@@ -164,4 +164,9 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 	public String getPluginID() {
 		return extension.getDeclaringPluginDescriptor().getId();
 	}
+
+	@Override
+	public Plugin getPlugin() {
+		return PluginManager.getInstance().getPlugin(getPluginID());
+	}
 }

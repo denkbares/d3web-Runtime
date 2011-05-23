@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.java.plugin.PluginManager;
 import org.java.plugin.registry.Library;
 import org.java.plugin.registry.PluginAttribute;
 import org.java.plugin.registry.PluginDescriptor;
@@ -108,7 +109,10 @@ public class JPFPlugin implements Plugin {
 	// contains the export filter of the plugin, initialized lazy
 	private List<ResourceFilter> resourceFilters = null;
 
-	public JPFPlugin(PluginDescriptor descriptor) {
+	private final PluginManager manager;
+
+	public JPFPlugin(PluginManager manager, PluginDescriptor descriptor) {
+		this.manager = manager;
 		this.descriptor = descriptor;
 	}
 
@@ -275,4 +279,8 @@ public class JPFPlugin implements Plugin {
 		}
 	}
 
+	@Override
+	public ClassLoader getClassLoader() {
+		return manager.getPluginClassLoader(descriptor);
+	}
 }

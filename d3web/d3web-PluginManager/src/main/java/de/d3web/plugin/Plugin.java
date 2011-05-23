@@ -42,4 +42,16 @@ public interface Plugin {
 	 * @return the plugin resources
 	 */
 	Resource[] getResources();
+
+	/**
+	 * Returns the {@link ClassLoader} of the Plugin.
+	 * 
+	 * The {@link ClassLoader} should be used to load classes from this plugin.
+	 * Caution: All classes of plugins are not part of the application's
+	 * classpath.
+	 * 
+	 * @created 20.05.2011
+	 * @return {@link ClassLoader}
+	 */
+	ClassLoader getClassLoader();
 }

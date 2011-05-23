@@ -104,7 +104,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	private void updateAnsweredWeight(Session session,
 			Collection<PropagationEntry> changes) {
-		XCLCaseObject caseObject = (XCLCaseObject) session.getSessionObject(this);
+		XCLCaseObject caseObject = session.getSessionObject(this);
 		for (PropagationEntry entry : changes) {
 			if (entry.getObject() instanceof Question) {
 				Question question = (Question) entry.getObject();

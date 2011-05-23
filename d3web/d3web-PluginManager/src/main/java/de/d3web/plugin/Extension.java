@@ -112,5 +112,19 @@ public interface Extension {
 	 */
 	String getExtendedPluginID();
 
+	/**
+	 * TODO: remove
+	 * 
+	 * @created 20.05.2011
+	 * @return
+	 */
 	String getPluginID();
+
+	/**
+	 * Returns the Plugin this Extension is part of
+	 * 
+	 * @created 20.05.2011
+	 * @return {@link Plugin} this Extension is part of
+	 */
+	Plugin getPlugin();
 }

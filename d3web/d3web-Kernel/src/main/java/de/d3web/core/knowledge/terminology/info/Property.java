@@ -62,8 +62,10 @@ public final class Property<T> {
 	// (to prevent loading class T, see getProperty for details and reason why)
 	private Class<T> storedClass = null;
 	private T defaultValue = null;
+	private final Extension extension;
 
-	private Property(Autosave autosave, String name, String description, boolean multilingual, String className, String defaultValueString) {
+	private Property(Extension extension, Autosave autosave, String name, String description, boolean multilingual, String className, String defaultValueString) {
+		this.extension = extension;
 		this.autosave = autosave;
 		this.name = name;
 		this.description = description;
@@ -105,7 +107,8 @@ public final class Property<T> {
 
 		// first initialize the class provided by the plugins class name
 		try {
-			this.storedClass = (Class<T>) Class.forName(this.storedClassName);
+			ClassLoader classLoader = extension.getPlugin().getClassLoader();
+			this.storedClass = (Class<T>) classLoader.loadClass(this.storedClassName);
 		}
 		catch (ClassNotFoundException e) {
 			throw new NoClassDefFoundError(
@@ -333,7 +336,7 @@ public final class Property<T> {
 			String storedClassName = e.getParameter("instanceof");
 			String defaultValueString = e.getParameter("default");
 			String description = e.getParameter("description");
-			Property<?> p = new Property<Object>(
+			Property<?> p = new Property<Object>(e,
 					pautosave, pname, description, pmultilingual,
 					storedClassName, defaultValueString);
 			properties.put(pname.toLowerCase(), p);

@@ -199,7 +199,7 @@ public final class JPFPluginManager extends PluginManager {
 			Collection<PluginDescriptor> descriptors =
 					this.manager.getRegistry().getPluginDescriptors();
 			for (PluginDescriptor descriptor : descriptors) {
-				result.add(new JPFPlugin(descriptor));
+				result.add(new JPFPlugin(manager, descriptor));
 			}
 			this.plugins = result.toArray(new Plugin[result.size()]);
 		}

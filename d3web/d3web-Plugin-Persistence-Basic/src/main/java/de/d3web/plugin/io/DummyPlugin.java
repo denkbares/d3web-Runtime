@@ -45,4 +45,9 @@ public class DummyPlugin implements Plugin {
 		return null;
 	}
 
+	@Override
+	public ClassLoader getClassLoader() {
+		return this.getClass().getClassLoader();
+	}
+
 }
