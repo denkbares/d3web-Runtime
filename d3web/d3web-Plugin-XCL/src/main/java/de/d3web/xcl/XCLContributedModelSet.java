@@ -41,7 +41,7 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	 */
 	public final static KnowledgeKind<XCLContributedModelSet> KNOWLEDGE_KIND = new KnowledgeKind<XCLContributedModelSet>(
 			"XCLContributedModelSet", XCLContributedModelSet.class);
-	private List<XCLModel> models = new ArrayList<XCLModel>();
+	private final List<XCLModel> models = new ArrayList<XCLModel>();
 
 	public void addModel(XCLModel model) {
 		if (!models.contains(model)) {
@@ -59,5 +59,10 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 
 	public boolean isEmpty() {
 		return models.isEmpty();
+	}
+
+	@Override
+	public String toString() {
+		return models.toString();
 	}
 }

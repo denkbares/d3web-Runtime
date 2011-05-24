@@ -268,8 +268,10 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 	@Override
 	public String toString() {
-		return "XCLModel[" + getSolution().getName() + "; " + getSuggestedThreshold() + "; "
-				+ getEstablishedThreshold() + "]@" + Integer.toHexString(hashCode());
+		return "XCLModel [" + getSolution().getName() + ": " + getAllRelations()
+				+ (getSuggestedThreshold() == null ? "" : "; " + getSuggestedThreshold())
+				+ (getEstablishedThreshold() == null ? "" : "; " + getEstablishedThreshold())
+				+ "]@" + Integer.toHexString(hashCode());
 	}
 
 	public Solution getSolution() {
@@ -415,6 +417,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	private XCLCaseModel getXCLCaseModel(Session session) {
-		return (XCLCaseModel) session.getSessionObject(this);
+		return session.getSessionObject(this);
 	}
 }
