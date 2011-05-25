@@ -80,8 +80,8 @@ public class BasicProperties {
 	/**
 	 * TODO: Remove when UnknownChoice is implemented
 	 * 
-	 * used for: Question, Knowledgebase doc: should UNKNOWN be invisible in
-	 * questions, If it is set to the kb it represents the default.
+	 * used for: Question, Knowledgebase doc: should UNKNOWN be invisible in questions, If it
+	 * is set to the kb it represents the default.
 	 * 
 	 * @return Boolean
 	 */
