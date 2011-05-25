@@ -80,7 +80,8 @@ public class BasicProperties {
 	/**
 	 * TODO: Remove when UnknownChoice is implemented
 	 * 
-	 * used for: Question doc: should UNKNOWN be invisible in questions
+	 * used for: Question, Knowledgebase doc: should UNKNOWN be invisible in
+	 * questions, If it is set to the kb it represents the default.
 	 * 
 	 * @return Boolean
 	 */
@@ -117,13 +118,6 @@ public class BasicProperties {
 	 * knowledge base.
 	 */
 	public static final Property<Date> CREATED = Property.getProperty("created", Date.class);
-
-	/**
-	 * A property for a {@link KnowledgeBase} instance that enables setting
-	 * UNKNOWN answer option visible by default for all questions
-	 */
-	public static final Property<Boolean> UNKNOWNBYDEFAULT =
-			Property.getProperty("unknownByDefault", Boolean.class);
 
 	/**
 	 * @see DefaultAbnormality
