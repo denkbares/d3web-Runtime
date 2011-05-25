@@ -108,6 +108,19 @@ public class BasicProperties {
 
 	/**
 	 * A property for a {@link KnowledgeBase} instance to store the desired
+	 * affiliation of the author and/or this knowledge base.
+	 */
+	public static final Property<String> AFFILIATION = Property.getProperty("affiliation",
+			String.class);
+
+	/**
+	 * A property for a {@link KnowledgeBase} instance to store the desired
+	 * status (e.g. PREVIEW, FINAL...) of this knowledge base.
+	 */
+	public static final Property<String> STATUS = Property.getProperty("status", String.class);
+
+	/**
+	 * A property for a {@link KnowledgeBase} instance to store the desired
 	 * filename of this knowledge base, when it is downloaded as a d3web file
 	 * from the wiki.
 	 */

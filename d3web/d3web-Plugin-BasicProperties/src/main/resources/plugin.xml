@@ -105,6 +105,26 @@
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="status">
+		<parameter id="name" value="status" />
+		<parameter id="description" value="contains a status, for example of a knowledge base" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="affiliation">
+		<parameter id="name" value="affiliation" />
+		<parameter id="description" value="contains a affiliation, for example of the author or the knowledge base" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="author">
 		<parameter id="name" value="author" />
 		<parameter id="description" value="contains a version, for example of a knowledge base" />
