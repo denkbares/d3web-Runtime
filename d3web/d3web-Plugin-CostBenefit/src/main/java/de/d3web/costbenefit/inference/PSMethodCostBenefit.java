@@ -148,7 +148,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// (only if there is any benefitual target
 		initializeSearchModelTo(caseObject, target);
 		SearchModel searchModel = caseObject.getSearchModel();
-		searchAlgorithm.search(caseObject.getSession(), searchModel);
+		// when using this method, you want to get that target, beta mode (later
+		// there must be a abortion critera to prevent an endless loop if target
+		// is unreachable
+		IterativeDeepeningSearchAlgorithm noAbortSearchAlgorithm = new IterativeDeepeningSearchAlgorithm();
+		noAbortSearchAlgorithm.setAbortStrategy(new NoAbortStrategy());
+		noAbortSearchAlgorithm.search(caseObject.getSession(), searchModel);
 
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
