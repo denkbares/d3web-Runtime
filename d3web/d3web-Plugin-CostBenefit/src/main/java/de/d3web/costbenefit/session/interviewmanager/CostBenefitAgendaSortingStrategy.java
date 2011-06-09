@@ -19,12 +19,14 @@
 package de.d3web.costbenefit.session.interviewmanager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.AgendaSortingStrategy;
@@ -34,9 +36,14 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 
 /**
- * The {@link CostBenefitAgendaSortingStrategy} does not do a specific sorting
- * of the {@link AgendaEntry} instances, but it removes entries from the agenda,
- * that became INACTIVE.
+ * The {@link CostBenefitAgendaSortingStrategy} removes entries from the agenda,
+ * that became INACTIVE, and sorts the agenda in the order:
+ * 
+ * 1.) questions in the order they appear in their parents
+ * 
+ * 2.) qcontainers of the CostbenefitSequence in the order of the sequence
+ * 
+ * 3.) all other QASets in the original order.
  * 
  * @author joba
  * 
@@ -55,13 +62,24 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 		// entries and put indicated questions to the beginning of the list
 		Map<Question, AgendaEntry> questions = new HashMap<Question, AgendaEntry>();
 		List<AgendaEntry> other = new LinkedList<AgendaEntry>();
+		List<QContainer> currentSequence = co.getCurrentSequence() == null
+				? new LinkedList<QContainer>()
+				: Arrays.asList(co.getCurrentSequence());
+		// entries of the current sequence in the agenda
+		AgendaEntry[] sequenceEntries = new AgendaEntry[currentSequence.size()];
 		for (AgendaEntry agendaEntry : entries) {
 			if (agendaEntry.hasState(InterviewState.ACTIVE)) {
 				if (agendaEntry.getInterviewObject() instanceof Question) {
 					questions.put((Question) agendaEntry.getInterviewObject(), agendaEntry);
 				}
 				else {
-					other.add(agendaEntry);
+					int indexOfQCon = currentSequence.indexOf(agendaEntry.getInterviewObject());
+					if (indexOfQCon != -1) {
+						sequenceEntries[indexOfQCon] = agendaEntry;
+					}
+					else {
+						other.add(agendaEntry);
+					}
 				}
 			}
 			else {
@@ -94,6 +112,10 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 		List<AgendaEntry> returnList = new ArrayList<AgendaEntry>(entries.size());
 		for (Question q : questionsSorted) {
 			returnList.add(questions.get(q));
+		}
+		// add entries of the current sequence in the correct order
+		for (AgendaEntry entry : sequenceEntries) {
+			if (entry != null) returnList.add(entry);
 		}
 		// add other QASets in original order
 		returnList.addAll(other);
