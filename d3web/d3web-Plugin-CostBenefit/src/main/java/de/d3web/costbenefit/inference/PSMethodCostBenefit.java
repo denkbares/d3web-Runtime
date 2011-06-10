@@ -174,9 +174,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		searchModel.addTarget(target);
 		// initialize benefit in search model to a positive value
 		// (use 1 if there is no benefit inside the target)
-		double benefit = target.getBenefit();
-		if (benefit <= 0) benefit = 1.0;
-		searchModel.maximizeBenefit(target, benefit);
+		searchModel.maximizeBenefit(target, Double.MAX_VALUE);
 
 		// set the undiscriminated solution to "null" to indicate that we will
 		// not consider them for checking to execute a new search
