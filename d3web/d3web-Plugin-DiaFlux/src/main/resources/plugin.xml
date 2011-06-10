@@ -25,26 +25,6 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="diafluxorigin">
-		<parameter id="name" value="DiaFluxOrigin" />
-		<parameter id="description" value="specifies the origin (id of a kdom node) of a DiaFlux model" />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.String" />
-	</extension>
-	
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="diafluxicon">
-		<parameter id="name" value="DiaFluxIcon" />
-		<parameter id="description" value="specifies the icon of a DiaFlux model" />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.String" />
-	</extension>
-	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="DiaFluxReader">
 		<parameter id="class" value="de.d3web.diaFlux.io.DiaFluxPersistenceHandler" />
