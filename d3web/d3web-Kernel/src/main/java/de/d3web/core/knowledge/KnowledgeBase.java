@@ -316,9 +316,11 @@ public class KnowledgeBase implements NamedObject {
 	/**
 	 * Returns a stored resource for a specified pathname accessor (a relative
 	 * path that must not start with "/"). A resource is a multimedia file
-	 * attached to the {@link KnowledgeBase}.
+	 * attached to the {@link KnowledgeBase}. If the resource specified by the
+	 * pathname is not available in this knowledge base, null is returned. The
+	 * pathname is treated case-insensitive.
 	 * 
-	 * @param pathname the specified pathname accessor.
+	 * @param pathname the specified pathname accessor
 	 * @return a resource stored by the specified accessor
 	 * @author joba
 	 * @date 15.04.2010
