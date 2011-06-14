@@ -97,6 +97,7 @@ public class SearchModel {
 	 */
 	public void addTarget(Target target) {
 		targets.add(target);
+		if (target.getMinPath() != null) countMinPaths++;
 		for (QContainer qcon : target.getQContainers()) {
 			Node key = getQContainerNode(qcon);
 			List<Target> refs = this.referencingTargets.get(key);
