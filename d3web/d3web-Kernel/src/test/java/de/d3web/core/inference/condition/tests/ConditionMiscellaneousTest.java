@@ -31,7 +31,6 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondAnswered;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondEqual;
@@ -96,37 +95,6 @@ public class ConditionMiscellaneousTest {
 
 		conditions = new Condition[] {
 				conditionQ1Yes, conditionQ2Yes, conditionQ3No };
-	}
-
-	@Test
-	public void testContextCondition() {
-		Session session = SessionFactory.createSession(kb);
-		Condition condition = new CondEqual(choiceQuestion1, choiceValueYes);
-		Condition contextCondition = new CondDState(solution, new Rating(State.ESTABLISHED));
-
-		// RULE: q1=YES => q3=YES (CONTEXT: solution=ESTABLISHED
-		Rule rule = RuleFactory.createSetValueRule(choiceQuestion3, choiceValueYes, condition);
-		rule.setContext(contextCondition);
-
-		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(choiceQuestion1, choiceValueYes));
-		assertEquals(UndefinedValue.getInstance(),
-				session.getBlackboard().getValue(choiceQuestion3));
-
-		// activate context, so rule can fire
-		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(solution, new Rating(State.ESTABLISHED)));
-		assertEquals(choiceValueYes,
-				session.getBlackboard().getValue(choiceQuestion3));
-		assertThat(rule.isUsed(session), is(true));
-
-		// retract context
-		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(solution, new Rating(State.EXCLUDED)));
-		assertEquals(UndefinedValue.getInstance(),
-				session.getBlackboard().getValue(choiceQuestion3));
-		assertThat(rule.isUsed(session), is(false));
-
 	}
 
 	@Test

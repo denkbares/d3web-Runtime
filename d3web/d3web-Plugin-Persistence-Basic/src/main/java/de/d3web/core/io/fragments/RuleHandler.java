@@ -19,6 +19,7 @@
 package de.d3web.core.io.fragments;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.w3c.dom.Document;
@@ -28,6 +29,7 @@ import org.w3c.dom.Node;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.PersistenceManager;
@@ -110,9 +112,14 @@ public class RuleHandler implements FragmentHandler {
 				}
 			}
 		}
+		// if there is a context defined (in old kbs), add id to the normal
+		// condition
+		if (context != null) {
+			condition = new CondAnd(Arrays.asList(condition, context));
+		}
 		// PSMethodContext must be set by the method, which calls the fragment
 		// handler
-		Rule rule = RuleFactory.createRule(action, condition, exception, context, null);
+		Rule rule = RuleFactory.createRule(action, condition, exception, null);
 		if (active != null && active.length() > 0) {
 			rule.setActive(Boolean.parseBoolean(active));
 		}
@@ -165,14 +172,6 @@ public class RuleHandler implements FragmentHandler {
 			node.appendChild(exceptionRoot);
 			Element exceptionNode = pm.writeFragment(exception, doc);
 			exceptionRoot.appendChild(exceptionNode);
-		}
-		// create context node
-		Condition context = rule.getContext();
-		if (context != null) {
-			Element contextRoot = doc.createElement("Context");
-			node.appendChild(contextRoot);
-			Element contextNode = pm.writeFragment(context, doc);
-			contextRoot.appendChild(contextNode);
 		}
 		return node;
 	}

@@ -113,10 +113,9 @@ public final class RuleFactory {
 				null);
 	}
 
-	public static Rule createRule(PSAction theAction, Condition theCondition, Condition theException, Condition theContext, Class<? extends PSMethodRulebased> psMethodContext) {
+	public static Rule createRule(PSAction theAction, Condition theCondition, Condition theException, Class<? extends PSMethodRulebased> psMethodContext) {
 		Rule rule = new Rule(psMethodContext);
 		setRuleParams(rule, theAction, theCondition, theException);
-		rule.setContext(theContext);
 		return rule;
 	}
 

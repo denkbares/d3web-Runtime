@@ -61,14 +61,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 */
 	private Condition exception;
 
-	/**
-	 * A condition which contains CondDState(diagnosis, ESTABLISHED) to
-	 * formulate a context of established diagnoses in which the rule is able to
-	 * fire. If specified diagnoses are not established, then rule must not
-	 * fire.
-	 */
-	private Condition diagnosisContext;
-
 	private Class<? extends PSMethodRulebased> problemsolverContext;
 
 	/**
@@ -129,19 +121,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 			 * The exception could not be tested --> just go on and treat it
 			 * like there is no exception
 			 */
-		}
-
-		try {
-			/*
-			 * if a solution context is available and it is false, then do not
-			 * fire!
-			 */
-			if ((getContext() != null) && !getContext().eval(session)) {
-				return false;
-			}
-		}
-		catch (NoAnswerException e) {
-			return false;
 		}
 
 		try {
@@ -259,18 +238,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	}
 
 	/**
-	 * @return the specified <it>solution context</it>. If not defined this
-	 *         method returns null. <BR>
-	 *         A solution context is a condition which contains
-	 *         CondDState(diagnosis, ESTABLISHED) to formulate a context of
-	 *         established solutions in which the rule is able to fire. If
-	 *         specified solutions are not established, then rule must not fire.
-	 */
-	public Condition getContext() {
-		return diagnosisContext;
-	}
-
-	/**
 	 * @return the exception when this rule must not fire.
 	 */
 	public Condition getException() {
@@ -286,7 +253,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * specified user session.
 	 */
 	public boolean hasFired(Session session) {
-		return ((CaseRuleComplex) session.getSessionObject(this)).hasFired();
+		return (session.getSessionObject(this)).hasFired();
 	}
 
 	/**
@@ -345,7 +312,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 		}
 		updateConditionTerminals(oldAction, newAction, getCondition());
 		updateConditionTerminals(oldAction, newAction, getException());
-		updateConditionTerminals(oldAction, newAction, getContext());
 	}
 
 	/**
@@ -485,37 +451,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	}
 
 	/**
-	 * Sets the specified <it>diagnosis context</it>. <BR>
-	 * Diagnosis context is a condition which contains CondDState(diagnosis,
-	 * ESTABLISHED) to formulate a context of established diagnoses in which the
-	 * rule is able to fire. If specified diagnoses are not established, then
-	 * rule must not fire. For checking the state of the diagnosis, the
-	 * heuristic problem solver is used.
-	 */
-	public void setContext(Condition newDiagnosisContext) {
-		// do not add any knowledge when the problem-solver context is still
-		// null
-		if (getProblemsolverContext() == null) {
-			diagnosisContext = newDiagnosisContext;
-			return;
-		}
-
-		/* check, if there are already some conditions */
-		if (getContext() != null) {
-			removeFrom(this,
-					getContext().getTerminalObjects(),
-					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
-		}
-		diagnosisContext = newDiagnosisContext;
-		if (getContext() != null) {
-			insertInto(this,
-					getContext().getTerminalObjects(),
-					PSMethodRulebased.getForwardKind(getProblemsolverContext()));
-		}
-
-	}
-
-	/**
 	 * Sets exception when this rule must not fire.
 	 */
 	public void setException(
@@ -544,7 +479,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * specified userCase.
 	 */
 	protected void setFired(boolean newFired, Session session) {
-		((CaseRuleComplex) session.getSessionObject(this)).setFired(newFired);
+		(session.getSessionObject(this)).setFired(newFired);
 	}
 
 	public void setProblemsolverContext(Class<? extends PSMethodRulebased> problemsolverContext) { // NOSONAR
@@ -563,11 +498,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 					removeFrom(
 							this,
 							getCondition().getTerminalObjects(),
-							PSMethodRulebased.getForwardKind(getProblemsolverContext()));
-				}
-				if (getContext() != null) {
-					removeFrom(this,
-							getContext().getTerminalObjects(),
 							PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 				}
 				if (getException() != null) {
@@ -593,11 +523,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 				insertInto(
 						this,
 						getCondition().getTerminalObjects(),
-						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
-			}
-			if (getContext() != null) {
-				insertInto(this,
-						getContext().getTerminalObjects(),
 						PSMethodRulebased.getForwardKind(getProblemsolverContext()));
 			}
 			if (getException() != null) {
@@ -655,7 +580,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 			}
 			eq = eq && equalConditions(getCondition(), r.getCondition());
 			eq = eq && equalConditions(getException(), r.getException());
-			eq = eq && equalConditions(getContext(), r.getContext());
 			eq = eq && equalActions(getAction(), r.getAction());
 			return eq;
 		}
@@ -674,9 +598,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 		}
 		if (getException() != null) {
 			hash += getException().hashCode();
-		}
-		if (getContext() != null) {
-			hash += getContext().hashCode();
 		}
 		return hash;
 	}
@@ -700,7 +621,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	}
 
 	public void remove() {
-		setContext(null);
 		setException(null);
 		setCondition(null);
 		setAction(null);
@@ -730,10 +650,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 		if (this.getException() != null) {
 			b.append("EXCEPT  ");
 			b.append(this.getException());
-		}
-		if (this.getContext() != null) {
-			b.append("CONTEXT ");
-			b.append(this.getContext());
 		}
 
 		return b.toString();
