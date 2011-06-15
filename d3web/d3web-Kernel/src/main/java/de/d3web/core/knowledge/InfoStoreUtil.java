@@ -18,6 +18,7 @@
  */
 package de.d3web.core.knowledge;
 
+import java.util.Comparator;
 import java.util.Locale;
 
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -30,9 +31,37 @@ import de.d3web.core.utilities.Triple;
  */
 public class InfoStoreUtil {
 
+	private static TripleComparator tripleComparator = new TripleComparator();
+
 	public static void copyEntries(InfoStore source, InfoStore target) {
 		for (Triple<Property<?>, Locale, ?> entry : source.entries()) {
 			target.addValue(entry.getA(), entry.getB(), entry.getC());
 		}
+	}
+
+	public static TripleComparator getTrimpleComparator() {
+		return tripleComparator;
+	}
+
+	/**
+	 * Comparator for {@link Triple}s used by the {@link InfoStore}. They are
+	 * first compared by the name of the {@link Property}, then by the
+	 * verbalization of the {@link Locale}.
+	 * 
+	 * @author Albrecht Striffler (denkbares GmbH)
+	 * @created 15.06.2011
+	 */
+
+	private static class TripleComparator implements Comparator<Triple<Property<?>, Locale, Object>> {
+
+		@Override
+		public int compare(Triple<Property<?>, Locale, Object> o1, Triple<Property<?>, Locale, Object> o2) {
+			int prop = o1.getA().getName().compareTo(o2.getA().getName());
+			if (prop != 0) return prop;
+			if (o1.getB() == null) return -1;
+			if (o2.getB() == null) return 1;
+			return o1.getB().toString().compareTo(o2.getB().toString());
+		}
+
 	}
 }
