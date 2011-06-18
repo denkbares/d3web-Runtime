@@ -108,7 +108,9 @@ public final class PersistenceManager extends FragmentManager {
 				String dateString = manifest.getMainAttributes().getValue("Date");
 				Date parsedDate = null;
 				try {
-					parsedDate = DateFormat.getDateInstance().parse(dateString);
+					if (dateString != null) {
+						parsedDate = DateFormat.getDateInstance().parse(dateString);
+					}
 				}
 				catch (ParseException e) {
 					// no nothing
@@ -236,23 +238,24 @@ public final class PersistenceManager extends FragmentManager {
 		ZipFile zipfile = new ZipFile(file);
 		try {
 			KnowledgeBase kb = new KnowledgeBase();
+			List<ZipEntry> files = new LinkedList<ZipEntry>();
+			// pre-calculate the size of the files to be parsed
 			Enumeration<? extends ZipEntry> entries = zipfile.entries();
 			long size = 0;
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
-				if (!entry.isDirectory()) {
-					size += entry.getSize();
-				}
+				// ignore directories
+				if (entry.isDirectory()) continue;
+				// ignore unrequired files necessary for previous versions
+				// of persistence
+				if (notNeeded(entry)) continue;
+				// tread multimedia as size 1,
+				// because the are only registered and unpacked on demand
+				size += isMultimediaEntry(entry) ? 1 : entry.getSize();
+				files.add(entry);
 			}
 			CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
-			entries = zipfile.entries();
-			List<ZipEntry> files = new LinkedList<ZipEntry>();
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = entries.nextElement();
-				if (!entry.isDirectory()) {
-					files.add(entry);
-				}
-			}
+			boolean parsedAnyFile = false;
 			for (Extension plugin : readerPlugins) {
 				for (ZipEntry entry : new LinkedList<ZipEntry>(files)) {
 					String name = entry.getName();
@@ -265,33 +268,58 @@ public final class PersistenceManager extends FragmentManager {
 							canparse = true;
 						}
 					}
-					else if (filename != null) {
+					if (filename != null) {
 						if (name.equals(filename)) {
 							canparse = true;
 						}
 					}
 					if (canparse) {
+						// if we can parse this entry
+						// we prepare the progress for the next step
+						cpl.next(entry.getSize());
+						cpl.updateProgress(0, "reading entry " + name);
+						// initialize the reader
 						KnowledgeReader reader = (KnowledgeReader) plugin.getSingleton();
 						reader.read(kb, zipfile.getInputStream(entry), cpl);
+						// and mark this as done
 						files.remove(entry);
+						parsedAnyFile = true;
 					}
 				}
 			}
+
+			// if we not have parsed at least one file
+			// we assume that this is no valid knowledge base
+			if (!parsedAnyFile) {
+				throw new IOException("The parsed file appears not to be a valid knowledge base");
+			}
+
+			// finally scan all files in multimedia folder
+			// and add them to the knowledge base as resources
 			for (ZipEntry entry : files) {
 				String name = entry.getName();
-				if (name.toLowerCase().startsWith(MULTIMEDIA_PATH_PREFIX)) {
+				if (isMultimediaEntry(entry)) {
+					// prepare progress for the next step,
+					// being "1" for multimedia
+					cpl.next(1);
+					cpl.updateProgress(0, "reading file " + name);
 					JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
 					kb.addResouce(jarBinaryRessource);
+					// we prepare the progress for the next step
 				}
-				else if (notNeeded(entry)) { // NOSONAR
-					// nothing to to, files were necessary for previous versions
-					// of persistence
-				}
-				else if (!entry.getName().startsWith(EXTENDS_PATH_PREFIX)) {
-					Logger.getLogger("Persistence").warning("No parser for entry " + name +
-							" available. This file will be lost when saving the KnowledgeBase.");
+				else {
+					cpl.next(entry.getSize());
+					cpl.updateProgress(0, "reading file " + name);
+					if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
+						Logger.getLogger("Persistence").warning(
+								"No parser for entry " + name +
+										" available. This file will be lost" +
+										" when saving the KnowledgeBase.");
+					}
 				}
 			}
+			// knowledge base loaded successfully
+			listener.updateProgress(1, "knowledge base loaded successfully");
 			return kb;
 		}
 		finally {
@@ -299,6 +327,18 @@ public final class PersistenceManager extends FragmentManager {
 		}
 	}
 
+	private boolean isMultimediaEntry(ZipEntry entry) {
+		return entry.getName().toLowerCase().startsWith(MULTIMEDIA_PATH_PREFIX);
+	}
+
+	/**
+	 * Returns the the specified entry is an unrequired file from a previous
+	 * version of the persistence, that cannot be read any longer.
+	 * 
+	 * @created 18.06.2011
+	 * @param entry the entry to be checked
+	 * @return if the entry should not be parsed
+	 */
 	private boolean notNeeded(ZipEntry entry) {
 		String name = entry.getName();
 		return name.equalsIgnoreCase("KB-INF/Index.xml")
