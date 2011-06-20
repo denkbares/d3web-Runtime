@@ -38,6 +38,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -66,10 +67,25 @@ public final class Util {
 	 *         valid XML content or the XML parser cannot be configured
 	 */
 	public static Document streamToDocument(InputStream stream) throws IOException {
+		return streamToDocument(stream, null);
+	}
+
+	/**
+	 * Creates an XML {@link Document} from the given {@link InputStream}.
+	 * 
+	 * @param stream the XML input stream
+	 * @param resolver is a {@link EntityResolver} to specify how entities given
+	 *        in the {@link Document} should be resolved
+	 * @return Document the document created from the stream
+	 * @throws IOException if the stream cannot be read or does not contains
+	 *         valid XML content or the XML parser cannot be configured
+	 */
+	public static Document streamToDocument(InputStream stream, EntityResolver resolver) throws IOException {
 		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder parser = null;
 		try {
 			parser = fac.newDocumentBuilder();
+			if (resolver != null) parser.setEntityResolver(resolver);
 			return parser.parse(new InputSource(stream));
 		}
 		catch (ParserConfigurationException e) {
