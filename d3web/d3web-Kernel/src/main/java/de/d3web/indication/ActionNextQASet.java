@@ -20,6 +20,7 @@
 
 package de.d3web.indication;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
@@ -85,10 +86,26 @@ public abstract class ActionNextQASet extends PSAction {
 	}
 
 	/**
-	 * sets a List of QASets that this Action can activate
+	 * Sets the specified list of {@link QASet} instances to be indicated, when
+	 * this action fires.
+	 * 
+	 * @param qasets the specified list of {@link QASet} instances
 	 */
 	public void setQASets(List<QASet> qasets) {
 		this.qasets = qasets;
+	}
+
+	/**
+	 * Sets the specified list of {@link QASet} instances to be indicated, when
+	 * this action fires.
+	 * 
+	 * @param qasets the specified list of {@link QASet} instances
+	 */
+	public void setQASets(QASet... qasets) {
+		this.qasets = new ArrayList<QASet>();
+		for (QASet qaSet : qasets) {
+			this.qasets.add(qaSet);
+		}
 	}
 
 	/**
