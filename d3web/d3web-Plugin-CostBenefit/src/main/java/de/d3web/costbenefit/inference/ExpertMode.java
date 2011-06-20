@@ -59,7 +59,7 @@ public class ExpertMode implements SessionObject {
 		}
 	};
 
-	private static final Comparator<Target> BENEFIT_COMPARATOR = new Comparator<Target>() {
+	static final Comparator<Target> BENEFIT_COMPARATOR = new Comparator<Target>() {
 
 		@Override
 		public int compare(Target target1, Target target2) {
@@ -85,7 +85,7 @@ public class ExpertMode implements SessionObject {
 	 *         available in the specified session
 	 */
 	public static ExpertMode getExpertMode(Session session) {
-		return (ExpertMode) session.getSessionObject(EXPERT_MODE_SOURCE);
+		return session.getSessionObject(EXPERT_MODE_SOURCE);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class ExpertMode implements SessionObject {
 	}
 
 	private CostBenefitCaseObject getCostBenefitCaseObject(PSMethodCostBenefit psm) {
-		return (CostBenefitCaseObject) session.getSessionObject(psm);
+		return session.getSessionObject(psm);
 	}
 
 	private PSMethodCostBenefit getPSMethodCostBenefit() {
