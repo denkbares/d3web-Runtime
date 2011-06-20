@@ -55,7 +55,7 @@ public class DefaultBlackboard implements Blackboard {
 	private final DefaultSession session;
 	private final FactStorage valueStorage;
 	private final FactStorage interviewStorage;
-	private boolean autosaveSource = false;
+	private boolean autosaveSource = true;
 
 	// TODO: also manage the SessionObjects here
 
@@ -88,7 +88,7 @@ public class DefaultBlackboard implements Blackboard {
 		// First: add the arriving fact to the protocol,
 		// if it was entered by the user
 		PSMethod psMethod = fact.getPSMethod();
-		if (isAutosaveSource() || psMethod != null && psMethod.hasType(Type.source)) {
+		if (isAutosaveSource() && psMethod != null && psMethod.hasType(Type.source)) {
 			getSession().getProtocol().addEntry(new FactProtocolEntry(new Date(), fact));
 		}
 
