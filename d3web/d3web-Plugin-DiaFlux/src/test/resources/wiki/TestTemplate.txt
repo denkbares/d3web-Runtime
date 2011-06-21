@@ -11,8 +11,7 @@ Description goes here...
 [{KnowWEPlugin quickinterview}]
 
 
-%%KnowWEPlugin
-@TagHandlerName: diaflux
+%%DiaFluxstate
 %
 
 %%DiaFlux

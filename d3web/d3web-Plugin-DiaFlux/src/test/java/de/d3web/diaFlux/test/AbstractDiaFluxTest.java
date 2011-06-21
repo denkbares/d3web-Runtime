@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -61,6 +62,8 @@ public abstract class AbstractDiaFluxTest {
 	protected final String fileName;
 	protected KnowledgeBase kb;
 	protected Session session;
+
+	protected Solution sol1;
 
 	protected QuestionOC quest1;
 	protected QuestionOC quest2;
@@ -93,6 +96,8 @@ public abstract class AbstractDiaFluxTest {
 	protected final String exit1 = "exit1";
 	protected final String exit2 = "exit2";
 	protected final String exit3 = "exit3";
+
+	protected final String solution1 = "solution1";
 
 	protected final String snapshot1 = "snapshot1";
 	protected final String snapshot2 = "snapshot2";
@@ -141,9 +146,16 @@ public abstract class AbstractDiaFluxTest {
 
 		kb = PersistenceManager.getInstance().load(file);
 
+		findSolutions();
 		findQuestions();
 		time = System.currentTimeMillis();
 		session = SessionFactory.createSession(kb, new Date(time));
+
+	}
+
+	private void findSolutions() {
+
+		sol1 = (Solution) kb.getManager().searchSolution("Solution1");
 
 	}
 

@@ -12,10 +12,13 @@ __Snapshot__\\
 [StopAfterSubflowTest]\\
 [RepeatedIndicationTest]\\
 [SnapshotSequenceInSubFlowTest]\\
-[WaitTest]\\
 
 __General__\\
 [AutostartTest]\\
+
+__Guards__\\
+[SolutionGuardsTest]\\
+
 \\
 
 [Template|TestTemplate]

@@ -1,0 +1,105 @@
+!!Solution guards tests
+
+tests the guards of a solution node.
+
+----
+
+%%ShowSolutions
+@master: this
+%
+
+[{KnowWEPlugin quickinterview}]
+
+
+%%DiaFluxstate
+%
+
+%%DiaFlux
+<flowchart fcid="mainID" name="Flow1" icon="sanduhr.gif" width="760" height="516" autostart="true" idCounter="32">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="start1">
+		<position left="50" top="103"></position>
+		<start>start1</start>
+	</node>
+
+	<node fcid="exit1">
+		<position left="534" top="76"></position>
+		<exit>Established</exit>
+	</node>
+
+	<node fcid="exit2">
+		<position left="535" top="119"></position>
+		<exit>Excluded</exit>
+	</node>
+
+	<node fcid="solution1">
+		<position left="241" top="90"></position>
+		<action markup="KnOffice">"Solution1" = N1</action>
+	</node>
+
+	<node fcid="exit3">
+		<position left="338" top="316"></position>
+		<exit>Confirmed</exit>
+	</node>
+
+	<node fcid="exit4">
+		<position left="192" top="317"></position>
+		<exit>Rejected</exit>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_26">
+		<origin>start1</origin>
+		<target>solution1</target>
+	</edge>
+
+	<edge fcid="#rule_27">
+		<origin>solution1</origin>
+		<target>exit1</target>
+		<guard markup="KnOffice">"Solution1" = established</guard>
+	</edge>
+
+	<edge fcid="#rule_28">
+		<origin>solution1</origin>
+		<target>exit2</target>
+		<guard markup="KnOffice">"Solution1" = excluded</guard>
+	</edge>
+
+	<edge fcid="#rule_30">
+		<origin>solution1</origin>
+		<target>exit3</target>
+		<guard markup="KnOffice">"Solution1" = confirmed</guard>
+	</edge>
+
+	<edge fcid="#rule_32">
+		<origin>solution1</origin>
+		<target>exit4</target>
+		<guard markup="KnOffice">"Solution1" = rejected</guard>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 763px; height: 523px;"><DIV class="Node" id="start1" style="left: 50px;top: 103px; width: 75px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">start1</DIV></DIV></DIV><DIV class="Node" id="solution1" style="left: 241px;top: 90px; width: 95px; height: 42px;"><DIV class="action" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/diagnosis.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>Solution1</DIV><DIV class="value" style=" width: 80px; height: 20px;">N1</DIV></DIV></DIV></DIV><DIV class="Node" id="exit3" style="left: 338px;top: 316px; width: 81px; height: 20px;"><DIV class="exit" style=" width: 68px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 66px; height: 16px;">Confirmed</DIV></DIV></DIV><DIV class="Node" id="exit4" style="left: 192px;top: 317px; width: 75px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Rejected</DIV></DIV></DIV><DIV class="Rule" id="#rule_26" style=" width: 0px; height: 0px;"><DIV class="h_line" style="left: 125px;top: 113px; width: 116px; height: 1px;"><DIV class="arrow_right" style=" width: 9px; height: 9px;"></DIV></DIV><DIV style="position: absolute;left: 125px;top: 113px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 7px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"></DIV></DIV></DIV><DIV class="rule_highlight" style=" width: 0px; height: 0px;"><DIV class="h_line_highlight" style="left: 124px;top: 112px; width: 118px; height: 3px;"></DIV></DIV><DIV class="rule_selector" style=" width: 0px; height: 0px;"><DIV class="rule_selector" style="position: absolute;left: 122px;top: 110px;overflow: hidden; width: 122px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_30" style=" width: 0px; height: 0px;"><DIV class="v_line" style="left: 312px;top: 132px; width: 1px; height: 95px;"><DIV class="no_arrow" style=" width: 0px; height: 0px;"></DIV></DIV><DIV class="h_line" style="left: 312px;top: 226px; width: 67px; height: 1px;"><DIV class="no_arrow" style=" width: 0px; height: 0px;"></DIV></DIV><DIV class="v_line" style="left: 378px;top: 226px; width: 1px; height: 90px;"><DIV class="arrow_down" style=" width: 9px; height: 9px;"></DIV></DIV><DIV style="position: absolute;left: 312px;top: 132px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px;top: 2px; width: 48px; height: 14px;"><DIV class="GuardPane" style=" width: 48px; height: 14px;"><DIV style=" width: 48px; height: 14px;">confirmed </DIV></DIV></DIV></DIV><DIV class="rule_highlight" style=" width: 0px; height: 0px;"><DIV class="v_line_highlight" style="left: 311px;top: 131px; width: 3px; height: 97px;"></DIV><DIV class="h_line_highlight" style="left: 311px;top: 225px; width: 69px; height: 3px;"></DIV><DIV class="v_line_highlight" style="left: 377px;top: 225px; width: 3px; height: 92px;"></DIV></DIV><DIV class="rule_selector" style=" width: 0px; height: 0px;"><DIV class="rule_selector" style="position: absolute;left: 309px;top: 129px;overflow: hidden; width: 7px; height: 101px;"></DIV><DIV class="rule_selector" style="position: absolute;left: 309px;top: 223px;overflow: hidden; width: 73px; height: 7px;"></DIV><DIV class="rule_selector" style="position: absolute;left: 375px;top: 223px;overflow: hidden; width: 7px; height: 96px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_32" style=" width: 0px; height: 0px;"><DIV class="v_line" style="left: 264px;top: 132px; width: 1px; height: 185px;"><DIV class="arrow_down" style=" width: 9px; height: 9px;"></DIV></DIV><DIV style="position: absolute;left: 264px;top: 132px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px;top: 2px; width: 39px; height: 14px;"><DIV class="GuardPane" style=" width: 39px; height: 14px;"><DIV style=" width: 39px; height: 14px;">rejected </DIV></DIV></DIV></DIV><DIV class="rule_highlight" style=" width: 0px; height: 0px;"><DIV class="v_line_highlight" style="left: 263px;top: 131px; width: 3px; height: 187px;"></DIV></DIV><DIV class="rule_selector" style=" width: 0px; height: 0px;"><DIV class="rule_selector" style="position: absolute;left: 261px;top: 129px;overflow: hidden; width: 7px; height: 191px;"></DIV></DIV></DIV><DIV class="Node" id="exit1" style="left: 534px;top: 76px; width: 87px; height: 20px;"><DIV class="exit" style=" width: 74px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 72px; height: 16px;">Established</DIV></DIV></DIV><DIV class="Rule" id="#rule_27" style=" width: 0px; height: 0px;"><DIV class="h_line" style="left: 336px;top: 93px; width: 198px; height: 1px;"><DIV class="arrow_right" style=" width: 9px; height: 9px;"></DIV></DIV><DIV style="position: absolute;left: 336px;top: 93px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 7px; width: 55px; height: 14px;"><DIV class="GuardPane" style=" width: 55px; height: 14px;"><DIV style=" width: 55px; height: 14px;">established </DIV></DIV></DIV></DIV><DIV class="rule_highlight" style=" width: 0px; height: 0px;"><DIV class="h_line_highlight" style="left: 335px;top: 92px; width: 200px; height: 3px;"></DIV></DIV><DIV class="rule_selector" style=" width: 0px; height: 0px;"><DIV class="rule_selector" style="position: absolute;left: 333px;top: 90px;overflow: hidden; width: 204px; height: 7px;"></DIV></DIV></DIV><DIV class="Node" id="exit2" style="left: 535px;top: 119px; width: 75px; height: 20px;"><DIV class="exit" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 20px; height: 20px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">Excluded</DIV></DIV></DIV><DIV class="Rule" id="#rule_28" style=" width: 0px; height: 0px;"><DIV class="h_line" style="left: 336px;top: 121px; width: 199px; height: 1px;"><DIV class="arrow_right" style=" width: 9px; height: 9px;"></DIV></DIV><DIV style="position: absolute;left: 336px;top: 121px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 7px; width: 44px; height: 14px;"><DIV class="GuardPane" style=" width: 44px; height: 14px;"><DIV style=" width: 44px; height: 14px;">excluded </DIV></DIV></DIV></DIV><DIV class="rule_highlight" style=" width: 0px; height: 0px;"><DIV class="h_line_highlight" style="left: 335px;top: 120px; width: 201px; height: 3px;"></DIV></DIV><DIV class="rule_selector" style=" width: 0px; height: 0px;"><DIV class="rule_selector" style="position: absolute;left: 333px;top: 118px;overflow: hidden; width: 205px; height: 7px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart>
+	
+
+%
+
+
+
+%%KnowledgeBase 
+  @uses: this
+%
+
+
+
+
+
+%%Solution
+Solution1
+
+%
