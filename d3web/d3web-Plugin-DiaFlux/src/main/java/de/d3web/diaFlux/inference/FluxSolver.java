@@ -142,7 +142,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 					List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
 					for (FlowRun flowRun : runs) {
-						boolean active = evalEdge(session, flowRun, edge);
+						boolean active = evalEdge(session, edge);
 						if (active) {
 							// begin node is not active, do nothing
 							if (flowRun.isActive(start)) {
@@ -195,9 +195,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 */
 	public static boolean checkSupport(Session session, Node end, FlowRun flowRun) {
 		List<Edge> inc = end.getIncomingEdges();
-		for (Edge edge2 : inc) {
-			if (evalEdge(session, flowRun, edge2)) {
-				if (flowRun.isActive(edge2.getStartNode())) {
+		for (Edge edge : inc) {
+			if (evalEdge(session, edge)) {
+				if (flowRun.isActive(edge.getStartNode())) {
 					return true;
 				}
 			}
@@ -269,7 +269,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 */
 	public static void checkSuccessorsOnActivation(Node end, FlowRun flowRun, Session session) {
 		for (Edge out : end.getOutgoingEdges()) {
-			if (!evalEdge(session, flowRun, out)) {
+			if (!evalEdge(session, out)) {
 				continue;
 			}
 			activateNode(out.getEndNode(), flowRun, session);
@@ -283,15 +283,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * @param edge
 	 * @return
 	 */
-	public static boolean evalEdge(Session session, FlowRun run, Edge edge) {
+	public static boolean evalEdge(Session session, Edge edge) {
 		if (!FluxSolver.evalToTrue(session, edge.getStartNode().getEdgePrecondition())) return false;
 		return evalToTrue(session, edge.getCondition());
-	}
-
-	private static boolean evalEdge(Session session, Collection<FlowRun> runs, Edge edge) {
-		if (!evalToTrue(session, edge.getCondition())) return false;
-		if (FluxSolver.evalToTrue(session, edge.getStartNode().getEdgePrecondition())) return true;
-		return false;
 	}
 
 	@Override
@@ -385,7 +379,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		for (Node node : tracedNodes) {
 			caseObject.traceNodes(node);
 			for (Edge edge : node.getOutgoingEdges()) {
-				if (evalEdge(session, caseObject.getRuns(), edge)) {
+				if (evalEdge(session, edge)) {
 					caseObject.traceEdges(edge);
 				}
 			}
