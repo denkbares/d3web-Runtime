@@ -20,6 +20,7 @@
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Double" />
+		<parameter id="default" value="1.0" />
 	</extension>
 	
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
