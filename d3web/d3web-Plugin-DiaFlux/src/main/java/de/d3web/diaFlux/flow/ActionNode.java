@@ -94,9 +94,10 @@ public class ActionNode extends AbstractNode {
 
 		// redo action with SSN as source
 		retract(session, null);
-
-		getAction().doIt(session, FluxSolver.SNAPSHOT_SOURCE,
-				session.getPSMethodInstance(FluxSolver.class));
+		if (!(getAction() instanceof ActionRepeatedIndication)) {
+			getAction().doIt(session, FluxSolver.SNAPSHOT_SOURCE,
+					session.getPSMethodInstance(FluxSolver.class));
+		}
 
 	}
 
