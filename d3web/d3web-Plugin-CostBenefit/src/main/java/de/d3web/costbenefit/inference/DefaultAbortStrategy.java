@@ -63,4 +63,9 @@ public class DefaultAbortStrategy implements AbortStrategy {
 		this(100000);
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " " + steps;
+	}
+
 }

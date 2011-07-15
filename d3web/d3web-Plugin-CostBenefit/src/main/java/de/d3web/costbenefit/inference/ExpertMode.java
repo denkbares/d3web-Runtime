@@ -53,7 +53,7 @@ public class ExpertMode implements SessionObject {
 			// check if it is allowed to create such an object
 			if (getPSMethodCostBenefit(session) == null) {
 				throw new IllegalStateException(
-						"ExpertMode cannot be used if session does not contain the cost benefit strategix solver");
+						"ExpertMode cannot be used if session does not contain the cost benefit strategic solver");
 			}
 			return new ExpertMode(session);
 		}
