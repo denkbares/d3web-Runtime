@@ -187,8 +187,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 				postTransitions.add(vt);
 			}
 		}
-		StateTransition st = new StateTransition(activationCondition, postTransitions, qcontainer);
-		qcontainer.getKnowledgeStore().addKnowledge(StateTransition.KNOWLEDGE_KIND, st);
+		new StateTransition(activationCondition, postTransitions, qcontainer);
 	}
 
 	private class StateTransitionComparator implements Comparator<StateTransition> {

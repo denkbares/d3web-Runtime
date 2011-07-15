@@ -54,6 +54,7 @@ public class StateTransition implements KnowledgeSlice {
 		this.activationCondition = activationCondition;
 		this.postTransitions = postTransitions;
 		this.qcontainer = qcontainer;
+		qcontainer.getKnowledgeStore().addKnowledge(KNOWLEDGE_KIND, this);
 	}
 
 	public Condition getActivationCondition() {
