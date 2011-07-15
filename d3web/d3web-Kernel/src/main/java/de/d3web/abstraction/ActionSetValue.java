@@ -35,6 +35,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.utilities.EqualsUtils;
 
 /**
  * Sets a specified value for a specified question. The value can be a
@@ -160,22 +161,12 @@ public class ActionSetValue extends PSAction {
 		}
 		if (o instanceof ActionSetValue) {
 			ActionSetValue a = (ActionSetValue) o;
-			return (isSame(a.getQuestion(), getQuestion()) && a.getValue()
+			return (EqualsUtils.isSame(a.getQuestion(), getQuestion()) && a.getValue()
 					.equals(getValue()));
 		}
 		else {
 			return false;
 		}
-	}
-
-	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) {
-			return true;
-		}
-		if (obj1 != null && obj2 != null) {
-			return obj1.equals(obj2);
-		}
-		return false;
 	}
 
 	@Override

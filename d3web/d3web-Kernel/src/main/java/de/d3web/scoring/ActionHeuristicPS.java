@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.utilities.EqualsUtils;
 
 /**
  * Action to add scores to solutions (heuristic problem-solver) <br>
@@ -149,21 +150,11 @@ public class ActionHeuristicPS extends PSAction {
 		}
 		if (o instanceof ActionHeuristicPS) {
 			ActionHeuristicPS a = (ActionHeuristicPS) o;
-			return isSame(a.getSolution(), getSolution())
-					&& isSame(a.getScore(), getScore());
+			return EqualsUtils.isSame(a.getSolution(), getSolution())
+					&& EqualsUtils.isSame(a.getScore(), getScore());
 		}
 		else {
 			return false;
 		}
-	}
-
-	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) {
-			return true;
-		}
-		if (obj1 != null && obj2 != null) {
-			return obj1.equals(obj2);
-		}
-		return false;
 	}
 }

@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.utilities.EqualsUtils;
 import de.d3web.core.utilities.HashCodeUtils;
 
 /**
@@ -155,17 +156,8 @@ public abstract class ActionNextQASet extends PSAction {
 		}
 
 		ActionNextQASet a = (ActionNextQASet) o;
-		return isSame(a.getQASets(), getQASets()) && isSame(a.getIndication(), getIndication());
-	}
-
-	protected boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) {
-			return true;
-		}
-		if (obj1 != null && obj2 != null) {
-			return obj1.equals(obj2);
-		}
-		return false;
+		return EqualsUtils.isSame(a.getQASets(), getQASets())
+				&& EqualsUtils.isSame(a.getIndication(), getIndication());
 	}
 
 }

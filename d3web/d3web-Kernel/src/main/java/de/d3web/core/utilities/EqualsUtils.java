@@ -77,4 +77,24 @@ public final class EqualsUtils {
 		return object.getClass().isArray();
 	}
 
+	/**
+	 * Checks if two objects are both null or if they equal with the equals
+	 * method
+	 * 
+	 * @created 15.07.2011
+	 * @param obj1 first {@link Object}
+	 * @param obj2 second {@link Object}
+	 * @return true if both objects are null or obj1.equals(obj2), false
+	 *         otherwise
+	 */
+	public static boolean isSame(Object obj1, Object obj2) {
+		if (obj1 == null && obj2 == null) {
+			return true;
+		}
+		if (obj1 != null && obj2 != null) {
+			return obj1.equals(obj2);
+		}
+		return false;
+	}
+
 }

@@ -32,6 +32,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.utilities.EqualsUtils;
 
 /**
  * RuleAction to suppress alternatives of a specified Question
@@ -158,21 +159,11 @@ public class ActionSuppressAnswer extends PSAction {
 		}
 		if (o instanceof ActionSuppressAnswer) {
 			ActionSuppressAnswer a = (ActionSuppressAnswer) o;
-			return (isSame(a.getQuestion(), getQuestion()) && isSame(a.getSuppress(), getSuppress()));
+			return (EqualsUtils.isSame(a.getQuestion(), getQuestion()) && EqualsUtils.isSame(
+					a.getSuppress(), getSuppress()));
 		}
 		else {
 			return false;
 		}
 	}
-
-	private boolean isSame(Object obj1, Object obj2) {
-		if (obj1 == null && obj2 == null) {
-			return true;
-		}
-		if (obj1 != null && obj2 != null) {
-			return obj1.equals(obj2);
-		}
-		return false;
-	}
-
 }
