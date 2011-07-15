@@ -61,14 +61,6 @@ public final class Score implements Comparable<Object> {
 	private double score;
 	private double aPriori;
 
-	public boolean aPrioriIsPositive() {
-		return getAPriori() > 0;
-	}
-
-	public boolean aPrioriIsZeroOrNegative() {
-		return getAPriori() <= 0;
-	}
-
 	/**
 	 * Creates a new score given to a diagnosis with a fixed amount of points
 	 * and an symbolic name.
@@ -77,9 +69,9 @@ public final class Score implements Comparable<Object> {
 	 *        &lt;0, it will be added, otherwise multiplied with theScore.
 	 */
 	private Score(double theScore, double theAPriori, String symbol) {
-		setScore(theScore);
-		setAPriori(theAPriori);
-		setSymbol(symbol);
+		score = theScore;
+		aPriori = theAPriori;
+		this.symbol = symbol;
 	}
 
 	/**
@@ -114,7 +106,7 @@ public final class Score implements Comparable<Object> {
 		long temp;
 		temp = Double.doubleToLongBits(score);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
+		result = prime * result + symbol.hashCode();
 		return result;
 	}
 
@@ -151,34 +143,16 @@ public final class Score implements Comparable<Object> {
 		return score;
 	}
 
-	public java.lang.String getSymbol() {
+	public String getSymbol() {
 		return symbol;
 	}
 
-	public void setAPriori(double newAPriori) {
-		aPriori = newAPriori;
-	}
-
-	public void setScore(double newScore) {
-		score = newScore;
-	}
-
-	public void setSymbol(java.lang.String newSymbol) {
-		symbol = newSymbol;
-	}
-
 	/**
-	 * @return the name of the symbol if avialable or the score if the symbol is
-	 *         not available.
+	 * @return the name of the symbol
 	 */
 	@Override
 	public String toString() {
-		if ((getSymbol() == null) || (getSymbol().equals(""))) {
-			return "" + getScore();
-		}
-		else {
-			return getSymbol();
-		}
+		return getSymbol();
 	}
 
 	/**

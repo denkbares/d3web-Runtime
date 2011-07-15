@@ -125,7 +125,7 @@ public class HeuristicRating extends Rating {
 			score += rating.getScore();
 		}
 		if (aprioriScore != null) {
-			if (aprioriScore.aPrioriIsPositive()) {
+			if (aprioriScore.getAPriori() > 0) {
 				score *= aprioriScore.getAPriori();
 			}
 			else {
