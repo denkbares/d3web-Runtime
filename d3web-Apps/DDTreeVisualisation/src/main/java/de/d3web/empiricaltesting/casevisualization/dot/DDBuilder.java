@@ -54,6 +54,7 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.StateRating;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
+import de.d3web.empiricaltesting.casevisualization.dot.DDNode.Content;
 import de.d3web.scoring.HeuristicRating;
 
 public final class DDBuilder implements CaseVisualizer {
@@ -70,9 +71,9 @@ public final class DDBuilder implements CaseVisualizer {
 	private ConfigLoader config = ConfigLoader.getInstance();
 
 	private Set<String> createdEdges;
-	private Map<RatedTestCase, DDNode> nodes;
+	private List<DDNode> nodes = new LinkedList<DDNode>();
 
-	public enum caseType {
+	public enum Lifecycle {
 		old_case, new_case, incorrect
 	};
 
@@ -187,7 +188,7 @@ public final class DDBuilder implements CaseVisualizer {
 	private void generateDDNet(List<SequentialTestCase> cases) {
 
 		createdEdges = new HashSet<String>();
-		nodes = new HashMap<RatedTestCase, DDNode>();
+		Map<RatedTestCase, DDNode> nodeMap = new HashMap<RatedTestCase, DDNode>();
 
 		for (SequentialTestCase stc : cases) {
 
@@ -196,31 +197,55 @@ public final class DDBuilder implements CaseVisualizer {
 
 			for (int i = 0; i < ratedCases.size(); i++) {
 				RatedTestCase ratedTestCase = ratedCases.get(i);
-				DDNode node = getDDNode(ratedTestCase);
-				if (ratedTestCase.wasTestedBefore()) {
-					node.setTheCaseType(caseType.old_case);
-				}
-				if (prec != null) {
-					prec.addChild(node);
-				}
-
+				DDNode node = getDDNode(ratedTestCase, nodeMap, prec);
 				prec = node;
 			}
 		}
 	}
 
-	private DDNode getDDNode(RatedTestCase ratedTestCase) {
-		DDNode node = nodes.get(ratedTestCase);
+	private DDNode getDDNode(RatedTestCase ratedTestCase, Map<RatedTestCase, DDNode> nodeMap, DDNode precessor) {
+		DDNode node = nodeMap.get(ratedTestCase);
 		if (node == null) {
-			node = new DDNode(ratedTestCase);
-			nodes.put(ratedTestCase, node);
+			Lifecycle lifecycle = ratedTestCase.wasTestedBefore()
+					? Lifecycle.old_case
+					: Lifecycle.new_case;
+			boolean seperateQuestionSolutionBlocks =
+					getConfig().getProperty("seperateQuestionSolutionBlocks").equals("true")
+							&& !ratedTestCase.getFindings().isEmpty()
+							&& (!ratedTestCase.getDerivedSolutions().isEmpty() || !ratedTestCase.getExpectedSolutions().isEmpty());
+			if (seperateQuestionSolutionBlocks) {
+				// we generate at least a block for the questions and the
+				// solutions
+				// if the questions are a mixture of decisive and non-decisive
+				// questions,
+				// we create two question nodes
+				// TODO: implement split of decisive and non-decisive questions
+				DDNode questionNode = new DDNode(ratedTestCase, Content.QUESTIONS, lifecycle);
+				DDNode solutionNode = new DDNode(ratedTestCase, Content.SOLUTIONS, lifecycle);
+				questionNode.addChild(solutionNode);
+				nodes.add(questionNode);
+				nodes.add(solutionNode);
+				nodeMap.put(ratedTestCase, solutionNode);
+				if (precessor != null) {
+					precessor.addChild(questionNode);
+				}
+				node = solutionNode;
+			}
+			else {
+				node = new DDNode(ratedTestCase, Content.BOTH, lifecycle);
+				nodes.add(node);
+				nodeMap.put(ratedTestCase, node);
+				if (precessor != null) {
+					precessor.addChild(node);
+				}
+			}
 		}
 		return node;
 	}
 
 	public String render() {
 		StringBuffer b = new StringBuffer(HEADER);
-		for (DDNode node : nodes.values()) {
+		for (DDNode node : nodes) {
 			renderNode(b, node, computeOutgoing(node));
 			for (DDEdge edge : node.getOutgoing()) {
 				renderEdge(b, edge);
@@ -472,59 +497,63 @@ public final class DDBuilder implements CaseVisualizer {
 
 		renderNodeCaseNameRow(result, node);
 
-		// print question answered for deriving the current solutions
-		renderNodeAnswers(result, node);
-
-		// Put all RatedSolutions in Maps
-		Map<Solution, RatedSolution> expSolutions =
-				getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
-		Map<Solution, RatedSolution> derSolutions =
-				getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
-
-		// Print Solutions Header
-		if (!allRatedSolutions.isEmpty()) {
-			renderSolutionsHeader(result, node, correctionColumn);
+		if (node.isQuestionNode()) {
+			// print question answered for deriving the current solutions
+			renderNodeAnswers(result, node);
 		}
 
-		int maxCount = Integer.valueOf(config.getProperty("maxVisibleSolutions"));
-		if (allRatedSolutions.size() > maxCount) {
-			renderTableLine(result, null, false,
-					"..." + allRatedSolutions.size() + " solutions left...");
-		}
-		else {
-			// iterate over all rated solutions, but avoid duplicates
-			Set<Solution> printedSolutions = new HashSet<Solution>();
-			for (RatedSolution ratedSolution : allRatedSolutions) {
-				// check if solution is already done
-				Solution d = ratedSolution.getSolution();
-				if (printedSolutions.contains(d)) continue;
-				printedSolutions.add(d);
+		if (node.isSolutionNode()) {
+			// Put all RatedSolutions in Maps
+			Map<Solution, RatedSolution> expSolutions =
+					getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
+			Map<Solution, RatedSolution> derSolutions =
+					getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
 
-				// otherwise print it
-				RatedSolution expected = expSolutions.get(d);
-				RatedSolution derived = derSolutions.get(d);
+			// Print Solutions Header
+			if (!allRatedSolutions.isEmpty()) {
+				renderSolutionsHeader(result, node, correctionColumn);
+			}
 
-				if (expected != null && derived != null && expected.equals(derived)) {
-					renderCorrectSolution(result, node,
-							derived, strSolutionColorCorrect,
-							correctionColumn, symbolicStates);
-				}
-				else {
-					String expColor = getColor(expected, strSolutionColorSuggested,
-							strSolutionColorEstablished, nodeColor);
-					String derColor = getColor(derived, strSolutionColorSuggested,
-							strSolutionColorEstablished, nodeColor);
-					renderIncorrectSolutions(result, node, expected, derived,
-							expColor, derColor, correctionColumn, symbolicStates);
+			int maxCount = Integer.valueOf(config.getProperty("maxVisibleSolutions"));
+			if (allRatedSolutions.size() > maxCount) {
+				renderTableLine(result, null, false,
+						"..." + allRatedSolutions.size() + " solutions left...");
+			}
+			else {
+				// iterate over all rated solutions, but avoid duplicates
+				Set<Solution> printedSolutions = new HashSet<Solution>();
+				for (RatedSolution ratedSolution : allRatedSolutions) {
+					// check if solution is already done
+					Solution d = ratedSolution.getSolution();
+					if (printedSolutions.contains(d)) continue;
+					printedSolutions.add(d);
+
+					// otherwise print it
+					RatedSolution expected = expSolutions.get(d);
+					RatedSolution derived = derSolutions.get(d);
+
+					if (expected != null && derived != null && expected.equals(derived)) {
+						renderCorrectSolution(result, node,
+								derived, strSolutionColorCorrect,
+								correctionColumn, symbolicStates);
+					}
+					else {
+						String expColor = getColor(expected, strSolutionColorSuggested,
+								strSolutionColorEstablished, nodeColor);
+						String derColor = getColor(derived, strSolutionColorSuggested,
+								strSolutionColorEstablished, nodeColor);
+						renderIncorrectSolutions(result, node, expected, derived,
+								expColor, derColor, correctionColumn, symbolicStates);
+					}
 				}
 			}
-		}
 
-		boolean showNextQuestions =
-				Boolean.valueOf(getConfig().getProperty("showNextQuestions"));
-		if (showNextQuestions) {
-			// print questions to be asked next (mostly only one)
-			renderNodeNextQuestions(result, node, nextQuestions);
+			boolean showNextQuestions =
+					Boolean.valueOf(getConfig().getProperty("showNextQuestions"));
+			if (showNextQuestions) {
+				// print questions to be asked next (mostly only one)
+				renderNodeNextQuestions(result, node, nextQuestions);
+			}
 		}
 
 		result.append("   </TABLE>>\n");
@@ -664,7 +693,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * 
 	 */
 	public void renderSolutionsHeader(StringBuffer result, DDNode node, boolean correctionColumn) {
-		String color = getConfig().getProperty("nodeColorQuestionnaireTitle");
+		String color = getConfig().getProperty("nodeColorSolutionTitle");
 		renderTableLine(result, color, correctionColumn, "Solution", "exp.", "der.");
 	}
 

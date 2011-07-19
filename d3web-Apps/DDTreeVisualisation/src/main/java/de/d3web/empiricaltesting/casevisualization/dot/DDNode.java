@@ -26,9 +26,13 @@ import java.util.List;
 
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
-import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.caseType;
+import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.Lifecycle;
 
 public final class DDNode {
+
+	enum Content {
+		SOLUTIONS, QUESTIONS, BOTH
+	}
 
 	private static int idCounter = 0;
 	private final String id = "node" + (idCounter++);
@@ -37,15 +41,13 @@ public final class DDNode {
 	private final List<DDEdge> outgoing = new ArrayList<DDEdge>();
 	private final List<DDEdge> incoming = new ArrayList<DDEdge>();
 
-	private caseType sessionType;
+	private final Lifecycle sessionType;
+	private final Content content;
 
-	public DDNode(RatedTestCase testCase, caseType sessiontype) {
+	public DDNode(RatedTestCase testCase, Content content, Lifecycle sessionType) {
 		this.testCase = testCase;
-		setTheCaseType(sessiontype);
-	}
-
-	public DDNode(RatedTestCase testCase) {
-		this(testCase, caseType.new_case);
+		this.content = content;
+		this.sessionType = sessionType;
 	}
 
 	public boolean hasPredecessors() {
@@ -98,12 +100,8 @@ public final class DDNode {
 		return true;
 	}
 
-	public caseType getTheCaseType() {
+	public Lifecycle getTheCaseType() {
 		return sessionType;
-	}
-
-	public void setTheCaseType(caseType sessionType) {
-		this.sessionType = sessionType;
 	}
 
 	public List<DDEdge> getIncoming() {
@@ -112,6 +110,14 @@ public final class DDNode {
 
 	public String getID() {
 		return id;
+	}
+
+	public boolean isQuestionNode() {
+		return !content.equals(Content.SOLUTIONS);
+	}
+
+	public boolean isSolutionNode() {
+		return !content.equals(Content.QUESTIONS);
 	}
 
 }

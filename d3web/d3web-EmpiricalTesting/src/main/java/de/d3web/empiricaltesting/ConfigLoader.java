@@ -81,6 +81,7 @@ public final class ConfigLoader {
 		config.setProperty("showQuestionnaireName", "false");
 		config.setProperty("showNextQuestions", "true");
 		config.setProperty("maxVisibleSolutions", "20");
+		config.setProperty("seperateQuestionSolutionBlocks", "false");
 		// Formatting Edges
 		config.setProperty("edgeWidthNewCase", "15");
 		config.setProperty("edgeWidthOldCase", "3");
