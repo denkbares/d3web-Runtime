@@ -28,6 +28,10 @@ import java.util.Properties;
 
 public final class ConfigLoader {
 
+	public enum EdgeShowAnswers {
+		all, decisive, none
+	}
+
 	private static ConfigLoader instance;
 	private Properties config;
 
@@ -80,6 +84,7 @@ public final class ConfigLoader {
 		config.setProperty("showNextQuestions", "true");
 		config.setProperty("maxVisibleSolutions", "20");
 		config.setProperty("seperateQuestionSolutionBlocks", "false");
+		config.setProperty("cellColorNull", "#FFFFBB");
 		// Formatting Edges
 		config.setProperty("edgeWidthNewCase", "15");
 		config.setProperty("edgeWidthOldCase", "3");
@@ -87,7 +92,7 @@ public final class ConfigLoader {
 		config.setProperty("edgeColorNewCase", "#04B404");
 		config.setProperty("edgeColorOldCase", "#A4A4A4");
 		config.setProperty("edgeColorIncorrectCase", "#FF0000");
-		config.setProperty("onlyDecisiveAnswers", "false");
+		config.setProperty("edgeShowAnswers", EdgeShowAnswers.all.toString());
 	}
 
 	public String getProperty(String key) {

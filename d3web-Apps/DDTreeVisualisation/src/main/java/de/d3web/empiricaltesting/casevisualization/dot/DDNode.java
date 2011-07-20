@@ -23,6 +23,7 @@ package de.d3web.empiricaltesting.casevisualization.dot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -33,10 +34,6 @@ import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 
 public final class DDNode {
-
-	enum Content {
-		SOLUTIONS, QUESTIONS, BOTH
-	}
 
 	// variables to create the node / edge net
 	private static int idCounter = 0;
@@ -57,6 +54,10 @@ public final class DDNode {
 		this.expectedSolutions = Collections.unmodifiableList(expectedSolutions);
 		this.derivedSolutions = Collections.unmodifiableList(derivedSolutions);
 		this.testedBefore = testedBefore;
+	}
+
+	public static DDNode createNode(String caseName, List<Finding> findings, List<RatedSolution> expectedSolutions, List<RatedSolution> derivedSolutions, boolean testedBefore) {
+		return new DDNode(caseName, findings, expectedSolutions, derivedSolutions, testedBefore);
 	}
 
 	public static DDNode createCompleteNode(RatedTestCase testcase) {
@@ -86,6 +87,24 @@ public final class DDNode {
 				testcase.wasTestedBefore());
 	}
 
+	public static DDNode createFindingNode(String caseName, List<Finding> findings, boolean testedBefore) {
+		return new DDNode(
+				caseName,
+				findings,
+				Collections.<RatedSolution> emptyList(),
+				Collections.<RatedSolution> emptyList(),
+				testedBefore);
+	}
+
+	public static DDNode createCopyNode(DDNode originalNode) {
+		return new DDNode(
+				originalNode.caseName,
+				originalNode.findings,
+				originalNode.expectedSolutions,
+				originalNode.derivedSolutions,
+				originalNode.testedBefore);
+	}
+
 	public boolean hasPredecessors() {
 		return (!incoming.isEmpty());
 	}
@@ -105,12 +124,14 @@ public final class DDNode {
 	public List<Question> getDecisiveQuestions() {
 		List<Question> result = new LinkedList<Question>();
 		Set<Question> checked = new HashSet<Question>();
-		for (Finding finding : getFindings()) {
-			Question question = finding.getQuestion();
-			if (checked.contains(question)) continue;
-			checked.add(question);
-			if (DDBuilder.hasMultipleOutgoingValues(question, this)) {
-				result.add(question);
+		for (DDNode child : getChildNodes()) {
+			for (Finding finding : child.getFindings()) {
+				Question question = finding.getQuestion();
+				if (checked.contains(question)) continue;
+				checked.add(question);
+				if (DDBuilder.hasMultipleOutgoingValues(question, this)) {
+					result.add(question);
+				}
 			}
 		}
 		return result;
@@ -130,12 +151,14 @@ public final class DDNode {
 	public List<Finding> getNonDecisiveFindings() {
 		List<Finding> result = new LinkedList<Finding>();
 		Set<Question> checked = new HashSet<Question>();
-		for (Finding finding : getFindings()) {
-			Question question = finding.getQuestion();
-			if (checked.contains(question)) continue;
-			checked.add(question);
-			if (!DDBuilder.hasMultipleOutgoingValues(question, this)) {
-				result.add(finding);
+		for (DDNode child : getChildNodes()) {
+			for (Finding finding : child.getFindings()) {
+				Question question = finding.getQuestion();
+				if (checked.contains(question)) continue;
+				checked.add(question);
+				if (!DDBuilder.hasMultipleOutgoingValues(question, this)) {
+					result.add(finding);
+				}
 			}
 		}
 		return result;
@@ -145,6 +168,36 @@ public final class DDNode {
 		DDEdge edge = new DDEdge(this, targetNode);
 		edge.getEnd().incoming.add(edge);
 		this.outgoing.add(edge);
+	}
+
+	public void removeChild(DDNode childNode) {
+		Iterator<DDEdge> iterator = this.outgoing.iterator();
+		while (iterator.hasNext()) {
+			DDEdge edge = iterator.next();
+			if (edge.getEnd().equals(childNode)) {
+				// remove this outgoing edge
+				iterator.remove();
+				// also remove this edge from the incoming edges
+				// of the child node
+				edge.getEnd().incoming.remove(edge);
+			}
+		}
+	}
+
+	public Set<DDNode> getParentNodes() {
+		Set<DDNode> result = new HashSet<DDNode>();
+		for (DDEdge edge : this.incoming) {
+			result.add(edge.getBegin());
+		}
+		return result;
+	}
+
+	public Set<DDNode> getChildNodes() {
+		Set<DDNode> result = new HashSet<DDNode>();
+		for (DDEdge edge : this.outgoing) {
+			result.add(edge.getEnd());
+		}
+		return result;
 	}
 
 	public List<DDEdge> getOutgoing() {

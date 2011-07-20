@@ -42,8 +42,10 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.empiricaltesting.CaseUtils;
 import de.d3web.empiricaltesting.ConfigLoader;
+import de.d3web.empiricaltesting.ConfigLoader.EdgeShowAnswers;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -184,8 +186,8 @@ public final class DDBuilder implements CaseVisualizer {
 		createdEdges = new HashSet<String>();
 		Map<RatedTestCase, DDNode> nodeMap = new HashMap<RatedTestCase, DDNode>();
 
+		// first we generate the complete net
 		for (SequentialTestCase stc : cases) {
-
 			List<RatedTestCase> ratedCases = stc.getCases();
 			DDNode prec = null;
 
@@ -195,6 +197,59 @@ public final class DDBuilder implements CaseVisualizer {
 				prec = node;
 			}
 		}
+
+		// afterwards, we rework the tree for splitting nodes into sub-graphs
+		boolean seperateQuestionSolutionBlocks =
+				getConfig().getProperty("seperateQuestionSolutionBlocks").equals("true");
+		if (seperateQuestionSolutionBlocks) {
+			List<DDNode> allNodes = new ArrayList<DDNode>(this.nodes);
+			for (DDNode node : allNodes) {
+				// check for decisive questions
+				// and continue if we do not have such ones
+				List<Question> decisiveQuestions = node.getDecisiveQuestions();
+				if (decisiveQuestions.isEmpty()) continue;
+				// check for common question
+				// and continue if we do not have such ones
+				List<Finding> commonFindings = node.getNonDecisiveFindings();
+				if (commonFindings.isEmpty()) continue;
+				DDNode commonNode = DDNode.createFindingNode(
+						// must be null,
+						// because it is the common part of all children
+						null,
+						commonFindings,
+						node.isTestedBefore());
+				this.nodes.add(commonNode);
+				for (DDNode child : node.getChildNodes()) {
+					// only add decisive findings and solutions
+					List<Finding> decisiveFindings = new LinkedList<Finding>(child.getFindings());
+					decisiveFindings.removeAll(commonNode.getFindings());
+					DDNode specificNode = DDNode.createNode(
+							child.getCaseName(),
+							decisiveFindings,
+							child.getDerivedSolutions(),
+							child.getExpectedSolutions(),
+							child.isTestedBefore());
+					commonNode.addChild(specificNode);
+					replaceNode(child, commonNode, specificNode);
+					this.nodes.add(specificNode);
+				}
+			}
+		}
+	}
+
+	private void replaceNode(DDNode old, DDNode subgraphRoot, DDNode subgraphLeaf) {
+		// replace old item from all its parents
+		for (DDNode parent : old.getParentNodes()) {
+			parent.removeChild(old);
+			parent.addChild(subgraphRoot);
+		}
+		// replace old item in all its children
+		for (DDNode child : old.getChildNodes()) {
+			old.removeChild(child);
+			subgraphLeaf.addChild(child);
+		}
+		// and remove old node from our node list
+		this.nodes.remove(old);
 	}
 
 	private DDNode getDDNode(RatedTestCase ratedTestCase, Map<RatedTestCase, DDNode> nodeMap, DDNode precessor) {
@@ -204,6 +259,7 @@ public final class DDBuilder implements CaseVisualizer {
 					getConfig().getProperty("seperateQuestionSolutionBlocks").equals("true")
 							&& !ratedTestCase.getFindings().isEmpty()
 							&& (!ratedTestCase.getDerivedSolutions().isEmpty() || !ratedTestCase.getExpectedSolutions().isEmpty());
+
 			if (seperateQuestionSolutionBlocks) {
 				// we generate at least a block for the questions and the
 				// solutions
@@ -280,16 +336,18 @@ public final class DDBuilder implements CaseVisualizer {
 
 			b.append("\"" + name0 + "\" -> \"" + name1 + "\" [");
 			b.append("label = \"");
-			boolean onlyDecisiveAnswers =
-					Boolean.valueOf(getConfig().getProperty("onlyDecisiveAnswers"));
-			List<Finding> findings = edge.getEnd().getFindings();
-			for (Finding f : findings) {
-				if (onlyDecisiveAnswers
-						&& !hasMultipleOutgoingValues(f.getQuestion(), edge.getBegin())) {
-					continue;
+			EdgeShowAnswers showAnswers =
+					EdgeShowAnswers.valueOf(getConfig().getProperty("edgeShowAnswers"));
+			if (!showAnswers.equals(EdgeShowAnswers.none)) {
+				List<Finding> findings = edge.getEnd().getFindings();
+				for (Finding f : findings) {
+					if (showAnswers.equals(EdgeShowAnswers.decisive)
+							&& !hasMultipleOutgoingValues(f.getQuestion(), edge.getBegin())) {
+						continue;
+					}
+					b.append(renderEdgeLabel(f));
+					b.append("\\l");
 				}
-				b.append(renderEdgeLabel(f));
-				b.append("\\l");
 			}
 			b.append("\"");
 
@@ -563,10 +621,14 @@ public final class DDBuilder implements CaseVisualizer {
 			renderTableLine(result, color, false, encodeHTML(title));
 		}
 		for (Finding finding : findings) {
+			String valuePrompt = null;
+			if (UndefinedValue.isNotUndefinedValue(finding.getValue())) {
+				valuePrompt = encodeHTML(finding.getValuePrompt());
+			}
 			renderTableLine(
 					result, null, false,
 					encodeHTML(finding.getQuestionPrompt()),
-					encodeHTML(finding.getValuePrompt()));
+					valuePrompt);
 		}
 	}
 
@@ -614,8 +676,14 @@ public final class DDBuilder implements CaseVisualizer {
 			if (i == 0) {
 				result.append(" COLSPAN=\"").append(colspan).append("\"");
 			}
+			String text = cells[i];
+			if (text == null) {
+				String emptyColor = getConfig().getProperty("cellColorNull");
+				result.append(" BGCOLOR=\"").append(emptyColor).append("\"");
+				text = "";
+			}
 			result.append(">");
-			result.append(cells[i]);
+			result.append(text);
 			result.append("</TD>");
 		}
 		if (correctionColumn) {
