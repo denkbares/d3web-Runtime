@@ -49,7 +49,7 @@ public class RatedTestCase {
 	/**
 	 * List of expected findings (derived by a psmethod)
 	 */
-	private List<Finding> expectedFindings;
+	private final List<Finding> expectedFindings;
 
 	/**
 	 * This Rated Testcase's List of derived Solutions (derived from the
@@ -341,16 +341,11 @@ public class RatedTestCase {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((derivedSolutions == null) ? 0 : derivedSolutions.hashCode());
-		result = prime
-				* result
-				+ ((expectedSolutions == null) ? 0 : expectedSolutions
-						.hashCode());
-		result = prime * result
-				+ ((findings == null) ? 0 : findings.hashCode());
+		result = prime * result + ((expectedFindings == null) ? 0 : expectedFindings.hashCode());
+		result = prime * result + ((expectedSolutions == null) ? 0 : expectedSolutions.hashCode());
+		result = prime * result + ((findings == null) ? 0 : findings.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((timeStamp == null) ? 0 : timeStamp.hashCode());
 		return result;
 	}
 
@@ -358,12 +353,12 @@ public class RatedTestCase {
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
-		if (!(obj instanceof RatedTestCase)) return false;
+		if (getClass() != obj.getClass()) return false;
 		RatedTestCase other = (RatedTestCase) obj;
-		if (derivedSolutions == null) {
-			if (other.derivedSolutions != null) return false;
+		if (expectedFindings == null) {
+			if (other.expectedFindings != null) return false;
 		}
-		else if (!derivedSolutions.equals(other.derivedSolutions)) return false;
+		else if (!expectedFindings.equals(other.expectedFindings)) return false;
 		if (expectedSolutions == null) {
 			if (other.expectedSolutions != null) return false;
 		}
@@ -376,6 +371,10 @@ public class RatedTestCase {
 			if (other.name != null) return false;
 		}
 		else if (!name.equals(other.name)) return false;
+		if (timeStamp == null) {
+			if (other.timeStamp != null) return false;
+		}
+		else if (!timeStamp.equals(other.timeStamp)) return false;
 		return true;
 	}
 
