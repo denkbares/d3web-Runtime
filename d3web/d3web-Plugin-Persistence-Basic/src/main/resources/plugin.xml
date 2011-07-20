@@ -472,7 +472,7 @@
 		<parameter id="name" value="MMInfoPersistenceHandler" />
 		<parameter id="description" value="KnowledgeWriter for MMInfos" />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
+		<parameter id="priority" value="3" />
 		<parameter id="filename" value="kb/mminfo.xml" />
 	</extension>
 	
@@ -483,7 +483,7 @@
 		<parameter id="name" value="MMInfoPersistenceHandler" />
 		<parameter id="description" value="KnowledgeReader for MMInfos." />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
+		<parameter id="priority" value="3" />
 		<parameter id="filename" value="kb/mminfo.xml" />
 	</extension>
 	
