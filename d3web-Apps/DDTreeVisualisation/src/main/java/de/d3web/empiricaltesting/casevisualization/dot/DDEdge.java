@@ -20,22 +20,14 @@
 
 package de.d3web.empiricaltesting.casevisualization.dot;
 
-import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.Lifecycle;
-
 public final class DDEdge {
 
 	private final DDNode begin;
 	private final DDNode end;
-	private final Lifecycle sessiontype;
-
-	public DDEdge(DDNode begin, DDNode end, Lifecycle sessiontype) {
-		this.begin = begin;
-		this.end = end;
-		this.sessiontype = sessiontype;
-	}
 
 	public DDEdge(DDNode begin, DDNode end) {
-		this(begin, end, Lifecycle.new_case);
+		this.begin = begin;
+		this.end = end;
 	}
 
 	@Override
@@ -72,8 +64,8 @@ public final class DDEdge {
 		return end;
 	}
 
-	public Lifecycle getCaseType() {
-		return sessiontype;
+	public boolean isTestedBefore() {
+		return begin.isTestedBefore();
 	}
 
 }

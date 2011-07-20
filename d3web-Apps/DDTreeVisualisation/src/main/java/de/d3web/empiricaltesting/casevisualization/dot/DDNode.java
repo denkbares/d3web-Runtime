@@ -22,11 +22,15 @@ package de.d3web.empiricaltesting.casevisualization.dot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.empiricaltesting.Finding;
+import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
-import de.d3web.empiricaltesting.casevisualization.dot.DDBuilder.Lifecycle;
 
 public final class DDNode {
 
@@ -34,20 +38,52 @@ public final class DDNode {
 		SOLUTIONS, QUESTIONS, BOTH
 	}
 
+	// variables to create the node / edge net
 	private static int idCounter = 0;
 	private final String id = "node" + (idCounter++);
-
-	private final RatedTestCase testCase;
 	private final List<DDEdge> outgoing = new ArrayList<DDEdge>();
 	private final List<DDEdge> incoming = new ArrayList<DDEdge>();
 
-	private final Lifecycle sessionType;
-	private final Content content;
+	// variables to describe the content of this node
+	private final String caseName;
+	private final boolean testedBefore;
+	private final List<Finding> findings;
+	private final List<RatedSolution> expectedSolutions;
+	private final List<RatedSolution> derivedSolutions;
 
-	public DDNode(RatedTestCase testCase, Content content, Lifecycle sessionType) {
-		this.testCase = testCase;
-		this.content = content;
-		this.sessionType = sessionType;
+	private DDNode(String caseName, List<Finding> findings, List<RatedSolution> expectedSolutions, List<RatedSolution> derivedSolutions, boolean testedBefore) {
+		this.caseName = caseName;
+		this.findings = Collections.unmodifiableList(findings);
+		this.expectedSolutions = Collections.unmodifiableList(expectedSolutions);
+		this.derivedSolutions = Collections.unmodifiableList(derivedSolutions);
+		this.testedBefore = testedBefore;
+	}
+
+	public static DDNode createCompleteNode(RatedTestCase testcase) {
+		return new DDNode(
+				testcase.getName(),
+				testcase.getFindings(),
+				testcase.getExpectedSolutions(),
+				testcase.getDerivedSolutions(),
+				testcase.wasTestedBefore());
+	}
+
+	public static DDNode createSolutionNode(RatedTestCase testcase) {
+		return new DDNode(
+				testcase.getName(),
+				Collections.<Finding> emptyList(),
+				testcase.getExpectedSolutions(),
+				testcase.getDerivedSolutions(),
+				testcase.wasTestedBefore());
+	}
+
+	public static DDNode createFindingNode(RatedTestCase testcase) {
+		return new DDNode(
+				testcase.getName(),
+				testcase.getFindings(),
+				Collections.<RatedSolution> emptyList(),
+				Collections.<RatedSolution> emptyList(),
+				testcase.wasTestedBefore());
 	}
 
 	public boolean hasPredecessors() {
@@ -55,53 +91,64 @@ public final class DDNode {
 	}
 
 	public List<Finding> getFindings() {
-		return testCase.getFindings();
+		return this.findings;
+	}
+
+	/**
+	 * Returns the set of questions of the child nodes, that are decisive. A
+	 * decisive question is a question that has multiple occurrences with
+	 * different values in this {@link DDNode}'s child nodes.
+	 * 
+	 * @created 19.07.2011
+	 * @return the list of decisive questions
+	 */
+	public List<Question> getDecisiveQuestions() {
+		List<Question> result = new LinkedList<Question>();
+		Set<Question> checked = new HashSet<Question>();
+		for (Finding finding : getFindings()) {
+			Question question = finding.getQuestion();
+			if (checked.contains(question)) continue;
+			checked.add(question);
+			if (DDBuilder.hasMultipleOutgoingValues(question, this)) {
+				result.add(question);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the set of findings of the child nodes, that are non-decisive. A
+	 * non-decisive finding is a finding that do not has multiple occurrences
+	 * with different values in this {@link DDNode}'s child nodes.
+	 * <p>
+	 * If there are multiple findings with same values for one questions, only
+	 * one of these findings will be returned.
+	 * 
+	 * @created 19.07.2011
+	 * @return the list of non-decisive findings
+	 */
+	public List<Finding> getNonDecisiveFindings() {
+		List<Finding> result = new LinkedList<Finding>();
+		Set<Question> checked = new HashSet<Question>();
+		for (Finding finding : getFindings()) {
+			Question question = finding.getQuestion();
+			if (checked.contains(question)) continue;
+			checked.add(question);
+			if (!DDBuilder.hasMultipleOutgoingValues(question, this)) {
+				result.add(finding);
+			}
+		}
+		return result;
 	}
 
 	public void addChild(DDNode targetNode) {
-		DDEdge edge = new DDEdge(this, targetNode, sessionType);
+		DDEdge edge = new DDEdge(this, targetNode);
 		edge.getEnd().incoming.add(edge);
 		this.outgoing.add(edge);
 	}
 
-	public RatedTestCase getTestCase() {
-		return testCase;
-	}
-
 	public List<DDEdge> getOutgoing() {
 		return Collections.unmodifiableList(outgoing);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((outgoing == null) ? 0 : outgoing.hashCode());
-		result = prime * result
-				+ ((testCase == null) ? 0 : testCase.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (!(obj instanceof DDNode)) return false;
-		DDNode other = (DDNode) obj;
-		if (outgoing == null) {
-			if (other.outgoing != null) return false;
-		}
-		else if (!outgoing.equals(other.outgoing)) return false;
-		if (testCase == null) {
-			if (other.testCase != null) return false;
-		}
-		else if (!testCase.equals(other.testCase)) return false;
-		return true;
-	}
-
-	public Lifecycle getTheCaseType() {
-		return sessionType;
 	}
 
 	public List<DDEdge> getIncoming() {
@@ -113,11 +160,41 @@ public final class DDNode {
 	}
 
 	public boolean isQuestionNode() {
-		return !content.equals(Content.SOLUTIONS);
+		return !this.findings.isEmpty();
 	}
 
 	public boolean isSolutionNode() {
-		return !content.equals(Content.QUESTIONS);
+		return !this.expectedSolutions.isEmpty() || !this.derivedSolutions.isEmpty();
+	}
+
+	@Override
+	public int hashCode() {
+		return this.id.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		DDNode other = (DDNode) obj;
+		return id.equals(other.id);
+	}
+
+	public String getCaseName() {
+		return caseName;
+	}
+
+	public List<RatedSolution> getExpectedSolutions() {
+		return expectedSolutions;
+	}
+
+	public List<RatedSolution> getDerivedSolutions() {
+		return derivedSolutions;
+	}
+
+	public boolean isTestedBefore() {
+		return testedBefore;
 	}
 
 }

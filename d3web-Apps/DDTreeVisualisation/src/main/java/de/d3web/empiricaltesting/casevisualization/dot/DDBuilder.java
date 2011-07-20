@@ -40,7 +40,6 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.empiricaltesting.CaseUtils;
@@ -54,7 +53,6 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.StateRating;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
-import de.d3web.empiricaltesting.casevisualization.dot.DDNode.Content;
 import de.d3web.scoring.HeuristicRating;
 
 public final class DDBuilder implements CaseVisualizer {
@@ -72,10 +70,6 @@ public final class DDBuilder implements CaseVisualizer {
 
 	private Set<String> createdEdges;
 	private List<DDNode> nodes = new LinkedList<DDNode>();
-
-	public enum Lifecycle {
-		old_case, new_case, incorrect
-	};
 
 	public DDBuilder() {
 	}
@@ -206,9 +200,6 @@ public final class DDBuilder implements CaseVisualizer {
 	private DDNode getDDNode(RatedTestCase ratedTestCase, Map<RatedTestCase, DDNode> nodeMap, DDNode precessor) {
 		DDNode node = nodeMap.get(ratedTestCase);
 		if (node == null) {
-			Lifecycle lifecycle = ratedTestCase.wasTestedBefore()
-					? Lifecycle.old_case
-					: Lifecycle.new_case;
 			boolean seperateQuestionSolutionBlocks =
 					getConfig().getProperty("seperateQuestionSolutionBlocks").equals("true")
 							&& !ratedTestCase.getFindings().isEmpty()
@@ -220,8 +211,8 @@ public final class DDBuilder implements CaseVisualizer {
 				// questions,
 				// we create two question nodes
 				// TODO: implement split of decisive and non-decisive questions
-				DDNode questionNode = new DDNode(ratedTestCase, Content.QUESTIONS, lifecycle);
-				DDNode solutionNode = new DDNode(ratedTestCase, Content.SOLUTIONS, lifecycle);
+				DDNode questionNode = DDNode.createFindingNode(ratedTestCase);
+				DDNode solutionNode = DDNode.createSolutionNode(ratedTestCase);
 				questionNode.addChild(solutionNode);
 				nodes.add(questionNode);
 				nodes.add(solutionNode);
@@ -232,7 +223,7 @@ public final class DDBuilder implements CaseVisualizer {
 				node = solutionNode;
 			}
 			else {
-				node = new DDNode(ratedTestCase, Content.BOTH, lifecycle);
+				node = DDNode.createCompleteNode(ratedTestCase);
 				nodes.add(node);
 				nodeMap.put(ratedTestCase, node);
 				if (precessor != null) {
@@ -305,33 +296,17 @@ public final class DDBuilder implements CaseVisualizer {
 			boolean bolOldCasesLikeNewCases =
 					getConfig().getProperty("renderOldCasesLikeNewCases").equals("true");
 
-			switch (edge.getCaseType()) {
-			case new_case:
+			if (edge.isTestedBefore() && !bolOldCasesLikeNewCases) {
+				b.append(" color = \"" +
+							getConfig().getProperty("edgeColorOldCase") + "\"");
+				b.append(" penwidth = " +
+							getConfig().getProperty("edgeWidthOldCase"));
+			}
+			else {
 				b.append(" color = \"" +
 						getConfig().getProperty("edgeColorNewCase") + "\"");
 				b.append(" penwidth = " +
 						getConfig().getProperty("edgeWidthNewCase"));
-				break;
-			case old_case:
-				if (bolOldCasesLikeNewCases) {
-					b.append(" color = \"" +
-							getConfig().getProperty("edgeColorNewCase") + "\"");
-					b.append(" penwidth = " +
-							getConfig().getProperty("edgeWidthNewCase"));
-				}
-				else {
-					b.append(" color = \"" +
-							getConfig().getProperty("edgeColorOldCase") + "\"");
-					b.append(" penwidth = " +
-							getConfig().getProperty("edgeWidthOldCase"));
-				}
-				break;
-			case incorrect:
-				b.append(" color = \"" +
-						getConfig().getProperty("edgeColorIncorrectCase") + "\"");
-				b.append(" penwidth = " +
-						getConfig().getProperty("edgeWidthIncorrectCase"));
-				break;
 			}
 
 			b.append("]\n");
@@ -347,7 +322,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @param outgoingNode the node where the different paths starts
 	 * @return if there are multiple different values for this question
 	 */
-	private boolean hasMultipleOutgoingValues(Question question, DDNode sourceNode) {
+	static boolean hasMultipleOutgoingValues(Question question, DDNode sourceNode) {
 		Set<Value> values = new HashSet<Value>();
 		List<DDEdge> outgoing = sourceNode.getOutgoing();
 		for (DDEdge edge : outgoing) {
@@ -435,7 +410,7 @@ public final class DDBuilder implements CaseVisualizer {
 	public void renderNodeCaseNameRow(StringBuffer result, DDNode node) {
 		if (Boolean.valueOf(config.getProperty("showTestCaseName"))) {
 			String color = config.getProperty("testCaseNameColor");
-			renderTableLine(result, color, false, node.getTestCase().getName());
+			renderTableLine(result, color, false, node.getCaseName());
 		}
 	}
 
@@ -443,10 +418,10 @@ public final class DDBuilder implements CaseVisualizer {
 
 		// prepare list of all solutions
 		List<RatedSolution> allRatedSolutions = new LinkedList<RatedSolution>();
-		allRatedSolutions.addAll(node.getTestCase().getExpectedSolutions());
-		allRatedSolutions.addAll(node.getTestCase().getDerivedSolutions());
+		allRatedSolutions.addAll(node.getExpectedSolutions());
+		allRatedSolutions.addAll(node.getDerivedSolutions());
 
-		if (node.getTestCase().getFindings().isEmpty() && allRatedSolutions.isEmpty()) {
+		if (node.getFindings().isEmpty() && allRatedSolutions.isEmpty()) {
 			renderEmptyNode(result, node);
 			return;
 		}
@@ -456,41 +431,18 @@ public final class DDBuilder implements CaseVisualizer {
 
 		boolean correctionColumn = false;
 
-		String strSolutionColorCorrect =
-				getConfig().getProperty("nodeColorNewCase");
-
-		String strSolutionColorSuggested =
-				getConfig().getProperty("solutionColorSuggested");
-		String strSolutionColorEstablished =
-				getConfig().getProperty("solutionColorEstablished");
-
-		String nodeColor = "";
+		String nodeColor;
 		boolean oldCasesLikeNewCases =
 				Boolean.valueOf(getConfig().getProperty("renderOldCasesLikeNewCases"));
 
 		boolean symbolicStates =
 				Boolean.valueOf(getConfig().getProperty("compareOnlySymbolicStates"));
 
-		switch (node.getTheCaseType()) {
-		case new_case:
+		if (node.isTestedBefore() && !oldCasesLikeNewCases) {
+			nodeColor = getConfig().getProperty("nodeColorOldCase");
+		}
+		else {
 			nodeColor = getConfig().getProperty("nodeColorNewCase");
-			strSolutionColorSuggested = nodeColor;
-			strSolutionColorEstablished = nodeColor;
-			break;
-		case old_case:
-			if (oldCasesLikeNewCases) nodeColor = getConfig().getProperty("nodeColorNewCase");
-			else nodeColor = getConfig().getProperty("nodeColorOldCase");
-
-			strSolutionColorCorrect = nodeColor;
-			strSolutionColorSuggested = nodeColor;
-			strSolutionColorEstablished = nodeColor;
-			break;
-		case incorrect:
-			nodeColor = getConfig().getProperty("nodeColorIncorrectCase");
-			if (Boolean.valueOf(getConfig().getProperty("printCorrectionColumn"))) {
-				correctionColumn = true;
-			}
-			break;
 		}
 
 		result.append("   <TABLE BGCOLOR=\"").append(nodeColor).append("\">\n");
@@ -505,9 +457,9 @@ public final class DDBuilder implements CaseVisualizer {
 		if (node.isSolutionNode()) {
 			// Put all RatedSolutions in Maps
 			Map<Solution, RatedSolution> expSolutions =
-					getSolutionsInHashMap(node.getTestCase().getExpectedSolutions());
+					getSolutionsInHashMap(node.getExpectedSolutions());
 			Map<Solution, RatedSolution> derSolutions =
-					getSolutionsInHashMap(node.getTestCase().getDerivedSolutions());
+					getSolutionsInHashMap(node.getDerivedSolutions());
 
 			// Print Solutions Header
 			if (!allRatedSolutions.isEmpty()) {
@@ -534,16 +486,12 @@ public final class DDBuilder implements CaseVisualizer {
 
 					if (expected != null && derived != null && expected.equals(derived)) {
 						renderCorrectSolution(result, node,
-								derived, strSolutionColorCorrect,
+								derived, nodeColor,
 								correctionColumn, symbolicStates);
 					}
 					else {
-						String expColor = getColor(expected, strSolutionColorSuggested,
-								strSolutionColorEstablished, nodeColor);
-						String derColor = getColor(derived, strSolutionColorSuggested,
-								strSolutionColorEstablished, nodeColor);
 						renderIncorrectSolutions(result, node, expected, derived,
-								expColor, derColor, correctionColumn, symbolicStates);
+								nodeColor, nodeColor, correctionColumn, symbolicStates);
 					}
 				}
 			}
@@ -592,7 +540,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @param node the node to render its findings as answers
 	 */
 	public void renderNodeAnswers(StringBuffer result, DDNode node) {
-		List<Finding> findings = node.getTestCase().getFindings();
+		List<Finding> findings = node.getFindings();
 		if (findings.isEmpty()) return;
 
 		Boolean showPrompt = Boolean.valueOf(getConfig().getProperty("showQuestionnairePrompt"));
@@ -617,8 +565,8 @@ public final class DDBuilder implements CaseVisualizer {
 		for (Finding finding : findings) {
 			renderTableLine(
 					result, null, false,
-					encodeHTML(finding.getQuestionPrompt()) + " = "
-							+ encodeHTML(finding.getValuePrompt()));
+					encodeHTML(finding.getQuestionPrompt()),
+					encodeHTML(finding.getValuePrompt()));
 		}
 	}
 
@@ -663,7 +611,7 @@ public final class DDBuilder implements CaseVisualizer {
 		result.append("    <TR>");
 		for (int i = 0; i < cells.length; i++) {
 			result.append("<TD").append(bgColor);
-			if (i == cells.length - 1) {
+			if (i == 0) {
 				result.append(" COLSPAN=\"").append(colspan).append("\"");
 			}
 			result.append(">");
@@ -752,7 +700,7 @@ public final class DDBuilder implements CaseVisualizer {
 		int colspan = correctionColumn ? 1 : 2;
 
 		result.append("    <TR>");
-		result.append("<TD>");
+		result.append("<TD COLSPAN=\"").append(colspan).append("\">");
 		result.append(encodeHTML(solName));
 		result.append("</TD>");
 		result.append("<TD ALIGN=\"CENTER\" BGCOLOR=\"");
@@ -762,7 +710,7 @@ public final class DDBuilder implements CaseVisualizer {
 		result.append("</TD>");
 		result.append("<TD ALIGN=\"CENTER\" BGCOLOR=\"");
 		result.append(derivedColor);
-		result.append("\" COLSPAN=\"").append(colspan).append("\">");
+		result.append("\">");
 		result.append(derived == null ? "N/A" : renderSolutionState(derived, symbolicStates));
 		result.append("</TD>");
 		if (correctionColumn) {
@@ -842,37 +790,6 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Returns the backgroundcolor which is appropriate for the currently
-	 * RatedSolution.
-	 * 
-	 * @param rs RatedSolution which's backgroundcolor we are looking for.
-	 * 
-	 * @param suggested String containing coloration information for solutions
-	 *        which are suggested
-	 * @param established String containing coloration information for solutions
-	 *        which are established
-	 * 
-	 * @return String representing the color
-	 */
-	private String getColor(RatedSolution rs, String suggested,
-			String established, String nodeColor) {
-
-		if (rs == null) {
-			return nodeColor;
-		}
-
-		Rating score = rs.getRating();
-		de.d3web.core.knowledge.terminology.Rating state = getState(score);
-
-		if (state.equals(new de.d3web.core.knowledge.terminology.Rating(State.ESTABLISHED))) {
-			return established;
-		}
-		else {
-			return suggested;
-		}
 	}
 
 	public void setConfig(ConfigLoader config) {
