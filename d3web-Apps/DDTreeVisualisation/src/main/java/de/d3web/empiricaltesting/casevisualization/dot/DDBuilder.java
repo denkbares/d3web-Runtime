@@ -202,37 +202,71 @@ public final class DDBuilder implements CaseVisualizer {
 		boolean seperateQuestionSolutionBlocks =
 				getConfig().getProperty("seperateQuestionSolutionBlocks").equals("true");
 		if (seperateQuestionSolutionBlocks) {
-			List<DDNode> allNodes = new ArrayList<DDNode>(this.nodes);
-			for (DDNode node : allNodes) {
-				// check for decisive questions
-				// and continue if we do not have such ones
-				List<Question> decisiveQuestions = node.getDecisiveQuestions();
-				if (decisiveQuestions.isEmpty()) continue;
-				// check for common question
-				// and continue if we do not have such ones
-				List<Finding> commonFindings = node.getNonDecisiveFindings();
-				if (commonFindings.isEmpty()) continue;
-				DDNode commonNode = DDNode.createFindingNode(
-						// must be null,
-						// because it is the common part of all children
-						null,
-						commonFindings,
-						node.isTestedBefore());
-				this.nodes.add(commonNode);
-				for (DDNode child : node.getChildNodes()) {
-					// only add decisive findings and solutions
-					List<Finding> decisiveFindings = new LinkedList<Finding>(child.getFindings());
-					decisiveFindings.removeAll(commonNode.getFindings());
-					DDNode specificNode = DDNode.createNode(
-							child.getCaseName(),
-							decisiveFindings,
-							child.getDerivedSolutions(),
-							child.getExpectedSolutions(),
-							child.isTestedBefore());
-					commonNode.addChild(specificNode);
-					replaceNode(child, commonNode, specificNode);
-					this.nodes.add(specificNode);
-				}
+			splitMixedFindingSolutionNodes();
+			splitMixedDecisiveNodes();
+		}
+	}
+
+	/**
+	 * Splits all nodes that are mixing up findings and solutions into two
+	 * connected nodes
+	 * 
+	 * @created 20.07.2011
+	 */
+	private void splitMixedFindingSolutionNodes() {
+		List<DDNode> allNodes = new ArrayList<DDNode>(this.nodes);
+		for (DDNode node : allNodes) {
+			if (node.getFindings().isEmpty()) continue;
+			if (node.getDerivedSolutions().isEmpty() && node.getExpectedSolutions().isEmpty()) continue;
+
+			DDNode questionNode = DDNode.createFindingNode(
+					node.getCaseName(), node.getFindings(), node.isTestedBefore());
+			DDNode solutionNode = DDNode.createSolutionNode(
+					node.getCaseName(),
+					node.getExpectedSolutions(), node.getDerivedSolutions(), node.isTestedBefore());
+			questionNode.addChild(solutionNode);
+			replaceNode(node, questionNode, solutionNode);
+			nodes.add(questionNode);
+			nodes.add(solutionNode);
+		}
+	}
+
+	/**
+	 * Splits all nodes that are mixing up decisive and non-decisive findings.
+	 * 
+	 * @created 20.07.2011
+	 */
+	private void splitMixedDecisiveNodes() {
+		List<DDNode> allNodes = new ArrayList<DDNode>(this.nodes);
+		for (DDNode node : allNodes) {
+			// check for decisive questions
+			// and continue if we do not have such ones
+			List<Question> decisiveQuestions = node.getDecisiveQuestions();
+			if (decisiveQuestions.isEmpty()) continue;
+			// check for common question
+			// and continue if we do not have such ones
+			List<Finding> commonFindings = node.getNonDecisiveFindings();
+			if (commonFindings.isEmpty()) continue;
+			DDNode commonNode = DDNode.createFindingNode(
+					// must be null,
+					// because it is the common part of all children
+					null,
+					commonFindings,
+					node.isTestedBefore());
+			this.nodes.add(commonNode);
+			for (DDNode child : node.getChildNodes()) {
+				// only add decisive findings and solutions
+				List<Finding> decisiveFindings = new LinkedList<Finding>(child.getFindings());
+				decisiveFindings.removeAll(commonNode.getFindings());
+				DDNode specificNode = DDNode.createNode(
+						child.getCaseName(),
+						decisiveFindings,
+						child.getDerivedSolutions(),
+						child.getExpectedSolutions(),
+						child.isTestedBefore());
+				commonNode.addChild(specificNode);
+				replaceNode(child, commonNode, specificNode);
+				this.nodes.add(specificNode);
 			}
 		}
 	}
@@ -255,36 +289,11 @@ public final class DDBuilder implements CaseVisualizer {
 	private DDNode getDDNode(RatedTestCase ratedTestCase, Map<RatedTestCase, DDNode> nodeMap, DDNode precessor) {
 		DDNode node = nodeMap.get(ratedTestCase);
 		if (node == null) {
-			boolean seperateQuestionSolutionBlocks =
-					getConfig().getProperty("seperateQuestionSolutionBlocks").equals("true")
-							&& !ratedTestCase.getFindings().isEmpty()
-							&& (!ratedTestCase.getDerivedSolutions().isEmpty() || !ratedTestCase.getExpectedSolutions().isEmpty());
-
-			if (seperateQuestionSolutionBlocks) {
-				// we generate at least a block for the questions and the
-				// solutions
-				// if the questions are a mixture of decisive and non-decisive
-				// questions,
-				// we create two question nodes
-				// TODO: implement split of decisive and non-decisive questions
-				DDNode questionNode = DDNode.createFindingNode(ratedTestCase);
-				DDNode solutionNode = DDNode.createSolutionNode(ratedTestCase);
-				questionNode.addChild(solutionNode);
-				nodes.add(questionNode);
-				nodes.add(solutionNode);
-				nodeMap.put(ratedTestCase, solutionNode);
-				if (precessor != null) {
-					precessor.addChild(questionNode);
-				}
-				node = solutionNode;
-			}
-			else {
-				node = DDNode.createCompleteNode(ratedTestCase);
-				nodes.add(node);
-				nodeMap.put(ratedTestCase, node);
-				if (precessor != null) {
-					precessor.addChild(node);
-				}
+			node = DDNode.createCompleteNode(ratedTestCase);
+			nodes.add(node);
+			nodeMap.put(ratedTestCase, node);
+			if (precessor != null) {
+				precessor.addChild(node);
 			}
 		}
 		return node;
@@ -450,7 +459,9 @@ public final class DDBuilder implements CaseVisualizer {
 		result.append("   <TABLE>\n");
 		String nodeColor = getConfig().getProperty("nodeColorIncorrectCase");
 		renderNodeCaseNameRow(result, node);
-		renderTableLine(result, nodeColor, false, "truncated");
+		renderTableLine(
+				result, nodeColor, false,
+				(node.getCaseNote() == null) ? "???" : node.getCaseNote());
 		result.append("   </TABLE>>\n");
 		result.append("];\n");
 	}

@@ -77,6 +77,7 @@ public final class TestPersistence {
 
 	// The Parameters
 	private static final String NAME = "Name";
+	private static final String NOTE = "Note";
 	private static final String TIMESTAMP = "time";
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss.SS");
@@ -280,6 +281,9 @@ public final class TestPersistence {
 
 		xmlsw.writeStartElement(RATED_TEST_CASE);
 		xmlsw.writeAttribute(NAME, rtc.getName());
+		if (rtc.getNote() != null) {
+			xmlsw.writeAttribute(NOTE, rtc.getNote());
+		}
 
 		if (rtc.getTimeStamp() != null) {
 			xmlsw.writeAttribute(TIMESTAMP, DATE_FORMAT.format(rtc.getTimeStamp()));
@@ -390,6 +394,7 @@ public final class TestPersistence {
 		else if (elName.equals(RATED_TEST_CASE)) {
 			rtc = new RatedTestCase();
 			rtc.setName(sr.getAttributeValue(null, NAME));
+			rtc.setNote(sr.getAttributeValue(null, NOTE));
 			String time = sr.getAttributeValue(null, TIMESTAMP);
 			if (time != null) {
 				try {

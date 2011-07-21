@@ -26,18 +26,21 @@ public interface Rating extends Comparable<Rating> {
 
 	public void setRating(Object theRating);
 
+	@Override
 	public int hashCode();
 
+	@Override
 	public boolean equals(Object o);
 
+	@Override
 	public String toString();
 
 	/**
 	 * Checks whether the given rating has a diagnostic relecance for the
 	 * problem-solving process. E.g., UNCLEAR/EXCLUDED is not relevant
 	 * 
-	 * @return true, when rating is something like established, suggested or
-	 *         excluded (or corresponding numerical notions)
+	 * @return true, when rating is something like established or suggested (or
+	 *         corresponding numerical notions)
 	 */
 	public boolean isProblemSolvingRelevant();
 }

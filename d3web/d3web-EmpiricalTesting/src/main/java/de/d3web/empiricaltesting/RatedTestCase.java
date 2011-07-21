@@ -36,6 +36,12 @@ public class RatedTestCase {
 	private String name = "";
 
 	/**
+	 * A note related to this Rated Test Case. The note may be used if some
+	 * additional description is required for that case.
+	 */
+	private String note = null;
+
+	/**
 	 * This Rated Testcase's List of Findings
 	 */
 	private List<Finding> findings;
@@ -406,5 +412,13 @@ public class RatedTestCase {
 
 	public Collection<Finding> getExpectedFindings() {
 		return Collections.unmodifiableCollection(expectedFindings);
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public String getNote() {
+		return note;
 	}
 }

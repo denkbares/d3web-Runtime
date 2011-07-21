@@ -43,13 +43,15 @@ public final class DDNode {
 
 	// variables to describe the content of this node
 	private final String caseName;
+	private final String caseNote;
 	private final boolean testedBefore;
 	private final List<Finding> findings;
 	private final List<RatedSolution> expectedSolutions;
 	private final List<RatedSolution> derivedSolutions;
 
-	private DDNode(String caseName, List<Finding> findings, List<RatedSolution> expectedSolutions, List<RatedSolution> derivedSolutions, boolean testedBefore) {
+	private DDNode(String caseName, String caseNote, List<Finding> findings, List<RatedSolution> expectedSolutions, List<RatedSolution> derivedSolutions, boolean testedBefore) {
 		this.caseName = caseName;
+		this.caseNote = caseNote;
 		this.findings = Collections.unmodifiableList(findings);
 		this.expectedSolutions = Collections.unmodifiableList(expectedSolutions);
 		this.derivedSolutions = Collections.unmodifiableList(derivedSolutions);
@@ -57,12 +59,14 @@ public final class DDNode {
 	}
 
 	public static DDNode createNode(String caseName, List<Finding> findings, List<RatedSolution> expectedSolutions, List<RatedSolution> derivedSolutions, boolean testedBefore) {
-		return new DDNode(caseName, findings, expectedSolutions, derivedSolutions, testedBefore);
+		return new DDNode(caseName, null, findings, expectedSolutions, derivedSolutions,
+				testedBefore);
 	}
 
 	public static DDNode createCompleteNode(RatedTestCase testcase) {
 		return new DDNode(
 				testcase.getName(),
+				testcase.getNote(),
 				testcase.getFindings(),
 				testcase.getExpectedSolutions(),
 				testcase.getDerivedSolutions(),
@@ -70,17 +74,27 @@ public final class DDNode {
 	}
 
 	public static DDNode createSolutionNode(RatedTestCase testcase) {
-		return new DDNode(
+		return createSolutionNode(
 				testcase.getName(),
-				Collections.<Finding> emptyList(),
 				testcase.getExpectedSolutions(),
 				testcase.getDerivedSolutions(),
 				testcase.wasTestedBefore());
 	}
 
+	public static DDNode createSolutionNode(String caseName, List<RatedSolution> expectedSolutions, List<RatedSolution> derivedSolutions, boolean testedBefore) {
+		return new DDNode(
+				caseName,
+				null,
+				Collections.<Finding> emptyList(),
+				expectedSolutions,
+				derivedSolutions,
+				testedBefore);
+	}
+
 	public static DDNode createFindingNode(RatedTestCase testcase) {
 		return new DDNode(
 				testcase.getName(),
+				testcase.getNote(),
 				testcase.getFindings(),
 				Collections.<RatedSolution> emptyList(),
 				Collections.<RatedSolution> emptyList(),
@@ -90,6 +104,7 @@ public final class DDNode {
 	public static DDNode createFindingNode(String caseName, List<Finding> findings, boolean testedBefore) {
 		return new DDNode(
 				caseName,
+				null,
 				findings,
 				Collections.<RatedSolution> emptyList(),
 				Collections.<RatedSolution> emptyList(),
@@ -99,6 +114,7 @@ public final class DDNode {
 	public static DDNode createCopyNode(DDNode originalNode) {
 		return new DDNode(
 				originalNode.caseName,
+				originalNode.getCaseNote(),
 				originalNode.findings,
 				originalNode.expectedSolutions,
 				originalNode.derivedSolutions,
@@ -236,6 +252,10 @@ public final class DDNode {
 
 	public String getCaseName() {
 		return caseName;
+	}
+
+	public String getCaseNote() {
+		return caseNote;
 	}
 
 	public List<RatedSolution> getExpectedSolutions() {

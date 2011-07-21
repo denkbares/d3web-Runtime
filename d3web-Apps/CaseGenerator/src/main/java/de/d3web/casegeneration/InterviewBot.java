@@ -96,6 +96,9 @@ public final class InterviewBot {
 	private KnowledgeBase knowledge;
 	// the method of how to determine the rating of a solution
 	private RatingStrategy ratingStrategy;
+	// truncate a branch if the number of positive solutions
+	// increase during the interview
+	private boolean truncateIncreasingSolutions;
 
 	// the strategy to select questions and possible values
 	private BotStrategy strategy;
@@ -135,13 +138,13 @@ public final class InterviewBot {
 
 			// do noting more if we reached the maximum number of cases
 			if (maxCases > 0 && casesCounter >= maxCases) {
-				storeError(thisCase, "truncated (max cases reached)");
+				storeError(thisCase, "max cases reached");
 				return;
 			}
 
 			// do noting more if user has canceled
 			if (isCanceled) {
-				storeError(thisCase, "truncated (cancel)");
+				storeError(thisCase, "user aborted");
 				return;
 			}
 
@@ -157,8 +160,8 @@ public final class InterviewBot {
 			// we sometimes will receive an empty fact set
 			if (factSets == null || factSets.length == 0) {
 				storeError(thisCase,
-						"truncated (no fact sets for "
-								+ Arrays.asList(interviewItems) + ")");
+						"no fact sets for "
+								+ Arrays.asList(interviewItems));
 				return;
 			}
 
@@ -177,19 +180,65 @@ public final class InterviewBot {
 								(factSets.length == 1) ? thisSession :
 										createCase(thisCase);
 				factSet.apply(nextSession);
-				SequentialTestCase nextSequentialCase = packNewSequence(
-							thisCase,
-							toFindings(factSet),
-							toRatedSolutions(nextSession));
 
-				// step down in recursion with the next suitable
-				// question to ask
-				traverse(nextSession, nextSequentialCase, depth + 1,
-							currentPercent, currentPercent + deltaPercent);
+				// we create the next sequence step now
+				List<RatedSolution> ratedSolutions = toRatedSolutions(nextSession);
+				SequentialTestCase nextSequentialCase = packNewSequence(
+								thisCase,
+								toFindings(factSet),
+								ratedSolutions,
+								null);
+
+				// we also check if the number of
+				// positive solutions has increased.
+				// In this case (and if specified in the bot settings)
+				// we want to truncate this path, recording an error message
+				if (truncateIncreasingSolutions && hasSolutionsIncreased(nextSequentialCase)) {
+					storeError(nextSequentialCase, "solutions increased");
+				}
+				else {
+					// step down in recursion with the next suitable
+					// question to ask
+					traverse(nextSession, nextSequentialCase, depth + 1,
+								currentPercent, currentPercent + deltaPercent);
+				}
 
 				// increase progress
 				updateProgress(currentPercent += deltaPercent);
 			}
+		}
+
+		/**
+		 * Check if the number of positive solutions have increased during that
+		 * sequence.
+		 * 
+		 * @created 20.07.2011
+		 * @param nextSequentialCase the sequence to be checked
+		 * @return if the number of solutions have increased at any time
+		 */
+		private boolean hasSolutionsIncreased(SequentialTestCase seqCase) {
+			List<RatedTestCase> ratedCases = seqCase.getCases();
+			int decreasingCounter = Integer.MAX_VALUE;
+			for (RatedTestCase ratedCase : ratedCases) {
+				// count positive solutions only, ignoring unclear and excluded
+				int count = 0;
+				List<RatedSolution> ratedSolutions = ratedCase.getExpectedSolutions();
+				for (RatedSolution ratedSolution : ratedSolutions) {
+					if (ratedSolution.getRating().isProblemSolvingRelevant()) {
+						count++;
+					}
+				}
+				// only check that count (of positive solutions)
+				// if there are at least one positive solution
+				if (count > 0) {
+					if (count > decreasingCounter) {
+						// we detected an increasing number of solutions
+						return true;
+					}
+					decreasingCounter = count;
+				}
+			}
+			return false;
 		}
 
 		private void storeError(SequentialTestCase thisCase, String message) {
@@ -198,7 +247,7 @@ public final class InterviewBot {
 			List<Finding> findings = Collections.emptyList();
 			List<RatedSolution> solutions = Collections.emptyList();
 			SequentialTestCase nextSequentialCase = packNewSequence(
-					thisCase, findings, solutions);
+					thisCase, findings, solutions, message);
 			store(nextSequentialCase);
 		}
 
@@ -287,9 +336,10 @@ public final class InterviewBot {
 		return generator.getCases();
 	}
 
-	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, List<Finding> findings, List<RatedSolution> solutions) {
+	private SequentialTestCase packNewSequence(SequentialTestCase sqCase, List<Finding> findings, List<RatedSolution> solutions, String note) {
 		RatedTestCase ratedCase = new RatedTestCase();
 		ratedCase.setName(UUID.randomUUID().toString());
+		ratedCase.setNote(note);
 		ratedCase.addFindings(findings);
 		ratedCase.addExpected(solutions);
 
@@ -370,6 +420,7 @@ public final class InterviewBot {
 		private long maxCases = 0;
 		private String sequentialTestCasePraefix = "STC";
 		private String ratedTestCasePraefix = "RTC";
+		private boolean truncateIncreasingSolutions = false;
 		private List<Finding> initFindings = new LinkedList<Finding>();
 		private RatingStrategy ratingStrategy = new DefaultRatingStrategy();
 		private final Map<Question, List<Value>> allowedAnswers = new HashMap<Question, List<Value>>();
@@ -397,6 +448,11 @@ public final class InterviewBot {
 
 		public Builder ratedTestCasePraefix(String val) {
 			ratedTestCasePraefix = val;
+			return this;
+		}
+
+		public Builder truncateIncreasingSolutions(boolean val) {
+			truncateIncreasingSolutions = val;
 			return this;
 		}
 
@@ -514,6 +570,7 @@ public final class InterviewBot {
 			bot.maxCases = this.maxCases;
 			bot.sequentialTestCasePraefix = this.sequentialTestCasePraefix;
 			bot.ratedTestCasePraefix = this.ratedTestCasePraefix;
+			bot.truncateIncreasingSolutions = this.truncateIncreasingSolutions;
 			bot.initFindings = this.initFindings;
 			bot.knowledge = this.knowledge;
 			bot.ratingStrategy = this.ratingStrategy;
