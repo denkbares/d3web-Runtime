@@ -73,7 +73,7 @@ public final class TestPersistence {
 	private static final String SOLUTIONS = "Solutions";
 	private static final String SOLUTION = "Solution";
 
-	private static final String MC_ANSWER_SEPARATOR = "#####";
+	private static final String MC_ANSWER_SEPARATOR = ",";
 
 	// The Parameters
 	private static final String NAME = "Name";
@@ -347,14 +347,27 @@ public final class TestPersistence {
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
 		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Value v = f.getValue();
-		if (v instanceof ChoiceValue) {
+		if (v instanceof MultipleChoiceValue) {
+			MultipleChoiceValue mcv = (MultipleChoiceValue) v;
+			String result ="[";
+			for (ChoiceID choice : mcv.getChoiceIDs()) {
+				result += '"' + choice.getText() + '"' + MC_ANSWER_SEPARATOR;
+				
+			}
+			
+			if (result.length() > 1) result = result.substring(0, result.length() - 1);
+
+			result+="]";
+			xmlsw.writeAttribute(ANSWER, result);
+		}
+		else if (v instanceof ChoiceValue) {
 			ChoiceID choice = ((ChoiceValue) v).getChoiceID();
 			xmlsw.writeAttribute(ANSWER, choice.getText());
 		}
-		if (v instanceof NumValue) {
+		else if (v instanceof NumValue) {
 			xmlsw.writeAttribute(ANSWER, ((NumValue) v).getValue().toString());
 		}
-		if (v instanceof Unknown) {
+		else if (v instanceof Unknown) {
 			xmlsw.writeAttribute(ANSWER, "unknown");
 		}
 	}
@@ -453,7 +466,7 @@ public final class TestPersistence {
 				f = new Finding(q, Unknown.getInstance());
 			}
 			else if (q instanceof QuestionMC) {
-				// '#####' separates two MCAnswers for a MCQuestion
+				answerText = answerText.substring(1, answerText.length() - 1);
 				Choice[] choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
 				f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
 			}
@@ -475,7 +488,8 @@ public final class TestPersistence {
 		Choice[] answers = new Choice[strings.length];
 		QuestionChoice qc = (QuestionChoice) q;
 		for (int i = 0; i < strings.length; i++) {
-			answers[i] = findAnswer(qc, strings[i]);
+			String answer = strings[i].replaceAll("\"", "");
+			answers[i] = findAnswer(qc, answer);
 		}
 		return answers;
 	}
