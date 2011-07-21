@@ -94,7 +94,7 @@ public interface Blackboard {
 	 *        for
 	 * @return the merged fact
 	 */
-	public Fact getValueFact(ValueObject valueObject);
+	public Fact getValueFact(TerminologyObject valueObject);
 
 	/**
 	 * Returns a collection of all terminology objects that have a value. This
@@ -250,6 +250,17 @@ public interface Blackboard {
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
 	public List<Solution> getSolutions(Rating.State state);
+
+	/**
+	 * Returns the Value Fact of one {@link PSMethod} of a
+	 * {@link TerminologyObject}
+	 * 
+	 * @created 21.09.2010
+	 * @param terminologyObject {@link TerminologyObject}
+	 * @param psmethod {@link PSMethod}
+	 * @return {@link Fact}
+	 */
+	Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod);
 
 	/**
 	 * Returns the Interview Fact of one {@link PSMethod} of a

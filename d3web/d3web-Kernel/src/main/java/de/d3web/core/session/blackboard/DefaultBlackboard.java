@@ -362,8 +362,13 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
-	public Fact getValueFact(ValueObject valueObject) {
+	public Fact getValueFact(TerminologyObject valueObject) {
 		return this.valueStorage.getMergedFact(valueObject);
+	}
+
+	@Override
+	public Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod) {
+		return this.valueStorage.getMergedFact(terminologyObject, psmethod);
 	}
 
 	private Value getValueFromFact(ValueObject object, Fact fact) {
