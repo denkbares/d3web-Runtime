@@ -31,6 +31,15 @@ import de.d3web.empiricaltesting.TestCase;
 public interface CaseVisualizer {
 
 	/**
+	 * Sets the label that should be pointed out when cases are visualized by
+	 * this visualizer.
+	 * 
+	 * @created 21.07.2011
+	 * @param label the label of the visualized cases
+	 */
+	public void setLabel(Label label);
+
+	/**
 	 * Creates a visualized DDTree from a TestCase suite and writes it to a
 	 * specified file.
 	 * 

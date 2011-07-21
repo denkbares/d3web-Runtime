@@ -20,6 +20,7 @@
 
 package de.d3web.empiricaltesting;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,9 +34,12 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 
 public final class CaseUtils {
 
@@ -129,6 +133,24 @@ public final class CaseUtils {
 			prompt = object.getName();
 		}
 		return prompt;
+	}
+
+	public static String getPrompt(TerminologyObject object, Value value) {
+		if (value instanceof ChoiceValue && object instanceof QuestionChoice) {
+			Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) object);
+			return CaseUtils.getPrompt(choice);
+		}
+		if (value instanceof MultipleChoiceValue && object instanceof QuestionChoice) {
+			StringBuilder result = new StringBuilder();
+			Collection<ChoiceID> choiceIDs = ((MultipleChoiceValue) value).getChoiceIDs();
+			if (choiceIDs.isEmpty()) return "--";
+			for (ChoiceID choiceID : choiceIDs) {
+				Choice choice = choiceID.getChoice((QuestionChoice) object);
+				result.append(", ").append(CaseUtils.getPrompt(choice));
+			}
+			return result.toString().substring(2);
+		}
+		return value.toString();
 	}
 
 	public Question getQuestionByIDorText(String questionIDorText,

@@ -45,6 +45,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.empiricaltesting.Finding;
@@ -52,6 +53,7 @@ import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.Rating;
 import de.d3web.empiricaltesting.SequentialTestCase;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class generates sequential test cases simulating an interview with the
@@ -405,6 +407,31 @@ public final class InterviewBot {
 		return initSession;
 	}
 
+	public List<Fact> getSeedFacts() {
+		// prepare some object to extract the seed
+		Session session = createInitSession();
+		Blackboard blackboard = session.getBlackboard();
+		PSMethodUserSelected psmUser = PSMethodUserSelected.getInstance();
+		// get seed facts for value objects
+		List<Fact> result = new LinkedList<Fact>();
+		Collection<TerminologyObject> valuedObjects = blackboard.getValuedObjects();
+		for (TerminologyObject object : valuedObjects) {
+			Fact fact = blackboard.getValueFact(object, psmUser);
+			if (fact != null) {
+				result.add(fact);
+			}
+		}
+		// get seed facts for interview objects
+		Collection<InterviewObject> interviewObjects = blackboard.getInterviewObjects();
+		for (InterviewObject interviewObject : interviewObjects) {
+			Fact fact = blackboard.getInterviewFact(interviewObject, psmUser);
+			if (fact != null) {
+				result.add(fact);
+			}
+		}
+		return result;
+	}
+
 	private void setCaseValue(Session session, Question q, Value v) {
 		Fact fact = FactFactory.createUserEnteredFact(q, v);
 		session.getBlackboard().addValueFact(fact);
@@ -592,6 +619,10 @@ public final class InterviewBot {
 
 	public BotStrategy getBotStrategy() {
 		return strategy;
+	}
+
+	public KnowledgeBase getKnowledgeBase() {
+		return this.knowledge;
 	}
 
 	/**

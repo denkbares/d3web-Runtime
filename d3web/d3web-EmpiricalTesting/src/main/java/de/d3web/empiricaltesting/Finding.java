@@ -20,17 +20,13 @@
 
 package de.d3web.empiricaltesting;
 
-import java.util.Collection;
-
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 
 /**
@@ -143,21 +139,7 @@ public class Finding implements Comparable<Finding> {
 	}
 
 	public String getValuePrompt() {
-		if (value instanceof ChoiceValue && question instanceof QuestionChoice) {
-			Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) question);
-			return CaseUtils.getPrompt(choice);
-		}
-		if (value instanceof MultipleChoiceValue && question instanceof QuestionChoice) {
-			StringBuilder result = new StringBuilder();
-			Collection<ChoiceID> choiceIDs = ((MultipleChoiceValue) value).getChoiceIDs();
-			if (choiceIDs.isEmpty()) return "--";
-			for (ChoiceID choiceID : choiceIDs) {
-				Choice choice = choiceID.getChoice((QuestionChoice) question);
-				result.append(", ").append(CaseUtils.getPrompt(choice));
-			}
-			return result.toString().substring(2);
-		}
-		return value.toString();
+		return CaseUtils.getPrompt(question, value);
 	}
 
 	/**

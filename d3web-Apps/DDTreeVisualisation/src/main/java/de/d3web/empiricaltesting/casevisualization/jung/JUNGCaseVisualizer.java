@@ -46,6 +46,7 @@ import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
+import de.d3web.empiricaltesting.casevisualization.Label;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
@@ -333,6 +334,11 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 		return filepath;
 
+	}
+
+	@Override
+	public void setLabel(Label label) {
+		// do nothing. Labels are not implemented yet.
 	}
 
 }

@@ -42,6 +42,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.empiricaltesting.CaseUtils;
 import de.d3web.empiricaltesting.ConfigLoader;
@@ -55,25 +56,32 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.StateRating;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
+import de.d3web.empiricaltesting.casevisualization.Label;
 import de.d3web.scoring.HeuristicRating;
 
 public final class DDBuilder implements CaseVisualizer {
 
 	private static final String CORRECTION_CELL = "<TD BGCOLOR=\"#FFFFFF\" WIDTH=\"50\"></TD>";
-	private final static String HEADER = "digraph g { \ngraph [ \n  rankdir = \"TD\" \n"
+	private static final String HEADER = "digraph g { \ngraph [ \n  rankdir = \"TD\" \n"
 			+ "]; \n" + "node [\n" + " fontname=Helvetica\n"
 			+ " fontsize = \"16\"\n" + "  shape = none\n" + "];\n"
 			+ "edge [ \n" + "];\n";
-	private final static String FOOTER = "\n}\n";
+	private static final String FOOTER = "\n}\n";
 
 	private static NumberFormat formater = new DecimalFormat("#########");
 
 	private ConfigLoader config = ConfigLoader.getInstance();
+	private Label label = null;
 
 	private Set<String> createdEdges;
 	private List<DDNode> nodes = new LinkedList<DDNode>();
 
 	public DDBuilder() {
+	}
+
+	@Override
+	public void setLabel(Label label) {
+		this.label = label;
 	}
 
 	/**
@@ -301,6 +309,7 @@ public final class DDBuilder implements CaseVisualizer {
 
 	public String render() {
 		StringBuffer b = new StringBuffer(HEADER);
+		renderLabel(b);
 		for (DDNode node : nodes) {
 			renderNode(b, node, computeOutgoing(node));
 			for (DDEdge edge : node.getOutgoing()) {
@@ -309,6 +318,32 @@ public final class DDBuilder implements CaseVisualizer {
 		}
 		b.append(FOOTER);
 		return b.toString();
+	}
+
+	public void renderLabel(StringBuffer result) {
+		if (this.label == null) return;
+		result.append("label0");
+		result.append(" [\n  label=<\n");
+		result.append("   <TABLE>\n");
+		String colorHeading = getConfig().getProperty("nodeColorLabelHeading");
+		String colorEntries = getConfig().getProperty("nodeColorLabelEntries");
+		// render about
+		renderTableLine(result, colorHeading, false, "About");
+		List<String> aboutKeys = this.label.getAboutKeys();
+		for (String key : aboutKeys) {
+			String value = this.label.getAboutValue(key);
+			renderTableLine(result, colorEntries, false, encodeHTML(key), encodeHTML(value));
+		}
+		// render seed
+		renderTableLine(result, colorHeading, false, "Seed");
+		List<Fact> seedEntries = this.label.getSeedEntries();
+		for (Fact fact : seedEntries) {
+			String name = CaseUtils.getPrompt(fact.getTerminologyObject());
+			String value = CaseUtils.getPrompt(fact.getTerminologyObject(), fact.getValue());
+			renderTableLine(result, colorEntries, false, encodeHTML(name), encodeHTML(value));
+		}
+		result.append("   </TABLE>>\n");
+		result.append("];\n");
 	}
 
 	private void write(OutputStream out) throws IOException {
@@ -414,6 +449,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @return the encoded text
 	 */
 	public String encodeHTML(String text) {
+		if (text == null) return "";
 		StringBuilder result = new StringBuilder(text.length() * 5);
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
