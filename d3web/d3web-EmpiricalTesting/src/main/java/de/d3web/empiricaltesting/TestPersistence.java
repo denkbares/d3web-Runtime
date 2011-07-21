@@ -349,15 +349,14 @@ public final class TestPersistence {
 		Value v = f.getValue();
 		if (v instanceof MultipleChoiceValue) {
 			MultipleChoiceValue mcv = (MultipleChoiceValue) v;
-			String result ="[";
+			String result = "[";
 			for (ChoiceID choice : mcv.getChoiceIDs()) {
 				result += '"' + choice.getText() + '"' + MC_ANSWER_SEPARATOR;
-				
 			}
 			
 			if (result.length() > 1) result = result.substring(0, result.length() - 1);
 
-			result+="]";
+			result += "]";
 			xmlsw.writeAttribute(ANSWER, result);
 		}
 		else if (v instanceof ChoiceValue) {
@@ -466,8 +465,15 @@ public final class TestPersistence {
 				f = new Finding(q, Unknown.getInstance());
 			}
 			else if (q instanceof QuestionMC) {
-				answerText = answerText.substring(1, answerText.length() - 1);
-				Choice[] choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
+				Choice[] choices;
+				if (answerText.startsWith("[")) {
+					answerText = answerText.substring(1, answerText.length() - 1);
+					choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
+				} // legacy format
+				else {
+					choices = toChoices(q, answerText.split("#####"));
+				}
+
 				f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
 			}
 			else if (q instanceof QuestionChoice) {
