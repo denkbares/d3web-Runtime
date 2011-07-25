@@ -120,6 +120,20 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				calculateNewPath(caseObject);
 				activateNextQContainer(caseObject);
 			}
+			// when activating the next qcontainer, which is applicable, check
+			// if it is already done and fire state transition and move to next
+			// QContainer if necessary
+			if (isDone(qc, session)) {
+				StateTransition st = StateTransition.getStateTransition(qc);
+				if (st != null) st.fire(session);
+				// remove indication
+				for (Fact fact : caseObject.getIndicatedFacts()) {
+					if (fact.getTerminologyObject() == qc) {
+						session.getBlackboard().removeInterviewFact(fact);
+					}
+				}
+				activateNextQContainer(caseObject);
+			}
 		}
 	}
 
