@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<KnowledgeBase system="d3web" type="costbenefit">
+<KnowledgeSlices>
+<StateTransition QID="TestStep">
+<activationCondition>
+<Condition type="and"/>
+</activationCondition>
+<ValueTransition QID="state">
+<ConditionalValueSetter AID="b">
+<Condition name="TestStep question" type="equal" value="lighting"/>
+</ConditionalValueSetter>
+</ValueTransition>
+</StateTransition>
+<StateTransition QID="TestStep2">
+<activationCondition>
+<Condition type="and"/>
+</activationCondition>
+<ValueTransition QID="state">
+<ConditionalValueSetter AID="a">
+<Condition name="TestStep2 question" type="numGreater" value="5.0"/>
+</ConditionalValueSetter>
+</ValueTransition>
+</StateTransition>
+<StateTransition QID="follower">
+<activationCondition>
+<Condition name="state" type="equal" value="b"/>
+</activationCondition>
+</StateTransition>
+</KnowledgeSlices>
+</KnowledgeBase>
