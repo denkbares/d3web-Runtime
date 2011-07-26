@@ -58,11 +58,6 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	public final static String ID = "xclpattern";
 
-	@Deprecated
-	public String getId() {
-		return ID;
-	}
-
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		Document doc = Util.streamToDocument(stream);
