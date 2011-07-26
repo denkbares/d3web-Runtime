@@ -75,7 +75,7 @@ public class PSMethodInit implements PSMethod {
 			List<? extends QASet> initQuestions = session.getKnowledgeBase().getInitQuestions();
 			for (QASet object : initQuestions) {
 				Fact fact = FactFactory.createIndicationFact(
-						session, object, new Indication(Indication.State.INDICATED), this, this);
+						object, new Indication(Indication.State.INDICATED), this, this);
 				session.getBlackboard().addInterviewFact(fact);
 			}
 

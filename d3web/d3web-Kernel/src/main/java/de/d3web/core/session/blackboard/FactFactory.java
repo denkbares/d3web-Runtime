@@ -163,8 +163,8 @@ public final class FactFactory {
 	 *        {@link TerminologyObject}
 	 * @return a fact representing the specified indication
 	 */
-	public static Fact createIndicationFact(Session session, TerminologyObject terminologyObject,
-			Indication indication, Object source, PSMethod psMethodContext) {
+	public static Fact createIndicationFact(TerminologyObject terminologyObject, Indication indication,
+			Object source, PSMethod psMethodContext) {
 		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
 	}
 
