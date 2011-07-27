@@ -41,7 +41,7 @@ import de.d3web.costbenefit.model.Target;
 
 /**
  * This IterativeDeepeningSearch is extended by multiple optimizations. It
- * operates on a SearchModel, wich provides all used methods
+ * operates on a SearchModel, which provides all used methods
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
@@ -106,7 +106,7 @@ class IterativeDeepeningSearch {
 			}
 		}
 		// remove all Target nodes
-		relevantNodes.removeAll(temp);
+		// relevantNodes.removeAll(temp);
 		// reenter Target nodes that are used in combined targets
 		relevantNodes.addAll(model.getCombinedTargetsNodes());
 		this.successorNodes = relevantNodes.toArray(new Node[relevantNodes
