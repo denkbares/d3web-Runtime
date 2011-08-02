@@ -82,6 +82,11 @@ public final class Property<T> {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 	public boolean isMultilingual() {
 		return multilingual;
 	}

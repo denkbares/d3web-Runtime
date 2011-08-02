@@ -146,20 +146,35 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Retrieves the AnswerChoice object contained in the alternatives list of
-	 * the specified question, that has the specified text as answer text
+	 * the specified question, that has the specified case sensitive text as
+	 * answer text.
 	 * 
 	 * @param question the specified question
 	 * @param answerText the requested answer text
 	 * @return null, if no answer found for specified params
 	 */
 	public static Choice findChoice(QuestionChoice question, String answerText) {
+		return findChoice(question, answerText, true);
+	}
+
+	/**
+	 * Retrieves the AnswerChoice object contained in the alternatives list of
+	 * the specified question, that has the specified text as answer text.
+	 * 
+	 * @param question the specified question
+	 * @param answerText the requested answer text
+	 * @param caseSensitive decides whether to search case sensitive or not
+	 * @return null, if no answer found for specified params
+	 */
+	public static Choice findChoice(QuestionChoice question, String answerText, boolean caseSensitive) {
 		if (question == null
 				|| question.getAllAlternatives() == null
 				|| answerText == null) {
 			return null;
 		}
 		for (Choice choice : question.getAllAlternatives()) {
-			if (answerText.equals(choice.getName())) {
+			if (answerText.equals(choice.getName())
+					|| (!caseSensitive && answerText.equalsIgnoreCase(choice.getName()))) {
 				return choice;
 			}
 		}
