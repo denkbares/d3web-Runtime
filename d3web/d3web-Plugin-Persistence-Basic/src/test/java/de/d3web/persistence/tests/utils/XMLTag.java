@@ -103,13 +103,6 @@ public class XMLTag {
 	}
 
 	/**
-	 * @return the value of the requested attribute
-	 */
-	public String getAttribute(String attr) {
-		return (String) attributes.get(attr);
-	}
-
-	/**
 	 * Adds a new attribute to this XMLTag
 	 * 
 	 * @param name the name of the new attribute
@@ -153,15 +146,6 @@ public class XMLTag {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Sets the tag´s children.
-	 * 
-	 * @param children the children to set
-	 */
-	public void setChildren(List<XMLTag> children) {
-		this.children = children;
 	}
 
 	/**
