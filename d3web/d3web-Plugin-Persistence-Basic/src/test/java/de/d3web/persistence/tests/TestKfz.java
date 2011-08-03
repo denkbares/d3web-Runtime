@@ -30,6 +30,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +42,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -87,8 +88,6 @@ public class TestKfz {
 	 * Assures that every type of question can be set and retrieved. Creation
 	 * date: (08.09.2000 16:11:48)
 	 * 
-	 * TODO Ochlast: No assert(), should be refactored
-	 * 
 	 * @throws IOException
 	 */
 	@Test
@@ -117,14 +116,8 @@ public class TestKfz {
 				FactFactory.createFact(session, Mf7,
 						mcv, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value value = session.getBlackboard().getValue(Mf5);
-		if (value == null) {
-			System.out.println("(1) --> NULL!!!!");
-		}
-		else {
-			System.out.println("(1) --> Mf55 : " + value.getValue());
-		}
-
-		System.out.println("---");
+		Assert.assertNotNull(value);
+		Assert.assertFalse(Unknown.assignedTo(value));
 	}
 
 	/**
@@ -154,16 +147,11 @@ public class TestKfz {
 						new NumValue(new Double(10)), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		Value Mf58Value = session.getBlackboard().getValue(Mf58);
-		if (Mf58Value == null) {
-			System.out.println("(1) --> NULL!!!!");
-		}
-		else {
-			System.out.println("(1) --> Mf58: " + Mf58Value.getValue());
-		}
+		Assert.assertNotNull(Mf58Value);
+		Assert.assertFalse(Unknown.assignedTo(Mf58Value));
 		// assertTrue("Error with formula (1)",
 		// ratingNormal == Msi4.getValue(session).get(0));
 
-		System.out.println("---");
 	}
 
 	/**
@@ -257,16 +245,11 @@ public class TestKfz {
 
 			Question q1 = (Question) qaSet;
 
-			System.out.println("    Frage: " + q1);
-			System.out.println("FrageText: " + q1.getName());
-			if (q1 instanceof QuestionChoice) {
-				System.out.println("Antworten: "
-						+ ((QuestionChoice) q1).getAllAlternatives());
-			}
 			session.getBlackboard().addValueFact(
 					FactFactory.createFact(session, q1,
 							Unknown.getInstance(), PSMethodUserSelected.getInstance(),
 							PSMethodUserSelected.getInstance()));
+			Assert.assertTrue(Unknown.assignedTo(session.getBlackboard().getValue(q1)));
 		}
 
 	}
