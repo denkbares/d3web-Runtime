@@ -64,16 +64,6 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="IntegerListHandler">
-		<parameter id="class"
-			value="de.d3web.core.io.fragments.IntegerListHandler" />
-		<parameter id="name" value="IntegerListHandler" />
-		<parameter id="description" value="Fragment Handler for IntegerLists" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="LinkedListHandler">
 		<parameter id="class"
 			value="de.d3web.core.io.fragments.LinkedListHandler" />

@@ -25,8 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.Rule;
-import de.d3web.core.io.utilities.NamedObjectComparator;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.utilities.NamedObjectComparator;
 
 /**
  * A comparator for Rules. The rules are sorted after the terminal object used

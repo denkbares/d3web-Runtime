@@ -33,7 +33,6 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.NamedObjectComparator;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -42,6 +41,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
+import de.d3web.core.utilities.NamedObjectComparator;
 
 /**
  * PersistanceHandler for MMInfos Creation date: (25.01.2002 14:18:47)
