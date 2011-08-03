@@ -33,10 +33,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -53,48 +50,11 @@ public final class CaseUtils {
 		return instance;
 	}
 
-	public void setCaseValue(Session session, String questionID, String answerID)
-			throws Exception {
-		QuestionChoice q = (QuestionChoice) session.getKnowledgeBase().getManager()
-				.searchQuestion(questionID);
-		if (answerID != null) {
-			Choice a = findAnswer(q, answerID);
-			setCaseValue(session, q, new ChoiceValue(a));
-		}
-	}
-
-	public void setCaseValue(Session session, QuestionChoice q, ChoiceValue a) {
-		Fact fact = FactFactory.createUserEnteredFact(q, a);
-
-		session.getBlackboard().addValueFact(fact);
-	}
-
-	public Choice findAnswer(QuestionChoice q, String answerId)
-			throws Exception {
-		for (Choice answer : q.getAllAlternatives()) {
-			if (answer.getName().equalsIgnoreCase(answerId)) return answer;
-		}
-		throw new Exception("Not found id [" + answerId + "] for question ["
-				+ q + "][" + q.getName() + "]");
-	}
-
 	public String pretty(String text) {
 		if (text.isEmpty()) return "";
 		text = text.replaceAll("<", "kleiner");
 		text = text.replaceAll(">", "groesser");
 		return text;
-	}
-
-	public String veryPretty(String text) {
-		String t = pretty(text);
-		if (t.indexOf('?') > -1) {
-			t = t.replaceAll("\\?", "");
-		}
-		return t;
-	}
-
-	public String prettyAnswer(String answer) {
-		return pretty(answer);
 	}
 
 	public String removeBadChars(String text) {
@@ -104,27 +64,6 @@ public final class CaseUtils {
 			text = text.replace("_", "");
 		}
 		return text;
-	}
-
-	public String prettyLabel(String label) {
-		String l = pretty(label);
-		l = l.replaceAll("-", "");
-		l = l.replaceAll("\\?", "");
-		l = l.replaceAll(" ", "_");
-		l = l.replaceAll("u\\.\\/o\\.", "_uo_");
-		l = l.replaceAll("\\(", "_");
-		l = l.replaceAll("\\)", "_");
-		l = l.replaceAll("\\.", "");
-		l = l.replaceAll("\\+", "_");
-		l = l.replaceAll("\\/", "_");
-		l = l.replaceAll(",", "_");
-		l = l.replaceAll("\\¡", "");
-		l = l.replaceAll("\\[", "");
-		l = l.replaceAll("\\]", "");
-		l = l.replaceAll("\\#", "");
-		l = l.replaceAll("\\'", "");
-		l = l.replaceAll(":", "");
-		return l;
 	}
 
 	public static String getPrompt(NamedObject object) {
