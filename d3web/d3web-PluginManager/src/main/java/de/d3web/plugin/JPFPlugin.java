@@ -45,9 +45,11 @@ public class JPFPlugin implements Plugin {
 
 		private boolean isPublic;
 		private final Set<String> entries;
+		private String path;
 
 		public ResourceFilter(Library lib) {
 			entries = new HashSet<String>();
+			path = lib.getPath();
 			for (String exportPrefix : lib.getExports()) {
 				if ("*".equals(exportPrefix)) { //$NON-NLS-1$
 					isPublic = true;
@@ -83,6 +85,9 @@ public class JPFPlugin implements Plugin {
 		}
 
 		public boolean isResourceVisible(String resPath) {
+			if (!resPath.startsWith(path)) {
+				return false;
+			}
 			// quick check
 			if (isPublic) {
 				return true;
@@ -172,6 +177,7 @@ public class JPFPlugin implements Plugin {
 					Enumeration<? extends ZipEntry> entries = zipfile.entries();
 					while (entries.hasMoreElements()) {
 						ZipEntry entry = entries.nextElement();
+						if (entry.isDirectory()) continue;
 						String relativePath = entry.getName();
 						if (matchesExports(relativePath)) {
 							URL resourceUrl = new URL(pluginUrl, relativePath);
@@ -224,7 +230,7 @@ public class JPFPlugin implements Plugin {
 
 	/**
 	 * Recursively collects all files that are in the specified directory and
-	 * adds them to the given collection. Please not that directories are not
+	 * adds them to the given collection. Please note that directories are not
 	 * added.
 	 * 
 	 * @param directory the directory to collect the files from
