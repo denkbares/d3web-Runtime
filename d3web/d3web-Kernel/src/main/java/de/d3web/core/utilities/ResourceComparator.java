@@ -16,7 +16,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.io.utilities;
+package de.d3web.core.utilities;
 
 import java.util.Comparator;
 
