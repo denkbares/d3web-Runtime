@@ -24,12 +24,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -85,6 +86,9 @@ public final class PersistenceManager extends FragmentManager {
 		private final String author;
 		private final Date date;
 		private final Resource favIcon;
+		// format of Date.toString()
+		private final SimpleDateFormat format = new SimpleDateFormat(
+				"EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
 		private KnowledgeBaseInfo(File kbFile, Manifest manifest) {
 			this.favIcon = createFavIconResource(kbFile);
@@ -97,7 +101,8 @@ public final class PersistenceManager extends FragmentManager {
 			}
 			else {
 				String manifestName = manifest.getMainAttributes().getValue("Name");
-				if (manifestName != null && !manifestName.trim().isEmpty()) {
+				if (manifestName != null && !manifestName.trim().isEmpty()
+						&& !manifestName.equals("null")) {
 					this.name = manifestName;
 				}
 				else {
@@ -109,7 +114,7 @@ public final class PersistenceManager extends FragmentManager {
 				Date parsedDate = null;
 				try {
 					if (dateString != null) {
-						parsedDate = DateFormat.getDateInstance().parse(dateString);
+						parsedDate = format.parse(dateString);
 					}
 				}
 				catch (ParseException e) {
