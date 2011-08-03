@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.LinkedList;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -59,8 +61,14 @@ public class TestResource {
 	private void testPlugin(Plugin plugin, String s) throws IOException {
 		Assert.assertNotNull(plugin);
 		Resource[] resources = plugin.getResources();
-		Assert.assertEquals(1, resources.length);
-		Resource resource = resources[0];
+		List<Resource> filteredResources = new LinkedList<Resource>();
+		for (Resource r : resources) {
+			if (!r.getPathName().contains(".svn")) {
+				filteredResources.add(r);
+			}
+		}
+		Assert.assertEquals(1, filteredResources.size());
+		Resource resource = filteredResources.get(0);
 		Assert.assertTrue(resource.getPathName().endsWith("Test.txt"));
 		// check the content of the file
 		Writer writer = new StringWriter();
