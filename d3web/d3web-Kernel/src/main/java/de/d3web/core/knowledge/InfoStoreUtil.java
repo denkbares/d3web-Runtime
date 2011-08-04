@@ -46,21 +46,25 @@ public class InfoStoreUtil {
 	/**
 	 * Comparator for {@link Triple}s used by the {@link InfoStore}. They are
 	 * first compared by the name of the {@link Property}, then by the
-	 * verbalization of the {@link Locale}.
+	 * verbalization of the {@link Locale} and then by the toString method of
+	 * the object.
 	 * 
 	 * @author Albrecht Striffler (denkbares GmbH)
 	 * @created 15.06.2011
 	 */
-
 	private static class TripleComparator implements Comparator<Triple<Property<?>, Locale, Object>> {
 
 		@Override
 		public int compare(Triple<Property<?>, Locale, Object> o1, Triple<Property<?>, Locale, Object> o2) {
 			int prop = o1.getA().getName().compareTo(o2.getA().getName());
 			if (prop != 0) return prop;
-			if (o1.getB() == null) return -1;
-			if (o2.getB() == null) return 1;
-			return o1.getB().toString().compareTo(o2.getB().toString());
+			if (!(o1.getB() == null && o2.getB() == null)) {
+				if (o1.getB() == null) return -1;
+				if (o2.getB() == null) return 1;
+				int locale = o1.getB().toString().compareTo(o2.getB().toString());
+				if (locale != 0) return locale;
+			}
+			return String.valueOf(o1.getC()).compareTo(String.valueOf(o2.getC()));
 		}
 
 	}
