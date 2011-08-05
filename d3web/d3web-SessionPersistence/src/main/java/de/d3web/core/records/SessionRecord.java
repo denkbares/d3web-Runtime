@@ -21,6 +21,7 @@ package de.d3web.core.records;
 import java.util.List;
 
 import de.d3web.core.session.SessionHeader;
+import de.d3web.core.session.blackboard.Fact;
 
 /**
  * Represents a persistent session
@@ -30,14 +31,44 @@ import de.d3web.core.session.SessionHeader;
  */
 public interface SessionRecord extends SessionHeader {
 
+	/**
+	 * Adds a value {@link Fact}
+	 * 
+	 * @created 05.08.2011
+	 * @param fact
+	 */
 	void addValueFact(FactRecord fact);
 
+	/**
+	 * Adds an interview {@link Fact}
+	 * 
+	 * @created 05.08.2011
+	 * @param fact
+	 */
 	void addInterviewFact(FactRecord fact);
 
+	/**
+	 * Returns all value facts
+	 * 
+	 * @created 05.08.2011
+	 * @return List of value facts
+	 */
 	List<FactRecord> getValueFacts();
 
+	/**
+	 * Return all interview facts
+	 * 
+	 * @created 05.08.2011
+	 * @return List of interview facts
+	 */
 	List<FactRecord> getInterviewFacts();
 
+	/**
+	 * Sets the name of the SessionRecord
+	 * 
+	 * @created 05.08.2011
+	 * @param name
+	 */
 	void setName(String name);
 
 }

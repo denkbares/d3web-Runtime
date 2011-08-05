@@ -59,6 +59,15 @@ public final class SessionConversionFactory {
 	private SessionConversionFactory() {
 	}
 
+	/**
+	 * Converts a SessionRecord to a Session
+	 * 
+	 * @created 05.08.2011
+	 * @param knowledgeBase {@link KnowledgeBase}
+	 * @param source {@link SessionRecord}
+	 * @return {@link Session}
+	 * @throws IOException
+	 */
 	public static Session copyToSession(KnowledgeBase knowledgeBase, SessionRecord source) throws IOException {
 		DefaultSession target = SessionFactory.createSession(source.getId(),
 				knowledgeBase, source.getCreationDate());
@@ -125,6 +134,13 @@ public final class SessionConversionFactory {
 		}
 	}
 
+	/**
+	 * Converts a Session to a SessionRecord
+	 * 
+	 * @created 05.08.2011
+	 * @param source {@link Session}
+	 * @return {@link SessionRecord}
+	 */
 	public static SessionRecord copyToSessionRecord(Session source) {
 		DefaultSessionRecord target = new DefaultSessionRecord(
 				source.getId(),

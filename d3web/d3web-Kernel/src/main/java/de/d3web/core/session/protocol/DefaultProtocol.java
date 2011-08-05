@@ -26,6 +26,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Default implementation of Protocol
+ * 
+ * @author Joachim Baumeister (denkbares GmbH)
+ */
 public class DefaultProtocol implements Protocol {
 
 	private final List<ProtocolEntry> entries = new ArrayList<ProtocolEntry>();
