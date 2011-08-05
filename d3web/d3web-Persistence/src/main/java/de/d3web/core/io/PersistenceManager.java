@@ -402,6 +402,8 @@ public final class PersistenceManager extends FragmentManager {
 		mainAttributes.put(new Attributes.Name("User"), System.getProperty("user.name"));
 		File tempfile = new File(file.getCanonicalPath() + ".temp");
 
+		tempfile.getAbsoluteFile().getParentFile().mkdirs();
+
 		JarOutputStream jarOutputStream = new JarOutputStream(
 				new FileOutputStream(tempfile), manifest);
 		int size = 0;
