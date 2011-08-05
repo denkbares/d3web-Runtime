@@ -47,7 +47,6 @@ import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
@@ -195,6 +194,7 @@ public class SessionPersistenceTest {
 		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
 		SessionRecord record1 = iterator.next();
 		SessionRecord record2 = iterator.next();
+		Assert.assertFalse(iterator.hasNext());
 		Session session1 = SessionConversionFactory.copyToSession(kb, record1);
 		Session session2 = SessionConversionFactory.copyToSession(kb, record2);
 		// the sorting in the hashmap isn't stable, so we sort manually
@@ -432,6 +432,8 @@ public class SessionPersistenceTest {
 		Assert.assertEquals(TESTNAME, session.getName());
 		Assert.assertEquals("First test session",
 				session.getInfoStore().getValue(MMInfo.DESCRIPTION));
+		Assert.assertEquals("First test session",
+				sessionRecord.getInfoStore().getValue(MMInfo.DESCRIPTION));
 		Assert.assertEquals(session2ID, session2.getId());
 		Assert.assertEquals(creationDate, session.getCreationDate());
 		Assert.assertEquals(lastChangeDate, session.getLastChangeDate());
@@ -486,8 +488,8 @@ public class SessionPersistenceTest {
 		for (TerminologyObject to : originalBlackboard.getValuedObjects()) {
 			TerminologyObject toReloaded = reloadedSession.getKnowledgeBase().getManager().search(
 					to.getName());
-			Assert.assertEquals(originalBlackboard.getValueFact((ValueObject) to),
-					reloadedBlackboard.getValueFact((ValueObject) toReloaded));
+			Assert.assertEquals(originalBlackboard.getValueFact(to),
+					reloadedBlackboard.getValueFact(toReloaded));
 		}
 		for (TerminologyObject to : originalBlackboard.getInterviewObjects()) {
 			TerminologyObject toReloaded = reloadedSession.getKnowledgeBase().getManager().search(

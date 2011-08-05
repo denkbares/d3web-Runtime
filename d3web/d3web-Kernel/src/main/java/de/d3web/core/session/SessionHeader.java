@@ -31,12 +31,15 @@ import de.d3web.core.session.protocol.Protocol;
  */
 public interface SessionHeader extends NamedObject {
 
-	// --- full implementation is reserved for later implementation ---
-	// (inkrement 2)
+	/**
+	 * Returns the {@link Protocol} of this session.
+	 * 
+	 * @return {@link Protocol}
+	 */
 	public Protocol getProtocol();
 
 	/**
-	 * This method should be called, when the session is edited manually
+	 * This method should be called, when the session is edited manually.
 	 * 
 	 * @created 24.09.2010
 	 */
@@ -44,7 +47,7 @@ public interface SessionHeader extends NamedObject {
 
 	/**
 	 * This method should be called, when the session was edited at the given
-	 * date
+	 * date.
 	 * 
 	 * @created 24.09.2010
 	 * @param date the Date when the Session was edited
@@ -52,7 +55,7 @@ public interface SessionHeader extends NamedObject {
 	public void touch(Date date);
 
 	/**
-	 * Returns the Date of the last change on this Session
+	 * Returns the Date of the last change on this Session.
 	 * 
 	 * @created 24.09.2010
 	 * @return the date of the last edit
@@ -60,7 +63,7 @@ public interface SessionHeader extends NamedObject {
 	public Date getLastChangeDate();
 
 	/**
-	 * Returns the creation date of the Session
+	 * Returns the creation date of the Session.
 	 * 
 	 * @created 24.09.2010
 	 * @return the creation date
