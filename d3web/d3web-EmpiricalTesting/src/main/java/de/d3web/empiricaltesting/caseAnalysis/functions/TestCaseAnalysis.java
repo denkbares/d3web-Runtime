@@ -116,15 +116,15 @@ public class TestCaseAnalysis {
 	 *         facts
 	 */
 	public Diff runAndAnalyze(SequentialTestCase stc, KnowledgeBase knowledge) {
-		Diff diff = new STCDiff(stc);
 		Date creationDate = getCreationDate(stc);
+		Session session = SessionFactory.createSession(stc.getName() + now().toString(), knowledge,
+				creationDate);
+		Diff diff = new STCDiff(stc, session);
 
 		if (this.debug) {
 			print("Analysis: " + stc.getName() + " [" + creationDate + "]");
 		}
 
-		Session session = SessionFactory.createSession(stc.getName() + now().toString(), knowledge,
-				creationDate);
 		for (RatedTestCase rtc : stc.getCases()) {
 			if (this.debug) {
 				print("   RTC: " + rtc.getName());

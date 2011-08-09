@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.d3web.core.session.Session;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.functions.Diff;
@@ -36,9 +37,10 @@ import de.d3web.empiricaltesting.caseAnalysis.functions.Diff;
  */
 public class STCDiff implements Diff {
 
-	private Map<RatedTestCase, RTCDiff> rtc_diffs;
-	private SequentialTestCase stc;
-	private Date analysisDate;
+	private final Map<RatedTestCase, RTCDiff> rtc_diffs;
+	private final SequentialTestCase stc;
+	private final Date analysisDate;
+	private final Session session;
 
 	/**
 	 * Creates a new differences storage for the specified
@@ -46,9 +48,10 @@ public class STCDiff implements Diff {
 	 * analysis run.
 	 * 
 	 * @param stc the specified {@link SequentialTestCase} instance
+	 * @param session
 	 */
-	public STCDiff(SequentialTestCase stc) {
-		this(stc, new Date());
+	public STCDiff(SequentialTestCase stc, Session session) {
+		this(stc, session, new Date());
 	}
 
 	/**
@@ -59,10 +62,11 @@ public class STCDiff implements Diff {
 	 * @param stc the specified {@link SequentialTestCase} instance
 	 * @param analysisDate the specified analysis date of the test run
 	 */
-	public STCDiff(SequentialTestCase stc, Date analysisDate) {
+	public STCDiff(SequentialTestCase stc, Session session, Date analysisDate) {
 		this.stc = stc;
-		this.rtc_diffs = new HashMap<RatedTestCase, RTCDiff>();
+		this.session = session;
 		this.analysisDate = analysisDate;
+		this.rtc_diffs = new HashMap<RatedTestCase, RTCDiff>();
 	}
 
 	/**
@@ -158,5 +162,17 @@ public class STCDiff implements Diff {
 	@Override
 	public Collection<RatedTestCase> getCasesWithDifference() {
 		return rtc_diffs.keySet();
+	}
+
+	/**
+	 * Returns the session that was used to executed the {@link SequentialTestCase}
+	 * 
+	 * @created 09.08.2011
+	 * @return the {@link Session} that was used to execute the
+	 *         {@link SequentialTestCase}.
+	 */
+	@Override
+	public Session getSession() {
+		return session;
 	}
 }

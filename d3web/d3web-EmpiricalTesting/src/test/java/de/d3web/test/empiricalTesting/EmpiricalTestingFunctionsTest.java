@@ -32,6 +32,8 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
@@ -137,7 +139,10 @@ public class EmpiricalTestingFunctionsTest {
 	@Test
 	public void testPrecisionRecall() {
 		// The good case "stc1"
-		STCDiff stc1_diff = new STCDiff(stc1);
+
+		Session session = SessionFactory.createSession(knowledge);
+
+		STCDiff stc1_diff = new STCDiff(stc1, session);
 		assertEquals(1, EmpiricalTestingFunctions.getInstance().precision(stc1_diff,
 						DerivationsCalculator.getInstance()), EPS);
 		assertEquals(1, EmpiricalTestingFunctions.getInstance().recall(stc1_diff,
@@ -146,7 +151,7 @@ public class EmpiricalTestingFunctionsTest {
 				DerivationsCalculator.getInstance()), EPS);
 
 		// The differing case "stc2": having prec=0,25
-		STCDiff stc2_diff = new STCDiff(stc2);
+		STCDiff stc2_diff = new STCDiff(stc2, session);
 		RTCDiff rtc_diff21 = new RTCDiff(rtc21);
 		rtc_diff21.addExpectedButNotDerived(s1, ESTABLISHED, SUGGESTED);
 		stc2_diff.add(rtc_diff21);

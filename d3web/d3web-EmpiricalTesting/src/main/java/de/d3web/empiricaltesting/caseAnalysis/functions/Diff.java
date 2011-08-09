@@ -21,6 +21,7 @@ package de.d3web.empiricaltesting.caseAnalysis.functions;
 import java.util.Collection;
 import java.util.Date;
 
+import de.d3web.core.session.Session;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
@@ -88,4 +89,12 @@ public interface Diff {
 	 */
 	Collection<RatedTestCase> getCasesWithDifference();
 
+	/**
+	 * Returns the session that was used to executed the {@link SequentialTestCase}
+	 * 
+	 * @created 09.08.2011
+	 * @return the {@link Session} that was used to execute the
+	 *         {@link SequentialTestCase}.
+	 */
+	Session getSession();
 }

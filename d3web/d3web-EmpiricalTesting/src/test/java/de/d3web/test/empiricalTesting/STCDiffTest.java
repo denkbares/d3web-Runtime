@@ -32,6 +32,8 @@ import org.junit.Test;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.empiricaltesting.Finding;
@@ -71,7 +73,8 @@ public class STCDiffTest {
 	@Test
 	public void testConstruction() {
 		SequentialTestCase stc = new SequentialTestCase();
-		STCDiff diff = new STCDiff(stc);
+		Session session = SessionFactory.createSession(knowledge);
+		STCDiff diff = new STCDiff(stc, session);
 
 		assertFalse(diff.hasDifferences());
 		diff.add(rtcDiff);
