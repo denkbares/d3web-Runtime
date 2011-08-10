@@ -23,6 +23,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
@@ -41,6 +42,7 @@ import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
 import de.d3web.empiricaltesting.caseAnalysis.STCDiff;
+import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * This class tests {@link STCDiff}.
@@ -57,7 +59,8 @@ public class STCDiffTest {
 	private RatedTestCase rtc;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 		knowledge = KnowledgeBaseUtils.createKnowledgeBase();
 		question = new QuestionNum(knowledge, "questionnum_name");
 		q_expected = new NumValue(1.0);
