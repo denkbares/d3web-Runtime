@@ -122,6 +122,9 @@ public class AStar {
 		Session actualSession = node.getSession();
 		for (StateTransition st : successors) {
 			QContainer qcontainer = st.getQcontainer();
+			List<QContainer> path = node.getPath().getPath();
+			// do not repeat qcontainers in a row
+			if (path.size() > 0 && path.get(path.size() - 1) == qcontainer) continue;
 			if (actualSession.getBlackboard().getIndication(qcontainer).isContraIndicated()) continue;
 			try {
 				if (st.getActivationCondition() == null
