@@ -16,32 +16,18 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.costbenefit.model;
-
-import java.util.List;
+package de.d3web.costbenefit.inference.astar;
 
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.costbenefit.inference.CostFunction;
 
 /**
- * Represents a path
  * 
  * @author Markus Friedrich (denkbares GmbH)
- * @created 10.08.2011
+ * @created 22.06.2011
  */
-public interface Path {
+public interface Heuristic {
 
-	/**
-	 * Collects all QContainers of the path in the correct (forward) order
-	 * 
-	 * @return a List of QContainers, representing this path
-	 */
-	List<QContainer> getPath();
-
-	/**
-	 * Returns the costs of this path
-	 * 
-	 * @return costs
-	 */
-	double getCosts();
+	double getDistance(State state, QContainer qcon, CostFunction costFunction);
 
 }

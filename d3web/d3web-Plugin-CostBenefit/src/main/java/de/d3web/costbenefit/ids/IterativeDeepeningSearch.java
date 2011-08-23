@@ -19,11 +19,14 @@
 package de.d3web.costbenefit.ids;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -34,10 +37,10 @@ import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.DefaultAbortStrategy;
-import de.d3web.costbenefit.model.Node;
-import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.costbenefit.model.ids.IDSPath;
+import de.d3web.costbenefit.model.ids.Node;
 
 /**
  * This IterativeDeepeningSearch is extended by multiple optimizations. It
@@ -65,12 +68,33 @@ class IterativeDeepeningSearch {
 	private final Node[] finalNodes;
 	public long count = 0;
 	private final SearchModel model;
-	private Path minSearchedPath;
+	private IDSPath minSearchedPath;
 	// TODO move to constructor...
 	private AbortStrategy abortStrategy = new DefaultAbortStrategy();
+	private final Map<Node, List<Target>> referencingTargets = new HashMap<Node, List<Target>>();
+	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
+	private int countMinPaths = 0;
 
 	public IterativeDeepeningSearch(SearchModel model) {
 		this.model = model;
+		// init model
+		Session session = model.getSession();
+		for (QContainer qcon : session.getKnowledgeBase().getManager().getQContainers()) {
+			Node containerNode = new Node(qcon, model);
+			map.put(qcon, containerNode);
+		}
+		for (Target target : model.getTargets()) {
+			if (target.getMinPath() != null) countMinPaths++;
+			for (QContainer qcon : target.getQContainers()) {
+				Node key = map.get(qcon);
+				List<Target> refs = this.referencingTargets.get(key);
+				if (refs == null) {
+					refs = new LinkedList<Target>();
+					this.referencingTargets.put(key, refs);
+				}
+				refs.add(target);
+			}
+		}
 		// get finalNodes
 		List<Target> possibleTargets = new LinkedList<Target>(model.getTargets());
 		Collections.sort(possibleTargets, new Comparator<Target>() {
@@ -85,13 +109,13 @@ class IterativeDeepeningSearch {
 		List<Node> temp = new LinkedList<Node>();
 		for (Target t : possibleTargets) {
 			for (QContainer qcon : t.getQContainers()) {
-				temp.add(model.getQContainerNode(qcon));
+				temp.add(map.get(qcon));
 			}
 		}
 		finalNodes = temp.toArray(new Node[temp.size()]);
-		Set<Node> nodeList = model.getNodes();
+		Set<Node> nodeList = getNodes();
 		HashSet<Node> relevantNodes = new HashSet<Node>();
-		Blackboard blackboard = model.getSession().getBlackboard();
+		Blackboard blackboard = session.getBlackboard();
 		// Nodes without post transitions are not relevant as successors
 		// TODO more sophisticated filter of successors (only relevant
 		// transitions, maybe backward search)
@@ -108,7 +132,7 @@ class IterativeDeepeningSearch {
 		// remove all Target nodes
 		// relevantNodes.removeAll(temp);
 		// reenter Target nodes that are used in combined targets
-		relevantNodes.addAll(model.getCombinedTargetsNodes());
+		relevantNodes.addAll(getCombinedTargetsNodes());
 		this.successorNodes = relevantNodes.toArray(new Node[relevantNodes
 				.size()]);
 		// cheaper nodes are tried as successors first
@@ -146,7 +170,7 @@ class IterativeDeepeningSearch {
 	private void search(Session testcase, int depth) throws AbortException {
 		if ((depth <= 0) || model.getTargets() == null
 				|| model.getTargets().size() == 0) return;
-		Path actual = new Path();
+		IDSPath actual = new IDSPath();
 		minSearchedPath = null;
 		findCheapestPath(actual, depth, testcase);
 		double mincosts;
@@ -170,7 +194,7 @@ class IterativeDeepeningSearch {
 				}
 			}
 		}
-		if (model.allTargetsReached()
+		if (allTargetsReached()
 				|| (model.getBestCostBenefit() < mincosts
 						/ model.getBestUnreachedBenefit())) {
 			// stop iterative deep search if each target node has been reached
@@ -190,7 +214,7 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private void findCheapestPath(Path actual, int depth, Session session)
+	private void findCheapestPath(IDSPath actual, int depth, Session session)
 			throws AbortException {
 
 		if (actual.getCosts() / model.getBestBenefit() > model
@@ -202,7 +226,7 @@ class IterativeDeepeningSearch {
 				if (!isValidSuccessor(actual, n, session)) continue;
 				actual.add(n, session);
 				abortStrategy.nextStep(actual);
-				model.minimizePath(actual);
+				minimizePath(actual);
 				actual.pop();
 			}
 			for (Node n : successorNodes) {
@@ -233,11 +257,71 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private boolean isValidSuccessor(Path actual, Node n, Session session) {
+	private boolean isValidSuccessor(IDSPath actual, Node n, Session session) {
 		// skip not applicable successors
 		if (!n.isApplicable(session)) return false;
 		if (actual.isEmpty()) return true;
 		return true;
 	}
 
+	/**
+	 * Returns all nodes of the graph to be searched.
+	 * 
+	 * @return
+	 */
+	private Set<Node> getNodes() {
+		Set<Node> nodeList = new HashSet<Node>();
+		for (Node node : map.values()) {
+			if (node.getStateTransition() != null) nodeList.add(node);
+		}
+		return nodeList;
+	}
+
+	/**
+	 * Returns all Nodes contained in combined Targets (targets with more than
+	 * one target Node)
+	 * 
+	 * @return
+	 */
+	private Collection<? extends Node> getCombinedTargetsNodes() {
+		List<Node> list = new LinkedList<Node>();
+		for (Target t : model.getTargets()) {
+			List<QContainer> qContainers = t.getQContainers();
+			if (qContainers.size() > 1) {
+				for (QContainer qcon : qContainers) {
+					list.add(map.get(qcon));
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Minimizes if necessary the path in all targets which are reached
+	 * 
+	 * @param path
+	 */
+	private void minimizePath(IDSPath path) {
+		Node node = path.getLastNode();
+		List<Target> theTargets = this.referencingTargets.get(node);
+		for (Target t : theTargets) {
+			if (t.isReached(path)) {
+				if (t.getMinPath() == null) countMinPaths++;
+				if (t.getMinPath() == null || t.getMinPath().getCosts() > path.getCosts()) {
+					t.setMinPath(path.copy());
+					model.checkTarget(t);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks if all targets are reached. If this is true, every target has a
+	 * minPath.
+	 * 
+	 * @return
+	 */
+	public boolean allTargetsReached() {
+		return (countMinPaths == model.getTargets().size());
+	}
 }

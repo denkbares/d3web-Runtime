@@ -52,10 +52,10 @@ import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
-import de.d3web.costbenefit.model.Node;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStrategy;
 
 /**
@@ -165,9 +165,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// when using this method, you want to get that target, beta mode (later
 		// there must be a abortion critera to prevent an endless loop if target
 		// is unreachable
-		IterativeDeepeningSearchAlgorithm noAbortSearchAlgorithm = new IterativeDeepeningSearchAlgorithm();
-		noAbortSearchAlgorithm.setAbortStrategy(new NoAbortStrategy());
-		noAbortSearchAlgorithm.search(caseObject.getSession(), searchModel);
+		// IterativeDeepeningSearchAlgorithm noAbortSearchAlgorithm = new
+		// IterativeDeepeningSearchAlgorithm();
+		// noAbortSearchAlgorithm.setAbortStrategy(new NoAbortStrategy());
+		searchAlgorithm.search(caseObject.getSession(), searchModel);
 
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
@@ -188,7 +189,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		searchModel.addTarget(target);
 		// initialize benefit in search model to a positive value
 		// (use 1 if there is no benefit inside the target)
-		searchModel.maximizeBenefit(target, Double.MAX_VALUE);
+		searchModel.maximizeBenefit(target, 10000000000.0);
 
 		// set the undiscriminated solution to "null" to indicate that we will
 		// not consider them for checking to execute a new search
@@ -215,7 +216,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		if (searchModel.getBestBenefit() != 0) {
 			searchAlgorithm.search(session, searchModel);
 		}
-
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
@@ -289,12 +289,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 */
 	private void activatePath(CostBenefitCaseObject caseObject, Path path) {
 		Session session = caseObject.getSession();
-		Collection<Node> nodes = path.getNodes();
-		QContainer[] currentSequence = new QContainer[nodes.size()];
+		Collection<QContainer> qContainers = path.getPath();
+		QContainer[] currentSequence = new QContainer[qContainers.size()];
 		int i = 0;
 		List<Fact> facts = new LinkedList<Fact>();
-		for (Node node : nodes) {
-			QContainer qContainer = node.getQContainer();
+		for (QContainer qContainer : qContainers) {
 			currentSequence[i] = qContainer;
 			makeOKQuestionsUndone(currentSequence[i], session);
 			i++;

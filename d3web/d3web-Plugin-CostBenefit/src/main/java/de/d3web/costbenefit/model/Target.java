@@ -67,8 +67,7 @@ public class Target {
 	 */
 	public boolean isReached(Path path) {
 		boolean[] reached = new boolean[this.getQContainers().size()];
-		for (Node node : path.getNodes()) {
-			QContainer qcon = node.getQContainer();
+		for (QContainer qcon : path.getPath()) {
 			if (this.getQContainers().contains(qcon)) {
 				reached[this.getQContainers().indexOf(qcon)] = true;
 			}
@@ -98,7 +97,7 @@ public class Target {
 	 * @created 07.03.2011
 	 * @param benefit the benefit calculated for this target
 	 */
-	void setBenefit(double benefit) {
+	public void setBenefit(double benefit) {
 		this.benefit = benefit;
 	}
 
@@ -125,7 +124,7 @@ public class Target {
 	 * @created 07.03.2011
 	 * @param minPath
 	 */
-	void setMinPath(Path minPath) {
+	public void setMinPath(Path minPath) {
 		this.minPath = minPath;
 	}
 

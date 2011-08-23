@@ -18,25 +18,16 @@
  */
 package de.d3web.costbenefit.model;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.model.ids.IDSPath;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search
@@ -47,12 +38,9 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 public class SearchModel {
 
 	private final Set<Target> targets = new HashSet<Target>();
-	private final Map<Node, List<Target>> referencingTargets = new HashMap<Node, List<Target>>();
+
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
-	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
-	private final Map<Question, List<Value>> expectedValues = new HashMap<Question, List<Value>>();
-	private int countMinPaths = 0;
 	private CostFunction costFunction;
 	private final Session session;
 
@@ -70,24 +58,6 @@ public class SearchModel {
 					"Kein Costbenefit-Problemlöser im Fall. Es wird die Standartkostenfunktion verwendet.",
 					null);
 		}
-		for (QContainer qcon : session.getKnowledgeBase().getManager().getQContainers()) {
-			Node containerNode = new Node(qcon, this);
-			map.put(qcon, containerNode);
-			Map<Question, Value> expected = containerNode.getExpectedValues(session);
-			for (Entry<Question, Value> entry : expected.entrySet()) {
-				Value answer = entry.getValue();
-				List<Value> answers = new LinkedList<Value>();
-				answers.add(answer);
-				// for (Object a: answers) {
-				// if (a instanceof Answer) answersCast.add((Answer) a);
-				// }
-				expectedValues.put(entry.getKey(), answers);
-			}
-		}
-	}
-
-	public Node getQContainerNode(QContainer qcon) {
-		return map.get(qcon);
 	}
 
 	/**
@@ -97,38 +67,9 @@ public class SearchModel {
 	 */
 	public void addTarget(Target target) {
 		targets.add(target);
-		if (target.getMinPath() != null) countMinPaths++;
-		for (QContainer qcon : target.getQContainers()) {
-			Node key = getQContainerNode(qcon);
-			List<Target> refs = this.referencingTargets.get(key);
-			if (refs == null) {
-				refs = new LinkedList<Target>();
-				this.referencingTargets.put(key, refs);
-			}
-			refs.add(target);
-		}
 	}
 
-	/**
-	 * Minimizes if necessary the path in all targets which are reached
-	 * 
-	 * @param path
-	 */
-	public void minimizePath(Path path) {
-		Node node = path.getLastNode();
-		List<Target> theTargets = this.referencingTargets.get(node);
-		for (Target t : theTargets) {
-			if (t.isReached(path)) {
-				if (t.getMinPath() == null) countMinPaths++;
-				if (t.getMinPath() == null || t.getMinPath().getCosts() > path.getCosts()) {
-					t.setMinPath(path.copy());
-					checkTarget(t);
-				}
-			}
-		}
-	}
-
-	private void checkTarget(Target t) {
+	public void checkTarget(Target t) {
 		if (bestBenefitTarget == null || t.getBenefit() > bestBenefitTarget.getBenefit()) {
 			bestBenefitTarget = t;
 		}
@@ -177,29 +118,6 @@ public class SearchModel {
 	}
 
 	/**
-	 * Returns all nodes of the graph to be searched.
-	 * 
-	 * @return
-	 */
-	public Set<Node> getNodes() {
-		Set<Node> nodeList = new HashSet<Node>();
-		for (Node node : map.values()) {
-			if (node.getStateTransition() != null) nodeList.add(node);
-		}
-		return nodeList;
-	}
-
-	/**
-	 * Checks if all targets are reached. If this is true, every target has a
-	 * minPath.
-	 * 
-	 * @return
-	 */
-	public boolean allTargetsReached() {
-		return (countMinPaths == targets.size());
-	}
-
-	/**
 	 * Returns the CostBenefit of the BestCostBenefitTarget
 	 * 
 	 * @return
@@ -233,7 +151,7 @@ public class SearchModel {
 	 * @param actual
 	 * @return
 	 */
-	public boolean isTarget(Path actual) {
+	public boolean isTarget(IDSPath actual) {
 		if (actual.isEmpty()) return false;
 		for (Target t : targets) {
 			if (t.isReached(actual)) {
@@ -241,39 +159,6 @@ public class SearchModel {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Returns all Nodes contained in combined Targets (targets with more than
-	 * one target Node)
-	 * 
-	 * @return
-	 */
-	public Collection<? extends Node> getCombinedTargetsNodes() {
-		List<Node> list = new LinkedList<Node>();
-		for (Target t : targets) {
-			List<QContainer> qContainers = t.getQContainers();
-			if (qContainers.size() > 1) {
-				for (QContainer qcon : qContainers) {
-					list.add(map.get(qcon));
-				}
-			}
-		}
-		return list;
-	}
-
-	/**
-	 * Checks if the Answer a to the Question q was the expected Answer which
-	 * has been used during the search. If not, the user has entered an
-	 * unexpected answer and the previously calculated sequence has become
-	 * invalid.
-	 * 
-	 * @param q
-	 * @param a
-	 * @return
-	 */
-	public boolean isExpectedAnswer(Question q, Choice a) {
-		return a.equals(expectedValues.get(q));
 	}
 
 	/**

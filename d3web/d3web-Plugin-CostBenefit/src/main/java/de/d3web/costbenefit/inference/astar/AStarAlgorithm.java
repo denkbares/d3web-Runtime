@@ -16,32 +16,35 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.costbenefit.model;
+package de.d3web.costbenefit.inference.astar;
 
-import java.util.List;
-
-import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.session.Session;
+import de.d3web.costbenefit.inference.SearchAlgorithm;
+import de.d3web.costbenefit.model.SearchModel;
 
 /**
- * Represents a path
+ * Calculates pathes to the targets in a SearchModel by using the A*-Algorithm
  * 
  * @author Markus Friedrich (denkbares GmbH)
- * @created 10.08.2011
+ * @created 22.06.2011
  */
-public interface Path {
+public class AStarAlgorithm implements SearchAlgorithm {
 
-	/**
-	 * Collects all QContainers of the path in the correct (forward) order
-	 * 
-	 * @return a List of QContainers, representing this path
-	 */
-	List<QContainer> getPath();
+	private Heuristic heuristic;
 
-	/**
-	 * Returns the costs of this path
-	 * 
-	 * @return costs
-	 */
-	double getCosts();
+	@Override
+	public void search(Session session, SearchModel model) {
+		if (heuristic == null) {
+			heuristic = new DividedTransitionHeuristic();
+		}
+		new AStar(session, model, heuristic).search();
+	}
 
+	public Heuristic getHeuristic() {
+		return heuristic;
+	}
+
+	public void setHeuristic(Heuristic heuristic) {
+		this.heuristic = heuristic;
+	}
 }

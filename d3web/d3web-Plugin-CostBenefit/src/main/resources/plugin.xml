@@ -80,7 +80,17 @@
 		<parameter id="class"
 			value="de.d3web.costbenefit.io.fragments.IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="name" value="IterativeDeepeningSearchAlgorithmHandler" />
-		<parameter id="description" value="Handler for IterativeDeepeningSearchAlgorithmHandler" />
+		<parameter id="description" value="Handler for IterativeDeepeningSearchAlgorithm" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="AStarSearchAlgorithmHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.AStarSearchAlgorithmHandler" />
+		<parameter id="name" value="AStarSearchAlgorithmHandler" />
+		<parameter id="description" value="Handler for AStarSearchAlgorithm" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>

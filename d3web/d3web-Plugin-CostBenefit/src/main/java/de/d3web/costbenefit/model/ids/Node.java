@@ -16,7 +16,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.costbenefit.model;
+package de.d3web.costbenefit.model.ids;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.StateTransition;
+import de.d3web.costbenefit.model.SearchModel;
 
 /**
  * QContainer Node for the virtual graph. Provides easy access to cost-benefit
@@ -59,7 +60,7 @@ public class Node {
 	 * @return
 	 */
 	public boolean isApplicable(Session session) {
-		if (st == null) return false;
+		if (st == null) return true;
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition == null) return true;
 		try {
