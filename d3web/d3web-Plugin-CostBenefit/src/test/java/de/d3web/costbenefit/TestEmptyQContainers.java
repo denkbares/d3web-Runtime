@@ -26,6 +26,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNumGreater;
@@ -45,8 +46,10 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.ExpertMode;
+import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -58,11 +61,19 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class TestEmptyQContainers {
 
+	protected void configureSearchAlgorithm(KnowledgeBase kb) {
+		PSMethodCostBenefit psmethod = new PSMethodCostBenefit();
+		psmethod.setSearchAlgorithm(new AStarAlgorithm());
+		kb.addPSConfig(new PSConfig(PSConfig.PSState.active, psmethod, "PSMethodCostBenefit",
+				"d3web-CostBenefit", 6));
+	}
+
 	@Test
 	public void test() throws Exception {
 		InitPluginManager.init();
 		// prepare kb and state question
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+		configureSearchAlgorithm(kb);
 		QuestionOC state = new QuestionOC(kb, "state");
 		Choice a = new Choice("a");
 		state.addAlternative(a);

@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +42,7 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 
 /**
+ * Algorithm which uses A* to find pathes to the targets
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
@@ -53,7 +55,7 @@ public class AStar {
 	private final List<Node> closedNodes = new LinkedList<Node>();
 	private final Map<State, Node> nodes = new HashMap<State, Node>();
 	private final Heuristic heuristic;
-	private final List<StateTransition> successors = new LinkedList<StateTransition>();
+	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
 
 	public AStar(Session session, SearchModel model, Heuristic heuristic) {
@@ -77,12 +79,8 @@ public class AStar {
 		// questions
 		Node start = new Node(computeState(session), session, new AStarPath(null, null, 0), 0);
 		openNodes.add(start);
-		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND)) {
-			if (st.getPostTransitions() != null && !st.getPostTransitions().isEmpty()) {
-				successors.add(st);
-			}
-		}
+		successors = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+				StateTransition.KNOWLEDGE_KIND);
 		// QContainers without a StateTransition can be executed at any time,
 		// but they cannot be used as intermediate steps because they have no
 		// transitions, so they are checked as targets before the calculation
