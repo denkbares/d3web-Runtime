@@ -54,6 +54,7 @@ public class CallFlowAction extends PSAction {
 			Logger.getLogger(CallFlowAction.class.getName()).severe(
 					"Could not find start node '" + startNodeName + "' in flow '" +
 							flowName + "'.");
+			return;
 		}
 
 		FluxSolver.activateNode(startNode, (FlowRun) source, session);
@@ -69,6 +70,7 @@ public class CallFlowAction extends PSAction {
 			Logger.getLogger(CallFlowAction.class.getName()).severe(
 					"Could not find start node '" + startNodeName + "' in flow '" +
 							flowName + "'.");
+			return;
 		}
 
 		FluxSolver.deactivateNode(startNode, (FlowRun) source, session);
