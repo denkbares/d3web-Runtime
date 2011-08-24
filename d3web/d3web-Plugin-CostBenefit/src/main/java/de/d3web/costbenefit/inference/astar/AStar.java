@@ -34,7 +34,10 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.inference.AbortException;
+import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.CostFunction;
+import de.d3web.costbenefit.inference.DefaultAbortStrategy;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
@@ -57,10 +60,20 @@ public class AStar {
 	private final Heuristic heuristic;
 	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
+	private final AbortStrategy abortStrategy;
+	private final Session session;
 
-	public AStar(Session session, SearchModel model, Heuristic heuristic) {
+	public AStar(Session session, SearchModel model, Heuristic heuristic, AbortStrategy abortStrategy) {
+		this.session = session;
 		this.model = model;
 		this.heuristic = heuristic;
+		if (abortStrategy != null) {
+			this.abortStrategy = abortStrategy;
+		}
+		else {
+			// 4000 opennodes should be possible with 2gb heapspace
+			this.abortStrategy = new DefaultAbortStrategy(400);
+		}
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
@@ -103,18 +116,37 @@ public class AStar {
 	 * @created 22.06.2011
 	 */
 	public void search() {
-		while (!openNodes.isEmpty()) {
-			Collections.sort(openNodes);
-			Node node = openNodes.pollFirst();
+		abortStrategy.init(model);
+		try {
+			while (!openNodes.isEmpty()) {
 
-			// if a target has been reached and its cost/benefit is better than
-			// the optimistic fValue of the best node, terminate the algorithm
-			if (model.getBestCostBenefitTarget() != null
-					&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
-				return;
+				Collections.sort(openNodes);
+				Node node = openNodes.pollFirst();
+				abortStrategy.nextStep(node.getPath(), session);
+				// if a target has been reached and its cost/benefit is better
+				// than
+				// the optimistic fValue of the best node, terminate the
+				// algorithm
+				if (model.getBestCostBenefitTarget() != null
+						&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
+					if (abortStrategy instanceof DefaultAbortStrategy) {
+						System.out.println("Calculation done, nodes expanded: "
+								+ session.getSessionObject((DefaultAbortStrategy) abortStrategy).getSteps());
+					}
+					return;
+				}
+				expandNode(node);
+				closedNodes.add(node);
 			}
-			expandNode(node);
-			closedNodes.add(node);
+		}
+		catch (AbortException e) {
+			// nothing to do
+			System.out.println("Calculation aborted by AbortStrategy.");
+			return;
+		}
+		if (abortStrategy instanceof DefaultAbortStrategy) {
+			System.out.println("Calculation done, all nodes expanded: "
+					+ session.getSessionObject((DefaultAbortStrategy) abortStrategy).getSteps());
 		}
 	}
 

@@ -18,8 +18,9 @@
  */
 package de.d3web.costbenefit.inference;
 
+import de.d3web.core.session.Session;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
-import de.d3web.costbenefit.model.ids.IDSPath;
 
 public class NoAbortStrategy implements AbortStrategy {
 
@@ -28,7 +29,7 @@ public class NoAbortStrategy implements AbortStrategy {
 	}
 
 	@Override
-	public void nextStep(IDSPath path) throws AbortException {
+	public void nextStep(Path path, Session session) throws AbortException {
 	}
 
 }

@@ -74,12 +74,12 @@ class IterativeDeepeningSearch {
 	private final Map<Node, List<Target>> referencingTargets = new HashMap<Node, List<Target>>();
 	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
 	private int countMinPaths = 0;
+	private final Session originalSession;
 
 	public IterativeDeepeningSearch(SearchModel model) {
 		this.model = model;
-		// init model
-		Session session = model.getSession();
-		for (QContainer qcon : session.getKnowledgeBase().getManager().getQContainers()) {
+		originalSession = model.getSession();
+		for (QContainer qcon : originalSession.getKnowledgeBase().getManager().getQContainers()) {
 			Node containerNode = new Node(qcon, model);
 			map.put(qcon, containerNode);
 		}
@@ -115,7 +115,7 @@ class IterativeDeepeningSearch {
 		finalNodes = temp.toArray(new Node[temp.size()]);
 		Set<Node> nodeList = getNodes();
 		HashSet<Node> relevantNodes = new HashSet<Node>();
-		Blackboard blackboard = session.getBlackboard();
+		Blackboard blackboard = originalSession.getBlackboard();
 		// Nodes without post transitions are not relevant as successors
 		// TODO more sophisticated filter of successors (only relevant
 		// transitions, maybe backward search)
@@ -225,14 +225,14 @@ class IterativeDeepeningSearch {
 			for (Node n : finalNodes) {
 				if (!isValidSuccessor(actual, n, session)) continue;
 				actual.add(n, session);
-				abortStrategy.nextStep(actual);
+				abortStrategy.nextStep(actual, originalSession);
 				minimizePath(actual);
 				actual.pop();
 			}
 			for (Node n : successorNodes) {
 				if (!isValidSuccessor(actual, n, session)) continue;
 				actual.add(n, session);
-				abortStrategy.nextStep(actual);
+				abortStrategy.nextStep(actual, originalSession);
 				if (minSearchedPath == null
 						|| actual.getCosts() < minSearchedPath.getCosts()) {
 					minSearchedPath = actual.copy();
@@ -246,7 +246,7 @@ class IterativeDeepeningSearch {
 				if (!isValidSuccessor(actual, successor, session)) continue;
 				List<Fact> undo = new LinkedList<Fact>();
 				actual.add(successor, session);
-				abortStrategy.nextStep(actual);
+				abortStrategy.nextStep(actual, originalSession);
 				undo.addAll(successor.setNormalValues(session));
 				undo.addAll(successor.getStateTransition().fire(session));
 				findCheapestPath(actual, depth - 1, session);

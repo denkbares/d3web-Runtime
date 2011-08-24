@@ -23,8 +23,11 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 
 /**
@@ -51,26 +54,26 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		AStarAlgorithm alg = new AStarAlgorithm();
-		// for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-		// Object readFragment =
-		// PersistenceManager.getInstance().readFragment(e, kb);
-		// if (readFragment instanceof AbortStrategy) {
-		// alg.setAbortStrategy((AbortStrategy) readFragment);
-		// }
-		// }
+		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
+			Object readFragment =
+					PersistenceManager.getInstance().readFragment(e, kb);
+			if (readFragment instanceof AbortStrategy) {
+				alg.setAbortStrategy((AbortStrategy) readFragment);
+			}
+		}
 		return alg;
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		// AStarAlgorithm alg = (AStarAlgorithm) object;
+		AStarAlgorithm alg = (AStarAlgorithm) object;
 		Element element = doc.createElement("searchAlgorithm");
 		element.setAttribute("name", "AStarSearchAlgorithm");
-		// AbortStrategy abortStrategy = alg.getAbortStrategy();
-		// if (abortStrategy != null) {
-		// element.appendChild(PersistenceManager.getInstance().writeFragment(
-		// abortStrategy, doc));
-		// }
+		AbortStrategy abortStrategy = alg.getAbortStrategy();
+		if (abortStrategy != null) {
+			element.appendChild(PersistenceManager.getInstance().writeFragment(
+					abortStrategy, doc));
+		}
 		return element;
 	}
 }

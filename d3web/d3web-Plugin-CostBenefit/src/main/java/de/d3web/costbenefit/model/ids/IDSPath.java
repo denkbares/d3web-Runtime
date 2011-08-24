@@ -128,4 +128,8 @@ public class IDSPath implements Path {
 		return list;
 	}
 
+	@Override
+	public String toString() {
+		return "IDSPath: " + getPath();
+	}
 }

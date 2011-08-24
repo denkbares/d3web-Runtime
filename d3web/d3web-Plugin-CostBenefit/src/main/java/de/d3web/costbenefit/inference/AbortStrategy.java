@@ -18,8 +18,9 @@
  */
 package de.d3web.costbenefit.inference;
 
+import de.d3web.core.session.Session;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
-import de.d3web.costbenefit.model.ids.IDSPath;
 
 /**
  * Strategy which decides, when a calculation should be aborted or not
@@ -42,7 +43,8 @@ public interface AbortStrategy {
 	 * {@link AbortException}
 	 * 
 	 * @param path
+	 * @param session TODO
 	 * @throws AbortException
 	 */
-	void nextStep(IDSPath path) throws AbortException;
+	void nextStep(Path path, Session session) throws AbortException;
 }

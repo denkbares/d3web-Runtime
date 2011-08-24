@@ -18,8 +18,12 @@
  */
 package de.d3web.costbenefit.inference;
 
+import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.costbenefit.inference.DefaultAbortStrategy.DefaultAbortStrategySessionObject;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
-import de.d3web.costbenefit.model.ids.IDSPath;
 
 /**
  * The DefaultAbortyStrategy throws an AbortException, when the maximum amount
@@ -27,31 +31,34 @@ import de.d3web.costbenefit.model.ids.IDSPath;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DefaultAbortStrategy implements AbortStrategy {
+public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<DefaultAbortStrategySessionObject> {
 
-	private long steps;
-
-	private long maxsteps;
+	private final long maxsteps;
 
 	public long getMaxsteps() {
 		return maxsteps;
 	}
 
-	private SearchModel model;
-
 	@Override
 	public void init(SearchModel model) {
-		steps = 0;
-		this.model = model;
+		DefaultAbortStrategySessionObject sessionObject = model.getSession().getSessionObject(this);
+		sessionObject.steps = 0;
+		sessionObject.model = model;
 	}
 
 	@Override
-	public void nextStep(IDSPath path) throws AbortException {
-		steps++;
-		if ((steps >= maxsteps && model.oneTargetReached()) || (steps >= maxsteps * 10)) {
+	public void nextStep(Path path, Session session) throws AbortException {
+		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
+		sessionObject.steps++;
+		if (check(sessionObject)) {
 			throw new AbortException();
 		}
 
+	}
+
+	private boolean check(DefaultAbortStrategySessionObject sessionObject) {
+		return (sessionObject.steps >= maxsteps && sessionObject.model.oneTargetReached())
+				|| (sessionObject.steps >= maxsteps * 10);
 	}
 
 	public DefaultAbortStrategy(long steps) {
@@ -64,8 +71,17 @@ public class DefaultAbortStrategy implements AbortStrategy {
 	}
 
 	@Override
-	public String toString() {
-		return getClass().getSimpleName() + " " + steps;
+	public DefaultAbortStrategySessionObject createSessionObject(Session session) {
+		return new DefaultAbortStrategySessionObject();
 	}
 
+	public static class DefaultAbortStrategySessionObject implements SessionObject {
+
+		private long steps;
+		private SearchModel model;
+
+		public long getSteps() {
+			return steps;
+		}
+	}
 }
