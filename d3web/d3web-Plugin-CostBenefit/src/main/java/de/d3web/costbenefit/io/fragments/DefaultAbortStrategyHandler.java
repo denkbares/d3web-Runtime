@@ -51,8 +51,13 @@ public class DefaultAbortStrategyHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		String maxsteps = element.getAttribute("maxsteps");
-		if (maxsteps.length() != 0) {
-			return new DefaultAbortStrategy(Integer.parseInt(maxsteps));
+		String increasingFactor = element.getAttribute("increasingFactor");
+		if (maxsteps.length() != 0 && increasingFactor.length() == 0) {
+			return new DefaultAbortStrategy(Long.parseLong(maxsteps));
+		}
+		else if (maxsteps.length() != 0 && increasingFactor.length() != 0) {
+			return new DefaultAbortStrategy(Integer.parseInt(maxsteps),
+					Integer.parseInt(increasingFactor));
 		}
 		return new DefaultAbortStrategy();
 	}
@@ -63,6 +68,7 @@ public class DefaultAbortStrategyHandler implements FragmentHandler {
 		Element element = doc.createElement("abortStrategy");
 		element.setAttribute("name", "DefaultAbortStrategy");
 		element.setAttribute("maxsteps", "" + strategie.getMaxsteps());
+		element.setAttribute("increasingFactor", "" + strategie.getMaxsteps());
 		return element;
 	}
 

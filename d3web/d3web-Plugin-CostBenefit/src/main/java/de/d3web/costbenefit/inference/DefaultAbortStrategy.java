@@ -34,6 +34,7 @@ import de.d3web.costbenefit.model.SearchModel;
 public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<DefaultAbortStrategySessionObject> {
 
 	private final long maxsteps;
+	private final long increasingFactor;
 
 	public long getMaxsteps() {
 		return maxsteps;
@@ -58,16 +59,29 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 
 	private boolean check(DefaultAbortStrategySessionObject sessionObject) {
 		return (sessionObject.steps >= maxsteps && sessionObject.model.oneTargetReached())
-				|| (sessionObject.steps >= maxsteps * 10);
+				|| (sessionObject.steps >= maxsteps * increasingFactor);
 	}
 
-	public DefaultAbortStrategy(long steps) {
+	/**
+	 * Creates a new {@link DefaultAbortStrategy} with the given parameters
+	 * 
+	 * @param steps if the calculation has reached a target, it will be aborted
+	 *        after this amount of steps
+	 * @param increasingFactor if not target is found, the calculation is
+	 *        aborted after increasingFactor*steps
+	 */
+	public DefaultAbortStrategy(long steps, int increasingFactor) {
 		maxsteps = steps;
+		this.increasingFactor = increasingFactor;
 	}
 
 	public DefaultAbortStrategy() {
 		// about 1,4 sec on my laptop ;-)
-		this(100000);
+		this(100000, 10);
+	}
+
+	public DefaultAbortStrategy(long steps) {
+		this(steps, 10);
 	}
 
 	@Override
