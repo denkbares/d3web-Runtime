@@ -69,7 +69,7 @@ public class DefaultAbortStrategyHandler implements FragmentHandler {
 		Element element = doc.createElement("abortStrategy");
 		element.setAttribute("name", "DefaultAbortStrategy");
 		element.setAttribute("maxsteps", "" + strategie.getMaxSteps());
-		element.setAttribute("increasingFactor", "" + strategie.getMaxSteps());
+		element.setAttribute("increasingFactor", "" + strategie.getIncreasingFactor());
 		return element;
 	}
 

@@ -184,7 +184,7 @@ public class SearchModel {
 	 * 
 	 * @return
 	 */
-	public boolean oneTargetReached() {
+	public boolean isAnyTargetReached() {
 		return (bestCostBenefitTarget != null);
 	}
 

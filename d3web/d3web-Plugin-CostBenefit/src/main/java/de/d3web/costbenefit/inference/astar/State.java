@@ -46,6 +46,8 @@ public class State {
 		for (Question q : preconditionQuestions) {
 			findings.put(q, session.getBlackboard().getValue(q));
 		}
+		// System.out.println("\tstate created: " + findings.size() +
+		// " entries");
 	}
 
 	/**

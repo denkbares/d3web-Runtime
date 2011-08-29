@@ -117,41 +117,45 @@ public class AStar {
 	 * @created 22.06.2011
 	 */
 	public void search() {
+		// TODO: remove this gc() if possible
+		Runtime.getRuntime().gc();
+		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
+		long time2 = System.currentTimeMillis();
 		try {
 			while (!openNodes.isEmpty()) {
 
 				// Collections.sort(openNodes);
 				Node node = openNodes.poll();
-				abortStrategy.nextStep(node.getPath(), session);
 				// if a target has been reached and its cost/benefit is better
 				// than
 				// the optimistic fValue of the best node, terminate the
 				// algorithm
 				if (model.getBestCostBenefitTarget() != null
 						&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
-					if (abortStrategy instanceof DefaultAbortStrategy) {
-						System.out.println("Calculation done, nodes expanded: "
-								+ session.getSessionObject((DefaultAbortStrategy) abortStrategy).getSteps());
-					}
-					return;
+					break;
 				}
 				expandNode(node);
 				closedNodes.add(node);
+				// System.out.println("\tnode closed");
 			}
 		}
 		catch (AbortException e) {
 			// nothing to do
 			System.out.println("Calculation aborted by AbortStrategy.");
-			return;
 		}
+		long time3 = System.currentTimeMillis();
 		if (abortStrategy instanceof DefaultAbortStrategy) {
-			System.out.println("Calculation done, all nodes expanded: "
-					+ session.getSessionObject((DefaultAbortStrategy) abortStrategy).getSteps());
+			System.out.println("Calculation done (" +
+					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
+					"time: " + (time3 - time2) + "ms, " +
+					"init: " + (time2 - time1) + "ms, " +
+					"#open: " + openNodes.size() + "ms, " +
+					"#closed: " + closedNodes.size() + "ms)");
 		}
 	}
 
-	private void expandNode(Node node) {
+	private void expandNode(Node node) throws AbortException {
 		Session actualSession = node.getSession();
 		for (StateTransition st : successors) {
 			QContainer qcontainer = st.getQcontainer();
@@ -176,6 +180,7 @@ public class AStar {
 						follower = new Node(newState, copiedSession, newPath, f);
 						nodes.put(newState, follower);
 						openNodes.add(follower);
+						// System.out.println("\tnode added");
 					}
 					else if (follower.getPath().getCosts() > newPath.getCosts()) {
 						// remove, update, add again to preserve ordering
@@ -184,8 +189,10 @@ public class AStar {
 						double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
 						follower.setfValue(f);
 						openNodes.add(follower);
+						// System.out.println("\tnode updated");
 					}
 					updateTargets(qcontainer, newPath);
+					abortStrategy.nextStep(node.getPath(), session);
 				}
 			}
 			catch (NoAnswerException e) {

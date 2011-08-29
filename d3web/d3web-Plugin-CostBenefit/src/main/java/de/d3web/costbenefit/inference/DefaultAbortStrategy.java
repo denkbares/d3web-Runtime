@@ -36,32 +36,6 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	private final int maxSteps;
 	private final float increasingFactor;
 
-	public long getMaxSteps() {
-		return maxSteps;
-	}
-
-	@Override
-	public void init(SearchModel model) {
-		DefaultAbortStrategySessionObject sessionObject = model.getSession().getSessionObject(this);
-		sessionObject.steps = 0;
-		sessionObject.model = model;
-	}
-
-	@Override
-	public void nextStep(Path path, Session session) throws AbortException {
-		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
-		sessionObject.steps++;
-		if (check(sessionObject)) {
-			throw new AbortException();
-		}
-
-	}
-
-	private boolean check(DefaultAbortStrategySessionObject sessionObject) {
-		return (sessionObject.steps >= maxSteps && sessionObject.model.oneTargetReached())
-				|| (sessionObject.steps >= maxSteps * increasingFactor);
-	}
-
 	/**
 	 * Creates a new {@link DefaultAbortStrategy} with the given parameters
 	 * 
@@ -75,13 +49,77 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 		this.increasingFactor = increasingFactor;
 	}
 
+	/**
+	 * Creates a new {@link DefaultAbortStrategy} with maximum steps of 100000
+	 * and an increasing factor of 10.
+	 * 
+	 * @see #getMaxSteps()
+	 * @see #getIncreasingFactor()
+	 */
 	public DefaultAbortStrategy() {
-		// about 1,4 sec on my laptop ;-)
+		// about 1,4 sec using IDS on Markus first laptop (RIP) ;-)
 		this(100000, 10);
 	}
 
-	public DefaultAbortStrategy(int steps) {
-		this(steps, 10);
+	/**
+	 * Creates a new {@link DefaultAbortStrategy} with the specified maximum
+	 * steps and an increasing factor of 10.
+	 * 
+	 * @param maxSteps if the calculation has reached a target, it will be
+	 *        aborted after this amount of steps
+	 * 
+	 * @see #getIncreasingFactor()
+	 */
+	public DefaultAbortStrategy(int maxSteps) {
+		this(maxSteps, 10);
+	}
+
+	/**
+	 * Returns the maximum number of steps searched until the best path should
+	 * be used without further searching.
+	 * 
+	 * @created 29.08.2011
+	 * @return maximum number of steps
+	 */
+	public int getMaxSteps() {
+		return maxSteps;
+	}
+
+	/**
+	 * Returns the factor, the maximum number of steps can be exceeded, if
+	 * searched has not found any path yet.
+	 * 
+	 * @created 29.08.2011
+	 * @return factor of exceeding maxSteps in worst case
+	 */
+	public float getIncreasingFactor() {
+		return getIncreasingFactor();
+	}
+
+	public long getSteps(Session session) {
+		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
+		return sessionObject.steps;
+	}
+
+	@Override
+	public void init(SearchModel model) {
+		DefaultAbortStrategySessionObject sessionObject = model.getSession().getSessionObject(this);
+		sessionObject.steps = 0;
+		sessionObject.model = model;
+	}
+
+	@Override
+	public void nextStep(Path path, Session session) throws AbortException {
+		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
+		sessionObject.steps++;
+		if (isAbortReached(sessionObject)) {
+			throw new AbortException();
+		}
+	}
+
+	private boolean isAbortReached(DefaultAbortStrategySessionObject sessionObject) {
+		return (sessionObject.steps >= maxSteps && sessionObject.model.isAnyTargetReached())
+				|| (sessionObject.steps >= maxSteps * increasingFactor);
 	}
 
 	@Override
