@@ -53,11 +53,12 @@ public class DefaultAbortStrategyHandler implements FragmentHandler {
 		String maxsteps = element.getAttribute("maxsteps");
 		String increasingFactor = element.getAttribute("increasingFactor");
 		if (maxsteps.length() != 0 && increasingFactor.length() == 0) {
-			return new DefaultAbortStrategy(Long.parseLong(maxsteps));
+			return new DefaultAbortStrategy(Integer.parseInt(maxsteps));
 		}
 		else if (maxsteps.length() != 0 && increasingFactor.length() != 0) {
-			return new DefaultAbortStrategy(Integer.parseInt(maxsteps),
-					Integer.parseInt(increasingFactor));
+			return new DefaultAbortStrategy(
+					Integer.parseInt(maxsteps),
+					Float.parseFloat(increasingFactor));
 		}
 		return new DefaultAbortStrategy();
 	}
@@ -67,8 +68,8 @@ public class DefaultAbortStrategyHandler implements FragmentHandler {
 		DefaultAbortStrategy strategie = (DefaultAbortStrategy) object;
 		Element element = doc.createElement("abortStrategy");
 		element.setAttribute("name", "DefaultAbortStrategy");
-		element.setAttribute("maxsteps", "" + strategie.getMaxsteps());
-		element.setAttribute("increasingFactor", "" + strategie.getMaxsteps());
+		element.setAttribute("maxsteps", "" + strategie.getMaxSteps());
+		element.setAttribute("increasingFactor", "" + strategie.getMaxSteps());
 		return element;
 	}
 

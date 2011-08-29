@@ -20,7 +20,6 @@ package de.d3web.costbenefit.inference.astar;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Question;
@@ -28,41 +27,43 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 /**
+ * The State class represents a compact description of the state of a session.
+ * This includes all answered questions that are used in any precondition or
+ * state transition.
+ * <p>
+ * If two paths reaches the same state (values for the state questions), they
+ * reference the identical node in the search graph. Therefore the State is the
+ * key identifier for a search node.
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
  */
 public class State {
 
-	private final Session session;
 	private final Map<Question, Value> findings = new HashMap<Question, Value>();
 
 	public State(Session session, Set<Question> preconditionQuestions) {
-		this.session = session;
 		for (Question q : preconditionQuestions) {
 			findings.put(q, session.getBlackboard().getValue(q));
 		}
 	}
 
-	public Session getSession() {
-		return session;
-	}
-
 	/**
-	 * Checks if the Question q has the value v in this state
+	 * Checks if the specified state {@link Question} has the specified
+	 * {@link Value} in this state.
 	 * 
 	 * @created 24.06.2011
-	 * @param q Question
-	 * @param v Value
+	 * @param question Question
+	 * @param value Value
 	 * @return true, if the Question q has the Value v, false otherwise
 	 */
-	public boolean check(Question q, Value v) {
-		Value storedValue = findings.get(q);
-		if (storedValue == null && v == null) {
+	public boolean hasValue(Question question, Value value) {
+		Value storedValue = findings.get(question);
+		if (storedValue == null && value == null) {
 			return true;
 		}
 		else if (storedValue != null) {
-			return storedValue.equals(v);
+			return storedValue.equals(value);
 		}
 		else {
 			return false;
@@ -73,25 +74,13 @@ public class State {
 	public boolean equals(Object o) {
 		if (o instanceof State) {
 			State otherState = (State) o;
-			if (findings.size() == otherState.findings.size()) {
-				for (Question q : findings.keySet()) {
-					if (!findings.get(q).equals(otherState.findings.get(q))) {
-						return false;
-					}
-				}
-				return true;
-			}
+			return findings.equals(otherState.findings);
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		int hash = findings.size();
-		for (Entry<Question, Value> e : findings.entrySet()) {
-			hash += e.getKey().hashCode();
-			hash += e.getValue().hashCode();
-		}
-		return hash;
+		return findings.hashCode();
 	}
 }

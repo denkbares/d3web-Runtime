@@ -87,7 +87,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 			CondEqual c = (CondEqual) cond;
 			QuestionChoice question = (QuestionChoice) c.getQuestion();
 			ChoiceValue value = (ChoiceValue) c.getValue();
-			if (state.check(question, value)) {
+			if (state.hasValue(question, value)) {
 				// condition is fulfilled, no state transition needed => no
 				// costs
 				return 0;
@@ -107,7 +107,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				CondEqual c = (CondEqual) terms.get(0);
 				QuestionChoice question = (QuestionChoice) c.getQuestion();
 				Value value = c.getValue();
-				if (!state.check(question, value)) {
+				if (!state.hasValue(question, value)) {
 					return 0.0;
 				}
 				double cheapest = Double.POSITIVE_INFINITY;

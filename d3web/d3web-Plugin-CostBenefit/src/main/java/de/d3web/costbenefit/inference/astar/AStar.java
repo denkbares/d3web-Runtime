@@ -19,12 +19,13 @@
 package de.d3web.costbenefit.inference.astar;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -54,8 +55,8 @@ public class AStar {
 
 	private final SearchModel model;
 	private final Set<Question> stateQuestions = new HashSet<Question>();
-	private final LinkedList<Node> openNodes = new LinkedList<Node>();
-	private final List<Node> closedNodes = new LinkedList<Node>();
+	private final Queue<Node> openNodes = new PriorityQueue<Node>();
+	private final Collection<Node> closedNodes = new LinkedList<Node>();
 	private final Map<State, Node> nodes = new HashMap<State, Node>();
 	private final Heuristic heuristic;
 	private final Collection<StateTransition> successors;
@@ -120,8 +121,8 @@ public class AStar {
 		try {
 			while (!openNodes.isEmpty()) {
 
-				Collections.sort(openNodes);
-				Node node = openNodes.pollFirst();
+				// Collections.sort(openNodes);
+				Node node = openNodes.poll();
 				abortStrategy.nextStep(node.getPath(), session);
 				// if a target has been reached and its cost/benefit is better
 				// than
@@ -170,15 +171,19 @@ public class AStar {
 					AStarPath newPath = new AStarPath(qcontainer,
 							node.getPath(), costs);
 					if (follower == null) {
+						// create a new one, because it does not exist
 						double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
 						follower = new Node(newState, copiedSession, newPath, f);
 						nodes.put(newState, follower);
 						openNodes.add(follower);
 					}
 					else if (follower.getPath().getCosts() > newPath.getCosts()) {
+						// remove, update, add again to preserve ordering
+						openNodes.remove(follower);
 						follower.updatePath(newPath);
 						double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
 						follower.setfValue(f);
+						openNodes.add(follower);
 					}
 					updateTargets(qcontainer, newPath);
 				}

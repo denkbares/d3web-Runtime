@@ -34,6 +34,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.FragmentManager;
+import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -144,6 +145,10 @@ public final class SessionPersistenceManager extends FragmentManager {
 		listener.updateProgress(0.7f, "writing records to disc");
 		Util.writeDocumentToOutputStream(doc, stream);
 		listener.updateProgress(1f, "writing records done");
+	}
+
+	public Collection<SessionRecord> loadSessions(File file) throws IOException {
+		return loadSessions(file, new DummyProgressListener());
 	}
 
 	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener) throws IOException {
