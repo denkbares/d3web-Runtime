@@ -72,8 +72,7 @@ public class AStar {
 			this.abortStrategy = abortStrategy;
 		}
 		else {
-			// 4000 opennodes should be possible with 2gb heapspace
-			this.abortStrategy = new DefaultAbortStrategy(200, 1);
+			this.abortStrategy = new DefaultAbortStrategy(5000, 1);
 		}
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
