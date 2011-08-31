@@ -109,6 +109,8 @@ public final class InterviewBot {
 	// creates new sessions for branching in the tree
 	private SessionFactory sessionFactory;
 
+	private List<BotListener> listeners = new LinkedList<BotListener>();
+
 	/**
 	 * Private inner class to store all transient information during the
 	 * creation process. This keeps the bot reentrant and avoid the need of
@@ -134,19 +136,19 @@ public final class InterviewBot {
 			// Termination of the recursion: no more questions to ask
 			// or maximum number of cases generated.
 			if (getBotStrategy().isFinished(thisSession)) {
-				store(thisCase);
+				storePath(thisSession, thisCase);
 				return;
 			}
 
 			// do noting more if we reached the maximum number of cases
 			if (maxCases > 0 && casesCounter >= maxCases) {
-				storeError(thisCase, "max cases reached");
+				storeError(thisSession, thisCase, "max cases reached");
 				return;
 			}
 
 			// do noting more if user has canceled
 			if (isCanceled) {
-				storeError(thisCase, "user aborted");
+				storeError(thisSession, thisCase, "user aborted");
 				return;
 			}
 
@@ -161,7 +163,7 @@ public final class InterviewBot {
 			// if we have an unexpected knowledge base layout
 			// we sometimes will receive an empty fact set
 			if (factSets == null || factSets.length == 0) {
-				storeError(thisCase,
+				storeError(thisSession, thisCase,
 						"no fact sets for "
 								+ Arrays.asList(interviewItems));
 				return;
@@ -196,7 +198,7 @@ public final class InterviewBot {
 				// In this case (and if specified in the bot settings)
 				// we want to truncate this path, recording an error message
 				if (truncateIncreasingSolutions && hasSolutionsIncreased(nextSequentialCase)) {
-					storeError(nextSequentialCase, "solutions increased");
+					storeError(nextSession, nextSequentialCase, "solutions increased");
 				}
 				else {
 					// step down in recursion with the next suitable
@@ -243,7 +245,7 @@ public final class InterviewBot {
 			return false;
 		}
 
-		private void storeError(SequentialTestCase thisCase, String message) {
+		private void storeError(Session session, SequentialTestCase thisCase, String message) {
 			// then store the message node
 			System.out.println("\t" + message);
 			List<Finding> findings = Collections.emptyList();
@@ -251,6 +253,9 @@ public final class InterviewBot {
 			SequentialTestCase nextSequentialCase = packNewSequence(
 					thisCase, findings, solutions, message);
 			store(nextSequentialCase);
+			for (BotListener listener : listeners) {
+				listener.pathErroneous(InterviewBot.this, session, nextSequentialCase);
+			}
 		}
 
 		/**
@@ -272,11 +277,17 @@ public final class InterviewBot {
 		 */
 		public void generate() {
 			progressListener.updateProgress(0f, "preparing generation");
-			Session initSession = createInitSession();
-			SequentialTestCase stc = createInitalCase(initSession);
+			for (BotListener listener : listeners) {
+				listener.knowledgePrepared(InterviewBot.this, getKnowledgeBase());
+			}
+			Session session = createInitSession();
+			SequentialTestCase stc = createInitalCase(session);
+			for (BotListener listener : listeners) {
+				listener.sessionPrepared(InterviewBot.this, session, stc);
+			}
 			updateProgress(0f);
 			// start with depth 2, because the seed is depth 1
-			traverse(initSession, stc, 2, 0f, 1f);
+			traverse(session, stc, 2, 0f, 1f);
 		}
 
 		private void updateProgress(float percent) {
@@ -300,15 +311,46 @@ public final class InterviewBot {
 		 * Give the sequential test case a name and add it to the collection of
 		 * generated cases.
 		 * 
+		 * @param session
+		 * 
 		 * @param theSeqCase the {@link SequentialTestCase} instance to be added
 		 *        to the collection of generated cases
 		 */
+		private void storePath(Session session, SequentialTestCase theSeqCase) {
+			store(theSeqCase);
+			for (BotListener listener : listeners) {
+				listener.pathCompleted(InterviewBot.this, session, theSeqCase);
+			}
+		}
+
 		private void store(SequentialTestCase theSeqCase) {
 			theSeqCase.setName(sequentialTestCasePraefix + casesCounter);
 			cases.add(theSeqCase);
 			casesCounter++;
 		}
 
+	}
+
+	/**
+	 * Adds a {@link BotListener} instance to the listeners of this
+	 * InterviewBot.
+	 * 
+	 * @created 30.08.2011
+	 * @param listener the listener to be added
+	 */
+	public void addBotListener(BotListener listener) {
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Removes a {@link BotListener} instance from the listeners of this
+	 * InterviewBot.
+	 * 
+	 * @created 30.08.2011
+	 * @param listener the listener to be removed
+	 */
+	public void removeBotListener(BotListener listener) {
+		this.listeners.remove(listener);
 	}
 
 	/**
