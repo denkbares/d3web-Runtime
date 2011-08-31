@@ -149,8 +149,8 @@ public class AStar {
 					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
 					"time: " + (time3 - time2) + "ms, " +
 					"init: " + (time2 - time1) + "ms, " +
-					"#open: " + openNodes.size() + "ms, " +
-					"#closed: " + closedNodes.size() + "ms)");
+					"#open: " + openNodes.size() + ", " +
+					"#closed: " + closedNodes.size());
 		}
 	}
 

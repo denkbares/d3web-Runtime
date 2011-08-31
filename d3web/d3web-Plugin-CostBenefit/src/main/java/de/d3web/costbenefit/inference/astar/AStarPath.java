@@ -82,6 +82,6 @@ public class AStarPath implements Path {
 
 	@Override
 	public String toString() {
-		return "Path: " + getPath();
+		return "A*-Path: " + getPath() + " (costs: " + getCosts() + ")";
 	}
 }

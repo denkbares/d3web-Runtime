@@ -130,6 +130,6 @@ public class IDSPath implements Path {
 
 	@Override
 	public String toString() {
-		return "IDSPath: " + getPath();
+		return "IDS-Path: " + getPath() + " (costs: " + getCosts() + ")";
 	}
 }
