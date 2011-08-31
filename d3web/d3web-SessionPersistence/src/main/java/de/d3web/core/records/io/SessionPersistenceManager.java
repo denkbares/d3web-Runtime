@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,6 +86,18 @@ public final class SessionPersistenceManager extends FragmentManager {
 	/**
 	 * Writes a set of session records as xml into the specified file.
 	 * 
+	 * @created 31.08.2011
+	 * @param file the target file to be written
+	 * @param sessionRecords the session records to be stored
+	 * @throws IOException if the xml content cannot be written into the file
+	 */
+	public void saveSessions(File file, Collection<SessionRecord> sessionRecords) throws IOException {
+		saveSessions(file, sessionRecords, new DummyProgressListener());
+	}
+
+	/**
+	 * Writes a set of session records as xml into the specified file.
+	 * 
 	 * @created 19.05.2011
 	 * @param file the target file to be written
 	 * @param sessionRecords the session records to be stored
@@ -107,6 +120,18 @@ public final class SessionPersistenceManager extends FragmentManager {
 			}
 		}
 		file.setLastModified(latestChange.getTime());
+	}
+
+	/**
+	 * Writes a set of session records as xml into the specified stream.
+	 * 
+	 * @created 31.08.2011
+	 * @param stream the target stream to be written
+	 * @param sessionRecords the session records to be stored
+	 * @throws IOException if the xml content cannot be written into the file
+	 */
+	public void saveSessions(OutputStream stream, Collection<SessionRecord> sessionRecords) throws IOException {
+		saveSessions(stream, sessionRecords, new DummyProgressListener());
 	}
 
 	/**
@@ -147,55 +172,105 @@ public final class SessionPersistenceManager extends FragmentManager {
 		listener.updateProgress(1f, "writing records done");
 	}
 
+	/**
+	 * Reads the {@link SessionRecord}s from a xml file and returns them as a
+	 * collection.
+	 * 
+	 * @created 31.08.2011
+	 * @param file the file to read the records from
+	 * @return the records read
+	 * @throws IOException if the file cannot be accessed or its contents are
+	 *         not stored session records
+	 */
 	public Collection<SessionRecord> loadSessions(File file) throws IOException {
 		return loadSessions(file, new DummyProgressListener());
 	}
 
+	/**
+	 * Reads the {@link SessionRecord}s from a xml file and returns them as a
+	 * collection.
+	 * 
+	 * @created 31.08.2011
+	 * @param file the file to read the records from
+	 * @param listener the progress listener to indicate the progress
+	 * @return the records read
+	 * @throws IOException if the file cannot be accessed or its contents are
+	 *         not stored session records
+	 */
 	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener) throws IOException {
-		updateHandler();
 		FileInputStream stream = new FileInputStream(file);
-		Collection<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
 		try {
-			listener.updateProgress(0.0f, "reading file from disc");
-			Document doc = Util.streamToDocument(stream);
-			List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
-			if (childNodes.size() == 1
-					&& childNodes.get(0).getNodeName().equalsIgnoreCase(REPOSITORY_TAG)) {
-				Element repositoryElement = childNodes.get(0);
-				List<Element> sessionElements = XMLUtil.getElementList(repositoryElement.getChildNodes());
-				int max = sessionElements.size();
-				int counter = 0;
-				for (Element e : sessionElements) {
-					// update progress
-					listener.updateProgress(
-							0.3f + max / (float) counter,
-							"parsing session " + counter + " of " + max);
-
-					String id = e.getAttribute("id");
-					String created = e.getAttribute("created");
-					String changed = e.getAttribute("changed");
-					try {
-						Date creationDate = DATE_FORMAT.parse(created);
-						Date dateOfLastEdit = DATE_FORMAT.parse(changed);
-						DefaultSessionRecord sr =
-								new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
-						for (Extension extension : handler) {
-							SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
-							theHandler.read(e, sr, listener);
-						}
-						sr.touch(dateOfLastEdit);
-						sessionRecords.add(sr);
-					}
-					catch (ParseException e1) {
-						throw new IOException(e1);
-					}
-				}
-			}
-			listener.updateProgress(1f, "parsing done");
-			return sessionRecords;
+			return loadSessions(stream, listener);
 		}
 		finally {
 			stream.close();
 		}
+	}
+
+	/**
+	 * Reads the {@link SessionRecord}s from a xml input stream and returns them
+	 * as a collection.
+	 * 
+	 * @created 31.08.2011
+	 * @param inputStream the stream to read the records from
+	 * @return the records read
+	 * @throws IOException if the stream's content is not a xml of stored
+	 *         session records
+	 */
+	public Collection<SessionRecord> loadSessions(InputStream inputStream) throws IOException {
+		return loadSessions(inputStream, new DummyProgressListener());
+	}
+
+	/**
+	 * Reads the {@link SessionRecord}s from a xml input stream and returns them
+	 * as a collection.
+	 * 
+	 * @created 31.08.2011
+	 * @param inputStream the stream to read the records from
+	 * @param listener the progress listener to indicate the progress
+	 * @return the records read
+	 * @throws IOException if the stream's content is not a xml of stored
+	 *         session records
+	 */
+	public Collection<SessionRecord> loadSessions(InputStream inputStream, ProgressListener listener) throws IOException {
+		updateHandler();
+		Collection<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
+		listener.updateProgress(0.0f, "reading file from disc");
+		Document doc = Util.streamToDocument(inputStream);
+		List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
+		if (childNodes.size() == 1
+				&& childNodes.get(0).getNodeName().equalsIgnoreCase(REPOSITORY_TAG)) {
+			Element repositoryElement = childNodes.get(0);
+			List<Element> sessionElements = XMLUtil.getElementList(repositoryElement.getChildNodes());
+			int max = sessionElements.size();
+			int counter = 0;
+			for (Element e : sessionElements) {
+				// update progress
+				listener.updateProgress(
+						0.3f + max / (float) counter,
+						"parsing session " + counter + " of " + max);
+
+				String id = e.getAttribute("id");
+				String created = e.getAttribute("created");
+				String changed = e.getAttribute("changed");
+				try {
+					Date creationDate = DATE_FORMAT.parse(created);
+					Date dateOfLastEdit = DATE_FORMAT.parse(changed);
+					DefaultSessionRecord sr =
+							new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
+					for (Extension extension : handler) {
+						SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
+						theHandler.read(e, sr, listener);
+					}
+					sr.touch(dateOfLastEdit);
+					sessionRecords.add(sr);
+				}
+				catch (ParseException e1) {
+					throw new IOException(e1);
+				}
+			}
+		}
+		listener.updateProgress(1f, "parsing done");
+		return sessionRecords;
 	}
 }

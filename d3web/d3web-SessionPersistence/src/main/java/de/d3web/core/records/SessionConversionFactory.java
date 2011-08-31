@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
@@ -135,16 +136,30 @@ public final class SessionConversionFactory {
 	}
 
 	/**
-	 * Converts a Session to a SessionRecord
+	 * Converts a {@link Session} to a {@link SessionRecord}.
 	 * 
 	 * @created 05.08.2011
-	 * @param source {@link Session}
-	 * @return {@link SessionRecord}
+	 * @param source the session to be converted
+	 * @return the created session record
 	 */
 	public static SessionRecord copyToSessionRecord(Session source) {
-		DefaultSessionRecord target = new DefaultSessionRecord(
-				source.getId(),
-				source.getCreationDate(), source.getLastChangeDate());
+		return copyToSessionRecord(source, false);
+	}
+
+	/**
+	 * Converts a {@link Session} to a {@link SessionRecord}.
+	 * 
+	 * @created 05.08.2011
+	 * @param source the session to be converted
+	 * @param createNewID specified if the record should be decoupled from the
+	 *        session be creating a new (unique) id
+	 * @return the created session record
+	 */
+	public static SessionRecord copyToSessionRecord(Session source, boolean createNewID) {
+		DefaultSessionRecord target =
+				new DefaultSessionRecord(
+						createNewID ? UUID.randomUUID().toString() : source.getId(),
+						source.getCreationDate(), source.getLastChangeDate());
 		target.setName(source.getName());
 		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 		target.getProtocol().addEntries(source.getProtocol().getProtocolHistory());
