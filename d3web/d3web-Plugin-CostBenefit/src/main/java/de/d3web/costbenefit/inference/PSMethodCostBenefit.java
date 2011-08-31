@@ -270,10 +270,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				if (benefit == 0) continue;
 				searchModel.addTarget(target);
 				searchModel.maximizeBenefit(target, benefit);
+				allTargets.add(target);
 			}
 			// recall them for storing into the case object
 			allSolutions.addAll(solutions);
-			allTargets.addAll(targets);
 		}
 		caseObject.setUndiscriminatedSolutions(allSolutions);
 		caseObject.setSearchModel(searchModel);
