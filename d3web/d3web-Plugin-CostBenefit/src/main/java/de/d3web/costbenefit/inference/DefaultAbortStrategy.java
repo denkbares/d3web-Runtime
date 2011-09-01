@@ -93,7 +93,10 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	 * @return factor of exceeding maxSteps in worst case
 	 */
 	public float getIncreasingFactor() {
-		return getIncreasingFactor();
+		//return getIncreasingFactor();
+
+		// Fixed by hanse02 on 01.09.2011
+		return increasingFactor;
 	}
 
 	public long getSteps(Session session) {
