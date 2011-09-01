@@ -27,7 +27,6 @@ import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
-import de.d3web.costbenefit.model.ids.IDSPath;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search
@@ -58,6 +57,65 @@ public class SearchModel {
 					"Kein Costbenefit-Problemlöser im Fall. Es wird die Standartkostenfunktion verwendet.",
 					null);
 		}
+	}
+
+	@Override
+	public SearchModel clone() {
+		SearchModel copy = new SearchModel(session);
+		copy.bestBenefitTarget =
+				this.bestBenefitTarget == null ? null : bestBenefitTarget.clone();
+		copy.bestCostBenefitTarget =
+				this.bestCostBenefitTarget == null ? null : bestCostBenefitTarget.clone();
+		for (Target target : targets) {
+			copy.addTarget(target.clone());
+		}
+		return copy;
+	}
+
+	/**
+	 * Merges the information from the specified {@link SearchModel} into this
+	 * SearchModel. The specified one is left untouched. This object is altered
+	 * and contains the merged results of the two searches.
+	 * 
+	 * @created 01.09.2011
+	 * @param other the search model to merge into this object
+	 */
+	public void merge(SearchModel other) {
+		// do all the checks inside this loop
+		// to avoid multiple clones for the same target
+		for (Target original : other.targets) {
+			// create one clone target
+			Target copy = original.clone();
+			// check for best benefit one
+			if (original == other.bestBenefitTarget) {
+				checkTarget(copy);
+			}
+			// check for best cost benefit one
+			// (else, because we have no need to check it twice)
+			else if (original == other.bestCostBenefitTarget) {
+				checkTarget(copy);
+			}
+			// and replace the one in the targets list
+			// if the copied one is better
+			Target existing = getExistingTarget(copy);
+			if (existing != null && existing.getCosts() > copy.getCosts()) {
+				targets.remove(existing);
+				targets.add(copy);
+			}
+		}
+	}
+
+	/**
+	 * Return the existing target that equals to the specified one.
+	 * Unfortunately the Set have no such function to acces the existing one.
+	 */
+	private Target getExistingTarget(Target blueprint) {
+		if (targets.contains(blueprint)) {
+			for (Target target : targets) {
+				if (target.equals(blueprint)) return target;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -151,7 +209,7 @@ public class SearchModel {
 	 * @param actual
 	 * @return
 	 */
-	public boolean isTarget(IDSPath actual) {
+	public boolean isTarget(Path actual) {
 		if (actual.isEmpty()) return false;
 		for (Target t : targets) {
 			if (t.isReached(actual)) {
@@ -191,4 +249,5 @@ public class SearchModel {
 	public Session getSession() {
 		return session;
 	}
+
 }
