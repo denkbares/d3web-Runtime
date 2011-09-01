@@ -58,6 +58,14 @@ public class Target {
 		this.qContainers.addAll(targetContainers);
 	}
 
+	@Override
+	protected Target clone() {
+		Target copy = new Target(qContainers);
+		copy.benefit = this.benefit;
+		copy.minPath = this.minPath;
+		return copy;
+	}
+
 	/**
 	 * Checks if this Target is reached by the specified path. It is reached,
 	 * when all QContainers are in the path.
