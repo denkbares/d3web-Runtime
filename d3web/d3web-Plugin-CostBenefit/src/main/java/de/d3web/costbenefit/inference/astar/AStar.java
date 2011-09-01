@@ -63,8 +63,10 @@ public class AStar {
 	private final CostFunction costFunction;
 	private final AbortStrategy abortStrategy;
 	private final Session session;
+	private final transient long initTime;
 
 	public AStar(Session session, SearchModel model, Heuristic heuristic, AbortStrategy abortStrategy) {
+		long time = System.currentTimeMillis();
 		this.session = session;
 		this.model = model;
 		this.heuristic = heuristic;
@@ -103,6 +105,7 @@ public class AStar {
 				updateTargets(qcon, new AStarPath(qcon, null, costFunction.getCosts(qcon, session)));
 			}
 		}
+		this.initTime = System.currentTimeMillis() - time;
 	}
 
 	private State computeState(Session session) {
@@ -120,7 +123,7 @@ public class AStar {
 		Runtime.getRuntime().gc();
 		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
-		long time2 = System.currentTimeMillis();
+		String termination = "done";
 		try {
 			while (!openNodes.isEmpty()) {
 
@@ -141,16 +144,16 @@ public class AStar {
 		}
 		catch (AbortException e) {
 			// nothing to do
-			System.out.println("Calculation aborted by AbortStrategy.");
+			termination = "aborted";
 		}
-		long time3 = System.currentTimeMillis();
+		long time2 = System.currentTimeMillis();
 		if (abortStrategy instanceof DefaultAbortStrategy) {
-			System.out.println("Calculation done (" +
+			System.out.println("A* Calculation "+termination+" (" +
 					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
-					"time: " + (time3 - time2) + "ms, " +
-					"init: " + (time2 - time1) + "ms, " +
+					"time: " + (time2 - time1) + "ms, " +
+					"init: " + initTime + "ms, " +
 					"#open: " + openNodes.size() + ", " +
-					"#closed: " + closedNodes.size());
+					"#closed: " + closedNodes.size() + ")");
 		}
 	}
 

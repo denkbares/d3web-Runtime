@@ -75,8 +75,10 @@ class IterativeDeepeningSearch {
 	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
 	private int countMinPaths = 0;
 	private final Session originalSession;
+	private final transient long initTime;
 
 	public IterativeDeepeningSearch(SearchModel model) {
+		long time = System.currentTimeMillis();
 		this.model = model;
 		originalSession = model.getSession();
 		for (QContainer qcon : originalSession.getKnowledgeBase().getManager().getQContainers()) {
@@ -137,7 +139,7 @@ class IterativeDeepeningSearch {
 				.size()]);
 		// cheaper nodes are tried as successors first
 		Arrays.sort(successorNodes, new StaticCostComparator());
-
+		this.initTime = System.currentTimeMillis() - time;
 	}
 
 	public AbortStrategy getAbortStrategy() {
@@ -156,14 +158,24 @@ class IterativeDeepeningSearch {
 	public void search(Session session) {
 		// Abort if there are no targets in the model
 		if (!model.hasTargets()) return;
+		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
 		Session testcase = Util.copyCase(session);
+		String termination = "done";
 		try {
 			search(testcase, 1);
 		}
 		catch (AbortException e) {
 			// we have stopped at the search due to time restrictions.
 			// use the best found path till now
+			termination = "aborted";
+		}
+		long time2 = System.currentTimeMillis();
+		if (abortStrategy instanceof DefaultAbortStrategy) {
+			System.out.println("IDS Calculation " + termination + " (" +
+					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
+					"time: " + (time2 - time1) + "ms, " +
+					"init: " + initTime + "ms)");
 		}
 	}
 
