@@ -31,17 +31,26 @@ import de.d3web.core.knowledge.terminology.QContainer;
 public interface Path {
 
 	/**
-	 * Collects all QContainers of the path in the correct (forward) order
+	 * Returns the {@link List} of all {@link QContainer}s of the path in the
+	 * correct (forward) order.
 	 * 
-	 * @return a List of QContainers, representing this path
+	 * @return a list of questionnaires, representing this path
 	 */
 	List<QContainer> getPath();
 
 	/**
-	 * Returns the costs of this path
+	 * Returns the total costs of this path. This may differ from the static
+	 * costs of the questionnaires accessed by {@link #getPath()}, if a specific
+	 * cost function is used.
 	 * 
-	 * @return costs
+	 * @return costs of the path
 	 */
 	double getCosts();
 
+	/**
+	 * Checks if the path is empty.
+	 * 
+	 * @return if the path is empty
+	 */
+	public boolean isEmpty();
 }

@@ -84,4 +84,10 @@ public class AStarPath implements Path {
 	public String toString() {
 		return "A*-Path: " + getPath() + " (costs: " + getCosts() + ")";
 	}
+
+	@Override
+	public boolean isEmpty() {
+		// an A* path can never be empty
+		return false;
+	}
 }

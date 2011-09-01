@@ -110,11 +110,7 @@ public class IDSPath implements Path {
 		return stack.peek();
 	}
 
-	/**
-	 * Checks if the path is empty.
-	 * 
-	 * @return
-	 */
+	@Override
 	public boolean isEmpty() {
 		return stack.isEmpty();
 	}
