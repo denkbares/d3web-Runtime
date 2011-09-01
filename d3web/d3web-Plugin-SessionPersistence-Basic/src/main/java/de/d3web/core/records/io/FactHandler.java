@@ -71,6 +71,9 @@ public class FactHandler implements SessionPersistenceHandler {
 			String idObjectName = factElement.getAttribute("objectName");
 			String psmName = factElement.getAttribute("psm");
 			if (psmName.length() == 0) psmName = null;
+			// preserve backward compatibility
+			// (used class.toString instead of class.getName)
+			if (psmName != null && psmName.startsWith("class ")) psmName = psmName.substring(6);
 			List<Element> valueNodes = XMLUtil.getElementList(factElement.getChildNodes());
 			SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 			Object readFragment = spm.readFragment(valueNodes.get(0), null);

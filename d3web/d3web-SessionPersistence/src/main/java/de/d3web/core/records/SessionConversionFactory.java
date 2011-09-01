@@ -75,17 +75,16 @@ public final class SessionConversionFactory {
 		target.setName(source.getName());
 		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 
-		// Search psmethods of session (improves performance)
+		// Search psmethods of session
 		Map<String, PSMethod> psMethods = new HashMap<String, PSMethod>();
 		for (PSMethod psm : target.getPSMethods()) {
-			psMethods.put(psm.getClass().toString(), psm);
+			psMethods.put(psm.getClass().getName(), psm);
 		}
 		target.getPropagationManager().openPropagation();
 		try {
-			List<Fact> valueFacts = new LinkedList<Fact>();
-			List<Fact> interviewFacts = new LinkedList<Fact>();
-			getFacts(knowledgeBase, source.getValueFacts(), psMethods, valueFacts);
-			getFacts(knowledgeBase, source.getInterviewFacts(), psMethods, interviewFacts);
+			List<Fact> valueFacts = getFacts(knowledgeBase, source.getValueFacts(), psMethods);
+			List<Fact> interviewFacts =
+					getFacts(knowledgeBase, source.getInterviewFacts(), psMethods);
 			for (Fact fact : valueFacts) {
 				target.getBlackboard().addValueFact(fact);
 			}
@@ -109,30 +108,32 @@ public final class SessionConversionFactory {
 		return target;
 	}
 
-	private static void getFacts(KnowledgeBase kb, List<FactRecord> factRecords, Map<String, PSMethod> psMethods, List<Fact> valueFacts) throws IOException {
+	private static List<Fact> getFacts(KnowledgeBase kb, List<FactRecord> factRecords, Map<String, PSMethod> psMethods) throws IOException {
+		List<Fact> resultFacts = new LinkedList<Fact>();
 		for (FactRecord factRecord : factRecords) {
+			// ignore merged facts
 			String psm = factRecord.getPsm();
-			if (psm != null) {
-				PSMethod psMethod = psMethods.get(psm);
-				if (psMethod != null) {
-					if (psMethod.hasType(Type.source)) {
-						Value value = factRecord.getValue();
-						TerminologyObject object = kb.getManager().search(
-								factRecord.getObjectName());
-						if (object == null) {
-							throw new IOException(
-									"Object " + factRecord.getObjectName() +
-											" not found in knowledge base");
-						}
-						valueFacts.add(new DefaultFact(object, value, psMethod, psMethod));
-					}
-				}
-				else {
-					throw new IOException("Problemsolver " + psm
-							+ " not found in Session.");
-				}
+			if (psm == null) continue;
+			PSMethod psMethod = psMethods.get(psm);
+
+			// ensure that problem solver exists
+			if (psMethod == null) {
+				throw new IOException("Problemsolver " + psm + " not found in Session.");
 			}
+
+			// ignore all non-source facts
+			if (!psMethod.hasType(Type.source)) continue;
+
+			// otherwise, create the fact and add it to our results
+			Value value = factRecord.getValue();
+			String objectName = factRecord.getObjectName();
+			TerminologyObject object = kb.getManager().search(objectName);
+			if (object == null) {
+				throw new IOException("Object " + objectName + " not found in knowledge base");
+			}
+			resultFacts.add(new DefaultFact(object, value, psMethod, psMethod));
 		}
+		return resultFacts;
 	}
 
 	/**
@@ -169,7 +170,7 @@ public final class SessionConversionFactory {
 			for (PSMethod psm : contributingPSMethods) {
 				Value value = blackboard.getValue(q, psm);
 				if (UndefinedValue.isNotUndefinedValue(value)) {
-					target.addValueFact(new FactRecord(q, psm.getClass().toString(), value));
+					target.addValueFact(new FactRecord(q, psm.getClass().getName(), value));
 				}
 			}
 			// if more than one psm has set a value, add the globally merged
@@ -184,7 +185,7 @@ public final class SessionConversionFactory {
 			for (PSMethod psm : contributingPSMethods) {
 				Rating rating = blackboard.getRating(s, psm);
 				if (!rating.hasState(State.UNCLEAR)) {
-					target.addValueFact(new FactRecord(s, psm.getClass().toString(), rating));
+					target.addValueFact(new FactRecord(s, psm.getClass().getName(), rating));
 				}
 			}
 			if (contributingPSMethods.size() > 1) {
@@ -197,7 +198,7 @@ public final class SessionConversionFactory {
 			for (PSMethod psm : indicatingPSMethods) {
 				Indication indication = blackboard.getIndication((InterviewObject) object, psm);
 				if (!indication.hasState(Indication.State.NEUTRAL)) {
-					target.addInterviewFact(new FactRecord(object, psm.getClass().toString(),
+					target.addInterviewFact(new FactRecord(object, psm.getClass().getName(),
 							indication));
 				}
 			}
