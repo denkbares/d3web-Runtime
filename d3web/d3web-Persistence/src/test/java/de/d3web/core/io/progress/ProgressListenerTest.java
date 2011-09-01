@@ -46,9 +46,10 @@ public class ProgressListenerTest {
 		listener.updateProgress(0, "Updating");
 		listener.updateProgress(0.2f, "Updating...");
 		listener.updateProgress(1, "Finished");
-		Assert.assertEquals("0%: Updating\n" +
-				"20%: Updating...\n" +
-				"100%: Finished\n", out.toString("UTF-8"));
+		System.out.flush();
+		String actual = out.toString("UTF-8").trim();
+		String expected = "0%: Updating\n20%: Updating...\n100%: Finished";
+		Assert.assertEquals(expected, actual);
 	}
 
 	@Test
