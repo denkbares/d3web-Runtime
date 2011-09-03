@@ -22,10 +22,12 @@ package de.d3web.core.session.blackboard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
@@ -297,5 +299,20 @@ final class FactAggregator {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns a collection of all problem and strategic solvers that are
+	 * contributing at least one fact to this FactAggregator.
+	 * 
+	 * @created 02.09.2011
+	 * @return the contributing solver instances
+	 */
+	public Collection<PSMethod> getContributingPSMethods() {
+		Set<PSMethod> result = new HashSet<PSMethod>();
+		for (Fact fact : facts) {
+			result.add(fact.getPSMethod());
+		}
+		return result;
 	}
 }

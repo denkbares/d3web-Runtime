@@ -340,25 +340,13 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	@Override
-	public List<PSMethod> getContributingPSMethods(TerminologyObject object) {
-		List<PSMethod> list = new LinkedList<PSMethod>();
-		for (PSMethod psm : session.getPSMethods()) {
-			if (valueStorage.hasFact(object, psm)) {
-				list.add(psm);
-			}
-		}
-		return list;
+	public Collection<PSMethod> getContributingPSMethods(TerminologyObject object) {
+		return valueStorage.getContributingPSMethods(object);
 	}
 
 	@Override
-	public List<PSMethod> getIndicatingPSMethods(TerminologyObject object) {
-		List<PSMethod> list = new LinkedList<PSMethod>();
-		for (PSMethod psm : session.getPSMethods()) {
-			if (interviewStorage.hasFact(object, psm)) {
-				list.add(psm);
-			}
-		}
-		return list;
+	public Collection<PSMethod> getIndicatingPSMethods(TerminologyObject object) {
+		return interviewStorage.getContributingPSMethods(object);
 	}
 
 	@Override
@@ -377,4 +365,5 @@ public class DefaultBlackboard implements Blackboard {
 		}
 		return fact.getValue();
 	}
+
 }

@@ -19,12 +19,16 @@
 
 package de.d3web.core.session.blackboard;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.utilities.NamedObjectComparator;
 
 /**
  * This class handles a dynamic set of {@link FactAggregator}s.
@@ -205,5 +209,72 @@ final class FactStorage {
 	 */
 	public Collection<TerminologyObject> getValuedObjects() {
 		return this.mediators.keySet();
+	}
+
+	/**
+	 * Returns a collection of all problem and strategic solvers that are
+	 * contributing at least one fact to the specified term objects.
+	 * 
+	 * @created 02.09.2011
+	 * @param termObject the object to get the contributing solvers for
+	 * @return the contributing solver instances
+	 */
+	public Collection<PSMethod> getContributingPSMethods(TerminologyObject termObject) {
+		FactAggregator aggregator = this.mediators.get(termObject);
+		if (aggregator != null) {
+			return aggregator.getContributingPSMethods();
+		}
+		return Collections.emptySet();
+	}
+
+	/**
+	 * Creates a "core dump" of the information contained in this FactStorage.
+	 * The dump ensures that equal FactStorages creates the same dumps (e.g. the
+	 * identical order of the information). Because of NOT containing every
+	 * possible information, it is not guaranteed that two FactStorage with same
+	 * dump may differ in some information (e.g. facts, hidden by other ones).
+	 * <p>
+	 * The following information are contained in the dump:
+	 * <ul>
+	 * <li>merged value facts for all {@link TerminologyObject}s that have facts
+	 * <li>the single facts derived by each problem solver before they are
+	 * merged globally
+	 * </ul>
+	 * <p>
+	 * This method may be helpful for debugging and testing purposes.
+	 * 
+	 * @created 03.09.2011
+	 * @return the dumped information
+	 */
+	public String dump() {
+		List<TerminologyObject> objects = new ArrayList<TerminologyObject>(mediators.keySet());
+		Collections.sort(objects, new NamedObjectComparator());
+		StringBuilder result = new StringBuilder();
+		for (TerminologyObject object : objects) {
+			FactAggregator aggregator = getAggregator(object);
+
+			// print object and merged fact
+			result.append(object).append("\t= ");
+			Fact fact = aggregator.getMergedFact();
+			String psmName = fact.getPSMethod().getClass().getSimpleName();
+			result.append(fact.getValue()).append(" [").append(psmName).append("]");
+
+			// print also facts for each contributing psm
+			Collection<PSMethod> psMethods = aggregator.getContributingPSMethods();
+			if (psMethods.size() > 1) {
+				result.append(" {");
+				for (PSMethod psMethod : psMethods) {
+					Fact subFact = aggregator.getMergedFact(psMethod);
+					String subName = psMethod.getClass().getSimpleName();
+					result.append(subName).append("=").append(subFact.getValue());
+					result.append(", ");
+				}
+				result.deleteCharAt(result.length() - 1);
+				result.deleteCharAt(result.length() - 1);
+				result.append("}");
+			}
+			result.append("\n");
+		}
+		return result.toString();
 	}
 }

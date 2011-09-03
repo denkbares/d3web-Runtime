@@ -98,8 +98,8 @@ public class StateTransition implements KnowledgeSlice {
 						// cvs.getAnswer(), new Object(),
 						// PSMethodUserSelected.getInstance());
 						Fact fact = new
-								PSMethodStateTransition.StateTransitionFact(q,
-										cvs.getAnswer());
+								PSMethodStateTransition.StateTransitionFact(
+										session, q, cvs.getAnswer());
 						session.getBlackboard().addValueFact(fact);
 						facts.add(fact);
 						break;

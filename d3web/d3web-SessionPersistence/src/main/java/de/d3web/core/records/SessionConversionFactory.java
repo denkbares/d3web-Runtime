@@ -19,6 +19,7 @@
 package de.d3web.core.records;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -166,7 +167,7 @@ public final class SessionConversionFactory {
 		target.getProtocol().addEntries(source.getProtocol().getProtocolHistory());
 		Blackboard blackboard = source.getBlackboard();
 		for (Question q : blackboard.getValuedQuestions()) {
-			List<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(q);
+			Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(q);
 			for (PSMethod psm : contributingPSMethods) {
 				Value value = blackboard.getValue(q, psm);
 				if (UndefinedValue.isNotUndefinedValue(value)) {
@@ -181,7 +182,7 @@ public final class SessionConversionFactory {
 			}
 		}
 		for (Solution s : blackboard.getValuedSolutions()) {
-			List<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(s);
+			Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(s);
 			for (PSMethod psm : contributingPSMethods) {
 				Rating rating = blackboard.getRating(s, psm);
 				if (!rating.hasState(State.UNCLEAR)) {
@@ -194,7 +195,7 @@ public final class SessionConversionFactory {
 			}
 		}
 		for (TerminologyObject object : blackboard.getInterviewObjects()) {
-			List<PSMethod> indicatingPSMethods = blackboard.getIndicatingPSMethods(object);
+			Collection<PSMethod> indicatingPSMethods = blackboard.getIndicatingPSMethods(object);
 			for (PSMethod psm : indicatingPSMethods) {
 				Indication indication = blackboard.getIndication((InterviewObject) object, psm);
 				if (!indication.hasState(Indication.State.NEUTRAL)) {

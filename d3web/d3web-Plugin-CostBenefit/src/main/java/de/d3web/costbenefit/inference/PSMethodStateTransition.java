@@ -20,7 +20,9 @@
 
 package de.d3web.costbenefit.inference;
 
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
@@ -28,39 +30,57 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 
 public final class PSMethodStateTransition extends PSMethodUserSelected {
 
-	private static PSMethodStateTransition instance;
-
-	private PSMethodStateTransition() {
-
-	}
-
-	public static PSMethodStateTransition getInstance() {
-		if (instance == null) {
-			instance = new PSMethodStateTransition();
-		}
-		return instance;
+	public PSMethodStateTransition() {
 	}
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-		StateTransitionFact max = null;
+		// remember: if a session is loaded from a record,
+		// source psm max have DefaultFacts instead of their one ones
+		Fact maxFact = null;
+		int maxNumber = Integer.MIN_VALUE;
 		for (Fact fact : facts) {
-			StateTransitionFact stf = (StateTransitionFact) fact;
-			if (max == null || max.number < stf.number) {
-				max = stf;
+			// use the first one (also works for DefaultFacts)
+			if (maxFact == null) {
+				maxFact = fact;
+			}
+			// and overwrite existing max if it is
+			// a normal fact or if the current one on newer
+			else if (fact instanceof StateTransitionFact) {
+				StateTransitionFact stf = (StateTransitionFact) fact;
+				if (maxNumber < stf.number) {
+					maxFact = stf;
+					maxNumber = stf.number;
+				}
 			}
 		}
-		return max;
+		return maxFact;
+	}
+
+	@Override
+	public double getPriority() {
+		// high priority (but not higher that the user itself)
+		return 1;
 	}
 
 	public static class StateTransitionFact extends DefaultFact {
 
+		private static final PSMethodStateTransition psmInstance = new PSMethodStateTransition();
 		public static int counter = 0;
+
 		private final int number;
 
-		public StateTransitionFact(TerminologyObject terminologyObject, Value value) {
-			super(terminologyObject, value, new Object(), PSMethodStateTransition.getInstance());
+		public StateTransitionFact(Session session, TerminologyObject terminologyObject, Value value) {
+			super(terminologyObject, value, new Object(), findPSM(session));
 			number = counter++;
+		}
+
+		private static PSMethod findPSM(Session session) {
+			PSMethod psm = session.getPSMethodInstance(PSMethodStateTransition.class);
+			if (psm == null) {
+				return psmInstance;
+			}
+			return psm;
 		}
 
 	}

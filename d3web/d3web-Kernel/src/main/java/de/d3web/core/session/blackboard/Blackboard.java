@@ -234,7 +234,7 @@ public interface Blackboard {
 	public Indication getIndication(InterviewObject interviewElement);
 
 	/**
-	 * Return a list of all answered questions
+	 * Return a list of all answered questions.
 	 * 
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 11.05.2010
@@ -253,7 +253,7 @@ public interface Blackboard {
 
 	/**
 	 * Returns the Value Fact of one {@link PSMethod} of a
-	 * {@link TerminologyObject}
+	 * {@link TerminologyObject}.
 	 * 
 	 * @created 21.09.2010
 	 * @param terminologyObject {@link TerminologyObject}
@@ -264,7 +264,7 @@ public interface Blackboard {
 
 	/**
 	 * Returns the Interview Fact of one {@link PSMethod} of a
-	 * {@link TerminologyObject}
+	 * {@link TerminologyObject}.
 	 * 
 	 * @created 21.09.2010
 	 * @param terminologyObject {@link TerminologyObject}
@@ -275,7 +275,7 @@ public interface Blackboard {
 
 	/**
 	 * Returns the {@link Indication} of one {@link PSMethod} of a
-	 * {@link TerminologyObject}
+	 * {@link TerminologyObject}.
 	 * 
 	 * @created 21.09.2010
 	 * @param interviewElement {@link InterviewObject}
@@ -285,22 +285,22 @@ public interface Blackboard {
 	Indication getIndication(InterviewObject interviewElement, PSMethod psMethod);
 
 	/**
-	 * Returns a list of all problemsolvers, which added at least one value fact
-	 * for the {@link TerminologyObject}
+	 * Returns a collection of all problem and strategic solvers, which added at
+	 * least one value fact for the {@link TerminologyObject}.
 	 * 
 	 * @created 24.09.2010
 	 * @param object {@link TerminologyObject}
-	 * @return List of {@link PSMethod}
+	 * @return {@link Collection} of {@link PSMethod}
 	 */
-	List<PSMethod> getContributingPSMethods(TerminologyObject object);
+	Collection<PSMethod> getContributingPSMethods(TerminologyObject object);
 
 	/**
-	 * Returns a list of all problemsolvers, which added at least one interview
-	 * fact for the {@link TerminologyObject}
+	 * Returns a collection of all problem and strategic solvers, which added at
+	 * least one interview fact for the {@link TerminologyObject}.
 	 * 
 	 * @created 24.09.2010
 	 * @param object {@link TerminologyObject}
-	 * @return List of {@link PSMethod}
+	 * @return {@link Collection} of {@link PSMethod}
 	 */
-	List<PSMethod> getIndicatingPSMethods(TerminologyObject object);
+	Collection<PSMethod> getIndicatingPSMethods(TerminologyObject object);
 }
