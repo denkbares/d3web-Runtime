@@ -58,16 +58,21 @@ public final class PSMethodStateTransition extends PSMethodUserSelected {
 	}
 
 	@Override
-	public double getPriority() {
-		// high priority (but not higher that the user itself)
-		return 1;
+	public int hashCode() {
+		// hashCode and equals will be based on class identification only
+		return getClass().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		// hashCode and equals will be based on class identification only
+		return other.getClass() == getClass();
 	}
 
 	public static class StateTransitionFact extends DefaultFact {
 
 		private static final PSMethodStateTransition psmInstance = new PSMethodStateTransition();
 		public static int counter = 0;
-
 		private final int number;
 
 		public StateTransitionFact(Session session, TerminologyObject terminologyObject, Value value) {
@@ -77,10 +82,10 @@ public final class PSMethodStateTransition extends PSMethodUserSelected {
 
 		private static PSMethod findPSM(Session session) {
 			PSMethod psm = session.getPSMethodInstance(PSMethodStateTransition.class);
-			if (psm == null) {
-				return psmInstance;
+			if (psm != null) {
+				return psm;
 			}
-			return psm;
+			return psmInstance;
 		}
 
 	}
