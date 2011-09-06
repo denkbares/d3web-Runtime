@@ -37,8 +37,8 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.TestPersistence;
-import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysisReport;
 import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysis;
+import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysisReport;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -75,7 +75,7 @@ public class KBTester {
 	 * @param t the underlying TestSuite
 	 */
 	private void testPrecisionAndRecallInterview(TestCase t) {
-		TestCaseAnalysis analysis = (TestCaseAnalysis) TestCaseAnalysis.getInstance();
+		TestCaseAnalysis analysis = new TestCaseAnalysis();
 		TestCaseAnalysisReport result = analysis.runAndAnalyze(t);
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nInterview-Precision differ in test suite ");
@@ -98,7 +98,7 @@ public class KBTester {
 	 * @param t the underlying TestSuite
 	 */
 	private void testPrecisionAndRecall(TestCase t) {
-		TestCaseAnalysis analysis = (TestCaseAnalysis) TestCaseAnalysis.getInstance();
+		TestCaseAnalysis analysis = new TestCaseAnalysis();
 		TestCaseAnalysisReport result = analysis.runAndAnalyze(t);
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nPrecision differ in test suite ");

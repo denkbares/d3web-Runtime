@@ -19,6 +19,8 @@
 package de.d3web.empiricaltesting.caseAnalysis.functions;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
@@ -33,6 +35,7 @@ import de.d3web.empiricaltesting.ScoreRating;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.StateRating;
 import de.d3web.empiricaltesting.TestCase;
+import de.d3web.empiricaltesting.TestListener;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
 import de.d3web.empiricaltesting.caseAnalysis.STCDiff;
 import de.d3web.indication.inference.PSMethodUserSelected;
@@ -48,12 +51,12 @@ import de.d3web.scoring.HeuristicRating;
  */
 public class TestCaseAnalysis {
 
-	private static TestCaseAnalysis instance = new TestCaseAnalysis();
-	private boolean debug = false;
+	private final List<TestListener> listeners;
 
-	public static TestCaseAnalysis getInstance() {
-		return instance;
+	public TestCaseAnalysis() {
+		listeners = new LinkedList<TestListener>();
 	}
+
 
 	/**
 	 * Performs a test case analysis on the specified collection of
@@ -69,12 +72,38 @@ public class TestCaseAnalysis {
 	 *         facts
 	 */
 	public TestCaseAnalysisReport runAndAnalyze(TestCase suite) {
+		notifyTestcaseStart(suite);
 		TestCaseAnalysisReport result = new AnalysisReport();
 		for (SequentialTestCase stc : suite.getRepository()) {
 			Diff diff = runAndAnalyze(stc, suite.getKb());
 			result.add(diff);
 		}
+		notifyTestcaseFinished(suite, result);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @created 06.09.2011
+	 * @param suite
+	 * @param result
+	 */
+	private void notifyTestcaseFinished(TestCase suite, TestCaseAnalysisReport result) {
+		for (TestListener listener : this.listeners) {
+			listener.testcaseFinished(suite, result);
+		}
+	}
+
+	/**
+	 * Notifies registered listeners about the start of a {@link TestCase}.
+	 * 
+	 * @created 06.09.2011
+	 * @param suite the suite about to be tested
+	 */
+	private void notifyTestcaseStart(TestCase suite) {
+		for (TestListener listener : listeners) {
+			listener.testcaseStarting(suite);
+		}
 	}
 
 	/**
@@ -119,24 +148,81 @@ public class TestCaseAnalysis {
 		Date creationDate = getCreationDate(stc);
 		Session session = SessionFactory.createSession(stc.getName() + now().toString(), knowledge,
 				creationDate);
+		notifySTCStart(stc, session);
 		Diff diff = new STCDiff(stc, session);
 
-		if (this.debug) {
-			print("Analysis: " + stc.getName() + " [" + creationDate + "]");
-		}
 
 		for (RatedTestCase rtc : stc.getCases()) {
-			if (this.debug) {
-				print("   RTC: " + rtc.getName());
-			}
+
+			notifyRTCStart(rtc);
+
 			setFindings(session, rtc);
 			RTCDiff rtc_diff = compareExpectations(session, rtc);
 
 			if (rtc_diff.hasDifferences()) {
 				((STCDiff) diff).add(rtc_diff);
 			}
+			notifyRTCFinished(rtc, rtc_diff);
 		}
+
+		notifySTCFinished(stc, session, diff);
 		return diff;
+	}
+
+	/**
+	 * Notifies listeners that a {@link RatedTestCase} has finished.
+	 * 
+	 * @created 06.09.2011
+	 * @param rtc the {@link RatedTestCase}
+	 * @param rtc_diff the result of the execution
+	 */
+	private void notifyRTCFinished(RatedTestCase rtc, RTCDiff rtc_diff) {
+		for (TestListener listener : this.listeners) {
+			listener.ratedTestcaseFinished(rtc, rtc_diff);
+		}
+	}
+
+	/**
+	 * Notifies registered Listeners that a {@link RatedTestCase} is about to
+	 * start.
+	 * 
+	 * @created 06.09.2011
+	 * @param rtc the {@link RatedTestCase} to be executed.
+	 */
+	private void notifyRTCStart(RatedTestCase rtc) {
+		for (TestListener listener : this.listeners) {
+			listener.ratedTestcaseStarting(rtc);
+		}
+
+	}
+
+	/**
+	 * Notifies registered listeners that a {@link SequentialTestCase} was
+	 * finished.
+	 * 
+	 * @created 06.09.2011
+	 * @param stc the executed {@link SequentialTestCase}
+	 * @param session
+	 * @param diff the result of the execution
+	 */
+	private void notifySTCFinished(SequentialTestCase stc, Session session, Diff diff) {
+		for (TestListener listener : this.listeners) {
+			listener.sequentialTestcaseFinished(stc, session, diff);
+		}
+	}
+
+	/**
+	 * Notifies registered listeners that a {@link SequentialTestCase} is about
+	 * to start.
+	 * 
+	 * @created 06.09.2011
+	 * @param stc the {@link SequentialTestCase}
+	 * @param session the {@link Session} that is used to execute stc
+	 */
+	private void notifySTCStart(SequentialTestCase stc, Session session) {
+		for (TestListener listener : this.listeners) {
+			listener.sequentialTestcaseStarting(stc, session);
+		}
 	}
 
 	/**
@@ -290,12 +376,13 @@ public class TestCaseAnalysis {
 		return new Date();
 	}
 
-	/**
-	 * 
-	 * @created 29.03.2011
-	 * @param b
-	 */
-	public void setDebug(boolean b) {
-		this.debug = b;
+	public void addTestListener(TestListener listener) {
+		this.listeners.add(listener);
 	}
+
+	public void removeTestListener(TestListener listener) {
+		this.listeners.remove(listener);
+	}
+
+
 }

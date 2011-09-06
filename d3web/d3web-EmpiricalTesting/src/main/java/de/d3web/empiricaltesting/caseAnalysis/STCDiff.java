@@ -40,7 +40,6 @@ public class STCDiff implements Diff {
 	private final Map<RatedTestCase, RTCDiff> rtc_diffs;
 	private final SequentialTestCase stc;
 	private final Date analysisDate;
-	private final Session session;
 
 	/**
 	 * Creates a new differences storage for the specified
@@ -51,7 +50,7 @@ public class STCDiff implements Diff {
 	 * @param session
 	 */
 	public STCDiff(SequentialTestCase stc, Session session) {
-		this(stc, session, new Date());
+		this(stc, new Date());
 	}
 
 	/**
@@ -62,9 +61,8 @@ public class STCDiff implements Diff {
 	 * @param stc the specified {@link SequentialTestCase} instance
 	 * @param analysisDate the specified analysis date of the test run
 	 */
-	public STCDiff(SequentialTestCase stc, Session session, Date analysisDate) {
+	public STCDiff(SequentialTestCase stc, Date analysisDate) {
 		this.stc = stc;
-		this.session = session;
 		this.analysisDate = analysisDate;
 		this.rtc_diffs = new HashMap<RatedTestCase, RTCDiff>();
 	}
@@ -164,15 +162,4 @@ public class STCDiff implements Diff {
 		return rtc_diffs.keySet();
 	}
 
-	/**
-	 * Returns the session that was used to executed the {@link SequentialTestCase}
-	 * 
-	 * @created 09.08.2011
-	 * @return the {@link Session} that was used to execute the
-	 *         {@link SequentialTestCase}.
-	 */
-	@Override
-	public Session getSession() {
-		return session;
-	}
 }
