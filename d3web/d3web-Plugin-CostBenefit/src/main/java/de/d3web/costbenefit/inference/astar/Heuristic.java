@@ -19,7 +19,7 @@
 package de.d3web.costbenefit.inference.astar;
 
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.costbenefit.inference.CostFunction;
+import de.d3web.costbenefit.model.SearchModel;
 
 /**
  * 
@@ -28,6 +28,29 @@ import de.d3web.costbenefit.inference.CostFunction;
  */
 public interface Heuristic {
 
-	double getDistance(State state, QContainer qcon, CostFunction costFunction);
+	/**
+	 * Returns the estimated costs to reach the target {@link QContainer} under
+	 * the specified state. The costs must be optimistic; thus under any
+	 * circumstances the returned distance must lower or equal to the best path
+	 * costs to reach that target.
+	 * 
+	 * @created 06.09.2011
+	 * @param state the state to start from
+	 * @param target the target to be reached
+	 * @param costFunction a custom cost function to calculate costs for a
+	 *        questionnaire
+	 * @return optimistic estimation of the minimal distance
+	 */
+	double getDistance(State state, QContainer target);
 
+	/**
+	 * Initializes the heuristic to be used for a specific {@link SearchModel}.
+	 * The heuristic is guaranteed to be used only for that search at the same
+	 * time, until {@link #init(SearchModel)} is called for an other search
+	 * model.
+	 * 
+	 * @created 06.09.2011
+	 * @param searchModel the SearchModel the heuristic should be used for
+	 */
+	void init(SearchModel searchModel);
 }

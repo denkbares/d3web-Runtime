@@ -66,18 +66,29 @@ public final class Util {
 		Session testCase = new CopiedSession(session.getKnowledgeBase());
 		((DefaultBlackboard) testCase.getBlackboard()).setAutosaveSource(false);
 		Blackboard blackboard = session.getBlackboard();
-		List<? extends Question> answeredQuestions = new LinkedList<Question>(
-				blackboard.getAnsweredQuestions());
-		for (Question q : answeredQuestions) {
-			Fact fact = blackboard.getValueFact(q);
-			testCase.getBlackboard().addValueFact(fact);
+		List<? extends Question> answeredQuestions = blackboard.getAnsweredQuestions();
+		try {
+			testCase.getPropagationManager().openPropagation();
+			for (Question q : answeredQuestions) {
+				Fact fact = blackboard.getValueFact(q);
+				testCase.getBlackboard().addValueFact(fact);
+			}
+		}
+		finally {
+			testCase.getPropagationManager().commitPropagation();
 		}
 		return testCase;
 	}
 
 	public static void undo(Session session, List<Fact> facts) {
-		for (Fact fact : facts) {
-			session.getBlackboard().removeValueFact(fact);
+		try {
+			session.getPropagationManager().openPropagation();
+			for (Fact fact : facts) {
+				session.getBlackboard().removeValueFact(fact);
+			}
+		}
+		finally {
+			session.getPropagationManager().commitPropagation();
 		}
 	}
 
@@ -178,19 +189,25 @@ public final class Util {
 		Map<Question, Value> valuesToSet = answerGetterAndSetter(session, qContainer, true);
 		List<Fact> facts = new LinkedList<Fact>();
 		PSMethod psmCostBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
-		for (Question q : valuesToSet.keySet()) {
-			// Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
-			// (psmCostBenefit == null) ? new PSMethodCostBenefit() :
-			// psmCostBenefit);
+		try {
+			session.getPropagationManager().openPropagation();
+			for (Question q : valuesToSet.keySet()) {
+				// Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
+				// (psmCostBenefit == null) ? new PSMethodCostBenefit() :
+				// psmCostBenefit);
 
-			PSMethod psMethod = (psmCostBenefit == null)
-					? new PSMethodCostBenefit()
-					: psmCostBenefit;
+				PSMethod psMethod = (psmCostBenefit == null)
+						? new PSMethodCostBenefit()
+						: psmCostBenefit;
 
-			Fact fact = FactFactory.createFact(session, q, valuesToSet.get(q), source, psMethod);
+				Fact fact = FactFactory.createFact(session, q, valuesToSet.get(q), source, psMethod);
 
-			session.getBlackboard().addValueFact(fact);
-			facts.add(fact);
+				session.getBlackboard().addValueFact(fact);
+				facts.add(fact);
+			}
+		}
+		finally {
+			session.getPropagationManager().commitPropagation();
 		}
 		return facts;
 	}

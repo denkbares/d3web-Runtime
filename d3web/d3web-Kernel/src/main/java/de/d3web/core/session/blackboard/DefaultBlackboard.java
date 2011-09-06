@@ -174,13 +174,9 @@ public class DefaultBlackboard implements Blackboard {
 		// of this new indication fact: this notification may be removed due to
 		// Session/Blackboard
 		// refactoring, i.e., when the notification is done at an upper place
-
 		InterviewObject factObject = (InterviewObject) fact.getTerminologyObject();
-
 		Value oldValue = getIndication(factObject);
-
 		this.interviewStorage.add(fact);
-
 		propagateIndicationChange(fact.getTerminologyObject(), oldValue);
 	}
 
@@ -193,9 +189,7 @@ public class DefaultBlackboard implements Blackboard {
 		// refactoring, i.e., when the notification is done at an upper place
 		InterviewObject factObject = (InterviewObject) fact.getTerminologyObject();
 		Value oldValue = getIndication(factObject);
-
 		this.interviewStorage.remove(fact);
-
 		propagateIndicationChange(factObject, oldValue);
 	}
 
@@ -308,7 +302,7 @@ public class DefaultBlackboard implements Blackboard {
 			// if the state is unclear
 			// we can have to look at all objects
 			for (Solution diag : getSession().getKnowledgeBase().getManager().getSolutions()) {
-				if (getRating(diag).getState().equals(state)) {
+				if (getRating(diag).hasState(state)) {
 					result.add(diag);
 				}
 			}
@@ -319,7 +313,7 @@ public class DefaultBlackboard implements Blackboard {
 			for (Object object : getValuedObjects()) {
 				if (object instanceof Solution) {
 					Solution diag = (Solution) object;
-					if (getRating(diag).getState().equals(state)) {
+					if (getRating(diag).hasState(state)) {
 						result.add(diag);
 					}
 				}

@@ -85,7 +85,7 @@ public final class UndefinedValue implements QuestionValue {
 	 * @date 15.04.2010
 	 */
 	public static boolean isUndefinedValue(Value value) {
-		return getInstance().equals(value);
+		return value instanceof UndefinedValue;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public final class UndefinedValue implements QuestionValue {
 	 * @date 15.04.2010
 	 */
 	public static boolean isNotUndefinedValue(Value value) {
-		return !getInstance().equals(value);
+		return !(value instanceof UndefinedValue);
 	}
 
 }

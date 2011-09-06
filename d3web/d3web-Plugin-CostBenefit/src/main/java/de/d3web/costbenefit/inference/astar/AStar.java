@@ -119,10 +119,9 @@ public class AStar {
 	 * @created 22.06.2011
 	 */
 	public void search() {
-		// TODO: remove this gc() if possible
-		Runtime.getRuntime().gc();
 		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
+		heuristic.init(model);
 		String termination = "done";
 		try {
 			while (!openNodes.isEmpty()) {
@@ -148,7 +147,7 @@ public class AStar {
 		}
 		long time2 = System.currentTimeMillis();
 		if (abortStrategy instanceof DefaultAbortStrategy) {
-			System.out.println("A* Calculation "+termination+" (" +
+			System.out.println("A* Calculation " + termination + " (" +
 					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
 					"time: " + (time2 - time1) + "ms, " +
 					"init: " + initTime + "ms, " +
@@ -239,7 +238,7 @@ public class AStar {
 			if (target.getQContainers().size() == 1) {
 				QContainer qContainer = target.getQContainers().get(0);
 				// adding the costs calculated by the heuristic
-				costs += heuristic.getDistance(state, qContainer, costFunction);
+				costs += heuristic.getDistance(state, qContainer);
 				// adding the costs of the target
 				costs += costFunction.getCosts(qContainer, session);
 				// dividing the whole costs by the benefit
