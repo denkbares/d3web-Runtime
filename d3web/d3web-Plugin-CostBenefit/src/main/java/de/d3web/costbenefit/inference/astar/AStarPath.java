@@ -50,11 +50,29 @@ public class AStarPath implements Path {
 
 	@Override
 	public double getCosts() {
-		double costs = this.costs;
-		if (predecessor != null) {
-			costs += predecessor.getCosts();
+		double sum = 0.0;
+		for (AStarPath item = this; item != null; item = item.predecessor) {
+			sum += item.costs;
 		}
-		return costs;
+		return sum;
+	}
+
+	public int getLength() {
+		int length = 1;
+		for (AStarPath item = this.predecessor; item != null; item = item.predecessor) {
+			length++;
+		}
+		return length;
+	}
+
+	/**
+	 * Returns the final {@link QContainer} of this path.
+	 * 
+	 * @created 08.09.2011
+	 * @return the final qcontainer in the path
+	 */
+	public QContainer getQContainer() {
+		return this.qContainer;
 	}
 
 	@Override
@@ -90,4 +108,96 @@ public class AStarPath implements Path {
 		// an A* path can never be empty
 		return false;
 	}
+
+	/**
+	 * Checks if this path has the specified prefix (or is equal to the prefix).
+	 * 
+	 * @created 08.09.2011
+	 * @param prefix the prefix to look for
+	 * @return if this path has the prefix
+	 */
+	public boolean hasPrefix(AStarPath prefix) {
+		int thisLen = getLength();
+		int prefixLen = prefix.getLength();
+
+		// check is this one has at least same length as prefix
+		if (thisLen < prefixLen) return false;
+
+		// get thisPrefix of the expected prefix lenght
+		AStarPath thisPrefix = this;
+		for (int i = thisLen; i > prefixLen; i--) {
+			thisPrefix = thisPrefix.predecessor;
+		}
+
+		// and the check if thisPrefix an prefix are equal
+		return thisPrefix.equals(prefix);
+	}
+
+	/**
+	 * Returns a path has the specified new prefix and the rest of this path
+	 * after the old prefix. Normally a new path is created, based on the new
+	 * prefix. If this path is equal to the prefix to be replaced, the new
+	 * prefix is returned. This method if not destructive to this path.
+	 * <p>
+	 * It is not checked if the prefix to be replaced is part of this path. This
+	 * method only replaces the length of the old prefix by the new one. If the
+	 * old prefix path is longer than this one an
+	 * {@link ArrayIndexOutOfBoundsException} is thrown. If one of the prefixes
+	 * is null, a {@link NullPointerException} is thrown.
+	 * 
+	 * @created 08.09.2011
+	 * @param oldPrefix the prefix to look for
+	 * @param newPrefix the new prefix replace
+	 * @return a newly created path with the replaced prefix (or this)
+	 * @throws ArrayIndexOutOfBoundsException the oldPrefix is longer than this
+	 *         path
+	 * @throws NullPointerException oldPrefix or newPrefix is null
+	 */
+	public AStarPath replacePrefix(AStarPath oldPrefix, AStarPath newPrefix) {
+		int thisLen = getLength();
+		int oldPrefixLen = oldPrefix.getLength();
+
+		// check is this path is equal or longer as the prefix
+		if (thisLen < oldPrefixLen) throw new ArrayIndexOutOfBoundsException();
+		return copyAndReplace(this, thisLen - oldPrefixLen, newPrefix);
+	}
+
+	private AStarPath copyAndReplace(AStarPath original, int itemsBeforePrefix, AStarPath newPrefix) {
+		if (itemsBeforePrefix == 0) return newPrefix;
+		return new AStarPath(
+				original.qContainer,
+				copyAndReplace(original.predecessor, itemsBeforePrefix - 1, newPrefix),
+				original.costs);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(costs);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((predecessor == null) ? 0 : predecessor.hashCode());
+		result = prime * result + ((qContainer == null) ? 0 : qContainer.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		AStarPath other = (AStarPath) obj;
+		if (Double.doubleToLongBits(costs) != Double.doubleToLongBits(other.costs)) return false;
+		if (predecessor == null) {
+			if (other.predecessor != null) return false;
+		}
+		else if (!predecessor.equals(other.predecessor)) return false;
+		if (qContainer == null) {
+			if (other.qContainer != null) return false;
+		}
+		else if (!qContainer.equals(other.qContainer)) return false;
+		return true;
+	}
+
 }

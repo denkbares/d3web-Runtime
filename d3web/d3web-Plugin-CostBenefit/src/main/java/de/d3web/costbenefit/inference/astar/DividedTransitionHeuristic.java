@@ -183,9 +183,11 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * @param preparingTransition the state transition possibly used to prepare
 	 *        the target
 	 * @param target the target QContainer to be prepared
+	 * @param stateQuestion the question represents the state to be estimated
+	 * @param stateValue the value the state should become
 	 * @return the minimal costs per question of the target's precondition
 	 */
-	private double calculateCosts(StateTransition preparingTransition, QContainer target) {
+	private double calculateCosts(StateTransition preparingTransition, QContainer target, Question stateQuestion, Value stateValue) {
 		// TODO: Filter position transitions (question not part of any
 		// precondition)
 
@@ -219,6 +221,12 @@ public class DividedTransitionHeuristic implements Heuristic {
 		// if no question has been found, return infinite costs
 		// because this state transition cannot set up the target
 		if (set.size() == 0) {
+			return Double.POSITIVE_INFINITY;
+		}
+
+		// if the specified question is not part of the set,
+		// we can assume "infinity" because it cannot be reached
+		if (!set.contains(stateQuestion)) {
 			return Double.POSITIVE_INFINITY;
 		}
 
@@ -283,25 +291,34 @@ public class DividedTransitionHeuristic implements Heuristic {
 		return result;
 	}
 
-	private HashMap<Question, Map<Value, Double>> getTargetMap(QContainer qcon) {
+	private HashMap<Question, Map<Value, Double>> getTargetMap(QContainer target) {
 		HashMap<Question, Map<Value, Double>> targetMap = new HashMap<Question, Map<Value, Double>>();
 		for (StateTransition st : allStateTransitions) {
 			for (ValueTransition vt : st.getPostTransitions()) {
-				Map<Value, Double> questionMap = targetMap.get(vt.getQuestion());
+				Question stateQuestion = vt.getQuestion();
+				Map<Value, Double> questionMap = targetMap.get(stateQuestion);
 				if (questionMap == null) {
 					questionMap = new HashMap<Value, Double>();
-					targetMap.put(vt.getQuestion(), questionMap);
+					targetMap.put(stateQuestion, questionMap);
 				}
 				for (ConditionalValueSetter cvs : vt.getSetters()) {
-					Double minimum = questionMap.get(cvs.getAnswer());
-					double costs = calculateCosts(st, qcon);
-					if (minimum == null) {
-						questionMap.put(cvs.getAnswer(), costs);
-					}
-					else if (minimum > costs) {
-						questionMap.put(cvs.getAnswer(), costs);
+					Value stateValue = cvs.getAnswer();
+					Double minimum = questionMap.get(stateValue);
+					double costs = calculateCosts(st, target, stateQuestion, stateValue);
+					if (minimum == null || minimum > costs) {
+						questionMap.put(stateValue, costs);
 					}
 				}
+			}
+		}
+
+		// for debug only
+		for (Question stateQuestion : targetMap.keySet()) {
+			Map<Value, Double> questionMap = targetMap.get(stateQuestion);
+			for (Value stateValue : questionMap.keySet()) {
+				System.out.println(
+						"heuristic (" + stateQuestion + "-->" + stateValue +
+								" for " + target + ") = " + questionMap.get(stateValue));
 			}
 		}
 		return targetMap;

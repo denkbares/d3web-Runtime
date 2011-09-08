@@ -19,6 +19,7 @@
 package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,6 +30,8 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
+import de.d3web.costbenefit.inference.astar.AStarAlgorithm.Processors;
+import de.d3web.costbenefit.inference.astar.Heuristic;
 
 /**
  * FragmentHandler for AStarSearchAlgorithm
@@ -54,11 +57,25 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		AStarAlgorithm alg = new AStarAlgorithm();
+		String processorsString = element.getAttribute("processors");
+		if (!processorsString.isEmpty()) {
+			try {
+				alg.setProcessors(Processors.valueOf(processorsString));
+			}
+			catch (IllegalArgumentException e) {
+				throw new IOException("unknown value '" + processorsString +
+						"' for processors in AStarAlgorithm; allowed values are " +
+						Arrays.asList(Processors.values()));
+			}
+		}
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			Object readFragment =
-					PersistenceManager.getInstance().readFragment(e, kb);
-			if (readFragment instanceof AbortStrategy) {
-				alg.setAbortStrategy((AbortStrategy) readFragment);
+			PersistenceManager pm = PersistenceManager.getInstance();
+			Object fragment = pm.readFragment(e, kb);
+			if (fragment instanceof Heuristic) {
+				alg.setHeuristic((Heuristic) fragment);
+			}
+			if (fragment instanceof AbortStrategy) {
+				alg.setAbortStrategy((AbortStrategy) fragment);
 			}
 		}
 		return alg;
@@ -69,9 +86,15 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 		AStarAlgorithm alg = (AStarAlgorithm) object;
 		Element element = doc.createElement("searchAlgorithm");
 		element.setAttribute("name", "AStarSearchAlgorithm");
+		element.setAttribute("processors", String.valueOf(alg.getProcessors()));
+
+		// write heuristic
+		PersistenceManager pm = PersistenceManager.getInstance();
+		element.appendChild(pm.writeFragment(alg.getHeuristic(), doc));
+		// write abort strategy
 		AbortStrategy abortStrategy = alg.getAbortStrategy();
 		if (abortStrategy != null) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(
+			element.appendChild(pm.writeFragment(
 					abortStrategy, doc));
 		}
 		return element;

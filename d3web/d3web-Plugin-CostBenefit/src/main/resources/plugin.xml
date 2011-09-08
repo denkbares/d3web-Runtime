@@ -56,6 +56,16 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DividedTransitionHeuristicHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.DividedTransitionHeuristicHandler" />
+		<parameter id="name" value="DividedTransitionHeuristicHandler" />
+		<parameter id="description" value="Handler for DividedTransitionHeuristic" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultAbortStrategyHandler">
 		<parameter id="class"
 			value="de.d3web.costbenefit.io.fragments.DefaultAbortStrategyHandler" />

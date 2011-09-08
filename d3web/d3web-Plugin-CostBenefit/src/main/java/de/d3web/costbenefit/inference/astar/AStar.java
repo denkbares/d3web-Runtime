@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,12 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -53,25 +60,49 @@ import de.d3web.costbenefit.model.Target;
  */
 public class AStar {
 
+	/**
+	 * Runnable that does the search and handles abort exception. Returns true
+	 * if the search has been stopped after finding the best possible result. It
+	 * returns false if the search has been aborted before.
+	 * 
+	 * @author volker_belli
+	 * @created 08.09.2011
+	 */
+	private final class SearchWorker implements Callable<Boolean> {
+
+		@Override
+		public Boolean call() {
+			try {
+				searchLoop();
+			}
+			catch (AbortException e) {
+				// nothing to do
+				// we only tell other tasks also to abort
+				return false;
+			}
+			return true;
+		}
+	}
+
 	private final SearchModel model;
 	private final Set<Question> stateQuestions = new HashSet<Question>();
 	private final Queue<Node> openNodes = new PriorityQueue<Node>();
 	private final Collection<Node> closedNodes = new LinkedList<Node>();
 	private final Map<State, Node> nodes = new HashMap<State, Node>();
-	private final Heuristic heuristic;
+	private final AStarAlgorithm algorithm;
 	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
 	private final AbortStrategy abortStrategy;
 	private final Session session;
 	private final transient long initTime;
 
-	public AStar(Session session, SearchModel model, Heuristic heuristic, AbortStrategy abortStrategy) {
+	public AStar(Session session, SearchModel model, AStarAlgorithm algorithm) {
 		long time = System.currentTimeMillis();
+		this.algorithm = algorithm;
 		this.session = session;
 		this.model = model;
-		this.heuristic = heuristic;
-		if (abortStrategy != null) {
-			this.abortStrategy = abortStrategy;
+		if (algorithm.getAbortStrategy() != null) {
+			this.abortStrategy = algorithm.getAbortStrategy();
 		}
 		else {
 			this.abortStrategy = new DefaultAbortStrategy(5000, 1);
@@ -102,7 +133,7 @@ public class AStar {
 		// starts
 		for (QContainer qcon : session.getKnowledgeBase().getManager().getQContainers()) {
 			if (StateTransition.getStateTransition(qcon) == null) {
-				updateTargets(qcon, new AStarPath(qcon, null, costFunction.getCosts(qcon, session)));
+				updateTargets(new AStarPath(qcon, null, costFunction.getCosts(qcon, session)));
 			}
 		}
 		this.initTime = System.currentTimeMillis() - time;
@@ -121,39 +152,145 @@ public class AStar {
 	public void search() {
 		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
-		heuristic.init(model);
-		String termination = "done";
-		try {
-			while (!openNodes.isEmpty()) {
+		algorithm.getHeuristic().init(model);
 
-				// Collections.sort(openNodes);
-				Node node = openNodes.poll();
-				// if a target has been reached and its cost/benefit is better
-				// than
-				// the optimistic fValue of the best node, terminate the
-				// algorithm
-				if (model.getBestCostBenefitTarget() != null
-						&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
-					break;
-				}
-				expandNode(node);
-				closedNodes.add(node);
-				// System.out.println("\tnode closed");
-			}
+		boolean succeeded;
+		int threadCount = algorithm.getThreadCount();
+		if (threadCount == 1) {
+			succeeded = searchSingleThreaded();
 		}
-		catch (AbortException e) {
-			// nothing to do
-			termination = "aborted";
+		else {
+			succeeded = searchMultiThreaded(threadCount);
 		}
+
 		long time2 = System.currentTimeMillis();
 		if (abortStrategy instanceof DefaultAbortStrategy) {
-			System.out.println("A* Calculation " + termination + " (" +
+			System.out.println("A* Calculation " +
+					(succeeded ? "done" : "aborted") + " (" +
 					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
 					"time: " + (time2 - time1) + "ms, " +
 					"init: " + initTime + "ms, " +
 					"#open: " + openNodes.size() + ", " +
 					"#closed: " + closedNodes.size() + ")");
 		}
+	}
+
+	/**
+	 * Returns true if the search has been stopped after finding the best
+	 * possible result. It returns false if the search has been aborted before.
+	 * 
+	 * @created 08.09.2011
+	 * @return if the search could been completed
+	 */
+	private boolean searchSingleThreaded() {
+		// simply call the search "in-thread"
+		return new SearchWorker().call();
+	}
+
+	/**
+	 * Returns true if the search has been stopped after finding the best
+	 * possible result. It returns false if the search has been aborted before.
+	 * 
+	 * @created 08.09.2011
+	 * @return if the search could been completed
+	 */
+	private boolean searchMultiThreaded(int threadCount) {
+		ExecutorService service = algorithm.getExecutorService();
+		List<Future<Boolean>> futures = new ArrayList<Future<Boolean>>();
+		for (int i = 0; i < threadCount; i++) {
+			Future<Boolean> submit = service.submit(new SearchWorker());
+			futures.add(submit);
+		}
+		boolean anySucceeded = false;
+		for (Future<Boolean> future : futures) {
+			try {
+				// await termination of every future
+				anySucceeded |= future.get();
+			}
+			catch (InterruptedException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+						"error in cost/benefit search thread", e);
+			}
+			catch (ExecutionException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+						"error in cost/benefit search thread", e);
+			}
+		}
+		return anySucceeded;
+	}
+
+	private void searchLoop() throws AbortException {
+		while (true) {
+			// check for the next open node to be processed
+			// due to parallelism, we do this synchronized
+			// until we are sure to have a node
+			// and have its current revision before starting expanding
+			Node node;
+			AStarPath nodePath;
+			synchronized (this) {
+				node = openNodes.poll();
+				if (node == null) break;
+				nodePath = node.getPath();
+			}
+			// if a target has been reached and its cost/benefit is better than
+			// the optimistic fValue of the best node, terminate the algorithm
+			if (model.getBestCostBenefitTarget() != null
+					&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
+				break;
+			}
+
+			// then we expand the node without focusing to revisions
+			expandNode(node);
+
+			// afterwards we check, if the expanded node has been updated,
+			// e.g. by an other node expanding thread
+			// (finding a shorter path to the currently expanded node)
+			synchronized (this) {
+				AStarPath newPath = node.getPath();
+				// we are updated if the path has changed
+				if (!newPath.equals(nodePath)) {
+					// update all successors based on the old
+					// path to be based on the new path for now
+					System.out.println("A* violation due to parallelism, re-checking affected nodes");
+					for (Node checked : this.openNodes) {
+						replaceNodePath(checked, nodePath, newPath);
+					}
+					for (Node checked : this.closedNodes) {
+						replaceNodePath(checked, nodePath, newPath);
+					}
+				}
+
+				closedNodes.add(node);
+			}
+			// System.out.println("\tnode closed");
+		}
+	}
+
+	/**
+	 * Checks if the specified node relies on the old path. If yes, the path
+	 * will be replaced by the new path, including optimization of optimal paths
+	 * in the search model.
+	 * 
+	 * @created 08.09.2011
+	 * @param checked the node to be checked
+	 * @param oldPath the original path prefix to be replaced
+	 * @param newPath the new path prefix replacing the old one
+	 */
+	private void replaceNodePath(Node checked, AStarPath oldPath, AStarPath newPath) {
+		// check if this node hat the required prefix to be replaced
+		boolean hasPrefix = checked.getPath().hasPrefix(oldPath);
+		System.out.println(
+				"prefix " + hasPrefix + " of " +
+						checked.getPath().getPath() + " and " + oldPath.getPath());
+		if (!hasPrefix) return;
+
+		// if yes, we create the prefix-replaced path
+		// and update the calculated costs of the targets
+		AStarPath createdPath = checked.getPath().replacePrefix(oldPath, newPath);
+		double f = calculateFValue(createdPath.getCosts(), checked.getState(), checked.getSession());
+		checked.updatePath(createdPath);
+		checked.setfValue(f);
+		updateTargets(createdPath);
 	}
 
 	private void expandNode(Node node) throws AbortException {
@@ -172,27 +309,28 @@ public class AStar {
 					Util.setNormalValues(copiedSession, qcontainer, this);
 					st.fire(copiedSession);
 					State newState = computeState(copiedSession);
-					Node follower = nodes.get(newState);
-					AStarPath newPath = new AStarPath(qcontainer,
-							node.getPath(), costs);
-					if (follower == null) {
-						// create a new one, because it does not exist
-						double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
-						follower = new Node(newState, copiedSession, newPath, f);
-						nodes.put(newState, follower);
-						openNodes.add(follower);
-						// System.out.println("\tnode added");
+					AStarPath newPath = new AStarPath(qcontainer, node.getPath(), costs);
+					synchronized (this) {
+						Node follower = nodes.get(newState);
+						if (follower == null) {
+							// create a new one, because it does not exist
+							double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
+							follower = new Node(newState, copiedSession, newPath, f);
+							nodes.put(newState, follower);
+							openNodes.add(follower);
+							// System.out.println("\tnode added");
+						}
+						else if (follower.getPath().getCosts() > newPath.getCosts()) {
+							// remove, update, add again to preserve ordering
+							double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
+							openNodes.remove(follower);
+							follower.updatePath(newPath);
+							follower.setfValue(f);
+							openNodes.add(follower);
+							// System.out.println("\tnode updated");
+						}
 					}
-					else if (follower.getPath().getCosts() > newPath.getCosts()) {
-						// remove, update, add again to preserve ordering
-						openNodes.remove(follower);
-						follower.updatePath(newPath);
-						double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
-						follower.setfValue(f);
-						openNodes.add(follower);
-						// System.out.println("\tnode updated");
-					}
-					updateTargets(qcontainer, newPath);
+					updateTargets(newPath);
 					abortStrategy.nextStep(node.getPath(), session);
 				}
 			}
@@ -205,7 +343,8 @@ public class AStar {
 		}
 	}
 
-	private void updateTargets(QContainer qcontainer, AStarPath newPath) {
+	private void updateTargets(AStarPath newPath) {
+		QContainer qcontainer = newPath.getQContainer();
 		for (Target t : model.getTargets()) {
 			if (t.getQContainers().size() == 1) {
 				if (t.getQContainers().get(0) == qcontainer) {
@@ -238,7 +377,7 @@ public class AStar {
 			if (target.getQContainers().size() == 1) {
 				QContainer qContainer = target.getQContainers().get(0);
 				// adding the costs calculated by the heuristic
-				costs += heuristic.getDistance(state, qContainer);
+				costs += algorithm.getHeuristic().getDistance(state, qContainer);
 				// adding the costs of the target
 				costs += costFunction.getCosts(qContainer, session);
 				// dividing the whole costs by the benefit
