@@ -18,9 +18,6 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
@@ -34,15 +31,9 @@ import de.d3web.costbenefit.model.SearchModel;
  */
 public class AStarAlgorithm implements SearchAlgorithm {
 
-	public enum Processors {
-		one, all, all_but_one
-	};
-
 	private Heuristic heuristic;
 	private AbortStrategy abortStrategy = null;
-	private Processors processors = Processors.one;
-
-	private transient ExecutorService executorService;
+	private boolean multiCore = true;
 
 	@Override
 	public void search(Session session, SearchModel model) {
@@ -50,26 +41,6 @@ public class AStarAlgorithm implements SearchAlgorithm {
 			heuristic = new DividedTransitionHeuristic();
 		}
 		new AStar(session, model, this).search();
-	}
-
-	public ExecutorService getExecutorService() {
-		if (executorService == null) {
-			executorService = Executors.newFixedThreadPool(getThreadCount());
-		}
-		return executorService;
-	}
-
-	public int getThreadCount() {
-		switch (getProcessors()) {
-		case one:
-			return 1;
-		case all:
-			return Runtime.getRuntime().availableProcessors();
-		case all_but_one:
-			int processors = Runtime.getRuntime().availableProcessors();
-			return processors > 2 ? processors - 1 : 1;
-		}
-		throw new IllegalStateException();
 	}
 
 	public Heuristic getHeuristic() {
@@ -88,11 +59,11 @@ public class AStarAlgorithm implements SearchAlgorithm {
 		this.abortStrategy = abortStrategy;
 	}
 
-	public void setProcessors(Processors processors) {
-		this.processors = processors;
+	public void setMultiCore(boolean multiCore) {
+		this.multiCore = multiCore;
 	}
 
-	public Processors getProcessors() {
-		return processors;
+	public boolean isMultiCore() {
+		return multiCore;
 	}
 }

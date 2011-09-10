@@ -19,7 +19,6 @@
 package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,7 +29,6 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
-import de.d3web.costbenefit.inference.astar.AStarAlgorithm.Processors;
 import de.d3web.costbenefit.inference.astar.Heuristic;
 
 /**
@@ -57,15 +55,14 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
 		AStarAlgorithm alg = new AStarAlgorithm();
-		String processorsString = element.getAttribute("processors");
+		String processorsString = element.getAttribute("multiCore");
 		if (!processorsString.isEmpty()) {
 			try {
-				alg.setProcessors(Processors.valueOf(processorsString));
+				alg.setMultiCore(Boolean.valueOf(processorsString));
 			}
 			catch (IllegalArgumentException e) {
-				throw new IOException("unknown value '" + processorsString +
-						"' for processors in AStarAlgorithm; allowed values are " +
-						Arrays.asList(Processors.values()));
+				throw new IOException(
+						"Attribute multiCore of AStarAlgorithm must be 'true' or 'false'");
 			}
 		}
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
@@ -86,7 +83,7 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 		AStarAlgorithm alg = (AStarAlgorithm) object;
 		Element element = doc.createElement("searchAlgorithm");
 		element.setAttribute("name", "AStarSearchAlgorithm");
-		element.setAttribute("processors", String.valueOf(alg.getProcessors()));
+		element.setAttribute("multiCore", String.valueOf(alg.isMultiCore()));
 
 		// write heuristic
 		PersistenceManager pm = PersistenceManager.getInstance();

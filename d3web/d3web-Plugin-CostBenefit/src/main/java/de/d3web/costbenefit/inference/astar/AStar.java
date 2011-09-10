@@ -18,12 +18,10 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -31,8 +29,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -61,28 +59,31 @@ import de.d3web.costbenefit.model.Target;
 public class AStar {
 
 	/**
-	 * Runnable that does the search and handles abort exception. Returns true
-	 * if the search has been stopped after finding the best possible result. It
-	 * returns false if the search has been aborted before.
+	 * Expands a node with a specified StateTransition and creates a new
+	 * follower node.
 	 * 
 	 * @author volker_belli
-	 * @created 08.09.2011
+	 * @created 09.09.2011
 	 */
-	private final class SearchWorker implements Callable<Boolean> {
+	private final class NodeExpander implements Callable<Node> {
+
+		private final Node sourceNode;
+		private final StateTransition stateTransition;
+
+		public NodeExpander(Node sourceNode, StateTransition stateTransition) {
+			this.sourceNode = sourceNode;
+			this.stateTransition = stateTransition;
+		}
 
 		@Override
-		public Boolean call() {
-			try {
-				searchLoop();
-			}
-			catch (AbortException e) {
-				// nothing to do
-				// we only tell other tasks also to abort
-				return false;
-			}
-			return true;
+		public Node call() {
+			Node follower = applyTransition(sourceNode, stateTransition);
+			// installNode(follower);
+			return follower;
 		}
 	}
+
+	private static final Logger log = Logger.getLogger(IterableExecutor.class.getName());
 
 	private final SearchModel model;
 	private final Set<Question> stateQuestions = new HashSet<Question>();
@@ -155,12 +156,13 @@ public class AStar {
 		algorithm.getHeuristic().init(model);
 
 		boolean succeeded;
-		int threadCount = algorithm.getThreadCount();
-		if (threadCount == 1) {
-			succeeded = searchSingleThreaded();
+		try {
+			searchLoop();
+			succeeded = true;
 		}
-		else {
-			succeeded = searchMultiThreaded(threadCount);
+		catch (AbortException e) {
+			// nothing to do
+			succeeded = false;
 		}
 
 		long time2 = System.currentTimeMillis();
@@ -175,63 +177,11 @@ public class AStar {
 		}
 	}
 
-	/**
-	 * Returns true if the search has been stopped after finding the best
-	 * possible result. It returns false if the search has been aborted before.
-	 * 
-	 * @created 08.09.2011
-	 * @return if the search could been completed
-	 */
-	private boolean searchSingleThreaded() {
-		// simply call the search "in-thread"
-		return new SearchWorker().call();
-	}
-
-	/**
-	 * Returns true if the search has been stopped after finding the best
-	 * possible result. It returns false if the search has been aborted before.
-	 * 
-	 * @created 08.09.2011
-	 * @return if the search could been completed
-	 */
-	private boolean searchMultiThreaded(int threadCount) {
-		ExecutorService service = algorithm.getExecutorService();
-		List<Future<Boolean>> futures = new ArrayList<Future<Boolean>>();
-		for (int i = 0; i < threadCount; i++) {
-			Future<Boolean> submit = service.submit(new SearchWorker());
-			futures.add(submit);
-		}
-		boolean anySucceeded = false;
-		for (Future<Boolean> future : futures) {
-			try {
-				// await termination of every future
-				anySucceeded |= future.get();
-			}
-			catch (InterruptedException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						"error in cost/benefit search thread", e);
-			}
-			catch (ExecutionException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						"error in cost/benefit search thread", e);
-			}
-		}
-		return anySucceeded;
-	}
-
 	private void searchLoop() throws AbortException {
-		while (true) {
+		while (!openNodes.isEmpty()) {
 			// check for the next open node to be processed
-			// due to parallelism, we do this synchronized
-			// until we are sure to have a node
-			// and have its current revision before starting expanding
-			Node node;
-			AStarPath nodePath;
-			synchronized (this) {
-				node = openNodes.poll();
-				if (node == null) break;
-				nodePath = node.getPath();
-			}
+			Node node = openNodes.poll();
+
 			// if a target has been reached and its cost/benefit is better than
 			// the optimistic fValue of the best node, terminate the algorithm
 			if (model.getBestCostBenefitTarget() != null
@@ -240,29 +190,156 @@ public class AStar {
 			}
 
 			// then we expand the node without focusing to revisions
-			expandNode(node);
-
-			// afterwards we check, if the expanded node has been updated,
-			// e.g. by an other node expanding thread
-			// (finding a shorter path to the currently expanded node)
-			synchronized (this) {
-				AStarPath newPath = node.getPath();
-				// we are updated if the path has changed
-				if (!newPath.equals(nodePath)) {
-					// update all successors based on the old
-					// path to be based on the new path for now
-					System.out.println("A* violation due to parallelism, re-checking affected nodes");
-					for (Node checked : this.openNodes) {
-						replaceNodePath(checked, nodePath, newPath);
-					}
-					for (Node checked : this.closedNodes) {
-						replaceNodePath(checked, nodePath, newPath);
-					}
-				}
-
-				closedNodes.add(node);
+			if (algorithm.isMultiCore()) {
+				expandNodeMultiThreaded(node);
 			}
-			// System.out.println("\tnode closed");
+			else {
+				expandNodeSingleThreaded(node);
+			}
+
+			// and mark the node as finished
+			// TODO: due to neg.costs nodes shall be optimized by shorter paths?
+			closedNodes.add(node);
+		}
+	}
+
+	private void expandNodeSingleThreaded(Node node) throws AbortException {
+		for (StateTransition st : successors) {
+			if (canApplyTransition(node, st)) {
+				Node newFollower = applyTransition(node, st);
+				installNode(newFollower);
+				abortStrategy.nextStep(newFollower.getPath(), session);
+			}
+		}
+	}
+
+	private void expandNodeMultiThreaded(Node node) throws AbortException {
+		// we split the search into two main tasks:
+		// 1) expand all nodes in many threads
+		// 2) install every expanded node as it is expanded
+
+		// first expand all nodes asynchronously
+		// using our iterable executor
+		IterableExecutor<Node> exec = createExecutor();
+		for (StateTransition st : successors) {
+			if (canApplyTransition(node, st)) {
+				exec.submit(new NodeExpander(node, st));
+			}
+		}
+
+		// then iterate through all expanded nodes
+		// and install them as they come in (synchronous install)
+		// this does not really matter, because installing is very quick
+		// and is done while the thread pool is still expanding
+		try {
+			for (Future<Node> future : exec) {
+				Node newFollower = future.get();
+				installNode(newFollower);
+				abortStrategy.nextStep(newFollower.getPath(), session);
+			}
+		}
+		catch (InterruptedException e) {
+			// re-throw exception of asynchronous thread
+			throw new IllegalStateException(e);
+		}
+		catch (ExecutionException e) {
+			// re-throw exception of asynchronous thread
+			Throwable cause = e.getCause();
+			if (cause instanceof RuntimeException) {
+				throw (RuntimeException) cause;
+			}
+			throw new IllegalStateException(cause);
+		}
+	}
+
+	private static ExecutorService threadPool = null;
+
+	private IterableExecutor<Node> createExecutor() {
+		// initialize thread pool if not exists
+		if (threadPool == null) {
+			int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
+			threadPool = Executors.newFixedThreadPool(threadCount);
+			log.info("created multicore thread pool of size " + threadCount);
+		}
+		// and return new executor based on the thread pool
+		return new IterableExecutor<Node>(threadPool);
+	}
+
+	/**
+	 * Returns if a state transition can be used to create following up nodes
+	 * for a specific node.
+	 * 
+	 * @created 09.09.2011
+	 * @param node the node to apply the state transition to
+	 * @param stateTransition the state transition to be applied
+	 * @return
+	 */
+	private boolean canApplyTransition(Node node, StateTransition stateTransition) {
+		Session actualSession = node.getSession();
+		QContainer qcontainer = stateTransition.getQcontainer();
+		// do not repeat qcontainers in a row
+		if (node.getPath().getQContainer() == qcontainer) {
+			return false;
+		}
+		// only use qcontainers that are not excluded
+		if (actualSession.getBlackboard().getIndication(qcontainer).isContraIndicated()) {
+			return false;
+		}
+		try {
+			// check if the precondition does hold
+			return stateTransition.getActivationCondition() == null
+					|| stateTransition.getActivationCondition().eval(actualSession);
+		}
+		catch (NoAnswerException e) {
+			// does not apply because of missing values
+			return false;
+		}
+		catch (UnknownAnswerException e) {
+			// does not apply because of unknown values
+			return false;
+		}
+	}
+
+	private void installNode(Node newFollower) {
+		synchronized (this) {
+			Node follower = nodes.get(newFollower.getState());
+			if (follower == null) {
+				// store the new one, because it does not exist
+				nodes.put(newFollower.getState(), newFollower);
+				openNodes.add(newFollower);
+				// System.out.println("\tnode added");
+			}
+			else if (follower.getPath().getCosts() > newFollower.getPath().getCosts()) {
+				// update existing node for the state
+				// for open nodes remove and add again to preserve ordering
+				boolean hasOpenNode = openNodes.remove(follower);
+				// due to negative costs it might be possible
+				// that the found node is still closed
+				// in this case we might in need to update all existing nodes
+				// TODO: handle negative costs more sophisticated?
+				if (!hasOpenNode) {
+					AStarPath oldPath = follower.getPath();
+					AStarPath newPath = newFollower.getPath();
+					replacePaths(oldPath, newPath);
+				}
+				// proceed with usual update
+				follower.updatePath(newFollower.getPath());
+				follower.setfValue(newFollower.getfValue());
+				if (hasOpenNode) openNodes.add(follower);
+			}
+		}
+		updateTargets(newFollower.getPath());
+	}
+
+	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
+		// update all successors based on the old
+		// path to be based on the new path for now
+		System.out.println("A* violation due to newgtive costs, re-checking affected nodes");
+		for (Node checked : this.openNodes) {
+			replaceNodePath(checked, oldPath, newPath);
+		}
+		for (Node checked : this.closedNodes) {
+			replaceNodePath(checked, oldPath, newPath);
 		}
 	}
 
@@ -279,9 +356,6 @@ public class AStar {
 	private void replaceNodePath(Node checked, AStarPath oldPath, AStarPath newPath) {
 		// check if this node hat the required prefix to be replaced
 		boolean hasPrefix = checked.getPath().hasPrefix(oldPath);
-		System.out.println(
-				"prefix " + hasPrefix + " of " +
-						checked.getPath().getPath() + " and " + oldPath.getPath());
 		if (!hasPrefix) return;
 
 		// if yes, we create the prefix-replaced path
@@ -293,54 +367,18 @@ public class AStar {
 		updateTargets(createdPath);
 	}
 
-	private void expandNode(Node node) throws AbortException {
+	private Node applyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
-		for (StateTransition st : successors) {
-			QContainer qcontainer = st.getQcontainer();
-			List<QContainer> path = node.getPath().getPath();
-			// do not repeat qcontainers in a row
-			if (path.size() > 0 && path.get(path.size() - 1) == qcontainer) continue;
-			if (actualSession.getBlackboard().getIndication(qcontainer).isContraIndicated()) continue;
-			try {
-				if (st.getActivationCondition() == null
-						|| st.getActivationCondition().eval(actualSession)) {
-					Session copiedSession = Util.copyCase(actualSession);
-					double costs = costFunction.getCosts(qcontainer, copiedSession);
-					Util.setNormalValues(copiedSession, qcontainer, this);
-					st.fire(copiedSession);
-					State newState = computeState(copiedSession);
-					AStarPath newPath = new AStarPath(qcontainer, node.getPath(), costs);
-					synchronized (this) {
-						Node follower = nodes.get(newState);
-						if (follower == null) {
-							// create a new one, because it does not exist
-							double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
-							follower = new Node(newState, copiedSession, newPath, f);
-							nodes.put(newState, follower);
-							openNodes.add(follower);
-							// System.out.println("\tnode added");
-						}
-						else if (follower.getPath().getCosts() > newPath.getCosts()) {
-							// remove, update, add again to preserve ordering
-							double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
-							openNodes.remove(follower);
-							follower.updatePath(newPath);
-							follower.setfValue(f);
-							openNodes.add(follower);
-							// System.out.println("\tnode updated");
-						}
-					}
-					updateTargets(newPath);
-					abortStrategy.nextStep(node.getPath(), session);
-				}
-			}
-			catch (NoAnswerException e) {
-				// do nothing
-			}
-			catch (UnknownAnswerException e) {
-				// do nothing
-			}
-		}
+		QContainer qcontainer = stateTransition.getQcontainer();
+		Session copiedSession = Util.copyCase(actualSession);
+		double costs = costFunction.getCosts(qcontainer, copiedSession);
+		Util.setNormalValues(copiedSession, qcontainer, this);
+		stateTransition.fire(copiedSession);
+		State newState = computeState(copiedSession);
+		AStarPath newPath = new AStarPath(qcontainer, node.getPath(), costs);
+		double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
+		Node newFollower = new Node(newState, copiedSession, newPath, f);
+		return newFollower;
 	}
 
 	private void updateTargets(AStarPath newPath) {
@@ -386,6 +424,7 @@ public class AStar {
 			}
 			// TODO: Multitarget?
 		}
+		// TODO: subtract all negative costs to preserve optimistic heuristic?
 		return min;
 	}
 
