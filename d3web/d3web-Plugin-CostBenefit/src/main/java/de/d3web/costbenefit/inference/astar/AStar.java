@@ -41,9 +41,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.AbortException;
-import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.CostFunction;
-import de.d3web.costbenefit.inference.DefaultAbortStrategy;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
@@ -93,22 +91,23 @@ public class AStar {
 	private final AStarAlgorithm algorithm;
 	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
-	private final AbortStrategy abortStrategy;
 	private final Session session;
+
+	// some information about the current search
 	private final transient long initTime;
+	private transient int steps = 0;
+	private transient boolean aborted = false;
+
+	// share one thread pool among the whole virtual machine
+	private static ExecutorService threadPool = null;
 
 	public AStar(Session session, SearchModel model, AStarAlgorithm algorithm) {
 		long time = System.currentTimeMillis();
 		this.algorithm = algorithm;
 		this.session = session;
 		this.model = model;
-		if (algorithm.getAbortStrategy() != null) {
-			this.abortStrategy = algorithm.getAbortStrategy();
-		}
-		else {
-			this.abortStrategy = new DefaultAbortStrategy(5000, 1);
-		}
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
+
 		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
 			if (st.getActivationCondition() != null) {
@@ -152,33 +151,20 @@ public class AStar {
 	 */
 	public void search() {
 		long time1 = System.currentTimeMillis();
-		abortStrategy.init(model);
+		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
-
-		boolean succeeded;
-		try {
-			searchLoop();
-			succeeded = true;
-		}
-		catch (AbortException e) {
-			// nothing to do
-			succeeded = false;
-		}
-
+		searchLoop();
 		long time2 = System.currentTimeMillis();
-		if (abortStrategy instanceof DefaultAbortStrategy) {
-			System.out.println("A* Calculation " +
-					(succeeded ? "done" : "aborted") + " (" +
-					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
-					"time: " + (time2 - time1) + "ms, " +
-					"init: " + initTime + "ms, " +
-					"#open: " + openNodes.size() + ", " +
-					"#closed: " + closedNodes.size() + ")");
-		}
+		log.info("A* Calculation " + (aborted ? "aborted" : "done") + " (" +
+				"#steps: " + steps + ", " +
+				"time: " + (time2 - time1) + "ms, " +
+				"init: " + initTime + "ms, " +
+				"#open: " + openNodes.size() + ", " +
+				"#closed: " + closedNodes.size() + ")");
 	}
 
-	private void searchLoop() throws AbortException {
-		while (!openNodes.isEmpty()) {
+	private void searchLoop() {
+		while (!aborted && !openNodes.isEmpty()) {
 			// check for the next open node to be processed
 			Node node = openNodes.poll();
 
@@ -203,17 +189,17 @@ public class AStar {
 		}
 	}
 
-	private void expandNodeSingleThreaded(Node node) throws AbortException {
+	private void expandNodeSingleThreaded(Node node) {
 		for (StateTransition st : successors) {
 			if (canApplyTransition(node, st)) {
 				Node newFollower = applyTransition(node, st);
 				installNode(newFollower);
-				abortStrategy.nextStep(newFollower.getPath(), session);
+				stepCompleted(newFollower);
 			}
 		}
 	}
 
-	private void expandNodeMultiThreaded(Node node) throws AbortException {
+	private void expandNodeMultiThreaded(Node node) {
 		// we split the search into two main tasks:
 		// 1) expand all nodes in many threads
 		// 2) install every expanded node as it is expanded
@@ -235,7 +221,7 @@ public class AStar {
 			for (Future<Node> future : exec) {
 				Node newFollower = future.get();
 				installNode(newFollower);
-				abortStrategy.nextStep(newFollower.getPath(), session);
+				stepCompleted(newFollower);
 			}
 		}
 		catch (InterruptedException e) {
@@ -252,7 +238,22 @@ public class AStar {
 		}
 	}
 
-	private static ExecutorService threadPool = null;
+	/**
+	 * Notifies that a search step has been completed.
+	 * 
+	 * @created 11.09.2011
+	 * @param node the node expanded by the current step
+	 */
+	private void stepCompleted(Node node) {
+		try {
+			steps++;
+			algorithm.getAbortStrategy().nextStep(node.getPath(), session);
+		}
+		catch (AbortException e) {
+			// record that abort is requested, but do noting special
+			aborted = true;
+		}
+	}
 
 	private IterableExecutor<Node> createExecutor() {
 		// initialize thread pool if not exists
@@ -334,7 +335,7 @@ public class AStar {
 	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
 		// update all successors based on the old
 		// path to be based on the new path for now
-		System.out.println("A* violation due to newgtive costs, re-checking affected nodes");
+		System.out.println("A* violation due to negative costs, re-checking affected nodes");
 		for (Node checked : this.openNodes) {
 			replaceNodePath(checked, oldPath, newPath);
 		}

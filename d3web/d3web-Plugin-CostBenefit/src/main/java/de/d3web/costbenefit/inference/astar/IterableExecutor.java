@@ -39,7 +39,14 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 	private static final Logger log = Logger.getLogger(IterableExecutor.class.getName());
 
 	/**
-	 * Adds the result to our list and notifies us
+	 * A decorating {@link Callable}. If the delegated callable has finished its
+	 * task, it adds the itself to our result list to notify the
+	 * IterableExecutor that new results are available. Therefore it also gets
+	 * the future set after it has been submitted to easily access the returned
+	 * result after notification.
+	 * <p>
+	 * The user of this class has to make sure that the future has been
+	 * initialized before using it (which usually happens asynchronously).
 	 * 
 	 * @author volker_belli
 	 * @created 09.09.2011
@@ -85,6 +92,16 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		return future;
 	}
 
+	/**
+	 * Gets a Worker that has finished at a specific index. The indexes are
+	 * ordered by the time the workers has finished their tasks. If a requested
+	 * worker has not been finished yet (but we are expecting its result), this
+	 * methods waits for that worker to be completed.
+	 * 
+	 * @created 11.09.2011
+	 * @param index the index of the result to be requested
+	 * @return the Worker finished at the index position
+	 */
 	private synchronized Worker getFinishedWorker(int index) {
 		// check if index is valid
 		if (index < 0 || index >= expectedResultCount) {
@@ -103,6 +120,13 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		return finishedWorkers.get(index);
 	}
 
+	/**
+	 * Adds a finished worker to the list. Notifies ourself if an iterator is
+	 * awaiting results.
+	 * 
+	 * @created 11.09.2011
+	 * @param worker the Worker that has finished
+	 */
 	private synchronized void addFinishedWorker(Worker worker) {
 		// add worker to out result list
 		finishedWorkers.add(worker);
@@ -116,7 +140,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 	 * is iterated. The iterator blocks if no result is available, but it is
 	 * still waiting for additional results.
 	 * 
-	 * @return an iterator for all results
+	 * @return an iterator for all results as they are completed
 	 */
 	@Override
 	public Iterator<Future<T>> iterator() {
@@ -132,8 +156,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 			@Override
 			public Future<T> next() {
 				// check if we have to wait for more results
-				Worker nextWorker = getFinishedWorker(index);
-				index++;
+				Worker nextWorker = getFinishedWorker(index++);
 				return nextWorker.future;
 			}
 

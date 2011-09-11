@@ -20,6 +20,7 @@ package de.d3web.costbenefit.inference.astar;
 
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.AbortStrategy;
+import de.d3web.costbenefit.inference.DefaultAbortStrategy;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.model.SearchModel;
 
@@ -31,15 +32,12 @@ import de.d3web.costbenefit.model.SearchModel;
  */
 public class AStarAlgorithm implements SearchAlgorithm {
 
-	private Heuristic heuristic;
-	private AbortStrategy abortStrategy = null;
+	private Heuristic heuristic = new DividedTransitionHeuristic();
+	private AbortStrategy abortStrategy = new DefaultAbortStrategy(5000, 1);
 	private boolean multiCore = true;
 
 	@Override
 	public void search(Session session, SearchModel model) {
-		if (heuristic == null) {
-			heuristic = new DividedTransitionHeuristic();
-		}
 		new AStar(session, model, this).search();
 	}
 
