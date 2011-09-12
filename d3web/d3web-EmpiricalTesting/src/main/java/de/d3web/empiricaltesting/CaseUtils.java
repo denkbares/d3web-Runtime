@@ -24,14 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
@@ -92,51 +88,6 @@ public final class CaseUtils {
 		return value.toString();
 	}
 
-	public Question getQuestionByIDorText(String questionIDorText,
-			String questionnaireText, KnowledgeBase kb) throws Exception {
-
-		Question foundQuestion = null;
-
-		if (questionnaireText == null || questionnaireText.equals("")) {
-			for (TerminologyObject q : kb.getManager().getQuestions()) {
-				if (questionIDorText.equals(q.getName())) foundQuestion = (Question) q;
-			}
-		}
-		else {
-			for (TerminologyObject q : kb.getManager().getQuestions()) {
-				if (questionIDorText.equals(q.getName())
-						&& checkQuestionnaire(q, questionnaireText)) foundQuestion = (Question) q;
-			}
-		}
-
-		if (foundQuestion == null) throw new Exception("Question not found for ID/Text: "
-				+ questionIDorText);
-		else return foundQuestion;
-	}
-
-	public Solution getSolutionByIDorText(String diagnosisIDorText,
-			KnowledgeBase kb) throws Exception {
-		Solution foundDiagnosis = null;
-		for (Solution d : kb.getManager().getSolutions()) {
-			if (diagnosisIDorText.equals(d.getName())
-					|| diagnosisIDorText.equals(d.getName())) foundDiagnosis = d;
-		}
-		if (foundDiagnosis == null) throw new Exception("Diagnosis not found for ID/Text: "
-				+ diagnosisIDorText);
-		else return foundDiagnosis;
-	}
-
-	private boolean checkQuestionnaire(TerminologyObject q, String questionnaireText) {
-		TerminologyObject question = q;
-		while (!(question.getParents()[0] instanceof QContainer)) {
-			if (question.getParents()[0] instanceof Question) question = question.getParents()[0];
-			else return false;
-		}
-
-		if (question.getParents()[0].getName().equals(questionnaireText)) return true;
-
-		return false;
-	}
 
 	// TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
 	// Antworten auf mehrere (erste) Fragen möglich

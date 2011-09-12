@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -47,8 +48,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
@@ -82,7 +81,6 @@ public final class TestPersistence {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss.SS");
 	private static final String QUESTION = "Question";
-	private static final String QUESTIONNAIRE = "Questionnaire";
 	private static final String ANSWER = "Answer";
 	private static final String RATING = "Rating";
 
@@ -97,8 +95,6 @@ public final class TestPersistence {
 
 	private SequentialTestCase stc = null;
 	private RatedTestCase rtc = null;
-
-	private final CaseUtils bh = CaseUtils.getInstance();
 
 	private static TestPersistence instance;
 
@@ -345,7 +341,6 @@ public final class TestPersistence {
 			xmlsw.writeEmptyElement(FINDING);
 		}
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
-		xmlsw.writeAttribute(QUESTIONNAIRE, findQuestionnaire(f.getQuestion()).getName());
 		Value v = f.getValue();
 		if (v instanceof MultipleChoiceValue) {
 			MultipleChoiceValue mcv = (MultipleChoiceValue) v;
@@ -432,12 +427,12 @@ public final class TestPersistence {
 			if (f != null) rtc.addExpectedFinding(f);
 		}
 		else if (elName.equals(SOLUTION)) {
-			Solution d = null;
-			try {
-				d = bh.getSolutionByIDorText(sr.getAttributeValue(null, NAME), kb);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
+			String name = sr.getAttributeValue(null, NAME);
+			Solution d = kb.getManager().searchSolution(name);
+			if (d == null) {
+				Logger.getLogger(getClass().getName()).warning(
+						"Solution not found '" + name + "'.");
+				return;
 			}
 			Rating r;
 			String s = sr.getAttributeValue(null, RATING);
@@ -457,10 +452,16 @@ public final class TestPersistence {
 	private Finding getFinding(XMLStreamReader sr, KnowledgeBase kb) {
 		String questionText = sr.getAttributeValue(null, QUESTION);
 		String answerText = sr.getAttributeValue(null, ANSWER);
-		String questionnaireText = sr.getAttributeValue(null, QUESTIONNAIRE);
 		Finding f = null;
 		try {
-			Question q = bh.getQuestionByIDorText(questionText, questionnaireText, kb);
+			Question q = kb.getManager().searchQuestion(questionText);
+
+			if (q == null) {
+				Logger.getLogger(getClass().getName()).warning(
+						"Solution not found '" + questionText + "'.");
+				return null;
+			}
+
 			if (answerText.equals("unknown") || answerText.equals("-?-")) {
 				f = new Finding(q, Unknown.getInstance());
 			}
@@ -548,14 +549,5 @@ public final class TestPersistence {
 		return findings;
 	}
 
-	private QASet findQuestionnaire(Question q) {
-		Question question = q;
-		while (!(question.getParents()[0] instanceof QContainer)) {
-			if (question.getParents()[0] instanceof Question) question = (Question) question.getParents()[0];
-			else return q.getKnowledgeBase().getRootQASet();
-		}
-
-		return (QASet) question.getParents()[0];
-	}
 
 }
