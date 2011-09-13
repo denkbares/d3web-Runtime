@@ -371,8 +371,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			if (isDone(qcon, session)) {
 				// mark is the questionnaire is either indicated or in our
 				// current sequence
-				isAnyQuesionnaireDone |= session.getBlackboard().getIndication(qcon).isRelevant();
-				isAnyQuesionnaireDone |= sequence.contains(qcon);
+				isAnyQuesionnaireDone = true;
 				KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
 						StateTransition.KNOWLEDGE_KIND);
 				if (ks != null) {
