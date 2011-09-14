@@ -313,14 +313,14 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 
 		// for debug only
-		for (Question stateQuestion : targetMap.keySet()) {
-			Map<Value, Double> questionMap = targetMap.get(stateQuestion);
-			for (Value stateValue : questionMap.keySet()) {
-				System.out.println(
-						"heuristic (" + stateQuestion + "-->" + stateValue +
-								" for " + target + ") = " + questionMap.get(stateValue));
-			}
-		}
+		// for (Question stateQuestion : targetMap.keySet()) {
+		// Map<Value, Double> questionMap = targetMap.get(stateQuestion);
+		// for (Value stateValue : questionMap.keySet()) {
+		// System.out.println(
+		// "heuristic (" + stateQuestion + "-->" + stateValue +
+		// " for " + target + ") = " + questionMap.get(stateValue));
+		// }
+		// }
 		return targetMap;
 	}
 }
