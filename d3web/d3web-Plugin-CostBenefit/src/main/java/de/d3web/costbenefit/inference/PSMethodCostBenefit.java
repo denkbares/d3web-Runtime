@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
@@ -37,19 +36,18 @@ import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costbenefit.model.Path;
@@ -108,7 +106,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// only check if the current one is done
 		// (or no current one has been activated yet)
 		if (caseObject.getCurrentPathIndex() == -1
-					|| isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
+					|| Util.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
 			caseObject.incCurrentPathIndex();
 			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
 				calculateNewPath(caseObject);
@@ -123,7 +121,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			// when activating the next qcontainer, which is applicable, check
 			// if it is already done and fire state transition and move to next
 			// QContainer if necessary
-			if (isDone(qc, session)) {
+			if (Util.isDone(qc, session)) {
 				StateTransition st = StateTransition.getStateTransition(qc);
 				if (st != null) st.fire(session);
 				// remove indication
@@ -232,7 +230,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Blackboard blackboard = session.getBlackboard();
 		for (InterviewObject interviewObject : blackboard.getInterviewObjects()) {
 			if (blackboard.getIndication(interviewObject).isRelevant()) {
-				if (!isDone(interviewObject, session)) {
+				if (!Util.isDone(interviewObject, session)) {
 					return true;
 				}
 			}
@@ -351,7 +349,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
-				addParentContainers(answeredQuestionnaires, object);
+				Util.addParentContainers(answeredQuestionnaires, object);
 			}
 			if (entry.isStrategic() && entry.hasChanged() && object instanceof QContainer) {
 				Indication indication = (Indication) entry.getNewValue();
@@ -368,16 +366,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// for every finished QContainter fire its post transitions
 		boolean isAnyQuesionnaireDone = false;
 		for (QContainer qcon : answeredQuestionnaires) {
-			if (isDone(qcon, session)) {
+			if (Util.isDone(qcon, session)) {
 				// mark is the questionnaire is either indicated or in our
 				// current sequence
 				isAnyQuesionnaireDone = true;
-				KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
-						StateTransition.KNOWLEDGE_KIND);
-				if (ks != null) {
-					StateTransition st = (StateTransition) ks;
-					st.fire(session);
-				}
+				break;
 			}
 		}
 
@@ -440,38 +433,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		return !previousSolutions.equals(currentSolutions);
 	}
 
-	/**
-	 * Checks, if all questions, contained in the specified {@link QASet} have a
-	 * value assigned to them in the specified session.
-	 * 
-	 * @param qaset the qaset to be checked
-	 * @param session the specified session
-	 * @return if the qaset is fully answered
-	 */
-	private boolean isDone(InterviewObject qaset, Session session) {
-		if (qaset instanceof Question) {
-			Value value = session.getBlackboard().getValue((Question) qaset);
-			if (UndefinedValue.isNotUndefinedValue(value)) {
-				boolean done = true;
-				for (TerminologyObject object : qaset.getChildren()) {
-					done = done && isDone((QASet) object, session);
-				}
-				return done;
-			}
-			else {
-				return false;
-			}
-		}
-		else if (qaset instanceof QContainer) {
-			boolean done = true;
-			for (TerminologyObject object : qaset.getChildren()) {
-				done = done && isDone((QASet) object, session);
-			}
-			return done;
-		}
-		return true;
-	}
-
 	public TargetFunction getTargetFunction() {
 		return targetFunction;
 	}
@@ -494,19 +455,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	public void setCostFunction(CostFunction costFunction) {
 		this.costFunction = costFunction;
-	}
-
-	private static void addParentContainers(Set<QContainer> targets,
-			TerminologyObject q) {
-		for (TerminologyObject qaset : q.getParents()) {
-			if (qaset instanceof QContainer) {
-				targets.add((QContainer) qaset);
-			}
-			else {
-				addParentContainers(targets, qaset);
-			}
-		}
-
 	}
 
 	@Override

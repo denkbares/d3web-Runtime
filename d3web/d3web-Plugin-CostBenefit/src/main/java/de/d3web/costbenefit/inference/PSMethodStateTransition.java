@@ -20,15 +20,24 @@
 
 package de.d3web.costbenefit.inference;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.costbenefit.Util;
 
-public final class PSMethodStateTransition extends PSMethodUserSelected {
+public final class PSMethodStateTransition extends PSMethodAdapter {
 
 	public PSMethodStateTransition() {
 	}
@@ -88,6 +97,39 @@ public final class PSMethodStateTransition extends PSMethodUserSelected {
 			return psmInstance;
 		}
 
+	}
+
+	@Override
+	public void propagate(Session session, Collection<PropagationEntry> changes) {
+		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
+		for (PropagationEntry entry : changes) {
+			TerminologyObject object = entry.getObject();
+			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
+				Util.addParentContainers(answeredQuestionnaires, object);
+			}
+		}
+		for (QContainer qcon : answeredQuestionnaires) {
+			if (Util.isDone(qcon, session)) {
+				// mark is the questionnaire is either indicated or in our
+				// current sequence
+				KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
+						StateTransition.KNOWLEDGE_KIND);
+				if (ks != null) {
+					StateTransition st = (StateTransition) ks;
+					st.fire(session);
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean hasType(Type type) {
+		return type == Type.source;
+	}
+
+	@Override
+	public double getPriority() {
+		return 1;
 	}
 
 }

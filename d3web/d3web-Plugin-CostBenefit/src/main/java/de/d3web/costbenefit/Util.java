@@ -23,14 +23,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Node;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -46,6 +49,7 @@ import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -217,5 +221,50 @@ public final class Util {
 		public CopiedSession(KnowledgeBase kb) {
 			super(null, kb, new Date(), false);
 		}
+	}
+
+	public static void addParentContainers(Set<QContainer> targets,
+			TerminologyObject q) {
+		for (TerminologyObject qaset : q.getParents()) {
+			if (qaset instanceof QContainer) {
+				targets.add((QContainer) qaset);
+			}
+			else {
+				addParentContainers(targets, qaset);
+			}
+		}
+
+	}
+
+	/**
+	 * Checks, if all questions, contained in the specified {@link QASet} have a
+	 * value assigned to them in the specified session.
+	 * 
+	 * @param qaset the qaset to be checked
+	 * @param session the specified session
+	 * @return if the qaset is fully answered
+	 */
+	public static boolean isDone(InterviewObject qaset, Session session) {
+		if (qaset instanceof Question) {
+			Value value = session.getBlackboard().getValue((Question) qaset);
+			if (UndefinedValue.isNotUndefinedValue(value)) {
+				boolean done = true;
+				for (TerminologyObject object : qaset.getChildren()) {
+					done = done && isDone((QASet) object, session);
+				}
+				return done;
+			}
+			else {
+				return false;
+			}
+		}
+		else if (qaset instanceof QContainer) {
+			boolean done = true;
+			for (TerminologyObject object : qaset.getChildren()) {
+				done = done && isDone((QASet) object, session);
+			}
+			return done;
+		}
+		return true;
 	}
 }
