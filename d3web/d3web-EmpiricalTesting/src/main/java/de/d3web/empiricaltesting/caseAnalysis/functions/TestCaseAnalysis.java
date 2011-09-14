@@ -57,7 +57,6 @@ public class TestCaseAnalysis {
 		listeners = new LinkedList<TestListener>();
 	}
 
-
 	/**
 	 * Performs a test case analysis on the specified collection of
 	 * {@link SequentialTestCase} instances. Each {@link SequentialTestCase}
@@ -150,7 +149,6 @@ public class TestCaseAnalysis {
 				creationDate);
 		notifySTCStart(stc, session);
 		Diff diff = new STCDiff(stc, session);
-
 
 		for (RatedTestCase rtc : stc.getCases()) {
 
@@ -247,10 +245,6 @@ public class TestCaseAnalysis {
 		}
 		throw new IllegalArgumentException("No SequentialTestCase with name " + stcName
 				+ " found in suite");
-	}
-
-	private void print(String string) {
-		System.out.println(string);
 	}
 
 	/**
@@ -383,6 +377,5 @@ public class TestCaseAnalysis {
 	public void removeTestListener(TestListener listener) {
 		this.listeners.remove(listener);
 	}
-
 
 }
