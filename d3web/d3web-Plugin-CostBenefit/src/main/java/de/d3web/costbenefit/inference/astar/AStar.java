@@ -28,8 +28,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
@@ -96,10 +94,6 @@ public class AStar {
 	// some information about the current search
 	private final transient long initTime;
 	private transient int steps = 0;
-	private transient boolean aborted = false;
-
-	// share one thread pool among the whole virtual machine
-	private static ExecutorService threadPool = null;
 
 	public AStar(Session session, SearchModel model, AStarAlgorithm algorithm) {
 		long time = System.currentTimeMillis();
@@ -155,7 +149,7 @@ public class AStar {
 		algorithm.getHeuristic().init(model);
 		searchLoop();
 		long time2 = System.currentTimeMillis();
-		log.info("A* Calculation " + (aborted ? "aborted" : "done") + " (" +
+		log.info("A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
 				"#steps: " + steps + ", " +
 				"time: " + (time2 - time1) + "ms, " +
 				"init: " + initTime + "ms, " +
@@ -164,7 +158,7 @@ public class AStar {
 	}
 
 	private void searchLoop() {
-		while (!aborted && !openNodes.isEmpty()) {
+		while (!model.isAborted() && !openNodes.isEmpty()) {
 			// check for the next open node to be processed
 			Node node = openNodes.poll();
 
@@ -206,7 +200,7 @@ public class AStar {
 
 		// first expand all nodes asynchronously
 		// using our iterable executor
-		IterableExecutor<Node> exec = createExecutor();
+		IterableExecutor<Node> exec = IterableExecutor.createExecutor();
 		for (StateTransition st : successors) {
 			if (canApplyTransition(node, st)) {
 				exec.submit(new NodeExpander(node, st));
@@ -251,19 +245,8 @@ public class AStar {
 		}
 		catch (AbortException e) {
 			// record that abort is requested, but do noting special
-			aborted = true;
+			model.abort();
 		}
-	}
-
-	private IterableExecutor<Node> createExecutor() {
-		// initialize thread pool if not exists
-		if (threadPool == null) {
-			int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
-			threadPool = Executors.newFixedThreadPool(threadCount);
-			log.info("created multicore thread pool of size " + threadCount);
-		}
-		// and return new executor based on the thread pool
-		return new IterableExecutor<Node>(threadPool);
 	}
 
 	/**

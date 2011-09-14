@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,8 @@ import java.util.logging.Logger;
 public class IterableExecutor<T> implements Iterable<Future<T>> {
 
 	private static final Logger log = Logger.getLogger(IterableExecutor.class.getName());
+	// share one thread pool among the whole virtual machine
+	private static ExecutorService threadPool = null;
 
 	/**
 	 * A decorating {@link Callable}. If the delegated callable has finished its
@@ -74,6 +77,24 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 
 	public IterableExecutor(ExecutorService service) {
 		this.service = service;
+	}
+
+	/**
+	 * Creates a new IterableExecutor. All iterators share a common set of
+	 * threats.
+	 * 
+	 * @created 14.09.2011
+	 * @return the created IterableExecutor
+	 */
+	public static <T> IterableExecutor<T> createExecutor() {
+		// initialize thread pool if not exists
+		if (threadPool == null) {
+			int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
+			threadPool = Executors.newFixedThreadPool(threadCount);
+			log.info("created multicore thread pool of size " + threadCount);
+		}
+		// and return new executor based on the thread pool
+		return new IterableExecutor<T>(threadPool);
 	}
 
 	/**

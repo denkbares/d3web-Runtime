@@ -24,13 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
+import de.d3web.costbenefit.inference.astar.IterableExecutor;
 import de.d3web.costbenefit.model.SearchModel;
 
 /**
@@ -84,17 +83,27 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 
 		case parallel:
 			// mode: parallel (threaded)
-			ExecutorService executor = Executors.newFixedThreadPool(delegates.size());
-			List<Future<SearchModel>> futures = new ArrayList<Future<SearchModel>>();
+			IterableExecutor<SearchModel> executor = IterableExecutor.createExecutor();
+			List<Worker> workers = new LinkedList<Worker>();
+			boolean succeeded = false;
 			for (SearchAlgorithm searchAlgorithm : delegates) {
 				SearchModel result = model.clone();
 				Worker worker = new Worker(searchAlgorithm, session, result);
-				Future<SearchModel> submit = executor.submit(worker);
-				futures.add(submit);
+				executor.submit(worker);
+				workers.add(worker);
 			}
-			for (Future<SearchModel> future : futures) {
+			for (Future<SearchModel> future : executor) {
 				try {
-					model.merge(future.get());
+					SearchModel result = future.get();
+					if (!result.isAborted()) {
+						// if any is succeeded we have the best result
+						succeeded = true;
+						// and can break all other searches
+						for (Worker worker : workers) {
+							worker.model.abort();
+						}
+					}
+					model.merge(result);
 				}
 				catch (InterruptedException e) {
 					Logger.getLogger(getClass().getName()).log(Level.SEVERE,
@@ -105,7 +114,9 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 							"error in cost/benefit search thread", e);
 				}
 			}
-			executor.shutdown();
+			// if no search task has succeeded,
+			// we also tell the merged model that all searches has been aborted
+			if (!succeeded) model.abort();
 			break;
 
 		case merged:

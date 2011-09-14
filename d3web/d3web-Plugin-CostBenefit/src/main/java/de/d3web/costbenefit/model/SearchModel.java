@@ -40,6 +40,7 @@ public class SearchModel {
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
+	private boolean aborted = false;
 	private CostFunction costFunction;
 	private final Session session;
 
@@ -248,6 +249,27 @@ public class SearchModel {
 
 	public Session getSession() {
 		return session;
+	}
+
+	/**
+	 * Tells the search algorithm to abort the search. If the search is already
+	 * aborted, this method should do nothing.
+	 * 
+	 * @created 14.09.2011
+	 */
+	public void abort() {
+		this.aborted = true;
+	}
+
+	/**
+	 * Check if the search has been aborted (externally or by the abort strategy
+	 * of the search).
+	 * 
+	 * @created 14.09.2011
+	 * @return if the search has been aborted
+	 */
+	public boolean isAborted() {
+		return aborted;
 	}
 
 }

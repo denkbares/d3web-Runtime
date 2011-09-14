@@ -66,7 +66,6 @@ class IterativeDeepeningSearch {
 
 	private final Node[] successorNodes;
 	private final Node[] finalNodes;
-	public long count = 0;
 	private final SearchModel model;
 	private IDSPath minSearchedPath;
 	// TODO move to constructor...
@@ -75,7 +74,10 @@ class IterativeDeepeningSearch {
 	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
 	private int countMinPaths = 0;
 	private final Session originalSession;
+
+	// some information about the current search
 	private final transient long initTime;
+	private transient int steps = 0;
 
 	public IterativeDeepeningSearch(SearchModel model) {
 		long time = System.currentTimeMillis();
@@ -161,22 +163,20 @@ class IterativeDeepeningSearch {
 		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
 		Session testcase = Util.copyCase(session);
-		String termination = "done";
 		try {
 			search(testcase, 1);
 		}
 		catch (AbortException e) {
 			// we have stopped at the search due to time restrictions.
 			// use the best found path till now
-			termination = "aborted";
+			model.abort();
 		}
 		long time2 = System.currentTimeMillis();
-		if (abortStrategy instanceof DefaultAbortStrategy) {
-			System.out.println("IDS Calculation " + termination + " (" +
-					"#steps: " + ((DefaultAbortStrategy) abortStrategy).getSteps(session) + ", " +
+		System.out.println("IDS Calculation " +
+					(model.isAborted() ? "aborted" : "done") + " (" +
+					"#steps: " + steps + ", " +
 					"time: " + (time2 - time1) + "ms, " +
 					"init: " + initTime + "ms)");
-		}
 	}
 
 	private void search(Session testcase, int depth) throws AbortException {
@@ -226,8 +226,7 @@ class IterativeDeepeningSearch {
 		}
 	}
 
-	private void findCheapestPath(IDSPath actual, int depth, Session session)
-			throws AbortException {
+	private void findCheapestPath(IDSPath actual, int depth, Session session) throws AbortException {
 
 		if (actual.getCosts() / model.getBestBenefit() > model
 				.getBestCostBenefit()) { // NOSONAR
@@ -237,14 +236,14 @@ class IterativeDeepeningSearch {
 			for (Node n : finalNodes) {
 				if (!isValidSuccessor(actual, n, session)) continue;
 				actual.add(n, session);
-				abortStrategy.nextStep(actual, originalSession);
+				nextStep(actual);
 				minimizePath(actual);
 				actual.pop();
 			}
 			for (Node n : successorNodes) {
 				if (!isValidSuccessor(actual, n, session)) continue;
 				actual.add(n, session);
-				abortStrategy.nextStep(actual, originalSession);
+				nextStep(actual);
 				if (minSearchedPath == null
 						|| actual.getCosts() < minSearchedPath.getCosts()) {
 					minSearchedPath = actual.copy();
@@ -258,14 +257,22 @@ class IterativeDeepeningSearch {
 				if (!isValidSuccessor(actual, successor, session)) continue;
 				List<Fact> undo = new LinkedList<Fact>();
 				actual.add(successor, session);
-				abortStrategy.nextStep(actual, originalSession);
+				nextStep(actual);
 				undo.addAll(successor.setNormalValues(session));
 				undo.addAll(successor.getStateTransition().fire(session));
 				findCheapestPath(actual, depth - 1, session);
-				count += undo.size();
 				actual.pop();
 				Util.undo(session, undo);
 			}
+		}
+	}
+
+	private void nextStep(IDSPath actual) throws AbortException {
+		steps++;
+		abortStrategy.nextStep(actual, originalSession);
+		// if we are aborted externally, do the same way
+		if (model.isAborted()) {
+			throw new AbortException();
 		}
 	}
 
