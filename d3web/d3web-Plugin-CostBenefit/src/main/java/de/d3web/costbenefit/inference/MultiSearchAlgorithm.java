@@ -126,7 +126,11 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 				SearchModel result = model.clone();
 				searchAlgorithm.search(session, result);
 				results.add(result);
+				// if we have found the best result (and not aborted before)
+				// we stop and do not search with the following algorithms
+				if (!result.isAborted()) break;
 			}
+			// merge all results (until the first non-aborted one)
 			for (SearchModel result : results) {
 				model.merge(result);
 			}
