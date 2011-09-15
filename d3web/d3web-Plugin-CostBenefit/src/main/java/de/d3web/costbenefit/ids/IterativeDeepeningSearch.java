@@ -169,7 +169,7 @@ class IterativeDeepeningSearch {
 		catch (AbortException e) {
 			// we have stopped at the search due to time restrictions.
 			// use the best found path till now
-			model.abort();
+			model.setAbort(true);
 		}
 		long time2 = System.currentTimeMillis();
 		System.out.println("IDS Calculation " +

@@ -245,7 +245,7 @@ public class AStar {
 		}
 		catch (AbortException e) {
 			// record that abort is requested, but do noting special
-			model.abort();
+			model.setAbort(true);
 		}
 	}
 

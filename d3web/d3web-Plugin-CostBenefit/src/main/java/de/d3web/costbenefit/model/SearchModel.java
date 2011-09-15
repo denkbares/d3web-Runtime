@@ -252,13 +252,16 @@ public class SearchModel {
 	}
 
 	/**
-	 * Tells the search algorithm to abort the search. If the search is already
-	 * aborted, this method should do nothing.
+	 * Tells the search algorithm whether to abort the search or not. If the
+	 * search is already aborted, this method should do nothing. Please note
+	 * that each search algorithm may set this flag if its abort strategy tells
+	 * him to do.
 	 * 
-	 * @created 14.09.2011
+	 * @param abort if the search is / shall be aborted
+	 * @created 15.09.2011
 	 */
-	public void abort() {
-		this.aborted = true;
+	public void setAbort(boolean abort) {
+		this.aborted = abort;
 	}
 
 	/**

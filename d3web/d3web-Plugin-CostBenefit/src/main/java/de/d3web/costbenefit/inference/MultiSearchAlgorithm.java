@@ -69,20 +69,23 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 	}
 
 	private final List<SearchAlgorithm> delegates = new LinkedList<SearchAlgorithm>();
-	private Mode mode = Mode.merged;
+	private Mode mode = Mode.parallel;
 
 	@Override
 	public void search(Session session, SearchModel model) {
 		switch (getMode()) {
 		case continued:
-			// mode: interact
 			for (SearchAlgorithm searchAlgorithm : delegates) {
+				// before searching, reset abort flag from the previous search
+				model.setAbort(false);
 				searchAlgorithm.search(session, model);
+				// if one search has completed successfully, we are finished
+				if (!model.isAborted()) break;
 			}
 			break;
 
 		case parallel:
-			// mode: parallel (threaded)
+			// mode: independent, threaded calculation for each search
 			IterableExecutor<SearchModel> executor = IterableExecutor.createExecutor();
 			List<Worker> workers = new LinkedList<Worker>();
 			boolean succeeded = false;
@@ -100,7 +103,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 						succeeded = true;
 						// and can break all other searches
 						for (Worker worker : workers) {
-							worker.model.abort();
+							worker.model.setAbort(true);
 						}
 					}
 					model.merge(result);
@@ -116,11 +119,11 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 			}
 			// if no search task has succeeded,
 			// we also tell the merged model that all searches has been aborted
-			if (!succeeded) model.abort();
+			if (!succeeded) model.setAbort(true);
 			break;
 
 		case merged:
-			// mode: parallel (non-threaded)
+			// mode: independent, non-threaded calculation for each search
 			List<SearchModel> results = new ArrayList<SearchModel>();
 			for (SearchAlgorithm searchAlgorithm : delegates) {
 				SearchModel result = model.clone();
