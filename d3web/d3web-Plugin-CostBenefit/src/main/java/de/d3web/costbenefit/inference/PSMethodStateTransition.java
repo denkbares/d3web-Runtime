@@ -22,6 +22,8 @@ package de.d3web.costbenefit.inference;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
@@ -32,12 +34,15 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.inference.PSMethodStateTransition.StateTransitionSessionObject;
 
-public final class PSMethodStateTransition extends PSMethodAdapter {
+public final class PSMethodStateTransition extends PSMethodAdapter implements SessionObjectSource<StateTransitionSessionObject> {
 
 	public PSMethodStateTransition() {
 	}
@@ -108,16 +113,36 @@ public final class PSMethodStateTransition extends PSMethodAdapter {
 				Util.addParentContainers(answeredQuestionnaires, object);
 			}
 		}
+		QContainer qcontainer = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodCostBenefit.class)).getCurrentQContainer();
+		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
 		for (QContainer qcon : answeredQuestionnaires) {
 			if (Util.isDone(qcon, session)) {
-				// mark is the questionnaire is either indicated or in our
-				// current sequence
-				KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
-						StateTransition.KNOWLEDGE_KIND);
-				if (ks != null) {
-					StateTransition st = (StateTransition) ks;
-					st.fire(session);
+				// if the qcontainer is the actual qcontainer of the sequence,
+				// fire its transitions
+				boolean fire = false;
+				if (qcon == qcontainer) {
+					fire = true;
 				}
+				// if the qcontainer was the last qcontainer fired, retract it's
+				// facts and fire the qcontainer again
+				else if (sessionObject.qContainer == qcon) {
+					// remove the old facts
+					for (Fact fact : sessionObject.facts) {
+						session.getBlackboard().removeValueFact(fact);
+					}
+					fire = true;
+				}
+				if (fire) {
+					KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
+							StateTransition.KNOWLEDGE_KIND);
+					if (ks != null) {
+						StateTransition st = (StateTransition) ks;
+						sessionObject.facts = st.fire(session);
+						sessionObject.qContainer = qcon;
+					}
+				}
+
 			}
 		}
 	}
@@ -130,6 +155,18 @@ public final class PSMethodStateTransition extends PSMethodAdapter {
 	@Override
 	public double getPriority() {
 		return 1;
+	}
+
+	public static class StateTransitionSessionObject implements SessionObject {
+
+		private List<Fact> facts = new LinkedList<Fact>();
+		private QContainer qContainer = null;
+
+	}
+
+	@Override
+	public StateTransitionSessionObject createSessionObject(Session session) {
+		return new StateTransitionSessionObject();
 	}
 
 }

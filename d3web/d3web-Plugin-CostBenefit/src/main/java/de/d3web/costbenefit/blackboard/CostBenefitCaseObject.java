@@ -136,4 +136,9 @@ public class CostBenefitCaseObject implements SessionObject {
 		return discriminatingTargets;
 	}
 
+	public QContainer getCurrentQContainer() {
+		if (currentSequence == null) return null;
+		return currentSequence[currentPathIndex];
+	}
+
 }
