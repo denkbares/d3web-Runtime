@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
@@ -63,6 +64,8 @@ class IterativeDeepeningSearch {
 			}
 		}
 	}
+
+	private static final Logger log = Logger.getLogger(IterativeDeepeningSearch.class.getName());
 
 	private final Node[] successorNodes;
 	private final Node[] finalNodes;
@@ -172,7 +175,7 @@ class IterativeDeepeningSearch {
 			model.setAbort(true);
 		}
 		long time2 = System.currentTimeMillis();
-		System.out.println("IDS Calculation " +
+		log.info("IDS Calculation " +
 					(model.isAborted() ? "aborted" : "done") + " (" +
 					"#steps: " + steps + ", " +
 					"time: " + (time2 - time1) + "ms, " +

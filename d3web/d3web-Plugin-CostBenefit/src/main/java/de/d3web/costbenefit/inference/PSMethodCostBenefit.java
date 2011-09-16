@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import de.d3web.core.inference.PSMethod;
@@ -64,6 +65,8 @@ import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStr
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject> {
+
+	private static final Logger log = Logger.getLogger(PSMethodCostBenefit.class.getName());
 
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
@@ -173,7 +176,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
-			System.out.println(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			activatePath(caseObject, minPath);
 		}
 		else {
@@ -220,7 +223,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
-			System.out.println(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			activatePath(caseObject, minPath);
 		}
 	}

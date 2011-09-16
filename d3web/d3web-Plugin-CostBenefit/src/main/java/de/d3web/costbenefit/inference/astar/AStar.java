@@ -79,7 +79,7 @@ public class AStar {
 		}
 	}
 
-	private static final Logger log = Logger.getLogger(IterableExecutor.class.getName());
+	private static final Logger log = Logger.getLogger(AStar.class.getName());
 
 	private final SearchModel model;
 	private final Set<Question> stateQuestions = new HashSet<Question>();
@@ -302,9 +302,9 @@ public class AStar {
 				// in this case we might in need to update all existing nodes
 				// TODO: handle negative costs more sophisticated?
 				if (!hasOpenNode) {
-					AStarPath oldPath = follower.getPath();
-					AStarPath newPath = newFollower.getPath();
-					replacePaths(oldPath, newPath);
+					// AStarPath oldPath = follower.getPath();
+					// AStarPath newPath = newFollower.getPath();
+					// replacePaths(oldPath, newPath);
 				}
 				// proceed with usual update
 				follower.updatePath(newFollower.getPath());
@@ -318,13 +318,13 @@ public class AStar {
 	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
 		// update all successors based on the old
 		// path to be based on the new path for now
-		// System.out.println("A* violation due to negative costs, re-checking affected nodes");
-		// for (Node checked : this.openNodes) {
-		// replaceNodePath(checked, oldPath, newPath);
-		// }
-		// for (Node checked : this.closedNodes) {
-		// replaceNodePath(checked, oldPath, newPath);
-		// }
+		System.out.println("A* violation due to negative costs, re-checking affected nodes");
+		for (Node checked : this.openNodes) {
+			replaceNodePath(checked, oldPath, newPath);
+		}
+		for (Node checked : this.closedNodes) {
+			replaceNodePath(checked, oldPath, newPath);
+		}
 	}
 
 	/**

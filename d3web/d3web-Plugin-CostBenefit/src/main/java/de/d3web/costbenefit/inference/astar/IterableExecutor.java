@@ -65,9 +65,13 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 
 		@Override
 		public T call() throws Exception {
-			T result = callable.call();
-			addFinishedWorker(this);
-			return result;
+			try {
+				T result = callable.call();
+				return result;
+			}
+			finally {
+				addFinishedWorker(this);
+			}
 		}
 	}
 
