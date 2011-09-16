@@ -21,6 +21,7 @@ package de.d3web.core.session.blackboard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,9 +38,12 @@ import de.d3web.core.knowledge.terminology.Rating;
  * This class organizes the facts of one type for one terminology object. It is
  * capable to merge different opinions (facts from different solvers) to one
  * final value of the terminology object.
+ * <p>
+ * <b>Note:<br>
+ * This class is for internal purpose only. Until you do not provide an own
+ * blackboard implementation, do not use this class directly! </b>
  * 
  * @author volker_belli
- * 
  */
 final class FactAggregator {
 
@@ -108,6 +112,15 @@ final class FactAggregator {
 			mergeFacts();
 		}
 		return this.mergedFact;
+	}
+
+	/**
+	 * Returns the merged fact of all currently added facts of this aggregator.
+	 * 
+	 * @return the merged fact
+	 */
+	public Collection<Fact> getAllFacts() {
+		return Collections.unmodifiableList(facts);
 	}
 
 	private void invalidate() {

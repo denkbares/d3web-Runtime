@@ -303,4 +303,20 @@ public interface Blackboard {
 	 * @return {@link Collection} of {@link PSMethod}
 	 */
 	Collection<PSMethod> getIndicatingPSMethods(TerminologyObject object);
+
+	/**
+	 * Adds a new {@link BlackboardListener} to this blackboard.
+	 * 
+	 * @created 16.09.2011
+	 * @param listener the listener to be added
+	 */
+	void addBlackboardListner(BlackboardListener listener);
+
+	/**
+	 * Removes an existing {@link BlackboardListener} from this blackboard.
+	 * 
+	 * @created 16.09.2011
+	 * @param listener the listener to be removed
+	 */
+	void removeBlackboardListner(BlackboardListener listener);
 }

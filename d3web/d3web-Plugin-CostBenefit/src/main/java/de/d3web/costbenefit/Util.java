@@ -18,7 +18,6 @@
  */
 package de.d3web.costbenefit;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,15 +40,17 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.manage.KnowledgeBaseUtils;
-import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.costbenefit.blackboard.CopiedSession;
+import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
@@ -66,7 +67,21 @@ public final class Util {
 	private Util() {
 	}
 
-	public static Session copyCase(Session session) {
+	public static Session createDecoratedSession(Session session) {
+		return new DecoratedSession(session);
+	}
+
+	/**
+	 * Creates a session that has the same value facts as the specified session,
+	 * without any problem or strategic solver. Neither interview facts, nor
+	 * {@link SessionObject}s, nor the interview agenda, nor the protocol will
+	 * be copied.
+	 * 
+	 * @created 15.09.2011
+	 * @param session the session to be copied
+	 * @return the created copy with value facts only
+	 */
+	public static Session createSearchCopy(Session session) {
 		Session testCase = new CopiedSession(session.getKnowledgeBase());
 		((DefaultBlackboard) testCase.getBlackboard()).setAutosaveSource(false);
 		Blackboard blackboard = session.getBlackboard();
@@ -132,11 +147,12 @@ public final class Util {
 	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
 		List<QuestionOC> questions = new LinkedList<QuestionOC>();
 		collectQuestions(qContainer, questions);
-		List<? extends Question> answeredQuestions = session.getBlackboard().getAnsweredQuestions();
+		Blackboard blackboard = session.getBlackboard();
 		Map<Question, Value> valuesToSet = new HashMap<Question, Value>();
 		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
 		for (QuestionOC q : questions) {
-			if (!answeredQuestions.contains(q)) {
+			Value value = blackboard.getValue(q);
+			if (UndefinedValue.isUndefinedValue(value)) {
 				DefaultAbnormality abnormality = q.getInfoStore().getValue(
 						BasicProperties.DEFAULT_ABNORMALITIY);
 				if (abnormality == null) {
@@ -160,7 +176,7 @@ public final class Util {
 				}
 			}
 			else {
-				expectedmap.put(q, session.getBlackboard().getValue(q));
+				expectedmap.put(q, value);
 			}
 		}
 		if (set) {
@@ -216,13 +232,26 @@ public final class Util {
 		return facts;
 	}
 
-	private static class CopiedSession extends DefaultSession {
-
-		public CopiedSession(KnowledgeBase kb) {
-			super(null, kb, new Date(), false);
-		}
-	}
-
+	/*
+	 * private static class CoveringSession extends DefaultSession {
+	 * 
+	 * public CoveringSession(DefaultSession coveredSession) { super(null,
+	 * coveredSession.getKnowledgeBase(), new Date(), false, false);
+	 * DefaultBlackboard coveredBlackboard = (DefaultBlackboard)
+	 * coveredSession.getBlackboard(); setBlackboard(new
+	 * CoveringBlackboard(this, coveredBlackboard)); } }
+	 * 
+	 * private static class CoveringBlackboard extends DefaultBlackboard {
+	 * 
+	 * public CoveringBlackboard(CoveringSession thisSession, DefaultBlackboard
+	 * coveredBlackboard) { super(thisSession, new
+	 * CoveringFactStorage(coveredBlackboard.getValueStorage()), new
+	 * CoveringFactStorage(coveredBlackboard.getInterviewStorage())); } }
+	 * 
+	 * private static class CoveringFactStorage extends FactStorage {
+	 * 
+	 * public CoveringFactStorage(FactStorage factStorage) { super(); } }
+	 */
 	public static void addParentContainers(Set<QContainer> targets,
 			TerminologyObject q) {
 		for (TerminologyObject qaset : q.getParents()) {

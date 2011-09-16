@@ -37,7 +37,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
@@ -52,12 +51,11 @@ import de.d3web.core.session.values.UndefinedValue;
  */
 public class DefaultBlackboard implements Blackboard {
 
-	private final DefaultSession session;
-	private final FactStorage valueStorage;
-	private final FactStorage interviewStorage;
+	private final Session session;
+	private FactStorage valueStorage;
+	private FactStorage interviewStorage;
 	private boolean autosaveSource = true;
-
-	// TODO: also manage the SessionObjects here
+	private final List<BlackboardListener> listeners = new LinkedList<BlackboardListener>();
 
 	public boolean isAutosaveSource() {
 		return autosaveSource;
@@ -72,10 +70,23 @@ public class DefaultBlackboard implements Blackboard {
 	 * 
 	 * @param session the session the blackboard is created for
 	 */
-	public DefaultBlackboard(DefaultSession session) {
+	public DefaultBlackboard(Session session) {
 		this.session = session;
-		this.valueStorage = new FactStorage();
-		this.interviewStorage = new FactStorage();
+		this.valueStorage = new DefaultFactStorage();
+		this.interviewStorage = new DefaultFactStorage();
+	}
+
+	/**
+	 * Creates a new default blackboard by an existing one, sharing the fact
+	 * storages.
+	 * 
+	 * @param session the session to construct this blackboard for
+	 * @param factStoragesSource the blackboard to share the fact storages
+	 */
+	protected DefaultBlackboard(Session session, DefaultBlackboard factStoragestoShare) {
+		this.session = session;
+		this.valueStorage = factStoragestoShare.valueStorage;
+		this.interviewStorage = factStoragestoShare.interviewStorage;
 	}
 
 	@Override
@@ -94,7 +105,7 @@ public class DefaultBlackboard implements Blackboard {
 
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
 		Value oldValue = getValue((ValueObject) terminologyObject);
-		this.valueStorage.add(fact);
+		this.getValueStorage().add(fact);
 		propergate(terminologyObject, oldValue);
 	}
 
@@ -109,13 +120,25 @@ public class DefaultBlackboard implements Blackboard {
 		PropagationManager propagationContoller = session.getPropagationManager();
 		propagationContoller.propagate((ValueObject) terminologyObject,
 				oldValue);
-		session.notifyListeners(terminologyObject);
+		for (BlackboardListener listener : listeners) {
+			listener.factsChanged(terminologyObject);
+		}
+	}
+
+	@Override
+	public void addBlackboardListner(BlackboardListener listener) {
+		this.listeners.add(listener);
+	}
+
+	@Override
+	public void removeBlackboardListner(BlackboardListener listener) {
+		this.listeners.remove(listener);
 	}
 
 	@Override
 	public void removeValueFact(Fact fact) {
 		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
-		this.valueStorage.remove(fact);
+		this.getValueStorage().remove(fact);
 		propergate(fact.getTerminologyObject(), oldValue);
 	}
 
@@ -130,19 +153,19 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
 		Value oldValue = getValue((ValueObject) terminologyObject);
-		this.valueStorage.remove(terminologyObject, source);
+		this.getValueStorage().remove(terminologyObject, source);
 		propergate(terminologyObject, oldValue);
 	}
 
 	@Override
 	public Value getValue(ValueObject valueObject) {
-		return getValueFromFact(valueObject, this.valueStorage.getMergedFact(valueObject));
+		return getValueFromFact(valueObject, this.getValueStorage().getMergedFact(valueObject));
 	}
 
 	@Override
 	public Collection<TerminologyObject> getValuedObjects() {
 		return Collections.unmodifiableCollection(
-				this.valueStorage.getValuedObjects());
+				this.getValueStorage().getValuedObjects());
 	}
 
 	@Override
@@ -176,7 +199,7 @@ public class DefaultBlackboard implements Blackboard {
 		// refactoring, i.e., when the notification is done at an upper place
 		InterviewObject factObject = (InterviewObject) fact.getTerminologyObject();
 		Value oldValue = getIndication(factObject);
-		this.interviewStorage.add(fact);
+		this.getInterviewStorage().add(fact);
 		propagateIndicationChange(fact.getTerminologyObject(), oldValue);
 	}
 
@@ -189,7 +212,7 @@ public class DefaultBlackboard implements Blackboard {
 		// refactoring, i.e., when the notification is done at an upper place
 		InterviewObject factObject = (InterviewObject) fact.getTerminologyObject();
 		Value oldValue = getIndication(factObject);
-		this.interviewStorage.remove(fact);
+		this.getInterviewStorage().remove(fact);
 		propagateIndicationChange(factObject, oldValue);
 	}
 
@@ -204,7 +227,7 @@ public class DefaultBlackboard implements Blackboard {
 		InterviewObject factObject = (InterviewObject) terminologyObject;
 		Value oldValue = getIndication(factObject);
 
-		this.interviewStorage.remove(terminologyObject, source);
+		this.getInterviewStorage().remove(terminologyObject, source);
 
 		propagateIndicationChange(terminologyObject, oldValue);
 	}
@@ -218,24 +241,24 @@ public class DefaultBlackboard implements Blackboard {
 		Fact oldFact = getInterviewFact(terminologyObject);
 		if (oldFact != null) {
 			Value oldValue = oldFact.getValue();
-			this.interviewStorage.remove(terminologyObject);
+			this.getInterviewStorage().remove(terminologyObject);
 			propagateIndicationChange(terminologyObject, oldValue);
 		}
 	}
 
 	@Override
 	public Fact getInterviewFact(TerminologyObject terminologyObject) {
-		return this.interviewStorage.getMergedFact(terminologyObject);
+		return this.getInterviewStorage().getMergedFact(terminologyObject);
 	}
 
 	@Override
 	public Fact getInterviewFact(TerminologyObject terminologyObject, PSMethod psmethod) {
-		return this.interviewStorage.getMergedFact(terminologyObject, psmethod);
+		return this.getInterviewStorage().getMergedFact(terminologyObject, psmethod);
 	}
 
 	@Override
 	public Collection<InterviewObject> getInterviewObjects() {
-		Collection<TerminologyObject> objects = this.interviewStorage.getValuedObjects();
+		Collection<TerminologyObject> objects = this.getInterviewStorage().getValuedObjects();
 		ArrayList<InterviewObject> result = new ArrayList<InterviewObject>(objects.size());
 		for (TerminologyObject object : objects) {
 			result.add((InterviewObject) object);
@@ -250,12 +273,12 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Value getValue(ValueObject object, PSMethod psmethod) {
-		return getValueFromFact(object, valueStorage.getMergedFact(object, psmethod));
+		return getValueFromFact(object, getValueStorage().getMergedFact(object, psmethod));
 	}
 
 	@Override
 	public Value getValue(ValueObject object, PSMethod psmethod, Object source) {
-		return getValueFromFact(object, valueStorage.getFact(object, psmethod, source));
+		return getValueFromFact(object, getValueStorage().getFact(object, psmethod, source));
 	}
 
 	@Override
@@ -286,7 +309,7 @@ public class DefaultBlackboard implements Blackboard {
 		// session.getKnowledgeBase().getManager().getQuestions()) {
 		for (TerminologyObject object : getValuedObjects()) {
 			if (object instanceof Question) {
-				Fact mergedFact = valueStorage.getMergedFact(object);
+				Fact mergedFact = getValueStorage().getMergedFact(object);
 				if (mergedFact != null && UndefinedValue.isNotUndefinedValue(mergedFact.getValue())) {
 					questions.add((Question) object);
 				}
@@ -324,7 +347,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Rating getRating(Solution solution, PSMethod psmethod) {
-		Fact mergedFact = valueStorage.getMergedFact(solution, psmethod);
+		Fact mergedFact = getValueStorage().getMergedFact(solution, psmethod);
 		if (mergedFact == null) {
 			return new Rating(State.UNCLEAR);
 		}
@@ -335,22 +358,22 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Collection<PSMethod> getContributingPSMethods(TerminologyObject object) {
-		return valueStorage.getContributingPSMethods(object);
+		return getValueStorage().getContributingPSMethods(object);
 	}
 
 	@Override
 	public Collection<PSMethod> getIndicatingPSMethods(TerminologyObject object) {
-		return interviewStorage.getContributingPSMethods(object);
+		return getInterviewStorage().getContributingPSMethods(object);
 	}
 
 	@Override
 	public Fact getValueFact(TerminologyObject valueObject) {
-		return this.valueStorage.getMergedFact(valueObject);
+		return this.getValueStorage().getMergedFact(valueObject);
 	}
 
 	@Override
 	public Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod) {
-		return this.valueStorage.getMergedFact(terminologyObject, psmethod);
+		return this.getValueStorage().getMergedFact(terminologyObject, psmethod);
 	}
 
 	private Value getValueFromFact(ValueObject object, Fact fact) {
@@ -358,6 +381,22 @@ public class DefaultBlackboard implements Blackboard {
 			return object.getDefaultValue();
 		}
 		return fact.getValue();
+	}
+
+	protected FactStorage getValueStorage() {
+		return valueStorage;
+	}
+
+	protected void setValueStorage(FactStorage valueStorage) {
+		this.valueStorage = valueStorage;
+	}
+
+	protected FactStorage getInterviewStorage() {
+		return interviewStorage;
+	}
+
+	protected void setInterviewStorage(FactStorage interviewStorage) {
+		this.interviewStorage = interviewStorage;
 	}
 
 }

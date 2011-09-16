@@ -318,13 +318,13 @@ public class AStar {
 	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
 		// update all successors based on the old
 		// path to be based on the new path for now
-		System.out.println("A* violation due to negative costs, re-checking affected nodes");
-		for (Node checked : this.openNodes) {
-			replaceNodePath(checked, oldPath, newPath);
-		}
-		for (Node checked : this.closedNodes) {
-			replaceNodePath(checked, oldPath, newPath);
-		}
+		// System.out.println("A* violation due to negative costs, re-checking affected nodes");
+		// for (Node checked : this.openNodes) {
+		// replaceNodePath(checked, oldPath, newPath);
+		// }
+		// for (Node checked : this.closedNodes) {
+		// replaceNodePath(checked, oldPath, newPath);
+		// }
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class AStar {
 	private Node applyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
 		QContainer qcontainer = stateTransition.getQcontainer();
-		Session copiedSession = Util.copyCase(actualSession);
+		Session copiedSession = Util.createDecoratedSession(actualSession);
 		double costs = costFunction.getCosts(qcontainer, copiedSession);
 		Util.setNormalValues(copiedSession, qcontainer, this);
 		stateTransition.fire(copiedSession);

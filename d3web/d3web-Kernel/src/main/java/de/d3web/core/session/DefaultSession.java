@@ -39,6 +39,7 @@ import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.core.session.blackboard.BlackboardListener;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DefaultInterview;
@@ -100,7 +101,18 @@ public class DefaultSession implements Session {
 		this.created = checkedDate;
 		this.edited = checkedDate;
 		this.kb = knowledgebase;
+
+		// create blackboard and register as listener to get fact changed
+		// notifications
 		this.blackboard = new DefaultBlackboard(this);
+		this.blackboard.addBlackboardListner(new BlackboardListener() {
+
+			@Override
+			public void factsChanged(TerminologyObject object) {
+				notifyListeners(object);
+			}
+		});
+
 		this.dynamicStore = new HashMap<SessionObjectSource<?>, SessionObject>();
 		// add problem-solving methods used for this case
 		this.usedPSMethods = new TreeSet<PSMethod>(new PSMethodComparator());

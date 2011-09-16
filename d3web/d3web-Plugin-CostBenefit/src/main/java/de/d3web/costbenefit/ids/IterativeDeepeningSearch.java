@@ -162,7 +162,7 @@ class IterativeDeepeningSearch {
 		if (!model.hasTargets()) return;
 		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
-		Session testcase = Util.copyCase(session);
+		Session testcase = Util.createSearchCopy(session);
 		try {
 			search(testcase, 1);
 		}
