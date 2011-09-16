@@ -18,13 +18,12 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Blackboard;
 
 /**
  * The State class represents a compact description of the state of a session.
@@ -40,14 +39,21 @@ import de.d3web.core.session.Value;
  */
 public class State {
 
-	private final Map<Question, Value> findings = new HashMap<Question, Value>();
+	private final Set<Question> questions;
+	private final Session session;
+	private final int hashCode;
 
 	public State(Session session, Set<Question> preconditionQuestions) {
-		for (Question q : preconditionQuestions) {
-			findings.put(q, session.getBlackboard().getValue(q));
+		this.session = session;
+		this.questions = preconditionQuestions;
+
+		int hashCode = 1;
+		Blackboard blackboard = session.getBlackboard();
+		for (Question q : questions) {
+			Value value = blackboard.getValue(q);
+			hashCode = 31 * hashCode + value.hashCode();
 		}
-		// System.out.println("\tstate created: " + findings.size() +
-		// " entries");
+		this.hashCode = hashCode;
 	}
 
 	/**
@@ -60,29 +66,36 @@ public class State {
 	 * @return true, if the Question q has the Value v, false otherwise
 	 */
 	public boolean hasValue(Question question, Value value) {
-		Value storedValue = findings.get(question);
-		if (storedValue == null && value == null) {
-			return true;
-		}
-		else if (storedValue != null) {
-			return storedValue.equals(value);
-		}
-		else {
-			return false;
-		}
+		Value storedValue = session.getBlackboard().getValue(question);
+		return equals(value, storedValue);
+	}
+
+	private boolean equals(Object o1, Object o2) {
+		if (o1 == o2) return true;
+		if (o1 == null) return false;
+		if (o2 == null) return false;
+		return o2.equals(o1);
 	}
 
 	@Override
 	public boolean equals(Object o) {
+		if (o == this) return true;
 		if (o instanceof State) {
 			State otherState = (State) o;
-			return findings.equals(otherState.findings);
+			if (otherState.hashCode != hashCode) return false;
+			if (!otherState.questions.equals(questions)) return false;
+			for (Question question : questions) {
+				Value value1 = session.getBlackboard().getValue(question);
+				Value value2 = otherState.session.getBlackboard().getValue(question);
+				if (!equals(value1, value2)) return false;
+			}
+			return true;
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return findings.hashCode();
+		return hashCode;
 	}
 }
