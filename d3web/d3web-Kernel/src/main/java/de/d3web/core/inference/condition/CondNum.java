@@ -115,8 +115,7 @@ public abstract class CondNum extends CondQuestion {
 	@Override
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(session);
-		Value caseValue = session.getBlackboard().getValue(getQuestion());
+		Value caseValue = checkAnswer(session);
 		if (caseValue instanceof NumValue) {
 			Double caseValueDouble = (Double) (((NumValue) caseValue).getValue());
 			return compare(caseValueDouble, getConditionValue());

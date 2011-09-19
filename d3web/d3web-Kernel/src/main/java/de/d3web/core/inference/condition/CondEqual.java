@@ -52,30 +52,17 @@ public class CondEqual extends CondQuestion {
 	@Override
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(session);
-		Value value = session.getBlackboard().getValue(getQuestion());
-
+		Value value = checkAnswer(session);
 		if (this.conditionValue instanceof UndefinedValue) {
 			return (value instanceof UndefinedValue);
 		}
-		else if (getQuestion() instanceof QuestionMC) {
+		if (getQuestion() instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {
 				MultipleChoiceValue currentValue = (MultipleChoiceValue) value;
-				if (this.conditionValue instanceof MultipleChoiceValue) {
-					return currentValue.containsAll((MultipleChoiceValue) this.conditionValue);
-				}
-				else {
-					return currentValue.contains(this.conditionValue);
-				}
-			}
-			else {
-				// workaround if there is a AnswerChoice set
-				return this.conditionValue.equals(value);
+				return currentValue.contains(this.conditionValue);
 			}
 		}
-		else {
-			return this.conditionValue.equals(value);
-		}
+		return this.conditionValue.equals(value);
 	}
 
 	/**

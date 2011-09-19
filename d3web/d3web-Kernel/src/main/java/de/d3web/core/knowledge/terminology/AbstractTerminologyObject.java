@@ -168,36 +168,22 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	}
 
 	/**
-	 * Checks, if other object is an NamedObject and if it contains the same ID.
+	 * Checks, if other object is of same class and has the same name.
 	 * 
 	 * @return true, if equal
 	 * @param other Object to compare for equality
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		else if ((other == null) || (getClass() != other.getClass())) {
-			return false;
-		}
-		else {
-			NamedObject otherIDO = (NamedObject) other;
-			if ((getName() != null) && (otherIDO.getName() != null)) {
-				return getName().equals(otherIDO.getName());
-			}
-			else {
-				return super.equals(other);
-			}
-		}
+		if (this == other) return true;
+		if (other == null) return false;
+		return (getClass() == other.getClass())
+				&& name.equals(((AbstractTerminologyObject) other).name);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return name.hashCode();
 	}
 
 	@Override

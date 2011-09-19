@@ -43,8 +43,7 @@ public abstract class CondDate extends CondQuestion {
 
 	@Override
 	public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
-		checkAnswer(session);
-		DateValue dateValue = (DateValue) session.getBlackboard().getValue(getQuestion());
+		DateValue dateValue = (DateValue) checkAnswer(session);
 		if (dateValue != null) {
 			return compare(dateValue);
 		}

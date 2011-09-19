@@ -53,13 +53,15 @@ public abstract class CondQuestion extends TerminalCondition {
 	/**
 	 * Shortcut to be used for the eval methods of inheriting classes: This
 	 * method checks if there exists a given value for this condition in the
-	 * specified {@link Session}.
+	 * specified {@link Session}. It also returns the value found for further
+	 * usage.
 	 * 
+	 * @return return the value if there is a "normal" value set
 	 * @throws NoAnswerException if the question has currently no answer
 	 * @throws UnknownAnswerException if the question is answered with
 	 *         {@link AnswerUnknown}
 	 */
-	protected void checkAnswer(Session session)
+	protected Value checkAnswer(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		Value value = session.getBlackboard().getValue(question);
 		if (value instanceof UndefinedValue || value == null) {
@@ -68,6 +70,7 @@ public abstract class CondQuestion extends TerminalCondition {
 		else if (value instanceof Unknown) {
 			throw UnknownAnswerException.getInstance();
 		}
+		return value;
 	}
 
 	/**
