@@ -74,7 +74,7 @@ public class AStar {
 		@Override
 		public Node call() {
 			Node follower = applyTransition(sourceNode, stateTransition);
-			// installNode(follower);
+			installNode(follower);
 			return follower;
 		}
 	}
@@ -214,7 +214,7 @@ public class AStar {
 		try {
 			for (Future<Node> future : exec) {
 				Node newFollower = future.get();
-				installNode(newFollower);
+				// installNode(newFollower);
 				stepCompleted(newFollower);
 			}
 		}
@@ -377,10 +377,12 @@ public class AStar {
 					// can be several nodes to reach a
 					// target, one of the other nodes could
 					// be cheaper
-					if (t.getMinPath() == null
-							|| t.getMinPath().getCosts() > newPath.getCosts()) {
-						t.setMinPath(newPath);
-						model.checkTarget(t);
+					synchronized (this) {
+						if (t.getMinPath() == null
+								|| t.getMinPath().getCosts() > newPath.getCosts()) {
+							t.setMinPath(newPath);
+							model.checkTarget(t);
+						}
 					}
 				}
 			}

@@ -128,15 +128,23 @@ public class SearchModel {
 		targets.add(target);
 	}
 
-	public void checkTarget(Target t) {
-		if (bestBenefitTarget == null || t.getBenefit() > bestBenefitTarget.getBenefit()) {
-			bestBenefitTarget = t;
+	/**
+	 * This method signals that a target has been reached by a new or improved
+	 * path. If updates the results of this search model if the new or improved
+	 * path optimizes them.
+	 * 
+	 * @created 18.09.2011
+	 * @param target the target that has been reached
+	 */
+	public void checkTarget(Target target) {
+		if (bestBenefitTarget == null || target.getBenefit() > bestBenefitTarget.getBenefit()) {
+			bestBenefitTarget = target;
 		}
-		// only check for best cost/benefit it the target has been reached yet
-		if (t.getMinPath() != null) {
+		// only check for best cost/benefit if the target has been reached yet
+		if (target.getMinPath() != null) {
 			if (bestCostBenefitTarget == null
-					|| t.getCostBenefit() < bestCostBenefitTarget.getCostBenefit()) {
-				bestCostBenefitTarget = t;
+					|| target.getCostBenefit() < bestCostBenefitTarget.getCostBenefit()) {
+				bestCostBenefitTarget = target;
 			}
 		}
 	}
