@@ -315,17 +315,17 @@ public class AStar {
 		updateTargets(newFollower.getPath());
 	}
 
-	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
-		// update all successors based on the old
-		// path to be based on the new path for now
-		System.out.println("A* violation due to negative costs, re-checking affected nodes");
-		for (Node checked : this.openNodes) {
-			replaceNodePath(checked, oldPath, newPath);
-		}
-		for (Node checked : this.closedNodes) {
-			replaceNodePath(checked, oldPath, newPath);
-		}
-	}
+	// private void replacePaths(AStarPath oldPath, AStarPath newPath) {
+	// // update all successors based on the old
+	// // path to be based on the new path for now
+	// System.out.println("A* violation due to negative costs, re-checking affected nodes");
+	// for (Node checked : this.openNodes) {
+	// replaceNodePath(checked, oldPath, newPath);
+	// }
+	// for (Node checked : this.closedNodes) {
+	// replaceNodePath(checked, oldPath, newPath);
+	// }
+	// }
 
 	/**
 	 * Checks if the specified node relies on the old path. If yes, the path
@@ -337,19 +337,22 @@ public class AStar {
 	 * @param oldPath the original path prefix to be replaced
 	 * @param newPath the new path prefix replacing the old one
 	 */
-	private void replaceNodePath(Node checked, AStarPath oldPath, AStarPath newPath) {
-		// check if this node hat the required prefix to be replaced
-		boolean hasPrefix = checked.getPath().hasPrefix(oldPath);
-		if (!hasPrefix) return;
-
-		// if yes, we create the prefix-replaced path
-		// and update the calculated costs of the targets
-		AStarPath createdPath = checked.getPath().replacePrefix(oldPath, newPath);
-		double f = calculateFValue(createdPath.getCosts(), checked.getState(), checked.getSession());
-		checked.updatePath(createdPath);
-		checked.setfValue(f);
-		updateTargets(createdPath);
-	}
+	// private void replaceNodePath(Node checked, AStarPath oldPath, AStarPath
+	// newPath) {
+	// // check if this node hat the required prefix to be replaced
+	// boolean hasPrefix = checked.getPath().hasPrefix(oldPath);
+	// if (!hasPrefix) return;
+	//
+	// // if yes, we create the prefix-replaced path
+	// // and update the calculated costs of the targets
+	// AStarPath createdPath = checked.getPath().replacePrefix(oldPath,
+	// newPath);
+	// double f = calculateFValue(createdPath.getCosts(), checked.getState(),
+	// checked.getSession());
+	// checked.updatePath(createdPath);
+	// checked.setfValue(f);
+	// updateTargets(createdPath);
+	// }
 
 	private Node applyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
