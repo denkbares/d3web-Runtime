@@ -35,6 +35,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
@@ -85,64 +86,72 @@ public class PSMethodInit implements PSMethod {
 			for (Question q : kb.getManager().getQuestions()) {
 				String property = q.getInfoStore().getValue(BasicProperties.INIT);
 				if (property != null) {
-					String s = property;
-					if (s.equalsIgnoreCase("unknown")) {
-						Fact fact = FactFactory.createFact(session, q,
-								Unknown.getInstance(),
-								new Object(), this);
+					try {
+						Value value = getValue(q, property);
+						Fact fact = FactFactory.createFact(session, q, value, new Object(),
+								this);
 						session.getBlackboard().addValueFact(fact);
-						continue;
 					}
-					List<String> ids = new LinkedList<String>();
-					int posstart = 0;
-					int posend = s.indexOf(';');
-					while (posend != -1) {
-						ids.add(s.substring(posstart, posend));
-						posstart = posend + 1;
-						posend = s.indexOf(';', posstart);
+					catch (IllegalArgumentException e) {
+						Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
 					}
-					ids.add(s.substring(posstart));
-					if (q instanceof QuestionOC) {
-						QuestionOC qc = (QuestionOC) q;
-						String choiceID = ids.get(0);
-						Choice choice =
-								KnowledgeBaseUtils.findChoice(qc, choiceID);
-						if (choice != null) {
-							Fact fact = FactFactory.createFact(session, qc,
-									new ChoiceValue(choice),
-									new Object(), this);
-							session.getBlackboard().addValueFact(fact);
-						}
-						else {
-							Logger.getLogger(getClass().getName()).warning(
-									"Cannot set initial value '" + property +
-											"' for question '" + q.getName()
-											+ "'. Choice not found.");
-						}
-					}
-					else if (q instanceof QuestionNum) {
-						QuestionNum qn = (QuestionNum) q;
-						NumValue value;
-						try {
-							value = new NumValue(Double.parseDouble(property));
-							Fact fact = FactFactory.createFact(session, qn,
-									value, this, this);
-							session.getBlackboard().addValueFact(fact);
-						}
-						catch (NumberFormatException e) {
-							Logger.getLogger(getClass().getName()).warning(
-									"Cannot set initial value '" + property +
-											"' for question '" + q.getName()
-											+ "', because it is not valid number.");
-						}
-					}
-					// TODO: handle QuestionDate, QuestionText, QuestionMC
 				}
 			}
 		}
 		finally {
 			session.getPropagationManager().commitPropagation();
 		}
+	}
+
+	/**
+	 * Returns the value represented by the string for the given question.
+	 * 
+	 * @created 20.09.2011
+	 * @param q {@link Question}
+	 * @param property String of the init property
+	 * @return Value representing the string
+	 * @throws IllegalArgumentException it the property string is not correct
+	 *         for the given question
+	 */
+	public static Value getValue(Question q, String property) throws IllegalArgumentException {
+		if (property.equalsIgnoreCase("unknown")) {
+			return Unknown.getInstance();
+		}
+		List<String> ids = new LinkedList<String>();
+		int posstart = 0;
+		int posend = property.indexOf(';');
+		while (posend != -1) {
+			ids.add(property.substring(posstart, posend));
+			posstart = posend + 1;
+			posend = property.indexOf(';', posstart);
+		}
+		ids.add(property.substring(posstart));
+		if (q instanceof QuestionOC) {
+			QuestionOC qc = (QuestionOC) q;
+			String choiceID = ids.get(0);
+			Choice choice =
+					KnowledgeBaseUtils.findChoice(qc, choiceID);
+			if (choice != null) {
+				return new ChoiceValue(choice);
+			}
+			else {
+				throw new IllegalArgumentException("Cannot set initial value '" + property +
+						"' for question '" + q.getName()
+						+ "'. Choice not found.");
+			}
+		}
+		else if (q instanceof QuestionNum) {
+			try {
+				return new NumValue(Double.parseDouble(property));
+			}
+			catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Cannot set initial value '" + property +
+								"' for question '" + q.getName()
+								+ "', because it is not valid number.");
+			}
+		}
+		// TODO: handle QuestionDate, QuestionText, QuestionMC
+		throw new IllegalArgumentException("QuestionType not supported yet.");
 	}
 
 	/**
