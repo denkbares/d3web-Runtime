@@ -50,7 +50,7 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 	public String getParameter(String param) {
 		Parameter parameter = extension.getParameter(param);
 		if (parameter != null) {
-			return parameter.valueAsString();
+			return parameter.rawValue();
 		}
 		else {
 			return null;

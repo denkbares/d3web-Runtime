@@ -91,4 +91,8 @@ public abstract class PluginManager {
 		}
 	}
 
+	public static boolean isInitialized() {
+		return instance != null;
+	}
+
 }
