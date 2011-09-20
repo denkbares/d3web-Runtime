@@ -20,7 +20,10 @@
 
 package de.d3web.core.inference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,16 +33,24 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 
 /**
@@ -126,7 +137,12 @@ public class PSMethodInit implements PSMethod {
 			posend = property.indexOf(';', posstart);
 		}
 		ids.add(property.substring(posstart));
-		if (q instanceof QuestionOC) {
+		if (q instanceof QuestionZC) {
+			throw new IllegalArgumentException("Cannot set initial value '" + property +
+					"' for question '" + q.getName()
+					+ "'. No Choice for this question type allowed.");
+		}
+		else if (q instanceof QuestionOC) {
 			QuestionOC qc = (QuestionOC) q;
 			String choiceID = ids.get(0);
 			Choice choice =
@@ -140,6 +156,28 @@ public class PSMethodInit implements PSMethod {
 						+ "'. Choice not found.");
 			}
 		}
+		else if (q instanceof QuestionMC) {
+			QuestionMC qmc = (QuestionMC) q;
+			List<ChoiceID> choices = new LinkedList<ChoiceID>();
+			List<String> badIds = new LinkedList<String>();
+			for (String id : ids) {
+				Choice choice = KnowledgeBaseUtils.findChoice(qmc, id);
+				if (choice != null) {
+					choices.add(new ChoiceID(choice));
+				}
+				else {
+					badIds.add(id);
+				}
+			}
+			if (!badIds.isEmpty()) {
+				throw new IllegalArgumentException("Cannot set initial value '" + property +
+						"' for question '" + q.getName()
+						+ "'. The following choices could not be found: " + badIds);
+			}
+			else {
+				return new MultipleChoiceValue(choices.toArray(new ChoiceID[choices.size()]));
+			}
+		}
 		else if (q instanceof QuestionNum) {
 			try {
 				return new NumValue(Double.parseDouble(property));
@@ -150,7 +188,34 @@ public class PSMethodInit implements PSMethod {
 								+ "', because it is not valid number.");
 			}
 		}
-		// TODO: handle QuestionDate, QuestionText, QuestionMC
+		else if (q instanceof QuestionDate) {
+			List<SimpleDateFormat> dateFormats = new LinkedList<SimpleDateFormat>();
+			dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS"));
+			dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+			dateFormats.add(new SimpleDateFormat("yyyy-MM-dd"));
+			dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS"));
+			dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
+			dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
+			Date date = null;
+			for (SimpleDateFormat sdf : dateFormats) {
+				try {
+					date = sdf.parse(property);
+				}
+				catch (ParseException e) {
+					continue;
+				}
+				break;
+			}
+			if (date == null) {
+				throw new IllegalArgumentException("Cannot set initial value '" + property +
+						"' for question '" + q.getName()
+						+ "', because it is not valid date format.");
+			}
+			return new DateValue(date);
+		}
+		else if (q instanceof QuestionText) {
+			return new TextValue(property);
+		}
 		throw new IllegalArgumentException("QuestionType not supported yet.");
 	}
 
