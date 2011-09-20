@@ -39,6 +39,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values. Especially
@@ -85,6 +86,13 @@ public class PSMethodInit implements PSMethod {
 				String property = q.getInfoStore().getValue(BasicProperties.INIT);
 				if (property != null) {
 					String s = property;
+					if (s.equalsIgnoreCase("unknown")) {
+						Fact fact = FactFactory.createFact(session, q,
+								Unknown.getInstance(),
+								new Object(), this);
+						session.getBlackboard().addValueFact(fact);
+						continue;
+					}
 					List<String> ids = new LinkedList<String>();
 					int posstart = 0;
 					int posend = s.indexOf(';');
