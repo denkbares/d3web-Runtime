@@ -28,7 +28,7 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 23.08.2011
  */
-public class IDSTestEmptyQContainers extends TestEmptyQContainers {
+public class TestEmptyQContainersIDS extends TestEmptyQContainers {
 
 	@Override
 	protected void configureSearchAlgorithm(KnowledgeBase kb) {

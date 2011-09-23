@@ -71,13 +71,15 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 */
 	private Collection<StateTransition> allStateTransitions;
 
+	private double negativeSum;
+
 	@Override
 	public double getDistance(State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		return estimatePathCosts(state, precondition, target);
+		return estimatePathCosts(state, precondition, target) + negativeSum;
 	}
 
 	@Override
@@ -90,6 +92,13 @@ public class DividedTransitionHeuristic implements Heuristic {
 		this.knowledgeBase = kb;
 		this.allStateTransitions = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
 		this.costCache = new HashMap<QContainer, Map<Question, Map<Value, Double>>>();
+		negativeSum = 0;
+		for (QContainer qcon : kb.getManager().getQContainers()) {
+			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
+			if (costs < 0) {
+				negativeSum += costs;
+			}
+		}
 	}
 
 	private double estimatePathCosts(State state, Condition cond, QContainer target) {
@@ -115,7 +124,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 			CondEqual c = (CondEqual) cond;
 			QuestionChoice question = (QuestionChoice) c.getQuestion();
 			ChoiceValue value = (ChoiceValue) c.getValue();
-			if (state.hasValue(question, value)) {
+			if (state.hasValue(question, value) || question.getName().contains("betriebsstufe")
+					|| question.getName().contains("batteriehauptschalter")) {
 				// condition is fulfilled, no state transition needed => no
 				// costs
 				return 0;
@@ -234,7 +244,13 @@ public class DividedTransitionHeuristic implements Heuristic {
 		// by the number of relevant questions possible set up
 		QContainer preapringContainer = preparingTransition.getQcontainer();
 		double costs = preapringContainer.getInfoStore().getValue(BasicProperties.COST);
-		return costs / set.size();
+		if (costs > 0.0) {
+			return costs / set.size();
+		}
+		else {
+			// the costs of all negative teststeps get substracted anyway
+			return 0;
+		}
 	}
 
 	private Set<Value> calculateRequiredValues(Question question, Condition condition) {

@@ -50,7 +50,7 @@ import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
-import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
+import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -84,7 +84,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public PSMethodCostBenefit() {
 		this.targetFunction = new DefaultTargetFunction();
 		this.costFunction = new DefaultCostFunction();
-		this.searchAlgorithm = new IterativeDeepeningSearchAlgorithm();
+		this.searchAlgorithm = new AStarAlgorithm();
 	}
 
 	@Override
