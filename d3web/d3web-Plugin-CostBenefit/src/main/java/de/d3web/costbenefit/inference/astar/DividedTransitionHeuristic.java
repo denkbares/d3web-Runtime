@@ -124,8 +124,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 			CondEqual c = (CondEqual) cond;
 			QuestionChoice question = (QuestionChoice) c.getQuestion();
 			ChoiceValue value = (ChoiceValue) c.getValue();
-			if (state.hasValue(question, value) || question.getName().contains("betriebsstufe")
-					|| question.getName().contains("batteriehauptschalter")) {
+			if (state.hasValue(question, value)) {
 				// condition is fulfilled, no state transition needed => no
 				// costs
 				return 0;
