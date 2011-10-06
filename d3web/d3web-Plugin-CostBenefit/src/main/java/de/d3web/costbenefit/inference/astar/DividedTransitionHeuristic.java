@@ -45,6 +45,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 
 /**
@@ -63,7 +64,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	/**
 	 * Stores the {@link KnowledgeBase} this heuristic is initialized for
 	 */
-	private KnowledgeBase knowledgeBase;
+	protected KnowledgeBase knowledgeBase;
 
 	/**
 	 * Stores all available state transitions of the knowledge base of the
@@ -71,10 +72,10 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 */
 	private Collection<StateTransition> allStateTransitions;
 
-	private double negativeSum;
+	protected double negativeSum;
 
 	@Override
-	public double getDistance(State state, QContainer target) {
+	public double getDistance(Path path, State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
@@ -101,7 +102,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private double estimatePathCosts(State state, Condition cond, QContainer target) {
+	protected double estimatePathCosts(State state, Condition cond, QContainer target) {
 		if (cond instanceof CondAnd) {
 			CondAnd cand = (CondAnd) cond;
 			double sum = 0;
@@ -218,7 +219,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				// check if the values required for that questions
 				// matches the values that can be set up
 				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
-				Set<Value> possibleValues = calculatePossibleValues(question, vt.getSetters());
+				Set<Value> possibleValues = calculatePossibleValues(vt.getSetters());
 				if (!Collections.disjoint(requiredValues, possibleValues)) {
 					// the values that can be set up are common with
 					// the required ones, so count that question
@@ -298,7 +299,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private Set<Value> calculatePossibleValues(Question question, List<ConditionalValueSetter> setters) {
+	protected Set<Value> calculatePossibleValues(List<ConditionalValueSetter> setters) {
 		Set<Value> result = new HashSet<Value>();
 		for (ConditionalValueSetter setter : setters) {
 			result.add(setter.getAnswer());

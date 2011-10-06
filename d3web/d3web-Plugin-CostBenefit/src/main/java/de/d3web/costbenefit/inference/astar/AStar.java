@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -43,6 +44,7 @@ import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 
@@ -318,7 +320,11 @@ public class AStar {
 	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
 		// update all successors based on the old
 		// path to be based on the new path for now
-		System.out.println("A* violation due to negative costs, re-checking affected nodes");
+		// filter calculation errors
+		if (oldPath.getCosts() - newPath.getCosts() > 0.00001) {
+			System.out.println(newPath + " has lower costs than " + oldPath
+					+ ", please check that!");
+		}
 		// for (Node checked : this.openNodes) {
 		// replaceNodePath(checked, oldPath, newPath);
 		// }
@@ -363,58 +369,50 @@ public class AStar {
 		stateTransition.fire(copiedSession);
 		State newState = computeState(copiedSession);
 		AStarPath newPath = new AStarPath(qcontainer, node.getPath(), costs);
-		double f = calculateFValue(newPath.getCosts(), newState, copiedSession);
+		double f = calculateFValue(newPath, newState, copiedSession);
 		Node newFollower = new Node(newState, copiedSession, newPath, f);
 		return newFollower;
 	}
 
 	private void updateTargets(AStarPath newPath) {
 		QContainer qcontainer = newPath.getQContainer();
+		List<QContainer> pathQContainers = newPath.getPath();
 		for (Target t : model.getTargets()) {
-			if (t.getQContainers().size() == 1) {
-				if (t.getQContainers().get(0) == qcontainer) {
-					// this has to be checked because there
-					// can be several nodes to reach a
-					// target, one of the other nodes could
-					// be cheaper
-					synchronized (this) {
-						if (t.getMinPath() == null
+			// update only if the last qcontainer of the path is contained in
+			// the target and if the path contains all targetQContainers
+			if (t.getQContainers().contains(qcontainer)
+					&& (pathQContainers.containsAll(t.getQContainers()))) {
+				// this has to be checked because there
+				// can be several nodes to reach a
+				// target, one of the other nodes could
+				// be cheaper
+				synchronized (this) {
+					if (t.getMinPath() == null
 								|| t.getMinPath().getCosts() > newPath.getCosts()) {
-							t.setMinPath(newPath);
-							model.checkTarget(t);
-						}
+						t.setMinPath(newPath);
+						model.checkTarget(t);
 					}
 				}
 			}
-			// TODO: Multitarget?
 		}
 	}
 
-	/**
-	 * 
-	 * @created 27.06.2011
-	 * @param costs
-	 * @param newState
-	 * @return
-	 */
-	private double calculateFValue(double pathcosts, State state, Session session) {
+	private double calculateFValue(Path path, State state, Session session) {
 		double min = Double.POSITIVE_INFINITY;
 		for (Target target : model.getTargets()) {
-			double costs = pathcosts;
-			if (target.getQContainers().size() == 1) {
-				QContainer qContainer = target.getQContainers().get(0);
+			double targetCosts = 0;
+			for (QContainer qContainer : target.getQContainers()) {
+				double costs = path.getCosts();
 				// adding the costs calculated by the heuristic
-				costs += algorithm.getHeuristic().getDistance(state, qContainer);
+				costs += algorithm.getHeuristic().getDistance(path, state, qContainer);
 				// adding the costs of the target
 				costs += costFunction.getCosts(qContainer, session);
-				// dividing the whole costs by the benefit
-				costs /= target.getBenefit();
-				min = Math.min(min, costs);
+				targetCosts = Math.max(targetCosts, costs);
 			}
-			// TODO: Multitarget?
+			// dividing the whole costs by the benefit
+			targetCosts /= target.getBenefit();
+			min = Math.min(min, targetCosts);
 		}
-		// TODO: subtract all negative costs to preserve optimistic heuristic?
-		// done in heuristic
 		return min;
 	}
 
