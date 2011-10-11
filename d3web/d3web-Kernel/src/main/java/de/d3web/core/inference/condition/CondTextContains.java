@@ -39,8 +39,7 @@ public class CondTextContains extends CondTextQuestion {
 	 * @param value the specified value (String)
 	 */
 	public CondTextContains(QuestionText question, String value) {
-		super(question);
-		this.setValue(value);
+		super(question, value);
 	}
 
 	@Override

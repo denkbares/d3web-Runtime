@@ -35,10 +35,11 @@ import de.d3web.core.session.values.DateValue;
  */
 public abstract class CondDate extends CondQuestion {
 
-	private DateValue value;
+	private final DateValue value;
 
-	protected CondDate(Question idobject) {
+	protected CondDate(Question idobject, DateValue value) {
 		super(idobject);
+		this.value = value;
 	}
 
 	@Override
@@ -62,16 +63,6 @@ public abstract class CondDate extends CondQuestion {
 	 */
 	public DateValue getValue() {
 		return this.value;
-	}
-
-	/**
-	 * Sets the {@link DateValue} value, that has to be the answer of the
-	 * contained {@link QuestionDate}.
-	 * 
-	 * @param value the conditioned String value
-	 */
-	public void setValue(DateValue value) {
-		this.value = value;
 	}
 
 	@Override

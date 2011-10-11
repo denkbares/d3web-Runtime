@@ -26,11 +26,12 @@ import de.d3web.core.session.values.TextValue;
 
 public abstract class CondTextQuestion extends CondQuestion {
 
-	protected CondTextQuestion(Question idobject) {
+	protected CondTextQuestion(Question idobject, String value) {
 		super(idobject);
+		this.value = value;
 	}
 
-	private String value;
+	private final String value;
 
 	@Override
 	public boolean eval(Session session)
@@ -55,16 +56,6 @@ public abstract class CondTextQuestion extends CondQuestion {
 	 */
 	public String getValue() {
 		return this.value;
-	}
-
-	/**
-	 * Sets the {@link String} value, that has to be contained in the answer of
-	 * the contained {@link QuestionText}.
-	 * 
-	 * @param value the conditioned String value
-	 */
-	public void setValue(String value) {
-		this.value = value;
 	}
 
 	@Override

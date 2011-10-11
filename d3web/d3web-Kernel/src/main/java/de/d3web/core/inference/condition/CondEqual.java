@@ -35,7 +35,7 @@ import de.d3web.core.session.values.UndefinedValue;
  */
 public class CondEqual extends CondQuestion {
 
-	private Value conditionValue;
+	private final Value conditionValue;
 
 	/**
 	 * Creates a new equal-condition constraining a specified question to a

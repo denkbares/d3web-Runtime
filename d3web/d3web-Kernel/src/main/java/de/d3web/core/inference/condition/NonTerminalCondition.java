@@ -57,7 +57,12 @@ public abstract class NonTerminalCondition implements Condition {
 		for (Object object : conditions) {
 			terms.add((Condition) object);
 		}
-		hash = getTerms().hashCode();
+		int temphash = 0;
+		// hashcode is independent from the order of the list
+		for (Condition cond : terms) {
+			temphash += cond.hashCode();
+		}
+		hash = temphash;
 	}
 
 	@Override
@@ -85,7 +90,8 @@ public abstract class NonTerminalCondition implements Condition {
 		if (this == other) {
 			return true;
 		}
-		else if ((other == null) || (getClass() != other.getClass())) {
+		else if ((other == null)
+				|| (getClass() != other.getClass() || hashCode() != other.hashCode())) {
 			return false;
 		}
 		else {

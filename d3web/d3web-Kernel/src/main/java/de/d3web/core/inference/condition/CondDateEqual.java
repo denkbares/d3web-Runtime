@@ -40,8 +40,7 @@ public class CondDateEqual extends CondDate {
 	 * @param value the specified value (DateValue)
 	 */
 	public CondDateEqual(QuestionDate question, DateValue value) {
-		super(question);
-		this.setValue(value);
+		super(question, value);
 	}
 
 	@Override

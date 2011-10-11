@@ -35,6 +35,8 @@ import de.d3web.core.session.Session;
  * condition, and an eval method to evaluate this condition with respect to a
  * given {@link Session}.
  * 
+ * Conditions must be immutable.
+ * 
  * @author Joachim Baumeister, Christian Betz
  */
 public interface Condition {

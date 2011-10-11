@@ -39,8 +39,7 @@ public class CondDateAfter extends CondDate {
 	 * @param value the specified value (DateValue)
 	 */
 	public CondDateAfter(QuestionDate question, DateValue value) {
-		super(question);
-		this.setValue(value);
+		super(question, value);
 	}
 
 	@Override

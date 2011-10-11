@@ -39,8 +39,7 @@ public class CondTextEqual extends CondTextQuestion {
 	 * @param value the specified value (String)
 	 */
 	public CondTextEqual(QuestionText question, String value) {
-		super(question);
-		this.setValue(value);
+		super(question, value);
 	}
 
 	@Override
