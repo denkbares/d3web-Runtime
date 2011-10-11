@@ -101,6 +101,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				// skip qcontainer if it is already initialized
 				if (targetCache.get(qcon) != null) continue;
 				StateTransition st = StateTransition.getStateTransition(qcon);
+				// qcontainers without Statetransition are handled separately
+				if (st == null) continue;
 				Condition activationCondition = st.getActivationCondition();
 				Collection<TerminologyObject> forbiddenTermObjects = getForbiddenObjects(activationCondition);
 				List<CondEqual> condEquals = getCondEquals(activationCondition);
