@@ -45,8 +45,8 @@ public class StateTransition implements KnowledgeSlice {
 	public static final KnowledgeKind<StateTransition> KNOWLEDGE_KIND = new KnowledgeKind<StateTransition>(
 			"STATE_TRANSITION", StateTransition.class);
 
-	private Condition activationCondition;
-	private List<ValueTransition> postTransitions;
+	private final Condition activationCondition;
+	private final List<ValueTransition> postTransitions;
 	private final QContainer qcontainer;
 
 	public StateTransition(Condition activationCondition, List<ValueTransition> postTransitions, QContainer qcontainer) {
@@ -61,16 +61,8 @@ public class StateTransition implements KnowledgeSlice {
 		return activationCondition;
 	}
 
-	public void setActivationCondition(Condition activationCondition) {
-		this.activationCondition = activationCondition;
-	}
-
 	public List<ValueTransition> getPostTransitions() {
 		return postTransitions;
-	}
-
-	public void setPostTransitions(List<ValueTransition> postTransition) {
-		this.postTransitions = postTransition;
 	}
 
 	public QContainer getQcontainer() {
@@ -125,25 +117,5 @@ public class StateTransition implements KnowledgeSlice {
 	 */
 	public static StateTransition getStateTransition(QContainer qcon) {
 		return qcon.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
-	}
-
-	/**
-	 * Fires the state transition of the QContainer in the Session
-	 * 
-	 * @created 25.06.2010
-	 * @param qcon QContainer
-	 * @param session Session
-	 * @return List of Facts which where added during the firing of the
-	 *         StateTransition, null if there is no StateTransition for the
-	 *         QContainer
-	 */
-	public static List<Fact> fireStateTransition(QContainer qcon, Session session) {
-		StateTransition st = getStateTransition(qcon);
-		if (st != null) {
-			return st.fire(session);
-		}
-		else {
-			return null;
-		}
 	}
 }

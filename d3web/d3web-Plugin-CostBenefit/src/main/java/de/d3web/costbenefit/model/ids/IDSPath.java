@@ -18,8 +18,6 @@
  */
 package de.d3web.costbenefit.model.ids;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -39,10 +37,6 @@ public class IDSPath implements Path {
 	private Stack<Node> stack = new Stack<Node>();
 	private double costs = 0;
 	private Stack<Double> coststack = new Stack<Double>();
-
-	public Collection<Node> getNodes() {
-		return Collections.unmodifiableCollection(stack);
-	}
 
 	@Override
 	public double getCosts() {

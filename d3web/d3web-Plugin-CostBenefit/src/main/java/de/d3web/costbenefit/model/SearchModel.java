@@ -108,7 +108,7 @@ public class SearchModel {
 
 	/**
 	 * Return the existing target that equals to the specified one.
-	 * Unfortunately the Set have no such function to acces the existing one.
+	 * Unfortunately the Set have no such function to access the existing one.
 	 */
 	private Target getExistingTarget(Target blueprint) {
 		if (targets.contains(blueprint)) {

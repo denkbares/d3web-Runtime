@@ -31,8 +31,8 @@ import de.d3web.core.knowledge.terminology.Question;
  */
 public class ValueTransition {
 
-	private Question question;
-	private List<ConditionalValueSetter> setters;
+	private final Question question;
+	private final List<ConditionalValueSetter> setters;
 
 	public ValueTransition(Question question,
 			List<ConditionalValueSetter> setters) {
@@ -45,16 +45,8 @@ public class ValueTransition {
 		return question;
 	}
 
-	public void setQuestion(Question question) {
-		this.question = question;
-	}
-
 	public List<ConditionalValueSetter> getSetters() {
 		return setters;
-	}
-
-	public void setSetters(List<ConditionalValueSetter> setters) {
-		this.setters = setters;
 	}
 
 }

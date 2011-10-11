@@ -19,16 +19,13 @@
 package de.d3web.costbenefit.model.ids;
 
 import java.util.List;
-import java.util.Map;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -96,16 +93,6 @@ public class Node {
 		else {
 			return (Double) property;
 		}
-	}
-
-	/**
-	 * Returns the expected values of all Questions of the Node's QContainer
-	 * 
-	 * @param session {@link Session}
-	 * @return Map with Questions as keys and Values as values
-	 */
-	public Map<Question, Value> getExpectedValues(Session session) {
-		return Util.getExpectedValues(session, qContainer);
 	}
 
 	/**

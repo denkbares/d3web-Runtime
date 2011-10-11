@@ -31,8 +31,8 @@ import de.d3web.core.session.Value;
  */
 public class ConditionalValueSetter {
 
-	private Value answer;
-	private Condition condition;
+	private final Value answer;
+	private final Condition condition;
 
 	public ConditionalValueSetter(Value answer, Condition condition) {
 		super();
@@ -44,16 +44,8 @@ public class ConditionalValueSetter {
 		return answer;
 	}
 
-	public void setAnswer(Value answer) {
-		this.answer = answer;
-	}
-
 	public Condition getCondition() {
 		return condition;
-	}
-
-	public void setCondition(Condition condition) {
-		this.condition = condition;
 	}
 
 }

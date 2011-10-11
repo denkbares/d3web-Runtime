@@ -96,11 +96,6 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 		return increasingFactor;
 	}
 
-	public long getSteps(Session session) {
-		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
-		return sessionObject.steps;
-	}
-
 	@Override
 	public void init(SearchModel model) {
 		DefaultAbortStrategySessionObject sessionObject = model.getSession().getSessionObject(this);
@@ -131,9 +126,5 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 
 		private long steps;
 		private SearchModel model;
-
-		public long getSteps() {
-			return steps;
-		}
 	}
 }

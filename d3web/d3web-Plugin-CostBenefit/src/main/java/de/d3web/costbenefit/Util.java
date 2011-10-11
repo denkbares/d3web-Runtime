@@ -133,17 +133,6 @@ public final class Util {
 		session.getPropagationManager().commitPropagation();
 	}
 
-	/**
-	 * Returns the expected values of all Questions of the given QContainer
-	 * 
-	 * @param session {@link Session}
-	 * @param qContainer {@link QContainer}
-	 * @return Map with Questions as keys and Values as values
-	 */
-	public static Map<Question, Value> getExpectedValues(Session testCase, QContainer qContainer) {
-		return answerGetterAndSetter(testCase, qContainer, false);
-	}
-
 	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
 		List<QuestionOC> questions = new LinkedList<QuestionOC>();
 		collectQuestions(qContainer, questions);
