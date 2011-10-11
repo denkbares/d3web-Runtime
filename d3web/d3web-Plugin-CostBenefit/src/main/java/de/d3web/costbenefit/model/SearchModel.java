@@ -213,22 +213,6 @@ public class SearchModel {
 	}
 
 	/**
-	 * Checks if the actual path reaches at least one target.
-	 * 
-	 * @param actual
-	 * @return
-	 */
-	public boolean isTarget(Path actual) {
-		if (actual.isEmpty()) return false;
-		for (Target t : targets) {
-			if (t.isReached(actual)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Checks if this model has at least one target
 	 * 
 	 * @return
