@@ -41,7 +41,9 @@ public abstract class NonTerminalCondition implements Condition {
 	/**
 	 * The list of conditions enclosed in this {@link NonTerminalCondition}.
 	 */
-	private List<Condition> terms;
+	private final List<Condition> terms;
+
+	private final int hash;
 
 	/**
 	 * Creates a new non-terminal condition with the specified sub-conditions.
@@ -55,6 +57,7 @@ public abstract class NonTerminalCondition implements Condition {
 		for (Object object : conditions) {
 			terms.add((Condition) object);
 		}
+		hash = getTerms().hashCode();
 	}
 
 	@Override
@@ -75,16 +78,6 @@ public abstract class NonTerminalCondition implements Condition {
 	 */
 	public List<Condition> getTerms() {
 		return terms;
-	}
-
-	/**
-	 * Sets the list of {@link Condition} instances to be enclosed in this
-	 * {@link NonTerminalCondition}.
-	 * 
-	 * @param theTerms the terms to be enclosed in this condition
-	 */
-	public void setTerms(List<Condition> theTerms) {
-		terms = theTerms;
 	}
 
 	@Override
@@ -111,6 +104,6 @@ public abstract class NonTerminalCondition implements Condition {
 
 	@Override
 	public int hashCode() {
-		return getTerms().hashCode();
+		return hash;
 	}
 }
