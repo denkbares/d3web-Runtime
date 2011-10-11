@@ -35,6 +35,11 @@ public class AStarPath implements Path {
 
 	private final QContainer qContainer;
 	private final AStarPath predecessor;
+
+	public AStarPath getPredecessor() {
+		return predecessor;
+	}
+
 	private final double costs;
 
 	public AStarPath(QContainer qContainer, AStarPath predecessor, double costs) {

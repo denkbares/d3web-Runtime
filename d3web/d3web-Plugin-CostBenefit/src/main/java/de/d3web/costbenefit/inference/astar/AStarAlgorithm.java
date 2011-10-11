@@ -32,8 +32,8 @@ import de.d3web.costbenefit.model.SearchModel;
  */
 public class AStarAlgorithm implements SearchAlgorithm {
 
-	private Heuristic heuristic = new DividedTransitionHeuristic();
-	private AbortStrategy abortStrategy = new DefaultAbortStrategy(5000, 1);
+	private Heuristic heuristic = new TPHeuristic();
+	private AbortStrategy abortStrategy = new DefaultAbortStrategy(500000, 4);
 	private boolean multiCore = true;
 
 	@Override

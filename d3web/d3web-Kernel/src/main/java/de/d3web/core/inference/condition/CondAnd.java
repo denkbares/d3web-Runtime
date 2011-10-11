@@ -82,8 +82,12 @@ public class CondAnd extends NonTerminalCondition {
 		String ret = "\u2190 CondAnd {";
 		for (Condition condition : getTerms()) {
 			if (condition != null) {
-				ret += condition.toString();
+				ret += condition.toString() + "; ";
 			}
+		}
+		// remove last "; "
+		if (ret.endsWith("; ")) {
+			ret = ret.substring(0, ret.length() - 2);
 		}
 		ret += "}";
 		return ret;

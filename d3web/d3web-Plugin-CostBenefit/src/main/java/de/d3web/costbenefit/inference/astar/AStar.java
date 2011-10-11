@@ -37,6 +37,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.AbortException;
@@ -117,8 +118,6 @@ public class AStar {
 				stateQuestions.add(t.getQuestion());
 			}
 		}
-		// TODO: add position question to stateQuestions, USE Transition
-		// questions
 		Node start = new Node(computeState(session), session, new AStarPath(null, null, 0), 0);
 		openNodes.add(start);
 		successors = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
@@ -133,6 +132,22 @@ public class AStar {
 			}
 		}
 		this.initTime = System.currentTimeMillis() - time;
+	}
+
+	private void checkPathFValues(Node targetNode) {
+		for (AStarPath pre = targetNode.getPath(); pre != null; pre = pre.getPredecessor()) {
+			for (Node node : nodes.values()) {
+				if (node.getPath() == pre) {
+					if (node.getfValue() > targetNode.getfValue()) {
+						log.severe("Heuristic of " + targetNode.getPath()
+								+ "was not optimistic, f Value: " + node.getfValue()
+								+ ", max: " + targetNode.getfValue() + ", node: "
+								+ node.getPath().getQContainer().getName());
+					}
+					break;
+				}
+			}
+		}
 	}
 
 	private State computeState(Session session) {
@@ -168,6 +183,7 @@ public class AStar {
 			// the optimistic fValue of the best node, terminate the algorithm
 			if (model.getBestCostBenefitTarget() != null
 					&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
+				checkPathFValues(node);
 				break;
 			}
 
@@ -180,7 +196,6 @@ public class AStar {
 			}
 
 			// and mark the node as finished
-			// TODO: due to neg.costs nodes shall be optimized by shorter paths?
 			closedNodes.add(node);
 		}
 	}
@@ -267,6 +282,11 @@ public class AStar {
 		if (node.getPath().getQContainer() == qcontainer) {
 			return false;
 		}
+		// negative QContainer can only be used once in a path
+		if (qcontainer.getInfoStore().getValue(BasicProperties.COST) < 0.0
+				&& node.getPath().getPath().contains(qcontainer)) {
+			return false;
+		}
 		// only use qcontainers that are not excluded
 		if (actualSession.getBlackboard().getIndication(qcontainer).isContraIndicated()) {
 			return false;
@@ -299,14 +319,17 @@ public class AStar {
 				// update existing node for the state
 				// for open nodes remove and add again to preserve ordering
 				boolean hasOpenNode = openNodes.remove(follower);
-				// due to negative costs it might be possible
-				// that the found node is still closed
-				// in this case we might in need to update all existing nodes
-				// TODO: handle negative costs more sophisticated?
+				// heuristic was not steady, log that the knowledgebase has to
+				// be checked
 				if (!hasOpenNode) {
 					AStarPath oldPath = follower.getPath();
 					AStarPath newPath = newFollower.getPath();
-					replacePaths(oldPath, newPath);
+					if (oldPath.getCosts() - newPath.getCosts() > 0.00001) {
+						log.severe(newPath + " has lower costs than " + oldPath
+								+ ", please check that!");
+						checkPathFValues(follower);
+						checkPathFValues(newFollower);
+					}
 				}
 				// proceed with usual update
 				follower.updatePath(newFollower.getPath());
@@ -316,49 +339,6 @@ public class AStar {
 		}
 		updateTargets(newFollower.getPath());
 	}
-
-	private void replacePaths(AStarPath oldPath, AStarPath newPath) {
-		// update all successors based on the old
-		// path to be based on the new path for now
-		// filter calculation errors
-		if (oldPath.getCosts() - newPath.getCosts() > 0.00001) {
-			System.out.println(newPath + " has lower costs than " + oldPath
-					+ ", please check that!");
-		}
-		// for (Node checked : this.openNodes) {
-		// replaceNodePath(checked, oldPath, newPath);
-		// }
-		// for (Node checked : this.closedNodes) {
-		// replaceNodePath(checked, oldPath, newPath);
-		// }
-	}
-
-	/**
-	 * Checks if the specified node relies on the old path. If yes, the path
-	 * will be replaced by the new path, including optimization of optimal paths
-	 * in the search model.
-	 * 
-	 * @created 08.09.2011
-	 * @param checked the node to be checked
-	 * @param oldPath the original path prefix to be replaced
-	 * @param newPath the new path prefix replacing the old one
-	 */
-	// private void replaceNodePath(Node checked, AStarPath oldPath, AStarPath
-	// newPath) {
-	// // check if this node hat the required prefix to be replaced
-	// boolean hasPrefix = checked.getPath().hasPrefix(oldPath);
-	// if (!hasPrefix) return;
-	//
-	// // if yes, we create the prefix-replaced path
-	// // and update the calculated costs of the targets
-	// AStarPath createdPath = checked.getPath().replacePrefix(oldPath,
-	// newPath);
-	// double f = calculateFValue(createdPath.getCosts(), checked.getState(),
-	// checked.getSession());
-	// checked.updatePath(createdPath);
-	// checked.setfValue(f);
-	// updateTargets(createdPath);
-	// }
 
 	private Node applyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();

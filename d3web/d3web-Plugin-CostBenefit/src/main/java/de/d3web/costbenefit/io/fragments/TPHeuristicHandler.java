@@ -34,10 +34,12 @@ import de.d3web.costbenefit.inference.astar.TPHeuristic;
  */
 public class TPHeuristicHandler implements FragmentHandler {
 
+	private static final String NODE_NAME = "TPHeuristic";
+
 	@Override
 	public boolean canRead(Element element) {
 		if (element.getNodeName().equals("heuristic")
-				&& element.getAttribute("name").equals("TPHeuristic")) {
+				&& element.getAttribute("name").equals(NODE_NAME)) {
 			return true;
 		}
 		return false;
@@ -56,7 +58,7 @@ public class TPHeuristicHandler implements FragmentHandler {
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
 		Element element = doc.createElement("heuristic");
-		element.setAttribute("name", "TPHeuristic");
+		element.setAttribute("name", NODE_NAME);
 		return element;
 	}
 

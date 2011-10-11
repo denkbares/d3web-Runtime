@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -35,7 +36,6 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.utilities.Pair;
@@ -52,6 +52,8 @@ import de.d3web.costbenefit.model.Target;
  * @created 30.09.2011
  */
 public class TPHeuristic extends DividedTransitionHeuristic {
+
+	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
 
 	/**
 	 * Stores for each CondEqual a Pair of Conditions and QContainers. If the
@@ -90,6 +92,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * @param model {@link SearchModel}
 	 */
 	private void initTargetCache(SearchModel model) {
+		long time = System.currentTimeMillis();
 		targetCache.clear();
 		Session session = model.getSession();
 		for (Target target : model.getTargets()) {
@@ -140,9 +143,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				targetCache.put(qcon, additionalConditions);
 			}
 		}
+		log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	private void initGeneralCache(SearchModel model) {
+		long time = System.currentTimeMillis();
 		preconditionCache.clear();
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
 		Collection<StateTransition> stateTransitions = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
@@ -166,6 +171,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 							if (condEqual.getValue().equals(v)) {
 								neededConditions.add(getConds(st.getActivationCondition()));
 								transitionalQContainer.add(st.getQcontainer());
+								break;
 							}
 						}
 					}
@@ -176,6 +182,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					getCommonConditions(neededConditions),
 					transitionalQContainer));
 		}
+		log.info("General init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	private List<Condition> getCommonConditions(LinkedList<List<Condition>> neededConditions) {
@@ -234,14 +241,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		List<QContainer> pathContainers = path.getPath();
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
-		pairloop: for (Pair<List<Condition>, List<QContainer>> p : targetCache.get(target)) {
-			for (QContainer qcon : p.getB()) {
-				if (pathContainers.contains(qcon)) {
-					continue pairloop;
-				}
-			}
+		for (Pair<List<Condition>, List<QContainer>> p : targetCache.get(target)) {
 			// if no qcontainer was on the path, add the conditions
-			conditions.addAll(p.getA());
+			if (Collections.disjoint(pathContainers, p.getB())) {
+				conditions.addAll(p.getA());
+			}
 		}
 		Condition condition;
 		if (conditions.size() > 0) {
@@ -278,10 +282,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		else {
 			condition = precondition;
 		}
-		QContainer dummy = new QContainer(KnowledgeBaseUtils.createKnowledgeBase(), "Dummy"
-				+ target.getName());
-		new StateTransition(condition, null, dummy);
-		return estimatePathCosts(state, condition, dummy) + negativeSum;
+		return estimatePathCosts(state, condition, condition) + calculateUnusedNegatives(path);
 	}
 
 	/**

@@ -59,7 +59,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * Stores the costs of the cheapest state transition per Question and Value
 	 * for each target
 	 */
-	private Map<QContainer, Map<Question, Map<Value, Double>>> costCache;
+	private Map<Condition, Map<Question, Map<Value, Double>>> costCache;
 
 	/**
 	 * Stores the {@link KnowledgeBase} this heuristic is initialized for
@@ -72,7 +72,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 */
 	private Collection<StateTransition> allStateTransitions;
 
-	protected double negativeSum;
+	private double negativeSum;
 
 	@Override
 	public double getDistance(Path path, State state, QContainer target) {
@@ -80,7 +80,19 @@ public class DividedTransitionHeuristic implements Heuristic {
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		return estimatePathCosts(state, precondition, target) + negativeSum;
+		return estimatePathCosts(state, precondition, precondition)
+				+ calculateUnusedNegatives(path);
+	}
+
+	protected double calculateUnusedNegatives(Path path) {
+		double negativeCostsInPath = 0.0;
+		for (QContainer qcon : path.getPath()) {
+			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
+			if (costs < 0.0) {
+				negativeCostsInPath += costs;
+			}
+		}
+		return (negativeSum - negativeCostsInPath) * 0.75;
 	}
 
 	@Override
@@ -92,7 +104,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		// otherwise prepare some information
 		this.knowledgeBase = kb;
 		this.allStateTransitions = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
-		this.costCache = new HashMap<QContainer, Map<Question, Map<Value, Double>>>();
+		this.costCache = new HashMap<Condition, Map<Question, Map<Value, Double>>>();
 		negativeSum = 0;
 		for (QContainer qcon : kb.getManager().getQContainers()) {
 			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
@@ -102,12 +114,12 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	protected double estimatePathCosts(State state, Condition cond, QContainer target) {
+	protected double estimatePathCosts(State state, Condition cond, Condition activationCondition) {
 		if (cond instanceof CondAnd) {
 			CondAnd cand = (CondAnd) cond;
 			double sum = 0;
 			for (Condition c : cand.getTerms()) {
-				sum += estimatePathCosts(state, c, target);
+				sum += estimatePathCosts(state, c, activationCondition);
 			}
 			return sum;
 		}
@@ -117,7 +129,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 			for (Condition c : cor.getTerms()) {
 				// in an or condition, only the cheapest term must be fulfilled
 				cheapest = Math.min(cheapest,
-						estimatePathCosts(state, c, target));
+						estimatePathCosts(state, c, activationCondition));
 			}
 			return cheapest;
 		}
@@ -130,7 +142,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				// costs
 				return 0;
 			}
-			Map<Value, Double> map = getCosts(target, question);
+			Map<Value, Double> map = getCosts(activationCondition, question);
 			if (map != null) {
 				Double costs = map.get(value);
 				if (costs != null) return costs;
@@ -150,7 +162,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				double cheapest = Double.POSITIVE_INFINITY;
 				// searches for the cheapest value transition, setting the
 				// question to another value
-				Map<Value, Double> map = getCosts(target, question);
+				Map<Value, Double> map = getCosts(activationCondition, question);
 				if (map != null) {
 					for (Entry<Value, Double> e : map.entrySet()) {
 						if (!e.getKey().equals(value)) {
@@ -172,11 +184,11 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private Map<Value, Double> getCosts(QContainer target, QuestionChoice question) {
-		Map<Question, Map<Value, Double>> targetMap = costCache.get(target);
+	private Map<Value, Double> getCosts(Condition activationCondition, QuestionChoice question) {
+		Map<Question, Map<Value, Double>> targetMap = costCache.get(activationCondition);
 		if (targetMap == null) {
-			targetMap = getTargetMap(target);
-			costCache.put(target, targetMap);
+			targetMap = getTargetMap(activationCondition);
+			costCache.put(activationCondition, targetMap);
 		}
 		return targetMap.get(question);
 	}
@@ -197,10 +209,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * @param stateValue the value the state should become
 	 * @return the minimal costs per question of the target's precondition
 	 */
-	private double calculateCosts(StateTransition preparingTransition, QContainer target, Question stateQuestion, Value stateValue) {
-		// TODO: Filter position transitions (question not part of any
-		// precondition)
-
+	private double calculateCosts(StateTransition preparingTransition, Condition activationCondition, Question stateQuestion, Value stateValue) {
 		// calculate all questions that
 		// a) will be set by the preparing state transition
 		// b) are relevant in the targets activation condition
@@ -208,8 +217,6 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 		// prepare the loop of all set values
 		// (targetStateTransition cannot be null, AStar handles that separately)
-		StateTransition targetStateTransition = StateTransition.getStateTransition(target);
-		Condition activationCondition = targetStateTransition.getActivationCondition();
 		Collection<? extends TerminologyObject> terminalObjects = activationCondition.getTerminalObjects();
 		Set<Question> set = new HashSet<Question>();
 		for (ValueTransition vt : preparingTransition.getPostTransitions()) {
@@ -256,13 +263,11 @@ public class DividedTransitionHeuristic implements Heuristic {
 	private Set<Value> calculateRequiredValues(Question question, Condition condition) {
 		if (condition instanceof CondAnd) {
 			CondAnd cand = (CondAnd) condition;
-			// there will no two sub-conditions for the same question
-			// so use the first one
+			Set<Value> result = new HashSet<Value>();
 			for (Condition subCondition : cand.getTerms()) {
-				Set<Value> result = calculateRequiredValues(question, subCondition);
-				if (!result.isEmpty()) return result;
+				result.addAll(calculateRequiredValues(question, subCondition));
 			}
-			return Collections.emptySet();
+			return result;
 		}
 		else if (condition instanceof CondOr) {
 			CondOr cor = (CondOr) condition;
@@ -307,7 +312,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		return result;
 	}
 
-	private HashMap<Question, Map<Value, Double>> getTargetMap(QContainer target) {
+	private HashMap<Question, Map<Value, Double>> getTargetMap(Condition activationCondition) {
 		HashMap<Question, Map<Value, Double>> targetMap = new HashMap<Question, Map<Value, Double>>();
 		for (StateTransition st : allStateTransitions) {
 			for (ValueTransition vt : st.getPostTransitions()) {
@@ -320,7 +325,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 				for (ConditionalValueSetter cvs : vt.getSetters()) {
 					Value stateValue = cvs.getAnswer();
 					Double minimum = questionMap.get(stateValue);
-					double costs = calculateCosts(st, target, stateQuestion, stateValue);
+					double costs = calculateCosts(st, activationCondition, stateQuestion,
+							stateValue);
 					if (minimum == null || minimum > costs) {
 						questionMap.put(stateValue, costs);
 					}
