@@ -380,7 +380,7 @@ public class AStar {
 	private double calculateFValue(Path path, State state, Session session) {
 		double min = Double.POSITIVE_INFINITY;
 		double pathCosts = path.getCosts();
-		for (Target target : model.getTargets().descendingSet()) {
+		for (Target target : model.getTargets()) {
 			double targetCosts = 0;
 			double benefit = target.getBenefit();
 			// we need only to calculate the heuristic

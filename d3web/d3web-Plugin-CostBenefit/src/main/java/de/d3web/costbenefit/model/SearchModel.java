@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.model;
 
+import java.util.Comparator;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -36,7 +37,7 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
  */
 public class SearchModel {
 
-	private final NavigableSet<Target> targets = new TreeSet<Target>();
+	private final NavigableSet<Target> targets = new TreeSet<Target>(new TargetComparator());
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
@@ -267,6 +268,15 @@ public class SearchModel {
 	 */
 	public boolean isAborted() {
 		return aborted;
+	}
+
+	private static class TargetComparator implements Comparator<Target> {
+
+		@Override
+		public int compare(Target o1, Target o2) {
+			return o2.compareTo(o1);
+		}
+
 	}
 
 }

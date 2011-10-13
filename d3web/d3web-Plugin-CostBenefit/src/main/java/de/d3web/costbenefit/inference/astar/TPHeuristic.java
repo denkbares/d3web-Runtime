@@ -61,13 +61,13 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * in the actual path, the conditions can be added to the condequal if there
 	 * are no conflicts (e.g. same termobjects in an CondOr and CondEqual)
 	 */
-	private Map<CondEqual, Pair<List<Condition>, List<QContainer>>> preconditionCache = new HashMap<CondEqual, Pair<List<Condition>, List<QContainer>>>();
+	private Map<CondEqual, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<CondEqual, Pair<List<Condition>, Set<QContainer>>>();
 
 	/**
 	 * Stores a List of Pairs of Conditions and QContainers establishing a state
 	 * where the conditions of the targetQContainer is applicable
 	 */
-	private Map<QContainer, List<Pair<List<Condition>, List<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, List<QContainer>>>>();
+	private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
 
 	@Override
 	public void init(SearchModel model) {
@@ -106,7 +106,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				Condition activationCondition = st.getActivationCondition();
 				Collection<TerminologyObject> forbiddenTermObjects = getForbiddenObjects(activationCondition);
 				List<CondEqual> condEquals = getCondEquals(activationCondition);
-				List<Pair<List<Condition>, List<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, List<QContainer>>>();
+				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 				// check all CondEquals of the StateTransition
 				for (CondEqual cond : condEquals) {
 					// if the condition is fullfilled continue, otherwise add
@@ -120,7 +120,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					}
 					catch (UnknownAnswerException e) {
 					}
-					Pair<List<Condition>, List<QContainer>> generalPair = preconditionCache.get(cond);
+					Pair<List<Condition>, Set<QContainer>> generalPair = preconditionCache.get(cond);
 					List<Condition> checkedConditions = new LinkedList<Condition>();
 					for (Condition precondition : generalPair.getA()) {
 						if (precondition instanceof CondEqual) {
@@ -139,8 +139,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 							checkedConditions.add(precondition);
 						}
 					}
-					additionalConditions.add(new Pair<List<Condition>, List<QContainer>>(
-							checkedConditions, generalPair.getB()));
+					if (!checkedConditions.isEmpty()) {
+						additionalConditions.add(new Pair<List<Condition>, Set<QContainer>>(
+								checkedConditions, generalPair.getB()));
+					}
 				}
 				targetCache.put(qcon, additionalConditions);
 			}
@@ -165,7 +167,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// that enables
 			// execution of the condEqual
 			LinkedList<List<Condition>> neededConditions = new LinkedList<List<Condition>>();
-			List<QContainer> transitionalQContainer = new LinkedList<QContainer>();
+			Set<QContainer> transitionalQContainer = new HashSet<QContainer>();
 			for (StateTransition st : stateTransitions) {
 				for (ValueTransition vt : st.getPostTransitions()) {
 					if (vt.getQuestion() == condEqual.getQuestion()) {
@@ -180,7 +182,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				}
 			}
 			// put all common conditions in the cache
-			preconditionCache.put(condEqual, new Pair<List<Condition>, List<QContainer>>(
+			preconditionCache.put(condEqual, new Pair<List<Condition>, Set<QContainer>>(
 					getCommonConditions(neededConditions),
 					transitionalQContainer));
 		}
@@ -240,10 +242,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		List<QContainer> pathContainers = path.getPath();
+		Collection<QContainer> pathContainers = path.getPath();
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
-		for (Pair<List<Condition>, List<QContainer>> p : targetCache.get(target)) {
+		for (Pair<List<Condition>, Set<QContainer>> p : targetCache.get(target)) {
 			// if no qcontainer was on the path, add the conditions
 			if (Collections.disjoint(pathContainers, p.getB())) {
 				conditions.addAll(p.getA());
