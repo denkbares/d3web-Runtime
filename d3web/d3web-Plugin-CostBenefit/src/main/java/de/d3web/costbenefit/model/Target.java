@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class Target {
+public class Target implements Comparable<Target> {
 
 	private static final long serialVersionUID = 1927072006554824366L;
 
@@ -206,5 +206,20 @@ public class Target {
 		int result = 1;
 		result = prime * result + ((qContainers == null) ? 0 : qContainers.hashCode());
 		return result;
+	}
+
+	@Override
+	public int compareTo(Target o) {
+		if (o == null) return 1;
+		double benefitdifference = this.benefit - o.benefit;
+		if (benefitdifference > 0.0) {
+			return 1;
+		}
+		else if (benefitdifference < 0.0) {
+			return -1;
+		}
+		else {
+			return qContainers.toString().compareTo(o.qContainers.toString());
+		}
 	}
 }

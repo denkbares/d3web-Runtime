@@ -18,8 +18,8 @@
  */
 package de.d3web.costbenefit.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
@@ -36,7 +36,7 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
  */
 public class SearchModel {
 
-	private final Set<Target> targets = new HashSet<Target>();
+	private final NavigableSet<Target> targets = new TreeSet<Target>();
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
@@ -157,7 +157,9 @@ public class SearchModel {
 	 */
 	public void maximizeBenefit(Target t, double benefit) {
 		if (t.getBenefit() < benefit) {
+			targets.remove(t);
 			t.setBenefit(benefit);
+			targets.add(t);
 			checkTarget(t);
 		}
 	}
@@ -180,7 +182,7 @@ public class SearchModel {
 		return bestBenefitTarget.getBenefit();
 	}
 
-	public Set<Target> getTargets() {
+	public NavigableSet<Target> getTargets() {
 		return targets;
 	}
 
