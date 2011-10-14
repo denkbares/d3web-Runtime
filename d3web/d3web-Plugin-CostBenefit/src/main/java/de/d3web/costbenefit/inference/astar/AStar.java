@@ -380,7 +380,8 @@ public class AStar {
 	private double calculateFValue(Path path, State state, Session session) {
 		double min = Double.POSITIVE_INFINITY;
 		double pathCosts = path.getCosts();
-		for (Target target : model.getTargets()) {
+
+		targets: for (Target target : model.getTargets()) {
 			double targetCosts = 0;
 			double benefit = target.getBenefit();
 			// we need only to calculate the heuristic
@@ -388,10 +389,13 @@ public class AStar {
 			if (pathCosts / benefit >= min) continue;
 			for (QContainer qContainer : target.getQContainers()) {
 				double costs = pathCosts;
-				// adding the costs calculated by the heuristic
-				costs += algorithm.getHeuristic().getDistance(path, state, qContainer);
 				// adding the costs of the target
 				costs += costFunction.getCosts(qContainer, session);
+				// we need only to calculate the heuristic
+				// if it is capable to minimize the f-Value
+				if (costs / benefit >= min) continue targets;
+				// adding the costs calculated by the heuristic
+				costs += algorithm.getHeuristic().getDistance(path, state, qContainer);
 				targetCosts = Math.max(targetCosts, costs);
 			}
 			// dividing the whole costs by the benefit
@@ -400,5 +404,4 @@ public class AStar {
 		}
 		return min;
 	}
-
 }
