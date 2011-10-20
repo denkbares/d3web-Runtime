@@ -196,6 +196,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	public static Value findValue(Question question, String valueString) {
+		if (question == null || valueString == null) {
+			throw new NullPointerException("Question and value String must not be null.");
+		}
 		if (valueString.equals(UndefinedValue.UNDEFINED_ID)) {
 			return UndefinedValue.getInstance();
 		}
