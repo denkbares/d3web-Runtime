@@ -20,7 +20,9 @@
 
 package de.d3web.xcl.inference;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,6 +34,9 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.inference.condition.CondAnd;
+import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -190,24 +195,42 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	@Override
 	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
-		Map<Set<Condition>, Float> map = new HashMap<Set<Condition>, Float>();
+		Map<List<Condition>, Float> map = new HashMap<List<Condition>, Float>();
+		LinkedList<Question> questions = new LinkedList<Question>();
+		LinkedList<TerminologyObject> tos = new LinkedList<TerminologyObject>();
+		tos.addAll(qasets);
+		flattenQASets(tos, questions);
 		float totalweight = 0;
 		for (Solution solution : solutions) {
-			Set<Condition> pot = new HashSet<Condition>();
-			KnowledgeSlice ks = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
-			if (ks == null) continue;
-			XCLModel model = (XCLModel) ks;
-			addRelationConditions(pot, qasets, model);
-
-			Float count = map.get(pot);
+			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+			if (model == null) continue;
+			LinkedList<Set<Condition>> conditionsForQuestions = new LinkedList<Set<Condition>>();
+			for (Question q : questions) {
+				Set<Condition> set = new HashSet<Condition>();
+				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
+				if (coveringRelations != null) {
+					for (XCLRelation r : coveringRelations) {
+						extractOrs(set, r.getConditionedFinding());
+					}
+				}
+				if (set.isEmpty()) set.add(null);
+				conditionsForQuestions.add(set);
+			}
+			// TODO: potentiate and add to pots
+			List<List<Condition>> combinations = getCombinations(new LinkedList<Set<Condition>>(
+					conditionsForQuestions));
 			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
 			float weight = (apriori == null) ? 1f : apriori.floatValue();
 			totalweight += weight;
-			if (count == null) {
-				map.put(pot, weight);
-			}
-			else {
-				map.put(pot, weight + count);
+			for (List<Condition> pot : combinations) {
+				Float count = map.get(pot);
+				if (count == null) {
+					map.put(pot, weight);
+				}
+				else {
+					map.put(pot, weight + count);
+				}
+
 			}
 		}
 		// Russel & Norvig p. 805
@@ -219,26 +242,59 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return sum;
 	}
 
-	private static void addRelationConditions(Set<Condition> pot,
-			Collection<? extends TerminologyObject> qaset, XCLModel model) {
-		for (TerminologyObject nob : qaset) {
-			addRelationConditions(pot, nob, model);
+	private static List<List<Condition>> getCombinations(LinkedList<Set<Condition>> conditionsForQuestions) {
+		List<List<Condition>> result = new LinkedList<List<Condition>>();
+		if (conditionsForQuestions.isEmpty()) {
+			result.add(Collections.<Condition> emptyList());
+			return result;
+		}
+		Set<Condition> first = conditionsForQuestions.poll();
+		List<List<Condition>> restresult = getCombinations(conditionsForQuestions);
+		for (List<Condition> list : restresult) {
+			for (Condition condition : first) {
+				List<Condition> item = new LinkedList<Condition>();
+				item.add(condition);
+				item.addAll(list);
+				result.add(item);
+			}
+		}
+		return result;
+	}
+
+	private static void flattenQASets(List<? extends TerminologyObject> qasets, List<Question> questions) {
+		for (TerminologyObject qaset : qasets) {
+			if (qaset instanceof Question) {
+				questions.add((Question) qaset);
+			}
+			TerminologyObject[] children = qaset.getChildren();
+			flattenQASets(Arrays.asList(children), questions);
 		}
 	}
 
-	private static void addRelationConditions(Set<Condition> pot,
-			TerminologyObject qaset, XCLModel model) {
-		if (qaset instanceof Question) {
-			Set<XCLRelation> coveringRelations = model
-					.getCoveringRelations(qaset);
-			if (coveringRelations != null) {
-				for (XCLRelation relation : coveringRelations) {
-					pot.add(relation.getConditionedFinding());
-				}
+	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding) {
+		if (conditionedFinding instanceof CondOr) {
+			for (Condition condition : ((CondOr) conditionedFinding).getTerms()) {
+				extractOrs(conds, condition);
 			}
 		}
-		for (TerminologyObject child : qaset.getChildren()) {
-			addRelationConditions(pot, child, model);
+		else if ((conditionedFinding instanceof CondAnd)
+				&& ((CondAnd) conditionedFinding).getTerms().size() == 1) {
+			extractOrs(conds, ((CondAnd) conditionedFinding).getTerms().get(0));
+		}
+		// replace condequals of normal answers with null
+		else if (conditionedFinding instanceof CondEqual) {
+			CondEqual condEqual = (CondEqual) conditionedFinding;
+			double abnormality = condEqual.getQuestion().getInfoStore().getValue(
+					BasicProperties.DEFAULT_ABNORMALITIY).getValue(condEqual.getValue());
+			if (abnormality == Abnormality.A0) {
+				conds.add(null);
+			}
+			else {
+				conds.add(condEqual);
+			}
+		}
+		else {
+			conds.add(conditionedFinding);
 		}
 
 	}
