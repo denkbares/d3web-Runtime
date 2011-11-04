@@ -92,7 +92,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				negativeCostsInPath += costs;
 			}
 		}
-		return (negativeSum - negativeCostsInPath) * 0.75;
+		return negativeSum * 0.75 - negativeCostsInPath;
 	}
 
 	@Override
