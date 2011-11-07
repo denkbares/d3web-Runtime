@@ -33,9 +33,9 @@ import de.d3web.costbenefit.inference.MultiSearchAlgorithm.Mode;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 
 /**
- * FragmentHandler for IteraticeDeepeningSearchAlgorithm
+ * FragmentHandler for MultiSearchAlgorithm
  * 
- * @author Markus Friedrich (denkbares GmbH)
+ * @author Volker Belli (denkbares GmbH)
  */
 public class MultiSearchAlgorithmHandler implements FragmentHandler {
 

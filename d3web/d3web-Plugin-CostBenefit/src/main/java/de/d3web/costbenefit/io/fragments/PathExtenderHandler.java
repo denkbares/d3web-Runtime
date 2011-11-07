@@ -27,20 +27,20 @@ import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
-import de.d3web.costbenefit.inference.AbortStrategy;
+import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.SearchAlgorithm;
 
 /**
- * FragmentHandler for IterativeDeepeningSearchAlgorithm
+ * FragmentHandler for PathExtender
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class IterativeDeepeningSearchAlgorithmHandler implements FragmentHandler {
+public class PathExtenderHandler implements FragmentHandler {
 
 	@Override
 	public boolean canRead(Element element) {
 		if (element.getNodeName().equals("searchAlgorithm")
-				&& element.getAttribute("name").equals("IterativeDeepeningSearchAlgorithm")) {
+				&& element.getAttribute("name").equals("PathExtender")) {
 			return true;
 		}
 		return false;
@@ -48,31 +48,31 @@ public class IterativeDeepeningSearchAlgorithmHandler implements FragmentHandler
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object instanceof IterativeDeepeningSearchAlgorithm;
+		return object instanceof PathExtender;
 	}
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		IterativeDeepeningSearchAlgorithm alg = new IterativeDeepeningSearchAlgorithm();
+		SearchAlgorithm subAlgorithm = null;
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			Object readFragment = PersistenceManager.getInstance().readFragment(e, kb);
-			if (readFragment instanceof AbortStrategy) {
-				alg.setAbortStrategy((AbortStrategy) readFragment);
+			Object fragment = PersistenceManager.getInstance().readFragment(e, kb);
+			if (fragment instanceof SearchAlgorithm) {
+				subAlgorithm = (SearchAlgorithm) fragment;
+				break;
 			}
 		}
-		return alg;
+		PathExtender algorithm = new PathExtender(subAlgorithm);
+		return algorithm;
 	}
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		IterativeDeepeningSearchAlgorithm alg = (IterativeDeepeningSearchAlgorithm) object;
+		PathExtender algorithm = (PathExtender) object;
 		Element element = doc.createElement("searchAlgorithm");
-		element.setAttribute("name", "IterativeDeepeningSearchAlgorithm");
-		AbortStrategy abortStrategy = alg.getAbortStrategy();
-		if (abortStrategy != null) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(
-					abortStrategy, doc));
-		}
+		element.setAttribute("name", "PathExtender");
+		Element fragment = PersistenceManager.getInstance().writeFragment(
+				algorithm.getSubalgorithm(), doc);
+		element.appendChild(fragment);
 		return element;
 	}
 }

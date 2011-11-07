@@ -164,5 +164,26 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="comfortBenefit">
+		<parameter id="name" value="comfortBenefit" />
+		<parameter id="description" value="Marks a QContainer indicating that the execution of this QContainer increases comfort for the user." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="PathExtenderHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.PathExtenderHandler" />
+		<parameter id="name" value="PathExtenderHandler" />
+		<parameter id="description" value="Handler for PathExtender" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 
 </plugin>
