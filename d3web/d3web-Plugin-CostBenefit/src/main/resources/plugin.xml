@@ -76,6 +76,16 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="SwitchingHeuristicHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.SwitchingHeuristicHandler" />
+		<parameter id="name" value="TPHeuristicHandler" />
+		<parameter id="description" value="Handler for SwitchingHeuristic" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultAbortStrategyHandler">
 		<parameter id="class"
 			value="de.d3web.costbenefit.io.fragments.DefaultAbortStrategyHandler" />
