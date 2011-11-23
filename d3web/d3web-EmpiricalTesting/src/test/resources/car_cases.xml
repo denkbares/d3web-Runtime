@@ -27,6 +27,8 @@
 			</Findings>
 			<Solutions>
 				<Solution Name="Damaged idle speed system" Rating="established"/>
+				<Solution Name="Clogged air filter" Rating="excluded"/>
+				<Solution Name="Empty battery" Rating="excluded"/>
 			</Solutions>
 		</RatedTestCase>
 	</STestCase>
@@ -55,6 +57,7 @@
 			</Findings>
 			<Solutions>
 				<Solution Name="Leaking air intake system" Rating="established"/>
+				<Solution Name="Clogged air filter" Rating="excluded"/>
 			</Solutions>
 		</RatedTestCase>
 	</STestCase>
@@ -76,6 +79,7 @@
 			</Findings>
 			<Solutions>
 				<Solution Name="Clogged air filter" Rating="established"/>
+				<Solution Name="Bad ignition timing" Rating="excluded"/>
 			</Solutions>
 		</RatedTestCase>
 	</STestCase>
@@ -89,6 +93,8 @@
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="suggested"/>
+				<Solution Name="Clogged air filter" Rating="excluded"/>
+				<Solution Name="Empty battery" Rating="excluded"/>
 			</Solutions>
 		</RatedTestCase>
 		<RatedTestCase Name="rtc2" LastTested="2009-09-11_0207">
@@ -99,6 +105,9 @@
 			</Findings>
 			<Solutions>
 				<Solution Name="Bad ignition timing" Rating="established"/>
+				<Solution Name="Clogged air filter" Rating="excluded"/>
+				<Solution Name="Damaged idle speed system" Rating="excluded"/>
+				<Solution Name="Empty battery" Rating="excluded"/>
 			</Solutions>
 		</RatedTestCase>
 	</STestCase>
@@ -117,6 +126,8 @@
 			</Findings>
 			<Solutions>
 				<Solution Name="Empty battery" Rating="established"/>
+				<Solution Name="Clogged air filter" Rating="excluded"/>
+				<Solution Name="Bad ignition timing" Rating="excluded"/>
 			</Solutions>
 		</RatedTestCase>
 	</STestCase>

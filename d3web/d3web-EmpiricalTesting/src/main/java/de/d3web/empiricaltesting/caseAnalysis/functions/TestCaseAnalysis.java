@@ -19,11 +19,15 @@
 package de.d3web.empiricaltesting.caseAnalysis.functions;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -316,10 +320,6 @@ public class TestCaseAnalysis {
 	 * {@link Session}. A {@link RTCDiff} instance is created to store these
 	 * differences.
 	 * 
-	 * TODO: Currently, only the "expected/not derived" relations are stored,
-	 * but not the "derived/but not expected" relations. We should consider this
-	 * at least for solutions.
-	 * 
 	 * @created 28.03.2011
 	 * @param session the specified {@link Session}
 	 * @param rtc the specified {@link RatedTestCase}
@@ -334,15 +334,38 @@ public class TestCaseAnalysis {
 				diffs.addExpectedButNotDerived(expected.getQuestion(), expected.getValue(), derived);
 			}
 		}
-		for (RatedSolution expected : rtc.getExpectedSolutions()) {
+
+		Map<Solution, Rating> expectedRatings = toMap(rtc.getExpectedSolutions());
+
+		// expected/not derived
+		for (Solution expected : expectedRatings.keySet()) {
 			// Caution: THESE ARE DIFFERENT TYPES OF RATINGS
-			Rating derived = session.getBlackboard().getRating(expected.getSolution());
-			Rating expectedRating = convert(expected.getRating());
+			Rating derived = session.getBlackboard().getRating(expected);
+			Rating expectedRating = expectedRatings.get(expected);
 			if (!expectedRating.equals(derived)) {
-				diffs.addExpectedButNotDerived(expected.getSolution(), expectedRating, derived);
+				diffs.addExpectedButNotDerived(expected, expectedRating, derived);
 			}
 		}
+
+		// derived/not expected
+		for (Solution solution : session.getKnowledgeBase().getManager().getSolutions()) {
+			Rating derived = session.getBlackboard().getRating(solution);
+			if (derived.hasState(State.UNCLEAR)) continue;
+			if (!expectedRatings.containsKey(solution)) {
+				diffs.addDerivedButNotExpected(solution, derived);
+			}
+		}
+
 		return diffs;
+	}
+
+	private static Map<Solution, Rating> toMap(List<RatedSolution> expectedSolutions) {
+		Map<Solution, Rating> allExpected = new HashMap<Solution, Rating>();
+		for (RatedSolution expected : expectedSolutions) {
+			Rating expectedRating = convert(expected.getRating());
+			allExpected.put(expected.getSolution(), expectedRating);
+		}
+		return allExpected;
 	}
 
 	/**

@@ -26,6 +26,7 @@ import java.util.Map;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.empiricaltesting.Finding;
@@ -73,6 +74,18 @@ public class RTCDiff {
 	 */
 	public void addExpectedButNotDerived(Solution solution, Rating expected, Rating derived) {
 		this.differences.put(solution, new ValueDiff(expected, derived));
+	}
+
+	/**
+	 * Adds a deviation to the RTCDiff instance, which says that there exists a
+	 * derived solution that was not expected.
+	 * 
+	 * @created Nov 3, 2011
+	 * @param solution
+	 * @param derived
+	 */
+	public void addDerivedButNotExpected(Solution solution, Rating derived) {
+		this.differences.put(solution, new ValueDiff(new Rating(State.UNCLEAR), derived));
 	}
 
 	/**

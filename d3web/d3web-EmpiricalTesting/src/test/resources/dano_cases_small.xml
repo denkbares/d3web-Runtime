@@ -49,6 +49,14 @@
         <Solution Name="Solution: P16" Rating="10" />
         <!--Solution: P13 (10)-->
         <Solution Name="Solution: P13" Rating="10" />
+        <!--Solution: P9 (excluded)-->
+        <Solution Name="Solution: P9" Rating="excluded" />
+        <!--Solution: P12 (excluded)-->
+        <Solution Name="Solution: P12" Rating="excluded" />
+        <!--Solution: P11 (excluded)-->
+        <Solution Name="Solution: P11" Rating="excluded" />
+        <!--Solution: P10 (excluded)-->
+        <Solution Name="Solution: P10" Rating="excluded" />
       </Solutions>
     </RatedTestCase>
     <RatedTestCase Name="RTC2">
@@ -63,6 +71,14 @@
         <Solution Name="Solution: P4" Rating="20" />
         <!--Solution: P3 (20)-->
         <Solution Name="Solution: P3" Rating="20" />
+        <!--Solution: P9 (excluded)-->
+        <Solution Name="Solution: P9" Rating="excluded" />
+        <!--Solution: P12 (excluded)-->
+        <Solution Name="Solution: P12" Rating="excluded" />
+        <!--Solution: P11 (excluded)-->
+        <Solution Name="Solution: P11" Rating="excluded" />
+        <!--Solution: P10 (excluded)-->
+        <Solution Name="Solution: P10" Rating="excluded" />
       </Solutions>
     </RatedTestCase>
     <RatedTestCase Name="RTC3">
@@ -79,6 +95,18 @@
         <Solution Name="Solution: P4" Rating="25" />
         <!--Solution: P7 (10)-->
         <Solution Name="Solution: P7" Rating="10" />
+        <!--Solution: P9 (excluded)-->
+        <Solution Name="Solution: P9" Rating="excluded" />
+        <!--Solution: P12 (excluded)-->
+        <Solution Name="Solution: P12" Rating="excluded" />
+        <!--Solution: P11 (excluded)-->
+        <Solution Name="Solution: P11" Rating="excluded" />
+        <!--Solution: P10 (excluded)-->
+        <Solution Name="Solution: P10" Rating="excluded" />
+        <!--Solution: P19 (excluded)-->
+        <Solution Name="Solution: P19" Rating="excluded" />
+        <!--Solution: P8 (excluded)-->
+        <Solution Name="Solution: P8" Rating="excluded" />
       </Solutions>
     </RatedTestCase>
   </STestCase>
