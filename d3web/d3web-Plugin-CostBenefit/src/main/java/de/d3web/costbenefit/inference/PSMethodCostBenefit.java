@@ -30,8 +30,12 @@ import java.util.regex.Pattern;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
@@ -41,15 +45,18 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.costbenefit.model.Path;
@@ -272,9 +279,18 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					.getDiscriminatingQuestions(solutions, session);
 			Collection<Target> targets = targetFunction.getTargets(session,
 					discriminatingQuestions, solutions, strategicSupport);
-			// TODO: remove targets of contra-indicated questions/qcontainers
-			// and rate the targets into the cost/benefit search model
 			for (Target target : targets) {
+				boolean skipTarget = false;
+				for (QContainer qcontainer : target.getQContainers()) {
+					if (session.getBlackboard().getIndication(qcontainer).isContraIndicated()
+							|| checkFinalQuestions(session, qcontainer)) {
+						skipTarget = true;
+						continue;
+					}
+				}
+				if (skipTarget) {
+					continue;
+				}
 				double benefit = strategicSupport.getInformationGain(
 						target.getQContainers(), solutions, session);
 				if (benefit == 0) continue;
@@ -288,6 +304,43 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		caseObject.setUndiscriminatedSolutions(allSolutions);
 		caseObject.setSearchModel(searchModel);
 		caseObject.setDiscriminatingTargets(allTargets);
+	}
+
+	/**
+	 * @created 25.11.2011
+	 * @param session Actual Session
+	 * @param qContainer {@link QContainer}
+	 * @return true when the {@link QContainer} cannot be applied due to
+	 *         finalQuestions
+	 */
+	private boolean checkFinalQuestions(Session session, QContainer qContainer) {
+		Condition activationCondition = StateTransition.getStateTransition(qContainer).getActivationCondition();
+		if (activationCondition == null) {
+			return false;
+		}
+		Session emptySession = new CopiedSession(session.getKnowledgeBase());
+		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
+			if (q.getInfoStore().getValue(FINAL_QUESTION)) {
+				// check if q has not the init value
+				Value initValue = PSMethodInit.getValue(q,
+						q.getInfoStore().getValue(BasicProperties.INIT));
+				Value actualValue = session.getBlackboard().getValue(q);
+				if (!initValue.equals(actualValue)) {
+					emptySession.getBlackboard().addValueFact(
+							FactFactory.createUserEnteredFact(q, actualValue));
+				}
+			}
+		}
+		// now all unmutable facts are added to the emptySession
+		try {
+			return (!activationCondition.eval(emptySession));
+		}
+		catch (NoAnswerException e) {
+			return false;
+		}
+		catch (UnknownAnswerException e) {
+			return false;
+		}
 	}
 
 	/**
