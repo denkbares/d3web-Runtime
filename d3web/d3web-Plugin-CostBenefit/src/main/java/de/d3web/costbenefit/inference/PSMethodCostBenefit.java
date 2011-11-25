@@ -314,7 +314,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 *         finalQuestions
 	 */
 	private boolean checkFinalQuestions(Session session, QContainer qContainer) {
-		Condition activationCondition = StateTransition.getStateTransition(qContainer).getActivationCondition();
+		StateTransition stateTransition = StateTransition.getStateTransition(qContainer);
+		if (stateTransition == null) {
+			return false;
+		}
+		Condition activationCondition = stateTransition.getActivationCondition();
 		if (activationCondition == null) {
 			return false;
 		}
