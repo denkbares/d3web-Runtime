@@ -186,6 +186,17 @@
 		<parameter id="default" value="false" />
 	</extension>
 	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="finalQuestion">
+		<parameter id="name" value="finalQuestion" />
+		<parameter id="description" value="Marks a Question indicating that the value of the question cannot be changed, once it has left the init value." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
+	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="PathExtenderHandler">
 		<parameter id="class"

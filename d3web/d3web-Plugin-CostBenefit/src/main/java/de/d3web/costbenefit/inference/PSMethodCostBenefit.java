@@ -41,6 +41,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -73,6 +74,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private SearchAlgorithm searchAlgorithm;
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * Marks a Question indicating that the value of the question cannot be
+	 * changed, once it has left the init value.
+	 */
+	public static final Property<Boolean> FINAL_QUESTION = Property.getProperty("finalQuestion",
+			Boolean.class);
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
 			CostFunction costFunction, SearchAlgorithm searchAlgorithm) {
