@@ -107,47 +107,71 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				Collection<TerminologyObject> forbiddenTermObjects = getForbiddenObjects(activationCondition);
 				List<CondEqual> condEquals = getCondEquals(activationCondition);
 				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
-				// check all CondEquals of the StateTransition
-				for (CondEqual cond : condEquals) {
-					// if the condition is fullfilled continue, otherwise add
-					// it's preconditions to the list
-					try {
-						if (cond.eval(session)) {
-							continue;
-						}
-					}
-					catch (NoAnswerException e) {
-					}
-					catch (UnknownAnswerException e) {
-					}
-					Pair<List<Condition>, Set<QContainer>> generalPair = preconditionCache.get(cond);
-					List<Condition> checkedConditions = new LinkedList<Condition>();
-					for (Condition precondition : generalPair.getA()) {
-						if (precondition instanceof CondEqual) {
-							CondEqual condEqual = (CondEqual) precondition;
-							// condequals must not be already contained and must
-							// not have a forbidden termobject
-							if (!condEquals.contains(precondition)
-									&& !forbiddenTermObjects.contains(condEqual.getQuestion())) {
-								checkedConditions.add(condEqual);
-							}
-						}
-						// all other conditions must not have any term object
-						// already contained in the activation condition
-						else if (Collections.disjoint(activationCondition.getTerminalObjects(),
-								precondition.getTerminalObjects())) {
-							checkedConditions.add(precondition);
-						}
-					}
-					if (!checkedConditions.isEmpty()) {
-						additionalConditions.add(new Pair<List<Condition>, Set<QContainer>>(
-								checkedConditions, generalPair.getB()));
-					}
+				List<CondEqual> conditionsToExamine = condEquals;
+				while (!conditionsToExamine.isEmpty()) {
+					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(session,
+							conditionsToExamine, condEquals,
+							activationCondition.getTerminalObjects(), forbiddenTermObjects);
+					additionalConditions.addAll(temppairs);
+					conditionsToExamine = getCondEquals(temppairs);
 				}
 				targetCache.put(qcon, additionalConditions);
 			}
 		}
 		log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
+	}
+
+	private List<CondEqual> getCondEquals(List<Pair<List<Condition>, Set<QContainer>>> temppairs) {
+		List<CondEqual> list = new LinkedList<CondEqual>();
+		for (Pair<List<Condition>, Set<QContainer>> p : temppairs) {
+			for (Condition cond : p.getA()) {
+				if (cond instanceof CondEqual) {
+					list.add((CondEqual) cond);
+				}
+			}
+		}
+		return list;
+	}
+
+	private List<Pair<List<Condition>, Set<QContainer>>> getPairs(Session session, List<CondEqual> targetConditions, List<CondEqual> originalCondEquals, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
+		List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
+		for (CondEqual cond : targetConditions) {
+			// if the condition is fullfilled continue, otherwise add
+			// it's preconditions to the list
+			try {
+				if (cond.eval(session)) {
+					continue;
+				}
+			}
+			catch (NoAnswerException e) {
+			}
+			catch (UnknownAnswerException e) {
+			}
+			Pair<List<Condition>, Set<QContainer>> generalPair = preconditionCache.get(cond);
+			List<Condition> checkedConditions = new LinkedList<Condition>();
+			for (Condition precondition : generalPair.getA()) {
+				if (precondition instanceof CondEqual) {
+					CondEqual condEqual = (CondEqual) precondition;
+					// condequals must not be already contained and must
+					// not have a forbidden termobject
+					if (!originalCondEquals.contains(precondition)
+							&& !forbiddenTermObjects.contains(condEqual.getQuestion())) {
+						checkedConditions.add(condEqual);
+					}
+				}
+				// all other conditions must not have any term object
+				// already contained in the activation condition
+				else if (Collections.disjoint(collection,
+						precondition.getTerminalObjects())) {
+					checkedConditions.add(precondition);
+				}
+			}
+			if (!checkedConditions.isEmpty()) {
+				additionalConditions.add(new Pair<List<Condition>, Set<QContainer>>(
+						checkedConditions, generalPair.getB()));
+			}
+		}
+		return additionalConditions;
 	}
 
 	private void initGeneralCache(SearchModel model) {
