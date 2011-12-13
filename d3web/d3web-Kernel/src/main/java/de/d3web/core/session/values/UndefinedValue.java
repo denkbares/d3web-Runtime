@@ -43,6 +43,9 @@ public final class UndefinedValue implements QuestionValue {
 		return instance;
 	}
 
+	/**
+	 * @return an empty {@link String}
+	 */
 	@Override
 	public Object getValue() {
 		return "";

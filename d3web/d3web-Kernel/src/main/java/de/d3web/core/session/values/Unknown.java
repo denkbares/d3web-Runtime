@@ -50,6 +50,9 @@ public class Unknown implements QuestionValue {
 		return value instanceof Unknown;
 	}
 
+	/**
+	 * @return the {@link String} "UNKNOWN"
+	 */
 	@Override
 	public Object getValue() {
 		// TODO: find a better implementation of unknown choices

@@ -180,6 +180,9 @@ public class Rating implements Value {
 		return getName();
 	}
 
+	/**
+	 * @return the {@link State} of this rating value
+	 */
 	@Override
 	public Object getValue() {
 		return getState();

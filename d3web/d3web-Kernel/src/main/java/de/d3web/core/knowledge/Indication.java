@@ -61,7 +61,7 @@ public class Indication implements Value {
 	}
 
 	/**
-	 * Returns the current state of this indication value.
+	 * Returns the current {@link State} of this indication value.
 	 * 
 	 * @return the current state
 	 */
@@ -69,6 +69,9 @@ public class Indication implements Value {
 		return state;
 	}
 
+	/**
+	 * @return the {@link State} of this indication value
+	 */
 	@Override
 	public Object getValue() {
 		return getState();

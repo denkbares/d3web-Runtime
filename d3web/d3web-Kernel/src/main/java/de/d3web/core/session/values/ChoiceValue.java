@@ -70,6 +70,9 @@ public class ChoiceValue implements QuestionValue {
 		this.choiceID = choiceID;
 	}
 
+	/**
+	 * @return the current {@link ChoiceID} of this choice value
+	 */
 	@Override
 	public Object getValue() {
 		return choiceID;

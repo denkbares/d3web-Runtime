@@ -49,6 +49,9 @@ public class NumValue implements QuestionValue {
 		this.value = value;
 	}
 
+	/**
+	 * @return the {@link Double} of this num value
+	 */
 	@Override
 	public Object getValue() {
 		return value;

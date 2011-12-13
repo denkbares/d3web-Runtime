@@ -135,6 +135,9 @@ public class HeuristicRating extends Rating {
 		return new HeuristicRating(score);
 	}
 
+	/**
+	 * @return the score of this heuristic rating value as a double
+	 */
 	@Override
 	public Object getValue() {
 		return getScore();

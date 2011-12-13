@@ -19,9 +19,6 @@
  */
 package de.d3web.core.session;
 
-import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.QuestionText;
 
 /**
  * This instance stores the value, that is assigned to a question, e.g., when a
@@ -32,10 +29,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 public interface Value extends Comparable<Value> {
 
 	/**
-	 * Returns the stored (primitive) value of this instance. For example, such
-	 * values can be Choice instances (for {@link QuestionOC}, {@link String}
-	 * instances for {@link QuestionText}, and {@link Double} for
-	 * {@link QuestionNum}.
+	 * Returns the stored (primitive) value of this instance.
 	 * 
 	 * @return the primitive value of this instance.
 	 * @author joba

@@ -163,6 +163,10 @@ public class MultipleChoiceValue implements QuestionValue {
 		return this.choiceIDs.contains(choiceID);
 	}
 
+	/**
+	 * @return the {@link Collection} of {@link ChoiceID}s of this multiple
+	 *         choice value
+	 */
 	@Override
 	public Object getValue() {
 		return choiceIDs;

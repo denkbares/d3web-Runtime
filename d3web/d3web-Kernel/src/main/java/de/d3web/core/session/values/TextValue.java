@@ -46,6 +46,9 @@ public class TextValue implements QuestionValue {
 		this.value = value;
 	}
 
+	/**
+	 * @return the {@link String} of this text value
+	 */
 	@Override
 	public Object getValue() {
 		return value;

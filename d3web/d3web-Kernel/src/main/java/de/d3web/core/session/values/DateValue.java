@@ -56,6 +56,9 @@ public class DateValue implements QuestionValue {
 		this.value = value;
 	}
 
+	/**
+	 * @return the {@link Date} of this date value
+	 */
 	@Override
 	public Object getValue() {
 		return value;
