@@ -87,6 +87,7 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 	}
 
 	private void reindex(TerminologyObject qaset) {
+		if (qaset == null) return;
 		qasetIndex.put(qaset, maxOrderingNumber);
 		maxOrderingNumber++;
 		for (TerminologyObject child : qaset.getChildren()) {
