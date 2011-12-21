@@ -40,6 +40,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Handles the two default successors ActionAddValue and ActionSetValue of
@@ -84,7 +85,12 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 						if (type.equalsIgnoreCase("answer")
 								|| type.equalsIgnoreCase("answerChoice")) {
 							String name = valNode.getAttributes().getNamedItem("name").getNodeValue();
-							parsedValues.add(new ChoiceValue(name));
+							if (name.equals(Unknown.getInstance().getValue().toString())) {
+								parsedValues.add(Unknown.getInstance());
+							}
+							else {
+								parsedValues.add(new ChoiceValue(name));
+							}
 						}
 						else if (type.equalsIgnoreCase("evaluatable")) {
 							List<Element> childNodes = XMLUtil.getElementList(valNode.getChildNodes());
