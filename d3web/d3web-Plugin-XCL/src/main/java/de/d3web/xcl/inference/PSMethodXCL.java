@@ -216,7 +216,9 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 				if (set.isEmpty()) set.add(null);
 				conditionsForQuestions.add(set);
 			}
-			// TODO: potentiate and add to pots
+
+			// multiply possible value sets to get pots
+			// and add solution probabilities to these pots
 			List<List<Condition>> combinations = getCombinations(new LinkedList<Set<Condition>>(
 					conditionsForQuestions));
 			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
@@ -233,6 +235,8 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 			}
 		}
+
+		// calculate information gain
 		// Russel & Norvig p. 805
 		double sum = 0;
 		for (Float relationcount : map.values()) {
