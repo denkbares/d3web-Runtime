@@ -30,7 +30,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 
 /**
- * A finding is a tuple of a {@link Question} and an {@link Answer}.
+ * A finding is a tuple of a {@link Question} and an {@link Value}.
  * 
  * @author joba
  * 
@@ -44,28 +44,28 @@ public class Finding implements Comparable<Finding> {
 	 * Constructs a new Finding by searching.
 	 * 
 	 * @param question Underlying question
-	 * @param answerIDorText Text or ID of the searched answer.
+	 * @param choiceName Name of the searched choice.
 	 * @throws Exception
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
-	public Finding(QuestionChoice question, String answerIDorText) throws Exception {
-		Choice foundAnswer = null;
-		for (Choice ac : question.getAllAlternatives()) {
-			if (answerIDorText.equals(ac.getName())) foundAnswer = ac;
+	public Finding(QuestionChoice question, String choiceName) throws Exception {
+		Choice foundChoice = null;
+		for (Choice choice : question.getAllAlternatives()) {
+			if (choiceName.equals(choice.getName())) foundChoice = choice;
 		}
-		if (foundAnswer == null) throw new Exception("Answer not found for ID/Text: "
-				+ answerIDorText);
+		if (foundChoice == null) throw new Exception("Choice not found: "
+				+ choiceName + " in question " + question.getName());
 		else {
-			setup(question, new ChoiceValue(foundAnswer));
+			setup(question, new ChoiceValue(foundChoice));
 		}
 	}
 
 	/**
 	 * Constructs a new Finding by searching the KnowledgeBase for numeric
-	 * Answer with committed value.
+	 * answer with committed value.
 	 * 
 	 * @param question the question
-	 * @param value value of the numeric Answer
+	 * @param value value of the numeric answer
 	 * @throws Exception
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
@@ -90,21 +90,21 @@ public class Finding implements Comparable<Finding> {
 	 * questionName and the specified answerName.
 	 * 
 	 * @param questionName the specified questionName
-	 * @param answerName the specified answerName
+	 * @param choiceName the specified answerName
 	 * @return a created Finding based on the specified names
 	 * @throws Exception when null delivered in one of the arguments or
 	 *         inappropriate Question type used
 	 */
-	public static Finding createFinding(KnowledgeBase k, String questionName, String answerName) throws Exception {
-		if (k == null || questionName == null || answerName == null) throw new Exception(
+	public static Finding createFinding(KnowledgeBase k, String questionName, String choiceName) throws Exception {
+		if (k == null || questionName == null || choiceName == null) throw new Exception(
 				"Null delivered as argument.");
 		for (Question question : k.getManager().getQuestions()) {
 			if (questionName.equals(question.getName())) {
 				if (question instanceof QuestionChoice) {
-					return new Finding((QuestionChoice) question, answerName);
+					return new Finding((QuestionChoice) question, choiceName);
 				}
 				else if (question instanceof QuestionNum) {
-					return new Finding((QuestionNum) question, answerName);
+					return new Finding((QuestionNum) question, choiceName);
 				}
 				else {
 					throw new Exception("Inappropriate question type.");
