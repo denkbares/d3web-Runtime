@@ -33,9 +33,9 @@ import org.junit.Test;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -54,7 +54,7 @@ public class STCDiffTest {
 
 	private KnowledgeBase knowledge;
 	private QuestionNum question;
-	private Value q_expected, q_derived;
+	private QuestionValue q_expected, q_derived;
 	private RTCDiff rtcDiff;
 	private RatedTestCase rtc;
 

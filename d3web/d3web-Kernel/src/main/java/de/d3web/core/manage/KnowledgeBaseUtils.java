@@ -49,7 +49,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.session.Value;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -195,7 +195,7 @@ public final class KnowledgeBaseUtils {
 		return MultipleChoiceValue.fromChoices(choices);
 	}
 
-	public static Value findValue(Question question, String valueString) {
+	public static QuestionValue findValue(Question question, String valueString) {
 		if (question == null || valueString == null) {
 			throw new NullPointerException("Question and value String must not be null.");
 		}

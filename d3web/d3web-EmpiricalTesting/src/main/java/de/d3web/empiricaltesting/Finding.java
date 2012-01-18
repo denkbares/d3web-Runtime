@@ -25,12 +25,13 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 
 /**
- * A finding is a tuple of a {@link Question} and an {@link Value}.
+ * A finding is a tuple of a {@link Question} and an {@link QuestionValue}.
  * 
  * @author joba
  * 
@@ -38,7 +39,7 @@ import de.d3web.core.session.values.NumValue;
 public class Finding implements Comparable<Finding> {
 
 	private Question question;
-	private Value value;
+	private QuestionValue value;
 
 	/**
 	 * Constructs a new Finding by searching.
@@ -80,7 +81,7 @@ public class Finding implements Comparable<Finding> {
 	 * @param answer The committed answer
 	 * @return new Finding consisting of committed question and answer
 	 */
-	public Finding(Question question, Value value) {
+	public Finding(Question question, QuestionValue value) {
 		setup(question, value);
 	}
 
@@ -114,7 +115,7 @@ public class Finding implements Comparable<Finding> {
 		throw new Exception("Question not found.");
 	}
 
-	private void setup(Question question, Value value) {
+	private void setup(Question question, QuestionValue value) {
 		this.question = question;
 		this.value = value;
 	}
@@ -147,7 +148,7 @@ public class Finding implements Comparable<Finding> {
 	 * 
 	 * @param v the value
 	 */
-	public void setValue(Value v) {
+	public void setValue(QuestionValue v) {
 		this.value = v;
 	}
 

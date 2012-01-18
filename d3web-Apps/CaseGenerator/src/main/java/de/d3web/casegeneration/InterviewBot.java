@@ -43,6 +43,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -411,7 +412,7 @@ public final class InterviewBot {
 		for (Fact fact : factSet.getValueFacts()) {
 			TerminologyObject object = fact.getTerminologyObject();
 			if (object instanceof Question) {
-				Finding finding = new Finding((Question) object, fact.getValue());
+				Finding finding = new Finding((Question) object, (QuestionValue) fact.getValue());
 				findings.add(finding);
 			}
 		}
