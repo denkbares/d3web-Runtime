@@ -21,6 +21,7 @@
 package de.d3web.empiricaltesting;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SequentialTestCase {
@@ -28,11 +29,21 @@ public class SequentialTestCase {
 	private String name = "";
 	private final List<RatedTestCase> ratedTestCases;
 
+	private Date startDate;
+
 	/**
 	 * Default Constructor
 	 */
 	public SequentialTestCase() {
 		ratedTestCases = new ArrayList<RatedTestCase>();
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getStartDate() {
+		return startDate;
 	}
 
 	/**

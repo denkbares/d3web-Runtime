@@ -76,6 +76,7 @@ public final class TestPersistence {
 
 	// The Parameters
 	private static final String NAME = "Name";
+	private static final String STARTDATE = "StartDate";
 	private static final String NOTE = "Note";
 	private static final String TIMESTAMP = "time";
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
@@ -263,6 +264,10 @@ public final class TestPersistence {
 
 		xmlsw.writeStartElement(S_TEST_CASE);
 		xmlsw.writeAttribute(NAME, stc.getName());
+		Date startDate = stc.getStartDate();
+		if (startDate != null) {
+			xmlsw.writeAttribute(STARTDATE, DATE_FORMAT.format(startDate));
+		}
 		for (RatedTestCase rtcases : stc.getCases()) {
 			write(rtcases, xmlsw);
 		}
@@ -348,7 +353,7 @@ public final class TestPersistence {
 			for (ChoiceID choice : mcv.getChoiceIDs()) {
 				result += '"' + choice.getText() + '"' + MC_ANSWER_SEPARATOR;
 			}
-			
+
 			if (result.length() > 1) result = result.substring(0, result.length() - 1);
 
 			result += "]";
@@ -397,6 +402,15 @@ public final class TestPersistence {
 		else if (elName.equals(S_TEST_CASE)) {
 			stc = new SequentialTestCase();
 			stc.setName(sr.getAttributeValue(null, NAME));
+			String dateString = sr.getAttributeValue(null, STARTDATE);
+			if (dateString != null) {
+				try {
+					stc.setStartDate(DATE_FORMAT.parse(dateString));
+				}
+				catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		else if (elName.equals(RATED_TEST_CASE)) {
 			rtc = new RatedTestCase();
@@ -548,6 +562,5 @@ public final class TestPersistence {
 		}
 		return findings;
 	}
-
 
 }
