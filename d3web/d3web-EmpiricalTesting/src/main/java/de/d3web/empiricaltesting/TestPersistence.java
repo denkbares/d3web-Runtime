@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -156,11 +155,9 @@ public final class TestPersistence {
 	 * @param in
 	 * @param kb
 	 * @return
-	 * @throws FactoryConfigurationError
-	 * @throws FileNotFoundException
 	 * @throws XMLStreamException
 	 */
-	public List<SequentialTestCase> loadCases(InputStream in, KnowledgeBase kb) throws FactoryConfigurationError, FileNotFoundException, XMLStreamException {
+	public List<SequentialTestCase> loadCases(InputStream in, KnowledgeBase kb) throws XMLStreamException {
 		// First create a new XMLInputFactory
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		// Setup a new eventReader
