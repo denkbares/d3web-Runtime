@@ -33,6 +33,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.scoring.HeuristicRating;
 
 public final class CaseUtils {
 
@@ -88,7 +89,6 @@ public final class CaseUtils {
 		return value.toString();
 	}
 
-
 	// TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
 	// Antworten auf mehrere (erste) Fragen möglich
 	public TestCase getPartiallyAnsweredSuite(Choice answer, List<SequentialTestCase> repository) {
@@ -98,5 +98,23 @@ public final class CaseUtils {
 					stc);
 		}
 		return ret;
+	}
+
+	/**
+	 * Returns a state corresponding to the committed score.
+	 * 
+	 * @param score Rating representing the score of a RatedSolution.
+	 * @return DiagnosisState corresponding to the committed scored.
+	 */
+	public static de.d3web.core.knowledge.terminology.Rating getState(Rating score) {
+
+		if (score instanceof ScoreRating) {
+			return new HeuristicRating(((ScoreRating) score).getRating());
+		}
+		else if (score instanceof StateRating) {
+			return ((StateRating) score).getRating();
+		}
+
+		return null;
 	}
 }

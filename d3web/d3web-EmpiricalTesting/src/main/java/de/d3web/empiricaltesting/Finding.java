@@ -26,7 +26,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.QuestionValue;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 
@@ -135,7 +134,7 @@ public class Finding implements Comparable<Finding> {
 	 * 
 	 * @return value
 	 */
-	public Value getValue() {
+	public QuestionValue getValue() {
 		return value;
 	}
 

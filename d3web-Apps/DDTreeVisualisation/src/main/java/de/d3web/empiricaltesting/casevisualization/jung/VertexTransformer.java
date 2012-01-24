@@ -42,8 +42,6 @@ import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.Rating;
 import de.d3web.empiricaltesting.ScoreRating;
-import de.d3web.empiricaltesting.StateRating;
-import de.d3web.scoring.HeuristicRating;
 
 /**
  * This class transforms Rated-Test-Cases which are the vertices of our graph
@@ -393,7 +391,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 */
 	private String transformSymbolicStates(Rating score) {
 
-		de.d3web.core.knowledge.terminology.Rating state = getState(score);
+		de.d3web.core.knowledge.terminology.Rating state = CaseUtils.getState(score);
 
 		return state.getName();
 
@@ -436,7 +434,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 		}
 
 		Rating score = rs.getRating();
-		de.d3web.core.knowledge.terminology.Rating state = getState(score);
+		de.d3web.core.knowledge.terminology.Rating state = CaseUtils.getState(score);
 
 		if (state.equals(new de.d3web.core.knowledge.terminology.Rating(State.ESTABLISHED))) {
 			return cfg.get("colorEstablished");
@@ -444,24 +442,6 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 		else {
 			return cfg.get("colorSuggested");
 		}
-	}
-
-	/**
-	 * Returns a state corresponding to the committed score.
-	 * 
-	 * @param score Rating representing the score of a RatedSolution.
-	 * @return DiagnosisState corresponding to the committed scored.
-	 */
-	private de.d3web.core.knowledge.terminology.Rating getState(Rating score) {
-
-		if (score instanceof ScoreRating) {
-			return new HeuristicRating(((ScoreRating) score).getRating());
-		}
-		else if (score instanceof StateRating) {
-			return ((StateRating) score).getRating();
-		}
-
-		return null;
 	}
 
 	/**
