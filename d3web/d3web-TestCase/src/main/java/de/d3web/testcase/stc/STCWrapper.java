@@ -119,7 +119,7 @@ public class STCWrapper implements TestCase {
 				timeStamp = new Date(startDate.getTime() + stc.getCases().indexOf(rtc) + 1);
 			}
 			if (date == timeStamp) {
-				for (RatedSolution f : rtc.getDerivedSolutions()) {
+				for (RatedSolution f : rtc.getExpectedSolutions()) {
 					checks.add(new DerivedSolutionCheck(f.getSolution(),
 							CaseUtils.getState(f.getRating())));
 				}
@@ -127,7 +127,7 @@ public class STCWrapper implements TestCase {
 					checks.add(new DerivedQuestionCheck(f.getQuestion(), f.getValue()));
 				}
 			}
-			if (date.after(timeStamp)) {
+			if (timeStamp.after(date)) {
 				break;
 			}
 		}

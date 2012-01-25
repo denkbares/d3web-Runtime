@@ -21,8 +21,6 @@ package de.d3web.testcase;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.knowledge.Indication;
@@ -60,45 +58,6 @@ public class TestCaseUtils {
 				blackboard.addValueFact(fact);
 			}
 		}
-	}
-
-	/**
-	 * Returns all Findings of the {@link TestCase} whose dates are before or at
-	 * the end Date
-	 * 
-	 * @created 24.01.2012
-	 * @param testCase specified TestCase
-	 * @param endDate specified end Date
-	 * @return List of Findings
-	 */
-	public static Collection<Finding> getFindings(TestCase testCase, Date endDate) {
-		List<Finding> findings = new LinkedList<Finding>();
-		for (Date date : testCase.chronology()) {
-			if (date.before(endDate) || date.equals(endDate)) {
-				findings.addAll(testCase.getFindings(date));
-			}
-		}
-		return findings;
-	}
-
-	/**
-	 * Returns all Findings of the {@link TestCase} whose dates are before or at
-	 * the end Date and after the startDate
-	 * 
-	 * @created 24.01.2012
-	 * @param testCase specified TestCase
-	 * @param startDate specified start Date
-	 * @param endDate specified end Date
-	 * @return List of Findings
-	 */
-	public static Collection<Finding> getFindings(TestCase testCase, Date startDate, Date endDate) {
-		List<Finding> findings = new LinkedList<Finding>();
-		for (Date date : testCase.chronology()) {
-			if (date.after(startDate) && (date.before(endDate) || date.equals(endDate))) {
-				findings.addAll(testCase.getFindings(date));
-			}
-		}
-		return findings;
 	}
 
 	/**

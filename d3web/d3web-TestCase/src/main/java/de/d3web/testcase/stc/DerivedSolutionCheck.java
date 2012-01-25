@@ -41,7 +41,7 @@ public class DerivedSolutionCheck implements Check {
 
 	@Override
 	public boolean check(Session session) {
-		return session.getBlackboard().getValue(solution).equals(rating);
+		return rating.equals(session.getBlackboard().getValue(solution));
 	}
 
 	@Override
