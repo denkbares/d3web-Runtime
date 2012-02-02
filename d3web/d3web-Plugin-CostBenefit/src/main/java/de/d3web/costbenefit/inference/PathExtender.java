@@ -23,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.d3web.core.inference.condition.CondAnd;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -48,6 +50,11 @@ public class PathExtender implements SearchAlgorithm {
 	private KnowledgeBase kb = null;
 	private List<QContainer> qcontainersToAdd = new LinkedList<QContainer>();
 
+	/**
+	 * This property should not be used anymore. It is replaced by the
+	 * KnowledgeSlice {@link ComfortBenefit}
+	 */
+	@Deprecated
 	public static final Property<Boolean> comfortBenefit = Property.getProperty("comfortBenefit",
 			Boolean.class);
 
@@ -65,7 +72,8 @@ public class PathExtender implements SearchAlgorithm {
 			kb = session.getKnowledgeBase();
 			qcontainersToAdd = new LinkedList<QContainer>();
 			for (QContainer qcon : kb.getManager().getQContainers()) {
-				if (qcon.getInfoStore().getValue(comfortBenefit)) {
+				if (qcon.getInfoStore().getValue(comfortBenefit)
+						|| qcon.getKnowledgeStore().getKnowledge(ComfortBenefit.KNOWLEDGE_KIND) != null) {
 					qcontainersToAdd.add(qcon);
 				}
 			}
@@ -123,9 +131,25 @@ public class PathExtender implements SearchAlgorithm {
 
 	private static boolean isApplicable(QContainer qcon, Session session) {
 		StateTransition stateTransition = StateTransition.getStateTransition(qcon);
-		if (stateTransition != null && stateTransition.getActivationCondition() != null) {
+		ComfortBenefit comfort = qcon.getKnowledgeStore().getKnowledge(
+				ComfortBenefit.KNOWLEDGE_KIND);
+		Condition condition = null;
+		if (stateTransition != null && stateTransition.getActivationCondition() != null
+				&& comfort != null) {
+			List<Condition> conds = new LinkedList<Condition>();
+			conds.add(stateTransition.getActivationCondition());
+			conds.add(comfort.getCondition());
+			condition = new CondAnd(conds);
+		}
+		else if (comfort != null) {
+			condition = comfort.getCondition();
+		}
+		else if (stateTransition != null && stateTransition.getActivationCondition() != null) {
+			condition = stateTransition.getActivationCondition();
+		}
+		if (condition != null) {
 			try {
-				return (stateTransition.getActivationCondition().eval(session));
+				return (condition.eval(session));
 			}
 			catch (NoAnswerException e) {
 				return false;

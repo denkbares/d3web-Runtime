@@ -54,7 +54,7 @@ import de.d3web.costbenefit.inference.ValueTransition;
  * This PersistenceHandler saves and stores the default KnowledgeSlices of the
  * CostBenefitPackage
  * 
- * @author Markus Friedrich (denkbar GmbH)
+ * @author Markus Friedrich (denkbares GmbH)
  * 
  */
 public class CostBenefitModelPersistenceHandler implements KnowledgeReader, KnowledgeWriter {

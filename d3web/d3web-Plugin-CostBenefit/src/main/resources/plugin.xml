@@ -55,6 +55,28 @@
 		<parameter id="filename" value="kb/costbenefitknowledge.xml" />
 	</extension>
 	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints"
+		point-id="KnowledgeWriter" id="ComfortBenefitHandler.Writer">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.ComfortBenefitHandler" />
+		<parameter id="name" value="ComfortBenefitHandler" />
+		<parameter id="description" value="Saves comfort benefit knowledge to XML" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/comfortBenefit.xml" />
+	</extension>
+
+	<extension plugin-id="KnowledgePersistenceExtensionPoints"
+		point-id="KnowledgeReader" id="ComfortBenefitHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.ComfortBenefitHandler" />
+		<parameter id="name" value="ComfortBenefitHandler" />
+		<parameter id="description" value="Loads comfort benefit knowledge from XML" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+		<parameter id="filename" value="kb/comfortBenefit.xml" />
+	</extension>
+	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DividedTransitionHeuristicHandler">
 		<parameter id="class"
