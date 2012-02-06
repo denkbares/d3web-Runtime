@@ -41,15 +41,18 @@ import de.d3web.testcase.model.TestCase;
 public class TestCaseUtils {
 
 	/**
-	 * Applies all Findings to the {@link Session}
+	 * Applies the findings of the specified {@link TestCase} at the specified
+	 * {@link Date} to the {@link Session}
 	 * 
 	 * @created 24.01.2012
 	 * @param session Session on which the Findings should be applied
-	 * @param findings Findings to apply
+	 * @param testCase specified TestCase
+	 * @param date specified Date
 	 */
-	public static void applyFindings(Session session, Collection<Finding> findings) {
+	public static void applyFindings(Session session, TestCase testCase, Date date) {
 		Blackboard blackboard = session.getBlackboard();
-		for (Finding f : findings) {
+		session.getPropagationManager().openPropagation(date.getTime());
+		for (Finding f : testCase.getFindings(date)) {
 			Fact fact = FactFactory.createUserEnteredFact(f.getTerminologyObject(), f.getValue());
 			if (f.getValue() instanceof Indication) {
 				blackboard.addInterviewFact(fact);
@@ -58,6 +61,7 @@ public class TestCaseUtils {
 				blackboard.addValueFact(fact);
 			}
 		}
+		session.getPropagationManager().commitPropagation();
 	}
 
 	/**
