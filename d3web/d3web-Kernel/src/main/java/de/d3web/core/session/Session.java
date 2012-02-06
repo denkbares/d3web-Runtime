@@ -86,22 +86,6 @@ public interface Session extends SessionHeader {
 	 */
 	PropagationManager getPropagationManager();
 
-	/**
-	 * Registers a new listener to this session. If something in this session
-	 * changes, then all registered listeners will be notified.
-	 * 
-	 * @param listener one new listener of this session to register
-	 */
-	void addListener(SessionEventListener listener);
-
-	/**
-	 * Removes the specified listener from the list of registered listeners. All
-	 * listeners will be notified, if something in the session changes.
-	 * 
-	 * @param listener the specified listener to be removed
-	 */
-	void removeListener(SessionEventListener listener);
-
 	// -----------------------from here on old stuff, TODO: remove?
 
 	/**

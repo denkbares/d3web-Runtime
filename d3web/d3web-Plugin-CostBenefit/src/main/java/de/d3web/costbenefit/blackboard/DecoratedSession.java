@@ -29,7 +29,6 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SessionEventListener;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -166,18 +165,6 @@ public class DecoratedSession implements Session {
 			public void commitPropagation() {
 			}
 		};
-	}
-
-	@Override
-	public void addListener(SessionEventListener listener) {
-		// no listeners supported
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void removeListener(SessionEventListener listener) {
-		// no listeners supported
-		throw new UnsupportedOperationException();
 	}
 
 	@Override

@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -37,9 +36,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.core.session.blackboard.BlackboardListener;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.interviewmanager.DefaultInterview;
@@ -105,13 +102,6 @@ public class DefaultSession implements Session {
 		// create blackboard and register as listener to get fact changed
 		// notifications
 		this.blackboard = new DefaultBlackboard(this);
-		this.blackboard.addBlackboardListner(new BlackboardListener() {
-
-			@Override
-			public void factsChanged(TerminologyObject object) {
-				notifyListeners(object);
-			}
-		});
 
 		this.dynamicStore = new HashMap<SessionObjectSource<?>, SessionObject>();
 		// add problem-solving methods used for this case
@@ -311,36 +301,9 @@ public class DefaultSession implements Session {
 		return blackboard;
 	}
 
-	// ******************** event notification *********************
-
-	private final Collection<SessionEventListener> listeners = new LinkedList<SessionEventListener>();
-
-	/**
-	 * this listener will be notified, if some value has been set in this case
-	 */
-	@Override
-	public void addListener(SessionEventListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-
-	@Override
-	public void removeListener(SessionEventListener listener) {
-		if (listeners.contains(listener)) {
-			listeners.remove(listener);
-		}
-	}
-
 	@Override
 	public PropagationManager getPropagationManager() {
 		return propagationController;
-	}
-
-	public void notifyListeners(TerminologyObject o) {
-		for (SessionEventListener listener : listeners) {
-			listener.notify(this, o, this);
-		}
 	}
 
 	// ******************** /event notification ********************
