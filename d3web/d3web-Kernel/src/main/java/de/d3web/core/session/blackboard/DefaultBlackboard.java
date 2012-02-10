@@ -22,7 +22,6 @@ package de.d3web.core.session.blackboard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,17 +95,19 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public void addValueFact(Fact fact) {
-		// First: add the arriving fact to the protocol,
-		// if it was entered by the user
-		PSMethod psMethod = fact.getPSMethod();
-		if (isAutosaveSource() && psMethod != null && psMethod.hasType(Type.source)) {
-			getSession().getProtocol().addEntry(new FactProtocolEntry(new Date(), fact));
-		}
 
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().add(fact);
 		propergate(terminologyObject, oldValue);
+		// add the arriving fact to the protocol
+		// if it was entered by a source psmethod
+		PSMethod psMethod = fact.getPSMethod();
+		if (isAutosaveSource() && psMethod != null && psMethod.hasType(Type.source)) {
+			getSession().getProtocol().addEntry(
+					new FactProtocolEntry(session.getPropagationManager().getPropagationTime(),
+							fact));
+		}
 	}
 
 	/**

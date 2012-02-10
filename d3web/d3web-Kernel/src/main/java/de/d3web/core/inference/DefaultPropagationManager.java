@@ -127,6 +127,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	public DefaultPropagationManager(Session session) {
 		this.session = session;
+		this.propagationTime = session.getCreationDate().getTime();
 	}
 
 	private void initHandlers() {
@@ -322,19 +323,8 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 	}
 
-	/**
-	 * Returns the propagation time of the current propagation. If no
-	 * propagation frame has been opened, an {@link IllegalStateException} is
-	 * thrown.
-	 * 
-	 * @return the propagation time of that propagation frame
-	 * @throws IllegalStateException if no propagation frame has been opened
-	 */
 	@Override
-	public long getPropagationTime() throws IllegalStateException {
-		if (recursiveCounter == 0) {
-			throw new IllegalStateException("no propagation frame opened");
-		}
+	public long getPropagationTime() {
 		return propagationTime;
 	}
 

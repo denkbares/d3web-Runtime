@@ -111,13 +111,12 @@ public interface PropagationManager {
 
 	/**
 	 * Returns the propagation time of the current propagation. If no
-	 * propagation frame has been opened, an {@link IllegalStateException} is
-	 * thrown.
+	 * propagation frame has been opened, the time of the last propagation is
+	 * returned.
 	 * 
 	 * @return the propagation time of that propagation frame
-	 * @throws IllegalStateException if no propagation frame has been opened
 	 */
-	long getPropagationTime() throws IllegalStateException;
+	long getPropagationTime();
 
 	/**
 	 * Propagates a change value of an {@link ValueObject} through the different
