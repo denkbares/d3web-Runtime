@@ -46,11 +46,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	private boolean active = true;
 
 	/**
-	 * contains a comment for this rule, extract later into e.g. properties
-	 */
-	private String comment;
-
-	/**
 	 * A condition which must be true, if rule should fire (obligatory).
 	 */
 	private Condition condition;
@@ -632,14 +627,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	@Override

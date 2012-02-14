@@ -123,9 +123,6 @@ public class RuleHandler implements FragmentHandler {
 		if (active != null && active.length() > 0) {
 			rule.setActive(Boolean.parseBoolean(active));
 		}
-		if (comment != null && comment.length() > 0) {
-			rule.setComment(comment);
-		}
 		return rule;
 	}
 
@@ -149,9 +146,6 @@ public class RuleHandler implements FragmentHandler {
 		node.setAttribute("type", "RuleComplex");
 		if (!rule.isActive()) {
 			node.setAttribute("active", "" + rule.isActive());
-		}
-		if (rule.getComment() != null) {
-			node.setAttribute("comment", rule.getComment());
 		}
 		FragmentManager pm = PersistenceManager.getInstance();
 		// creating action node
