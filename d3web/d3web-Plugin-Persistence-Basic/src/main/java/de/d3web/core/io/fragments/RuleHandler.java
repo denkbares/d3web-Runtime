@@ -68,7 +68,6 @@ public class RuleHandler implements FragmentHandler {
 	@Override
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
 		String active = node.getAttribute("active");
-		String comment = node.getAttribute("comment");
 		PSAction action = null;
 		Condition condition = null;
 		Condition exception = null;
