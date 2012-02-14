@@ -41,11 +41,6 @@ import de.d3web.core.session.blackboard.CaseRuleComplex;
 public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	/**
-	 * Flag indicates, if the rule is activated.
-	 */
-	private boolean active = true;
-
-	/**
 	 * A condition which must be true, if rule should fire (obligatory).
 	 */
 	private Condition condition;
@@ -157,11 +152,6 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 			boolean hasFired = hasFired(session);
 			boolean canFire = canFire(session);
 
-			// ... do nothing, if not active
-			if (!active) {
-				return;
-			}
-
 			if (!hasFired && canFire) {
 				executeRuleAction = true;
 			}
@@ -270,7 +260,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * condition entries (since the knowledge map key changes for them as well)
 	 * and diagnosisContext, rule exceptions.
 	 * */
-	protected void updateActionReferences(
+	private void updateActionReferences(
 			PSAction oldAction,
 			PSAction newAction) {
 		// do not add any knowledge when the problem solver context is still
@@ -313,7 +303,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * Remove terminal objects of specified condition from the old action and
 	 * insert them into the specified new action.
 	 * */
-	protected void updateConditionTerminals(
+	private void updateConditionTerminals(
 			PSAction oldAction,
 			PSAction newAction,
 			Condition condi) {
@@ -473,7 +463,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * Sets the state of the rule, if it has fired or not in context of the
 	 * specified userCase.
 	 */
-	protected void setFired(boolean newFired, Session session) {
+	private void setFired(boolean newFired, Session session) {
 		(session.getSessionObject(this)).setFired(newFired);
 	}
 
@@ -559,74 +549,10 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 		return toString() + "\n fired: " + hasFired(session);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-		else if (this == o) {
-			return true;
-		}
-		if (o instanceof Rule) {
-			Rule r = (Rule) o;
-			boolean eq = super.equals(r);
-			if (!eq) {
-				return false;
-			}
-			eq = eq && equalConditions(getCondition(), r.getCondition());
-			eq = eq && equalConditions(getException(), r.getException());
-			eq = eq && equalActions(getAction(), r.getAction());
-			return eq;
-		}
-		return false;
-
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = super.hashCode();
-		if (getAction() != null) {
-			hash += getAction().hashCode();
-		}
-		if (getCondition() != null) {
-			hash += getCondition().hashCode();
-		}
-		if (getException() != null) {
-			hash += getException().hashCode();
-		}
-		return hash;
-	}
-
-	private static boolean equalActions(PSAction a1, PSAction a2) {
-		if (a1 != null && a2 != null) {
-			return a1.equals(a2);
-		}
-		else {
-			return (a1 == null && a2 == null);
-		}
-	}
-
-	private static boolean equalConditions(Condition c1, Condition c2) {
-		if (c1 != null && c2 != null) {
-			return c1.equals(c2);
-		}
-		else {
-			return (c1 == null && c2 == null);
-		}
-	}
-
 	public void remove() {
 		setException(null);
 		setCondition(null);
 		setAction(null);
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	@Override

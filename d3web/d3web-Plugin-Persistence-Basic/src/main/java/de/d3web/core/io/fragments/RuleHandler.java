@@ -67,7 +67,6 @@ public class RuleHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element node) throws IOException {
-		String active = node.getAttribute("active");
 		PSAction action = null;
 		Condition condition = null;
 		Condition exception = null;
@@ -119,9 +118,6 @@ public class RuleHandler implements FragmentHandler {
 		// PSMethodContext must be set by the method, which calls the fragment
 		// handler
 		Rule rule = RuleFactory.createRule(action, condition, exception, null);
-		if (active != null && active.length() > 0) {
-			rule.setActive(Boolean.parseBoolean(active));
-		}
 		return rule;
 	}
 
@@ -143,9 +139,6 @@ public class RuleHandler implements FragmentHandler {
 		Rule rule = (Rule) object;
 		Element node = doc.createElement("KnowledgeSlice");
 		node.setAttribute("type", "RuleComplex");
-		if (!rule.isActive()) {
-			node.setAttribute("active", "" + rule.isActive());
-		}
 		FragmentManager pm = PersistenceManager.getInstance();
 		// creating action node
 		PSAction action = rule.getAction();
