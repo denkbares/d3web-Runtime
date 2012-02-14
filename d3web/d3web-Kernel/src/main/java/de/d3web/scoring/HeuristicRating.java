@@ -20,7 +20,6 @@
 package de.d3web.scoring;
 
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.session.Value;
 import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
@@ -89,28 +88,6 @@ public class HeuristicRating extends Rating {
 	@Override
 	public int hashCode() {
 		return (int) (super.hashCode() + 47 * Math.round(getScore()));
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
-		HeuristicRating other = (HeuristicRating) obj;
-		if (Double.doubleToLongBits(score) != Double.doubleToLongBits(other.score)) return false;
-		return true;
-	}
-
-	@Override
-	public int compareTo(Value other) {
-		if (other instanceof HeuristicRating) {
-			// if both ratings are heuristic ones, compare by score
-			return (int) Math.signum(this.score - ((HeuristicRating) other).score);
-		}
-		else {
-			// otherwise use common compare of ratings
-			return super.compareTo(other);
-		}
 	}
 
 	/**
