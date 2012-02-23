@@ -101,6 +101,7 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 		DefaultAbortStrategySessionObject sessionObject = model.getSession().getSessionObject(this);
 		sessionObject.steps = 0;
 		sessionObject.model = model;
+		sessionObject.abort = false;
 	}
 
 	@Override
@@ -113,8 +114,46 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	}
 
 	private boolean isAbortReached(DefaultAbortStrategySessionObject sessionObject) {
-		return (sessionObject.steps >= maxSteps && sessionObject.model.isAnyTargetReached())
+		return sessionObject.abort
+				|| (sessionObject.steps >= maxSteps && sessionObject.model.isAnyTargetReached())
 				|| (sessionObject.steps >= maxSteps * increasingFactor);
+	}
+
+	/**
+	 * If this method is called, the calculation will abort after the next step
+	 * 
+	 * @created 23.02.2012
+	 * @param session Session in which the calculation should be aborted
+	 */
+	public void abort(Session session) {
+		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
+		sessionObject.abort = true;
+	}
+
+	/**
+	 * Returns the steps of the actual calculation in the specified session. If
+	 * there is no active calculation, the steps of the last calculation are
+	 * returned.
+	 * 
+	 * @created 23.02.2012
+	 * @param session the specified Session
+	 * @return The actual amount of steps done
+	 */
+	public long getSteps(Session session) {
+		return session.getSessionObject(this).steps;
+	}
+
+	/**
+	 * Checks if at least one target is reached in the current calculation. If
+	 * there is no active calculation, the result of the last calculation is
+	 * returned.
+	 * 
+	 * @created 23.02.2012
+	 * @param session
+	 * @return
+	 */
+	public boolean isAnyTargetReached(Session session) {
+		return session.getSessionObject(this).model.isAnyTargetReached();
 	}
 
 	@Override
@@ -126,5 +165,6 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 
 		private long steps;
 		private SearchModel model;
+		private boolean abort;
 	}
 }
