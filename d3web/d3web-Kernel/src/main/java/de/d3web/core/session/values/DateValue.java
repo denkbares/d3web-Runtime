@@ -19,9 +19,11 @@
  */
 package de.d3web.core.session.values;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.QuestionValue;
@@ -36,11 +38,21 @@ import de.d3web.core.session.Value;
 public class DateValue implements QuestionValue {
 
 	/**
-	 * The Format, in which the dates are saved and loaded. The Format is for
-	 * example 2003-10-20-13-51-23
+	 * The accepted formats for dates. The first format is the one used for
+	 * saving DateValues.
 	 */
-	public static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-
+	private static final List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
+	static {
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd"));
+		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS"));
+		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
+		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
+	}
 	private final Date value;
 
 	/**
@@ -54,6 +66,18 @@ public class DateValue implements QuestionValue {
 			throw new NullPointerException();
 		}
 		this.value = value;
+	}
+
+	public static DateValue createDateValue(String valueString) throws IllegalArgumentException {
+		for (SimpleDateFormat dateFormat : dateFormats) {
+			try {
+				Date date = dateFormat.parse(valueString);
+				return new DateValue(date);
+			}
+			catch (ParseException e) {
+			}
+		}
+		throw new IllegalArgumentException("'" + valueString + "' can not be recognized as a date");
 	}
 
 	/**
@@ -73,7 +97,7 @@ public class DateValue implements QuestionValue {
 	 * setDate(String)
 	 */
 	public String getDateString() {
-		return format.format(value);
+		return dateFormats.get(0).format(value);
 	}
 
 	@Override
