@@ -23,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -210,7 +212,8 @@ public class SessionPersistenceTest {
 		// tests if the repository stops loading if the file is null
 		boolean error = false;
 		try {
-			errorTestingRepository.load(null);
+			File nullFile = null;
+			errorTestingRepository.load(nullFile);
 		}
 		catch (NullPointerException e) {
 			error = true;
@@ -218,7 +221,26 @@ public class SessionPersistenceTest {
 		Assert.assertTrue(error);
 		error = false;
 		try {
-			errorTestingRepository.save(null);
+			InputStream nullStream = null;
+			errorTestingRepository.load(nullStream);
+		}
+		catch (NullPointerException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+		try {
+			File nullFile = null;
+			errorTestingRepository.save(nullFile);
+		}
+		catch (NullPointerException e) {
+			error = true;
+		}
+		Assert.assertTrue(error);
+		error = false;
+		try {
+			OutputStream nullStream = null;
+			errorTestingRepository.save(nullStream);
 		}
 		catch (NullPointerException e) {
 			error = true;

@@ -20,6 +20,8 @@ package de.d3web.file.records.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 
 import de.d3web.core.io.progress.DummyProgressListener;
@@ -74,6 +76,32 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 		}
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		spm.saveSessions(file, sessionRecords.values(), listener);
+	}
+
+	public void load(InputStream file) throws IOException {
+		this.load(file, new DummyProgressListener());
+	}
+
+	public void load(InputStream stream, ProgressListener listener) throws IOException {
+		if (stream == null) {
+			throw new NullPointerException("InputStream is null. Unable to load SessionRepository.");
+		}
+		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+		Collection<SessionRecord> records = spm.loadSessions(stream, listener);
+		for (SessionRecord sr : records) {
+			add(sr);
+		}
+	}
+
+	public void save(OutputStream stream) throws IOException {
+		this.save(stream, new DummyProgressListener());
+	}
+
+	public void save(OutputStream stream, ProgressListener listener) throws IOException {
+		if (stream == null) throw new NullPointerException(
+				"OutputStream is null. Unable to save SessionRepository.");
+		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+		spm.saveSessions(stream, sessionRecords.values(), listener);
 	}
 
 }
