@@ -20,8 +20,7 @@ package de.d3web.testcase;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
@@ -72,11 +71,14 @@ public class TestCaseUtils {
 	 * @return Collection of questions used in the specified {@link TestCase}
 	 */
 	public static Collection<Question> getUsedQuestions(TestCase testCase) {
-		Set<Question> questions = new HashSet<Question>();
+		Collection<Question> questions = new LinkedList<Question>();
 		for (Date date : testCase.chronology()) {
 			for (Finding f : testCase.getFindings(date)) {
 				if (f.getTerminologyObject() instanceof Question) {
-					questions.add((Question) f.getTerminologyObject());
+					Question question = (Question) f.getTerminologyObject();
+					if (!questions.contains(question)) {
+						questions.add(question);
+					}
 				}
 			}
 		}
