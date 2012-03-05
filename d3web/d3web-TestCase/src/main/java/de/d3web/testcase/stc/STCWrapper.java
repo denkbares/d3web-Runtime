@@ -86,7 +86,7 @@ public class STCWrapper implements TestCase {
 				// create the timestamp based on the position in the list
 				timeStamp = new Date(startDate.getTime() + stc.getCases().indexOf(rtc) + 1);
 			}
-			if (date == timeStamp) {
+			if (date.equals(timeStamp)) {
 				for (de.d3web.empiricaltesting.Finding f : rtc.getFindings()) {
 					findings.add(new DefaultFinding(f.getQuestion(), f.getValue(), date));
 				}
@@ -118,7 +118,7 @@ public class STCWrapper implements TestCase {
 				// create the timestamp based on the position in the list
 				timeStamp = new Date(startDate.getTime() + stc.getCases().indexOf(rtc) + 1);
 			}
-			if (date == timeStamp) {
+			if (date.equals(timeStamp)) {
 				for (RatedSolution f : rtc.getExpectedSolutions()) {
 					checks.add(new DerivedSolutionCheck(f.getSolution(),
 							CaseUtils.getState(f.getRating())));
