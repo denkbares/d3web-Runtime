@@ -53,15 +53,17 @@ public class DefaultBlackboard implements Blackboard {
 	private final Session session;
 	private FactStorage valueStorage;
 	private FactStorage interviewStorage;
-	private boolean autosaveSource = true;
+	private boolean sourceRecording = true;
 	private final List<BlackboardListener> listeners = new LinkedList<BlackboardListener>();
 
-	public boolean isAutosaveSource() {
-		return autosaveSource;
+	@Override
+	public boolean isSourceRecording() {
+		return sourceRecording;
 	}
 
-	public void setAutosaveSource(boolean autosaveSource) {
-		this.autosaveSource = autosaveSource;
+	@Override
+	public void setSourceRecording(boolean autosaveSource) {
+		this.sourceRecording = autosaveSource;
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class DefaultBlackboard implements Blackboard {
 		// add the arriving fact to the protocol
 		// if it was entered by a source psmethod
 		PSMethod psMethod = fact.getPSMethod();
-		if (isAutosaveSource() && psMethod != null && psMethod.hasType(Type.source)) {
+		if (isSourceRecording() && psMethod != null && psMethod.hasType(Type.source)) {
 			getSession().getProtocol().addEntry(
 					new FactProtocolEntry(session.getPropagationManager().getPropagationTime(),
 							fact));

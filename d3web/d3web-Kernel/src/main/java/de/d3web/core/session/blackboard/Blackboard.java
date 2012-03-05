@@ -319,4 +319,8 @@ public interface Blackboard {
 	 * @param listener the listener to be removed
 	 */
 	void removeBlackboardListner(BlackboardListener listener);
+
+	public abstract void setSourceRecording(boolean autosaveSource);
+
+	public abstract boolean isSourceRecording();
 }

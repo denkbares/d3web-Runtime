@@ -43,7 +43,6 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
-import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -83,7 +82,7 @@ public final class Util {
 	 */
 	public static Session createSearchCopy(Session session) {
 		Session testCase = new CopiedSession(session.getKnowledgeBase());
-		((DefaultBlackboard) testCase.getBlackboard()).setAutosaveSource(false);
+		testCase.getBlackboard().setSourceRecording(false);
 		Blackboard blackboard = session.getBlackboard();
 		List<? extends Question> answeredQuestions = blackboard.getAnsweredQuestions();
 		try {

@@ -40,7 +40,7 @@ public class DecoratedBlackboard extends DefaultBlackboard {
 
 	public DecoratedBlackboard(DecoratedSession session, DefaultBlackboard decoratedBlackboard) {
 		super(session, decoratedBlackboard);
-		setAutosaveSource(false);
+		setSourceRecording(false);
 		setValueStorage(new DecoratedFactStorage(getValueStorage()));
 		setInterviewStorage(new DecoratedFactStorage(getInterviewStorage()));
 	}
