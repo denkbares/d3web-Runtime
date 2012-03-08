@@ -128,31 +128,16 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		// insert XCL
 		XCLRelation relation = null;
 		XCLModel xclModel = d.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
-		if (xclModel != null) {
-			relation = XCLRelation.createXCLRelation(
-							theCondition, weight);
-			if (kdomNodeID != null) {
-				relation.setKdmomID(kdomNodeID);
-			}
-			xclModel.addRelation(relation, type);
+		if (xclModel == null) {
+			xclModel = new XCLModel(d);
+			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, xclModel);
 		}
-		else {
-			XCLModel newModel = new XCLModel(d);
-			relation = XCLRelation.createXCLRelation(theCondition,
-					weight);
-
-			if (kdomNodeID != null) {
-				relation.setKdmomID(kdomNodeID);
-			}
-
-			newModel.addRelation(relation, type);
-			// TODO: must it be added to the knowledge base?
-			// kb.addKnowledge(PSMethodXCL.class, newModel,
-			// XCLModel.KNOWLEDGE_KIND);
-			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, newModel);
-
+		relation = XCLRelation.createXCLRelation(
+				theCondition, weight);
+		if (kdomNodeID != null) {
+			relation.setKdmomID(kdomNodeID);
 		}
-
+		xclModel.addRelation(relation, type);
 		return relation;
 	}
 
@@ -180,10 +165,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	public void setConsiderOnlyRelevantRelations(
 			boolean considerOnlyRelevantRelations) {
 		this.considerOnlyRelevantRelations = considerOnlyRelevantRelations;
-	}
-
-	private PSMethodXCL getPSMethodXCL(Session session) {
-		return session.getPSMethodInstance(PSMethodXCL.class);
 	}
 
 	public boolean addRelation(XCLRelation relation) {
@@ -276,10 +257,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 	public Solution getSolution() {
 		return solution;
-	}
-
-	public void setSolution(Solution solution) {
-		this.solution = solution;
 	}
 
 	/**
@@ -402,7 +379,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		private final InferenceTrace inferenceTrace;
 
 		private XCLCaseModel(XCLModel model, Session session) {
-			ScoreAlgorithm scoreAlgorithm = model.getPSMethodXCL(session).getScoreAlgorithm();
+			ScoreAlgorithm scoreAlgorithm = session.getPSMethodInstance(PSMethodXCL.class).getScoreAlgorithm();
 			this.inferenceTrace = scoreAlgorithm.createInferenceTrace(model);
 		}
 	}
