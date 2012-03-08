@@ -159,37 +159,13 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return max;
 	}
 
-	// public double getAbnormality(AbstractAbnormality abnormality, List<?>
-	// answers) {
-	// // no answer ==> not abnormal
-	// if (answers == null || answers.size()==0)
-	// return 0.0;
-	// // no slice ==> every answer is abnormal
-	// if (abnormality == null) return 1.0;
-	// double max = 0;
-	// for (Object a : answers) {
-	// max = Math.max(max, abnormality.getValue((Answer) a));
-	// }
-	// return max;
-	// }
-
 	public Abnormality getAbnormalitySlice(Question question) {
-		try {
-			Abnormality knowledge = question.getInfoStore().getValue(
+		Abnormality knowledge = question.getInfoStore().getValue(
 					BasicProperties.DEFAULT_ABNORMALITIY);
-			if (knowledge == null) {
-				knowledge = question.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
-			}
-			return knowledge;
+		if (knowledge == null) {
+			knowledge = question.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
 		}
-		catch (IllegalArgumentException e) {
-			throw new IllegalStateException(
-					"internal error accessing shared knowledge", e);
-		}
-		catch (SecurityException e) {
-			throw new IllegalStateException(
-					"internal error accessing shared knowledge", e);
-		}
+		return knowledge;
 	}
 
 	@Override
@@ -335,10 +311,6 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	@Override
 	public void init(Session session) {
-	}
-
-	public boolean isContributingToResult() {
-		return true;
 	}
 
 	public static class XCLCaseObject implements SessionObject {
