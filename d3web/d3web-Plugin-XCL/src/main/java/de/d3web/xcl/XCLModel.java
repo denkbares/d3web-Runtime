@@ -84,41 +84,24 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 	public static String insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d) {
-		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains, null);
-	}
-
-	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d, String kdomNodeID) {
-		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains,
-				kdomNodeID);
+		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type) {
-		return insertXCLRelation(kb, theCondition, d, type, 1, null);
-	}
-
-	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d, XCLRelationType type, String kdomNodeID) {
-		return insertXCLRelation(kb, theCondition, d, type, 1, kdomNodeID);
+		return insertXCLRelation(kb, theCondition, d, type, 1);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type,
 			double weight) {
-		return insertXCLRelation(kb, theCondition, d, type, weight, null);
-	}
-
-	public static String insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d, XCLRelationType type,
-			double weight, String kdomNodeID) {
 		return insertAndReturnXCLRelation(kb, theCondition, d, type,
-				weight, kdomNodeID).getId();
+				weight).getId();
 	}
 
 	public static XCLRelation insertAndReturnXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type,
-			double weight, String kdomNodeID) {
+			double weight) {
 
 		// Nullchecks
 		if (theCondition == null || d == null) {
@@ -134,9 +117,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		}
 		relation = XCLRelation.createXCLRelation(
 				theCondition, weight);
-		if (kdomNodeID != null) {
-			relation.setKdmomID(kdomNodeID);
-		}
 		xclModel.addRelation(relation, type);
 		return relation;
 	}

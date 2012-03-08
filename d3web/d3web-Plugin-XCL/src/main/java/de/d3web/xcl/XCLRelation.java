@@ -37,16 +37,6 @@ public class XCLRelation {
 	private String id;
 	private static int count = 0;
 
-	private String kdmomID = null;
-
-	public String getKdmomID() {
-		return kdmomID;
-	}
-
-	public void setKdmomID(String kdmomID) {
-		this.kdmomID = kdmomID;
-	}
-
 	private XCLRelation() {
 		super();
 		count++;
