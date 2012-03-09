@@ -27,7 +27,7 @@ import de.d3web.core.inference.condition.Condition;
  * @author Reinhard Hatko
  * 
  */
-public interface Edge {
+public interface Edge extends DiaFluxElement {
 
 	/**
 	 * 
@@ -46,10 +46,5 @@ public interface Edge {
 	 * @return s the edges guard
 	 */
 	Condition getCondition();
-
-	/**
-	 * @return s the ID
-	 */
-	String getID();
 
 }

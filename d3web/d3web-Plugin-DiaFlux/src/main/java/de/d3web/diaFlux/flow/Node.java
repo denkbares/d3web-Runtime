@@ -33,7 +33,7 @@ import de.d3web.core.session.Session;
  * @author Reinhard Hatko
  * 
  */
-public interface Node {
+public interface Node extends DiaFluxElement {
 
 	/**
 	 * 
@@ -46,11 +46,6 @@ public interface Node {
 	 * @return s a list of this node's incoming edges.
 	 */
 	List<Edge> getIncomingEdges();
-
-	/**
-	 * @return s the id of the node
-	 */
-	String getID();
 
 	/**
 	 * @return s the flow this node belongs to
