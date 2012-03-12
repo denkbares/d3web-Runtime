@@ -464,41 +464,37 @@ public final class TestPersistence {
 		String questionText = sr.getAttributeValue(null, QUESTION);
 		String answerText = sr.getAttributeValue(null, ANSWER);
 		Finding f = null;
-		try {
-			Question q = kb.getManager().searchQuestion(questionText);
+		Question q = kb.getManager().searchQuestion(questionText);
 
-			if (q == null) {
-				Logger.getLogger(getClass().getName()).warning(
+		if (q == null) {
+			Logger.getLogger(getClass().getName()).warning(
 						"Solution not found '" + questionText + "'.");
-				return null;
+			return null;
+		}
+
+		if (answerText.equals("unknown") || answerText.equals("-?-")) {
+			f = new Finding(q, Unknown.getInstance());
+		}
+		else if (q instanceof QuestionMC) {
+			Choice[] choices;
+			if (answerText.startsWith("[")) {
+				answerText = answerText.substring(1, answerText.length() - 1);
+				choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
+			} // legacy format
+			else {
+				choices = toChoices(q, answerText.split("#####"));
 			}
 
-			if (answerText.equals("unknown") || answerText.equals("-?-")) {
-				f = new Finding(q, Unknown.getInstance());
-			}
-			else if (q instanceof QuestionMC) {
-				Choice[] choices;
-				if (answerText.startsWith("[")) {
-					answerText = answerText.substring(1, answerText.length() - 1);
-					choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
-				} // legacy format
-				else {
-					choices = toChoices(q, answerText.split("#####"));
-				}
+			f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
+		}
+		else if (q instanceof QuestionChoice) {
+			f = new Finding((QuestionChoice) q, answerText);
+		}
+		else if (q instanceof QuestionNum) {
+			f = new Finding((QuestionNum) q, answerText);
+		}
+		// TODO: auf andere Question Arten überprüfen
 
-				f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
-			}
-			else if (q instanceof QuestionChoice) {
-				f = new Finding((QuestionChoice) q, answerText);
-			}
-			else if (q instanceof QuestionNum) {
-				f = new Finding((QuestionNum) q, answerText);
-			}
-			// TODO: auf andere Question Arten überprüfen
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 		return f;
 	}
 

@@ -48,12 +48,12 @@ public class Finding implements Comparable<Finding> {
 	 * @throws Exception
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
-	public Finding(QuestionChoice question, String choiceName) throws Exception {
+	public Finding(QuestionChoice question, String choiceName) {
 		Choice foundChoice = null;
 		for (Choice choice : question.getAllAlternatives()) {
 			if (choiceName.equals(choice.getName())) foundChoice = choice;
 		}
-		if (foundChoice == null) throw new Exception("Choice not found: "
+		if (foundChoice == null) throw new IllegalArgumentException("Choice not found: "
 				+ choiceName + " in question " + question.getName());
 		else {
 			setup(question, new ChoiceValue(foundChoice));
@@ -69,7 +69,7 @@ public class Finding implements Comparable<Finding> {
 	 * @throws Exception
 	 * @return new Finding consisting of committed question and searched answer.
 	 */
-	public Finding(QuestionNum question, String value) throws Exception {
+	public Finding(QuestionNum question, String value) {
 		setup(question, new NumValue(Double.parseDouble(value)));
 	}
 
