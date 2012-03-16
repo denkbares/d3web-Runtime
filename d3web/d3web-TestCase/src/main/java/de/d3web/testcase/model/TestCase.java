@@ -21,6 +21,7 @@ package de.d3web.testcase.model;
 import java.util.Collection;
 import java.util.Date;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
@@ -47,13 +48,14 @@ public interface TestCase {
 	/**
 	 * Returns all findings of this TestCase associated to the specified Date.
 	 * If there is no such finding in this TestCase, an empty Collection is
-	 * returend.
+	 * returned.
 	 * 
 	 * @created 23.01.2012
 	 * @param date the Date to get the Findings for
+	 * @param kb {@link KnowledgeBase}
 	 * @return Findings at the specified Date
 	 */
-	Collection<Finding> getFindings(Date date);
+	Collection<Finding> getFindings(Date date, KnowledgeBase kb);
 
 	/**
 	 * Finding of the defined {@link TerminologyObject} at the specified Date.
@@ -72,9 +74,10 @@ public interface TestCase {
 	 * 
 	 * @created 23.01.2012
 	 * @param date the Date to get the Checks for
+	 * @param kb {@link KnowledgeBase}
 	 * @return Checks at the specified date
 	 */
-	Collection<Check> getChecks(Date date);
+	Collection<Check> getChecks(Date date, KnowledgeBase kb);
 
 	/**
 	 * Returns the Date when the TestCase was originally started
@@ -83,4 +86,14 @@ public interface TestCase {
 	 * @return Date when the TestCase was started
 	 */
 	Date getStartDate();
+
+	/**
+	 * Checks if the kb fits to the TestCase and returns errors as a collections
+	 * of Strings
+	 * 
+	 * @created 14.03.2012
+	 * @param kb {@link KnowledgeBase}
+	 * @return Collections of Errors
+	 */
+	Collection<String> check(KnowledgeBase kb);
 }

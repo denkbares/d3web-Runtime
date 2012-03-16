@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.QuestionValue;
@@ -37,6 +38,11 @@ import de.d3web.core.session.Value;
  */
 public class DateValue implements QuestionValue {
 
+	// this format should be used when saving DateValues to be able to parse the
+	// date with the static method createDateValue(String)
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss.SS");
+
 	/**
 	 * The accepted formats for dates. The first format is the one used for
 	 * saving DateValues.
@@ -46,12 +52,14 @@ public class DateValue implements QuestionValue {
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS"));
+		dateFormats.add(DATE_FORMAT);
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
+		// can parse Date.toString()
+		dateFormats.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
 	}
 	private final Date value;
 

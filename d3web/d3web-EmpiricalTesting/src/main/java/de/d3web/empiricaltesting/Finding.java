@@ -20,12 +20,14 @@
 
 package de.d3web.empiricaltesting;
 
-import de.d3web.core.knowledge.KnowledgeBase;
+import java.util.logging.Logger;
+
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.QuestionValue;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 
@@ -53,8 +55,11 @@ public class Finding implements Comparable<Finding> {
 		for (Choice choice : question.getAllAlternatives()) {
 			if (choiceName.equals(choice.getName())) foundChoice = choice;
 		}
-		if (foundChoice == null) throw new IllegalArgumentException("Choice not found: "
-				+ choiceName + " in question " + question.getName());
+		if (foundChoice == null) {
+			Logger.getLogger(getClass().getName()).warning("Choice not found: "
+					+ choiceName + " in question " + question.getName());
+			setup(question, new ChoiceValue(new ChoiceID(choiceName)));
+		}
 		else {
 			setup(question, new ChoiceValue(foundChoice));
 		}
@@ -82,36 +87,6 @@ public class Finding implements Comparable<Finding> {
 	 */
 	public Finding(Question question, QuestionValue value) {
 		setup(question, value);
-	}
-
-	/**
-	 * Creates a new {@link Finding} based on the {@link QuestionChoice}
-	 * contained in the specified {@link KnowledgeBase} with the specified
-	 * questionName and the specified answerName.
-	 * 
-	 * @param questionName the specified questionName
-	 * @param choiceName the specified answerName
-	 * @return a created Finding based on the specified names
-	 * @throws Exception when null delivered in one of the arguments or
-	 *         inappropriate Question type used
-	 */
-	public static Finding createFinding(KnowledgeBase k, String questionName, String choiceName) throws Exception {
-		if (k == null || questionName == null || choiceName == null) throw new Exception(
-				"Null delivered as argument.");
-		for (Question question : k.getManager().getQuestions()) {
-			if (questionName.equals(question.getName())) {
-				if (question instanceof QuestionChoice) {
-					return new Finding((QuestionChoice) question, choiceName);
-				}
-				else if (question instanceof QuestionNum) {
-					return new Finding((QuestionNum) question, choiceName);
-				}
-				else {
-					throw new Exception("Inappropriate question type.");
-				}
-			}
-		}
-		throw new Exception("Question not found.");
 	}
 
 	private void setup(Question question, QuestionValue value) {

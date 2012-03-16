@@ -20,14 +20,31 @@ package de.d3web.testcase.stc;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.QuestionValue;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.empiricaltesting.CaseUtils;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
+import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
@@ -78,7 +95,7 @@ public class STCWrapper implements TestCase {
 	}
 
 	@Override
-	public Collection<Finding> getFindings(Date date) {
+	public Collection<Finding> getFindings(Date date, KnowledgeBase kb) {
 		List<Finding> findings = new LinkedList<Finding>();
 		for (RatedTestCase rtc : stc.getCases()) {
 			Date timeStamp = rtc.getTimeStamp();
@@ -88,7 +105,12 @@ public class STCWrapper implements TestCase {
 			}
 			if (date.equals(timeStamp)) {
 				for (de.d3web.empiricaltesting.Finding f : rtc.getFindings()) {
-					findings.add(new DefaultFinding(f.getQuestion(), f.getValue(), date));
+					Question question = f.getQuestion();
+					if (question.getKnowledgeBase() != kb) {
+						question = kb.getManager().searchQuestion(question.getName());
+						if (question == null) continue;
+					}
+					findings.add(new DefaultFinding(question, repairValue(f, question), date));
 				}
 			}
 			if (timeStamp.after(date)) {
@@ -98,9 +120,37 @@ public class STCWrapper implements TestCase {
 		return findings;
 	}
 
+	private QuestionValue repairValue(de.d3web.empiricaltesting.Finding f, Question question) {
+		QuestionValue value = f.getValue();
+		if ((question instanceof QuestionNum && !(value instanceof NumValue))
+				|| (question instanceof QuestionText && !(value instanceof TextValue))
+				|| (question instanceof QuestionOC && !(value instanceof ChoiceValue))
+				|| (question instanceof QuestionMC && !(value instanceof MultipleChoiceValue))
+				|| (question instanceof QuestionDate && !(value instanceof DateValue))) {
+			try {
+				value = KnowledgeBaseUtils.findValue(question, value.getValue().toString());
+			}
+			catch (NumberFormatException e) {
+				// nothing todo
+			}
+			catch (IllegalArgumentException e) {
+				// nothing todo
+			}
+			if (value == null) {
+				if (question instanceof QuestionOC) {
+					value = new ChoiceValue(f.getValuePrompt().toString());
+				}
+				else {
+					value = f.getValue();
+				}
+			}
+		}
+		return value;
+	}
+
 	@Override
 	public Finding getFinding(Date date, TerminologyObject object) {
-		Collection<Finding> findings = getFindings(date);
+		Collection<Finding> findings = getFindings(date, object.getKnowledgeBase());
 		for (Finding f : findings) {
 			if (f.getTerminologyObject() == object) {
 				return f;
@@ -110,7 +160,7 @@ public class STCWrapper implements TestCase {
 	}
 
 	@Override
-	public Collection<Check> getChecks(Date date) {
+	public Collection<Check> getChecks(Date date, KnowledgeBase kb) {
 		List<Check> checks = new LinkedList<Check>();
 		for (RatedTestCase rtc : stc.getCases()) {
 			Date timeStamp = rtc.getTimeStamp();
@@ -120,11 +170,21 @@ public class STCWrapper implements TestCase {
 			}
 			if (date.equals(timeStamp)) {
 				for (RatedSolution f : rtc.getExpectedSolutions()) {
-					checks.add(new DerivedSolutionCheck(f.getSolution(),
+					Solution solution = f.getSolution();
+					if (solution.getKnowledgeBase() != kb) {
+						solution = kb.getManager().searchSolution(solution.getName());
+						if (solution == null) continue;
+					}
+					checks.add(new DerivedSolutionCheck(solution,
 							CaseUtils.getState(f.getRating())));
 				}
 				for (de.d3web.empiricaltesting.Finding f : rtc.getExpectedFindings()) {
-					checks.add(new DerivedQuestionCheck(f.getQuestion(), f.getValue()));
+					Question question = f.getQuestion();
+					if (question.getKnowledgeBase() != kb) {
+						question = kb.getManager().searchQuestion(question.getName());
+						if (question == null) continue;
+					}
+					checks.add(new DerivedQuestionCheck(question, repairValue(f, question)));
 				}
 			}
 			if (timeStamp.after(date)) {
@@ -154,6 +214,35 @@ public class STCWrapper implements TestCase {
 			}
 		}
 		return startDate;
+	}
+
+	@Override
+	public Collection<String> check(KnowledgeBase kb) {
+		Collection<String> errors = new HashSet<String>();
+		for (RatedTestCase rtc : stc.getCases()) {
+			Collection<de.d3web.empiricaltesting.Finding> findings = new LinkedList<de.d3web.empiricaltesting.Finding>();
+			findings.addAll(rtc.getFindings());
+			findings.addAll(rtc.getExpectedFindings());
+			for (de.d3web.empiricaltesting.Finding f : findings) {
+				String questionName = f.getQuestion().getName();
+				Question question = kb.getManager().searchQuestion(questionName);
+				if (question == null) {
+					errors.add("Question \"" + questionName
+							+ "\" is not contained in the KB.");
+				}
+				else {
+					TestCaseUtils.checkValues(errors, question, repairValue(f, question));
+				}
+			}
+			for (RatedSolution ratedSolution : rtc.getExpectedSolutions()) {
+				String solutionName = ratedSolution.getSolution().getName();
+				if (kb.getManager().searchSolution(solutionName) == null) {
+					errors.add("Solution \"" + solutionName
+							+ "\" is not contained in the KB.");
+				}
+			}
+		}
+		return errors;
 	}
 
 }

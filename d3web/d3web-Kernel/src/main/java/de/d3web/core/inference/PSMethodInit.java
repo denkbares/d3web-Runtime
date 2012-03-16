@@ -20,10 +20,7 @@
 
 package de.d3web.core.inference;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -189,29 +186,15 @@ public class PSMethodInit implements PSMethod {
 			}
 		}
 		else if (q instanceof QuestionDate) {
-			List<SimpleDateFormat> dateFormats = new LinkedList<SimpleDateFormat>();
-			dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS"));
-			dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-			dateFormats.add(new SimpleDateFormat("yyyy-MM-dd"));
-			dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS"));
-			dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
-			dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
-			Date date = null;
-			for (SimpleDateFormat sdf : dateFormats) {
-				try {
-					date = sdf.parse(property);
-				}
-				catch (ParseException e) {
-					continue;
-				}
-				break;
+			try {
+				return DateValue.createDateValue(property);
 			}
-			if (date == null) {
+			// throw more detailed error message
+			catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("Cannot set initial value '" + property +
 						"' for question '" + q.getName()
 						+ "', because it is not valid date format.");
 			}
-			return new DateValue(date);
 		}
 		else if (q instanceof QuestionText) {
 			return new TextValue(property);

@@ -21,6 +21,7 @@ package de.d3web.testcase.record;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -28,16 +29,13 @@ import java.util.TreeSet;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.protocol.ProtocolEntry;
-import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
@@ -51,12 +49,10 @@ import de.d3web.testcase.model.TestCase;
  */
 public class SessionRecordWrapper implements TestCase {
 
-	private final KnowledgeBase kb;
 	private final SessionRecord record;
 
-	public SessionRecordWrapper(SessionRecord record, KnowledgeBase kb) {
+	public SessionRecordWrapper(SessionRecord record) {
 		this.record = record;
-		this.kb = kb;
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class SessionRecordWrapper implements TestCase {
 	}
 
 	@Override
-	public Collection<Finding> getFindings(Date date) {
+	public Collection<Finding> getFindings(Date date, KnowledgeBase kb) {
 		List<Finding> findings = new LinkedList<Finding>();
 		for (ProtocolEntry entry : record.getProtocol().getProtocolHistory()) {
 			if (entry instanceof FactProtocolEntry && entry.getDate().equals(date)) {
@@ -91,7 +87,7 @@ public class SessionRecordWrapper implements TestCase {
 			if (entry instanceof FactProtocolEntry && entry.getDate().equals(date)) {
 				FactProtocolEntry fpe = (FactProtocolEntry) entry;
 				if (fpe.getSolvingMethodClassName().equals(PSMethodUserSelected.class.getName())) {
-					if (object == kb.getManager().search(fpe.getTerminologyObjectName())) {
+					if (object.getName().equals(fpe.getTerminologyObjectName())) {
 						return new DefaultFinding(object, fpe.getValue(), entry.getDate());
 					}
 				}
@@ -101,7 +97,7 @@ public class SessionRecordWrapper implements TestCase {
 	}
 
 	@Override
-	public Collection<Check> getChecks(Date date) {
+	public Collection<Check> getChecks(Date date, KnowledgeBase kb) {
 		return Collections.emptyList();
 	}
 
@@ -110,8 +106,9 @@ public class SessionRecordWrapper implements TestCase {
 		return record.getCreationDate();
 	}
 
-	public Collection<String> check() {
-		Collection<String> errors = new LinkedList<String>();
+	@Override
+	public Collection<String> check(KnowledgeBase kb) {
+		Collection<String> errors = new HashSet<String>();
 		for (ProtocolEntry entry : record.getProtocol().getProtocolHistory()) {
 			if (entry instanceof FactProtocolEntry) {
 				FactProtocolEntry fpe = (FactProtocolEntry) entry;
@@ -119,24 +116,12 @@ public class SessionRecordWrapper implements TestCase {
 					TerminologyObject object = kb.getManager().search(
 							fpe.getTerminologyObjectName());
 					if (object == null) {
-						errors.add("TerminologyObject " + fpe.getTerminologyObjectName()
-								+ " is not contained in the KB.");
+						errors.add("TerminologyObject \"" + fpe.getTerminologyObjectName()
+								+ "\" is not contained in the KB.");
 					}
-					else if (object instanceof QuestionChoice
-							&& fpe.getValue() instanceof ChoiceValue) {
-						ChoiceValue cv = (ChoiceValue) fpe.getValue();
-						if (cv.getChoice((QuestionChoice) object) == null) {
-							errors.add("The question " + object.getName() + " has no choice "
-									+ cv.getAnswerChoiceID());
-						}
-					}
-					else if (object instanceof QuestionMC
-							&& fpe.getValue() instanceof MultipleChoiceValue) {
-						MultipleChoiceValue mcv = (MultipleChoiceValue) fpe.getValue();
-						if (mcv.asChoiceList((QuestionChoice) object).contains(null)) {
-							errors.add("The question " + object.getName()
-									+ " does not contain all choices of " + mcv.toString());
-						}
+					else {
+						Value value = fpe.getValue();
+						TestCaseUtils.checkValues(errors, object, value);
 					}
 				}
 			}

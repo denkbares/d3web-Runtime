@@ -20,9 +20,6 @@
 
 package de.d3web.core.manage;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -261,19 +258,12 @@ public final class KnowledgeBaseUtils {
 		}
 
 		// date questions
-		// HOTFIX 2010-09-09 Date questions currently only work with the
-		// dateformat below.
-		// TODO Need a better overall solution for date questions!
 		else if (question instanceof QuestionDate) {
 			try {
-				final DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-				return new DateValue(format.parse(valueString));
+				return DateValue.createDateValue(valueString);
 			}
-			catch (ParseException e) {
+			catch (IllegalArgumentException e) {
 				return null;
-				// throw new IllegalArgumentException(
-				// "The committed String is not a correctly formatted date: " +
-				// e.getMessage());
 			}
 		}
 		else {

@@ -51,12 +51,15 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 
 public final class TestPersistence {
@@ -84,7 +87,6 @@ public final class TestPersistence {
 	private static final String ANSWER = "Answer";
 	private static final String RATING = "Rating";
 
-	private static final String CREATIONDATE = "CreationDate";
 	private static final String NUMOFCASES = "NumberOfCases";
 	private static final String USEDSOLUTIONS = "UsedSolutions";
 	private static final String USEDFINDINGS = "UsedFindings";
@@ -235,8 +237,6 @@ public final class TestPersistence {
 		xmlsw.writeCharacters("\n");
 		xmlsw.writeStartElement(S_TEST_CASES);
 
-		xmlsw.writeAttribute(CREATIONDATE, new SimpleDateFormat(
-				"yyyy-MM-dd_HHmm").format(new Date()));
 		xmlsw.writeAttribute(NUMOFCASES, "" + cases.size());
 		xmlsw.writeAttribute(USEDSOLUTIONS, ""
 				+ computeUsedSolutions(cases).size() + "");
@@ -363,8 +363,14 @@ public final class TestPersistence {
 		else if (v instanceof NumValue) {
 			xmlsw.writeAttribute(ANSWER, ((NumValue) v).getValue().toString());
 		}
+		else if (v instanceof TextValue) {
+			xmlsw.writeAttribute(ANSWER, ((TextValue) v).getText());
+		}
 		else if (v instanceof Unknown) {
 			xmlsw.writeAttribute(ANSWER, "unknown");
+		}
+		else if (v instanceof DateValue) {
+			xmlsw.writeAttribute(ANSWER, DateValue.DATE_FORMAT.format(((DateValue) v).getDate()));
 		}
 	}
 
@@ -468,7 +474,7 @@ public final class TestPersistence {
 
 		if (q == null) {
 			Logger.getLogger(getClass().getName()).warning(
-						"Solution not found '" + questionText + "'.");
+						"Question not found '" + questionText + "'.");
 			return null;
 		}
 
@@ -493,7 +499,12 @@ public final class TestPersistence {
 		else if (q instanceof QuestionNum) {
 			f = new Finding((QuestionNum) q, answerText);
 		}
-		// TODO: auf andere Question Arten überprüfen
+		else if (q instanceof QuestionText) {
+			f = new Finding(q, new TextValue(answerText));
+		}
+		else if (q instanceof QuestionNum) {
+			f = new Finding(q, DateValue.createDateValue(answerText));
+		}
 
 		return f;
 	}

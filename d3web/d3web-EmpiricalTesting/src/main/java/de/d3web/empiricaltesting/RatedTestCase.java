@@ -20,8 +20,6 @@
 
 package de.d3web.empiricaltesting;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -232,14 +230,6 @@ public class RatedTestCase {
 	 */
 	public void setTestingDate(String date) {
 		lastTested = date;
-	}
-
-	/**
-	 * Sets TestingDate to now.
-	 */
-	public void setTestingDateNow() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmm");
-		lastTested = df.format(new Date()).toString();
 	}
 
 	public void inverseSortSolutions() {
