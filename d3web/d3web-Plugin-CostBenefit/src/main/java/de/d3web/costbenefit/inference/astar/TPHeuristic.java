@@ -30,14 +30,20 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondNot;
+import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Pair;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
@@ -61,7 +67,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * in the actual path, the conditions can be added to the condequal if there
 	 * are no conflicts (e.g. same termobjects in an CondOr and CondEqual)
 	 */
-	private Map<CondEqual, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<CondEqual, Pair<List<Condition>, Set<QContainer>>>();
+	private Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<Condition, Pair<List<Condition>, Set<QContainer>>>();
 
 	/**
 	 * Stores a List of Pairs of Conditions and QContainers establishing a state
@@ -105,15 +111,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				if (st == null) continue;
 				Condition activationCondition = st.getActivationCondition();
 				Collection<TerminologyObject> forbiddenTermObjects = getForbiddenObjects(activationCondition);
-				List<CondEqual> condEquals = getCondEquals(activationCondition);
+				List<Condition> conditions = getPrimitiveConditions(activationCondition);
 				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
-				List<CondEqual> conditionsToExamine = condEquals;
+				List<Condition> conditionsToExamine = conditions;
 				while (!conditionsToExamine.isEmpty()) {
 					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(session,
-							conditionsToExamine, condEquals,
+							conditionsToExamine, conditions,
 							activationCondition.getTerminalObjects(), forbiddenTermObjects);
 					additionalConditions.addAll(temppairs);
-					conditionsToExamine = getCondEquals(temppairs);
+					conditionsToExamine = getPrimitiveConditions(temppairs);
 				}
 				targetCache.put(qcon, additionalConditions);
 			}
@@ -121,21 +127,31 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
-	private List<CondEqual> getCondEquals(List<Pair<List<Condition>, Set<QContainer>>> temppairs) {
-		List<CondEqual> list = new LinkedList<CondEqual>();
+	private static List<Condition> getPrimitiveConditions(List<Pair<List<Condition>, Set<QContainer>>> temppairs) {
+		List<Condition> list = new LinkedList<Condition>();
 		for (Pair<List<Condition>, Set<QContainer>> p : temppairs) {
 			for (Condition cond : p.getA()) {
 				if (cond instanceof CondEqual) {
-					list.add((CondEqual) cond);
+					list.add(cond);
+				}
+				else if (cond instanceof CondOr) {
+					if (checkCondOr((CondOr) cond)) {
+						list.add(cond);
+					}
+				}
+				else if (cond instanceof CondNot) {
+					if (checkCondNot((CondNot) cond)) {
+						list.add(cond);
+					}
 				}
 			}
 		}
 		return list;
 	}
 
-	private List<Pair<List<Condition>, Set<QContainer>>> getPairs(Session session, List<CondEqual> targetConditions, List<CondEqual> originalCondEquals, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
+	private List<Pair<List<Condition>, Set<QContainer>>> getPairs(Session session, List<Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
 		List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
-		for (CondEqual cond : targetConditions) {
+		for (Condition cond : targetConditions) {
 			// if the condition is fullfilled continue, otherwise add
 			// it's preconditions to the list
 			try {
@@ -154,7 +170,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					CondEqual condEqual = (CondEqual) precondition;
 					// condequals must not be already contained and must
 					// not have a forbidden termobject
-					if (!originalCondEquals.contains(precondition)
+					if (!originalPrimitiveConditions.contains(precondition)
 							&& !forbiddenTermObjects.contains(condEqual.getQuestion())) {
 						checkedConditions.add(condEqual);
 					}
@@ -182,11 +198,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// collect all CondEqual preconditions of all statetransitions (CondAnd
 		// are splitted, other condition types can not be used to extend
 		// condition
-		Set<CondEqual> precondions = new HashSet<CondEqual>();
+		Set<Condition> precondions = new HashSet<Condition>();
 		for (StateTransition st : stateTransitions) {
-			precondions.addAll(getCondEquals(st.getActivationCondition()));
+			precondions.addAll(getPrimitiveConditions(st.getActivationCondition()));
 		}
-		for (CondEqual condEqual : precondions) {
+		for (Condition condition : precondions) {
 			// collect all conditions of state transitions establishing a state
 			// that enables
 			// execution of the condEqual
@@ -194,9 +210,9 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			Set<QContainer> transitionalQContainer = new HashSet<QContainer>();
 			for (StateTransition st : stateTransitions) {
 				for (ValueTransition vt : st.getPostTransitions()) {
-					if (vt.getQuestion() == condEqual.getQuestion()) {
+					if (vt.getQuestion() == condition.getTerminalObjects().iterator().next()) {
 						for (Value v : calculatePossibleValues(vt.getSetters())) {
-							if (condEqual.getValue().equals(v)) {
+							if (checkValue(condition, v)) {
 								neededConditions.add(getConds(st.getActivationCondition()));
 								transitionalQContainer.add(st.getQcontainer());
 								break;
@@ -206,14 +222,32 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				}
 			}
 			// put all common conditions in the cache
-			preconditionCache.put(condEqual, new Pair<List<Condition>, Set<QContainer>>(
+			preconditionCache.put(condition, new Pair<List<Condition>, Set<QContainer>>(
 					getCommonConditions(neededConditions),
 					transitionalQContainer));
 		}
 		log.info("General init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
-	private List<Condition> getCommonConditions(LinkedList<List<Condition>> neededConditions) {
+	private static boolean checkValue(Condition condition, Value v) {
+		if (condition instanceof CondEqual) {
+			return ((CondEqual) condition).getValue().equals(v);
+		}
+		else if (condition instanceof CondOr && (v instanceof ChoiceValue)) {
+			List<ChoiceID> choiceIDs = getChoiceIDs((CondOr) condition);
+			ChoiceValue cv = (ChoiceValue) v;
+			return choiceIDs.contains(cv.getChoiceID());
+		}
+		else if (condition instanceof CondNot && (v instanceof ChoiceValue)) {
+			ChoiceValue cv = (ChoiceValue) v;
+			CondNot condNot = (CondNot) condition;
+			CondEqual condEqual = (CondEqual) condNot.getTerms().get(0);
+			return (cv.getChoiceID() != ((ChoiceValue) condEqual.getValue()).getChoiceID());
+		}
+		return false;
+	}
+
+	private static List<Condition> getCommonConditions(LinkedList<List<Condition>> neededConditions) {
 		// take the first list and check if all other lists contain it's
 		// conditions
 		List<Condition> first = neededConditions.poll();
@@ -232,21 +266,90 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return commonConditions;
 	}
 
-	private List<CondEqual> getCondEquals(Condition cond) {
-		List<CondEqual> conds = new LinkedList<CondEqual>();
+	private static List<Condition> getPrimitiveConditions(Condition cond) {
+		List<Condition> conds = new LinkedList<Condition>();
 		if (cond instanceof CondEqual) {
-			conds.add((CondEqual) cond);
+			conds.add(cond);
+		}
+		else if (cond instanceof CondOr) {
+			CondOr condOr = (CondOr) cond;
+			if (checkCondOr(condOr)) {
+				conds.add(condOr);
+			}
+		}
+		else if (cond instanceof CondNot) {
+			CondNot condNot = (CondNot) cond;
+			if (checkCondNot(condNot)) {
+				conds.add(condNot);
+			}
 		}
 		else if (cond instanceof CondAnd) {
 			CondAnd condAnd = (CondAnd) cond;
 			for (Condition c : condAnd.getTerms()) {
-				conds.addAll(getCondEquals(c));
+				conds.addAll(getPrimitiveConditions(c));
 			}
 		}
 		return conds;
 	}
 
-	private List<Condition> getConds(Condition cond) {
+	/**
+	 * Checks if all terms of the specified CondOr are {@link CondEqual}s of
+	 * QuestionOC
+	 * 
+	 * @created 22.03.2012
+	 */
+	private static boolean checkCondOr(CondOr condOr) {
+		Question question = null;
+		boolean accept = true;
+		for (Condition c : condOr.getTerms()) {
+			if (!(c instanceof CondEqual)) {
+				accept = false;
+				break;
+			}
+			CondEqual condEqual = (CondEqual) c;
+			if (question == null) {
+				question = condEqual.getQuestion();
+			}
+			else {
+				if (question != condEqual.getQuestion()) {
+					accept = false;
+					break;
+				}
+			}
+			if (!(condEqual.getQuestion() instanceof QuestionOC && condEqual.getValue() instanceof ChoiceValue)) {
+				accept = false;
+				break;
+			}
+		}
+		return accept;
+	}
+
+	/**
+	 * Checks if the specifid {@link CondNot} contains only one CondEqual of a
+	 * ChoiceValue
+	 * 
+	 * @created 22.03.2012
+	 */
+	private static boolean checkCondNot(CondNot condNot) {
+		Condition negatedCondition = condNot.getTerms().get(0);
+		if (negatedCondition instanceof CondEqual) {
+			CondEqual condEqual = (CondEqual) negatedCondition;
+			return (condEqual.getValue() instanceof ChoiceValue);
+		}
+		return false;
+	}
+
+	private static List<ChoiceID> getChoiceIDs(CondOr condOr) {
+		List<ChoiceID> choices = new LinkedList<ChoiceID>();
+		for (Condition c : condOr.getTerms()) {
+			CondEqual condEqual = (CondEqual) c;
+			ChoiceValue cv = (ChoiceValue) condEqual.getValue();
+			choices.add(cv.getChoiceID());
+		}
+		return choices;
+	}
+
+	private static List<Condition> getConds(Condition cond) {
 		List<Condition> conds = new LinkedList<Condition>();
 		if (cond instanceof CondAnd) {
 			CondAnd condAnd = (CondAnd) cond;
@@ -284,8 +387,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				if (additionalCondition instanceof CondEqual) {
 					conditionsToUse.add(additionalCondition);
 				}
+			}
+			for (Condition additionalCondition : conditions) {
 				// the term objects of the other conditions must be disjunct
-				else {
+				if (!(additionalCondition instanceof CondEqual)) {
 					boolean disjunct = true;
 					for (Condition reference : conditions) {
 						if (reference != additionalCondition) {
