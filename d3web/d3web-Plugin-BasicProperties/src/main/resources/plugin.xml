@@ -187,7 +187,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="abnormality">
 		<parameter id="name" value="abnormality" />
-		<parameter id="description" value="Represents the abnormality of a symptom." />
+		<parameter id="description" value="Represents the abnormality of different values of a question. These can be parsed from strings like [choice:abnormality;]+" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
