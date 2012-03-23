@@ -22,12 +22,15 @@ package de.d3web.core.knowledge.terminology.info.abnormality;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.ChoiceValue;
 
 /**
  * Represents the abnormality of a symptom Creation date: (06.08.2001 15:51:58)
@@ -90,6 +93,38 @@ public class DefaultAbnormality implements Abnormality {
 			infoStore.addValue(BasicProperties.DEFAULT_ABNORMALITIY, abnormalitySlice);
 		}
 		abnormalitySlice.addValue(value, abnormality);
+	}
+
+	public static DefaultAbnormality valueOf(String s) {
+		DefaultAbnormality defaultAbnormality = new DefaultAbnormality();
+		String[] abnormalities = s.split(";");
+		for (String abnormalityString : abnormalities) {
+			if (abnormalityString.trim().isEmpty()) continue;
+			int lastColon = abnormalityString.lastIndexOf(":");
+			double abnormality = Double.parseDouble(abnormalityString.substring(lastColon + 1).replace(
+					",", ".").trim());
+			defaultAbnormality.addValue(
+					new ChoiceValue(new ChoiceID(abnormalityString.substring(0, lastColon).trim())),
+					abnormality);
+		}
+		return defaultAbnormality;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Entry<Value, Double> entry : values.entrySet()) {
+			sb.append(entry.getKey().toString());
+			sb.append(":");
+			sb.append(entry.getValue());
+			sb.append(";");
+		}
+		if (sb.length() > 0) {
+			return sb.substring(0, sb.length() - 1);
+		}
+		else {
+			return "";
+		}
 	}
 
 }
