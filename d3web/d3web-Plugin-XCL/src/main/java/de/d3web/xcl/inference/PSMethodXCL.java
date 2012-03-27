@@ -155,7 +155,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		if (abnormality == null || (!(answer instanceof Value))) return 1.0;
 
 		double max = 0;
-		// TODO: Explicit Handling for MC Answers! (joba, 2010-03-11)
+		// TODO: Explicit handling for MC Answers! (joba, 2010-03-11)
 		max = abnormality.getValue((Value) answer);
 		// for (Object a : answers) {
 		// max = Math.max(max, abnormality.getValue((Answer) a));

@@ -112,7 +112,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			Condition theCondition, Solution d, XCLRelationType type,
 			double weight) {
 
-		// Nullchecks
+		// null checks
 		if (theCondition == null || d == null) {
 			return null;
 		}
