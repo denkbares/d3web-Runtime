@@ -63,7 +63,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	private boolean considerOnlyRelevantRelations = true;
 	// TODO: store these information in the NamedObjects, also required for
 	// efficient propagation
-	private transient final Map<TerminologyObject, Set<XCLRelation>> coverage = new HashMap<TerminologyObject, Set<XCLRelation>>();
+	private transient final Map<TerminologyObject, Set<XCLRelation>> negativeCoverage = new HashMap<TerminologyObject, Set<XCLRelation>>();
+	private transient final Map<TerminologyObject, Set<XCLRelation>> positiveCoverage = new HashMap<TerminologyObject, Set<XCLRelation>>();
 
 	public XCLModel(Solution solution) {
 		this.solution = solution;
@@ -75,11 +76,19 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	public Set<TerminologyObject> getCoveredSymptoms() {
-		return coverage.keySet();
+		return positiveCoverage.keySet();
 	}
 
 	public Set<XCLRelation> getCoveringRelations(TerminologyObject no) {
-		return coverage.get(no);
+		return positiveCoverage.get(no);
+	}
+
+	public Set<TerminologyObject> getNegativeCoveredSymptoms() {
+		return negativeCoverage.keySet();
+	}
+
+	public Set<XCLRelation> getNegativeCoveringRelations(TerminologyObject no) {
+		return negativeCoverage.get(no);
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
@@ -163,16 +172,16 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			set.addModel(this);
 		}
 		if (type.equals(XCLRelationType.explains)) {
-			return addRelationTo(relation, relations);
+			return addPositiveRelationTo(relation, relations);
 		}
 		else if (type.equals(XCLRelationType.contradicted)) {
-			return addRelationTo(relation, contradictingRelations);
+			return addNegativeRelationTo(relation, contradictingRelations);
 		}
 		else if (type.equals(XCLRelationType.requires)) {
-			return addRelationTo(relation, necessaryRelations);
+			return addPositiveRelationTo(relation, necessaryRelations);
 		}
 		else if (type.equals(XCLRelationType.sufficiently)) {
-			return addRelationTo(relation, sufficientRelations);
+			return addPositiveRelationTo(relation, sufficientRelations);
 		}
 		else return false;
 	}
@@ -196,17 +205,34 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		sufficientRelations.remove(rel);
 	}
 
-	private boolean addRelationTo(XCLRelation relation,
+	private boolean addPositiveRelationTo(XCLRelation relation,
 			Collection<XCLRelation> theRelations) {
 
 		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
 		Collection<? extends TerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
 		for (TerminologyObject no : terminalObjects) {
-			Set<XCLRelation> set = coverage.get(no);
+			Set<XCLRelation> set = positiveCoverage.get(no);
 			if (set == null) {
 				set = new HashSet<XCLRelation>();
-				coverage.put(no, set);
+				positiveCoverage.put(no, set);
+			}
+			set.add(relation);
+		}
+		return true;
+	}
+
+	private boolean addNegativeRelationTo(XCLRelation relation,
+			Collection<XCLRelation> theRelations) {
+
+		if (theRelations.contains(relation)) return false;
+		theRelations.add(relation);
+		Collection<? extends TerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
+		for (TerminologyObject no : terminalObjects) {
+			Set<XCLRelation> set = negativeCoverage.get(no);
+			if (set == null) {
+				set = new HashSet<XCLRelation>();
+				negativeCoverage.put(no, set);
 			}
 			set.add(relation);
 		}

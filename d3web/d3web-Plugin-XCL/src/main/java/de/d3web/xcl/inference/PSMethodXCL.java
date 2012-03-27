@@ -38,6 +38,9 @@ import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.NonTerminalCondition;
+import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -45,6 +48,7 @@ import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
@@ -186,7 +190,13 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
 				if (coveringRelations != null) {
 					for (XCLRelation r : coveringRelations) {
-						extractOrs(set, r.getConditionedFinding());
+						extractOrs(set, r.getConditionedFinding(), false);
+					}
+				}
+				coveringRelations = model.getNegativeCoveringRelations(q);
+				if (coveringRelations != null) {
+					for (XCLRelation r : coveringRelations) {
+						extractOrs(set, r.getConditionedFinding(), true);
 					}
 				}
 				if (set.isEmpty()) set.add(null);
@@ -251,30 +261,44 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
-	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding) {
+	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding, boolean contra) {
 		if (conditionedFinding instanceof CondOr) {
 			for (Condition condition : ((CondOr) conditionedFinding).getTerms()) {
-				extractOrs(conds, condition);
+				extractOrs(conds, condition, contra);
 			}
 		}
 		else if ((conditionedFinding instanceof CondAnd)
 				&& ((CondAnd) conditionedFinding).getTerms().size() == 1) {
-			extractOrs(conds, ((CondAnd) conditionedFinding).getTerms().get(0));
+			extractOrs(conds, ((CondAnd) conditionedFinding).getTerms().get(0), contra);
 		}
 		// replace condequals of normal answers with null
 		else if (conditionedFinding instanceof CondEqual) {
 			CondEqual condEqual = (CondEqual) conditionedFinding;
-			double abnormality = condEqual.getQuestion().getInfoStore().getValue(
-					BasicProperties.DEFAULT_ABNORMALITIY).getValue(condEqual.getValue());
+			DefaultAbnormality abnormalityStore = condEqual.getQuestion().getInfoStore().getValue(
+					BasicProperties.DEFAULT_ABNORMALITIY);
+			double abnormality = Abnormality.A5;
+			if (abnormalityStore != null) {
+				abnormality = abnormalityStore.getValue(condEqual.getValue());
+			}
 			if (abnormality == Abnormality.A0) {
 				conds.add(null);
 			}
 			else {
-				conds.add(condEqual);
+				if (contra) {
+					conds.add(new ContraCondition(condEqual));
+				}
+				else {
+					conds.add(condEqual);
+				}
 			}
 		}
 		else {
-			conds.add(conditionedFinding);
+			if (contra) {
+				conds.add(new ContraCondition(conditionedFinding));
+			}
+			else {
+				conds.add(conditionedFinding);
+			}
 		}
 
 	}
@@ -301,6 +325,11 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;
 			for (TerminologyObject nob : model.getCoveredSymptoms()) {
+				if (nob instanceof Question) {
+					coveredSymptoms.add((Question) nob);
+				}
+			}
+			for (TerminologyObject nob : model.getNegativeCoveredSymptoms()) {
 				if (nob instanceof Question) {
 					coveredSymptoms.add((Question) nob);
 				}
@@ -360,5 +389,19 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	public double getPriority() {
 		// default priority
 		return 5;
+	}
+
+	private static class ContraCondition extends NonTerminalCondition {
+
+		public ContraCondition(Condition condition) {
+			super(Arrays.asList(condition));
+		}
+
+		@Override
+		public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
+			// is not called
+			throw new IllegalAccessError();
+		}
+
 	}
 }
