@@ -280,12 +280,12 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			if (abnormalityStore != null) {
 				abnormality = abnormalityStore.getValue(condEqual.getValue());
 			}
-			if (abnormality == Abnormality.A0) {
-				conds.add(null);
+			if (contra) {
+				conds.add(new ContraCondition(condEqual));
 			}
 			else {
-				if (contra) {
-					conds.add(new ContraCondition(condEqual));
+				if (abnormality == Abnormality.A0) {
+					conds.add(null);
 				}
 				else {
 					conds.add(condEqual);
