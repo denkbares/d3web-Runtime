@@ -206,11 +206,11 @@ public class STCWrapper implements TestCase {
 					startDate = firstRTC.getTimeStamp();
 				}
 				else {
-					startDate = new Date();
+					startDate = new Date(0);
 				}
 			}
 			else {
-				startDate = new Date();
+				startDate = new Date(0);
 			}
 		}
 		return startDate;
