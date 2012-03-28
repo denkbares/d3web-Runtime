@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InterviewObject;
@@ -163,6 +164,10 @@ public class DecoratedSession implements Session {
 
 			@Override
 			public void commitPropagation() {
+			}
+
+			@Override
+			public void addListener(PropagationListener listener) {
 			}
 		};
 	}

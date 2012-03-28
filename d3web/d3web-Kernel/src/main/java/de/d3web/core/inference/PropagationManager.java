@@ -168,4 +168,12 @@ public interface PropagationManager {
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
 	void propagate(ValueObject object, Value oldValue, PSMethod psMethod);
+
+	/**
+	 * Adds a {@link PropagationListener} to the PropagationManager
+	 * 
+	 * @created 27.03.2012
+	 * @param listener
+	 */
+	void addListener(PropagationListener listener);
 }

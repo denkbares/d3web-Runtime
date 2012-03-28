@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,8 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 public class DefaultPropagationManager implements PropagationManager {
+
+	private Collection<PropagationListener> listeners = new LinkedList<PropagationListener>();
 
 	private class PSMethodHandler {
 
@@ -82,25 +85,8 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 
 		public void propagate() {
-
-			Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
-					propagationEntries.size());
-			for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
-				ValueObject object = change.getKey();
-				Value oldValue = change.getValue();
-				Value value = session.getBlackboard().getValue(object);
-				PropagationEntry entry = new PropagationEntry(object, oldValue, value);
-				entries.add(entry);
-			}
-			for (InterviewObject object : interviewOrder) {
-				Value oldValue = interviewPropagationEntries.get(object);
-				Value value = session.getBlackboard().getIndication(object);
-				PropagationEntry entry = new PropagationEntry(object, oldValue, value);
-				entry.setStrategic(true);
-				entries.add(entry);
-			}
-			propagationEntries.clear();
-			interviewPropagationEntries.clear();
+			Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
+					interviewPropagationEntries, interviewOrder);
 			interviewOrder.clear();
 
 			try {
@@ -184,6 +170,9 @@ public class DefaultPropagationManager implements PropagationManager {
 		if (this.recursiveCounter == 1) {
 			this.propagationTime = time;
 			initHandlers();
+			for (PropagationListener listener : listeners) {
+				listener.propagationStarted();
+			}
 		}
 	}
 
@@ -230,6 +219,9 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * all changes.
 	 */
 	private void distribute() {
+		boolean postpropagate = false;
+		Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
+		Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
 
 		while (true) {
 			PSMethodHandler firstHandler = null;
@@ -239,6 +231,15 @@ public class DefaultPropagationManager implements PropagationManager {
 
 			// if no such handler exists, start post propagation
 			if (firstHandler == null) {
+				if (!postpropagate) {
+					postpropagate = true;
+					Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
+							interviewPropagationEntries,
+							interviewPropagationEntries.keySet());
+					for (PropagationListener listener : listeners) {
+						listener.postPropagationStarted(entries);
+					}
+				}
 				for (PSMethodHandler handler : this.psHandlers) {
 					if (handler.getPSMethod() instanceof PostHookablePSMethod) {
 						((PostHookablePSMethod) handler.getPSMethod()).postPropagate(session);
@@ -247,10 +248,43 @@ public class DefaultPropagationManager implements PropagationManager {
 				firstHandler = findNextHandler();
 				if (firstHandler == null) break;
 			}
-
+			for (Entry<ValueObject, Value> entry : firstHandler.propagationEntries.entrySet()) {
+				propagationEntries.put(entry.getKey(), entry.getValue());
+			}
+			for (Entry<InterviewObject, Value> entry : firstHandler.interviewPropagationEntries.entrySet()) {
+				interviewPropagationEntries.put(entry.getKey(), entry.getValue());
+			}
 			// otherwise continue with this handler
 			firstHandler.propagate();
 		}
+		Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
+				interviewPropagationEntries,
+				interviewPropagationEntries.keySet());
+		for (PropagationListener listener : listeners) {
+			listener.propagationFinished(entries);
+		}
+	}
+
+	private Collection<PropagationEntry> convertMapsToEntries(Map<ValueObject, Value> propagationEntries, Map<InterviewObject, Value> interviewPropagationEntries, Collection<InterviewObject> interviewObjectOrder) {
+		Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
+				propagationEntries.size());
+		for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
+			ValueObject object = change.getKey();
+			Value oldValue = change.getValue();
+			Value value = session.getBlackboard().getValue(object);
+			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+			entries.add(entry);
+		}
+		for (InterviewObject object : interviewObjectOrder) {
+			Value oldValue = interviewPropagationEntries.get(object);
+			Value value = session.getBlackboard().getIndication(object);
+			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+			entry.setStrategic(true);
+			entries.add(entry);
+		}
+		propagationEntries.clear();
+		interviewPropagationEntries.clear();
+		return entries;
 	}
 
 	/**
@@ -272,7 +306,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * Propagates a change value of an object through the different PSMethods.
 	 * <p>
 	 * This method may cause other value propagations and therefore may be
-	 * called recursevely. It is called after the value has been updated in the
+	 * called recursively. It is called after the value has been updated in the
 	 * case. Thus the case already contains the new value.
 	 * <p>
 	 * <b>Do not call this method directly! It will be called by the case to
@@ -354,6 +388,11 @@ public class DefaultPropagationManager implements PropagationManager {
 			// and commit the propagation frame
 			commitPropagation();
 		}
+	}
+
+	@Override
+	public void addListener(PropagationListener listener) {
+		listeners.add(listener);
 	}
 
 }
