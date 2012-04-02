@@ -53,7 +53,7 @@ public class NodeActiveCondition implements Condition {
 
 		// TODO ATM this is only necessary for exit nodes
 		// But this type of condition per se allows to check for every node
-		EndNode exitNode = DiaFluxUtils.findExitNode(session, flowName, nodeName);
+		EndNode exitNode = DiaFluxUtils.findExitNode(session.getKnowledgeBase(), flowName, nodeName);
 
 		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
 

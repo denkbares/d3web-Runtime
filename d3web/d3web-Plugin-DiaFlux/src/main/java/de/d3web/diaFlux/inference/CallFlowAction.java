@@ -48,7 +48,8 @@ public class CallFlowAction extends PSAction {
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 
-		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
+		StartNode startNode = DiaFluxUtils.findStartNode(session.getKnowledgeBase(), flowName,
+				startNodeName);
 
 		if (startNode == null) {
 			Logger.getLogger(CallFlowAction.class.getName()).severe(
@@ -64,7 +65,8 @@ public class CallFlowAction extends PSAction {
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
 
-		StartNode startNode = DiaFluxUtils.findStartNode(session, flowName, startNodeName);
+		StartNode startNode = DiaFluxUtils.findStartNode(session.getKnowledgeBase(), flowName,
+				startNodeName);
 
 		if (startNode == null) {
 			Logger.getLogger(CallFlowAction.class.getName()).severe(
