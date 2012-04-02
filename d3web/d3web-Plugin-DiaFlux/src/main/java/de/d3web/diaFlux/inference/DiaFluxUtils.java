@@ -20,6 +20,7 @@
 
 package de.d3web.diaFlux.inference;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
@@ -60,10 +62,9 @@ public final class DiaFluxUtils {
 	}
 
 	public static FlowSet getFlowSet(Session session) {
-
 		return getFlowSet(session.getKnowledgeBase());
-
 	}
+
 
 	public static boolean isFlowCase(Session session) {
 
@@ -77,7 +78,7 @@ public final class DiaFluxUtils {
 	}
 
 	public static DiaFluxCaseObject getDiaFluxCaseObject(Session session) {
-		return (DiaFluxCaseObject) session.getSessionObject(session.getPSMethodInstance(FluxSolver.class));
+		return session.getSessionObject(session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
@@ -85,23 +86,22 @@ public final class DiaFluxUtils {
 
 		for (Flow flow : getFlowSet(base)) {
 			if (flow.isAutostart()) {
-
 				result.addAll(flow.getStartNodes());
-
 			}
-
 		}
 
 		return result;
 
 	}
 
-	public static Node findNode(Session session, String flowName, String nodeName) {
-		FlowSet flowSet = getFlowSet(session);
+
+	public static Flow findFlow(KnowledgeBase kb, String flowName) {
+		FlowSet flowSet = getFlowSet(kb);
 
 		if (flowSet == null) {
 			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
 					("No Flowcharts found in kb."));
+			return null;
 		}
 
 		Flow subflow = flowSet.get(flowName);
@@ -111,92 +111,72 @@ public final class DiaFluxUtils {
 					("Flowchart '" + flowName + "' not found."));
 			return null;
 		}
+		return subflow;
+	}
 
-		List<Node> startNodes = subflow.getNodes();
+	private static <T extends Node> T findNode(List<T> nodes, String nodeName) {
 
-		for (Node node : startNodes) {
+		for (T node : nodes) {
 			if (node.getName().equalsIgnoreCase(nodeName)) {
 				return node;
-
 			}
 		}
 
 		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("Node '" + nodeName + "' of flow '" + flowName + "' not found."));
+				("Node '" + nodeName + "' not found."));
 		return null;
 
+	}
+
+	public static StartNode findStartNode(KnowledgeBase kb, String flowName, String startNodeName) {
+
+		Flow flow = findFlow(kb, flowName);
+		List<StartNode> startNodes = flow.getStartNodes();
+		return findNode(startNodes, startNodeName);
+
+	}
+
+	public static EndNode findExitNode(KnowledgeBase kb, String flowName, String endNodeName) {
+
+		Flow flow = findFlow(kb, flowName);
+		List<EndNode> exitNodes = flow.getExitNodes();
+		return findNode(exitNodes, endNodeName);
+	}
+
+	public static StartNode getCalledStartNode(KnowledgeBase kb, ComposedNode composedNode) {
+		return findStartNode(kb, composedNode.getCalledFlowName(),
+				composedNode.getCalledStartNodeName());
+	}
+	/**
+	 * Returns the {@link Flow} that is called by composedNode
+	 * 
+	 * @created 08.02.2012
+	 */
+	public static Flow getCalledFlow(KnowledgeBase kb, ComposedNode composedNode) {
+		return getCalledStartNode(kb, composedNode).getFlow();
 	}
 
 	/**
-	 * returns the StartNode that is called by the supplied action
+	 * Returns all {@link ComposedNode}s, that call the supplied {@link Flow}.
+	 * 
+	 * @created 15.03.2012
+	 * @param kb
+	 * @param flow
+	 * @return a List containing all the ComposedNodes
 	 */
-	// TODO Cleanup
-	public static StartNode findStartNode(Session session, String flowName, String startNodeName) {
+	public static List<ComposedNode> getCallingNodes(KnowledgeBase kb, Flow calledFlow) {
+		List<ComposedNode> result = new LinkedList<ComposedNode>();
 
-		FlowSet flowSet = getFlowSet(session);
+		for (Flow flow : getFlowSet(kb)) {
+			Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
 
-		if (flowSet == null) {
-			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("No Flowcharts found in kb."));
-		}
-
-		Flow subflow = flowSet.get(flowName);
-
-		if (subflow == null) {
-			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("Flowchart '" + flowName + "' not found."));
-			return null;
-		}
-
-		List<StartNode> startNodes = subflow.getStartNodes();
-
-		for (StartNode node : startNodes) {
-			if (node.getName().equalsIgnoreCase(startNodeName)) {
-				return node;
-
+			for (ComposedNode composedNode : composedNodes) {
+				if (getCalledFlow(kb, composedNode) == calledFlow) {
+					result.add(composedNode);
+				}
 			}
 		}
 
-		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("Startnode '" + startNodeName + "' of flow '" + flowName + "' not found."));
-		return null;
-
+		return result;
 	}
-
-	/**
-	 * returns the StartNode that is called by the supplied action
-	 */
-	// TODO Cleanup
-	public static EndNode findExitNode(Session session, String flowName, String startNodeName) {
-
-		FlowSet flowSet = getFlowSet(session);
-
-		if (flowSet == null) {
-			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("No Flowcharts found in kb."));
-		}
-
-		Flow subflow = flowSet.get(flowName);
-
-		if (subflow == null) {
-			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("Flowchart '" + flowName + "' not found."));
-			return null;
-		}
-
-		List<EndNode> exitNodes = subflow.getExitNodes();
-
-		for (EndNode node : exitNodes) {
-			if (node.getName().equalsIgnoreCase(startNodeName)) {
-				return node;
-
-			}
-		}
-
-		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("Exitnode '" + startNodeName + "' of flow '" + flowName + "' not found."));
-		return null;
-
-	}
-
 }
