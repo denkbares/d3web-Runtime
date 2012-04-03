@@ -286,7 +286,7 @@ public class KnowledgeBase implements NamedObject {
 	 * @date 16.03.2011
 	 */
 	public void removeResouce(Resource resource) {
-		this.resouces.add(resource);
+		this.resouces.remove(resource);
 	}
 
 	/**
