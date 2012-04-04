@@ -29,7 +29,7 @@ import java.util.Collection;
  */
 public interface PropagationListener {
 
-	void propagationStarted();
+	void propagationStarted(Collection<PropagationEntry> entries);
 
 	void postPropagationStarted(Collection<PropagationEntry> entries);
 

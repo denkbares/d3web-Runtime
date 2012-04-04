@@ -61,7 +61,7 @@ public class PropagationListenerTest {
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(q1, new NumValue(5.0)));
 		Assert.assertEquals(2, listener.entries.size());
-		Assert.assertEquals(0, listener.postpropagationEntries.size());
+		Assert.assertEquals(2, listener.postpropagationEntries.size());
 		for (PropagationEntry entry : listener.entries) {
 			if (entry.getObject() == q1) {
 				Assert.assertEquals(new NumValue(5.0), entry.getNewValue());
@@ -81,7 +81,7 @@ public class PropagationListenerTest {
 		private Collection<PropagationEntry> postpropagationEntries = new LinkedList<PropagationEntry>();
 
 		@Override
-		public void propagationStarted() {
+		public void propagationStarted(Collection<PropagationEntry> entries) {
 		}
 
 		@Override

@@ -23,6 +23,7 @@ package de.d3web.core.inference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +40,18 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	private Collection<PropagationListener> listeners = new LinkedList<PropagationListener>();
 
+	private final Map<ValueObject, Value> postPropagationEntries = new HashMap<ValueObject, Value>();
+	private final Map<InterviewObject, Value> postInterviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
+
+	private final Map<ValueObject, Value> globalPropagationEntries = new HashMap<ValueObject, Value>();
+	private final Map<InterviewObject, Value> globalInterviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
+
 	private class PSMethodHandler {
 
 		private boolean hasPropagated;
 		private final PSMethod psMethod;
 		private final Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
-		private final Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
-		private final List<InterviewObject> interviewOrder = new LinkedList<InterviewObject>();
+		private final Map<InterviewObject, Value> interviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
 
 		public PSMethodHandler(PSMethod psMethod) {
 			this.psMethod = psMethod;
@@ -64,7 +70,6 @@ public class DefaultPropagationManager implements PropagationManager {
 		public void addInterviewPropagationEntry(InterviewObject key, Value oldValue) {
 			if (!interviewPropagationEntries.containsKey(key)) {
 				interviewPropagationEntries.put(key, oldValue);
-				interviewOrder.add(key);
 			}
 		}
 
@@ -86,8 +91,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 		public void propagate() {
 			Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
-					interviewPropagationEntries, interviewOrder);
-			interviewOrder.clear();
+					interviewPropagationEntries, true);
 
 			try {
 				// propagate the changes, using the new interface
@@ -170,9 +174,6 @@ public class DefaultPropagationManager implements PropagationManager {
 		if (this.recursiveCounter == 1) {
 			this.propagationTime = time;
 			initHandlers();
-			for (PropagationListener listener : listeners) {
-				listener.propagationStarted();
-			}
 		}
 	}
 
@@ -219,9 +220,13 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * all changes.
 	 */
 	private void distribute() {
-		boolean postpropagate = false;
-		Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
-		Map<InterviewObject, Value> interviewPropagationEntries = new HashMap<InterviewObject, Value>();
+		// inform listener about starting entries
+		Collection<PropagationEntry> startingEntries = convertMapsToEntries(
+				globalPropagationEntries,
+				globalInterviewPropagationEntries, false);
+		for (PropagationListener listener : listeners) {
+			listener.propagationStarted(startingEntries);
+		}
 
 		while (true) {
 			PSMethodHandler firstHandler = null;
@@ -231,14 +236,12 @@ public class DefaultPropagationManager implements PropagationManager {
 
 			// if no such handler exists, start post propagation
 			if (firstHandler == null) {
-				if (!postpropagate) {
-					postpropagate = true;
-					Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
-							interviewPropagationEntries,
-							interviewPropagationEntries.keySet());
-					for (PropagationListener listener : listeners) {
-						listener.postPropagationStarted(entries);
-					}
+				// inform listener about post propagation entries
+				Collection<PropagationEntry> entries = convertMapsToEntries(
+						postPropagationEntries,
+						postInterviewPropagationEntries, true);
+				for (PropagationListener listener : listeners) {
+					listener.postPropagationStarted(entries);
 				}
 				for (PSMethodHandler handler : this.psHandlers) {
 					if (handler.getPSMethod() instanceof PostHookablePSMethod) {
@@ -248,26 +251,20 @@ public class DefaultPropagationManager implements PropagationManager {
 				firstHandler = findNextHandler();
 				if (firstHandler == null) break;
 			}
-			for (Entry<ValueObject, Value> entry : firstHandler.propagationEntries.entrySet()) {
-				propagationEntries.put(entry.getKey(), entry.getValue());
-			}
-			for (Entry<InterviewObject, Value> entry : firstHandler.interviewPropagationEntries.entrySet()) {
-				interviewPropagationEntries.put(entry.getKey(), entry.getValue());
-			}
 			// otherwise continue with this handler
 			firstHandler.propagate();
 		}
-		Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
-				interviewPropagationEntries,
-				interviewPropagationEntries.keySet());
+		Collection<PropagationEntry> entries = convertMapsToEntries(
+				globalPropagationEntries,
+				globalInterviewPropagationEntries, true);
 		for (PropagationListener listener : listeners) {
 			listener.propagationFinished(entries);
 		}
 	}
 
-	private Collection<PropagationEntry> convertMapsToEntries(Map<ValueObject, Value> propagationEntries, Map<InterviewObject, Value> interviewPropagationEntries, Collection<InterviewObject> interviewObjectOrder) {
+	private Collection<PropagationEntry> convertMapsToEntries(Map<ValueObject, Value> propagationEntries, Map<InterviewObject, Value> interviewPropagationEntries, boolean clearEntries) {
 		Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
-				propagationEntries.size());
+				propagationEntries.size() + interviewPropagationEntries.size());
 		for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
 			ValueObject object = change.getKey();
 			Value oldValue = change.getValue();
@@ -275,15 +272,18 @@ public class DefaultPropagationManager implements PropagationManager {
 			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 			entries.add(entry);
 		}
-		for (InterviewObject object : interviewObjectOrder) {
+		for (Entry<InterviewObject, Value> change : interviewPropagationEntries.entrySet()) {
+			InterviewObject object = change.getKey();
 			Value oldValue = interviewPropagationEntries.get(object);
 			Value value = session.getBlackboard().getIndication(object);
 			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 			entry.setStrategic(true);
 			entries.add(entry);
 		}
-		propagationEntries.clear();
-		interviewPropagationEntries.clear();
+		if (clearEntries) {
+			propagationEntries.clear();
+			interviewPropagationEntries.clear();
+		}
 		return entries;
 	}
 
@@ -350,6 +350,12 @@ public class DefaultPropagationManager implements PropagationManager {
 					handler.addPropagationEntry(object, oldValue);
 				}
 			}
+			if (!postPropagationEntries.containsKey(object)) {
+				postPropagationEntries.put(object, oldValue);
+			}
+			if (!globalPropagationEntries.containsKey(object)) {
+				globalPropagationEntries.put(object, oldValue);
+			}
 		}
 		finally {
 			// and commit the propagation frame
@@ -382,6 +388,12 @@ public class DefaultPropagationManager implements PropagationManager {
 			// add the value change to each handler
 			for (PSMethodHandler handler : this.psHandlers) {
 				handler.addInterviewPropagationEntry(object, oldValue);
+			}
+			if (!postInterviewPropagationEntries.containsKey(object)) {
+				postInterviewPropagationEntries.put(object, oldValue);
+			}
+			if (!globalInterviewPropagationEntries.containsKey(object)) {
+				globalInterviewPropagationEntries.put(object, oldValue);
 			}
 		}
 		finally {
