@@ -180,10 +180,7 @@ public final class Property<T> {
 	 * @return the class of the data stored in this property
 	 */
 	public Class<T> getStoredClass() {
-		if (this.storedClass == null) {
-			throw new IllegalStateException(
-						"property " + name + " not initialized");
-		}
+		initStoredClass();
 		return storedClass;
 	}
 
