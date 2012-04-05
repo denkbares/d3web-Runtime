@@ -36,14 +36,14 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.NonTerminalCondition;
-import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -55,6 +55,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.xcl.DefaultScoreAlgorithm;
 import de.d3web.xcl.ScoreAlgorithm;
@@ -180,6 +182,23 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		LinkedList<TerminologyObject> tos = new LinkedList<TerminologyObject>();
 		tos.addAll(qasets);
 		flattenQASets(tos, questions);
+		Map<Question, Set<Condition>> excludingQuestions = new HashMap<Question, Set<Condition>>();
+		for (Question q : questions) {
+			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
+					XCLContributedModelSet.KNOWLEDGE_KIND);
+			for (XCLModel model : knowledge.getModels()) {
+				for (XCLRelation relation : model.getContradictingRelations()) {
+					if (relation.getConditionedFinding().getTerminalObjects().contains(q)) {
+						Set<Condition> conditions = excludingQuestions.get(q);
+						if (conditions == null) {
+							conditions = new HashSet<Condition>();
+							excludingQuestions.put(q, conditions);
+						}
+						conditions.add(relation.getConditionedFinding());
+					}
+				}
+			}
+		}
 		float totalweight = 0;
 		for (Solution solution : solutions) {
 			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
@@ -190,16 +209,27 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
 				if (coveringRelations != null) {
 					for (XCLRelation r : coveringRelations) {
-						extractOrs(set, r.getConditionedFinding(), false);
+						extractOrs(set, r.getConditionedFinding());
 					}
 				}
 				coveringRelations = model.getNegativeCoveringRelations(q);
+				Set<Condition> conditions = excludingQuestions.get(q) == null
+						? new HashSet<Condition>()
+						: new HashSet<Condition>(excludingQuestions.get(q));
 				if (coveringRelations != null) {
 					for (XCLRelation r : coveringRelations) {
-						extractOrs(set, r.getConditionedFinding(), true);
+						extractOrs(set, new CondNot(r.getConditionedFinding()));
+						conditions.remove(r.getConditionedFinding());
 					}
 				}
-				if (set.isEmpty()) set.add(null);
+				if (set.isEmpty()) {
+					set.add(null);
+				}
+				// cover all conditions used in contrarelations of other
+				// XCLModels
+				for (Condition c : conditions) {
+					extractOrs(set, c);
+				}
 				conditionsForQuestions.add(set);
 			}
 
@@ -261,15 +291,53 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 	}
 
-	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding, boolean contra) {
+	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding) {
+		// if the condition is a condnot, try to replace it with condors or
+		// condands
+		if (conditionedFinding instanceof CondNot) {
+			CondNot condNot = (CondNot) conditionedFinding;
+			Condition subCondition = condNot.getTerms().get(0);
+			if (subCondition instanceof CondEqual) {
+				CondEqual condEqual = (CondEqual) subCondition;
+				Value value = condEqual.getValue();
+				if (condEqual.getQuestion() instanceof QuestionOC && value instanceof ChoiceValue) {
+					ChoiceValue cv = (ChoiceValue) value;
+					List<Condition> terms = new LinkedList<Condition>();
+					QuestionOC oc = (QuestionOC) condEqual.getQuestion();
+					for (Choice c : oc.getAllAlternatives()) {
+						if (!cv.getChoiceID().equals(new ChoiceID(c))) {
+							terms.add(new CondEqual(oc, new ChoiceValue(c)));
+						}
+					}
+					conditionedFinding = new CondOr(terms);
+				}
+			}
+			// use De Morgan
+			else if (subCondition instanceof CondAnd) {
+				CondAnd condAnd = (CondAnd) subCondition;
+				List<Condition> terms = new LinkedList<Condition>();
+				for (Condition c : condAnd.getTerms()) {
+					terms.add(new CondNot(c));
+				}
+				conditionedFinding = new CondOr(terms);
+			}
+			else if (subCondition instanceof CondOr) {
+				CondOr condOr = (CondOr) subCondition;
+				List<Condition> terms = new LinkedList<Condition>();
+				for (Condition c : condOr.getTerms()) {
+					terms.add(new CondNot(c));
+				}
+				conditionedFinding = new CondAnd(terms);
+			}
+		}
 		if (conditionedFinding instanceof CondOr) {
 			for (Condition condition : ((CondOr) conditionedFinding).getTerms()) {
-				extractOrs(conds, condition, contra);
+				extractOrs(conds, condition);
 			}
 		}
 		else if ((conditionedFinding instanceof CondAnd)
 				&& ((CondAnd) conditionedFinding).getTerms().size() == 1) {
-			extractOrs(conds, ((CondAnd) conditionedFinding).getTerms().get(0), contra);
+			extractOrs(conds, ((CondAnd) conditionedFinding).getTerms().get(0));
 		}
 		// replace condequals of normal answers with null
 		else if (conditionedFinding instanceof CondEqual) {
@@ -280,25 +348,15 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			if (abnormalityStore != null) {
 				abnormality = abnormalityStore.getValue(condEqual.getValue());
 			}
-			if (contra) {
-				conds.add(new ContraCondition(condEqual));
+			if (abnormality == Abnormality.A0) {
+				conds.add(null);
 			}
 			else {
-				if (abnormality == Abnormality.A0) {
-					conds.add(null);
-				}
-				else {
-					conds.add(condEqual);
-				}
+				conds.add(condEqual);
 			}
 		}
 		else {
-			if (contra) {
-				conds.add(new ContraCondition(conditionedFinding));
-			}
-			else {
-				conds.add(conditionedFinding);
-			}
+			conds.add(conditionedFinding);
 		}
 
 	}
@@ -391,17 +449,4 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return 5;
 	}
 
-	private static class ContraCondition extends NonTerminalCondition {
-
-		public ContraCondition(Condition condition) {
-			super(Arrays.asList(condition));
-		}
-
-		@Override
-		public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
-			// is not called
-			throw new IllegalAccessError();
-		}
-
-	}
 }
