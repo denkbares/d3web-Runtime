@@ -18,7 +18,7 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
@@ -33,9 +33,13 @@ import de.d3web.core.session.Session;
  */
 public final class NOOPAction extends PSAction {
 
-	public static final PSAction INSTANCE = new NOOPAction();
+	private final List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
 
-	private NOOPAction() {
+	public NOOPAction() {
+	}
+
+	public NOOPAction(TerminologyObject termObj) {
+		objects.add(termObj);
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public final class NOOPAction extends PSAction {
 
 	@Override
 	public List<? extends TerminologyObject> getBackwardObjects() {
-		return Collections.emptyList();
+		return objects;
 	}
 
 	@Override
@@ -53,6 +57,6 @@ public final class NOOPAction extends PSAction {
 
 	@Override
 	public String toString() {
-		return "NOOP";
+		return "NOOP" + objects;
 	}
 }

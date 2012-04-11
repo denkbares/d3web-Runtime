@@ -65,12 +65,10 @@ public class ComposedNode extends AbstractNode {
 		action.undo(session, run, session.getPSMethodInstance(FluxSolver.class));
 	}
 
-	// TODO: vb: add method getCalledFlow() -> Flow
 	public String getCalledFlowName() {
 		return action.getFlowName();
 	}
 
-	// TODO: vb: add method getCalledStartNode -> StartNode
 	public String getCalledStartNodeName() {
 		return action.getStartNodeName();
 	}

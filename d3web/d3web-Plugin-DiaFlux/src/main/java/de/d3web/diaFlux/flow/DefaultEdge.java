@@ -41,6 +41,10 @@ public class DefaultEdge implements Edge {
 		if (endNode == null) {
 			throw new IllegalArgumentException("endNode must not be null");
 		}
+		if (startNode.getFlow() != endNode.getFlow()) {
+			throw new IllegalArgumentException("Both nodes must be in the same flow.");
+
+		}
 		if (condition == null) {
 			throw new IllegalArgumentException("condition must not be null");
 		}
@@ -97,6 +101,11 @@ public class DefaultEdge implements Edge {
 	@Override
 	public Node getStartNode() {
 		return startNode;
+	}
+
+	@Override
+	public Flow getFlow() {
+		return startNode.getFlow();
 	}
 
 	@Override

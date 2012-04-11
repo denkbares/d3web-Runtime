@@ -39,7 +39,7 @@ public class NOOPActionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		return NOOPAction.INSTANCE;
+		return new NOOPAction();
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class NOOPActionHandler implements FragmentHandler {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object == NOOPAction.INSTANCE;
+		return object instanceof NOOPAction;
 	}
 
 }

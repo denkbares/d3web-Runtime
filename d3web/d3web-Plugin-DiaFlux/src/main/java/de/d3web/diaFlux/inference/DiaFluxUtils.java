@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
@@ -79,6 +80,32 @@ public final class DiaFluxUtils {
 
 	public static DiaFluxCaseObject getDiaFluxCaseObject(Session session) {
 		return session.getSessionObject(session.getPSMethodInstance(FluxSolver.class));
+	}
+
+	/**
+	 * checks if there is a connecting Path from the {@link Node} fromNode to
+	 * the {@link Node} toNode. This method does NOT do a "deep" search, it only
+	 * works for Nodes in the same flow.
+	 * 
+	 * @created 04.04.2012
+	 * @param fromNode
+	 * @param toNode
+	 * @return
+	 */
+	public static boolean areConnectedNodes(Node fromNode, Node toNode) {
+		if (fromNode.getFlow() != toNode.getFlow()) return false;
+		return areConnectedNodes(fromNode, toNode, new LinkedList<Edge>());
+	}
+
+	private static boolean areConnectedNodes(Node fromNode, Node toNode, Collection<Edge> activeEdges) {
+		if (fromNode == toNode) return true;
+		for (Edge edge : fromNode.getOutgoingEdges()) {
+			if (activeEdges.contains(edge)) continue;
+			activeEdges.add(edge);
+			if (areConnectedNodes(edge.getEndNode(), toNode, activeEdges)) return true;
+			activeEdges.remove(edge);
+		}
+		return false;
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
@@ -136,6 +163,10 @@ public final class DiaFluxUtils {
 
 	}
 
+	public static EndNode findExitNode(KnowledgeBase kb, NodeActiveCondition condition) {
+		return findExitNode(kb, condition.getFlowName(), condition.getNodeName());
+	}
+
 	public static EndNode findExitNode(KnowledgeBase kb, String flowName, String endNodeName) {
 
 		Flow flow = findFlow(kb, flowName);
@@ -179,4 +210,30 @@ public final class DiaFluxUtils {
 
 		return result;
 	}
+
+	/**
+	 * Returns all {@link ComposedNode}s, that call the supplied
+	 * {@link StartNode}.
+	 * 
+	 * @created 15.03.2012
+	 * @param kb
+	 * @param flow
+	 * @return a List containing all the ComposedNodes
+	 */
+	public static List<ComposedNode> getCallingNodes(KnowledgeBase kb, StartNode startNode) {
+		List<ComposedNode> result = new LinkedList<ComposedNode>();
+
+		for (Flow flow : getFlowSet(kb)) {
+			Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
+
+			for (ComposedNode composedNode : composedNodes) {
+				if (getCalledStartNode(kb, composedNode) == startNode) {
+					result.add(composedNode);
+				}
+			}
+		}
+
+		return result;
+	}
+
 }

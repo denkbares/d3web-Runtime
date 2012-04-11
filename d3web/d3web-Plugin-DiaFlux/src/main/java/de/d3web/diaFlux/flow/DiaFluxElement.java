@@ -31,4 +31,10 @@ public interface DiaFluxElement {
 	 */
 	String getID();
 
+	/**
+	 * @created 05.04.2012
+	 * @return s the containing flow of this element
+	 */
+	Flow getFlow();
+
 }
