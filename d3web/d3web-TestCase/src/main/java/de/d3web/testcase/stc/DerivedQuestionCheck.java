@@ -19,8 +19,10 @@
 package de.d3web.testcase.stc;
 
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.testcase.model.Check;
 
 /**
@@ -42,6 +44,11 @@ public class DerivedQuestionCheck implements Check {
 
 	@Override
 	public boolean check(Session session) {
+		if (value instanceof MultipleChoiceValue && question instanceof QuestionMC) {
+			MultipleChoiceValue currentValue = (MultipleChoiceValue) session.getBlackboard().getValue(
+					question);
+			return currentValue.contains(value);
+		}
 		return session.getBlackboard().getValue(question).equals(value);
 	}
 
