@@ -68,8 +68,9 @@ public class DStateConditionHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		CondDState cond = (CondDState) object;
 		String status = "";
-		if (cond.getStatus() != null) {
-			status = cond.getStatus().toString();
+		State ratingState = cond.getRatingState();
+		if (ratingState != null) {
+			status = ratingState.name();
 		}
 		return XMLUtil.writeCondition(doc, cond.getSolution(), "DState", status);
 	}
@@ -77,11 +78,8 @@ public class DStateConditionHandler implements FragmentHandler {
 	private static Rating getRating(String status) {
 
 		if (status.equalsIgnoreCase("established")) return new Rating(State.ESTABLISHED);
-
 		if (status.equalsIgnoreCase("excluded")) return new Rating(State.EXCLUDED);
-
 		if (status.equalsIgnoreCase("suggested")) return new Rating(State.SUGGESTED);
-
 		if (status.equalsIgnoreCase("unclear")) return new Rating(State.UNCLEAR);
 
 		return null;

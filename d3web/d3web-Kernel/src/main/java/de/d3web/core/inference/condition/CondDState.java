@@ -34,21 +34,45 @@ import de.d3web.core.session.Session;
 public class CondDState extends TerminalCondition {
 
 	private final Solution solution;
-	private final Rating solutionState;
+	private final Rating.State solutionState;
 
 	/**
-	 * Creates a new CondDState Expression:
+	 * Creates a new CondDState Expression for a specified solution and a
+	 * rating-state of a certain state. Please note that only the state of the
+	 * rating will be checked.
 	 * 
 	 * @param diagnose diagnosis to check
-	 * @param solutionState state of the diagnosis to check
-	 * @param context the context in which the diagnosis has the state
+	 * @param rating the rating to take the state from
 	 */
-	public CondDState(
-			Solution diagnosis,
-			Rating solutionState) {
-		super(diagnosis);
-		this.solution = diagnosis;
+	public CondDState(Solution solution, Rating rating) {
+		this(solution, rating.getState());
+	}
+
+	/**
+	 * Creates a new CondDState Expression for a specified solution and a state
+	 * to be checked.
+	 * <p>
+	 * Please note: if the rating is null, then this condition always returns
+	 * true for that solution.
+	 * 
+	 * @param solution diagnosis to check
+	 * @param solutionState state of the diagnosis to check
+	 */
+	public CondDState(Solution solution, Rating.State solutionState) {
+		super(solution);
+		this.solution = solution;
 		this.solutionState = solutionState;
+	}
+
+	/**
+	 * Creates a new CondDState Expression for a specified solution that always
+	 * is true.
+	 * 
+	 * @param solution diagnosis to check
+	 * @param solutionState state of the diagnosis to check
+	 */
+	public CondDState(Solution solution) {
+		this(solution, (Rating.State) null);
 	}
 
 	/**
@@ -60,14 +84,16 @@ public class CondDState extends TerminalCondition {
 	 */
 	@Override
 	public boolean eval(Session session) throws NoAnswerException {
-		return solutionState.equals(session.getBlackboard().getRating(solution));
+		// if we do not have a state this is always true
+		if (solutionState == null) return true;
+		return session.getBlackboard().getRating(solution).hasState(solutionState);
 	}
 
 	public Solution getSolution() {
 		return solution;
 	}
 
-	public Rating getStatus() {
+	public Rating.State getRatingState() {
 		return solutionState;
 	}
 
@@ -76,7 +102,7 @@ public class CondDState extends TerminalCondition {
 		return "\u2190 CondDState diagnosis: "
 				+ solution.getName()
 				+ " value: "
-				+ this.getStatus();
+				+ this.getRatingState();
 	}
 
 	@Override
@@ -95,12 +121,12 @@ public class CondDState extends TerminalCondition {
 			test = (otherCDS.getSolution() == null) && test;
 		}
 
-		if (this.getStatus() != null) {
-			test = this.getStatus().equals(otherCDS.getStatus())
+		if (this.getRatingState() != null) {
+			test = this.getRatingState().equals(otherCDS.getRatingState())
 					&& test;
 		}
 		else {
-			test = (otherCDS.getStatus() == null) && test;
+			test = (otherCDS.getRatingState() == null) && test;
 		}
 		return test;
 	}
@@ -114,8 +140,8 @@ public class CondDState extends TerminalCondition {
 			str += getSolution().toString();
 		}
 
-		if (getStatus() != null) {
-			str += getStatus().toString();
+		if (getRatingState() != null) {
+			str += getRatingState().toString();
 		}
 
 		if (getTerminalObjects() != null) {

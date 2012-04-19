@@ -353,7 +353,7 @@ public class ConditionMiscellaneousTest {
 		CondDState conditionDState = new CondDState(solution, ratingEstablished);
 
 		assertThat(conditionDState.getSolution(), is(equalTo(solution)));
-		assertThat(conditionDState.getStatus(), is(equalTo(ratingEstablished)));
+		assertThat(conditionDState.getRatingState(), is(equalTo(State.ESTABLISHED)));
 
 		// Test the toString() method
 		String string = conditionDState.toString();
@@ -361,7 +361,7 @@ public class ConditionMiscellaneousTest {
 		assertThat(string.isEmpty(), is(false));
 
 		// .equals() Method of CondDState is possibly buggy!!
-		Condition copiedCondition = new CondDState(solution, ratingEstablished);
+		Condition copiedCondition = new CondDState(solution, State.ESTABLISHED);
 		assertThat(conditionDState, is(equalTo(copiedCondition)));
 
 		assertThat(conditionDState.hashCode(), is(not(0)));
