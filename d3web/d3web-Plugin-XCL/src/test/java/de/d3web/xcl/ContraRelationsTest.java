@@ -29,6 +29,7 @@ import org.junit.Test;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -38,6 +39,7 @@ import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
+ * Tests contra relations in combination with xcl (sprintgroup)
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 27.03.2012
@@ -60,6 +62,16 @@ public class ContraRelationsTest {
 		assertPositive(session, xcl, q2);
 		assertPositive(session, xcl, q3);
 		assertZero(session, xcl, q4);
+		Solution solution4 = kb.getManager().searchSolution(
+				"Lösung4");
+		InferenceTrace inferenceTrace4 = solution4.getKnowledgeStore().getKnowledge(
+				XCLModel.KNOWLEDGE_KIND).getInferenceTrace(session);
+		Solution solution2 = kb.getManager().searchSolution(
+				"Lösung2");
+		InferenceTrace inferenceTrace2 = solution2.getKnowledgeStore().getKnowledge(
+				XCLModel.KNOWLEDGE_KIND).getInferenceTrace(session);
+		Assert.assertEquals(0.0, inferenceTrace4.getSupport());
+		Assert.assertEquals(0.0, inferenceTrace2.getSupport());
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(q1, new ChoiceValue(new ChoiceID("a1"))));
 		Assert.assertEquals(3, xcl.getUndiscriminatedSolutions(session).size());
@@ -67,24 +79,27 @@ public class ContraRelationsTest {
 		assertPositive(session, xcl, q2);
 		assertZero(session, xcl, q3);
 		assertZero(session, xcl, q4);
+		double supportBeforeFullfillingContraIndication4 = inferenceTrace4.getSupport();
+		Assert.assertTrue(supportBeforeFullfillingContraIndication4 > 0.0);
+		double supportBeforeFullfillingContraIndication2 = inferenceTrace2.getSupport();
+		Assert.assertTrue(supportBeforeFullfillingContraIndication2 > 0.0);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(q2, new ChoiceValue(new ChoiceID("a1"))));
 		Assert.assertEquals(2, xcl.getUndiscriminatedSolutions(session).size());
 		Assert.assertTrue(xcl.getUndiscriminatedSolutions(session).contains(
 				kb.getManager().searchSolution(
 						"Lösung1")));
+		Assert.assertEquals(supportBeforeFullfillingContraIndication4, inferenceTrace4.getSupport());
+		Assert.assertEquals(supportBeforeFullfillingContraIndication2, inferenceTrace2.getSupport());
 		Assert.assertTrue(xcl.getUndiscriminatedSolutions(session).contains(
-				kb.getManager().searchSolution(
-						"Lösung4")));
+				solution4));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(q2, new ChoiceValue(new ChoiceID("a2"))));
 		Assert.assertEquals(2, xcl.getUndiscriminatedSolutions(session).size());
 		Assert.assertTrue(xcl.getUndiscriminatedSolutions(session).contains(
-				kb.getManager().searchSolution(
-						"Lösung2")));
+				solution2));
 		Assert.assertTrue(xcl.getUndiscriminatedSolutions(session).contains(
-				kb.getManager().searchSolution(
-						"Lösung4")));
+				solution4));
 	}
 
 	private void assertZero(Session session, PSMethodXCL xcl, Question q4) {
