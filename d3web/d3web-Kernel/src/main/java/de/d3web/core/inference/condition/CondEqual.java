@@ -43,9 +43,14 @@ public class CondEqual extends CondQuestion {
 	 * 
 	 * @param question the question to check
 	 * @param value the value the question needs to be assigned to
+	 * @throws IllegalArgumentException if the Value is instance of
+	 *         {@link UndefinedValue}
 	 */
-	public CondEqual(Question question, Value value) {
+	public CondEqual(Question question, Value value) throws IllegalArgumentException {
 		super(question);
+		if (value instanceof UndefinedValue) {
+			throw new IllegalArgumentException("Value must not be UndefinedValue.");
+		}
 		this.conditionValue = value;
 	}
 
@@ -53,9 +58,6 @@ public class CondEqual extends CondQuestion {
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		Value value = checkAnswer(session);
-		if (this.conditionValue instanceof UndefinedValue) {
-			return (value instanceof UndefinedValue);
-		}
 		if (getQuestion() instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {
 				MultipleChoiceValue currentValue = (MultipleChoiceValue) value;
