@@ -18,33 +18,38 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.diaFlux.inference;
+package de.d3web.core.inference.condition;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
-import de.d3web.core.inference.condition.CondAnd;
-import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.TerminalCondition;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
 /**
+ * A terminal condition that always returns true. In addition a set of terminals
+ * can be specified to which objects the condition "is connected to" (e.g. on
+ * what changes a rule using that condition should be evaluated.
+ * <p>
+ * This class is not intended to be used directly by users. In contrast it is a
+ * utility condition to handle specific problem solver issues.
  * 
  * @author Reinhard Hatko
  * @created on: 09.10.2009
  */
 public final class ConditionTrue extends TerminalCondition {
 
-	public static final Condition INSTANCE = new CondAnd(new ArrayList<Condition>());
+	public static final Condition INSTANCE = new ConditionTrue();
 
-	private ConditionTrue() {
-		super(null);
+	public ConditionTrue(TerminologyObject... connectedObjects) {
+		super(connectedObjects);
+	}
+
+	public ConditionTrue(Collection<? extends TerminologyObject> connectedObjects) {
+		super(connectedObjects);
 	}
 
 	@Override
-	public boolean eval(Session theCase) throws NoAnswerException,
-			UnknownAnswerException {
+	public boolean eval(Session theCase) throws NoAnswerException, UnknownAnswerException {
 		return true;
 	}
 }

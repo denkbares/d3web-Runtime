@@ -205,7 +205,16 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="ConditionTrueFragmentHandler">
+		<parameter id="class"
+			value="de.d3web.core.io.fragments.conditions.ConditionTrueFragmentHandler" />
+		<parameter id="name" value="ConditionTrueFragmentHandler" />
+		<parameter id="description" value="FragementHandler for ConditionTrue" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+		
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="EqualConditionHandler">
 		<parameter id="class"

@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -54,7 +55,6 @@ import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
-import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.plugin.test.InitPluginManager;

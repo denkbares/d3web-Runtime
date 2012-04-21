@@ -33,6 +33,7 @@ import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QNumWrapper;
 import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondNumLessEqual;
+import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseUtils;
@@ -49,7 +50,6 @@ import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
-import de.d3web.diaFlux.inference.ConditionTrue;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.plugin.test.InitPluginManager;
 

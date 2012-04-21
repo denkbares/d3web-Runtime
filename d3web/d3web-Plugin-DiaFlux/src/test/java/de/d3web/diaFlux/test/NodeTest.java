@@ -30,13 +30,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.diaFlux.flow.AbstractNode;
 import de.d3web.diaFlux.flow.DefaultEdge;
 import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
-import de.d3web.diaFlux.inference.ConditionTrue;
 
 /**
  * 

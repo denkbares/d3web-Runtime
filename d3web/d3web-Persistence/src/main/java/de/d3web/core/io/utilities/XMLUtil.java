@@ -412,6 +412,28 @@ public final class XMLUtil {
 	}
 
 	/**
+	 * Filters all elements of a NodeList and returns them in a collection. The
+	 * list will only contain that elements of the NodeList that match the
+	 * specified node name. The name selection is case insensitive.
+	 * 
+	 * @param list Nodelist containing all types of nodes (text nodes etc.)
+	 * @param nodeName the name of the elements to be selected (case
+	 *        insensitive)
+	 * @return a list containing all elements from nodelist, but not containing
+	 *         other nodes such as text nodes etc.
+	 */
+	public static List<Element> getElementList(NodeList list, String nodeName) {
+		List<Element> col = new ArrayList<Element>();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node item = list.item(i);
+			if (item instanceof Element && item.getNodeName().equalsIgnoreCase(nodeName)) {
+				col.add((Element) item);
+			}
+		}
+		return col;
+	}
+
+	/**
 	 * Determines the value with the specified id or value for a Question
 	 * 
 	 * @param session the actual case

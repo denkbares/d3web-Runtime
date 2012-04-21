@@ -34,16 +34,26 @@ import de.d3web.core.knowledge.TerminologyObject;
  */
 public abstract class TerminalCondition implements Condition {
 
-	private final Collection<TerminologyObject> terminal = new ArrayList<TerminologyObject>(
-			1);
+	private final Collection<TerminologyObject> terminals = new ArrayList<TerminologyObject>(1);
 
 	/**
-	 * Creates a new terminal condition with the specified proposition.
+	 * Creates a new terminal condition with the specified depending objects.
 	 * 
-	 * @param conds the specified condition
+	 * @param terminals the object(s) the condition depends on.
 	 */
-	protected TerminalCondition(TerminologyObject idobject) {
-		terminal.add(idobject);
+	public TerminalCondition(TerminologyObject... terminals) {
+		for (TerminologyObject object : terminals) {
+			if (object != null) this.terminals.add(object);
+		}
+	}
+
+	/**
+	 * Creates a new terminal condition with the specified depending objects.
+	 * 
+	 * @param terminals the object(s) the condition depends on.
+	 */
+	public TerminalCondition(Collection<? extends TerminologyObject> terminals) {
+		this.terminals.addAll(terminals);
 	}
 
 	/**
@@ -54,34 +64,28 @@ public abstract class TerminalCondition implements Condition {
 	 */
 	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
-		return terminal;
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		else if ((other == null) || (getClass() != other.getClass())) {
-			return false;
-		}
-		else if (this.getTerminalObjects() != null &&
-				((TerminalCondition) other).getTerminalObjects() != null) {
-			return this.getTerminalObjects().containsAll(
-					((TerminalCondition) other).getTerminalObjects())
-							&& ((TerminalCondition) other).getTerminalObjects().containsAll(
-									this.getTerminalObjects());
-		}
-		else {
-			return (this.getTerminalObjects() == null)
-					&& (((TerminalCondition) other).getTerminalObjects() == null);
-		}
-
+		return terminals;
 	}
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((terminals == null) ? 0 : terminals.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		TerminalCondition other = (TerminalCondition) obj;
+		if (terminals == null) {
+			if (other.terminals != null) return false;
+		}
+		else if (!terminals.equals(other.terminals)) return false;
+		return true;
 	}
 
 }
