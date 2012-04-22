@@ -43,6 +43,7 @@ import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
 
@@ -118,6 +119,9 @@ public class TestCaseUtils {
 	public static void checkValues(Collection<String> errors, TerminologyObject object, Value value) {
 		if (value == null) {
 			errors.add("The question \"" + object.getName() + "\" has no valid value.");
+		}
+		else if (object instanceof Question && value instanceof Unknown) {
+			// this is ok, no error
 		}
 		else if (object instanceof QuestionOC) {
 			if (value instanceof ChoiceValue) {
