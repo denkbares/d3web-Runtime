@@ -20,9 +20,11 @@ package de.d3web.testcase.stc;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -60,9 +62,23 @@ public class STCWrapper implements TestCase {
 
 	private final SequentialTestCase stc;
 	private Date startDate;
+	private final Map<Date, List<Check>> additionalChecks = new HashMap<Date, List<Check>>();
 
 	public STCWrapper(SequentialTestCase stc) {
 		this.stc = stc;
+	}
+
+	public void addCheck(Date date, Check check) {
+		List<Check> checks = additionalChecks.get(date);
+		if (checks == null) {
+			checks = new LinkedList<Check>();
+			additionalChecks.put(date, checks);
+		}
+		checks.add(check);
+	}
+
+	public void addCheck(RatedTestCase rtc, Check check) {
+		addCheck(getDate(rtc), check);
 	}
 
 	@Override
@@ -98,11 +114,7 @@ public class STCWrapper implements TestCase {
 	public Collection<Finding> getFindings(Date date, KnowledgeBase kb) {
 		List<Finding> findings = new LinkedList<Finding>();
 		for (RatedTestCase rtc : stc.getCases()) {
-			Date timeStamp = rtc.getTimeStamp();
-			if (timeStamp == null) {
-				// create the timestamp based on the position in the list
-				timeStamp = new Date(startDate.getTime() + stc.getCases().indexOf(rtc) + 1);
-			}
+			Date timeStamp = getDate(rtc);
 			if (date.equals(timeStamp)) {
 				for (de.d3web.empiricaltesting.Finding f : rtc.getFindings()) {
 					Question question = f.getQuestion();
@@ -118,6 +130,24 @@ public class STCWrapper implements TestCase {
 			}
 		}
 		return findings;
+	}
+
+	/**
+	 * Gets the date of the rated test case to be evaluated at. If the rated
+	 * test case has no specified date itself, it will be calculated
+	 * appropriately.
+	 * 
+	 * @created 22.04.2012
+	 * @param rtc the rated test case to get the date for
+	 * @return the date of the rtc
+	 */
+	public Date getDate(RatedTestCase rtc) {
+		Date timeStamp = rtc.getTimeStamp();
+		if (timeStamp == null) {
+			// create the timestamp based on the position in the list
+			timeStamp = new Date(getStartDate().getTime() + stc.getCases().indexOf(rtc) + 1);
+		}
+		return timeStamp;
 	}
 
 	private QuestionValue repairValue(de.d3web.empiricaltesting.Finding f, Question question) {
@@ -162,12 +192,9 @@ public class STCWrapper implements TestCase {
 	@Override
 	public Collection<Check> getChecks(Date date, KnowledgeBase kb) {
 		List<Check> checks = new LinkedList<Check>();
+		// create checks based on stc standard behavior
 		for (RatedTestCase rtc : stc.getCases()) {
-			Date timeStamp = rtc.getTimeStamp();
-			if (timeStamp == null) {
-				// create the timestamp based on the position in the list
-				timeStamp = new Date(startDate.getTime() + stc.getCases().indexOf(rtc) + 1);
-			}
+			Date timeStamp = getDate(rtc);
 			if (date.equals(timeStamp)) {
 				for (RatedSolution f : rtc.getExpectedSolutions()) {
 					Solution solution = f.getSolution();
@@ -191,6 +218,12 @@ public class STCWrapper implements TestCase {
 				break;
 			}
 		}
+
+		// also add additional checks if available
+		List<Check> addedChecks = additionalChecks.get(date);
+		if (addedChecks != null) checks.addAll(addedChecks);
+
+		// retrun the common list of checks
 		return checks;
 	}
 
