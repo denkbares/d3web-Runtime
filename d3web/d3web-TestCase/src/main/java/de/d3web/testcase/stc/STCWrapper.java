@@ -145,9 +145,18 @@ public class STCWrapper implements TestCase {
 		Date timeStamp = rtc.getTimeStamp();
 		if (timeStamp == null) {
 			// create the timestamp based on the position in the list
-			timeStamp = new Date(getStartDate().getTime() + stc.getCases().indexOf(rtc) + 1);
+			timeStamp = new Date(getStartDate().getTime() + indexOf(rtc) + 1);
 		}
 		return timeStamp;
+	}
+
+	private int indexOf(RatedTestCase rtc) {
+		int index = 0;
+		for (RatedTestCase ratedTestCase : stc.getCases()) {
+			if (rtc == ratedTestCase) return index;
+			index++;
+		}
+		return -1;
 	}
 
 	private QuestionValue repairValue(de.d3web.empiricaltesting.Finding f, Question question) {
