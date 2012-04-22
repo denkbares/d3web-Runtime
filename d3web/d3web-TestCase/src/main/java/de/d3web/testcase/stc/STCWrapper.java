@@ -259,6 +259,11 @@ public class STCWrapper implements TestCase {
 	}
 
 	@Override
+	public String toString() {
+		return "SequentialTestCase(" + this.stc.getName() + ")";
+	}
+
+	@Override
 	public Collection<String> check(KnowledgeBase kb) {
 		Collection<String> errors = new HashSet<String>();
 		for (RatedTestCase rtc : stc.getCases()) {
