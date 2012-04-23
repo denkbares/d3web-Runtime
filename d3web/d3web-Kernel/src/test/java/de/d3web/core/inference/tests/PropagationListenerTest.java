@@ -55,9 +55,9 @@ public class PropagationListenerTest {
 		QuestionNum q1 = new QuestionNum(kb, "Q1");
 		QuestionNum q2 = new QuestionNum(kb, "Q2");
 		RuleFactory.createSetValueRule(q2, new FormulaNumber(10.0), new CondNumEqual(q1, 5.0));
-		Session session = SessionFactory.createSession(kb);
 		TestListener listener = new TestListener();
-		session.getPropagationManager().addListener(listener);
+		SessionFactory.addPropagationListener(listener);
+		Session session = SessionFactory.createSession(kb);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(q1, new NumValue(5.0)));
 		Assert.assertEquals(2, listener.entries.size());
