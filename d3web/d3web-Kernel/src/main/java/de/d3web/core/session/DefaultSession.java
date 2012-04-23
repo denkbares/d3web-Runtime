@@ -119,26 +119,7 @@ public class DefaultSession implements Session {
 				addUsedPSMethod(method);
 			}
 			addPlugedPSMethods(knowledgebase);
-
-			// after adding the ps methods, we init inside a propagation,
-			// because it may also
-			// add facts to the blackboard that require the start date of the
-			// case
-			PropagationManager propagationContoller = getPropagationManager();
-			propagationContoller.openPropagation(this.created.getTime());
-			try {
-				for (PSMethod method : this.usedPSMethods) {
-					method.init(this);
-				}
-			}
-			finally {
-				propagationContoller.commitPropagation();
-
-			}
 		}
-
-		// TODO: add knowlegde base id, name, version
-		// into the case header (dc markup?, properties?)
 
 	}
 
@@ -194,6 +175,23 @@ public class DefaultSession implements Session {
 	DefaultSession(String id, KnowledgeBase knowledgebase, FormStrategy formStrategy, Date creationDate) {
 		this(id, knowledgebase, creationDate);
 		getInterview().setFormStrategy(formStrategy);
+	}
+
+	void initPSMethods() {
+		// after adding the ps methods, we init inside a propagation,
+		// because it may also
+		// add facts to the blackboard that require the start date of the
+		// case
+		PropagationManager propagationContoller = getPropagationManager();
+		propagationContoller.openPropagation(this.created.getTime());
+		try {
+			for (PSMethod method : this.usedPSMethods) {
+				method.init(this);
+			}
+		}
+		finally {
+			propagationContoller.commitPropagation();
+		}
 	}
 
 	private void checkStateAndInsertPSM(KnowledgeBase kb, PSConfig psConfig) {

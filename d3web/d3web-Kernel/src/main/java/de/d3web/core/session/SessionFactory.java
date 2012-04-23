@@ -21,13 +21,16 @@
 package de.d3web.core.session;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
+import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
@@ -51,6 +54,8 @@ public final class SessionFactory {
 			PSMethodInit.getInstance(),
 			PSMethodInterview.getInstance()
 			);
+
+	private static final Collection<PropagationListener> propagationListeners = new LinkedList<PropagationListener>();
 
 	private SessionFactory() { // enforce noninstantiability
 	}
@@ -126,6 +131,35 @@ public final class SessionFactory {
 	public static synchronized DefaultSession createSession(String id,
 			KnowledgeBase knowledgeBase,
 			FormStrategy formStrategy, Date creationDate) {
-		return new DefaultSession(id, knowledgeBase, formStrategy, creationDate);
+		DefaultSession defaultSession = new DefaultSession(id, knowledgeBase, formStrategy,
+				creationDate);
+		for (PropagationListener propagationListener : propagationListeners) {
+			defaultSession.getPropagationManager().addListener(propagationListener);
+		}
+		defaultSession.initPSMethods();
+		return defaultSession;
+	}
+
+	/**
+	 * Adds a {@link PropagationListener} which will be added to each session
+	 * created by this factory before the initialization of the {@link PSMethod}
+	 * s
+	 * 
+	 * @created 23.04.2012
+	 * @param propagationListener {@link PropagationListener}
+	 */
+	public static void addPropagationListener(PropagationListener propagationListener) {
+		propagationListeners.add(propagationListener);
+	}
+
+	/**
+	 * Removes a {@link PropagationListener} from being added to each created
+	 * Session
+	 * 
+	 * @created 23.04.2012
+	 * @param propagationListener
+	 */
+	public static void removePropagationListener(PropagationListener propagationListener) {
+		propagationListeners.remove(propagationListener);
 	}
 }
