@@ -81,17 +81,17 @@ public class PropagationListenerTest {
 		private Collection<PropagationEntry> postpropagationEntries = new LinkedList<PropagationEntry>();
 
 		@Override
-		public void propagationStarted(Collection<PropagationEntry> entries) {
+		public void propagationStarted(Session session, Collection<PropagationEntry> entries) {
 		}
 
 		@Override
-		public void postPropagationStarted(Collection<PropagationEntry> entries) {
+		public void postPropagationStarted(Session session, Collection<PropagationEntry> entries) {
 			this.entries.addAll(entries);
 
 		}
 
 		@Override
-		public void propagationFinished(Collection<PropagationEntry> entries) {
+		public void propagationFinished(Session session, Collection<PropagationEntry> entries) {
 			this.postpropagationEntries.addAll(entries);
 		}
 

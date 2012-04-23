@@ -20,6 +20,8 @@ package de.d3web.core.inference;
 
 import java.util.Collection;
 
+import de.d3web.core.session.Session;
+
 /**
  * Interface for classes, which want to get notified about the different
  * propagation states
@@ -29,10 +31,10 @@ import java.util.Collection;
  */
 public interface PropagationListener {
 
-	void propagationStarted(Collection<PropagationEntry> entries);
+	void propagationStarted(Session session, Collection<PropagationEntry> entries);
 
-	void postPropagationStarted(Collection<PropagationEntry> entries);
+	void postPropagationStarted(Session session, Collection<PropagationEntry> entries);
 
-	void propagationFinished(Collection<PropagationEntry> entries);
+	void propagationFinished(Session session, Collection<PropagationEntry> entries);
 
 }

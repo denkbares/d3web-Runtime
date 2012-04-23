@@ -225,7 +225,7 @@ public class DefaultPropagationManager implements PropagationManager {
 				globalPropagationEntries,
 				globalInterviewPropagationEntries, false);
 		for (PropagationListener listener : listeners) {
-			listener.propagationStarted(startingEntries);
+			listener.propagationStarted(session, startingEntries);
 		}
 
 		while (true) {
@@ -241,7 +241,7 @@ public class DefaultPropagationManager implements PropagationManager {
 						postPropagationEntries,
 						postInterviewPropagationEntries, true);
 				for (PropagationListener listener : listeners) {
-					listener.postPropagationStarted(entries);
+					listener.postPropagationStarted(session, entries);
 				}
 				for (PSMethodHandler handler : this.psHandlers) {
 					if (handler.getPSMethod() instanceof PostHookablePSMethod) {
@@ -258,7 +258,7 @@ public class DefaultPropagationManager implements PropagationManager {
 				globalPropagationEntries,
 				globalInterviewPropagationEntries, true);
 		for (PropagationListener listener : listeners) {
-			listener.propagationFinished(entries);
+			listener.propagationFinished(session, entries);
 		}
 	}
 

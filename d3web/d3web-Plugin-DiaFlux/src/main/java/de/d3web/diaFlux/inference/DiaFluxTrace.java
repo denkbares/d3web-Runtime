@@ -70,12 +70,12 @@ public class DiaFluxTrace implements PropagationListener, SessionObject, Session
 	}
 
 	@Override
-	public void propagationStarted(Collection<PropagationEntry> entries) {
+	public void propagationStarted(Session session, Collection<PropagationEntry> entries) {
 
 	}
 
 	@Override
-	public void postPropagationStarted(Collection<PropagationEntry> entries) {
+	public void postPropagationStarted(Session session, Collection<PropagationEntry> entries) {
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 		// we clear the current trace if the last snapshot is out-dated.
 		// we do not if the propagation time is still the same (so we are in the
@@ -137,7 +137,7 @@ public class DiaFluxTrace implements PropagationListener, SessionObject, Session
 	}
 
 	@Override
-	public void propagationFinished(Collection<PropagationEntry> entries) {
+	public void propagationFinished(Session session, Collection<PropagationEntry> entries) {
 
 	}
 
