@@ -74,10 +74,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		if (!DiaFluxUtils.isFlowCase(session)) {
 			return;
 		}
-		// TODO move this elsewhere, eg when creating sessions in KnowWE
-		// this is just for displaying and not necessary for the PSM
-		session.getSessionObject(DiaFluxTrace.SOURCE);
-		session.getSessionObject(DiaFluxValueTrace.SOURCE);
 
 		Logger.getLogger(FluxSolver.class.getName()).fine(
 				"Initing FluxSolver with case: " + session);
