@@ -188,14 +188,16 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 					XCLContributedModelSet.KNOWLEDGE_KIND);
 			if (knowledge != null) {
 				for (XCLModel model : knowledge.getModels()) {
-					for (XCLRelation relation : model.getContradictingRelations()) {
-						if (relation.getConditionedFinding().getTerminalObjects().contains(q)) {
-							Set<Condition> conditions = excludingQuestions.get(q);
-							if (conditions == null) {
-								conditions = new HashSet<Condition>();
-								excludingQuestions.put(q, conditions);
+					if (solutions.contains(model.getSolution())) {
+						for (XCLRelation relation : model.getContradictingRelations()) {
+							if (relation.getConditionedFinding().getTerminalObjects().contains(q)) {
+								Set<Condition> conditions = excludingQuestions.get(q);
+								if (conditions == null) {
+									conditions = new HashSet<Condition>();
+									excludingQuestions.put(q, conditions);
+								}
+								conditions.add(relation.getConditionedFinding());
 							}
-							conditions.add(relation.getConditionedFinding());
 						}
 					}
 				}
