@@ -346,15 +346,7 @@ public final class TestPersistence {
 		Value v = f.getValue();
 		if (v instanceof MultipleChoiceValue) {
 			MultipleChoiceValue mcv = (MultipleChoiceValue) v;
-			String result = "[";
-			for (ChoiceID choice : mcv.getChoiceIDs()) {
-				result += '"' + choice.getText() + '"' + MC_ANSWER_SEPARATOR;
-			}
-
-			if (result.length() > 1) result = result.substring(0, result.length() - 1);
-
-			result += "]";
-			xmlsw.writeAttribute(ANSWER, result);
+			xmlsw.writeAttribute(ANSWER, ChoiceID.encodeChoiceIDs(mcv.getChoiceIDs()));
 		}
 		else if (v instanceof ChoiceValue) {
 			ChoiceID choice = ((ChoiceValue) v).getChoiceID();
@@ -486,12 +478,12 @@ public final class TestPersistence {
 			if (answerText.startsWith("[")) {
 				answerText = answerText.substring(1, answerText.length() - 1);
 				choices = toChoices(q, answerText.split(MC_ANSWER_SEPARATOR));
+				f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
 			} // legacy format
 			else {
-				choices = toChoices(q, answerText.split("#####"));
+				f = new Finding(q, new MultipleChoiceValue(ChoiceID.decodeChoiceIDs(answerText)));
 			}
 
-			f = new Finding(q, MultipleChoiceValue.fromChoices(choices));
 		}
 		else if (q instanceof QuestionChoice) {
 			f = new Finding((QuestionChoice) q, answerText);
