@@ -120,7 +120,7 @@ public class TestCaseUtils {
 		if (value == null) {
 			errors.add("The question \"" + object.getName() + "\" has no valid value.");
 		}
-		else if (object instanceof Question && value instanceof Unknown) {
+		else if (object instanceof Question && value instanceof Unknown) { // NOSONAR
 			// this is ok, no error
 		}
 		else if (object instanceof QuestionOC) {

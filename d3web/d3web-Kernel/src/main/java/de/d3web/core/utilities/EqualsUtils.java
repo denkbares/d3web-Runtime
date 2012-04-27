@@ -43,7 +43,7 @@ public final class EqualsUtils {
 	 * @param b
 	 * @return
 	 */
-	public static boolean equals(Object a, Object b) {
+	public static boolean equals(Object a, Object b) { // NOSONAR
 		// check for identity and make null-safe
 		if (a == b) return true;
 		if (a == null) return false;
