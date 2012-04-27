@@ -66,7 +66,6 @@ public final class DiaFluxUtils {
 		return getFlowSet(session.getKnowledgeBase());
 	}
 
-
 	public static boolean isFlowCase(Session session) {
 
 		if (session == null) {
@@ -121,7 +120,6 @@ public final class DiaFluxUtils {
 
 	}
 
-
 	public static Flow findFlow(KnowledgeBase kb, String flowName) {
 		FlowSet flowSet = getFlowSet(kb);
 
@@ -158,6 +156,7 @@ public final class DiaFluxUtils {
 	public static StartNode findStartNode(KnowledgeBase kb, String flowName, String startNodeName) {
 
 		Flow flow = findFlow(kb, flowName);
+		if (flow == null) return null;
 		List<StartNode> startNodes = flow.getStartNodes();
 		return findNode(startNodes, startNodeName);
 
@@ -170,6 +169,7 @@ public final class DiaFluxUtils {
 	public static EndNode findExitNode(KnowledgeBase kb, String flowName, String endNodeName) {
 
 		Flow flow = findFlow(kb, flowName);
+		if (flow == null) return null;
 		List<EndNode> exitNodes = flow.getExitNodes();
 		return findNode(exitNodes, endNodeName);
 	}
@@ -178,6 +178,7 @@ public final class DiaFluxUtils {
 		return findStartNode(kb, composedNode.getCalledFlowName(),
 				composedNode.getCalledStartNodeName());
 	}
+
 	/**
 	 * Returns the {@link Flow} that is called by composedNode
 	 * 

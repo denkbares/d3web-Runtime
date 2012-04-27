@@ -106,12 +106,13 @@ public class ComposedNode extends AbstractNode {
 				// only other composed nodes using the same flowcharts may
 				// be blocked
 				Flow flow = DiaFluxUtils.getFlowSet(session).get(action.getFlowName());
-				for (Node node : flow.getNodes()) {
-					if (startNodes.contains(node)) {
-						return false;
+				if (flow != null) {
+					for (Node node : flow.getNodes()) {
+						if (startNodes.contains(node)) {
+							return false;
+						}
 					}
 				}
-
 			}
 			return true;
 		}
