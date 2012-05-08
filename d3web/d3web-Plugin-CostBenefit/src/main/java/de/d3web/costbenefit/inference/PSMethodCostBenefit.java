@@ -21,6 +21,7 @@ package de.d3web.costbenefit.inference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,10 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.inference.condition.CondAnd;
+import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondNot;
+import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -54,6 +59,7 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.blackboard.CopiedSession;
@@ -79,6 +85,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
+	private double strategicBenefitFactor = 0.0;
+
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
 
@@ -88,6 +96,24 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 */
 	public static final Property<Boolean> FINAL_QUESTION = Property.getProperty("finalQuestion",
 			Boolean.class);
+
+	public double getStrategicBenefitFactor() {
+		return strategicBenefitFactor;
+	}
+
+	/**
+	 * Sets the strategicBenefitFactor, if it is set to 0, no strategic benefit
+	 * is added
+	 * 
+	 * @created 08.05.2012
+	 * @param strategicBenefitFactor
+	 * @throws IllegalArgumentException if the factor is lower than 0
+	 */
+	public void setStrategicBenefitFactor(double strategicBenefitFactor) {
+		if (strategicBenefitFactor < 0.0) throw new IllegalArgumentException(
+				"Strategic benefit factor must be 0 or greater");
+		this.strategicBenefitFactor = strategicBenefitFactor;
+	}
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
 			CostFunction costFunction, SearchAlgorithm searchAlgorithm) {
@@ -303,7 +329,147 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 		caseObject.setUndiscriminatedSolutions(allSolutions);
 		caseObject.setSearchModel(searchModel);
+		if (strategicBenefitFactor > 0.0) {
+			addStrategicBenefit(session, allTargets, searchModel);
+		}
 		caseObject.setDiscriminatingTargets(allTargets);
+	}
+
+	private void addStrategicBenefit(Session session, HashSet<Target> allTargets, SearchModel searchModel) {
+		double totalbenefit = 0.0;
+		List<Question> finalQuestions = getFinalQuestions(session);
+		HashMap<Condition, Double> conditionValueCache = new HashMap<Condition, Double>();
+
+		HashMap<QContainer, Target> targetMap = new HashMap<QContainer, Target>();
+		for (Target t : allTargets) {
+			targetMap.put(t.getQContainers().get(0), t);
+			totalbenefit += t.getBenefit() / t.getCosts();
+			fillConditionValueCache(conditionValueCache, t);
+		}
+		for (Condition condition : conditionValueCache.keySet()) {
+			double additiveValue = strategicBenefitFactor * conditionValueCache.get(condition)
+					/ totalbenefit;
+			if (condition instanceof CondEqual) {
+				CondEqual condEqual = (CondEqual) condition;
+				// only inspect conditions of final questions
+				if (!finalQuestions.contains(condEqual.getQuestion())) {
+					continue;
+				}
+				boolean fullfilled = false;
+				try {
+					if (condition.eval(session)) {
+						fullfilled = true;
+					}
+				}
+				catch (NoAnswerException e) {
+					// nothing to do
+				}
+				catch (UnknownAnswerException e) {
+					// nothing to do
+				}
+				if (!fullfilled) {
+					ST: for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+							StateTransition.KNOWLEDGE_KIND)) {
+
+						for (ValueTransition vt : st.getPostTransitions()) {
+							if (vt.getQuestion() == condEqual.getQuestion()) {
+								for (ConditionalValueSetter cvs : vt.getSetters()) {
+									if (cvs.getAnswer().equals(condEqual.getValue())) {
+										Target target = targetMap.get(st.getQcontainer());
+										if (target != null) {
+											log.info("Increasing Benefit for " + target
+													+ " from " + target.getBenefit() + " to "
+													+ (target.getBenefit() + additiveValue));
+											searchModel.maximizeBenefit(target, target.getBenefit()
+													+ additiveValue);
+										}
+										else {
+											target = new Target(Arrays.asList(st.getQcontainer()));
+											target.setBenefit(additiveValue);
+											log.info("Creating new target " + target
+													+ " with benefit " + target.getBenefit());
+											targetMap.put(st.getQcontainer(), target);
+											searchModel.addTarget(target);
+										}
+										continue ST;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		log.info("Total Benefit/Cost: " + totalbenefit);
+		log.info("BS Zustand Benefit/Cost: " + conditionValueCache);
+	}
+
+	private static void fillConditionValueCache(HashMap<Condition, Double> conditionValueCache, Target t) {
+		StateTransition stateTransition = StateTransition.getStateTransition(
+					t.getQContainers().get(0));
+		if (stateTransition == null) return;
+		Condition activationCondition = stateTransition.getActivationCondition();
+		List<Condition> terms = new LinkedList<Condition>();
+		// Expand ands
+		if (activationCondition instanceof CondAnd) {
+			CondAnd condAnd = (CondAnd) activationCondition;
+			terms.addAll(condAnd.getTerms());
+		}
+		else {
+			terms.add(activationCondition);
+		}
+		// invert ContNots containing a CondEqual of QuestionOCs
+		for (Condition c : new LinkedList<Condition>(terms)) {
+			if (c instanceof CondNot) {
+				CondNot condNot = (CondNot) c;
+				if (condNot.getTerms().get(0) instanceof CondEqual) {
+					CondEqual condEqual = (CondEqual) condNot.getTerms().get(0);
+					if (condEqual.getQuestion() instanceof QuestionOC
+								&& condEqual.getValue() instanceof ChoiceValue) {
+						ChoiceValue value = (ChoiceValue) condEqual.getValue();
+						List<Condition> conds = new LinkedList<Condition>();
+						for (Choice choice : ((QuestionOC) condEqual.getQuestion()).getAllAlternatives()) {
+							if (!choice.getName().equals(value.getChoiceID().getText())) {
+								conds.add(new CondEqual(condEqual.getQuestion(),
+											new ChoiceValue(choice)));
+							}
+						}
+						terms.add(new CondOr(conds));
+						terms.remove(condNot);
+					}
+				}
+			}
+		}
+		// spit ors, each subcondition is added to the list of
+		// conditions
+		// (ignoring the fact that one condition would be enough)
+		for (Condition condition : new LinkedList<Condition>(terms)) {
+			if (condition instanceof CondOr) {
+				CondOr condOr = (CondOr) condition;
+				terms.remove(condOr);
+				terms.addAll(condOr.getTerms());
+			}
+		}
+		for (Condition c : terms) {
+			Double value = conditionValueCache.get(c);
+			if (value == null) {
+				conditionValueCache.put(c, t.getBenefit() / t.getCosts());
+			}
+			else {
+				conditionValueCache.put(c, t.getBenefit() / t.getCosts() + value);
+			}
+		}
+	}
+
+	private static List<Question> getFinalQuestions(Session session) {
+		List<Question> finalQuestions = new LinkedList<Question>();
+		for (Question question : session.getKnowledgeBase().getManager().getQuestions()) {
+			Boolean value = question.getInfoStore().getValue(FINAL_QUESTION);
+			if (value) {
+				finalQuestions.add(question);
+			}
+		}
+		return finalQuestions;
 	}
 
 	/**
