@@ -309,7 +309,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				boolean skipTarget = false;
 				for (QContainer qcontainer : target.getQContainers()) {
 					if (session.getBlackboard().getIndication(qcontainer).isContraIndicated()
-							|| checkFinalQuestions(session, qcontainer)) {
+							|| isBlockedByFinalQuestions(session, qcontainer)) {
 						skipTarget = true;
 						continue;
 					}
@@ -473,13 +473,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
+	 * Checks if the given QContainer is blocked by an answered final question
+	 * (so that it cannot be applied in the session)
+	 * 
 	 * @created 25.11.2011
 	 * @param session Actual Session
 	 * @param qContainer {@link QContainer}
 	 * @return true when the {@link QContainer} cannot be applied due to
 	 *         finalQuestions
 	 */
-	private boolean checkFinalQuestions(Session session, QContainer qContainer) {
+	public static boolean isBlockedByFinalQuestions(Session session, QContainer qContainer) {
 		StateTransition stateTransition = StateTransition.getStateTransition(qContainer);
 		if (stateTransition == null) {
 			return false;

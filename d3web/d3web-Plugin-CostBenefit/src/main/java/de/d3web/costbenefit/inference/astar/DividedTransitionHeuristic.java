@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,6 +44,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
+import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
@@ -103,7 +105,14 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 		// otherwise prepare some information
 		this.knowledgeBase = kb;
-		this.allStateTransitions = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
+		this.allStateTransitions = new LinkedList<StateTransition>();
+		// filter StateTransitions that cannot be applied due to final questions
+		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
+			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(), st.getQcontainer())) {
+				allStateTransitions.add(st);
+			}
+		}
+
 		this.costCache = new HashMap<Condition, Map<Question, Map<Value, Double>>>();
 		negativeSum = 0;
 		for (QContainer qcon : kb.getManager().getQContainers()) {

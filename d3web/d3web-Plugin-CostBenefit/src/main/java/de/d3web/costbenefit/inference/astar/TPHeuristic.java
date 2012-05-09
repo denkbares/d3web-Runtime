@@ -45,6 +45,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.utilities.Pair;
+import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
@@ -194,7 +195,13 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		long time = System.currentTimeMillis();
 		preconditionCache.clear();
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
-		Collection<StateTransition> stateTransitions = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
+		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
+		// filter StateTransitions that cannot be applied due to final questions
+		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
+			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(), st.getQcontainer())) {
+				stateTransitions.add(st);
+			}
+		}
 		// collect all CondEqual preconditions of all statetransitions (CondAnd
 		// are splitted, other condition types can not be used to extend
 		// condition
