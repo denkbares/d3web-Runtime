@@ -153,7 +153,13 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	 * @return
 	 */
 	public boolean isAnyTargetReached(Session session) {
-		return session.getSessionObject(this).model.isAnyTargetReached();
+		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
+		if (sessionObject.model != null) {
+			return sessionObject.model.isAnyTargetReached();
+		}
+		else {
+			return false;
+		}
 	}
 
 	@Override
