@@ -78,9 +78,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 	@Override
 	public void init(SearchModel model) {
-		if (this.knowledgeBase != model.getSession().getKnowledgeBase()) {
-			initGeneralCache(model);
-		}
+		initGeneralCache(model);
 		super.init(model);
 		initTargetCache(model);
 	}
@@ -198,7 +196,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
-			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(), st.getQcontainer())) {
+			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(),
+					st.getQcontainer())) {
 				stateTransitions.add(st);
 			}
 		}
