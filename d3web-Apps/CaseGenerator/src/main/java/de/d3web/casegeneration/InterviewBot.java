@@ -432,10 +432,16 @@ public final class InterviewBot {
 
 	private Session createCase(SequentialTestCase sqCase) {
 		Session session = this.sessionFactory.createSession(knowledge);
-		for (RatedTestCase c : sqCase.getCases()) {
-			for (Finding finding : c.getFindings()) {
-				setCaseValue(session, finding.getQuestion(), finding.getValue());
+		session.getPropagationManager().openPropagation();
+		try {
+			for (RatedTestCase c : sqCase.getCases()) {
+				for (Finding finding : c.getFindings()) {
+					setCaseValue(session, finding.getQuestion(), finding.getValue());
+				}
 			}
+		}
+		finally {
+			session.getPropagationManager().commitPropagation();
 		}
 		return session;
 	}
@@ -444,8 +450,14 @@ public final class InterviewBot {
 		Session initSession = this.sessionFactory.createSession(knowledge);
 		// initSession.getInterview().setFormStrategy(new
 		// NextUnansweredQuestionFormStrategy());
-		for (Finding finding : initFindings) {
-			setCaseValue(initSession, finding.getQuestion(), finding.getValue());
+		initSession.getPropagationManager().openPropagation();
+		try {
+			for (Finding finding : initFindings) {
+				setCaseValue(initSession, finding.getQuestion(), finding.getValue());
+			}
+		}
+		finally {
+			initSession.getPropagationManager().commitPropagation();
 		}
 		return initSession;
 	}
