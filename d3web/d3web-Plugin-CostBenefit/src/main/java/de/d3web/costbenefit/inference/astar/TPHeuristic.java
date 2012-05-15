@@ -163,6 +163,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			catch (UnknownAnswerException e) {
 			}
 			Pair<List<Condition>, Set<QContainer>> generalPair = preconditionCache.get(cond);
+			if (generalPair == null) continue;
 			List<Condition> checkedConditions = new LinkedList<Condition>();
 			for (Condition precondition : generalPair.getA()) {
 				if (precondition instanceof CondEqual) {
