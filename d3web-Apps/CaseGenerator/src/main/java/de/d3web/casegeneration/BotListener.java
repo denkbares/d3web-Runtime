@@ -79,4 +79,14 @@ public interface BotListener {
 	 */
 	void pathCompleted(InterviewBot interviewBot, Session session, SequentialTestCase stc);
 
+	/**
+	 * This method is called, when a block of questions is ansered
+	 * 
+	 * @created 16.05.2012
+	 * @param interviewBot the {@link InterviewBot} created that event
+	 * @param session the session of the completed path
+	 * @param stc the completed path
+	 */
+	void stepCompleted(InterviewBot interviewBot, Session session, SequentialTestCase stc);
+
 }

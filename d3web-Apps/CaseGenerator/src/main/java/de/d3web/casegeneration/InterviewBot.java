@@ -202,6 +202,9 @@ public final class InterviewBot {
 					storeError(nextSession, nextSequentialCase, "solutions increased");
 				}
 				else {
+					for (BotListener listener : listeners) {
+						listener.stepCompleted(InterviewBot.this, thisSession, nextSequentialCase);
+					}
 					// step down in recursion with the next suitable
 					// question to ask
 					traverse(nextSession, nextSequentialCase, depth + 1,

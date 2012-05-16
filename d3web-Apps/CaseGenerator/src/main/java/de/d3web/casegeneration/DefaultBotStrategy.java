@@ -114,6 +114,10 @@ public class DefaultBotStrategy implements BotStrategy {
 
 	@Override
 	public Solution[] getExpectedSolutions(Session session) {
+		return computeExpectedSolutions(session);
+	}
+
+	public static Solution[] computeExpectedSolutions(Session session) {
 		final Blackboard blackboard = session.getBlackboard();
 		// collect all relevant solutions
 		List<Solution> result = new LinkedList<Solution>();
