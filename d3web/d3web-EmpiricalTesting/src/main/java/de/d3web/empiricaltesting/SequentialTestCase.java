@@ -21,6 +21,8 @@
 package de.d3web.empiricaltesting;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +37,11 @@ public class SequentialTestCase {
 	 * Default Constructor
 	 */
 	public SequentialTestCase() {
-		ratedTestCases = new ArrayList<RatedTestCase>();
+		this(Collections.<RatedTestCase> emptyList());
+	}
+
+	public SequentialTestCase(Collection<RatedTestCase> rtcs) {
+		ratedTestCases = new ArrayList<RatedTestCase>(rtcs);
 	}
 
 	public void setStartDate(Date startDate) {
