@@ -6,9 +6,9 @@
     <version>0.2-SNAPSHOT</version>
   </parent>
   <groupId>de.uniwue.d3web</groupId>
-  <artifactId>TestingFramework</artifactId>
+  <artifactId>d3web-TestingFramework</artifactId>
   <version>0.2-SNAPSHOT</version>
-  <name>TestingFramework</name>
+  <name>d3web-TestingFramework</name>
   <description>Defines essential classes/interfaces for testing (e.g., of knowledge bases)</description>
   <dependencies>
   	<dependency>
