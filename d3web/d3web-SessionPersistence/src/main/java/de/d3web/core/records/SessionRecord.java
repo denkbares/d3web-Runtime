@@ -20,6 +20,9 @@ package de.d3web.core.records;
 
 import java.util.List;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.SessionHeader;
 import de.d3web.core.session.blackboard.Fact;
 
@@ -70,5 +73,16 @@ public interface SessionRecord extends SessionHeader {
 	 * @param name
 	 */
 	void setName(String name);
+
+	/**
+	 * Returns all {@link Solution} instances, that hold one of the specified
+	 * states
+	 * 
+	 * @param statea the States the diagnoses must have to be returned
+	 * @param kb {@link KnowledgeBase}
+	 * @return a list of diagnoses in this case that have one of the specified
+	 *         states
+	 */
+	public List<Solution> getSolutions(KnowledgeBase kb, State... states);
 
 }

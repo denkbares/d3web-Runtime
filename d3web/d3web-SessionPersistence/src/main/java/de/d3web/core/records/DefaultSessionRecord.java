@@ -20,11 +20,17 @@ package de.d3web.core.records;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.SessionInfoStore;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
@@ -131,5 +137,35 @@ public class DefaultSessionRecord implements SessionRecord {
 	@Override
 	public InfoStore getInfoStore() {
 		return infoStore;
+	}
+
+	@Override
+	public List<Solution> getSolutions(KnowledgeBase kb, State... states) {
+		HashMap<Solution, FactRecord> map = new HashMap<Solution, FactRecord>();
+		for (FactRecord fact : valueFacts) {
+			Solution solution = kb.getManager().searchSolution(fact.getObjectName());
+			if (solution != null) {
+				FactRecord savedRecord = map.get(solution);
+				if (savedRecord == null) {
+					map.put(solution, fact);
+				}
+				// if the psm is null, it is a merged fact, so this fact should
+				// be used
+				else if (fact.getPsm() == null) {
+					map.put(solution, fact);
+				}
+			}
+		}
+		List<Solution> result = new LinkedList<Solution>();
+		for (Entry<Solution, FactRecord> entry : map.entrySet()) {
+			for (State state : states) {
+				Rating value = (Rating) entry.getValue().getValue();
+				if (value.hasState(state)) {
+					result.add(entry.getKey());
+					continue;
+				}
+			}
+		}
+		return result;
 	}
 }

@@ -34,6 +34,9 @@ import java.util.List;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.records.DefaultSessionRepository;
 import de.d3web.core.records.FactRecord;
 import de.d3web.core.records.SessionRecord;
@@ -295,6 +298,12 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		public InfoStore getInfoStore() {
 			parseIfNecessary();
 			return realRecord.getInfoStore();
+		}
+
+		@Override
+		public List<Solution> getSolutions(KnowledgeBase kb, State... states) {
+			parseIfNecessary();
+			return realRecord.getSolutions(kb, states);
 		}
 
 	}
