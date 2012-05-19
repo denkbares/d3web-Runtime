@@ -370,24 +370,38 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				if (!fullfilled) {
 					ST: for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 							StateTransition.KNOWLEDGE_KIND)) {
-
 						for (ValueTransition vt : st.getPostTransitions()) {
 							if (vt.getQuestion() == condEqual.getQuestion()) {
 								for (ConditionalValueSetter cvs : vt.getSetters()) {
+									boolean answeredQuestion = false;
+									for (TerminologyObject object : cvs.getCondition().getTerminalObjects()) {
+										if ((object instanceof Question)
+												&& UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(
+														(Question) object))) {
+											answeredQuestion = true;
+											break;
+										}
+									}
+									if (answeredQuestion) continue;
 									if (cvs.getAnswer().equals(condEqual.getValue())) {
 										Target target = targetMap.get(st.getQcontainer());
 										if (target != null) {
-											log.info("Increasing Benefit for " + target
-													+ " from " + target.getBenefit() + " to "
-													+ (target.getBenefit() + additiveValue));
+											// log.info("Increasing Benefit for "
+											// + target
+											// + " from " + target.getBenefit()
+											// + " to "
+											// + (target.getBenefit() +
+											// additiveValue));
 											searchModel.maximizeBenefit(target, target.getBenefit()
 													+ additiveValue);
 										}
 										else {
 											target = new Target(Arrays.asList(st.getQcontainer()));
 											target.setBenefit(additiveValue);
-											log.info("Creating new target " + target
-													+ " with benefit " + target.getBenefit());
+											// log.info("Creating new target " +
+											// target
+											// + " with benefit " +
+											// target.getBenefit());
 											targetMap.put(st.getQcontainer(), target);
 											searchModel.addTarget(target);
 										}
@@ -400,8 +414,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				}
 			}
 		}
-		log.info("Total Benefit/Cost: " + totalbenefit);
-		log.info("BS Zustand Benefit/Cost: " + conditionValueCache);
+		// log.info("Total Benefit/Cost: " + totalbenefit);
+		// log.info("BS Zustand Benefit/Cost: " + conditionValueCache);
 	}
 
 	private static void fillConditionValueCache(HashMap<Condition, Double> conditionValueCache, Target t) {
