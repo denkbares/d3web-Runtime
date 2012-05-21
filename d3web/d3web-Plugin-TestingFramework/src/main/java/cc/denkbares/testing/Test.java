@@ -25,19 +25,16 @@ package cc.denkbares.testing;
  */
 public interface Test<T> {
 
-	public static final String PLUGIN_ID = "TestingFramework";
+	// public static final String PLUGIN_ID = "d3web-Kernel-ExtensionPoints";
+
+	public static final String PLUGIN_ID =
+			"d3web-Plugin-TestingFramework-ExtensionPoints";
 	public static final String EXTENSION_POINT_ID = "Test";
 
-	public TestResult execute(T testObject, String[] args);
+	public Message execute(T testObject, String[] args);
 
 	public ArgsCheckResult checkArgs(String[] args);
 
-	/**
-	 * 
-	 * TODO: Dann über plugin-framework
-	 * 
-	 * @created 04.05.2012
-	 * @return
-	 */
 	public Class<T> getTestObjectClass();
+
 }

@@ -25,9 +25,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import cc.denkbares.testing.Message;
-import cc.denkbares.testing.TestResult;
-
 /**
  * An instance of this class holds the result of a ci build
  * 

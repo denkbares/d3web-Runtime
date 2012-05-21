@@ -1,5 +1,8 @@
 package cc.denkbares.testing;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +38,7 @@ import de.d3web.plugin.PluginManager;
  * @author jochenreutelshofer
  * @created 04.05.2012
  */
-public class TestExecutor<T> {
+public class TestExecutor {
 
 	private final TestObjectProvider testObjectProvider;
 
@@ -46,33 +49,73 @@ public class TestExecutor<T> {
 		this.testObjectProvider = provider;
 	}
 
-	public TestResult runTest(String testName, final String testObjectID, final String[] args) {
+	@SuppressWarnings("unchecked")
+	private static <T> T cast(Object testObject, Class<T> testObjectClass) {
+		// first check null, because Class.isInstance differs from
+		// "instanceof"-operator for null objects
+		if (testObject == null) return null;
 
-		final Test<T> t = findTest(testName);
+		// check the type of the section
+		if (!testObjectClass.isInstance(testObject)) {
+			throw new ClassCastException();
+		}
+		// and securely cast
+		return (T) testObject;
+	}
+
+	public Set<TestResult> runTest(String testName, final String testObjectID, final String[] args) {
+		Test<?> t = findTest(testName);
 		if (t == null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Test not found: '" + testName + "'");
+					"Test not found: '" + testName
+							+ "'");
+			Set<TestResult> result = new HashSet<TestResult>();
+			result.add(new TestResultImpl(new Message(Message.Type.ERROR,
+					"Test could not be found on the system."), testName, args.toString()));
+			return result;
+		}
+		else {
+
+			return runTest(t, testObjectID, args);
+		}
+	}
+
+	public <T> Set<TestResult> runTest(final Test<T> t, final String testObjectID, final String[] args) {
+
+		ArgsCheckResult argsCheckResult = t.checkArgs(args);
+		if (argsCheckResult.getType().equals(ArgsCheckResult.Type.ERROR)) {
+			Set<TestResult> set = new HashSet<TestResult>();
+			set.add(new TestResultImpl(new Message(Message.Type.ERROR, "Invalid arguments: "
+					+ argsCheckResult.toString()), t.toString(), args.toString()));
 		}
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		Callable<TestResult> c = new Callable<TestResult>() {
+		Callable<Set<TestResult>> c = new Callable<Set<TestResult>>() {
 
 			@Override
-			public TestResult call() throws Exception {
-				T testObject = testObjectProvider.getTestObject(t.getTestObjectClass(),
+			public Set<TestResult> call() throws Exception {
+				List<?> testObjects = testObjectProvider.getTestObject(t.getTestObjectClass(),
 						testObjectID);
 				// TODO: return result if no TestObject Found
-				return t.execute(testObject,
-							args);
+
+				Set<TestResult> set = new HashSet<TestResult>();
+				for (Object testObject : testObjects) {
+					set.add(new TestResultImpl(t.execute(cast(testObject, t.getTestObjectClass()),
+							args), t.toString(), args.toString()));
+				}
+				return set;
 			}
+
 		};
+		Future<Set<TestResult>> future = executor.submit(c);
 
-		Future<TestResult> future = executor.submit(c);
-
-		TestResult result = null;
+		Set<TestResult> result = null;
 		try {
 			result = future.get();
+			for (TestResult testResult : result) {
+				testResult.setConfiguration(args.toString());
+			}
 		}
 		catch (InterruptedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
@@ -92,21 +135,20 @@ public class TestExecutor<T> {
 	 * @param testName
 	 * @return
 	 */
-	private Test<T> findTest(String testName) {
+	private Test<?> findTest(String testName) {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			if (extension instanceof Test) {
-				@SuppressWarnings("unchecked")
-				Test<T> t = (Test<T>) extension;
-				if (t.getClass().getName().equals(testName)) {
+			if (extension.getNewInstance() instanceof Test) {
+				Test<?> t = (Test<?>) extension.getSingleton();
+				if (t.getClass().getSimpleName().equals(testName)) {
 					return t;
 				}
-				else {
-					Logger.getLogger(getClass().getName()).warning(
-							"extension of class '" + extension.getClass().getName() +
-									"' is not of the extected type " + Test.class.getName());
-				}
+			}
+			else {
+				Logger.getLogger(getClass().getName()).warning(
+						"extension of class '" + extension.getClass().getName() +
+								"' is not of the expected type " + Test.class.getName());
 			}
 		}
 		return null;

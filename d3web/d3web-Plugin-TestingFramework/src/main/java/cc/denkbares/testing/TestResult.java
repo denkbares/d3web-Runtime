@@ -25,16 +25,14 @@ package cc.denkbares.testing;
  */
 public interface TestResult {
 
-	public enum Type {
-		SUCCESS,
-		FAILURE,
-		ERROR
-	}
-
-	public Type getType();
-
-	public String getMessage();
+	public Message getMessage();
 
 	public String getConfiguration();
+
+	public void setConfiguration(String configuration);
+
+	public Message.Type getType();
+
+	public String getTestName();
 
 }
