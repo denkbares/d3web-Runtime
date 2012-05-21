@@ -18,6 +18,8 @@
  */
 package cc.denkbares.testing;
 
+import cc.denkbares.testing.Message.Type;
+
 /**
  * 
  * @author jochenreutelshofer
@@ -25,35 +27,36 @@ package cc.denkbares.testing;
  */
 public class TestResultImpl implements TestResult, Comparable<TestResult> {
 
-	private final Type type;
-	private final String message;
-	private final String configuration;
+	private final Message message;
+	private String configuration;
+	private final String testName;
 
-	public TestResultImpl(Type type) {
-		this(type, null, null);
-	}
+	// public TestResultImpl(Message message) {
+	// this(message, null, null);
+	// }
 
-	public TestResultImpl(Type type, String message) {
-		this(type, message, null);
-	}
-
-	public TestResultImpl(Type type, String message, String configuration) {
-		this.type = type;
+	public TestResultImpl(Message message, String configuration, String testName) {
 		this.message = message;
+		this.configuration = configuration;
+		this.testName = testName;
+	}
+
+	@Override
+	public String getTestName() {
+		return testName;
+	}
+
+	@Override
+	public void setConfiguration(String configuration) {
 		this.configuration = configuration;
 	}
 
 	public boolean isSuccessful() {
-		return type == Type.SUCCESS;
+		return message.getType() == Message.Type.SUCCESS;
 	}
 
 	@Override
-	public Type getType() {
-		return type;
-	}
-
-	@Override
-	public String getMessage() {
+	public Message getMessage() {
 		return message;
 	}
 
@@ -64,7 +67,7 @@ public class TestResultImpl implements TestResult, Comparable<TestResult> {
 
 	@Override
 	public String toString() {
-		return type.toString() + " - " + getMessage();
+		return getMessage().toString() + " - " + configuration.toString();
 	}
 
 	/**
@@ -72,7 +75,7 @@ public class TestResultImpl implements TestResult, Comparable<TestResult> {
 	 */
 	@Override
 	public int compareTo(TestResult tr) {
-		return type.compareTo(tr.getType());
+		return message.getType().compareTo(tr.getMessage().getType());
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class TestResultImpl implements TestResult, Comparable<TestResult> {
 	 * @return if this result has a message
 	 */
 	public boolean hasMessage() {
-		return this.message != null && !this.message.isEmpty();
+		return this.message != null && !(this.message.getText().length() == 0);
 	}
 
 	/**
@@ -101,7 +104,7 @@ public class TestResultImpl implements TestResult, Comparable<TestResult> {
 		int result = 1;
 		result = prime * result + ((configuration == null) ? 0 : configuration.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((message.getType() == null) ? 0 : message.getType().hashCode());
 		return result;
 	}
 
@@ -119,8 +122,13 @@ public class TestResultImpl implements TestResult, Comparable<TestResult> {
 			if (other.getMessage() != null) return false;
 		}
 		else if (!message.equals(other.getMessage())) return false;
-		if (type != other.getType()) return false;
+		if (message.getType() != other.getMessage().getType()) return false;
 		return true;
+	}
+
+	@Override
+	public Type getType() {
+		return message.getType();
 	}
 
 }

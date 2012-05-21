@@ -21,20 +21,33 @@ package cc.denkbares.testing;
 /**
  * 
  * @author jochenreutelshofer
- * @created 04.05.2012
+ * @created 21.05.2012
  */
-public interface Test<T> {
+public class Message {
 
-	// public static final String PLUGIN_ID = "d3web-Kernel-ExtensionPoints";
+	private final Type type;
+	private final String message;
 
-	public static final String PLUGIN_ID =
-			"d3web-Plugin-TestingFramework-ExtensionPoints";
-	public static final String EXTENSION_POINT_ID = "Test";
+	public Message(Type type) {
+		this(type, null);
+	}
 
-	public Message execute(T testObject, String[] args);
+	public Type getType() {
+		return type;
+	}
 
-	public ArgsCheckResult checkArgs(String[] args);
+	public String getText() {
+		return message;
+	}
 
-	public Class<T> getTestObjectClass();
+	public Message(Type type, String message) {
+		this.type = type;
+		this.message = message;
+	}
 
+	public enum Type {
+		SUCCESS,
+		FAILURE,
+		ERROR
+	}
 }

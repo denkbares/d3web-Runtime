@@ -18,6 +18,8 @@
  */
 package cc.denkbares.testing;
 
+import java.util.List;
+
 /**
  * 
  * @author jochenreutelshofer
@@ -25,6 +27,6 @@ package cc.denkbares.testing;
  */
 public interface TestObjectProvider {
 
-	public <T> T getTestObject(Class<T> c, String id);
+	public <T> List<T> getTestObject(Class<T> c, String id);
 
 }
