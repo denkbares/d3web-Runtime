@@ -202,7 +202,7 @@ public final class Property<T> {
 	 *         identical with the class specified in the plugin definition
 	 */
 	@SuppressWarnings("unchecked")
-	public static <StoreageType> Property<StoreageType> getProperty(String name, Class<StoreageType> theStoredClass) {
+	public static <StoreageType> Property<StoreageType> getProperty(String name, Class<StoreageType> theStoredClass) throws NoSuchElementException, ClassCastException {
 		Property<?> property = getUntypedProperty(name);
 		if (!property.storedClassName.equals(theStoredClass.getName())) {
 			throw new ClassCastException(
@@ -228,7 +228,7 @@ public final class Property<T> {
 	 *         name
 	 */
 	@SuppressWarnings("unchecked")
-	public static Property<Object> getUntypedProperty(String name) {
+	public static Property<Object> getUntypedProperty(String name) throws NoSuchElementException {
 		Property<?> property = properties.get(name.toLowerCase());
 		if (property == null) {
 			throw new NoSuchElementException("unknown property " + name);
