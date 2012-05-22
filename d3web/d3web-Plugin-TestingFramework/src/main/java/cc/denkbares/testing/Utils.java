@@ -21,34 +21,21 @@ package cc.denkbares.testing;
 /**
  * 
  * @author jochenreutelshofer
- * @created 04.05.2012
+ * @created 22.05.2012
  */
-public interface TestResult {
+public class Utils {
 
-	/**
-	 * Returns the message attached to this TestResult.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public Message getMessage();
+	public static String concat(String[] args) {
+		StringBuffer buffy = new StringBuffer();
+		for (String string : args) {
+			buffy.append(string + ";");
+		}
 
-	/**
-	 * Returns the arguments/parameters with which the test was executed.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public String getConfiguration();
-
-	/**
-	 * Returns the type of the attached message.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public Message.Type getType();
-
-	public String getTestName();
+		String result = buffy.toString();
+		if (result.endsWith(";")) {
+			result = result.substring(0, result.length() - 1);
+		}
+		return result;
+	}
 
 }

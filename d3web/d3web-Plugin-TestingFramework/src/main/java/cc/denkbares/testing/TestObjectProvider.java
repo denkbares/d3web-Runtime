@@ -21,12 +21,23 @@ package cc.denkbares.testing;
 import java.util.List;
 
 /**
+ * TestObjectProvider interface for providing test-objects.
  * 
  * @author jochenreutelshofer
  * @created 04.05.2012
  */
-public interface TestObjectProvider {
+public interface TestObjectProvider<T> {
 
-	public <T> List<T> getTestObject(Class<T> c, String id);
+	/**
+	 * Delivers a test-object of the given class for a given identifier.
+	 * 
+	 * @created 22.05.2012
+	 * @param c Class of the test-object
+	 * @param id Identifier for the desired test-object instance.
+	 * @return
+	 */
+	public List<T> getTestObject(Class<T> c, String id);
+
+	public static final String EXTENSION_POINT_ID = "TestObjectProvider";
 
 }

@@ -28,14 +28,10 @@ import cc.denkbares.testing.Message.Type;
 public class TestResultImpl implements TestResult, Comparable<TestResult> {
 
 	private final Message message;
-	private String configuration;
+	private final String configuration;
 	private final String testName;
 
-	// public TestResultImpl(Message message) {
-	// this(message, null, null);
-	// }
-
-	public TestResultImpl(Message message, String configuration, String testName) {
+	public TestResultImpl(Message message, String testName, String configuration) {
 		this.message = message;
 		this.configuration = configuration;
 		this.testName = testName;
@@ -44,11 +40,6 @@ public class TestResultImpl implements TestResult, Comparable<TestResult> {
 	@Override
 	public String getTestName() {
 		return testName;
-	}
-
-	@Override
-	public void setConfiguration(String configuration) {
-		this.configuration = configuration;
 	}
 
 	public boolean isSuccessful() {

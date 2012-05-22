@@ -19,22 +19,47 @@
 package cc.denkbares.testing;
 
 /**
+ * Interface for tests. Implement this class to create a test to be used within
+ * the TestingFramework.
  * 
  * @author jochenreutelshofer
  * @created 04.05.2012
  */
 public interface Test<T> {
 
-	// public static final String PLUGIN_ID = "d3web-Kernel-ExtensionPoints";
-
 	public static final String PLUGIN_ID =
 			"d3web-Plugin-TestingFramework-ExtensionPoints";
+
 	public static final String EXTENSION_POINT_ID = "Test";
 
+	/**
+	 * The test is implemented within this method. The object to be tested
+	 * (testObject) is passed to the execute method by the TestingFramework.
+	 * 
+	 * @param testObject object to be tested (e.g., a knowledge base)
+	 * @param args optional additional config parameters for the test
+	 * @return a Message containing information about the outcome of the test
+	 */
 	public Message execute(T testObject, String[] args);
 
+	/**
+	 * Checks the config parameters for correctness. If the parameters are
+	 * sufficient, they will be passed to the execute method. If they are rated
+	 * to be insufficient, the execute method is not called, but a test result
+	 * message will be generated accordingly.
+	 * 
+	 * @param args
+	 * @return
+	 */
 	public ArgsCheckResult checkArgs(String[] args);
 
+	/**
+	 * Defines the class of the test-object to be tested by the execute method.
+	 * This method is used to retrieve the test object from the
+	 * TestObjectProvider.
+	 * 
+	 * @return
+	 */
 	public Class<T> getTestObjectClass();
 
 }

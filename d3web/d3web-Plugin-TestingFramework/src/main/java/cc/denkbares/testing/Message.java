@@ -19,6 +19,8 @@
 package cc.denkbares.testing;
 
 /**
+ * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an
+ * (optional) message text.
  * 
  * @author jochenreutelshofer
  * @created 21.05.2012
@@ -43,6 +45,10 @@ public class Message {
 	public Message(Type type, String message) {
 		this.type = type;
 		this.message = message;
+	}
+
+	public boolean isSuccess() {
+		return type == Type.SUCCESS;
 	}
 
 	public enum Type {

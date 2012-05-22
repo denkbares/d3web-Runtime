@@ -30,6 +30,16 @@ public class ArgsCheckResult {
 	}
 
 	private final Type type;
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public ArgsCheckResult(Type t, String m) {
+		this(t);
+		this.message = m;
+	}
 
 	public ArgsCheckResult(Type t) {
 		this.type = t;

@@ -34,6 +34,8 @@ import de.d3web.plugin.PluginManager;
  */
 
 /**
+ * A TestExecutor executes a set of tests.
+ * 
  * 
  * @author jochenreutelshofer
  * @created 04.05.2012
@@ -41,12 +43,14 @@ import de.d3web.plugin.PluginManager;
 public class TestExecutor {
 
 	private final TestObjectProvider testObjectProvider;
+	private final List<Pair<String, List<String>>> tests;
 
 	/**
-	 * 
+	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(TestObjectProvider provider) {
+	public TestExecutor(TestObjectProvider provider, List<Pair<String, List<String>>> testAndItsParameters) {
 		this.testObjectProvider = provider;
+		this.tests = testAndItsParameters;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,7 +59,7 @@ public class TestExecutor {
 		// "instanceof"-operator for null objects
 		if (testObject == null) return null;
 
-		// check the type of the section
+		// check the type of the test-object
 		if (!testObjectClass.isInstance(testObject)) {
 			throw new ClassCastException();
 		}
@@ -63,6 +67,49 @@ public class TestExecutor {
 		return (T) testObject;
 	}
 
+	/**
+	 * Runs the tests given by the task list using the provided
+	 * TestObjectProvider. A BuildResultSet with the given build-number is
+	 * created.
+	 * 
+	 * @created 22.05.2012
+	 * @param buildNumber Build number for this build.
+	 * @return
+	 */
+	public BuildResultSet runtTests(int buildNumber) {
+		long buildStartTime = System.currentTimeMillis();
+		BuildResultSet build = new BuildResultSet(buildNumber);
+
+		for (Pair<String, List<String>> testAndItsParameters : tests) {
+
+			String testName = testAndItsParameters.getA();
+			List<String> parameters = testAndItsParameters.getB();
+
+			String[] array = parameters.toArray(new String[] {});
+			Set<TestResult> testResults = this.runTest(testName, array[0],
+						array);
+			if (testResults != null) {
+				for (TestResult testResult : testResults) {
+					build.addTestResult(testResult);
+				}
+			}
+		}
+
+		build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+		return build;
+	}
+
+	/**
+	 * Retrieves and runs the test with the given name.
+	 * 
+	 * 
+	 * @created 22.05.2012
+	 * @param <T>
+	 * @param t The test to be executed.
+	 * @param testObjectID Identifier for the test-object
+	 * @param args The parameters for the test execution
+	 * @return
+	 */
 	public Set<TestResult> runTest(String testName, final String testObjectID, final String[] args) {
 		Test<?> t = findTest(testName);
 		if (t == null) {
@@ -71,7 +118,7 @@ public class TestExecutor {
 							+ "'");
 			Set<TestResult> result = new HashSet<TestResult>();
 			result.add(new TestResultImpl(new Message(Message.Type.ERROR,
-					"Test could not be found on the system."), testName, args.toString()));
+					"Test could not be found on the system."), testName, Utils.concat(args)));
 			return result;
 		}
 		else {
@@ -80,13 +127,24 @@ public class TestExecutor {
 		}
 	}
 
+	/**
+	 * Runs the given test with the given parameters on a test-object specified
+	 * by the string testObjectID.
+	 * 
+	 * @created 22.05.2012
+	 * @param <T>
+	 * @param t The test to be executed.
+	 * @param testObjectID Identifier for the test-object
+	 * @param args The parameters for the test execution
+	 * @return
+	 */
 	public <T> Set<TestResult> runTest(final Test<T> t, final String testObjectID, final String[] args) {
 
 		ArgsCheckResult argsCheckResult = t.checkArgs(args);
 		if (argsCheckResult.getType().equals(ArgsCheckResult.Type.ERROR)) {
 			Set<TestResult> set = new HashSet<TestResult>();
 			set.add(new TestResultImpl(new Message(Message.Type.ERROR, "Invalid arguments: "
-					+ argsCheckResult.toString()), t.toString(), args.toString()));
+					+ argsCheckResult.toString()), t.getClass().getSimpleName(), Utils.concat(args)));
 		}
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -95,14 +153,20 @@ public class TestExecutor {
 
 			@Override
 			public Set<TestResult> call() throws Exception {
+				Set<TestResult> set = new HashSet<TestResult>();
 				List<?> testObjects = testObjectProvider.getTestObject(t.getTestObjectClass(),
 						testObjectID);
-				// TODO: return result if no TestObject Found
+				if (testObjects.size() == 0) {
+					set.add(new TestResultImpl(new Message(Message.Type.ERROR,
+							"No test-object found. (Check TestObjectProviders)"),
+							t.getClass().getSimpleName(),
+							Utils.concat(args)));
 
-				Set<TestResult> set = new HashSet<TestResult>();
+				}
+
 				for (Object testObject : testObjects) {
 					set.add(new TestResultImpl(t.execute(cast(testObject, t.getTestObjectClass()),
-							args), t.toString(), args.toString()));
+							args), t.getClass().getSimpleName(), Utils.concat(args)));
 				}
 				return set;
 			}
@@ -113,9 +177,6 @@ public class TestExecutor {
 		Set<TestResult> result = null;
 		try {
 			result = future.get();
-			for (TestResult testResult : result) {
-				testResult.setConfiguration(args.toString());
-			}
 		}
 		catch (InterruptedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
@@ -130,6 +191,8 @@ public class TestExecutor {
 	}
 
 	/**
+	 * Searches within the plugged tests for a test with a specific name.
+	 * Returns null if the test is not found.
 	 * 
 	 * @created 04.05.2012
 	 * @param testName

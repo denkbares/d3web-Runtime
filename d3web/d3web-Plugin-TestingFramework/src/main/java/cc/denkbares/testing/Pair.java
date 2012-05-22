@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 denkbares GmbH
+ * Copyright (C) 2011 University Wuerzburg, Computer Science VI
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -19,36 +19,37 @@
 package cc.denkbares.testing;
 
 /**
+ * Class representing a generic pair.
  * 
- * @author jochenreutelshofer
- * @created 04.05.2012
+ * @author Sebastian Furth
+ * 
  */
-public interface TestResult {
+public class Pair<T1, T2> {
 
-	/**
-	 * Returns the message attached to this TestResult.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public Message getMessage();
+	private final T1 a;
+	private final T2 b;
 
-	/**
-	 * Returns the arguments/parameters with which the test was executed.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public String getConfiguration();
+	public Pair(T1 a, T2 b) {
+		if (a == null || b == null) {
+			throw new NullPointerException("The constructor parameters can't be null!");
+		}
+		this.a = a;
+		this.b = b;
+	}
 
-	/**
-	 * Returns the type of the attached message.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public Message.Type getType();
+	public T1 getA() {
+		return a;
+	}
 
-	public String getTestName();
+	public T2 getB() {
+		return b;
+	}
+
+	@Override
+	public String toString() {
+		return "#Pair["
+				+ String.valueOf(getA()) + "; "
+				+ String.valueOf(getB()) + "]";
+	}
 
 }
