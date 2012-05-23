@@ -154,6 +154,7 @@ public class TestExecutor {
 			@Override
 			public Set<TestResult> call() throws Exception {
 				Set<TestResult> set = new HashSet<TestResult>();
+				@SuppressWarnings("unchecked")
 				List<?> testObjects = testObjectProvider.getTestObject(t.getTestObjectClass(),
 						testObjectID);
 				if (testObjects.size() == 0) {
