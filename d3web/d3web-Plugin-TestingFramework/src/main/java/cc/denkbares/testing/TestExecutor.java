@@ -42,13 +42,14 @@ import de.d3web.plugin.PluginManager;
  */
 public class TestExecutor {
 
+	@SuppressWarnings("rawtypes")
 	private final TestObjectProvider testObjectProvider;
 	private final List<Pair<String, List<String>>> tests;
 
 	/**
 	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(TestObjectProvider provider, List<Pair<String, List<String>>> testAndItsParameters) {
+	public TestExecutor(@SuppressWarnings("rawtypes") TestObjectProvider provider, List<Pair<String, List<String>>> testAndItsParameters) {
 		this.testObjectProvider = provider;
 		this.tests = testAndItsParameters;
 	}
@@ -145,6 +146,7 @@ public class TestExecutor {
 			Set<TestResult> set = new HashSet<TestResult>();
 			set.add(new TestResultImpl(new Message(Message.Type.ERROR, "Invalid arguments: "
 					+ argsCheckResult.toString()), t.getClass().getSimpleName(), Utils.concat(args)));
+			return set;
 		}
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -186,6 +188,7 @@ public class TestExecutor {
 		catch (ExecutionException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Exception in Test execution: '" + t.toString() + "'");
+			e.printStackTrace();
 		}
 
 		return result;
