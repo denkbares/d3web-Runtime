@@ -144,8 +144,12 @@ public class TestExecutor {
 		ArgsCheckResult argsCheckResult = t.checkArgs(args);
 		if (argsCheckResult.getType().equals(ArgsCheckResult.Type.ERROR)) {
 			Set<TestResult> set = new HashSet<TestResult>();
+			String message = argsCheckResult.getType().toString();
+			if (argsCheckResult.getMessage() != null) {
+				message += ": " + argsCheckResult.getMessage();
+			}
 			set.add(new TestResultImpl(new Message(Message.Type.ERROR, "Invalid arguments: "
-					+ argsCheckResult.toString()), t.getClass().getSimpleName(), Utils.concat(args)));
+					+ message), t.getClass().getSimpleName(), Utils.concat(args)));
 			return set;
 		}
 
