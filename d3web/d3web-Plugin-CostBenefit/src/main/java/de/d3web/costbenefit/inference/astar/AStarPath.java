@@ -18,9 +18,13 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.costbenefit.model.Path;
@@ -35,11 +39,11 @@ public class AStarPath implements Path {
 
 	private final QContainer qContainer;
 	private final AStarPath predecessor;
-
-	public AStarPath getPredecessor() {
-		return predecessor;
-	}
-
+	private SoftReference<List<QContainer>> pathReference;
+	private SoftReference<Set<QContainer>> cache;
+	private SoftReference<Double> totalCostCache;
+	private SoftReference<Double> negativCostCache;
+	private SoftReference<Integer> hashCache;
 	private final double costs;
 
 	public AStarPath(QContainer qContainer, AStarPath predecessor, double costs) {
@@ -53,20 +57,49 @@ public class AStarPath implements Path {
 		this.predecessor = predecessor;
 	}
 
+	public AStarPath getPredecessor() {
+		return predecessor;
+	}
+
 	@Override
 	public double getCosts() {
-		double sum = 0.0;
-		for (AStarPath item = this; item != null; item = item.predecessor) {
-			sum += item.costs;
+		if (totalCostCache != null) {
+			Double totalCosts = totalCostCache.get();
+			if (totalCosts != null) {
+				return totalCosts;
+			}
 		}
+		double sum = 0.0;
+		if (predecessor != null) {
+			sum += predecessor.getCosts();
+		}
+		sum += costs;
+		totalCostCache = new SoftReference<Double>(new Double(sum));
+		return sum;
+	}
+
+	@Override
+	public double getNegativeCosts() {
+		if (negativCostCache != null) {
+			Double negativeCosts = negativCostCache.get();
+			if (negativeCosts != null) {
+				return negativeCosts;
+			}
+		}
+		double sum = 0.0;
+		if (predecessor != null) {
+			sum += predecessor.getNegativeCosts();
+		}
+		if (costs < 0) sum += costs;
+		negativCostCache = new SoftReference<Double>(new Double(sum));
 		return sum;
 	}
 
 	/**
-	 * Returns the final {@link QContainer} of this path.
+	 * Returns the final {@link QContainer} of this pathReference.
 	 * 
 	 * @created 08.09.2011
-	 * @return the final qcontainer in the path
+	 * @return the final qcontainer in the pathReference
 	 */
 	public QContainer getQContainer() {
 		return this.qContainer;
@@ -74,21 +107,29 @@ public class AStarPath implements Path {
 
 	@Override
 	public List<QContainer> getPath() {
-		LinkedList<QContainer> path = new LinkedList<QContainer>();
-		addQContainersToPath(path);
-		return Collections.unmodifiableList(path);
+		if (pathReference != null) {
+			List<QContainer> path = pathReference.get();
+			if (path != null) {
+				return path;
+			}
+		}
+		ArrayList<QContainer> newPath = new ArrayList<QContainer>();
+		addQContainersToPath(newPath);
+		List<QContainer> path = Collections.unmodifiableList(newPath);
+		pathReference = new SoftReference<List<QContainer>>(path);
+		return path;
 	}
 
 	/**
-	 * This method is used to add QContainers to the actual path recursively
-	 * without having to create more than one list
+	 * This method is used to add QContainers to the actual pathReference
+	 * recursively without having to create more than one list
 	 * 
 	 * @created 22.06.2011
-	 * @param path each predecessor adds its qContainer to this list
+	 * @param pathReference each predecessor adds its qContainer to this list
 	 */
-	private void addQContainersToPath(LinkedList<QContainer> path) {
+	private void addQContainersToPath(ArrayList<QContainer> path) {
 		if (predecessor != null) {
-			predecessor.addQContainersToPath(path);
+			path.addAll(predecessor.getPath());
 		}
 		if (qContainer != null) {
 			path.add(qContainer);
@@ -102,12 +143,24 @@ public class AStarPath implements Path {
 
 	@Override
 	public boolean isEmpty() {
-		// an A* path can never be empty
+		// an A* pathReference can never be empty
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
+		if (hashCache != null) {
+			Integer hash = hashCache.get();
+			if (hash != null) {
+				return hash;
+			}
+		}
+		int result = calculateHashCode();
+		hashCache = new SoftReference<Integer>(new Integer(result));
+		return result;
+	}
+
+	public int calculateHashCode() {
 		final int prime = 31;
 		int result = 1;
 		long temp;
@@ -134,6 +187,41 @@ public class AStarPath implements Path {
 		}
 		else if (!qContainer.equals(other.qContainer)) return false;
 		return true;
+	}
+
+	@Override
+	public boolean contains(QContainer qContainer) {
+		Set<QContainer> set = getSet();
+		return set.contains(qContainer);
+	}
+
+	@Override
+	public boolean contains(Collection<QContainer> qContainers) {
+		Set<QContainer> set = getSet();
+		for (QContainer qcon : qContainers) {
+			if (set.contains(qcon)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<QContainer> qContainers) {
+		Set<QContainer> set = getSet();
+		return set.containsAll(qContainers);
+	}
+
+	public Set<QContainer> getSet() {
+		Set<QContainer> set = null;
+		if (cache != null) {
+			set = cache.get();
+		}
+		if (set == null) {
+			set = new HashSet<QContainer>(getPath());
+			cache = new SoftReference<Set<QContainer>>(set);
+		}
+		return set;
 	}
 
 }

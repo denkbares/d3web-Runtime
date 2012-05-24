@@ -78,6 +78,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 	@Override
 	public void init(SearchModel model) {
+		// TODO: cache blocked finalquestionlist, initgeneral should only be
+		// called when the kb or the list changes
 		initGeneralCache(model);
 		super.init(model);
 		initTargetCache(model);
@@ -228,6 +230,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					}
 				}
 			}
+			// TODO: add a hashmap finalquestion -> conditions which must be
+			// recalculated
 			// put all common conditions in the cache
 			preconditionCache.put(condition, new Pair<List<Condition>, Set<QContainer>>(
 					getCommonConditions(neededConditions),
@@ -376,12 +380,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		Collection<QContainer> pathContainers = path.getPath();
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
 		for (Pair<List<Condition>, Set<QContainer>> p : targetCache.get(target)) {
 			// if no qcontainer was on the path, add the conditions
-			if (Collections.disjoint(pathContainers, p.getB())) {
+			if (!path.contains(p.getB())) {
 				conditions.addAll(p.getA());
 			}
 		}
@@ -390,31 +393,45 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			List<Condition> conditionsToUse = new LinkedList<Condition>();
 			// add the original condition
 			conditionsToUse.add(precondition);
+			Set<Condition> nonCondEqual = new HashSet<Condition>();
 			for (Condition additionalCondition : conditions) {
 				if (additionalCondition instanceof CondEqual) {
 					conditionsToUse.add(additionalCondition);
 				}
+				else {
+					nonCondEqual.add(additionalCondition);
+				}
 			}
-			for (Condition additionalCondition : conditions) {
+			Set<Condition> blacklist = new HashSet<Condition>();
+			for (Condition additionalCondition : nonCondEqual) {
+				if (blacklist.contains(additionalCondition)) {
+					continue;
+				}
+				// using a HashSet to fasten Collections.disjoint
+				Set<TerminologyObject> objectsOfAdditionalCondition = new HashSet<TerminologyObject>(
+						additionalCondition.getTerminalObjects());
 				// the term objects of the other conditions must be disjunct
-				if (!(additionalCondition instanceof CondEqual)) {
-					boolean disjunct = true;
-					for (Condition reference : conditions) {
-						if (reference != additionalCondition) {
-							if (!Collections.disjoint(reference.getTerminalObjects(),
-									additionalCondition.getTerminalObjects())) {
-								// adding of this condition could violate the
-								// optimism, continue with next condition
-								disjunct = false;
-								break;
-							}
+				boolean disjunct = true;
+				// NOTE: Collect all reference TerminologyObjects and doing
+				// only one disjoint operation is slower (cannot abort, must
+				// Iterate all conditions)
+				for (Condition reference : conditions) {
+					if (reference != additionalCondition) {
+						if (!Collections.disjoint(reference.getTerminalObjects(),
+									objectsOfAdditionalCondition)) {
+							// adding of this condition could violate the
+							// optimism, continue with next condition
+							disjunct = false;
+							// reference condition cannot be used either
+							blacklist.add(reference);
+							break;
 						}
 					}
-					// if the terms objects are disjunct from all other
-					// additional conditions, the condition can be added
-					if (disjunct) {
-						conditionsToUse.add(additionalCondition);
-					}
+				}
+				// if the terms objects are disjunct from all other
+				// additional conditions, the condition can be added
+				if (disjunct) {
+					conditionsToUse.add(additionalCondition);
 				}
 			}
 			condition = new CondAnd(conditionsToUse);
@@ -422,7 +439,9 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		else {
 			condition = precondition;
 		}
-		return estimatePathCosts(state, condition, condition) + calculateUnusedNegatives(path);
+		double result = estimatePathCosts(state, condition, condition)
+				+ calculateUnusedNegatives(path);
+		return result;
 	}
 
 	/**

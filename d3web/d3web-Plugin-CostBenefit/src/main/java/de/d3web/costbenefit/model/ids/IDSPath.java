@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.model.ids;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -36,6 +37,7 @@ public class IDSPath implements Path {
 
 	private Stack<Node> stack = new Stack<Node>();
 	private double costs = 0;
+	private double negativeCosts = 0;
 	private Stack<Double> coststack = new Stack<Double>();
 
 	@Override
@@ -53,6 +55,7 @@ public class IDSPath implements Path {
 		stack.push(node);
 		double nodeCosts = node.getCosts(session);
 		costs += nodeCosts;
+		if (nodeCosts < 0) negativeCosts += nodeCosts;
 		coststack.push(nodeCosts);
 	}
 
@@ -63,6 +66,7 @@ public class IDSPath implements Path {
 		stack.pop();
 		Double cost = coststack.pop();
 		costs -= cost;
+		if (cost < 0) negativeCosts -= costs;
 	}
 
 	/**
@@ -78,11 +82,11 @@ public class IDSPath implements Path {
 		return copy;
 	}
 
-	private void add(Node node, Double double1) {
+	private void add(Node node, Double cost) {
 		stack.push(node);
-		coststack.push(double1);
-		costs += double1;
-
+		coststack.push(cost);
+		costs += cost;
+		if (cost < 0) negativeCosts += cost;
 	}
 
 	/**
@@ -121,5 +125,31 @@ public class IDSPath implements Path {
 	@Override
 	public String toString() {
 		return "IDS-Path: " + getPath() + " (costs: " + getCosts() + ")";
+	}
+
+	@Override
+	public double getNegativeCosts() {
+		return negativeCosts;
+	}
+
+	@Override
+	public boolean contains(QContainer qContainer) {
+		return getPath().contains(qContainer);
+	}
+
+	@Override
+	public boolean containsAll(Collection<QContainer> qContainers) {
+		return getPath().containsAll(qContainers);
+	}
+
+	@Override
+	public boolean contains(Collection<QContainer> qContainers) {
+		List<QContainer> path = getPath();
+		for (QContainer qcon : qContainers) {
+			if (path.contains(qcon)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

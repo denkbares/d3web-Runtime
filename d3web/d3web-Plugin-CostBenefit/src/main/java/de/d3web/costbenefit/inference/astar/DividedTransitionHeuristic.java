@@ -87,14 +87,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	}
 
 	protected double calculateUnusedNegatives(Path path) {
-		double negativeCostsInPath = 0.0;
-		for (QContainer qcon : path.getPath()) {
-			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
-			if (costs < 0.0) {
-				negativeCostsInPath += costs;
-			}
-		}
-		return negativeSum * 0.75 - negativeCostsInPath;
+		return negativeSum * 0.75 - path.getNegativeCosts();
 	}
 
 	@Override
@@ -108,7 +101,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 		this.allStateTransitions = new LinkedList<StateTransition>();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
-			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(), st.getQcontainer())) {
+			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(),
+					st.getQcontainer())) {
 				allStateTransitions.add(st);
 			}
 		}
@@ -208,41 +202,17 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * {@link StateTransition}. If the StateTransition is capable to prepare
 	 * multiple precondition questions of the target, the costs of the preparing
 	 * questionnaire are divided by the number of preconditions to be
-	 * established (to have the the cost per precondition question).
+	 * established (to have the cost per precondition question).
 	 * 
 	 * @created 06.09.2011
 	 * @param preparingTransition the state transition possibly used to prepare
 	 *        the target
-	 * @param target the target QContainer to be prepared
 	 * @param stateQuestion the question represents the state to be estimated
-	 * @param stateValue the value the state should become
+	 * @param target the target QContainer to be prepared
 	 * @return the minimal costs per question of the target's precondition
 	 */
-	private double calculateCosts(StateTransition preparingTransition, Condition activationCondition, Question stateQuestion, Value stateValue) {
-		// calculate all questions that
-		// a) will be set by the preparing state transition
-		// b) are relevant in the targets activation condition
-		// c) the set values are common with the required values
-
-		// prepare the loop of all set values
-		// (targetStateTransition cannot be null, AStar handles that separately)
-		Collection<? extends TerminologyObject> terminalObjects = activationCondition.getTerminalObjects();
-		Set<Question> set = new HashSet<Question>();
-		for (ValueTransition vt : preparingTransition.getPostTransitions()) {
-			Question question = vt.getQuestion();
-			// the question is relevant (and not yet accepted)
-			if (terminalObjects.contains(question) && !set.contains(question)) {
-				// check if the values required for that questions
-				// matches the values that can be set up
-				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
-				Set<Value> possibleValues = calculatePossibleValues(vt.getSetters());
-				if (!Collections.disjoint(requiredValues, possibleValues)) {
-					// the values that can be set up are common with
-					// the required ones, so count that question
-					set.add(question);
-				}
-			}
-		}
+	private double calculateCosts(StateTransition preparingTransition, Condition activationCondition, Question stateQuestion) {
+		Set<Question> set = getQuestionSet(preparingTransition, activationCondition);
 
 		// if no question has been found, return infinite costs
 		// because this state transition cannot set up the target
@@ -267,6 +237,41 @@ public class DividedTransitionHeuristic implements Heuristic {
 			// the costs of all negative teststeps get substracted anyway
 			return 0;
 		}
+	}
+
+	/**
+	 * calculate all questions that
+	 * 
+	 * a) will be set by the preparing state transition
+	 * 
+	 * b) are relevant in the targets activation condition
+	 * 
+	 * c) the set values are common with the required values
+	 * 
+	 * @created 23.05.2012
+	 * @param preparingTransition
+	 * @param activationCondition
+	 * @return
+	 */
+	private Set<Question> getQuestionSet(StateTransition preparingTransition, Condition activationCondition) {
+		Collection<? extends TerminologyObject> terminalObjects = activationCondition.getTerminalObjects();
+		Set<Question> set = new HashSet<Question>();
+		for (ValueTransition vt : preparingTransition.getPostTransitions()) {
+			Question question = vt.getQuestion();
+			// the question is relevant (and not yet accepted)
+			if (terminalObjects.contains(question) && !set.contains(question)) {
+				// check if the values required for that questions
+				// matches the values that can be set up
+				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
+				Set<Value> possibleValues = calculatePossibleValues(vt.getSetters());
+				if (!Collections.disjoint(requiredValues, possibleValues)) {
+					// the values that can be set up are common with
+					// the required ones, so count that question
+					set.add(question);
+				}
+			}
+		}
+		return set;
 	}
 
 	private Set<Value> calculateRequiredValues(Question question, Condition condition) {
@@ -331,11 +336,10 @@ public class DividedTransitionHeuristic implements Heuristic {
 					questionMap = new HashMap<Value, Double>();
 					targetMap.put(stateQuestion, questionMap);
 				}
+				double costs = calculateCosts(st, activationCondition, stateQuestion);
 				for (ConditionalValueSetter cvs : vt.getSetters()) {
 					Value stateValue = cvs.getAnswer();
 					Double minimum = questionMap.get(stateValue);
-					double costs = calculateCosts(st, activationCondition, stateQuestion,
-							stateValue);
 					if (minimum == null || minimum > costs) {
 						questionMap.put(stateValue, costs);
 					}

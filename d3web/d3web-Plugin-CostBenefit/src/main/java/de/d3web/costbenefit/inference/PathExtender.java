@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,7 +89,7 @@ public class PathExtender implements SearchAlgorithm {
 			for (QContainer qconToInclude : qcontainersToAdd) {
 				Double staticCosts = qconToInclude.getInfoStore().getValue(BasicProperties.COST);
 				// if it is already in the path, do nothing
-				if (!path.getPath().contains(qconToInclude)) {
+				if (!path.contains(qconToInclude)) {
 					Session copiedSession = Util.createSearchCopy(session);
 					for (int i = 0; i < path.getPath().size(); i++) {
 						// check if the qcontainer is applicable
@@ -125,7 +126,8 @@ public class PathExtender implements SearchAlgorithm {
 	private Path getNewPath(int position, QContainer qconToInclude, Path path, Session session) {
 		List<QContainer> qContainers = new LinkedList<QContainer>(path.getPath());
 		qContainers.add(position, qconToInclude);
-		ExtendedPath newPath = new ExtendedPath(qContainers, path.getCosts());
+		ExtendedPath newPath = new ExtendedPath(qContainers, path.getCosts(),
+				path.getNegativeCosts());
 		return newPath;
 	}
 
@@ -178,13 +180,15 @@ public class PathExtender implements SearchAlgorithm {
 
 	private static class ExtendedPath implements Path {
 
-		private List<QContainer> qContainers = new LinkedList<QContainer>();
-		private double costs;
+		private final List<QContainer> qContainers;
+		private final double costs;
+		private final double negativeCosts;
 
-		private ExtendedPath(List<QContainer> qContainers, double costs) {
+		private ExtendedPath(List<QContainer> qContainers, double costs, double negativeCosts) {
 			super();
 			this.qContainers = qContainers;
 			this.costs = costs;
+			this.negativeCosts = negativeCosts;
 		}
 
 		@Override
@@ -205,6 +209,31 @@ public class PathExtender implements SearchAlgorithm {
 		@Override
 		public String toString() {
 			return "Extended-Path: " + getPath() + " (costs: " + getCosts() + ")";
+		}
+
+		@Override
+		public double getNegativeCosts() {
+			return negativeCosts;
+		}
+
+		@Override
+		public boolean contains(QContainer qContainer) {
+			return qContainers.contains(qContainer);
+		}
+
+		@Override
+		public boolean containsAll(Collection<QContainer> qContainers) {
+			return qContainers.containsAll(qContainers);
+		}
+
+		@Override
+		public boolean contains(Collection<QContainer> qContainers) {
+			for (QContainer qcon : qContainers) {
+				if (contains(qcon)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 	}

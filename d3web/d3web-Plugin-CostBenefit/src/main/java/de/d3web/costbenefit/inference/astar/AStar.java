@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -164,6 +163,7 @@ public class AStar {
 		long time1 = System.currentTimeMillis();
 		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
+		log.info("Starting calculation, #targets: " + model.getTargets().size());
 		searchLoop();
 		long time2 = System.currentTimeMillis();
 		log.info("A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
@@ -178,6 +178,11 @@ public class AStar {
 		while (!model.isAborted() && !openNodes.isEmpty()) {
 			// check for the next open node to be processed
 			Node node = openNodes.poll();
+
+			if (node.getfValue() == Double.POSITIVE_INFINITY) {
+				log.info("All targets are unreachable, calculation aborted");
+				break;
+			}
 
 			// if a target has been reached and its cost/benefit is better than
 			// the optimistic fValue of the best node, terminate the algorithm
@@ -284,7 +289,7 @@ public class AStar {
 		}
 		// negative QContainer can only be used once in a path
 		if (qcontainer.getInfoStore().getValue(BasicProperties.COST) < 0.0
-				&& node.getPath().getPath().contains(qcontainer)) {
+				&& node.getPath().contains(qcontainer)) {
 			return false;
 		}
 		// only use qcontainers that are not excluded
@@ -356,12 +361,11 @@ public class AStar {
 
 	private void updateTargets(AStarPath newPath) {
 		QContainer qcontainer = newPath.getQContainer();
-		List<QContainer> pathQContainers = newPath.getPath();
 		for (Target t : model.getTargets()) {
 			// update only if the last qcontainer of the path is contained in
 			// the target and if the path contains all targetQContainers
 			if (t.getQContainers().contains(qcontainer)
-					&& (pathQContainers.containsAll(t.getQContainers()))) {
+					&& (newPath.containsAll(t.getQContainers()))) {
 				// this has to be checked because there
 				// can be several nodes to reach a
 				// target, one of the other nodes could

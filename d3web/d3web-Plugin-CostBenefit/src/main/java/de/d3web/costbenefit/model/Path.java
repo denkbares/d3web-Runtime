@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.model;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -53,4 +54,41 @@ public interface Path {
 	 * @return if the path is empty
 	 */
 	public boolean isEmpty();
+
+	/**
+	 * Returns the sum of all negative costs on the path
+	 * 
+	 * @created 22.05.2012
+	 * @return
+	 */
+	double getNegativeCosts();
+
+	/**
+	 * Returns it the path contains the QContainer
+	 * 
+	 * @created 22.05.2012
+	 * @param qContainer {@link QContainer}
+	 * @return true if the path contains the QContainer, false otherwise
+	 */
+	boolean contains(QContainer qContainer);
+
+	/**
+	 * Returns if the path contains all specified QContainers
+	 * 
+	 * @created 22.05.2012
+	 * @param qContainers specified QContainers
+	 * @return true if the path contains all specified QContainers, false
+	 *         otherwise
+	 */
+	boolean containsAll(Collection<QContainer> qContainers);
+
+	/**
+	 * Returns if the path contains any of the specified QContainers
+	 * 
+	 * @created 22.05.2012
+	 * @param qContainers specified QContainers
+	 * @return true if at least on of the specified qContainers is contained in
+	 *         the path, false otherwise
+	 */
+	boolean contains(Collection<QContainer> qContainers);
 }
