@@ -19,6 +19,7 @@
 package de.d3web.costbenefit.inference.astar;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -38,6 +39,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
+import de.d3web.core.utilities.Pair;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.CostFunction;
@@ -92,6 +94,7 @@ public class AStar {
 	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
 	private final Session session;
+	private final Map<Pair<Path, QContainer>, Double> hValueCache = Collections.synchronizedMap(new HashMap<Pair<Path, QContainer>, Double>());
 
 	// some information about the current search
 	private final transient long initTime;
@@ -382,6 +385,8 @@ public class AStar {
 	}
 
 	private double calculateFValue(Path path, State state, Session session) {
+		// to be removed after evaluation
+
 		double min = Double.POSITIVE_INFINITY;
 		double pathCosts = path.getCosts();
 
@@ -398,14 +403,28 @@ public class AStar {
 				// we need only to calculate the heuristic
 				// if it is capable to minimize the f-Value
 				if (costs / benefit >= min) continue targets;
+				// trial: also check cache
+				AStarPath prePath = ((AStarPath) path).getPredecessor();
+				if (prePath != null) {
+					Pair<Path, QContainer> key = new Pair<Path, QContainer>(prePath, qContainer);
+					Double preHValue = hValueCache.get(key);
+					if (preHValue != null) {
+						double costs2 = preHValue + prePath.getCosts();
+						if (costs2 / benefit >= min) continue targets;
+					}
+				}
 				// adding the costs calculated by the heuristic
-				costs += algorithm.getHeuristic().getDistance(path, state, qContainer);
+				double distance = algorithm.getHeuristic().getDistance(path, state, qContainer);
+				costs += distance;
+				Pair<Path, QContainer> key = new Pair<Path, QContainer>(path, qContainer);
+				hValueCache.put(key, distance);
 				targetCosts = Math.max(targetCosts, costs);
 			}
 			// dividing the whole costs by the benefit
 			targetCosts /= benefit;
 			min = Math.min(min, targetCosts);
 		}
+
 		return min;
 	}
 }

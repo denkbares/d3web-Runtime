@@ -41,7 +41,7 @@ public class AStarPath implements Path {
 	private final QContainer qContainer;
 	private final AStarPath predecessor;
 	private Reference<List<QContainer>> pathReference;
-	private Reference<Set<QContainer>> cache;
+	private Reference<Set<QContainer>> pathSetReference;
 	private final double totalCostCache;
 	private final double negativCostCache;
 	private final double costs;
@@ -178,13 +178,13 @@ public class AStarPath implements Path {
 
 	@Override
 	public boolean contains(QContainer qContainer) {
-		Set<QContainer> set = getSet();
+		Set<QContainer> set = getPathSetReference();
 		return set.contains(qContainer);
 	}
 
 	@Override
 	public boolean contains(Collection<QContainer> qContainers) {
-		Set<QContainer> set = getSet();
+		Set<QContainer> set = getPathSetReference();
 		for (QContainer qcon : qContainers) {
 			if (set.contains(qcon)) {
 				return true;
@@ -195,18 +195,18 @@ public class AStarPath implements Path {
 
 	@Override
 	public boolean containsAll(Collection<QContainer> qContainers) {
-		Set<QContainer> set = getSet();
+		Set<QContainer> set = getPathSetReference();
 		return set.containsAll(qContainers);
 	}
 
-	public Set<QContainer> getSet() {
+	private Set<QContainer> getPathSetReference() {
 		Set<QContainer> set = null;
-		if (cache != null) {
-			set = cache.get();
+		if (pathSetReference != null) {
+			set = pathSetReference.get();
 		}
 		if (set == null) {
 			set = new HashSet<QContainer>(getPath());
-			cache = new SoftReference<Set<QContainer>>(set);
+			pathSetReference = new SoftReference<Set<QContainer>>(set);
 		}
 		return set;
 	}
