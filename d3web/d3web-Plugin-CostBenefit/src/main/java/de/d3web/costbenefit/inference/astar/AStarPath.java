@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
+import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,12 +40,12 @@ public class AStarPath implements Path {
 
 	private final QContainer qContainer;
 	private final AStarPath predecessor;
-	private SoftReference<List<QContainer>> pathReference;
-	private SoftReference<Set<QContainer>> cache;
-	private SoftReference<Double> totalCostCache;
-	private SoftReference<Double> negativCostCache;
-	private SoftReference<Integer> hashCache;
+	private Reference<List<QContainer>> pathReference;
+	private Reference<Set<QContainer>> cache;
+	private final double totalCostCache;
+	private final double negativCostCache;
 	private final double costs;
+	private final int hashCache;
 
 	public AStarPath(QContainer qContainer, AStarPath predecessor, double costs) {
 		super();
@@ -55,6 +56,24 @@ public class AStarPath implements Path {
 		}
 		this.qContainer = qContainer;
 		this.predecessor = predecessor;
+
+		// calculate costs
+		double sum = 0.0;
+		if (predecessor != null) {
+			sum += predecessor.getCosts();
+		}
+		sum += costs;
+		totalCostCache = sum;
+
+		// calculate negative costs
+		sum = 0.0;
+		if (predecessor != null) {
+			sum += predecessor.getNegativeCosts();
+		}
+		if (costs < 0) sum += costs;
+		negativCostCache = sum;
+
+		this.hashCache = calculateHashCode();
 	}
 
 	public AStarPath getPredecessor() {
@@ -63,36 +82,12 @@ public class AStarPath implements Path {
 
 	@Override
 	public double getCosts() {
-		if (totalCostCache != null) {
-			Double totalCosts = totalCostCache.get();
-			if (totalCosts != null) {
-				return totalCosts;
-			}
-		}
-		double sum = 0.0;
-		if (predecessor != null) {
-			sum += predecessor.getCosts();
-		}
-		sum += costs;
-		totalCostCache = new SoftReference<Double>(new Double(sum));
-		return sum;
+		return totalCostCache;
 	}
 
 	@Override
 	public double getNegativeCosts() {
-		if (negativCostCache != null) {
-			Double negativeCosts = negativCostCache.get();
-			if (negativeCosts != null) {
-				return negativeCosts;
-			}
-		}
-		double sum = 0.0;
-		if (predecessor != null) {
-			sum += predecessor.getNegativeCosts();
-		}
-		if (costs < 0) sum += costs;
-		negativCostCache = new SoftReference<Double>(new Double(sum));
-		return sum;
+		return negativCostCache;
 	}
 
 	/**
@@ -149,15 +144,7 @@ public class AStarPath implements Path {
 
 	@Override
 	public int hashCode() {
-		if (hashCache != null) {
-			Integer hash = hashCache.get();
-			if (hash != null) {
-				return hash;
-			}
-		}
-		int result = calculateHashCode();
-		hashCache = new SoftReference<Integer>(new Integer(result));
-		return result;
+		return hashCache;
 	}
 
 	public int calculateHashCode() {
