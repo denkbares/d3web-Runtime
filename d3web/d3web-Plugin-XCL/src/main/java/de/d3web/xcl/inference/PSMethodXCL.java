@@ -178,31 +178,14 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
 		Map<List<Condition>, Float> map = new HashMap<List<Condition>, Float>();
-		LinkedList<Question> questions = new LinkedList<Question>();
-		LinkedList<TerminologyObject> tos = new LinkedList<TerminologyObject>();
+		Collection<Question> questions = new HashSet<Question>();
+		Collection<TerminologyObject> tos = new HashSet<TerminologyObject>();
 		tos.addAll(qasets);
 		flattenQASets(tos, questions);
-		Map<Question, Set<Condition>> excludingQuestions = new HashMap<Question, Set<Condition>>();
-		for (Question q : questions) {
-			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
-					XCLContributedModelSet.KNOWLEDGE_KIND);
-			if (knowledge != null) {
-				for (XCLModel model : knowledge.getModels()) {
-					if (solutions.contains(model.getSolution())) {
-						for (XCLRelation relation : model.getContradictingRelations()) {
-							if (relation.getConditionedFinding().getTerminalObjects().contains(q)) {
-								Set<Condition> conditions = excludingQuestions.get(q);
-								if (conditions == null) {
-									conditions = new HashSet<Condition>();
-									excludingQuestions.put(q, conditions);
-								}
-								conditions.add(relation.getConditionedFinding());
-							}
-						}
-					}
-				}
-			}
-		}
+
+		Map<Question, Set<Condition>> excludingQuestions =
+				getExcludingQuestion(solutions, questions);
+
 		float totalweight = 0;
 		for (Solution solution : solutions) {
 			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
@@ -266,6 +249,34 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return sum;
 	}
 
+	private Map<Question, Set<Condition>> getExcludingQuestion(Collection<Solution> solutions, Collection<Question> questions) {
+		Map<Question, Set<Condition>> excludingQuestions = new HashMap<Question, Set<Condition>>();
+		for (Question q : questions) {
+			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
+					XCLContributedModelSet.KNOWLEDGE_KIND);
+			if (knowledge != null) {
+				for (XCLModel model : knowledge.getModels()) {
+					if (solutions.contains(model.getSolution())) {
+						for (XCLRelation relation : model.getContradictingRelations()) {
+							Collection<? extends TerminologyObject> relationObjects =
+									relation.getConditionedFinding().getTerminalObjects();
+							if (relationObjects.contains(q)) {
+								Set<Condition> conditions = excludingQuestions.get(q);
+								if (conditions == null) {
+									conditions = new HashSet<Condition>();
+									excludingQuestions.put((Question) q, conditions);
+								}
+								conditions.add(relation.getConditionedFinding());
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return excludingQuestions;
+	}
+
 	private static List<List<Condition>> getCombinations(LinkedList<Set<Condition>> conditionsForQuestions) {
 		List<List<Condition>> result = new LinkedList<List<Condition>>();
 		if (conditionsForQuestions.isEmpty()) {
@@ -285,7 +296,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return result;
 	}
 
-	private static void flattenQASets(List<? extends TerminologyObject> qasets, List<Question> questions) {
+	private static void flattenQASets(Collection<? extends TerminologyObject> qasets, Collection<Question> questions) {
 		for (TerminologyObject qaset : qasets) {
 			if (qaset instanceof Question) {
 				questions.add((Question) qaset);
@@ -369,13 +380,14 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
-			return solutions;
+			return new HashSet<Solution>(solutions);
 		}
 		solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
 		if (solutions.size() > 0) {
-			return solutions;
+			return new HashSet<Solution>(solutions);
 		}
-		return session.getBlackboard().getSolutions(State.UNCLEAR);
+		solutions = session.getBlackboard().getSolutions(State.UNCLEAR);
+		return new HashSet<Solution>(solutions);
 	}
 
 	@Override
