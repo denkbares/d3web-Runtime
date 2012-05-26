@@ -178,4 +178,12 @@ public class DefaultSessionRepository implements SessionRepository {
 		return (f instanceof CreationDateFilter);
 	}
 
+	/**
+	 * Clears all of the specified entries form the session repository.
+	 * 
+	 * @created 24.05.2012
+	 */
+	public void clear() {
+		sessionRecords.clear();
+	}
 }

@@ -321,4 +321,5 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			if (outChannel != null) outChannel.close();
 		}
 	}
+
 }
