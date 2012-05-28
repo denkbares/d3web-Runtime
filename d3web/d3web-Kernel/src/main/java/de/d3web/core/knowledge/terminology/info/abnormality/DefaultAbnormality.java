@@ -20,6 +20,7 @@
 
 package de.d3web.core.knowledge.terminology.info.abnormality;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,6 +32,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
  * Represents the abnormality of a symptom Creation date: (06.08.2001 15:51:58)
@@ -64,6 +66,19 @@ public class DefaultAbnormality implements Abnormality {
 		Double ret = values.get(ans);
 		if (ret != null) {
 			return ret.doubleValue();
+		}
+
+		if (ans instanceof MultipleChoiceValue) {
+			double max = -1f;
+			Collection<ChoiceID> choiceIDs = ((MultipleChoiceValue) ans).getChoiceIDs();
+			for (ChoiceID choiceID : choiceIDs) {
+				ret = values.get(new ChoiceValue(choiceID));
+				if (ret == null) return A5;
+				double abnorm = ret;
+				if (abnorm >= A5) return A5;
+				max = Math.max(max, abnorm);
+			}
+			if (max >= A0) return max;
 		}
 
 		return A5;

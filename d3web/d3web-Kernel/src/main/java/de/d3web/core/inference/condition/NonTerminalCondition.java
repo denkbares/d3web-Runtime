@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.utilities.HashCodeUtils;
 
 /**
  * Abstract condition for all non-terminal conditions. A non-terminal condition
@@ -51,17 +52,12 @@ public abstract class NonTerminalCondition implements Condition {
 	 * @param conditions the specified sub-conditions
 	 */
 	public NonTerminalCondition(List<Condition> conditions) {
-		// The interface with the plain List is currently
-		// not touched. Therefore, we do a conversion here.
-		terms = new ArrayList<Condition>(conditions.size());
-		for (Object object : conditions) {
-			terms.add((Condition) object);
-		}
-		int temphash = 0;
-		// hashcode is independent from the order of the list
-		for (Condition cond : terms) {
-			temphash += cond.hashCode();
-		}
+		terms = new ArrayList<Condition>(conditions);
+		// create hash code an cache it
+		int temphash = HashCodeUtils.SEED;
+		temphash = HashCodeUtils.hash(temphash, getClass());
+		temphash = HashCodeUtils.hash(temphash, terms);
+		// temphash = HashCodeUtils.hashUnordered(temphash, terms);
 		hash = temphash;
 	}
 
@@ -96,15 +92,9 @@ public abstract class NonTerminalCondition implements Condition {
 		}
 		else {
 			NonTerminalCondition otherNTC = (NonTerminalCondition) other;
-
-			if ((this.getTerms()) != null && (otherNTC.getTerms() != null)) {
-				return (this.getTerms().containsAll(otherNTC.getTerms()) && otherNTC.getTerms().containsAll(
-						this.getTerms()));
-			}
-			else {
-				return ((this.getTerms()) == null && (otherNTC.getTerms() == null));
-			}
-
+			return this.terms.equals(otherNTC.terms);
+			// return this.terms.containsAll(otherNTC.terms)
+			// && otherNTC.terms.containsAll(this.terms);
 		}
 	}
 

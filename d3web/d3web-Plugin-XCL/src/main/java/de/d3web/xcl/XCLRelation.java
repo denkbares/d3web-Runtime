@@ -28,6 +28,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.utilities.HashCodeUtils;
 
 public class XCLRelation {
 
@@ -122,22 +123,26 @@ public class XCLRelation {
 	public boolean equals(Object o) {
 		if (o instanceof XCLRelation) {
 			XCLRelation r = (XCLRelation) o;
-			return (id.equals(r.id) &&
-					conditionedFinding.equals(r.conditionedFinding) && weight == r.weight);
+			return id.equals(r.id) &&
+					conditionedFinding.equals(r.conditionedFinding) && weight == r.weight;
 		}
 		return false;
 	}
 
 	@Override
 	public String toString() {
-		String w = " ";
-		if (weight != DEFAULT_WEIGHT) w += weight;
-		return conditionedFinding.toString() + w;
+		String string = conditionedFinding.toString();
+		if (weight != DEFAULT_WEIGHT) string += " " + weight;
+		return string;
 	}
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		int hash = HashCodeUtils.SEED;
+		hash = HashCodeUtils.hash(hash, id);
+		hash = HashCodeUtils.hash(hash, conditionedFinding);
+		hash = HashCodeUtils.hash(hash, weight);
+		return hash;
 	}
 
 }

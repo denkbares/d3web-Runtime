@@ -21,6 +21,7 @@
 package de.d3web.core.utilities;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 
 /**
  * Collected methods which allow easy implementation of <code>hashCode</code>.
@@ -54,7 +55,7 @@ public final class HashCodeUtils {
 	/**
 	 * Prime number to multiply first terms before adding the additional term.
 	 */
-	private static final int PRIME_MULTIPLIER = 37;
+	private static final int PRIME_MULTIPLIER = 31;
 
 	/**
 	 * Appends a boolean value onto the specified seed.
@@ -129,5 +130,19 @@ public final class HashCodeUtils {
 
 	private static boolean isArray(Object aObject) {
 		return aObject.getClass().isArray();
+	}
+
+	/**
+	 * Appends an unordered set of objects onto the specified seed. This will
+	 * result on the same hash is the objects are equal, independent of the
+	 * order of the objects in the specified collection.
+	 */
+	public static int hashUnordered(int aSeed, Collection<?> aCollection) {
+		int hash = 0;
+		// hashcode is independent from the order of the list
+		for (Object object : aCollection) {
+			hash += (object == null) ? 1 : object.hashCode();
+		}
+		return hash(aSeed, hash);
 	}
 }
