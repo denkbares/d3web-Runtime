@@ -439,7 +439,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		else {
 			condition = precondition;
 		}
-		double result = estimatePathCosts(state, condition, condition)
+		double result = estimatePathCosts(state, condition)
 				+ calculateUnusedNegatives(path);
 		return result;
 	}

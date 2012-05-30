@@ -82,7 +82,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		return estimatePathCosts(state, precondition, precondition)
+		return estimatePathCosts(state, precondition)
 				+ calculateUnusedNegatives(path);
 	}
 
@@ -94,7 +94,6 @@ public class DividedTransitionHeuristic implements Heuristic {
 	public void init(SearchModel model) {
 		// check if no further initialization required
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
-		if (this.knowledgeBase == kb) return;
 
 		// otherwise prepare some information
 		this.knowledgeBase = kb;
@@ -117,12 +116,30 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	protected double estimatePathCosts(State state, Condition cond, Condition activationCondition) {
+	protected double estimatePathCosts(State state, Condition activationCondition) {
+		Map<Question, Map<Value, Double>> targetMap = costCache.get(activationCondition);
+		if (targetMap == null) {
+			targetMap = getTargetMap(activationCondition);
+			costCache.put(activationCondition, targetMap);
+		}
+		// save terminology objects of condition as a set
+		// create input vector for these objects
+		// cache estimated path costs by this vector
+
+		// compile activationcondition to a tree with evaluable objects, getting
+		// values and value -> cost map by the index of the object in the Vector
+		return estimatePathCosts(state, activationCondition, targetMap);
+	}
+
+	protected double estimatePathCosts(State state, Condition cond, Map<Question, Map<Value, Double>> targetMap) {
 		if (cond instanceof CondAnd) {
 			CondAnd cand = (CondAnd) cond;
 			double sum = 0;
 			for (Condition c : cand.getTerms()) {
-				sum += estimatePathCosts(state, c, activationCondition);
+				sum += estimatePathCosts(state, c, targetMap);
+				if (sum == Double.POSITIVE_INFINITY) {
+					break;
+				}
 			}
 			return sum;
 		}
@@ -132,7 +149,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 			for (Condition c : cor.getTerms()) {
 				// in an or condition, only the cheapest term must be fulfilled
 				cheapest = Math.min(cheapest,
-						estimatePathCosts(state, c, activationCondition));
+						estimatePathCosts(state, c, targetMap));
 			}
 			return cheapest;
 		}
@@ -145,7 +162,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				// costs
 				return 0;
 			}
-			Map<Value, Double> map = getCosts(activationCondition, question);
+			Map<Value, Double> map = getCosts(targetMap, question);
 			if (map != null) {
 				Double costs = map.get(value);
 				if (costs != null) return costs;
@@ -165,7 +182,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				double cheapest = Double.POSITIVE_INFINITY;
 				// searches for the cheapest value transition, setting the
 				// question to another value
-				Map<Value, Double> map = getCosts(activationCondition, question);
+				Map<Value, Double> map = getCosts(targetMap, question);
 				if (map != null) {
 					for (Entry<Value, Double> e : map.entrySet()) {
 						if (!e.getKey().equals(value)) {
@@ -187,13 +204,9 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private Map<Value, Double> getCosts(Condition activationCondition, QuestionChoice question) {
-		Map<Question, Map<Value, Double>> targetMap = costCache.get(activationCondition);
-		if (targetMap == null) {
-			targetMap = getTargetMap(activationCondition);
-			costCache.put(activationCondition, targetMap);
-		}
-		return targetMap.get(question);
+	private Map<Value, Double> getCosts(Map<Question, Map<Value, Double>> targetMap, QuestionChoice question) {
+		Map<Value, Double> questionMap = targetMap.get(question);
+		return questionMap;
 	}
 
 	/**
