@@ -55,7 +55,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	public static final String EXTENSION_ID = "PSMethodXCL";
 
 	private ScoreAlgorithm scoreAlgorithm = new DefaultScoreAlgorithm();
-	private final StrategicSupport strategicSupport = new StrategicSupportXCL();
+	private final StrategicSupport strategicSupport = new StrategicSupportXCLCached();
 
 	public PSMethodXCL() {
 		super();
