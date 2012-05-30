@@ -18,6 +18,7 @@
  */
 package de.d3web.xcl.inference;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -155,79 +156,6 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private static final List<Collection<Condition>> emptyCombination = Collections.unmodifiableList(Arrays.<Collection<Condition>> asList(Collections.<Condition> emptyList()));
-
-	private static final Map<Object, List<Collection<Condition>>> nullCombinationCache = new HashMap<Object, List<Collection<Condition>>>();
-
-	private List<Collection<Condition>> getCombinations(LinkedList<Collection<Condition>> conditionsForQuestions) {
-		boolean allNull = true;
-		for (Collection<Condition> conditions : conditionsForQuestions) {
-			if (conditions.size() != 1 || !conditions.contains(null)) {
-				allNull = false;
-				break;
-			}
-		}
-		if (allNull) {
-			Object key = new Integer(conditionsForQuestions.size());
-			List<Collection<Condition>> result = nullCombinationCache.get(key);
-			if (result == null) {
-				result = calcCombinations(conditionsForQuestions);
-				nullCombinationCache.put(key, result);
-			}
-			return result;
-		}
-		else {
-			return calcCombinations(conditionsForQuestions);
-		}
-	}
-
-	private static List<Collection<Condition>> calcCombinations(LinkedList<Collection<Condition>> conditionsForQuestions) {
-		if (conditionsForQuestions.isEmpty()) {
-			return emptyCombination;
-		}
-		Collection<Condition> firstConditions = conditionsForQuestions.poll();
-		List<Collection<Condition>> restresult = calcCombinations(conditionsForQuestions);
-		// in ≥ 90% of the cases both restresult and first contains 1 element
-		// in ≥ 50% of the cases restresult contains one empty list
-		List<Collection<Condition>> result = new LinkedList<Collection<Condition>>();
-		// if (restresult == emptyCombination && first.size() == 1) {
-		// result.add(first);
-		// return result;
-		// }
-		for (Collection<Condition> restCombination : restresult) {
-			for (Condition firstCondition : firstConditions) {
-				List<Condition> item = new LinkedList<Condition>();
-				item.add(firstCondition);
-				item.addAll(restCombination);
-				result.add(item);
-			}
-		}
-		return result;
-	}
-
-	// private static long excludeTime = 0;
-	// private static long potsTime = 0;
-	// private static int countAllQuestions = 0;
-	// private static int countRelevantQuestions = 0;
-	//
-	// public static void initStats() {
-	// excludeTime = 0;
-	// potsTime = 0;
-	// countAllQuestions = 0;
-	// countRelevantQuestions = 0;
-	// }
-	//
-	// public static void showStats() {
-	// System.out.println("init excludingQuestions: " + excludeTime + "ms");
-	// System.out.println("init pots: " + potsTime + "ms");
-	// System.out.println("average relavant questions: "
-	// + Math.round(countRelevantQuestions / (float) countAllQuestions *
-	// 1000000) / 10000f
-	// + "%");
-	//
-	// }
-
 	@Override
 	public Collection<Question> getDiscriminatingQuestions(
 			Collection<Solution> solutions, Session session) {
@@ -278,29 +206,22 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		return excludingQuestions;
 	}
 
-	private static class WeightSum {
-
-		private float value = 0f;
-	}
-
 	@Override
 	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
-		Map<Collection<Condition>, WeightSum> map = new HashMap<Collection<Condition>, WeightSum>();
 		Collection<Question> questions = getRelevantQuestions(qasets);
+		if (questions.size() == 0) return 0;
 
-		// long time1 = System.currentTimeMillis();
+		InformationPots<Condition> pots = new InformationPots<Condition>();
+
 		Map<Question, Set<XCLRelation>> excludingQuestions =
 				getExcludingQuestion(solutions, questions);
 
-		// long time2 = System.currentTimeMillis();
-		// excludeTime += (time2 - time1);
-
-		float totalweight = 0;
 		for (Solution solution : solutions) {
 			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 			if (model == null) continue;
-			LinkedList<Set<Condition>> conditionsForQuestions = new LinkedList<Set<Condition>>();
+			ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<Set<Condition>>(
+					questions.size());
 			for (Question q : questions) {
 				Set<Condition> set = null;
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
@@ -337,37 +258,11 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 			// multiply possible value sets to get pots
 			// and add solution probabilities to these pots
-			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
-			float weight = (apriori == null) ? 1f : apriori.floatValue();
-			totalweight += weight;
-			fillSolutionIntoPots(weight, conditionsForQuestions, map);
+			pots.addWeights(solution, conditionsForQuestions);
 		}
-
-		// long time3 = System.currentTimeMillis();
-		// potsTime += (time3 - time2);
 
 		// calculate information gain
-		// Russel & Norvig p. 805
-		double sum = 0;
-		for (WeightSum weight : map.values()) {
-			double p = (double) weight.value / totalweight;
-			sum += (-1) * p * Math.log10(p) / Math.log10(2);
-		}
-		return sum;
-	}
-
-	private void fillSolutionIntoPots(float weight, List<? extends Collection<Condition>> conditionsForQuestions, Map<Collection<Condition>, WeightSum> map) {
-		List<Collection<Condition>> combinations =
-				getCombinations(new LinkedList<Collection<Condition>>(conditionsForQuestions));
-		for (Collection<Condition> pot : combinations) {
-			WeightSum weightSum = map.get(pot);
-			if (weightSum == null) {
-				weightSum = new WeightSum();
-				map.put(pot, weightSum);
-			}
-			weightSum.value += weight;
-		}
-
+		return pots.getInformationGain();
 	}
 
 	private static final Set<Condition> NULL_SET = Collections.unmodifiableSet(new HashSet<Condition>(
