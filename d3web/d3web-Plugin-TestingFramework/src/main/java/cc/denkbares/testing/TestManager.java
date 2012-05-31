@@ -18,29 +18,43 @@
  */
 package cc.denkbares.testing;
 
-import java.util.List;
+import java.util.logging.Logger;
+
+import de.d3web.plugin.Extension;
+import de.d3web.plugin.PluginManager;
 
 /**
- * TestObjectProvider interface for providing test-objects.
  * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
- * @created 04.05.2012
+ * @created 30.05.2012
  */
-public interface TestObjectProvider {
+public class TestManager {
 
 	/**
-	 * Delivers a test-object of the given class for a regular expression for an
-	 * identifier.
+	 * Searches within the plugged tests for a test with a specific name.
+	 * Returns null if the test is not found.
 	 * 
-	 * @created 22.05.2012
-	 * @param c Class of the test-object
-	 * @param name regex for the desired test-object instance.
+	 * @created 04.05.2012
+	 * @param testName
 	 * @return
 	 */
-	public <T> List<T> getTestObjects(Class<T> c, String name);
-
-	public <T> String getTestObjectName(T testObject);
-
-	public static final String EXTENSION_POINT_ID = "TestObjectProvider";
+	public static Test<?> findTest(String testName) {
+		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
+				Test.EXTENSION_POINT_ID);
+		for (Extension extension : extensions) {
+			if (extension.getNewInstance() instanceof Test) {
+				Test<?> t = (Test<?>) extension.getSingleton();
+				if (t.getClass().getSimpleName().equals(testName)) {
+					return t;
+				}
+			}
+			else {
+				Logger.getLogger(TestManager.class.getName()).warning(
+						"extension of class '" + extension.getClass().getName() +
+								"' is not of the expected type " + Test.class.getName());
+			}
+		}
+		return null;
+	}
 
 }

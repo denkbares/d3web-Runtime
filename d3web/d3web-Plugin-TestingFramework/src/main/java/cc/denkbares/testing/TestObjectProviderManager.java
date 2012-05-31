@@ -18,24 +18,36 @@
  */
 package cc.denkbares.testing;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.d3web.plugin.Extension;
+import de.d3web.plugin.PluginManager;
+
 /**
  * 
- * @author jochenreutelshofer
- * @created 22.05.2012
+ * @author Jochen Reutelshöfer (denkbares GmbH)
+ * @created 30.05.2012
  */
-public class Utils {
+public class TestObjectProviderManager {
 
-	public static String concat(String[] args) {
-		StringBuffer buffy = new StringBuffer();
-		for (String string : args) {
-			buffy.append(string + ";");
+	/**
+	 * 
+	 * @created 04.05.2012
+	 * @param testName
+	 * @return
+	 */
+	public static List<TestObjectProvider> findTestObjectProviders() {
+		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
+				TestObjectProvider.EXTENSION_POINT_ID);
+		List<TestObjectProvider> pluggedProviders = new ArrayList<TestObjectProvider>();
+		for (Extension extension : extensions) {
+			if (extension.getNewInstance() instanceof TestObjectProvider) {
+				TestObjectProvider t = (TestObjectProvider) extension.getSingleton();
+				pluggedProviders.add(t);
+			}
 		}
-
-		String result = buffy.toString();
-		if (result.endsWith(";")) {
-			result = result.substring(0, result.length() - 1);
-		}
-		return result;
+		return pluggedProviders;
 	}
 
 }

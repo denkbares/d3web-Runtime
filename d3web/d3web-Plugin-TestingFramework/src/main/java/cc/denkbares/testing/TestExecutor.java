@@ -1,8 +1,8 @@
 package cc.denkbares.testing;
 
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -10,9 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.PluginManager;
 
 /*
  * Copyright (C) 2012 denkbares GmbH
@@ -37,24 +34,22 @@ import de.d3web.plugin.PluginManager;
  * A TestExecutor executes a set of tests.
  * 
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public class TestExecutor {
 
-	@SuppressWarnings("rawtypes")
-	private final TestObjectProvider testObjectProvider;
-	private final List<Pair<String, List<String>>> tests;
+	private final Collection<TestObjectProvider> testObjectProviders;
+	private final List<ExecutableTest> tests;
 
 	/**
 	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(@SuppressWarnings("rawtypes") TestObjectProvider provider, List<Pair<String, List<String>>> testAndItsParameters) {
-		this.testObjectProvider = provider;
+	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters) {
+		this.testObjectProviders = providers;
 		this.tests = testAndItsParameters;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T> T cast(Object testObject, Class<T> testObjectClass) {
 		// first check null, because Class.isInstance differs from
 		// "instanceof"-operator for null objects
@@ -65,7 +60,7 @@ public class TestExecutor {
 			throw new ClassCastException();
 		}
 		// and securely cast
-		return (T) testObject;
+		return testObjectClass.cast(testObject);
 	}
 
 	/**
@@ -77,55 +72,28 @@ public class TestExecutor {
 	 * @param buildNumber Build number for this build.
 	 * @return
 	 */
-	public BuildResultSet runtTests(int buildNumber) {
+	public BuildResult runtTests(int buildNumber) {
 		long buildStartTime = System.currentTimeMillis();
-		BuildResultSet build = new BuildResultSet(buildNumber);
+		BuildResult build = new BuildResult(buildNumber);
 
-		for (Pair<String, List<String>> testAndItsParameters : tests) {
+		for (ExecutableTest testAndItsParameters : tests) {
 
-			String testName = testAndItsParameters.getA();
-			List<String> parameters = testAndItsParameters.getB();
-
-			String[] array = parameters.toArray(new String[] {});
-			Set<TestResult> testResults = this.runTest(testName, array[0],
-						array);
-			if (testResults != null) {
-				for (TestResult testResult : testResults) {
-					build.addTestResult(testResult);
-				}
+			String[] array = testAndItsParameters.getArguments();
+			TestResult testResult = this.runTest(testAndItsParameters.getTest(), array[0],
+					Arrays.copyOfRange(array, 1,
+							array.length));
+			if (testResult == null) {
+				testResult = new TestResult(
+						testAndItsParameters.getTest().getClass().getSimpleName(),
+						testAndItsParameters.getArguments());
+				testResult.addMessage(array[0], new Message(Message.Type.ERROR,
+						"Unexpected error while executing test."));
 			}
+			build.addTestResult(testResult);
 		}
 
 		build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
 		return build;
-	}
-
-	/**
-	 * Retrieves and runs the test with the given name.
-	 * 
-	 * 
-	 * @created 22.05.2012
-	 * @param <T>
-	 * @param t The test to be executed.
-	 * @param testObjectID Identifier for the test-object
-	 * @param args The parameters for the test execution
-	 * @return
-	 */
-	public Set<TestResult> runTest(String testName, final String testObjectID, final String[] args) {
-		Test<?> t = findTest(testName);
-		if (t == null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Test not found: '" + testName
-							+ "'");
-			Set<TestResult> result = new HashSet<TestResult>();
-			result.add(new TestResultImpl(new Message(Message.Type.ERROR,
-					"Test could not be found on the system."), testName, Utils.concat(args)));
-			return result;
-		}
-		else {
-
-			return runTest(t, testObjectID, args);
-		}
 	}
 
 	/**
@@ -139,49 +107,70 @@ public class TestExecutor {
 	 * @param args The parameters for the test execution
 	 * @return
 	 */
-	public <T> Set<TestResult> runTest(final Test<T> t, final String testObjectID, final String[] args) {
+	public <T> TestResult runTest(final Test<T> t, final String testObjectID, final String[] args) {
 
+		final String testName = t.getClass().getSimpleName();
 		ArgsCheckResult argsCheckResult = t.checkArgs(args);
-		if (argsCheckResult.getType().equals(ArgsCheckResult.Type.ERROR)) {
-			Set<TestResult> set = new HashSet<TestResult>();
-			String message = argsCheckResult.getType().toString();
-			if (argsCheckResult.getMessage() != null) {
-				message += ": " + argsCheckResult.getMessage();
+		if (argsCheckResult.hasError()) {
+			TestResult result = new TestResult(t.getClass().getSimpleName(),
+					args);
+			String[] arguments = argsCheckResult.getArguments();
+			for (int i = 0; i < arguments.length; i++) {
+				if (argsCheckResult.hasError(i)) {
+					renderMessage(testObjectID, args, argsCheckResult, result, i, "Error");
+				}
+				if (argsCheckResult.hasWarning(i)) {
+					renderMessage(testObjectID, args, argsCheckResult, result, i, "Warning");
+				}
 			}
-			set.add(new TestResultImpl(new Message(Message.Type.ERROR, "Invalid arguments: "
-					+ message), t.getClass().getSimpleName(), Utils.concat(args)));
-			return set;
+			if (arguments.length == 0 && argsCheckResult.hasError(0)) {
+				renderMessage(testObjectID, args, argsCheckResult, result, 0, "Error");
+			}
+
+			return result;
 		}
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		Callable<Set<TestResult>> c = new Callable<Set<TestResult>>() {
+		Callable<TestResult> c = new Callable<TestResult>() {
 
 			@Override
-			public Set<TestResult> call() throws Exception {
-				Set<TestResult> set = new HashSet<TestResult>();
-				@SuppressWarnings("unchecked")
-				List<?> testObjects = testObjectProvider.getTestObject(t.getTestObjectClass(),
-						testObjectID);
-				if (testObjects.size() == 0) {
-					set.add(new TestResultImpl(new Message(Message.Type.ERROR,
-							"No test-object found. (Check TestObjectProviders)"),
-							t.getClass().getSimpleName(),
-							Utils.concat(args)));
+			public TestResult call() throws Exception {
+				TestResult result = new TestResult(testName, args);
+
+				int totalNumberOfTestObjects = 0;
+				for (TestObjectProvider testObjectProvider : testObjectProviders) {
+
+					List<?> testObjects = testObjectProvider.getTestObjects(t.getTestObjectClass(),
+							testObjectID);
+					totalNumberOfTestObjects += testObjects.size();
+
+					for (Object testObject : testObjects) {
+						if (testObject != null) {
+							Message message = t.execute(cast(testObject, t.getTestObjectClass()),
+									args);
+							result.addMessage(testObjectProvider.getTestObjectName(testObject),
+									message);
+						}
+						else {
+							result.addMessage(testName, new Message(Message.Type.ERROR,
+									"Test-object was null. (Check TestObjectProviders)"));
+						}
+
+					}
+				}
+				if (totalNumberOfTestObjects == 0) {
+					result.addMessage(testName, new Message(Message.Type.ERROR,
+							"No test-object found. (Check TestObjectProviders)"));
 
 				}
-
-				for (Object testObject : testObjects) {
-					set.add(new TestResultImpl(t.execute(cast(testObject, t.getTestObjectClass()),
-							args), t.getClass().getSimpleName(), Utils.concat(args)));
-				}
-				return set;
+				return result;
 			}
 
 		};
-		Future<Set<TestResult>> future = executor.submit(c);
+		Future<TestResult> future = executor.submit(c);
 
-		Set<TestResult> result = null;
+		TestResult result = null;
 		try {
 			result = future.get();
 		}
@@ -198,30 +187,17 @@ public class TestExecutor {
 		return result;
 	}
 
-	/**
-	 * Searches within the plugged tests for a test with a specific name.
-	 * Returns null if the test is not found.
-	 * 
-	 * @created 04.05.2012
-	 * @param testName
-	 * @return
-	 */
-	private Test<?> findTest(String testName) {
-		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
-				Test.EXTENSION_POINT_ID);
-		for (Extension extension : extensions) {
-			if (extension.getNewInstance() instanceof Test) {
-				Test<?> t = (Test<?>) extension.getSingleton();
-				if (t.getClass().getSimpleName().equals(testName)) {
-					return t;
-				}
+	private void renderMessage(final String testObjectID, final String[] args, ArgsCheckResult argsCheckResult, TestResult result, int i, String type) {
+		if (argsCheckResult.getMessage(i) != null) {
+			String arg = "none";
+			if (i < args.length) {
+				arg = args[i];
 			}
-			else {
-				Logger.getLogger(getClass().getName()).warning(
-						"extension of class '" + extension.getClass().getName() +
-								"' is not of the expected type " + Test.class.getName());
-			}
+			String message = type + ": " + argsCheckResult.getMessage(i);
+			result.addMessage(testObjectID, new Message(Message.Type.ERROR,
+					"Invalid argument: "
+							+ arg + " (" + message + ")"));
 		}
-		return null;
 	}
+
 }

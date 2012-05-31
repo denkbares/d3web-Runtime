@@ -22,7 +22,7 @@ package cc.denkbares.testing;
  * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an
  * (optional) message text.
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 21.05.2012
  */
 public class Message {

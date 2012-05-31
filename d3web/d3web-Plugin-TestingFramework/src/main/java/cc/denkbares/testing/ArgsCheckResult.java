@@ -20,32 +20,79 @@ package cc.denkbares.testing;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public class ArgsCheckResult {
 
-	public enum Type {
-		FINE, WARNING, ERROR
+	private final String[] args;
+	private String[] errors;
+	private final String[] warnings;
+
+	public ArgsCheckResult(String[] args) {
+		this.args = args;
+		errors = new String[args.length];
+		warnings = new String[args.length];
+
+		// we still need a place to store errors
+		if (args.length == 0) {
+			errors = new String[1];
+		}
 	}
 
-	private final Type type;
-	private String message;
-
-	public String getMessage() {
-		return message;
+	public String[] getArguments() {
+		return args;
 	}
 
-	public ArgsCheckResult(Type t, String m) {
-		this(t);
-		this.message = m;
+	public void setError(int argIndex, String message) {
+		if (argIndex < 0 || argIndex >= errors.length) {
+			throw new IllegalArgumentException("out of range for argument array");
+		}
+		errors[argIndex] = message;
 	}
 
-	public ArgsCheckResult(Type t) {
-		this.type = t;
+	public void setWarning(int argIndex, String message) {
+		if (argIndex < 0 || argIndex >= errors.length) {
+			throw new IllegalArgumentException("out of range for argument array");
+		}
+		warnings[argIndex] = message;
 	}
 
-	public Type getType() {
-		return type;
+	public boolean hasError(int argIndex) {
+		if (argIndex < 0 || argIndex >= errors.length) {
+			throw new IllegalArgumentException("out of range for argument array");
+		}
+		return errors[argIndex] != null;
 	}
+
+	public boolean hasError() {
+		for (int i = 0; i < errors.length; i++) {
+			if (errors[i] != null) return true;
+		}
+		return false;
+	}
+
+	public boolean hasWarning() {
+		for (int i = 0; i < warnings.length; i++) {
+			if (warnings[i] != null) return true;
+		}
+		return false;
+	}
+
+	public boolean hasWarning(int argIndex) {
+		if (argIndex < 0 || argIndex >= errors.length) {
+			throw new IllegalArgumentException("out of range for argument array");
+		}
+		return warnings[argIndex] != null;
+	}
+
+	public String getMessage(int argIndex) {
+		if (errors[argIndex] != null) {
+			return errors[argIndex];
+		}
+		else {
+			return warnings[argIndex];
+		}
+	}
+
 }

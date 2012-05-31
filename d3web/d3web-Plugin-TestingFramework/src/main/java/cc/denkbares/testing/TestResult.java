@@ -18,37 +18,119 @@
  */
 package cc.denkbares.testing;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import cc.denkbares.testing.Message.Type;
+
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
-public interface TestResult {
+public class TestResult implements Comparable<TestResult> {
 
-	/**
-	 * Returns the message attached to this TestResult.
-	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public Message getMessage();
+	private final String[] args;
+	private final String testName;
+
+	private final Map<String, Message> messages = new HashMap<String, Message>();
+
+	public TestResult(String testName, String[] arguments) {
+		this.args = arguments;
+		this.testName = testName;
+	}
+
+	public String getTestName() {
+		return testName;
+	}
+
+	public boolean isSuccessful() {
+		return getType() == Message.Type.SUCCESS;
+	}
 
 	/**
 	 * Returns the arguments/parameters with which the test was executed.
 	 * 
-	 * @created 22.05.2012
-	 * @return
-	 */
-	public String getConfiguration();
-
-	/**
-	 * Returns the type of the attached message.
 	 * 
 	 * @created 22.05.2012
 	 * @return
 	 */
-	public Message.Type getType();
+	public String[] getArguments() {
+		return args;
+	}
 
-	public String getTestName();
+	@Override
+	public int compareTo(TestResult tr) {
+		return getType().compareTo(tr.getType());
+	}
 
+	/**
+	 * Returns if the test result described by this object has a configuration
+	 * 
+	 * @created 30.05.2011
+	 * @return if this result has a configuration
+	 */
+	public boolean hasConfiguration() {
+		return this.args != null && !(this.args.length == 0);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((args == null) ? 0 : args.hashCode());
+		result = prime * result + ((messages == null) ? 0 : hashCode());
+		result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		TestResult other = (TestResult) obj;
+		if (args == null) {
+			if (other.getArguments() != null) return false;
+		}
+		else if (!args.equals(other.getArguments())) return false;
+		Collection<String> otherTestObjectNames = other.getTestObjectNames();
+		if (getTestObjectNames().size() != otherTestObjectNames.size()) return false;
+		// TODO: compare each message ?!
+		if (getType() != other.getType()) return false;
+		return true;
+	}
+
+	/**
+	 * Summarized type of the contained messages.
+	 * 
+	 * @created 22.05.2012
+	 * @return
+	 */
+	public Type getType() {
+		Type t = Message.Type.SUCCESS;
+		for (String testObjectName : this.messages.keySet()) {
+			Message test = messages.get(testObjectName);
+			if (test.getType().equals(Type.ERROR)) {
+				return Type.ERROR;
+			}
+			if (test.getType().equals(Type.FAILURE)) {
+				t = Type.FAILURE;
+			}
+		}
+		return t;
+	}
+
+	public void addMessage(String testObjectName, Message message) {
+		this.messages.put(testObjectName, message);
+	}
+
+	public Collection<String> getTestObjectNames() {
+		return messages.keySet();
+	}
+
+	public Message getMessage(String testObjectName) {
+		return messages.get(testObjectName);
+	}
 }

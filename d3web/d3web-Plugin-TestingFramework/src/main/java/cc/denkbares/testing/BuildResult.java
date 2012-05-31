@@ -30,7 +30,7 @@ import java.util.List;
  * 
  * @author Marc-Oliver Ochlast
  */
-public final class BuildResultSet {
+public final class BuildResult {
 
 	/**
 	 * List of all test results of the executed tests
@@ -52,11 +52,11 @@ public final class BuildResultSet {
 	 */
 	private long buildDuration = 0;
 
-	public BuildResultSet(int buildNumber) {
+	public BuildResult(int buildNumber) {
 		this(buildNumber, new Date());
 	}
 
-	public BuildResultSet(int buildNumber, Date buildDate) {
+	public BuildResult(int buildNumber, Date buildDate) {
 		this.buildNumber = buildNumber;
 		this.buildDate = buildDate;
 	}

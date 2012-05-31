@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 University Wuerzburg, Computer Science VI
+ * Copyright (C) 2012 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -19,37 +19,29 @@
 package cc.denkbares.testing;
 
 /**
- * Class representing a generic pair.
  * 
- * @author Sebastian Furth
- * 
+ * @author Jochen Reutelshöfer (denkbares GmbH)
+ * @created 30.05.2012
  */
-public class Pair<T1, T2> {
+public class ExecutableTest {
 
-	private final T1 a;
-	private final T2 b;
+	private final Test<?> test;
+	private final String[] args;
 
-	public Pair(T1 a, T2 b) {
-		if (a == null || b == null) {
-			throw new NullPointerException("The constructor parameters can't be null!");
-		}
-		this.a = a;
-		this.b = b;
+	/**
+	 * 
+	 */
+	public ExecutableTest(Test<?> t, String[] args) {
+		this.test = t;
+		this.args = args;
 	}
 
-	public T1 getA() {
-		return a;
+	public Test<?> getTest() {
+		return test;
 	}
 
-	public T2 getB() {
-		return b;
-	}
-
-	@Override
-	public String toString() {
-		return "#Pair["
-				+ String.valueOf(getA()) + "; "
-				+ String.valueOf(getB()) + "]";
+	public String[] getArguments() {
+		return args;
 	}
 
 }

@@ -22,7 +22,8 @@ package cc.denkbares.testing;
  * Interface for tests. Implement this class to create a test to be used within
  * the TestingFramework.
  * 
- * @author jochenreutelshofer
+ * @param <T> type of the test object (e.g., KnowledgeBase)
+ * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public interface Test<T> {
@@ -39,8 +40,9 @@ public interface Test<T> {
 	 * @param testObject object to be tested (e.g., a knowledge base)
 	 * @param args optional additional config parameters for the test
 	 * @return a Message containing information about the outcome of the test
+	 * @throws NullPointerException if testObject or args is null
 	 */
-	public Message execute(T testObject, String[] args);
+	Message execute(T testObject, String[] args);
 
 	/**
 	 * Checks the config parameters for correctness. If the parameters are
@@ -50,8 +52,9 @@ public interface Test<T> {
 	 * 
 	 * @param args
 	 * @return
+	 * @throws NullPointerException if testObject or args is null
 	 */
-	public ArgsCheckResult checkArgs(String[] args);
+	ArgsCheckResult checkArgs(String[] args);
 
 	/**
 	 * Defines the class of the test-object to be tested by the execute method.
@@ -60,6 +63,6 @@ public interface Test<T> {
 	 * 
 	 * @return
 	 */
-	public Class<T> getTestObjectClass();
+	Class<T> getTestObjectClass();
 
 }
