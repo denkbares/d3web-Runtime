@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -120,7 +121,9 @@ public class AStar {
 				stateQuestions.add(t.getQuestion());
 			}
 		}
-		Node start = new Node(computeState(session), session, new AStarPath(null, null, 0), 0);
+		AStarPath emptyPath = new AStarPath(null, null, 0);
+		State startState = computeState(session);
+		Node start = new Node(startState, session, emptyPath, 0);
 		openNodes.add(start);
 		successors = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND);
@@ -166,6 +169,13 @@ public class AStar {
 		long time1 = System.currentTimeMillis();
 		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
+
+		// clean up targets if it is not expected to require too much time
+		// and also expect significant speed optimization during calculation
+		if (model.getTargets().size() <= 50) {
+			removeInfiniteTargets();
+		}
+
 		log.info("Starting calculation, #targets: " + model.getTargets().size());
 		searchLoop();
 		long time2 = System.currentTimeMillis();
@@ -175,6 +185,19 @@ public class AStar {
 				"init: " + initTime + "ms, " +
 				"#open: " + openNodes.size() + ", " +
 				"#closed: " + closedNodes.size() + ")");
+	}
+
+	private void removeInfiniteTargets() {
+		Node startNode = openNodes.iterator().next();
+		for (Target target : new ArrayList<Target>(model.getTargets())) {
+			Heuristic heuristic = algorithm.getHeuristic();
+			QContainer qcontainer = target.getQContainers().get(0);
+			double distance =
+					heuristic.getDistance(startNode.getPath(), startNode.getState(), qcontainer);
+			if (distance == Double.POSITIVE_INFINITY) {
+				model.removeTarget(target);
+			}
+		}
 	}
 
 	private void searchLoop() {

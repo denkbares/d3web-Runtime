@@ -54,6 +54,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
+import de.d3web.xcl.XCLRelationType;
 
 /**
  * 
@@ -169,11 +170,6 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 					coveredSymptoms.add((Question) nob);
 				}
 			}
-			for (TerminologyObject nob : model.getNegativeCoveredSymptoms()) {
-				if (nob instanceof Question) {
-					coveredSymptoms.add((Question) nob);
-				}
-			}
 		}
 		return coveredSymptoms;
 	}
@@ -186,10 +182,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			if (knowledge != null) {
 				for (XCLModel model : knowledge.getModels()) {
 					if (solutions.contains(model.getSolution())) {
-						for (XCLRelation relation : model.getContradictingRelations()) {
-							Collection<? extends TerminologyObject> relationObjects =
-									relation.getConditionedFinding().getTerminalObjects();
-							if (relationObjects.contains(q)) {
+						for (XCLRelation relation : model.getCoveringRelations(q)) {
+							if (relation.hasType(XCLRelationType.contradicted)) {
 								Set<XCLRelation> conditions = excludingQuestions.get(q);
 								if (conditions == null) {
 									conditions = new HashSet<XCLRelation>();
@@ -225,29 +219,23 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			for (Question q : questions) {
 				Set<Condition> set = null;
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
-				if (coveringRelations != null) {
-					for (XCLRelation r : coveringRelations) {
-						set = lazyAddAll(set, getExtractedOrs(r));
-					}
-				}
-				Set<XCLRelation> negativeRelations = model.getNegativeCoveringRelations(q);
-				if (negativeRelations != null) {
-					for (XCLRelation r : negativeRelations) {
+				for (XCLRelation r : coveringRelations) {
+					if (r.hasType(XCLRelationType.contradicted)) {
 						set = lazyAddAll(set, getNegatedExtractedOrs(r));
 					}
-				}
-				else {
-					negativeRelations = Collections.emptySet();
+					else {
+						set = lazyAddAll(set, getExtractedOrs(r));
+					}
 				}
 				if (set == null) {
 					set = NULL_SET;
 				}
-				// cover all conditions used in contrarelations of other
+				// cover all conditions used in contra-relations of other
 				// XCLModels
 				Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
 				if (excludingRelations != null) {
 					for (XCLRelation r : excludingRelations) {
-						if (negativeRelations.contains(r)) {
+						if (coveringRelations != null && coveringRelations.contains(r)) {
 							continue;
 						}
 						set = lazyAddAll(set, getExtractedOrs(r));
@@ -258,6 +246,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 			// multiply possible value sets to get pots
 			// and add solution probabilities to these pots
+
 			pots.addWeights(solution, conditionsForQuestions);
 		}
 

@@ -305,6 +305,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					.getDiscriminatingQuestions(solutions, session);
 			Collection<Target> targets = targetFunction.getTargets(session,
 					discriminatingQuestions, solutions, strategicSupport);
+
 			for (Target target : targets) {
 				boolean skipTarget = false;
 				for (QContainer qcontainer : target.getQContainers()) {
@@ -324,6 +325,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				searchModel.maximizeBenefit(target, benefit);
 				allTargets.add(target);
 			}
+
 			// recall them for storing into the case object
 			allSolutions.addAll(solutions);
 		}

@@ -22,6 +22,7 @@ package de.d3web.xcl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -44,9 +45,8 @@ import de.d3web.xcl.inference.PSMethodXCL;
 
 public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, SessionObjectSource<XCLCaseModel> {
 
-	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND = new KnowledgeKind<XCLModel>(
-			"XCLModel",
-			XCLModel.class);
+	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND =
+			new KnowledgeKind<XCLModel>("XCLModel", XCLModel.class);
 
 	private Solution solution;
 
@@ -63,8 +63,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	private boolean considerOnlyRelevantRelations = true;
 	// TODO: store these information in the NamedObjects, also required for
 	// efficient propagation
-	private transient final Map<TerminologyObject, Set<XCLRelation>> negativeCoverage = new HashMap<TerminologyObject, Set<XCLRelation>>();
-	private transient final Map<TerminologyObject, Set<XCLRelation>> positiveCoverage = new HashMap<TerminologyObject, Set<XCLRelation>>();
+	private transient final Map<TerminologyObject, Set<XCLRelation>> coveringRelations = new HashMap<TerminologyObject, Set<XCLRelation>>();
 
 	public XCLModel(Solution solution) {
 		this.solution = solution;
@@ -75,20 +74,30 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		contradictingRelations = new LinkedList<XCLRelation>();
 	}
 
+	/**
+	 * Returns a set of all the {@link TerminologyObject}s that are covered by
+	 * this {@link XCLModel} with any type of {@link XCLRelation}.
+	 * 
+	 * @created 31.05.2012
+	 * @return the covered terminology objects
+	 */
 	public Set<TerminologyObject> getCoveredSymptoms() {
-		return positiveCoverage.keySet();
+		return coveringRelations.keySet();
 	}
 
+	/**
+	 * Returns all the {@link XCLRelation}s of any {@link XCLRelationType} that
+	 * are covering the specified {@link TerminologyObject} within this
+	 * {@link XCLModel}. If no relations are covering the specified object, an
+	 * empty set is returned.
+	 * 
+	 * @created 31.05.2012
+	 * @param no the object to be covered
+	 * @return the covering relations
+	 */
 	public Set<XCLRelation> getCoveringRelations(TerminologyObject no) {
-		return positiveCoverage.get(no);
-	}
-
-	public Set<TerminologyObject> getNegativeCoveredSymptoms() {
-		return negativeCoverage.keySet();
-	}
-
-	public Set<XCLRelation> getNegativeCoveringRelations(TerminologyObject no) {
-		return negativeCoverage.get(no);
+		Set<XCLRelation> result = coveringRelations.get(no);
+		return (result == null) ? Collections.<XCLRelation> emptySet() : result;
 	}
 
 	public static String insertXCLRelation(KnowledgeBase kb,
@@ -124,8 +133,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			xclModel = new XCLModel(d);
 			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, xclModel);
 		}
-		relation = XCLRelation.createXCLRelation(
-				theCondition, weight);
+		relation = XCLRelation.createXCLRelation(theCondition, weight);
 		xclModel.addRelation(relation, type);
 		return relation;
 	}
@@ -161,6 +169,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
+		relation.initType(type);
 		for (TerminologyObject nob : relation.getConditionedFinding().getTerminalObjects()) {
 			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(
 					XCLContributedModelSet.KNOWLEDGE_KIND);
@@ -172,16 +181,16 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			set.addModel(this);
 		}
 		if (type.equals(XCLRelationType.explains)) {
-			return addPositiveRelationTo(relation, relations);
+			return addRelationTo(relation, relations);
 		}
 		else if (type.equals(XCLRelationType.contradicted)) {
-			return addNegativeRelationTo(relation, contradictingRelations);
+			return addRelationTo(relation, contradictingRelations);
 		}
 		else if (type.equals(XCLRelationType.requires)) {
-			return addPositiveRelationTo(relation, necessaryRelations);
+			return addRelationTo(relation, necessaryRelations);
 		}
 		else if (type.equals(XCLRelationType.sufficiently)) {
-			return addPositiveRelationTo(relation, sufficientRelations);
+			return addRelationTo(relation, sufficientRelations);
 		}
 		else return false;
 	}
@@ -205,34 +214,17 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		sufficientRelations.remove(rel);
 	}
 
-	private boolean addPositiveRelationTo(XCLRelation relation,
+	private boolean addRelationTo(XCLRelation relation,
 			Collection<XCLRelation> theRelations) {
 
 		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
 		Collection<? extends TerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
 		for (TerminologyObject no : terminalObjects) {
-			Set<XCLRelation> set = positiveCoverage.get(no);
+			Set<XCLRelation> set = coveringRelations.get(no);
 			if (set == null) {
 				set = new HashSet<XCLRelation>();
-				positiveCoverage.put(no, set);
-			}
-			set.add(relation);
-		}
-		return true;
-	}
-
-	private boolean addNegativeRelationTo(XCLRelation relation,
-			Collection<XCLRelation> theRelations) {
-
-		if (theRelations.contains(relation)) return false;
-		theRelations.add(relation);
-		Collection<? extends TerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
-		for (TerminologyObject no : terminalObjects) {
-			Set<XCLRelation> set = negativeCoverage.get(no);
-			if (set == null) {
-				set = new HashSet<XCLRelation>();
-				negativeCoverage.put(no, set);
+				coveringRelations.put(no, set);
 			}
 			set.add(relation);
 		}

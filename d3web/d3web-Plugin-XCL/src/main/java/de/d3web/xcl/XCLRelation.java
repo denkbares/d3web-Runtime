@@ -36,6 +36,7 @@ public class XCLRelation {
 	private Condition conditionedFinding;
 	private double weight = DEFAULT_WEIGHT;
 	private String id;
+	private XCLRelationType type = null;
 	private static int count = 0;
 
 	private XCLRelation() {
@@ -145,4 +146,29 @@ public class XCLRelation {
 		return hash;
 	}
 
+	// TODO: init type in constructor and make it final
+	void initType(XCLRelationType type) {
+		this.type = type;
+	}
+
+	/**
+	 * Returns the type of this relation or null of the relation has not been
+	 * added to an {@link XCLModel} yet.
+	 * 
+	 * @created 31.05.2012
+	 */
+	public XCLRelationType getType() {
+		return this.type;
+	}
+
+	/**
+	 * Returns if this relation if of the specified relation type.
+	 * 
+	 * @created 31.05.2012
+	 * @param type the type to check aginst
+	 * @return if the relation if of expected type, false otherwise
+	 */
+	public boolean hasType(XCLRelationType type) {
+		return type.equals(this.type);
+	}
 }

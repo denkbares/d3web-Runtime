@@ -129,6 +129,17 @@ public class SearchModel {
 		targets.add(target);
 	}
 
+	public void removeTarget(Target target) {
+		 targets.remove(target);
+		if (bestCostBenefitTarget != null) {
+			throw new IllegalStateException("cannot remove targets during search");
+		}
+		if (target == bestBenefitTarget) {
+			bestBenefitTarget = null;
+			if (!targets.isEmpty()) bestBenefitTarget = targets.first();
+		}
+	}
+
 	/**
 	 * This method signals that a target has been reached by a new or improved
 	 * path. If updates the results of this search model if the new or improved

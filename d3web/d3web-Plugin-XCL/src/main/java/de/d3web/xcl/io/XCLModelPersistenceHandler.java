@@ -209,10 +209,9 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				Node child = children.item(t);
 
 				if (child.getNodeName().equals("Condition")) {
-					// TODO: check jochen
 					child.getTextContent();
-					ac = (Condition) PersistenceManager.getInstance().readFragment((Element) child,
-							kb);
+					ac = (Condition) PersistenceManager.getInstance().readFragment(
+							(Element) child, kb);
 				}
 				else if (child.getNodeName().equals("weight")) {
 					weight = Double.parseDouble(child.getTextContent());

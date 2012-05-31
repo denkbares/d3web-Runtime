@@ -52,6 +52,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
+import de.d3web.xcl.XCLRelationType;
 
 /**
  * 
@@ -80,19 +81,16 @@ public class StrategicSupportXCL implements StrategicSupport {
 			for (Question q : questions) {
 				Set<Condition> set = new HashSet<Condition>();
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
-				if (coveringRelations != null) {
-					for (XCLRelation r : coveringRelations) {
-						extractOrs(set, r.getConditionedFinding());
-					}
-				}
-				coveringRelations = model.getNegativeCoveringRelations(q);
 				Set<Condition> conditions = excludingQuestions.get(q) == null
 						? new HashSet<Condition>()
 						: new HashSet<Condition>(excludingQuestions.get(q));
-				if (coveringRelations != null) {
-					for (XCLRelation r : coveringRelations) {
+				for (XCLRelation r : coveringRelations) {
+					if (r.hasType(XCLRelationType.contradicted)) {
 						extractOrs(set, new CondNot(r.getConditionedFinding()));
 						conditions.remove(r.getConditionedFinding());
+					}
+					else {
+						extractOrs(set, r.getConditionedFinding());
 					}
 				}
 				if (set.isEmpty()) {
@@ -285,11 +283,6 @@ public class StrategicSupportXCL implements StrategicSupport {
 			if (ks == null) continue;
 			XCLModel model = (XCLModel) ks;
 			for (TerminologyObject nob : model.getCoveredSymptoms()) {
-				if (nob instanceof Question) {
-					coveredSymptoms.add((Question) nob);
-				}
-			}
-			for (TerminologyObject nob : model.getNegativeCoveredSymptoms()) {
 				if (nob instanceof Question) {
 					coveredSymptoms.add((Question) nob);
 				}
