@@ -64,6 +64,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	// TODO: store these information in the NamedObjects, also required for
 	// efficient propagation
 	private transient final Map<TerminologyObject, Set<XCLRelation>> coveringRelations = new HashMap<TerminologyObject, Set<XCLRelation>>();
+	private transient final Set<TerminologyObject> positiveCoveredSymptoms = new HashSet<TerminologyObject>();
 
 	public XCLModel(Solution solution) {
 		this.solution = solution;
@@ -83,6 +84,18 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	 */
 	public Set<TerminologyObject> getCoveredSymptoms() {
 		return coveringRelations.keySet();
+	}
+
+	/**
+	 * Returns a set of all the {@link TerminologyObject}s that are covered by
+	 * this {@link XCLModel} with any type that is not
+	 * {@link XCLRelationType#contradicted}.
+	 * 
+	 * @created 31.05.2012
+	 * @return the covered terminology objects
+	 */
+	public Set<TerminologyObject> getPositiveCoveredSymptoms() {
+		return positiveCoveredSymptoms;
 	}
 
 	/**
@@ -219,6 +232,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
+
+		boolean isPositive = !relation.hasType(XCLRelationType.contradicted);
 		Collection<? extends TerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
 		for (TerminologyObject no : terminalObjects) {
 			Set<XCLRelation> set = coveringRelations.get(no);
@@ -227,6 +242,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 				coveringRelations.put(no, set);
 			}
 			set.add(relation);
+			if (isPositive) positiveCoveredSymptoms.add(no);
 		}
 		return true;
 	}
