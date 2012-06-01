@@ -74,13 +74,39 @@ public class InformationPots<K> {
 	}
 
 	private final Map<MultiKey<K>, WeightSum> map = new HashMap<MultiKey<K>, WeightSum>();
-	private float totalweight = 0;
+	private float totalWeight = 0;
 
+	/**
+	 * Adds a solution (or its weight to be more specific) to all pots possible.
+	 * The possible pots are the pots for every combination of answers
+	 * specified. The specified answers are a Collection of answers for a vector
+	 * (ArrayList) of questions. The collection of answers may contain
+	 * <code>null</code> that represents 'any normal value' of that question.
+	 * 
+	 * @created 01.06.2012
+	 * @param solution the solution to add to the pots
+	 * @param answers all answers for all relevant questions
+	 */
 	public void addWeights(Solution solution, ArrayList<? extends Collection<K>> answers) {
 		Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
 		float weight = (apriori == null) ? 1f : apriori.floatValue();
-		totalweight += weight;
+		addWeights(weight, answers);
+	}
 
+	/**
+	 * Adds a solution weight to all pots possible. The possible pots are the
+	 * pots for every combination of answers specified. The specified answers
+	 * are a Collection of answers for a vector (ArrayList) of questions. The
+	 * collection of answers may contain <code>null</code> that represents 'any
+	 * normal value' of that question.
+	 * 
+	 * @created 01.06.2012
+	 * @param solution the solution to add to the pots
+	 * @param answers all answers for all relevant questions
+	 */
+	public void addWeights(float weight, ArrayList<? extends Collection<K>> answers) {
+		if (weight == 0f) return;
+		totalWeight += weight;
 		int size = answers.size();
 		@SuppressWarnings("unchecked")
 		K[] keys = (K[]) new Object[size];
@@ -120,10 +146,21 @@ public class InformationPots<K> {
 		// Russel & Norvig p. 805
 		double sum = 0;
 		for (WeightSum weight : map.values()) {
-			double p = (double) weight.value / totalweight;
+			double p = (double) weight.value / totalWeight;
 			sum += (-1) * p * Math.log10(p) / Math.log10(2);
 		}
 		return sum;
+	}
+
+	/**
+	 * Returns the total weight of all solutions added yet to this
+	 * InformationPots.
+	 * 
+	 * @created 01.06.2012
+	 * @return the total weight added yet
+	 */
+	public float getTotalWeight() {
+		return totalWeight;
 	}
 
 }

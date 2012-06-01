@@ -57,7 +57,7 @@ public class ContraRelationsTest {
 		Question q2 = kb.getManager().searchQuestion("Frage2");
 		Question q3 = kb.getManager().searchQuestion("Frage3");
 		Question q4 = kb.getManager().searchQuestion("Frage4");
-		Assert.assertEquals(5, xcl.getUndiscriminatedSolutions(session).size());
+		Assert.assertEquals(4, xcl.getUndiscriminatedSolutions(session).size());
 		assertPositive(session, xcl, q1);
 		assertPositive(session, xcl, q2);
 		assertPositive(session, xcl, q3);

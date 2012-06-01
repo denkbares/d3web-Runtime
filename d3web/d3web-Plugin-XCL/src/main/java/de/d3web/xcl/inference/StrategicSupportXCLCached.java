@@ -211,11 +211,21 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Map<Question, Set<XCLRelation>> excludingQuestions =
 				getExcludingQuestion(solutions, questions);
 
-		for (Solution solution : solutions) {
-			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
-			if (model == null) continue;
-			ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<Set<Condition>>(
-					questions.size());
+		Set<XCLModel> coveringModels = new HashSet<XCLModel>();
+		for (Question q : questions) {
+			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
+					XCLContributedModelSet.KNOWLEDGE_KIND);
+			if (knowledge == null) continue;
+			for (XCLModel model : knowledge.getModels()) {
+				if (solutions.contains(model.getSolution())) {
+					coveringModels.add(model);
+				}
+			}
+		}
+
+		for (XCLModel model : coveringModels) {
+			ArrayList<Set<Condition>> conditionsForQuestions =
+					new ArrayList<Set<Condition>>(questions.size());
 			for (Question q : questions) {
 				Set<Condition> set = null;
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
@@ -246,12 +256,41 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 			// multiply possible value sets to get pots
 			// and add solution probabilities to these pots
-
-			pots.addWeights(solution, conditionsForQuestions);
+			pots.addWeights(model.getSolution(), conditionsForQuestions);
 		}
+
+		// finally we add all the solutions that are not covered at all
+		float allWeight = getTotalWeight(solutions);
+		ArrayList<Set<Condition>> conditionsForQuestions =
+				new ArrayList<Set<Condition>>(questions.size());
+		for (int i = 0; i < questions.size(); i++) {
+			conditionsForQuestions.add(NULL_SET);
+		}
+		pots.addWeights(allWeight - pots.getTotalWeight(), conditionsForQuestions);
 
 		// calculate information gain
 		return pots.getInformationGain();
+	}
+
+	// use come cache mechanism to avoid multiple calculation
+	private transient Collection<Solution> lastTotalWeightSolutions = null;
+	private transient float lastTotalWeight = 0f;
+
+	private synchronized float getTotalWeight(Collection<Solution> solutions) {
+		if (lastTotalWeightSolutions == solutions) return lastTotalWeight;
+
+		// calculate the total weight
+		float totalWeight = 0;
+		for (Solution solution : solutions) {
+			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
+			float weight = (apriori == null) ? 1f : apriori.floatValue();
+			totalWeight += weight;
+		}
+
+		// use cache and return
+		lastTotalWeightSolutions = solutions;
+		lastTotalWeight = totalWeight;
+		return totalWeight;
 	}
 
 	private static final Set<Condition> NULL_SET = Collections.unmodifiableSet(new HashSet<Condition>(
@@ -320,16 +359,24 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 	@Override
 	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
-		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
-		if (solutions.size() > 0) {
-			return new HashSet<Solution>(solutions);
+		Collection<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
+		if (solutions.isEmpty()) {
+			solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
 		}
-		solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
-		if (solutions.size() > 0) {
-			return new HashSet<Solution>(solutions);
+		if (solutions.isEmpty()) {
+			solutions = session.getBlackboard().getSolutions(State.UNCLEAR);
 		}
-		solutions = session.getBlackboard().getSolutions(State.UNCLEAR);
-		return new HashSet<Solution>(solutions);
+		// make a hashset, because we require it for fast access
+		// during information gain calculation later on
+		// and remove all non-xcl solutions from the set meanwhile
+		HashSet<Solution> result = new HashSet<Solution>();
+		for (Solution solution : solutions) {
+			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+			if (model != null) {
+				result.add(solution);
+			}
+		}
+		return result;
 	}
 
 }
