@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -43,6 +45,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -56,12 +59,6 @@ import de.d3web.costbenefit.model.SearchModel;
  * @created 22.06.2011
  */
 public class DividedTransitionHeuristic implements Heuristic {
-
-	/**
-	 * Stores the costs of the cheapest state transition per Question and Value
-	 * for each target
-	 */
-	private Map<Condition, Map<Question, Map<Value, Double>>> costCache;
 
 	/**
 	 * Stores the {@link KnowledgeBase} this heuristic is initialized for
@@ -106,7 +103,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 			}
 		}
 
-		this.costCache = new HashMap<Condition, Map<Question, Map<Value, Double>>>();
+		this.costCache = Collections.synchronizedMap(new HashMap<Condition, ActivationCacheEntry>());
 		negativeSum = 0;
 		for (QContainer qcon : kb.getManager().getQContainers()) {
 			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
@@ -116,58 +113,152 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	protected double estimatePathCosts(State state, Condition activationCondition) {
-		Map<Question, Map<Value, Double>> targetMap = costCache.get(activationCondition);
-		if (targetMap == null) {
-			targetMap = getTargetMap(activationCondition);
-			costCache.put(activationCondition, targetMap);
-		}
-		// save terminology objects of condition as a set
-		// create input vector for these objects
-		// cache estimated path costs by this vector
+	private static final class ActivationCacheEntry {
 
-		// compile activationcondition to a tree with evaluable objects, getting
-		// values and value -> cost map by the index of the object in the Vector
-		return estimatePathCosts(state, activationCondition, targetMap);
+		private Map<Question, Map<Value, Double>> targetMap;
+		private List<TerminologyObject> objects;
+		private CompiledCostsFunction costFunction;
 	}
 
-	protected double estimatePathCosts(State state, Condition cond, Map<Question, Map<Value, Double>> targetMap) {
-		if (cond instanceof CondAnd) {
-			CondAnd cand = (CondAnd) cond;
+	/**
+	 * Stores the costs of the cheapest state transition per Question and Value
+	 * for each target
+	 */
+	private Map<Condition, ActivationCacheEntry> costCache;
+
+	protected double estimatePathCosts(State state, Condition activationCondition) {
+		ActivationCacheEntry entry = costCache.get(activationCondition);
+		if (entry == null) {
+			entry = new ActivationCacheEntry();
+			entry.targetMap = getTargetMap(activationCondition);
+			entry.objects = new ArrayList<TerminologyObject>(
+					activationCondition.getTerminalObjects());
+			entry.costFunction = compile(activationCondition, entry.objects, entry.targetMap);
+			costCache.put(activationCondition, entry);
+		}
+
+		ArrayList<Value> key = new ArrayList<Value>(entry.objects.size());
+		for (TerminologyObject object : entry.objects) {
+			if (object instanceof Question) {
+				key.add(state.getValue((Question) object));
+			}
+			else {
+				key.add(UndefinedValue.getInstance());
+			}
+		}
+
+		return entry.costFunction.eval(key);
+	}
+
+	private static interface CompiledCostsFunction {
+
+		double eval(ArrayList<Value> values);
+	}
+
+	private static final class CompiledCondAnd implements CompiledCostsFunction {
+
+		private final CompiledCostsFunction[] children;
+
+		public CompiledCondAnd(CompiledCostsFunction[] children) {
+			this.children = children;
+		}
+
+		@Override
+		public double eval(ArrayList<Value> values) {
 			double sum = 0;
-			for (Condition c : cand.getTerms()) {
-				sum += estimatePathCosts(state, c, targetMap);
-				if (sum == Double.POSITIVE_INFINITY) {
-					break;
-				}
+			for (CompiledCostsFunction child : children) {
+				sum += child.eval(values);
+				if (sum == Double.POSITIVE_INFINITY) break;
 			}
 			return sum;
 		}
-		else if (cond instanceof CondOr) {
-			CondOr cor = (CondOr) cond;
+	}
+
+	private static final class CompiledCondOr implements CompiledCostsFunction {
+
+		private final CompiledCostsFunction[] children;
+
+		public CompiledCondOr(CompiledCostsFunction[] children) {
+			this.children = children;
+		}
+
+		@Override
+		public double eval(ArrayList<Value> values) {
 			double cheapest = Double.POSITIVE_INFINITY;
-			for (Condition c : cor.getTerms()) {
+			for (CompiledCostsFunction child : children) {
 				// in an or condition, only the cheapest term must be fulfilled
-				cheapest = Math.min(cheapest,
-						estimatePathCosts(state, c, targetMap));
+				cheapest = Math.min(cheapest, child.eval(values));
+				if (cheapest == 0.0) break;
 			}
 			return cheapest;
+		}
+	}
+
+	private static final class CompiledCondEqual implements CompiledCostsFunction {
+
+		private final int index;
+		private final Value value;
+		private final double costs;
+
+		public CompiledCondEqual(Value value, int index, double costs) {
+			this.costs = costs;
+			this.value = value;
+			this.index = index;
+		}
+
+		@Override
+		public double eval(ArrayList<Value> values) {
+			Value value = values.get(index);
+			if (this.value.equals(value)) return 0.0;
+			return costs;
+		}
+	}
+
+	private static final class CompiledCondNotEqual implements CompiledCostsFunction {
+
+		private final int index;
+		private final Value value;
+		private final double costs;
+
+		public CompiledCondNotEqual(Value value, int index, double costs) {
+			this.costs = costs;
+			this.value = value;
+			this.index = index;
+		}
+
+		@Override
+		public double eval(ArrayList<Value> values) {
+			Value value = values.get(index);
+			if (!this.value.equals(value)) return 0.0;
+			return costs;
+		}
+	}
+
+	private CompiledCostsFunction compile(Condition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
+		if (cond instanceof CondAnd) {
+			CompiledCostsFunction[] children =
+					getCompiledChildren((CondAnd) cond, objects, targetMap);
+			if (children.length == 1) return children[0];
+			return new CompiledCondAnd(children);
+		}
+		else if (cond instanceof CondOr) {
+			CompiledCostsFunction[] children =
+					getCompiledChildren((CondOr) cond, objects, targetMap);
+			if (children.length == 1) return children[0];
+			return new CompiledCondOr(children);
 		}
 		else if (cond instanceof CondEqual) {
 			CondEqual c = (CondEqual) cond;
 			QuestionChoice question = (QuestionChoice) c.getQuestion();
 			ChoiceValue value = (ChoiceValue) c.getValue();
-			if (state.hasValue(question, value)) {
-				// condition is fulfilled, no state transition needed => no
-				// costs
-				return 0;
-			}
 			Map<Value, Double> map = getCosts(targetMap, question);
+			int index = objects.indexOf(question);
+			double valueCosts = Double.POSITIVE_INFINITY;
 			if (map != null) {
 				Double costs = map.get(value);
-				if (costs != null) return costs;
+				if (costs != null) valueCosts = costs;
 			}
-			return Double.POSITIVE_INFINITY;
+			return new CompiledCondEqual(value, index, valueCosts);
 		}
 		else if (cond instanceof CondNot) {
 			CondNot cnot = (CondNot) cond;
@@ -176,13 +267,11 @@ public class DividedTransitionHeuristic implements Heuristic {
 				CondEqual c = (CondEqual) terms.get(0);
 				QuestionChoice question = (QuestionChoice) c.getQuestion();
 				Value value = c.getValue();
-				if (!state.hasValue(question, value)) {
-					return 0.0;
-				}
-				double cheapest = Double.POSITIVE_INFINITY;
+				Map<Value, Double> map = getCosts(targetMap, question);
+				int index = objects.indexOf(question);
 				// searches for the cheapest value transition, setting the
 				// question to another value
-				Map<Value, Double> map = getCosts(targetMap, question);
+				double cheapest = Double.POSITIVE_INFINITY;
 				if (map != null) {
 					for (Entry<Value, Double> e : map.entrySet()) {
 						if (!e.getKey().equals(value)) {
@@ -190,7 +279,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 						}
 					}
 				}
-				return cheapest;
+				return new CompiledCondNotEqual(value, index, cheapest);
 			}
 			else {
 				throw new IllegalArgumentException("Can only handle CondNot with one CondEqual: "
@@ -202,6 +291,16 @@ public class DividedTransitionHeuristic implements Heuristic {
 					"Can only handle CondNot, CondAnd, CondOr or CondEqual: "
 							+ cond);
 		}
+	}
+
+	private CompiledCostsFunction[] getCompiledChildren(NonTerminalCondition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
+		List<Condition> terms = cond.getTerms();
+		CompiledCostsFunction[] children = new CompiledCostsFunction[terms.size()];
+		int index = 0;
+		for (Condition term : terms) {
+			children[index++] = compile(term, objects, targetMap);
+		}
+		return children;
 	}
 
 	private Map<Value, Double> getCosts(Map<Question, Map<Value, Double>> targetMap, QuestionChoice question) {
