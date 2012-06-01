@@ -40,6 +40,7 @@ import de.d3web.core.session.blackboard.Blackboard;
 public class State {
 
 	private final Set<Question> questions;
+	// private final Value[] values;
 	private final Session session;
 	private final int hashCode;
 
@@ -49,9 +50,12 @@ public class State {
 
 		int hashCode = 1;
 		Blackboard blackboard = session.getBlackboard();
+		// this.values = new Value[questions.size()];
+		// int index = 0;
 		for (Question q : questions) {
 			Value value = blackboard.getValue(q);
 			hashCode = 31 * hashCode + value.hashCode();
+			// values[index++] = value;
 		}
 		this.hashCode = hashCode;
 	}
@@ -70,6 +74,10 @@ public class State {
 		return equals(value, storedValue);
 	}
 
+	public final Value getValue(Question question) {
+		return session.getBlackboard().getValue(question);
+	}
+
 	private boolean equals(Object o1, Object o2) { // NOSONAR
 		if (o1 == o2) return true;
 		if (o1 == null) return false;
@@ -83,6 +91,7 @@ public class State {
 		if (o instanceof State) {
 			State otherState = (State) o;
 			if (otherState.hashCode != hashCode) return false;
+			// return Arrays.equals(otherState.values, values);
 			if (!otherState.questions.equals(questions)) return false;
 			for (Question question : questions) {
 				Value value1 = session.getBlackboard().getValue(question);
