@@ -16,13 +16,13 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package cc.denkbares.testing;
+package de.d3web.testing;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import cc.denkbares.testing.Message.Type;
+import de.d3web.testing.Message.Type;
 
 /**
  * 

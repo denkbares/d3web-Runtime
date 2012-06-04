@@ -16,7 +16,8 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package cc.denkbares.testing;
+package de.d3web.testing;
+
 
 /**
  * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an

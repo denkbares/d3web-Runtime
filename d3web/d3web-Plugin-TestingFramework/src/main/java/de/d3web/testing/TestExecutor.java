@@ -1,4 +1,4 @@
-package cc.denkbares.testing;
+package de.d3web.testing;
 
 import java.util.Arrays;
 import java.util.Collection;

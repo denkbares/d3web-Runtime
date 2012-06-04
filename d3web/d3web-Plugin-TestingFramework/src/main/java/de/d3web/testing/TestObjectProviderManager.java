@@ -16,31 +16,38 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package cc.denkbares.testing;
+package de.d3web.testing;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.d3web.plugin.Extension;
+import de.d3web.plugin.PluginManager;
+
 /**
- * TestObjectProvider interface for providing test-objects.
  * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
- * @created 04.05.2012
+ * @created 30.05.2012
  */
-public interface TestObjectProvider {
+public class TestObjectProviderManager {
 
 	/**
-	 * Delivers a test-object of the given class for a regular expression for an
-	 * identifier.
 	 * 
-	 * @created 22.05.2012
-	 * @param c Class of the test-object
-	 * @param name regex for the desired test-object instance.
+	 * @created 04.05.2012
+	 * @param testName
 	 * @return
 	 */
-	public <T> List<T> getTestObjects(Class<T> c, String name);
-
-	public <T> String getTestObjectName(T testObject);
-
-	public static final String EXTENSION_POINT_ID = "TestObjectProvider";
+	public static List<TestObjectProvider> findTestObjectProviders() {
+		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
+				TestObjectProvider.EXTENSION_POINT_ID);
+		List<TestObjectProvider> pluggedProviders = new ArrayList<TestObjectProvider>();
+		for (Extension extension : extensions) {
+			if (extension.getNewInstance() instanceof TestObjectProvider) {
+				TestObjectProvider t = (TestObjectProvider) extension.getSingleton();
+				pluggedProviders.add(t);
+			}
+		}
+		return pluggedProviders;
+	}
 
 }

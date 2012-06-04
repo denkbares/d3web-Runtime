@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package cc.denkbares.testing;
+package de.d3web.testing;
 
 import java.util.Collections;
 import java.util.Date;
