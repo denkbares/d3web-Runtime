@@ -86,13 +86,7 @@ public class Node {
 	}
 
 	public double getStaticCosts() {
-		Object property = qContainer.getInfoStore().getValue(BasicProperties.COST);
-		if (property == null) {
-			return 0;
-		}
-		else {
-			return (Double) property;
-		}
+		return qContainer.getInfoStore().getValue(BasicProperties.COST);
 	}
 
 	/**

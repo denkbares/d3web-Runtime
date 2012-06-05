@@ -85,6 +85,18 @@ public class AStarPath implements Path {
 		return totalCostCache;
 	}
 
+	/**
+	 * Returns the costs of the final QContainer of this path. These are the
+	 * costs of the last step taken, including dynamic costs from the cost
+	 * function.
+	 * 
+	 * @created 02.06.2012
+	 * @return the direct costs of the last step
+	 */
+	public double getDirectCosts() {
+		return this.costs;
+	}
+
 	@Override
 	public double getNegativeCosts() {
 		return negativCostCache;

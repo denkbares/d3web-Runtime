@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -58,6 +59,22 @@ public class DefaultFactStorage implements FactStorage {
 			this.mediators.put(termObject, aggregator);
 		}
 		return aggregator;
+	}
+
+	/**
+	 * Returns a newly created deep copy of this object for building a fully
+	 * working copy of the current session.
+	 * 
+	 * @created 04.06.2012
+	 * @return a deep copy of this object
+	 */
+	@Override
+	public DefaultFactStorage copy() {
+		DefaultFactStorage result = new DefaultFactStorage();
+		for (Entry<TerminologyObject, FactAggregator> entry : mediators.entrySet()) {
+			result.mediators.put(entry.getKey(), entry.getValue().copy());
+		}
+		return result;
 	}
 
 	@Override

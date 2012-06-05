@@ -152,18 +152,16 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	}
 
 	public KnowledgeBase loadKnowledgeSlices(KnowledgeBase kb, Document doc, ProgressListener listener) throws IOException {
-		listener.updateProgress(0, "Loading knowledge base");
+		listener.updateProgress(0, "Preparing xcl models");
 		NodeList xclmodels = doc.getElementsByTagName("XCLModel");
-		int cur = 0;
+		float cur = 0;
 		int max = xclmodels.getLength();
-		for (int i = 0; i < xclmodels.getLength(); i++) {
-
+		for (int i = 0; i < max; i++) {
+			listener.updateProgress(cur++ / max, "Loading xcl models");
 			Node current = xclmodels.item(i);
-
 			addKnowledge(kb, current);
-			listener.updateProgress(++cur / max, "Loading knowledge base: XCL Models");
 		}
-
+		listener.updateProgress(1, "Loading xcl models completed");
 		return kb;
 	}
 

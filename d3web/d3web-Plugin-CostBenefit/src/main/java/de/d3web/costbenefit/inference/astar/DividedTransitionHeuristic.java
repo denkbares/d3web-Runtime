@@ -340,8 +340,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 		// otherwise take the static costs and divide them
 		// by the number of relevant questions possible set up
-		QContainer preapringContainer = preparingTransition.getQcontainer();
-		double costs = preapringContainer.getInfoStore().getValue(BasicProperties.COST);
+		double costs = preparingTransition.getCosts();
 		if (costs > 0.0) {
 			return costs / set.size();
 		}

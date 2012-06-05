@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.session.Copyable;
 
 /**
  * This class handles a dynamic set of {@link FactAggregator}s.
@@ -33,7 +34,7 @@ import de.d3web.core.knowledge.TerminologyObject;
  * 
  * @author volker_belli
  */
-public interface FactStorage {
+public interface FactStorage extends Copyable<FactStorage> {
 
 	/**
 	 * Returns the merged fact if there are any facts available. This method

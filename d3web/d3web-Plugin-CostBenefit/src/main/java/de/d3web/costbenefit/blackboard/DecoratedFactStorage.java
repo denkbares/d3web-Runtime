@@ -24,6 +24,7 @@ import java.util.Set;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.blackboard.DefaultFactStorage;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactStorage;
@@ -42,9 +43,9 @@ import de.d3web.core.session.blackboard.FactStorage;
  */
 public class DecoratedFactStorage implements FactStorage {
 
-	private final FactStorage covering = new DefaultFactStorage();
+	private final FactStorage covering;
 	private final FactStorage decorated;
-	private final Set<TerminologyObject> coveredObjects = new HashSet<TerminologyObject>();
+	private final Set<TerminologyObject> coveredObjects;
 
 	/**
 	 * Creates a new DecoratedFactStorage that covers the specified fact
@@ -53,7 +54,19 @@ public class DecoratedFactStorage implements FactStorage {
 	 * @param storage the FactStorage to be covered.
 	 */
 	public DecoratedFactStorage(FactStorage decoratedStorage) {
-		this.decorated = decoratedStorage;
+		this(new DefaultFactStorage(), decoratedStorage, new HashSet<TerminologyObject>());
+	}
+
+	private DecoratedFactStorage(FactStorage covering, FactStorage decorated, Set<TerminologyObject> coveredObjects) {
+		this.covering = covering;
+		this.decorated = decorated;
+		this.coveredObjects = coveredObjects;
+	}
+
+	@Override
+	public DecoratedFactStorage copy() {
+		return new DecoratedFactStorage(
+				covering.copy(), decorated, new HashSet<TerminologyObject>(coveredObjects));
 	}
 
 	/**
@@ -170,6 +183,26 @@ public class DecoratedFactStorage implements FactStorage {
 		return isCovered(termObject)
 				? covering.getContributingPSMethods(termObject)
 				: decorated.getContributingPSMethods(termObject);
+	}
+
+	/**
+	 * Returns the merged fact of this {@link DecoratedFactStorage} or
+	 * (transitively) the first decorated instance in the sequence. In contrast
+	 * to {@link #getMergedFact(TerminologyObject)}, it does not return the
+	 * merged fact of the underlying original session.
+	 * 
+	 * @created 05.06.2012
+	 * @param object the object to get the merged fact for
+	 * @return the merged fact or null if it has not been decorated
+	 */
+	public Fact getDecoratedMergedFact(ValueObject object) {
+		if (isCovered(object)) {
+			return covering.getMergedFact(object);
+		}
+		if (decorated instanceof DecoratedFactStorage) {
+			return ((DecoratedFactStorage) decorated).getDecoratedMergedFact(object);
+		}
+		return null;
 	}
 
 }

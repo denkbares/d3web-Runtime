@@ -24,6 +24,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
+import de.d3web.costbenefit.blackboard.DecoratedBlackboard;
 
 /**
  * The State class represents a compact description of the state of a session.
@@ -40,7 +41,6 @@ import de.d3web.core.session.blackboard.Blackboard;
 public class State {
 
 	private final Set<Question> questions;
-	// private final Value[] values;
 	private final Session session;
 	private final int hashCode;
 
@@ -50,12 +50,16 @@ public class State {
 
 		int hashCode = 1;
 		Blackboard blackboard = session.getBlackboard();
-		// this.values = new Value[questions.size()];
-		// int index = 0;
-		for (Question q : questions) {
-			Value value = blackboard.getValue(q);
-			hashCode = 31 * hashCode + value.hashCode();
-			// values[index++] = value;
+		// we only have to use the covered values, so if the
+		// blackboard is an original one, we do not access any value at all
+		if (blackboard instanceof DecoratedBlackboard) {
+			DecoratedBlackboard decorated = (DecoratedBlackboard) blackboard;
+			for (Question q : questions) {
+				Value value = decorated.getChangedValue(q);
+				if (value != null) {
+					hashCode = 31 * hashCode + value.hashCode();
+				}
+			}
 		}
 		this.hashCode = hashCode;
 	}
@@ -78,7 +82,7 @@ public class State {
 		return session.getBlackboard().getValue(question);
 	}
 
-	private boolean equals(Object o1, Object o2) { // NOSONAR
+	private static boolean equals(Object o1, Object o2) { // NOSONAR
 		if (o1 == o2) return true;
 		if (o1 == null) return false;
 		if (o2 == null) return false;
@@ -91,12 +95,39 @@ public class State {
 		if (o instanceof State) {
 			State otherState = (State) o;
 			if (otherState.hashCode != hashCode) return false;
-			// return Arrays.equals(otherState.values, values);
-			if (!otherState.questions.equals(questions)) return false;
-			for (Question question : questions) {
-				Value value1 = session.getBlackboard().getValue(question);
-				Value value2 = otherState.session.getBlackboard().getValue(question);
-				if (!equals(value1, value2)) return false;
+			synchronized (questions) {
+				if (otherState.questions.equals(questions)) return false;
+				Blackboard thisBoard = session.getBlackboard();
+				Blackboard otherBoard = otherState.session.getBlackboard();
+				DecoratedBlackboard thisDB = thisBoard instanceof DecoratedBlackboard
+						? (DecoratedBlackboard) thisBoard
+						: null;
+				DecoratedBlackboard otherDB = otherBoard instanceof DecoratedBlackboard
+						? (DecoratedBlackboard) otherBoard
+						: null;
+				// if both blackboards are equal (e.g. both null) return true;
+				if (thisDB == otherDB) return true;
+				// of only one exists, test if there are no decorated value
+				// first try this one is null
+				if (thisDB == null) {
+					for (Question question : questions) {
+						if (otherDB.getChangedValue(question) != null) return false;
+					}
+					return true;
+				}
+				// also try other one is null
+				if (otherDB == null) {
+					for (Question question : questions) {
+						if (thisDB.getChangedValue(question) != null) return false;
+					}
+					return true;
+				}
+				// if both are decorating, compare their changed values only
+				for (Question question : questions) {
+					if (!DecoratedBlackboard.hasEqualValue(question, thisDB, otherDB)) {
+						return false;
+					}
+				}
 			}
 			return true;
 		}
@@ -106,5 +137,9 @@ public class State {
 	@Override
 	public int hashCode() {
 		return hashCode;
+	}
+
+	public Set<Question> getQuestions() {
+		return questions;
 	}
 }

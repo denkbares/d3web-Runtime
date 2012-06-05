@@ -37,6 +37,7 @@ public class Target implements Comparable<Target> {
 	private static final long serialVersionUID = 1927072006554824366L;
 
 	private final List<QContainer> qContainers = new LinkedList<QContainer>();
+	private final double costs;
 	private double benefit = 0.0;
 	private Path minPath;
 
@@ -47,6 +48,7 @@ public class Target implements Comparable<Target> {
 	 */
 	public Target(QContainer targetContainer) {
 		this.qContainers.add(targetContainer);
+		this.costs = summarizeCosts(qContainers);
 	}
 
 	/**
@@ -56,6 +58,15 @@ public class Target implements Comparable<Target> {
 	 */
 	public Target(Collection<QContainer> targetContainers) {
 		this.qContainers.addAll(targetContainers);
+		this.costs = summarizeCosts(qContainers);
+	}
+
+	private static double summarizeCosts(List<QContainer> qContainers) {
+		double costs = 0.0;
+		for (QContainer item : qContainers) {
+			costs += item.getInfoStore().getValue(BasicProperties.COST);
+		}
+		return costs;
 	}
 
 	@Override
@@ -146,13 +157,6 @@ public class Target implements Comparable<Target> {
 	 * @return the cost of this target
 	 */
 	public double getCosts() {
-		double costs = 0.0;
-		for (QContainer item : qContainers) {
-			Double itemCosts = item.getInfoStore().getValue(BasicProperties.COST);
-			if (itemCosts != null) {
-				costs += itemCosts.doubleValue();
-			}
-		}
 		return costs;
 	}
 

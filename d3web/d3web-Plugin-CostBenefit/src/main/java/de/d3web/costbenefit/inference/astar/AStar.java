@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -38,15 +39,14 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.utilities.Pair;
 import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
-import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -87,7 +87,7 @@ public class AStar {
 	private static final Logger log = Logger.getLogger(AStar.class.getName());
 
 	private final SearchModel model;
-	private final Set<Question> stateQuestions = new HashSet<Question>();
+	private final Set<Question> usedStateQuestions = new LinkedHashSet<Question>();
 	private final Queue<Node> openNodes = new PriorityQueue<Node>();
 	private final Collection<Node> closedNodes = new LinkedList<Node>();
 	private final Map<State, Node> nodes = new HashMap<State, Node>();
@@ -108,19 +108,6 @@ public class AStar {
 		this.model = model;
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 
-		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND)) {
-			if (st.getActivationCondition() != null) {
-				for (TerminologyObject object : st.getActivationCondition().getTerminalObjects()) {
-					if (object instanceof Question) {
-						stateQuestions.add((Question) object);
-					}
-				}
-			}
-			for (ValueTransition t : st.getPostTransitions()) {
-				stateQuestions.add(t.getQuestion());
-			}
-		}
 		AStarPath emptyPath = new AStarPath(null, null, 0);
 		State startState = computeState(session);
 		Node start = new Node(startState, session, emptyPath, 0);
@@ -156,8 +143,7 @@ public class AStar {
 	}
 
 	private State computeState(Session session) {
-		State state = new State(session, stateQuestions);
-		return state;
+		return new State(session, usedStateQuestions);
 	}
 
 	/**
@@ -314,7 +300,7 @@ public class AStar {
 			return false;
 		}
 		// negative QContainer can only be used once in a path
-		if (qcontainer.getInfoStore().getValue(BasicProperties.COST) < 0.0
+		if (stateTransition.getCosts() < 0.0
 				&& node.getPath().contains(qcontainer)) {
 			return false;
 		}
@@ -377,8 +363,19 @@ public class AStar {
 		Session copiedSession = Util.createDecoratedSession(actualSession);
 		double costs = costFunction.getCosts(qcontainer, copiedSession);
 		Util.setNormalValues(copiedSession, qcontainer, this);
-		stateTransition.fire(copiedSession);
-		State newState = computeState(copiedSession);
+
+		List<Fact> facts = stateTransition.fire(copiedSession);
+		State newState;
+		synchronized (usedStateQuestions) {
+			for (Fact fact : facts) {
+				TerminologyObject object = fact.getTerminologyObject();
+				if (object instanceof Question) {
+					usedStateQuestions.add((Question) object);
+				}
+			}
+			newState = computeState(copiedSession);
+		}
+
 		AStarPath newPath = new AStarPath(qcontainer, node.getPath(), costs);
 		double f = calculateFValue(newPath, newState, copiedSession);
 		Node newFollower = new Node(newState, copiedSession, newPath, f);

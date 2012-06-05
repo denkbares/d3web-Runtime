@@ -33,6 +33,7 @@ import java.util.Set;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.session.Copyable;
 
 /**
  * This class organizes the facts of one type for one terminology object. It is
@@ -45,10 +46,31 @@ import de.d3web.core.knowledge.terminology.Rating;
  * 
  * @author volker_belli
  */
-final class FactAggregator {
+final class FactAggregator implements Copyable<FactAggregator> {
 
-	private final List<Fact> facts = new ArrayList<Fact>();
-	private Fact mergedFact = null;
+	private final List<Fact> facts;
+	private Fact mergedFact;
+
+	public FactAggregator() {
+		this.facts = new ArrayList<Fact>();
+		this.mergedFact = null;
+	}
+
+	/**
+	 * Copy constructor to create a deep copy of this instance.
+	 * 
+	 * @param factAggregator the source instance to be copied
+	 */
+	private FactAggregator(FactAggregator source) {
+		this.facts = new ArrayList<Fact>(source.facts);
+		this.mergedFact = source.mergedFact;
+	}
+
+	@Override
+	public FactAggregator copy() {
+		// use copy constructor
+		return new FactAggregator(this);
+	}
 
 	/**
 	 * Adds a new fact to the aggregator. If a fact with the same source as the

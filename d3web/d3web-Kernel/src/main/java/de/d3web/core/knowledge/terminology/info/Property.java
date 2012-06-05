@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.plugin.Extension;
@@ -127,7 +129,16 @@ public final class Property<T> {
 			try {
 				this.defaultValue = parseValue(this.defaultValueString);
 			}
+			catch (IllegalArgumentException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+						"cannot parse/initialize property default value: " +
+								this.name + " = " + this.defaultValueString, e);
+				// do noting here, leave defaultValue on null
+			}
 			catch (NoSuchMethodException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+						"cannot parse/initialize property default value: " +
+								this.name + " = " + this.defaultValueString, e);
 				// do noting here, leave defaultValue on null
 			}
 		}
@@ -254,23 +265,25 @@ public final class Property<T> {
 	 * <p>
 	 * For parsing this method uses the static "valueOf"-method of the stored
 	 * class T. Therefore class T must have a method with the exact signature
-	 * <code>public static T valueOf(String)<code>. (Only the return value may also be a more
-	 * specific subclass of T). Please note that the java basic types support that method, as well as all 
-	 * java enumerations.
+	 * <code>public static T valueOf(String)</code>. (Only the return value may
+	 * also be a more specific subclass of T). Please note that the java basic
+	 * types support that method, as well as all java enumerations.
 	 * <p>
-	 * If there is no public method suitable for parsing a {@link NoSuchMethodException} 
-	 * is thrown. If there is
-	 * any unchecked exception during parsing, the exception is also thrown 
-	 * by this method. If there is
-	 * any checked exception during parsing, an IllegalArgumentException is thrown, containing the
-	 * original exception as its cause.
+	 * If there is no public method suitable for parsing a
+	 * {@link NoSuchMethodException} is thrown. If there is any unchecked
+	 * exception during parsing, the exception is also thrown by this method. If
+	 * there is any checked exception during parsing, an
+	 * IllegalArgumentException is thrown, containing the original exception as
+	 * its cause.
 	 * 
 	 * 
 	 * @created 31.10.2010
-	 * @param string
-	 * @return
+	 * @param string the string to be parsed
+	 * @return the resulting value
+	 * @throws NoSuchMethodException there is no appropriate parse method found
+	 * @throws IllegalArgumentException if any parse exception occurred
 	 */
-	public T parseValue(String string) throws NoSuchMethodException {
+	public T parseValue(String string) throws NoSuchMethodException, IllegalArgumentException {
 		// use string directly if T == String
 		// because String only supports valueOf(Object)
 		// instead of valueOf(String)

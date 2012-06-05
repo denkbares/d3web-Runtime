@@ -57,10 +57,25 @@ public class DecoratedSession implements Session {
 	private final long time = System.currentTimeMillis();
 	private final KnowledgeBase knowledgeBase;
 	private final Blackboard blackboard;
+	private final Session rootSession;
 
 	public DecoratedSession(Session other) {
 		this.knowledgeBase = other.getKnowledgeBase();
 		this.blackboard = new DecoratedBlackboard(this, (DefaultBlackboard) other.getBlackboard());
+		this.rootSession = (other instanceof DecoratedSession)
+				? ((DecoratedSession) other).rootSession
+				: other;
+	}
+
+	/**
+	 * Returns the original root session that is decorated by this
+	 * {@link DecoratedSession} and a series of other DecoratedSessions.
+	 * 
+	 * @created 04.06.2012
+	 * @return the original root session
+	 */
+	public Session getRootSession() {
+		return this.rootSession;
 	}
 
 	@Override

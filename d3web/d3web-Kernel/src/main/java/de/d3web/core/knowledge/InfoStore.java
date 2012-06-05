@@ -33,7 +33,8 @@ public interface InfoStore {
 	 * Returns the value stored for the specified key with language
 	 * {@link #NO_LANGUAGE}. If there is no such key for the
 	 * {@link #NO_LANGUAGE}, the key's default value is returned. If there is no
-	 * such default value defined, null is returned.
+	 * such default value defined, the declared default value of this property
+	 * is returned (or null if there is no default value defined).
 	 * 
 	 * @param key the property to be accessed
 	 * @return the value for that key
@@ -45,8 +46,9 @@ public interface InfoStore {
 	 * Returns the value stored for the specified key with the specified
 	 * language. If there is no such language, it is tried to access the key
 	 * with language {@link #NO_LANGUAGE}. If there is no such item, the key's
-	 * default value is returned. If there is no such default value defined,
-	 * null is returned.
+	 * default value is returned. If there is no such default value defined, the
+	 * declared default value of this property is returned (or null if there is
+	 * no default value defined).
 	 * 
 	 * @param key the property to be accessed
 	 * @param language the language to be accessed

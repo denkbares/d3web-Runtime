@@ -28,6 +28,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
@@ -48,12 +49,14 @@ public class StateTransition implements KnowledgeSlice {
 	private final Condition activationCondition;
 	private final List<ValueTransition> postTransitions;
 	private final QContainer qcontainer;
+	private final double costs;
 
 	public StateTransition(Condition activationCondition, List<ValueTransition> postTransitions, QContainer qcontainer) {
 		super();
 		this.activationCondition = activationCondition;
 		this.postTransitions = postTransitions;
 		this.qcontainer = qcontainer;
+		this.costs = qcontainer.getInfoStore().getValue(BasicProperties.COST);
 		qcontainer.getKnowledgeStore().addKnowledge(KNOWLEDGE_KIND, this);
 	}
 
@@ -117,5 +120,17 @@ public class StateTransition implements KnowledgeSlice {
 	 */
 	public static StateTransition getStateTransition(QContainer qcon) {
 		return qcon.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
+	}
+
+	/**
+	 * Returns the static costs of this {@link StateTransition}. The real costs
+	 * may differ because of the cost function that is applied to calculate the
+	 * real costs.
+	 * 
+	 * @created 02.06.2012
+	 * @return the static costs of this transition
+	 */
+	public double getCosts() {
+		return costs;
 	}
 }

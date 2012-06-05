@@ -87,7 +87,7 @@ public class PathExtender implements SearchAlgorithm {
 		CostFunction costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 		if (path != null && !qcontainersToAdd.isEmpty()) {
 			for (QContainer qconToInclude : qcontainersToAdd) {
-				Double staticCosts = qconToInclude.getInfoStore().getValue(BasicProperties.COST);
+				double staticCosts = qconToInclude.getInfoStore().getValue(BasicProperties.COST);
 				// if it is already in the path, do nothing
 				if (!path.contains(qconToInclude)) {
 					Session copiedSession = Util.createSearchCopy(session);

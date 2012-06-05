@@ -30,9 +30,11 @@ import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * The Blackboard manages all dynamic values created within the case and
@@ -78,11 +80,14 @@ public interface Blackboard {
 	public void removeValueFact(TerminologyObject terminologyObject, Object source);
 
 	/**
-	 * Returns the value of an ValueObject
+	 * Returns the value of an {@link ValueObject}. The method never returns
+	 * null. If there is no value set for the specified ValueObject, its default
+	 * value is returned (which is e.g. {@link UndefinedValue} for Questions and
+	 * a {@link Rating} with {@link State#UNCLEAR} for Solutions.
 	 * 
 	 * @created 30.09.2010
-	 * @param terminologyObject
-	 * @return Value
+	 * @param valueObject the object to get the value for
+	 * @return Value the current value for this object
 	 */
 	public Value getValue(ValueObject valueObject);
 
@@ -186,7 +191,8 @@ public interface Blackboard {
 	 * Returns the current rating of the diagnosis. The returned rating is the
 	 * merged rating over all problem solvers available. This is a typed
 	 * shortcut for accessing the value {@link Fact} of the {@link Solution} and
-	 * read out its current value.
+	 * read out its current value.The method never returns null, it returns an
+	 * {@link State#UNCLEAR} {@link Rating} if the solution is not rated yet.
 	 * 
 	 * @param solution the solution to take the rating from
 	 * @return the total rating of the solution
@@ -195,26 +201,38 @@ public interface Blackboard {
 
 	/**
 	 * Returns the Value of a {@link ValueObject}, calculated by the specified
-	 * psmethod
+	 * psmethod. The method never returns null. If there is no value set for the
+	 * specified ValueObject, its default value is returned (which is e.g.
+	 * {@link UndefinedValue} for Questions and a {@link Rating} with
+	 * {@link State#UNCLEAR} for Solutions.
 	 * 
-	 * @param object {@link ValueObject}
+	 * @created 30.09.2010
+	 * @param object the object to get the value for
 	 * @param psmethod PSMethod
-	 * @return Value
+	 * @return Value the current value for this object and psmethod
 	 */
 	public Value getValue(ValueObject object, PSMethod psmethod);
 
 	/**
 	 * Returns the Value of a {@link ValueObject}, calculated by the specified
-	 * source
+	 * source object. The method never returns null. If there is no value set
+	 * for the specified ValueObject, its default value is returned (which is
+	 * e.g. {@link UndefinedValue} for Questions and a {@link Rating} with
+	 * {@link State#UNCLEAR} for Solutions.
 	 * 
-	 * @param object {@link ValueObject}
-	 * @param source
-	 * @return Value
+	 * @created 30.09.2010
+	 * @param object the object to get the value for
+	 * @param psmethod the PSMethod derived the value
+	 * @param source the source object that derived that value
+	 * @return Value the current value for this object, psmethod and source
 	 */
 	public Value getValue(ValueObject object, PSMethod psmethod, Object source);
 
 	/**
-	 * Returns the Value of a Solution, calculated by the specified psmethod
+	 * Returns the Value of a Solution, calculated by the specified psmethod.
+	 * The method never returns null, it returns an {@link State#UNCLEAR}
+	 * {@link Rating} if the solution is not rated yet by the specified
+	 * {@link PSMethod}.
 	 * 
 	 * @param solution Solution
 	 * @param psmethod PSMethod
@@ -226,7 +244,9 @@ public interface Blackboard {
 	 * Returns the current indication state of the interview element. The
 	 * returned indication state is the merged indication over all strategic
 	 * solvers available. This is a typed shortcut for accessing the interview
-	 * {@link Fact} of the {@link QASet} and read out its current value.
+	 * {@link Fact} of the {@link QASet} and read out its current value. The
+	 * method never returns null, it returns an {@link Indication.State#NEUTRAL}
+	 * indication if the object is not indicated yet.
 	 * 
 	 * @param question the question to take the rating from
 	 * @return the indication of the interview element
@@ -275,12 +295,15 @@ public interface Blackboard {
 
 	/**
 	 * Returns the {@link Indication} of one {@link PSMethod} of a
-	 * {@link TerminologyObject}.
+	 * {@link TerminologyObject}.The method never returns null, it returns an
+	 * {@link Indication.State#NEUTRAL} indication if the object is not
+	 * indicated yet by the specified strategic solver.
 	 * 
 	 * @created 21.09.2010
 	 * @param interviewElement {@link InterviewObject}
-	 * @param psMethod {@link PSMethod}
-	 * @return {@link Indication}
+	 * @param psMethod the strategic solver that derived the requested
+	 *        indication
+	 * @return the indication of the specified strategic solver
 	 */
 	Indication getIndication(InterviewObject interviewElement, PSMethod psMethod);
 
