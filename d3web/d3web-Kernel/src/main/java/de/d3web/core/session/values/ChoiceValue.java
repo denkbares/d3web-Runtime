@@ -97,6 +97,8 @@ public class ChoiceValue implements QuestionValue {
 
 	@Override
 	public int hashCode() {
+		// must be identical to MultipleChoiceValue with one alternative
+		// to not violate the hashCode/equals contract
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + choiceID.hashCode();

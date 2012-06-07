@@ -248,9 +248,13 @@ public class MultipleChoiceValue implements QuestionValue {
 
 	@Override
 	public int hashCode() {
+		// must be identical to ChoiceValue if having only one alternative
+		// to not violate the hashCode/equals contract
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + choiceIDs.hashCode();
+		for (ChoiceID choice : choiceIDs) {
+			result = prime * result + choice.hashCode();
+		}
 		return result;
 	}
 }
