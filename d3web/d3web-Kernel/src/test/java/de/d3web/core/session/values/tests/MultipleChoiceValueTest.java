@@ -163,8 +163,7 @@ public class MultipleChoiceValueTest {
 		assertThat(mcValueTwo.hashCode(), is(not(0)));
 
 		MultipleChoiceValue mcValueEmpty = new MultipleChoiceValue(new ArrayList<ChoiceID>());
-		assertThat(mcValueEmpty.hashCode(), is(31));// Eclipse´s standard
-													// hashCode() prime
+		assertThat(mcValueEmpty.hashCode(), is(1));
 	}
 
 	/**
