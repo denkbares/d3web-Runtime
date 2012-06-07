@@ -47,7 +47,6 @@ import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
-import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -88,7 +87,6 @@ public class AStar {
 	private static final Logger log = Logger.getLogger(AStar.class.getName());
 
 	private final SearchModel model;
-	private final Map<Question, Value> allStateQuestions = new HashMap<Question, Value>();
 	private final Map<Question, Value> usedStateQuestions = new LinkedHashMap<Question, Value>();
 	private final Queue<Node> openNodes = new PriorityQueue<Node>();
 	private final Collection<Node> closedNodes = new LinkedList<Node>();
@@ -110,23 +108,6 @@ public class AStar {
 		this.model = model;
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 
-		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND)) {
-			if (st.getActivationCondition() != null) {
-				for (TerminologyObject object : st.getActivationCondition().getTerminalObjects()) {
-					if (object instanceof Question) {
-						Question question = (Question) object;
-						Value originalValue = session.getBlackboard().getValue(question);
-						allStateQuestions.put(question, originalValue);
-					}
-				}
-			}
-			for (ValueTransition t : st.getPostTransitions()) {
-				Question question = t.getQuestion();
-				Value originalValue = session.getBlackboard().getValue(question);
-				allStateQuestions.put(question, originalValue);
-			}
-		}
 		AStarPath emptyPath = new AStarPath(null, null, 0);
 		State startState = computeState(session);
 		Node start = new Node(startState, session, emptyPath, 0);

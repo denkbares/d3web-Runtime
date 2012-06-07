@@ -89,10 +89,8 @@ public class State {
 		return session.getBlackboard().getValue(question);
 	}
 
-	private boolean equals(Object o1, Object o2) { // NOSONAR
+	private boolean equals(Value o1, Value o2) { // NOSONAR
 		if (o1 == o2) return true;
-		if (o1 == null) return false;
-		if (o2 == null) return false;
 		return o2.equals(o1);
 	}
 
