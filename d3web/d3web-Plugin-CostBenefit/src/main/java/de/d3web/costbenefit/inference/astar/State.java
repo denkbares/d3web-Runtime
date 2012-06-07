@@ -18,7 +18,9 @@
  */
 package de.d3web.costbenefit.inference.astar;
 
-import java.util.Set;
+import java.util.BitSet;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
@@ -40,13 +42,15 @@ import de.d3web.costbenefit.blackboard.DecoratedBlackboard;
  */
 public class State {
 
-	private final Set<Question> questions;
+	private final Map<Question, Value> usedQuestions;
 	private final Session session;
 	private final int hashCode;
+	private final BitSet changedQuestions;
 
-	public State(Session session, Set<Question> preconditionQuestions) {
+	public State(Session session, Map<Question, Value> usedPreconditionQuestions) {
 		this.session = session;
-		this.questions = preconditionQuestions;
+		this.usedQuestions = usedPreconditionQuestions;
+		this.changedQuestions = new BitSet();
 
 		int hashCode = 1;
 		Blackboard blackboard = session.getBlackboard();
@@ -54,11 +58,14 @@ public class State {
 		// blackboard is an original one, we do not access any value at all
 		if (blackboard instanceof DecoratedBlackboard) {
 			DecoratedBlackboard decorated = (DecoratedBlackboard) blackboard;
-			for (Question q : questions) {
-				Value value = decorated.getChangedValue(q);
-				if (value != null) {
+			int bitIndex = 0;
+			for (Entry<Question, Value> entry : usedQuestions.entrySet()) {
+				Value value = decorated.getDecoratedValue(entry.getKey());
+				if (value != null && !value.equals(entry.getValue())) {
 					hashCode = 31 * hashCode + value.hashCode();
+					changedQuestions.set(bitIndex);
 				}
+				bitIndex++;
 			}
 		}
 		this.hashCode = hashCode;
@@ -82,7 +89,7 @@ public class State {
 		return session.getBlackboard().getValue(question);
 	}
 
-	private static boolean equals(Object o1, Object o2) { // NOSONAR
+	private boolean equals(Object o1, Object o2) { // NOSONAR
 		if (o1 == o2) return true;
 		if (o1 == null) return false;
 		if (o2 == null) return false;
@@ -95,41 +102,21 @@ public class State {
 		if (o instanceof State) {
 			State otherState = (State) o;
 			if (otherState.hashCode != hashCode) return false;
-			synchronized (questions) {
-				if (otherState.questions.equals(questions)) return false;
-				Blackboard thisBoard = session.getBlackboard();
-				Blackboard otherBoard = otherState.session.getBlackboard();
-				DecoratedBlackboard thisDB = thisBoard instanceof DecoratedBlackboard
-						? (DecoratedBlackboard) thisBoard
-						: null;
-				DecoratedBlackboard otherDB = otherBoard instanceof DecoratedBlackboard
-						? (DecoratedBlackboard) otherBoard
-						: null;
-				// if both blackboards are equal (e.g. both null) return true;
-				if (thisDB == otherDB) return true;
-				// of only one exists, test if there are no decorated value
-				// first try this one is null
-				if (thisDB == null) {
-					for (Question question : questions) {
-						if (otherDB.getChangedValue(question) != null) return false;
-					}
-					return true;
-				}
-				// also try other one is null
-				if (otherDB == null) {
-					for (Question question : questions) {
-						if (thisDB.getChangedValue(question) != null) return false;
-					}
-					return true;
-				}
-				// if both are decorating, compare their changed values only
-				for (Question question : questions) {
-					if (!DecoratedBlackboard.hasEqualValue(question, thisDB, otherDB)) {
+			if (!this.changedQuestions.equals(otherState.changedQuestions)) return false;
+			synchronized (usedQuestions) {
+				if (!otherState.usedQuestions.equals(usedQuestions)) return false;
+				int bitIndex = 0;
+				for (Question question : usedQuestions.keySet()) {
+					// only check if the bit for this question is set
+					if (!changedQuestions.get(bitIndex++)) continue;
+					Value value1 = session.getBlackboard().getValue(question);
+					Value value2 = otherState.session.getBlackboard().getValue(question);
+					if (!equals(value1, value2)) {
 						return false;
 					}
 				}
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}
@@ -137,9 +124,5 @@ public class State {
 	@Override
 	public int hashCode() {
 		return hashCode;
-	}
-
-	public Set<Question> getQuestions() {
-		return questions;
 	}
 }
