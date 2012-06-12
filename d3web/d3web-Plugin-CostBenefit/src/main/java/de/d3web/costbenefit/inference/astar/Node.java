@@ -84,6 +84,11 @@ public class Node implements Comparable<Node> {
 		if (node2 == null) {
 			return 1;
 		}
+		if (fValue == node2.fValue) {
+			// if the f Value is equal, prefer nodes with higher path costs ->
+			// closer to target
+			return Double.compare(node2.path.getCosts(), path.getCosts());
+		}
 		return Double.compare(fValue, node2.fValue);
 	}
 

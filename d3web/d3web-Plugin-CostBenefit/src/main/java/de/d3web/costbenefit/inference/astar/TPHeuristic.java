@@ -153,21 +153,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	private List<Pair<List<Condition>, Set<QContainer>>> getPairs(Session session, List<Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
 		List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 		for (Condition cond : targetConditions) {
-			// if the condition is fullfilled continue, otherwise add
-			// it's preconditions to the list
-			try {
-				if (cond.eval(session)) {
-					continue;
-				}
-			}
-			catch (NoAnswerException e) {
-			}
-			catch (UnknownAnswerException e) {
-			}
+			if (isConditionFullfilled(session, cond)) continue;
 			Pair<List<Condition>, Set<QContainer>> generalPair = preconditionCache.get(cond);
 			if (generalPair == null) continue;
 			List<Condition> checkedConditions = new LinkedList<Condition>();
 			for (Condition precondition : generalPair.getA()) {
+				if (isConditionFullfilled(session, precondition)) continue;
 				if (precondition instanceof CondEqual) {
 					CondEqual condEqual = (CondEqual) precondition;
 					// condequals must not be already contained and must
@@ -190,6 +181,20 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			}
 		}
 		return additionalConditions;
+	}
+
+	private boolean isConditionFullfilled(Session session, Condition cond) {
+		boolean fullfilled = false;
+		try {
+			if (cond.eval(session)) {
+				fullfilled = true;
+			}
+		}
+		catch (NoAnswerException e) {
+		}
+		catch (UnknownAnswerException e) {
+		}
+		return fullfilled;
 	}
 
 	private void initGeneralCache(SearchModel model) {
