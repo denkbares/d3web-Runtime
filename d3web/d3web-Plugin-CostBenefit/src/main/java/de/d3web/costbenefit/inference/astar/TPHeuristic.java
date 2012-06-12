@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
@@ -40,6 +41,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
@@ -76,13 +78,44 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 */
 	private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
 
+	private Collection<Question> cachedFinalQuestions = new HashSet<Question>();
+
 	@Override
 	public void init(SearchModel model) {
-		// TODO: cache blocked finalquestionlist, initgeneral should only be
-		// called when the kb or the list changes
-		initGeneralCache(model);
+		// initgeneral in only called when the kb or the list of cached final
+		// questions changes
+		if (model.getSession().getKnowledgeBase() != knowledgeBase) {
+			initGeneralCache(model);
+			// knowledbase gets updated in super.init(model)
+			cachedFinalQuestions = calculateAnsweredFinalQuestions(model);
+		}
+		else {
+			HashSet<Question> answeredFinalQuestions = calculateAnsweredFinalQuestions(model);
+			if (!answeredFinalQuestions.equals(cachedFinalQuestions)) {
+				cachedFinalQuestions = answeredFinalQuestions;
+				initGeneralCache(model);
+			}
+		}
 		super.init(model);
 		initTargetCache(model);
+	}
+
+	private HashSet<Question> calculateAnsweredFinalQuestions(SearchModel model) {
+		HashSet<Question> answeredFinalQuestions = new HashSet<Question>();
+		for (Question q : model.getSession().getKnowledgeBase().getManager().getQuestions()) {
+			if (q.getInfoStore().getValue(PSMethodCostBenefit.FINAL_QUESTION)) {
+				// check if q has not the init value
+				Value initValue = PSMethodInit.getValue(q,
+						q.getInfoStore().getValue(BasicProperties.INIT));
+				Value actualValue = model.getSession().getBlackboard().getValue(q);
+				// equality has to be checked, it is not sufficient to check the
+				// sizes, because another session could have been loaded
+				if (!initValue.equals(actualValue)) {
+					answeredFinalQuestions.add(q);
+				}
+			}
+		}
+		return answeredFinalQuestions;
 	}
 
 	/**
