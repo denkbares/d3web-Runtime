@@ -42,7 +42,7 @@ public class ArgsCheckResult {
 
 	public static ArgsCheckResult classNotFoundResult(String clazzName) {
 		ArgsCheckResult result = new ArgsCheckResult(new String[] { clazzName });
-		result.setError(0, "Class for test could not be found.");
+		result.setError(0, "Class for test could not be found: " + clazzName);
 		return result;
 	}
 
@@ -93,12 +93,14 @@ public class ArgsCheckResult {
 	}
 
 	public String getMessage(int argIndex) {
-		if (errors[argIndex] != null) {
+		if (errors.length > argIndex && errors[argIndex] != null) {
 			return errors[argIndex];
 		}
 		else {
-			return warnings[argIndex];
+			if (warnings.length > argIndex) return warnings[argIndex];
 		}
+
+		return null;
 	}
 
 }
