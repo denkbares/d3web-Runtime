@@ -40,6 +40,12 @@ public class ArgsCheckResult {
 		}
 	}
 
+	public static ArgsCheckResult classNotFoundResult(String clazzName) {
+		ArgsCheckResult result = new ArgsCheckResult(new String[] { clazzName });
+		result.setError(0, "Class for test could not be found.");
+		return result;
+	}
+
 	public String[] getArguments() {
 		return args;
 	}
