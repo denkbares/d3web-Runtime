@@ -18,7 +18,6 @@
  */
 package de.d3web.testing;
 
-
 /**
  * Interface for tests. Implement this class to create a test to be used within
  * the TestingFramework.
@@ -30,7 +29,7 @@ package de.d3web.testing;
 public interface Test<T> {
 
 	public static final String PLUGIN_ID =
-			"d3web-Plugin-TestingFramework-ExtensionPoints";
+			"d3web-Plugin-TestingFramework";
 
 	public static final String EXTENSION_POINT_ID = "Test";
 
