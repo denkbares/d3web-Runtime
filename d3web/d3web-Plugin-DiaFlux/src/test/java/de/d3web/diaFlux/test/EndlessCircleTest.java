@@ -45,19 +45,19 @@ public class EndlessCircleTest extends AbstractDiaFluxTest {
 
 		assertNodeStates(Flow1, comment1, snapshot1, nodeQ6_2);
 
-		testNumValue(quest6, 15);
+		assertNumValue(quest6, 15);
 
 		setChoiceValue(quest1, answer1);
 
 		assertNodeStates(Flow1, comment1, snapshot1, nodeQ6_2);
 
-		testNumValue(quest6, 25);
+		assertNumValue(quest6, 25);
 
 		setChoiceValue(quest1, answer2);
 
 		assertNodeStates(Flow1, comment1, snapshot1, nodeQ6_2);
 
-		testNumValue(quest6, 35);
+		assertNumValue(quest6, 35);
 
 	}
 

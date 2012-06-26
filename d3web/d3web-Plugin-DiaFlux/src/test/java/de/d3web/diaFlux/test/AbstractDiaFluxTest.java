@@ -21,9 +21,7 @@ package de.d3web.diaFlux.test;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.junit.Assert;
@@ -134,7 +132,7 @@ public abstract class AbstractDiaFluxTest {
 	protected final String nodeQ10_2 = nodeQ10 + "_2";
 	private long time;
 
-	AbstractDiaFluxTest(String fileName) {
+	protected AbstractDiaFluxTest(String fileName) {
 		this.fileName = fileName;
 	}
 
@@ -155,7 +153,7 @@ public abstract class AbstractDiaFluxTest {
 
 	private void findSolutions() {
 
-		sol1 = (Solution) kb.getManager().searchSolution("Solution1");
+		sol1 = kb.getManager().searchSolution("Solution1");
 
 	}
 
@@ -236,19 +234,13 @@ public abstract class AbstractDiaFluxTest {
 
 	private void failWithUnsupportedNode(String flowName, String id) {
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
-
 		Flow flow = flowSet.get(flowName);
 		StringBuffer buffy = new StringBuffer("Supported Nodes in '" + flowName + "': ");
-		Set<Node> nodes = new HashSet<Node>();
-		for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
-			for (Node node : run.getActiveNodes()) {
-				nodes.add(node);
-			}
-		}
-		for (Node node : flow.getNodes()) {
-			buffy.append(node.getID() + ", ");
 
+		for (Node node : flow.getNodes()) {
+			if (isSupported(node)) buffy.append(node.getID() + ", ");
 		}
+
 		Logger.getLogger(getClass().getName()).info(buffy.toString());
 
 		Assert.fail("Node '" + id + "' must be active.");
@@ -276,11 +268,22 @@ public abstract class AbstractDiaFluxTest {
 
 	}
 
-	protected void testNumValue(QuestionNum num, double expected) {
+	protected void assertNumValue(QuestionNum num, double expected) {
 		double actual = ((NumValue) session.getBlackboard().getValue(num)).getDouble().doubleValue();
 
 		Assert.assertEquals("Question '" + num.getName() + "' does not have the expected value.",
 				expected, actual, 0.005);
+
+	}
+
+
+	protected void setNumValue(QuestionNum question, double value) {
+
+		Logger.getLogger(getClass().getName()).info(
+				"Setting '" + question.getName() + "' to '" + value + "'.");
+
+		Fact fact = FactFactory.createUserEnteredFact(question, new NumValue(value));
+		addFact(fact);
 
 	}
 
@@ -292,10 +295,14 @@ public abstract class AbstractDiaFluxTest {
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new ChoiceValue(choice));
 
+		addFact(fact);
+
+	}
+
+	public void addFact(Fact fact) {
 		session.getPropagationManager().openPropagation(++time);
 		session.getBlackboard().addValueFact(fact);
 		session.getPropagationManager().commitPropagation();
-		
 	}
 
 }
