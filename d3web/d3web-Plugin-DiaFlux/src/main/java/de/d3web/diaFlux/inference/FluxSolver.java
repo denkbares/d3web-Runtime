@@ -23,6 +23,7 @@ package de.d3web.diaFlux.inference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -113,8 +114,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).fine(
-				"Start propagating: " + changes);
+		Logger.getLogger(FluxSolver.class.getName()).fine("Start propagating: " + changes);
+		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
 
 		for (PropagationEntry propagationEntry : changes) {
 
@@ -122,46 +123,72 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			if (propagationEntry.isStrategic()) {
 				continue;
 			}
-			else {
 
-				TerminologyObject object = propagationEntry.getObject();
+			TerminologyObject object = propagationEntry.getObject();
 
-				EdgeMap slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
+			EdgeMap slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
 
-				// TO does not occur in any edge
-				if (slice == null) {
-					continue;
-				}
+			// TO does not occur in any edge
+			if (slice == null) {
+				continue;
+			}
 
-				// iterate over all edges that contain the changed TO
-				for (Edge edge : slice.getEdges()) {
+			// These lists contain the edges that have to be de-/activated
+			// the edges are processed afterwards in the right order,
+			// at first the deactivations, then the activations
+			List<Edge> activate = new LinkedList<Edge>();
+			List<Edge> deactivate = new LinkedList<Edge>();
 
-					Node start = edge.getStartNode();
-					Node end = edge.getEndNode();
+			// iterate over all edges that contain the changed TO
+			for (Edge edge : slice.getEdges()) {
 
-					List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
-					for (FlowRun flowRun : runs) {
-						boolean active = evalEdge(session, edge);
-						if (active) {
-							// begin node is not active, do nothing
-							if (flowRun.isActive(start)) {
-								// Edge was not active before
-								if (!flowRun.isActivated(end)) {
-									activateNode(end, flowRun, session);
-								}
+				Node start = edge.getStartNode();
+				Node end = edge.getEndNode();
+
+				for (FlowRun flowRun : runs) {
+					boolean active = evalEdge(session, edge);
+					if (active) {
+						// begin node is not active, do nothing
+						if (flowRun.isActive(start)) {
+							// Edge was not active before
+							if (!flowRun.isActivated(end)) {
+								activate.add(edge);
 							}
 						}
-						else {
-							if (flowRun.isActivated(end)) {
-								boolean support = checkSupport(session, end, flowRun);
-								if (!support) {
-									deactivateNode(end, flowRun, session);
-								}
+					}
+					else {
+						// start node is not active (maybe was before)
+						if (flowRun.isActivated(end)) {
+							// if the end node is active
+							boolean support = checkSupport(session, end, flowRun);
+							// ...but is no longer supported by any other edge
+							// (then the start node of the edge was active)
+							if (!support) {
+								// we also have to deactivate the end node
+								deactivate.add(edge);
 							}
 						}
 					}
 				}
 			}
+
+			// now process the edges accordingly
+			for (FlowRun flowRun : runs) {
+
+				for (Edge edge : deactivate) {
+					deactivateNode(edge.getEndNode(), flowRun, session);
+				}
+
+				for (Edge edge : activate) {
+					// we need to check the activation state of the start
+					// node again, as it may no longer be active due to the
+					// deactivations just made
+					if (flowRun.isActive(edge.getStartNode())) {
+						activateNode(edge.getEndNode(), flowRun, session);
+					}
+				}
+			}
+
 		}
 
 		// check backward knowledge: nodes that uses other objects to calculate
@@ -310,10 +337,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		}
 
 		Map<FlowRun, Collection<SnapshotNode>> snappyFlows = getFlowRunsWithEnteredSnapshot(
-				enteredSnapshots,
-				caseObject);
-		Logger.getLogger(FluxSolver.class.getName()).fine(
-				"Taking snapshots: " + snappyFlows);
+				enteredSnapshots, caseObject);
+		Logger.getLogger(FluxSolver.class.getName()).fine("Taking snapshots: " + snappyFlows);
 
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<FlowRun>();
