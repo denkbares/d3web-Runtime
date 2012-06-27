@@ -144,9 +144,10 @@ public final class Util {
 				DefaultAbnormality abnormality = q.getInfoStore().getValue(
 						BasicProperties.DEFAULT_ABNORMALITIY);
 				if (abnormality == null) {
-					if (set) Logger.getLogger(Util.class.getName()).throwing(
-							Util.class.getName(),
-							"Fehler, kein Normalwert gesetzt: " + q, null);
+					if (set) {
+						Logger.getLogger(Util.class.getName()).info(
+								"no normal value for question " + q);
+					}
 					continue;
 				}
 				List<Choice> alternatives = q.getAllAlternatives();
