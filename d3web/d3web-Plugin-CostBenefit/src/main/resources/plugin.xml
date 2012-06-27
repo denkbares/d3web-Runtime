@@ -228,5 +228,16 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="targetOnly">
+		<parameter id="name" value="targetOnly" />
+		<parameter id="description" value="Marks a QContainer that it can only be used as an end QContainer by the AStar algorithm. This QContainer cannot be used to prepare other QContainers." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
 
 </plugin>

@@ -38,6 +38,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
@@ -96,6 +97,9 @@ public class AStar {
 	private final CostFunction costFunction;
 	private final Session session;
 	private final Map<Pair<Path, QContainer>, Double> hValueCache = Collections.synchronizedMap(new HashMap<Pair<Path, QContainer>, Double>());
+
+	public static final Property<Boolean> TARGET_ONLY = Property.getProperty(
+			"targetOnly", Boolean.class);
 
 	// some information about the current search
 	private final transient long initTime;
@@ -190,7 +194,9 @@ public class AStar {
 		while (!model.isAborted() && !openNodes.isEmpty()) {
 			// check for the next open node to be processed
 			Node node = openNodes.poll();
-
+			// System.out.println("Expanding: " + node.getPath().getPath() +
+			// ", f-Value:"
+			// + node.getfValue());
 			if (node.getfValue() == Double.POSITIVE_INFINITY) {
 				log.info("All targets are unreachable, calculation aborted");
 				break;
@@ -324,6 +330,14 @@ public class AStar {
 	}
 
 	private void installNode(Node newFollower) {
+		updateTargets(newFollower.getPath());
+		Boolean targetOnly = newFollower.getPath().getQContainer().getInfoStore().getValue(
+				TARGET_ONLY);
+		if (targetOnly) {
+			// do not add this node to our pathes, it cannot be reused because
+			// the last QContainer can not be used to establish preconditions
+			return;
+		}
 		synchronized (this) {
 			Node follower = nodes.get(newFollower.getState());
 			if (follower == null) {
@@ -354,7 +368,6 @@ public class AStar {
 				if (hasOpenNode) openNodes.add(follower);
 			}
 		}
-		updateTargets(newFollower.getPath());
 	}
 
 	private Node applyTransition(Node node, StateTransition stateTransition) {
