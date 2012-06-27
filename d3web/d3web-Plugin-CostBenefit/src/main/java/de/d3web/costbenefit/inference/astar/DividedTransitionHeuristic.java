@@ -414,6 +414,12 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 		else if (condition instanceof CondNot) {
 			CondNot cnot = (CondNot) condition;
+			if (condition.getTerminalObjects().size() != 1) {
+				throw new IllegalArgumentException(
+						"Can only handle CondNot with one question: "
+								+ condition);
+			}
+			if (!cnot.getTerminalObjects().iterator().next().equals(question)) return Collections.emptySet();
 			// use all choices as values
 			Set<Value> result = new HashSet<Value>();
 			for (Choice choice : ((QuestionOC) question).getAllAlternatives()) {
