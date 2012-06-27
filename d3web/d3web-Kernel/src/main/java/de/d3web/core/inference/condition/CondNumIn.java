@@ -45,6 +45,7 @@ public class CondNumIn extends CondNum {
 	public CondNumIn(QuestionNum question, Double minValue, Double maxValue) {
 		this(question, new NumericalInterval(minValue.doubleValue(), maxValue.doubleValue(), false,
 				false));
+		numericalInterval.checkValidity();
 	}
 
 	/**

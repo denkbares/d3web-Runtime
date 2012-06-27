@@ -119,8 +119,11 @@ public class NumericalIntervalHandler implements FragmentHandler {
 			try {
 				boolean[] borders = string2booleanTypes(type);
 				if (value == null || value.length() == 0) {
-					return new NumericalInterval(string2double(lower), string2double(upper),
+					NumericalInterval interval = new NumericalInterval(string2double(lower),
+							string2double(upper),
 							borders[0], borders[1]);
+					interval.checkValidity();
+					return interval;
 				}
 				else {
 					return new AbnormalityInterval(string2double(lower), string2double(upper),

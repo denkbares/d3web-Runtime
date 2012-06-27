@@ -45,11 +45,11 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 
 	}
 
-	private double left;
-	private double right;
+	private final double left;
+	private final double right;
 
-	private boolean leftOpen;
-	private boolean rightOpen;
+	private final boolean leftOpen;
+	private final boolean rightOpen;
 
 	/**
 	 * Constructs a NumerialInterval
@@ -64,7 +64,6 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		this.right = right;
 		this.leftOpen = leftOpen;
 		this.rightOpen = rightOpen;
-		checkValidity();
 	}
 
 	/**
@@ -77,8 +76,8 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		this(left, right, false, false);
 	}
 
-	private void checkValidity() throws IntervalException {
-		if (getLeft() == getRight() && isLeftOpen() && isRightOpen()) {
+	public void checkValidity() throws IntervalException {
+		if (getLeft() == getRight() && (isLeftOpen() || isRightOpen())) {
 			throw new IntervalException(
 					"an interval containing only one value must not be open on any side");
 		}
@@ -194,14 +193,87 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 
 	}
 
-	@Override
-	public String toString() {
-		String str = "";
-		if (leftOpen) {
-			str += "(";
+	public NumericalInterval intersect(NumericalInterval other) {
+
+		NumericalInterval min; // smaller one wrt compareTo
+		NumericalInterval max; // bigger one wrt compareTo
+
+		if (this.compareTo(other) < 1) {
+			min = this;
+			max = other;
 		}
 		else {
-			str += "[";
+			min = other;
+			max = this;
+		}
+
+		double rightVal;
+		boolean rightOpen;
+
+		int compare = Double.compare(min.right, max.right);
+		if (compare == 0) {
+			rightVal = min.right;
+			rightOpen = min.isRightOpen() || max.isRightOpen();
+		}
+		else if (compare < 0) {
+			rightVal = min.right;
+			rightOpen = min.isRightOpen();
+		}
+		else {
+			rightVal = max.right;
+			rightOpen = max.isRightOpen();
+
+		}
+
+		NumericalInterval result = new NumericalInterval(max.left, rightVal, max.isLeftOpen(),
+				rightOpen);
+		return result;
+
+	}
+
+	/**
+	 * Checks whether this Interval contains some other Interval
+	 * 
+	 * @param o other interval
+	 * @return boolean
+	 */
+	public boolean contains(NumericalInterval other) {
+
+		if (this.getLeft() > other.getLeft()) {
+			return false;
+		}
+		if (this.getRight() < other.getRight()) {
+			return false;
+		}
+
+		if (this.getLeft() == other.getLeft()) {
+			if (this.isLeftOpen() && !other.isLeftOpen()) {
+				return false;
+			}
+		}
+
+		if (this.getRight() == other.getRight()) {
+			if (this.isRightOpen() && !other.isRightOpen()) {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
+	public boolean isEmpty() {
+		return (right < left) || (left == right && (leftOpen || rightOpen));
+	}
+
+	@Override
+	public String toString() {
+		String str;
+		if (leftOpen) {
+			str = "(";
+		}
+		else {
+			str = "[";
 		}
 
 		str += left + ", " + right;
@@ -223,7 +295,6 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 */
 	@Override
 	public int hashCode() {
-
 		return toString().hashCode();
 	}
 
@@ -239,13 +310,20 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		}
 		else if (left > ni.left) {
 			return 1;
+		} // left is equal, closed interval comes first, if any
+		else if (leftOpen != ni.leftOpen) {
+			return !leftOpen ? -1 : 1;
 		}
+		// left is equal wrt to value and openness
 		else if (right < ni.right) {
 			return -1;
 		}
 		else if (right > ni.right) {
 			return 1;
-		}
+		} // left is equal and right is equal-valued, check openness
+		else if (rightOpen != ni.rightOpen) {
+			return rightOpen ? -1 : 1;
+		}// everything is equal
 		else {
 			return 0;
 		}

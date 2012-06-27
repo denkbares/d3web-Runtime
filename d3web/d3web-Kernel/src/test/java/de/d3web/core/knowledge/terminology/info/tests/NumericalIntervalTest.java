@@ -23,7 +23,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
@@ -37,21 +36,14 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval.IntervalExcept
  */
 public class NumericalIntervalTest {
 
-	NumericalInterval four_seven_closed_closed;
-
-	@Before
-	public void setUp() throws Exception {
-		four_seven_closed_closed = new NumericalInterval(4, 7);
-	}
 
 	/**
 	 * Test method for
 	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#hashCode()}
-	 * .
 	 */
 	@Test
 	public void testHashCode() {
-		assertThat(four_seven_closed_closed.hashCode(), is(not(0)));
+		assertThat(parse("[4, 7]").hashCode(), is(not(0)));
 	}
 
 	/**
@@ -60,17 +52,27 @@ public class NumericalIntervalTest {
 	 */
 	@Test(expected = IntervalException.class)
 	public void testNumericalIntervalThrowsIntervalException1() {
-		new NumericalInterval(1, 1, true, true);
+		new NumericalInterval(1, 1, true, true).checkValidity();
 	}
 
 	@Test(expected = IntervalException.class)
 	public void testNumericalIntervalThrowsIntervalException2() {
-		new NumericalInterval(2, 1, false, true);
+		new NumericalInterval(1, 1, false, true).checkValidity();
 	}
 
 	@Test(expected = IntervalException.class)
 	public void testNumericalIntervalThrowsIntervalException3() {
-		new NumericalInterval(-3, -4, false, false);
+		new NumericalInterval(1, 1, true, false).checkValidity();
+	}
+
+	@Test(expected = IntervalException.class)
+	public void testNumericalIntervalThrowsIntervalException4() {
+		new NumericalInterval(2, 1, false, true).checkValidity();
+	}
+
+	@Test(expected = IntervalException.class)
+	public void testNumericalIntervalThrowsIntervalException5() {
+		new NumericalInterval(-3, -4, false, false).checkValidity();
 	}
 
 	/**
@@ -80,11 +82,11 @@ public class NumericalIntervalTest {
 	 */
 	@Test
 	public void testContains() {
-		assertThat(four_seven_closed_closed.contains(5), is(true));
-		assertThat(four_seven_closed_closed.contains(4), is(true));
-		assertThat(four_seven_closed_closed.contains(7), is(true));
-		assertThat(four_seven_closed_closed.contains(1), is(false));
-		assertThat(four_seven_closed_closed.contains(9), is(false));
+		assertThat(parse("[4, 7]").contains(5), is(true));
+		assertThat(parse("[4, 7]").contains(4), is(true));
+		assertThat(parse("[4, 7]").contains(7), is(true));
+		assertThat(parse("[4, 7]").contains(1), is(false));
+		assertThat(parse("[4, 7]").contains(9), is(false));
 	}
 
 	/**
@@ -93,7 +95,7 @@ public class NumericalIntervalTest {
 	 */
 	@Test
 	public void testGetLeft() {
-		assertThat(four_seven_closed_closed.getLeft(), is(4d));
+		assertThat(parse("[4, 7]").getLeft(), is(4d));
 	}
 
 	/**
@@ -102,7 +104,7 @@ public class NumericalIntervalTest {
 	 */
 	@Test
 	public void testGetRight() {
-		assertThat(four_seven_closed_closed.getRight(), is(7d));
+		assertThat(parse("[4, 7]").getRight(), is(7d));
 	}
 
 	/**
@@ -111,7 +113,7 @@ public class NumericalIntervalTest {
 	 */
 	@Test
 	public void testGetLeftOpen() {
-		assertThat(four_seven_closed_closed.isLeftOpen(), is(false));
+		assertThat(parse("[4, 7]").isLeftOpen(), is(false));
 	}
 
 	/**
@@ -120,69 +122,165 @@ public class NumericalIntervalTest {
 	 */
 	@Test
 	public void testGetRightOpen() {
-		assertThat(four_seven_closed_closed.isRightOpen(), is(false));
+		assertThat(parse("[4, 7]").isRightOpen(), is(false));
 	}
 
 	/**
 	 * Test method for
 	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#equals(java.lang.Object)}
-	 * .
 	 */
 	@Test
 	public void testEqualsObject() {
-		assertThat(four_seven_closed_closed.equals(four_seven_closed_closed), is(true));
-		assertThat(four_seven_closed_closed.equals(null), is(false));
-		assertThat(four_seven_closed_closed.equals(new Object()), is(false));
-		assertThat(four_seven_closed_closed.equals(new NumericalInterval(4, 7)), is(true));
-		assertThat(four_seven_closed_closed.equals(new NumericalInterval(4, 7.1)), is(false));
+		assertThat(parse("[4, 7]").equals(parse("[4, 7]")), is(true));
+		assertThat(parse("[4, 7]").equals(null), is(false));
+		assertThat(parse("[4, 7]").equals(new Object()), is(false));
+		assertThat(parse("[4, 7]").equals(parse("[4, 7]")), is(true));
+		assertThat(parse("[4, 7]").equals(parse("[4, 7.1]")), is(false));
 	}
 
 	/**
 	 * Test method for
 	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#intersects(de.d3web.core.knowledge.terminology.info.NumericalInterval)}
-	 * .
 	 */
 	@Test
 	public void testIntersects() {
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(1, 3)), is(false));
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(1, 4, true, true)), is(false));
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(1, 4)), is(true));
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(8, 9)), is(false));
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(7, 9, true, true)), is(false));
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(7, 9)), is(true));
-		assertThat(four_seven_closed_closed.intersects(
-				new NumericalInterval(4, 7)), is(true));
+		assertThat(parse("[4, 7]").intersects(parse("[1, 3]")), is(false));
+		assertThat(parse("[4, 7]").intersects(parse("(1, 4)")), is(false));
+		assertThat(parse("[4, 7]").intersects(parse("[1, 4]")), is(true));
+		assertThat(parse("[4, 7]").intersects(parse("[8, 9]")), is(false));
+		assertThat(parse("[4, 7]").intersects(parse("(7, 9)")), is(false));
+		assertThat(parse("[4, 7]").intersects(parse("[7, 9]")), is(true));
+		assertThat(parse("[4, 7]").intersects(parse("[4, 7]")), is(true));
 	}
 
 	/**
 	 * Test method for
 	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#toString()}
-	 * .
 	 */
 	@Test
 	public void testToString() {
-		assertThat(four_seven_closed_closed.toString(), is("[4.0, 7.0]"));
+		assertThat(parse("[4, 7]").toString(), is("[4.0, 7.0]"));
 		assertThat(new NumericalInterval(6.1, 8.3, true, true).toString(), is("(6.1, 8.3)"));
 	}
 
 	/**
 	 * Test method for
 	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#compareTo(de.d3web.core.knowledge.terminology.info.NumericalInterval)}
-	 * .
 	 */
 	@Test
 	public void testCompareTo() {
-		assertThat(four_seven_closed_closed.compareTo(new NumericalInterval(5, 8)), is(-1));
-		assertThat(four_seven_closed_closed.compareTo(new NumericalInterval(3, 8)), is(1));
-		assertThat(four_seven_closed_closed.compareTo(new NumericalInterval(4, 8)), is(-1));
-		assertThat(four_seven_closed_closed.compareTo(new NumericalInterval(4, 6)), is(1));
-		assertThat(four_seven_closed_closed.compareTo(new NumericalInterval(4, 7)), is(0));
+		assertThat(parse("[4, 7]").compareTo(parse("[5, 8]")), is(-1));
+		assertThat(parse("[4, 7]").compareTo(parse("[3, 8]")), is(1));
+		assertThat(parse("[4, 7]").compareTo(parse("[4, 8]")), is(-1));
+		assertThat(parse("[4, 7]").compareTo(parse("[4, 6]")), is(1));
+		assertThat(parse("[4, 7]").compareTo(parse("[4, 7]")), is(0));
+		assertThat(parse("[4, 7]").compareTo(parse("(4, 7)")), is(-1));
+
+		assertThat(parse("(4, 7)").compareTo(parse("(4, 7)")), is(0));
+		assertThat(parse("[4, 7]").compareTo(parse("(4, 7)")), is(-1));
+		assertThat(parse("(4, 7]").compareTo(parse("[4, 7)")), is(1));
+
+		assertThat(parse("[4, 7)").compareTo(parse("[4, 7]")), is(-1));
+		assertThat(parse("[4, 7]").compareTo(parse("[4, 7)")), is(1));
+	}
+
+	@Test
+	public void testContainsInterval() throws Exception {
+		// not containing
+		assertThat(parse("[4, 7]").contains(parse("[8, 9]")), is(false));
+		assertThat(parse("[4, 7]").contains(parse("(2, 3)")), is(false));
+
+		// containing
+		assertThat(parse("[4, 7]").contains(parse("[5, 6]")), is(true));
+		assertThat(parse("[4, 7]").contains(parse("(5, 6)")), is(true));
+
+		// overlapping
+		assertThat(parse("[4, 7]").contains(parse("[3, 6]")), is(false));
+		assertThat(parse("[4, 7]").contains(parse("(5, 8)")), is(false));
+
+		// boundary cases
+		assertThat(parse("[4, 7]").contains(parse("[4, 7]")), is(true));
+		assertThat(parse("[4, 7]").contains(parse("[4, 7)")), is(true));
+		assertThat(parse("[4, 7]").contains(parse("(4, 7]")), is(true));
+		assertThat(parse("[4, 7]").contains(parse("(4, 7)")), is(true));
+
+		assertThat(parse("[4, 7)").contains(parse("(4, 7)")), is(true));
+		assertThat(parse("(4, 7]").contains(parse("(4, 7)")), is(true));
+		assertThat(parse("(4, 7)").contains(parse("(4, 7)")), is(true));
+
+		assertThat(parse("(4, 7)").contains(parse("[4, 7]")), is(false));
+		assertThat(parse("(4, 7)").contains(parse("[4, 7)")), is(false));
+		assertThat(parse("(4, 7)").contains(parse("(4, 7]")), is(false));
+		assertThat(parse("(4, 7]").contains(parse("[4, 7)")), is(false));
+
+	}
+
+	@Test
+	public void testIsEmpty() throws Exception {
+		assertThat(parse("[4, 7]").isEmpty(), is(false));
+		assertThat(parse("[4, 4]").isEmpty(), is(false));
+		assertThat(parse("[-4, -4]").isEmpty(), is(false));
+		assertThat(parse("[-4, -3]").isEmpty(), is(false));
+		assertThat(parse("[-Infinity, Infinity]").isEmpty(), is(false));
+
+		assertThat(parse("[4, 4)").isEmpty(), is(true));
+		assertThat(parse("(4, 4]").isEmpty(), is(true));
+		assertThat(parse("(4, 4)").isEmpty(), is(true));
+		assertThat(parse("[Infinity, -Infinity]").isEmpty(), is(true));
+
+	}
+
+	@Test
+	public void testIntersect() throws Exception {
+		// equal boundaries
+		assertThat(parse("[4, 7]").intersect(parse("[4, 7]")), is(parse("[4, 7]")));
+		assertThat(parse("(4, 7)").intersect(parse("[4, 7]")), is(parse("(4, 7)")));
+		assertThat(parse("[4, 7)").intersect(parse("(4, 7]")), is(parse("(4, 7)")));
+		assertThat(parse("(4, 7]").intersect(parse("[4, 7)")), is(parse("(4, 7)")));
+		assertThat(parse("(4, 7)").intersect(parse("(4, 7)")), is(parse("(4, 7)")));
+
+		// containing
+		assertThat(parse("(4, 7)").intersect(parse("[5, 6]")), is(parse("[5, 6]")));
+		assertThat(parse("[4, 7]").intersect(parse("(5, 6)")), is(parse("(5, 6)")));
+
+		// overlapping
+		assertThat(parse("(4, 7)").intersect(parse("[5, 8]")), is(parse("[5, 7)")));
+		assertThat(parse("(4, 7]").intersect(parse("(5, 8)")), is(parse("(5, 7]")));
+
+		assertThat(parse("(6, 8)").intersect(parse("[7, 9]")), is(parse("[7, 8)")));
+		assertThat(parse("(6, 8]").intersect(parse("(7, 9)")), is(parse("(7, 8]")));
+	}
+
+	@Test
+	public void testParse() throws Exception {
+		assertThat(parse("[4, 7]"), is(new NumericalInterval(4, 7)));
+		assertThat(parse("[4, 7)"), is(new NumericalInterval(4, 7, false, true)));
+		assertThat(parse("(4, 7]"), is(new NumericalInterval(4, 7, true, false)));
+		assertThat(parse("(4, 7)"), is(new NumericalInterval(4, 7, true, true)));
+		assertThat(parse("[-7, -4]"), is(new NumericalInterval(-7, -4)));
+
+		assertThat(parse("(4.56, 7.89)"), is(new NumericalInterval(4.56, 7.89, true, true)));
+	}
+
+	private static NumericalInterval parse(String s) {
+		String[] split = s.split(",");
+		String leftSide = split[0].trim();
+		String rightSide = split[1].trim();
+		double left = Double.parseDouble(leftSide.substring(1));
+		double right = Double.parseDouble(rightSide.substring(0, rightSide.length() - 1));
+
+		boolean leftOpen;
+		if (leftSide.startsWith("(")) leftOpen = true;
+		else if (leftSide.startsWith("[")) leftOpen = false;
+		else throw new IllegalArgumentException(s);
+
+		boolean rightOpen;
+		if (rightSide.endsWith(")")) rightOpen = true;
+		else if (rightSide.endsWith("]")) rightOpen = false;
+		else throw new IllegalArgumentException(s);
+
+		return new NumericalInterval(left, right, leftOpen, rightOpen);
+
 	}
 
 }
