@@ -72,8 +72,8 @@ public class ConditionBooleanTest {
 
 		// two ChoiceValues, representing to two possible answers "yes" and "no"
 		// for the above questions
-		choiceValueYes = new ChoiceValue(choiceQuestion1.getAlternative(0));
-		choiceValueNo = new ChoiceValue(choiceQuestion1.getAlternative(1));
+		choiceValueYes = new ChoiceValue(choiceQuestion1.getAllAlternatives().get(0));
+		choiceValueNo = new ChoiceValue(choiceQuestion1.getAllAlternatives().get(1));
 
 		// these two conditions should both be answered with "yes"
 		conditionQ1Yes = new CondEqual(choiceQuestion1, choiceValueYes);

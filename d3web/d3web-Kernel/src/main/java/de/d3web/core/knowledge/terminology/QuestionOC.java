@@ -20,9 +20,6 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.Collections;
-import java.util.List;
-
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -84,16 +81,5 @@ public class QuestionOC extends QuestionChoice {
 		parent.addChild(this);
 	}
 
-	public Choice getAlternative(int key) {
-		return getAlternatives().get(key);
-	}
 
-	public List<Choice> getAlternatives() {
-		if (getAllAlternatives() == null) {
-			return Collections.emptyList();
-		}
-		else {
-			return getAllAlternatives();
-		}
-	}
 }

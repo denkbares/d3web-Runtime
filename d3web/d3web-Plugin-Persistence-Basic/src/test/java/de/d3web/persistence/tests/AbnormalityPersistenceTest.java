@@ -55,7 +55,7 @@ public class AbnormalityPersistenceTest {
 		answers[0] = "Antwort1";
 		answers[1] = "Antwort2";
 		QuestionOC oc = new QuestionOC(kb.getRootQASet(), "OC", answers);
-		Choice choice = oc.getAlternatives().get(0);
+		Choice choice = oc.getAllAlternatives().get(0);
 		QuestionNum num = new QuestionNum(kb.getRootQASet(), "Num");
 		DefaultAbnormality a = new DefaultAbnormality();
 		a.addValue(new ChoiceValue(choice), Abnormality.A0);
@@ -70,10 +70,10 @@ public class AbnormalityPersistenceTest {
 		KnowledgeBase reloadedKB = pm.load(file);
 		oc = (QuestionOC) reloadedKB.getManager().searchQuestion("OC");
 		num = (QuestionNum) reloadedKB.getManager().searchQuestion("Num");
-		choice = oc.getAlternatives().get(0);
+		choice = oc.getAllAlternatives().get(0);
 		a = oc.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY);
 		Assert.assertEquals(Abnormality.A0, a.getValue(new ChoiceValue(choice)));
-		Choice choice2 = oc.getAlternatives().get(1);
+		Choice choice2 = oc.getAllAlternatives().get(1);
 		// A5 is default
 		Assert.assertEquals(Abnormality.A5, a.getValue(new ChoiceValue(choice2)));
 

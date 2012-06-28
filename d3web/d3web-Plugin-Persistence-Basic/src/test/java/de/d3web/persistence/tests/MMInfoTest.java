@@ -48,7 +48,7 @@ public class MMInfoTest {
 		String[] answers = new String[1];
 		answers[0] = "Answer 1";
 		QuestionOC oc = new QuestionOC(kb.getRootQASet(), "Question", answers);
-		Choice choice = oc.getAlternative(0);
+		Choice choice = oc.getAllAlternatives().get(0);
 		oc.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.GERMAN, "Frage");
 		choice.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.GERMAN, "Antwort 1");
 		File file = new File("target/test/MMinfoTest.d3web");
@@ -59,6 +59,7 @@ public class MMInfoTest {
 		oc = (QuestionOC) reloadedKB.getManager().searchQuestion("Question");
 		Assert.assertEquals("Frage", oc.getInfoStore().getValue(MMInfo.DESCRIPTION, Locale.GERMAN));
 		Assert.assertEquals("Antwort 1",
-				oc.getAlternative(0).getInfoStore().getValue(MMInfo.DESCRIPTION, Locale.GERMAN));
+				oc.getAllAlternatives().get(0).getInfoStore().getValue(MMInfo.DESCRIPTION,
+						Locale.GERMAN));
 	}
 }
