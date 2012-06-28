@@ -262,7 +262,9 @@ class IterativeDeepeningSearch {
 				actual.add(successor, session);
 				nextStep(actual);
 				undo.addAll(successor.setNormalValues(session));
-				undo.addAll(successor.getStateTransition().fire(session));
+				if (successor.getStateTransition() != null) {
+					undo.addAll(successor.getStateTransition().fire(session));
+				}
 				findCheapestPath(actual, depth - 1, session);
 				actual.pop();
 				Util.undo(session, undo);

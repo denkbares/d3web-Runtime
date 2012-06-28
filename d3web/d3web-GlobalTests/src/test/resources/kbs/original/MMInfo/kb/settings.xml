@@ -20,6 +20,7 @@
 <plugin ID="d3web-DiaFlux" autodetect="false" required="false"/>
 <plugin ID="d3web-Kernel-ExtensionPoints" autodetect="false" required="false"/>
 <plugin ID="d3web-Persistence-ImageQuestion" autodetect="false" required="false"/>
+<plugin ID="d3web-SessionPersistence-ExtensionPoints" autodetect="false" required="false"/>
 <plugin ID="d3web-XCL" autodetect="true" required="false"/>
 <plugin ID="knowledgePersistenceShared" autodetect="false" required="false"/>
 </plugins>

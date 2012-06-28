@@ -5,6 +5,7 @@
 	<requires>
 		<import plugin-id="d3web-Kernel-ExtensionPoints" />
 		<import plugin-id="KnowledgePersistenceExtensionPoints" />
+		<import plugin-id="d3web-SessionPersistence-ExtensionPoints" />
 	</requires>
 
 	<runtime>
@@ -238,6 +239,16 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Boolean" />
 		<parameter id="default" value="false" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="ManualTargetSelectionEntryHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.ManualTargetSelectionEntryHandler" />
+		<parameter id="name" value="ManualTargetSelectionEntryHandler" />
+		<parameter id="description" value="Handler for ManualTargetSelectionEntries" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
 	</extension>
 
 </plugin>

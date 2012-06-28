@@ -31,6 +31,7 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
 
 /**
  * This class provides utility functions to enable an advanced user mode. Within
@@ -162,10 +163,13 @@ public class ExpertMode implements SessionObject {
 	public void selectTarget(Target target) throws AbortException {
 		PSMethodCostBenefit psm = getPSMethodCostBenefit();
 		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
-
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
+			session.getProtocol().addEntry(
+					new ManualTargetSelectionEntry(propagationManager.getPropagationTime(),
+							target.getQContainers().toArray(
+									new QContainer[target.getQContainers().size()])));
 			psm.calculateNewPathTo(pso, target);
 			psm.activateNextQContainer(pso);
 		}
