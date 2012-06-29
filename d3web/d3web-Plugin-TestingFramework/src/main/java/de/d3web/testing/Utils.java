@@ -81,42 +81,6 @@ public class Utils {
 		args = Arrays.copyOfRange(args, 1, args.length);
 		ArgsCheckResult argsCheckResult = test.checkArgs(args);
 		msgs.add(argsCheckResult);
-		// if (argsCheckResult.hasError() || argsCheckResult.hasWarning()) {
-		// String[] arguments = argsCheckResult.getArguments();
-		// for (int i = 0; i < arguments.length; i++) {
-		// if (argsCheckResult.hasError(i)) {
-		// msgs.add(new Message(Message.Type.ERROR, testName + ": "
-		// + renderMessage(
-		// args, argsCheckResult,
-		// i)));
-		// }
-		// if (argsCheckResult.hasWarning(i)) {
-		// msgs.add(new Message(Message.Type.ERROR, testName + ": "
-		// + renderMessage(
-		// args, argsCheckResult,
-		// i)));
-		// }
-		// }
-		//
-		// // error on zero arguments
-		// if (arguments.length == 0 && argsCheckResult.hasError(0)) {
-		// msgs.add(new Message(Message.Type.ERROR, testName + ": "
-		// + renderMessage(
-		// args, argsCheckResult, 0)));
-		// }
-		// }
-	}
-
-	private static String renderMessage(final String[] args, ArgsCheckResult argsCheckResult, int i) {
-		if (argsCheckResult.getMessage(i) != null) {
-			String arg = "none";
-			if (i < args.length) {
-				arg = args[i];
-			}
-			String message = argsCheckResult.getMessage(i);
-			return "Invalid argument: " + arg + " (" + message + ")";
-		}
-		return null;
 	}
 
 }
