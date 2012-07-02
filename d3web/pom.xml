@@ -275,5 +275,6 @@
 		<module>d3web-Plugin-SessionPersistence-Basic</module>
 		<module>d3web-TestCase</module>
 		<module>d3web-Plugin-TestingFramework</module>
+		<module>d3web-Utils</module>
 	</modules>
 </project>
