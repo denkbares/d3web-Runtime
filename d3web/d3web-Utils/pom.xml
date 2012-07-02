@@ -1,0 +1,13 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>d3web</artifactId>
+    <groupId>de.uniwue.d3web</groupId>
+    <version>0.2-SNAPSHOT</version>
+  </parent>
+  <groupId>de.uniwue.d3web</groupId>
+  <artifactId>d3web-Utils</artifactId>
+  <version>0.2-SNAPSHOT</version>
+  <name>d3web-Utils</name>
+  <description>General helpful code that is not related to KR and reasoning.</description>
+</project>
