@@ -80,13 +80,13 @@ public class CaseUpdater {
 								// check that it is really a diff of the form:
 								// UNCLEAR -> EXCLUDED
 								ValueDiff valueDiff = rtcDiff.getDiffFor(to);
-								if (valueDiff.derived.equals(new Rating(Rating.State.EXCLUDED))
-										&& valueDiff.expected.equals(new Rating(
+								if (valueDiff.getDerived().equals(new Rating(Rating.State.EXCLUDED))
+										&& valueDiff.getExpected().equals(new Rating(
 												Rating.State.UNCLEAR))) {
 
 									// add new rated solution
 									rtc.addExpected(new RatedSolution((Solution) to,
-											new StateRating((Rating) valueDiff.derived)));
+											new StateRating((Rating) valueDiff.getDerived())));
 								}
 							}
 						}
