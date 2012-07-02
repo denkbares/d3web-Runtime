@@ -30,12 +30,21 @@ import de.d3web.core.session.Value;
  */
 public class ValueDiff {
 
-	public Value expected;
-	public Value derived;
+	private final Value expected;
+
+	private final Value derived;
 
 	public ValueDiff(Value expected, Value derived) {
 		this.expected = expected;
 		this.derived = derived;
+	}
+
+	public Value getExpected() {
+		return expected;
+	}
+
+	public Value getDerived() {
+		return derived;
 	}
 
 	public boolean differ() {

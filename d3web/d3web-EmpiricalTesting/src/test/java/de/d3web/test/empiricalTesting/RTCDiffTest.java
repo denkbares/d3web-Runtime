@@ -85,8 +85,8 @@ public class RTCDiffTest {
 		assertTrue(diffObjects.contains(question));
 
 		ValueDiff valueDiff = diff.getDiffFor(question);
-		assertEquals(q_derived, valueDiff.derived);
-		assertEquals(q_expected, valueDiff.expected);
+		assertEquals(q_derived, valueDiff.getDerived());
+		assertEquals(q_expected, valueDiff.getExpected());
 
 		Collection<TerminologyObject> correctlyDerived = diff.correctlyDerived();
 		assertTrue(correctlyDerived.isEmpty());
