@@ -18,9 +18,12 @@
  */
 package de.d3web.costbenefit.inference;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Value;
 
 /**
  * A ValueTransition contains a question and a List of ConditionalValueSetters,
@@ -47,6 +50,21 @@ public class ValueTransition {
 
 	public List<ConditionalValueSetter> getSetters() {
 		return setters;
+	}
+
+	/**
+	 * Calculates a {@link Set} of all possible values, which can be set by this
+	 * ValueTransition
+	 * 
+	 * @created 04.07.2012
+	 * @return Set of possible values
+	 */
+	public Set<Value> calculatePossibleValues() {
+		Set<Value> result = new HashSet<Value>();
+		for (ConditionalValueSetter setter : setters) {
+			result.add(setter.getAnswer());
+		}
+		return result;
 	}
 
 }

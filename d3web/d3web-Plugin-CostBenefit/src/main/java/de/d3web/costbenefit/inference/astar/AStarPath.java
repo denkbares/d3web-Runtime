@@ -149,12 +149,6 @@ public class AStarPath implements Path {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		// an A* pathReference can never be empty
-		return false;
-	}
-
-	@Override
 	public int hashCode() {
 		return hashCache;
 	}

@@ -24,8 +24,7 @@ import java.util.List;
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -86,25 +85,14 @@ public class StateTransition implements KnowledgeSlice {
 			Question q = vt.getQuestion();
 			List<ConditionalValueSetter> setters = vt.getSetters();
 			for (ConditionalValueSetter cvs : setters) {
-				try {
-					Condition condition = cvs.getCondition();
-					if (condition == null || cvs.getCondition().eval(session)) {
-						// Fact fact = FactFactory.createFact(q,
-						// cvs.getAnswer(), new Object(),
-						// PSMethodUserSelected.getInstance());
-						Fact fact = new
+				Condition condition = cvs.getCondition();
+				if (condition == null || Conditions.isTrue(cvs.getCondition(), session)) {
+					Fact fact = new
 								PSMethodStateTransition.StateTransitionFact(
 										session, q, cvs.getAnswer());
-						session.getBlackboard().addValueFact(fact);
-						facts.add(fact);
-						break;
-					}
-				}
-				catch (NoAnswerException e) {
-					// Nothing to do
-				}
-				catch (UnknownAnswerException e) {
-					// Nothing to do
+					session.getBlackboard().addValueFact(fact);
+					facts.add(fact);
+					break;
 				}
 			}
 		}

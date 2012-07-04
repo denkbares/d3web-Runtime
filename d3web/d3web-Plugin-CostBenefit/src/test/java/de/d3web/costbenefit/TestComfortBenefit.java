@@ -210,11 +210,6 @@ public class TestComfortBenefit {
 		}
 
 		@Override
-		public boolean isEmpty() {
-			return qcons.isEmpty();
-		}
-
-		@Override
 		public double getNegativeCosts() {
 			return 0;
 		}

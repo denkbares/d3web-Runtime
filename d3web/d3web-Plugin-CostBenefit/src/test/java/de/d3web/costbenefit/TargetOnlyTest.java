@@ -81,7 +81,7 @@ public class TargetOnlyTest {
 		ChoiceValue valueStateB = new ChoiceValue(stateB);
 
 		// the first QContainer is applicable on start and enables the usage of
-		// the first
+		// the second
 		QContainer first = new QContainer(kb, "First");
 		QuestionOC q1 = new QuestionOC(first, "Q1");
 		Choice answer1 = new Choice("answer1");

@@ -21,8 +21,7 @@ package de.d3web.costbenefit.model.ids;
 import java.util.List;
 
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
@@ -60,16 +59,7 @@ public class Node {
 		if (st == null) return true;
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition == null) return true;
-		try {
-			return activationCondition.eval(session);
-		}
-		catch (NoAnswerException e) {
-		}
-		catch (UnknownAnswerException e) {
-		}
-		// if there is no answer (or the answer is unknown),
-		// the QContainer is not applicable
-		return false;
+		return Conditions.isTrue(activationCondition, session);
 	}
 
 	public QContainer getQContainer() {

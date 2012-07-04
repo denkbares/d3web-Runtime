@@ -32,8 +32,7 @@ import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
@@ -310,8 +309,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * @return
 	 */
 	public static boolean evalEdge(Session session, Edge edge) {
-		if (!FluxSolver.evalToTrue(session, edge.getStartNode().getEdgePrecondition())) return false;
-		return evalToTrue(session, edge.getCondition());
+		if (!Conditions.isTrue(edge.getStartNode().getEdgePrecondition(), session)) return false;
+		return Conditions.isTrue(edge.getCondition(), session);
 	}
 
 	@Override
@@ -380,8 +379,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	}
 
-
-
 	/**
 	 * Creates a collection of all nodes that are active in any flow run that
 	 * leads towards this snapshot node.
@@ -418,7 +415,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	private boolean hasNotLeft(Node node, Collection<Node> allActiveNodes, Session session) {
 		if (allActiveNodes.contains(node)) {
 			for (Edge edge : node.getOutgoingEdges()) {
-				if (evalToTrue(session, edge.getCondition())) {
+				if (Conditions.isTrue(edge.getCondition(), session)) {
 					return false;
 				}
 			}
@@ -430,7 +427,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	private static boolean hasIncomingActivation(Node child, Collection<Node> allActiveNodes, Session session) {
 		for (Edge edge : child.getIncomingEdges()) {
 			if (allActiveNodes.contains(edge.getStartNode())
-					&& evalToTrue(session, edge.getCondition())) {
+					&& Conditions.isTrue(edge.getCondition(), session)) {
 				return true;
 			}
 		}
@@ -468,18 +465,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			}
 		}
 		return snappyRuns;
-	}
-
-	public static boolean evalToTrue(Session session, Condition condition) {
-		try {
-			return condition.eval(session);
-		}
-		catch (NoAnswerException e) {
-			return false;
-		}
-		catch (UnknownAnswerException e) {
-			return false;
-		}
 	}
 
 	public static void deactivate(Session session, Node node, FlowRun flowRun) {

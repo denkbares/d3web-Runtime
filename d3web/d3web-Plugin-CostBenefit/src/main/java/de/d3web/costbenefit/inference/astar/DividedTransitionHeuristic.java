@@ -376,7 +376,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 				// check if the values required for that questions
 				// matches the values that can be set up
 				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
-				Set<Value> possibleValues = calculatePossibleValues(vt.getSetters());
+				Set<Value> possibleValues = vt.calculatePossibleValues();
 				if (!Collections.disjoint(requiredValues, possibleValues)) {
 					// the values that can be set up are common with
 					// the required ones, so count that question
@@ -435,14 +435,6 @@ public class DividedTransitionHeuristic implements Heuristic {
 					"Can only handle CondNot, CondAnd, CondOr or CondEqual: "
 							+ condition);
 		}
-	}
-
-	protected Set<Value> calculatePossibleValues(List<ConditionalValueSetter> setters) {
-		Set<Value> result = new HashSet<Value>();
-		for (ConditionalValueSetter setter : setters) {
-			result.add(setter.getAnswer());
-		}
-		return result;
 	}
 
 	private HashMap<Question, Map<Value, Double>> getTargetMap(Condition activationCondition) {

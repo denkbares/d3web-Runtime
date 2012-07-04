@@ -33,8 +33,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -112,10 +111,6 @@ public class AStar {
 		this.model = model;
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 
-		AStarPath emptyPath = new AStarPath(null, null, 0);
-		State startState = computeState(session);
-		Node start = new Node(startState, session, emptyPath, 0);
-		openNodes.add(start);
 		successors = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND);
 		// QContainers without a StateTransition can be executed at any time,
@@ -159,7 +154,11 @@ public class AStar {
 		long time1 = System.currentTimeMillis();
 		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
-
+		AStarPath emptyPath = new AStarPath(null, null, 0);
+		State startState = computeState(session);
+		Node start = new Node(startState, session, emptyPath, calculateFValue(emptyPath,
+				startState, session));
+		getOpenNodes().add(start);
 		// clean up targets if it is not expected to require too much time
 		// and also expect significant speed optimization during calculation
 		if (model.getTargets().size() <= 50) {
@@ -173,12 +172,12 @@ public class AStar {
 				"#steps: " + steps + ", " +
 				"time: " + (time2 - time1) + "ms, " +
 				"init: " + initTime + "ms, " +
-				"#open: " + openNodes.size() + ", " +
-				"#closed: " + closedNodes.size() + ")");
+				"#open: " + getOpenNodes().size() + ", " +
+				"#closed: " + getClosedNodes().size() + ")");
 	}
 
 	private void removeInfiniteTargets() {
-		Node startNode = openNodes.iterator().next();
+		Node startNode = getOpenNodes().iterator().next();
 		for (Target target : new ArrayList<Target>(model.getTargets())) {
 			Heuristic heuristic = algorithm.getHeuristic();
 			QContainer qcontainer = target.getQContainers().get(0);
@@ -191,9 +190,9 @@ public class AStar {
 	}
 
 	private void searchLoop() {
-		while (!model.isAborted() && !openNodes.isEmpty()) {
+		while (!model.isAborted() && !getOpenNodes().isEmpty()) {
 			// check for the next open node to be processed
-			Node node = openNodes.poll();
+			Node node = getOpenNodes().poll();
 			// System.out.println("Expanding: " + node.getPath().getPath() +
 			// ", f-Value:"
 			// + node.getfValue());
@@ -219,7 +218,7 @@ public class AStar {
 			}
 
 			// and mark the node as finished
-			closedNodes.add(node);
+			getClosedNodes().add(node);
 		}
 	}
 
@@ -314,19 +313,9 @@ public class AStar {
 		if (actualSession.getBlackboard().getIndication(qcontainer).isContraIndicated()) {
 			return false;
 		}
-		try {
-			// check if the precondition does hold
-			return stateTransition.getActivationCondition() == null
-					|| stateTransition.getActivationCondition().eval(actualSession);
-		}
-		catch (NoAnswerException e) {
-			// does not apply because of missing values
-			return false;
-		}
-		catch (UnknownAnswerException e) {
-			// does not apply because of unknown values
-			return false;
-		}
+		// check if the precondition does hold
+		return stateTransition.getActivationCondition() == null
+					|| Conditions.isTrue(stateTransition.getActivationCondition(), actualSession);
 	}
 
 	private void installNode(Node newFollower) {
@@ -343,13 +332,13 @@ public class AStar {
 			if (follower == null) {
 				// store the new one, because it does not exist
 				nodes.put(newFollower.getState(), newFollower);
-				openNodes.add(newFollower);
+				getOpenNodes().add(newFollower);
 				// System.out.println("\tnode added");
 			}
 			else if (follower.getPath().getCosts() > newFollower.getPath().getCosts()) {
 				// update existing node for the state
 				// for open nodes remove and add again to preserve ordering
-				boolean hasOpenNode = openNodes.remove(follower);
+				boolean hasOpenNode = getOpenNodes().remove(follower);
 				// heuristic was not steady, log that the knowledgebase has to
 				// be checked
 				if (!hasOpenNode) {
@@ -365,7 +354,7 @@ public class AStar {
 				// proceed with usual update
 				follower.updatePath(newFollower.getPath());
 				follower.setfValue(newFollower.getfValue());
-				if (hasOpenNode) openNodes.add(follower);
+				if (hasOpenNode) getOpenNodes().add(follower);
 			}
 		}
 	}
@@ -473,5 +462,13 @@ public class AStar {
 		}
 
 		return min;
+	}
+
+	Queue<Node> getOpenNodes() {
+		return openNodes;
+	}
+
+	Collection<Node> getClosedNodes() {
+		return closedNodes;
 	}
 }

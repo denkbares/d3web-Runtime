@@ -26,8 +26,7 @@ import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -150,15 +149,7 @@ public class PathExtender implements SearchAlgorithm {
 			condition = stateTransition.getActivationCondition();
 		}
 		if (condition != null) {
-			try {
-				return (condition.eval(session));
-			}
-			catch (NoAnswerException e) {
-				return false;
-			}
-			catch (UnknownAnswerException e) {
-				return false;
-			}
+			return Conditions.isTrue(condition, session);
 		}
 		else {
 			return true;
@@ -199,11 +190,6 @@ public class PathExtender implements SearchAlgorithm {
 		@Override
 		public double getCosts() {
 			return costs;
-		}
-
-		@Override
-		public boolean isEmpty() {
-			return qContainers.isEmpty();
 		}
 
 		@Override

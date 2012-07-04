@@ -49,13 +49,6 @@ public interface Path {
 	double getCosts();
 
 	/**
-	 * Checks if the path is empty.
-	 * 
-	 * @return if the path is empty
-	 */
-	public boolean isEmpty();
-
-	/**
 	 * Returns the sum of all negative costs on the path
 	 * 
 	 * @created 22.05.2012

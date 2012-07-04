@@ -39,6 +39,7 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.Indication;
@@ -357,19 +358,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				if (!finalQuestions.contains(condEqual.getQuestion())) {
 					continue;
 				}
-				boolean fullfilled = false;
-				try {
-					if (condition.eval(session)) {
-						fullfilled = true;
-					}
-				}
-				catch (NoAnswerException e) {
-					// nothing to do
-				}
-				catch (UnknownAnswerException e) {
-					// nothing to do
-				}
-				if (!fullfilled) {
+				if (!Conditions.isTrue(condition, session)) {
 					ST: for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 							StateTransition.KNOWLEDGE_KIND)) {
 						for (ValueTransition vt : st.getPostTransitions()) {

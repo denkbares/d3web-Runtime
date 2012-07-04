@@ -108,7 +108,6 @@ public class IDSPath implements Path {
 		return stack.peek();
 	}
 
-	@Override
 	public boolean isEmpty() {
 		return stack.isEmpty();
 	}

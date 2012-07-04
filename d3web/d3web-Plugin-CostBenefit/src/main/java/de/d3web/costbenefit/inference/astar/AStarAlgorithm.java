@@ -35,10 +35,12 @@ public class AStarAlgorithm implements SearchAlgorithm {
 	private Heuristic heuristic = new TPHeuristic();
 	private AbortStrategy abortStrategy = new DefaultAbortStrategy(500000, 4);
 	private boolean multiCore = true;
+	private AStar lastSearch;
 
 	@Override
 	public void search(Session session, SearchModel model) {
-		new AStar(session, model, this).search();
+		lastSearch = new AStar(session, model, this);
+		lastSearch.search();
 	}
 
 	public Heuristic getHeuristic() {
@@ -63,5 +65,15 @@ public class AStarAlgorithm implements SearchAlgorithm {
 
 	public boolean isMultiCore() {
 		return multiCore;
+	}
+
+	/**
+	 * Returns an explanation component of the last search started.
+	 * 
+	 * @created 03.07.2012
+	 * @return {@link AStarExplanationComponent}
+	 */
+	public AStarExplanationComponent getExplanationComponent() {
+		return new AStarExplanationComponent(lastSearch);
 	}
 }
