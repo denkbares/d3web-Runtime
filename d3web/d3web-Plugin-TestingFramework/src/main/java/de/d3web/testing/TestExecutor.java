@@ -117,11 +117,14 @@ public class TestExecutor {
 
 		for (ExecutableTest test : allTestsAndTestobjects.keySet()) {
 			// next major step for combined progress listener
-			progressListener.next(countTestObjects(allTestsAndTestobjects.get(test)));
+			// here do a normalization of the task weights assuming that all
+			// major steps have equal weight
+			progressListener.next((long) ((float) testObjectsTotal / allTestsAndTestobjects.size()));
 
 			String[] array = test.getArguments();
 			String[] testArgs = Arrays.copyOfRange(array, 1,
-					array.length);
+					array.length); // strip the first argument since it always
+									// is the test object name
 			TestResult testResult = executeTests(test.getTest(), testArgs,
 					allTestsAndTestobjects.get(test));
 
