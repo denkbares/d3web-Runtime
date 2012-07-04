@@ -36,18 +36,26 @@ package de.d3web.core.io.progress;
 public class CombinedProgressListener implements ProgressListener {
 
 	private long totalSize;
+
 	private long currentStepStart = 0;
 	private long currentStepSize = 0;
-	private ProgressListener decratedListener;
+	private final ProgressListener decoratedListener;
 
-	public CombinedProgressListener(long totalSize, ProgressListener decratedListener) {
+	public CombinedProgressListener(long totalSize, ProgressListener decoratedListener) {
 		this.totalSize = totalSize;
-		this.decratedListener = decratedListener;
+		this.decoratedListener = decoratedListener;
+	}
+
+	public CombinedProgressListener(ProgressListener decoratedListener) {
+		this(-1, decoratedListener);
 	}
 
 	@Override
 	public void updateProgress(float percent, String message) {
-		decratedListener.updateProgress(
+		if (totalSize == -1) {
+			throw new IllegalArgumentException("totalSize has not been set before update");
+		}
+		decoratedListener.updateProgress(
 				(percent * currentStepSize + currentStepStart) / totalSize,
 				message);
 	}
@@ -61,5 +69,16 @@ public class CombinedProgressListener implements ProgressListener {
 	public void next(long size) {
 		currentStepStart += currentStepSize;
 		currentStepSize = size;
+	}
+
+	/**
+	 * Allows to set the total size of the task. This parameter needs to be set
+	 * before the first call of updateProgress() !
+	 * 
+	 * @created 04.07.2012
+	 * @param totalSize
+	 */
+	public void setTotalSize(long totalSize) {
+		this.totalSize = totalSize;
 	}
 }
