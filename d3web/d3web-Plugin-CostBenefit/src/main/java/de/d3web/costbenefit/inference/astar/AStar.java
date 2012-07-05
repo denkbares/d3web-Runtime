@@ -471,4 +471,8 @@ public class AStar {
 	Collection<Node> getClosedNodes() {
 		return closedNodes;
 	}
+
+	SearchModel getModel() {
+		return model;
+	}
 }

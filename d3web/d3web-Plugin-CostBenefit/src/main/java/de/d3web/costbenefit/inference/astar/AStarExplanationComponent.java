@@ -19,6 +19,7 @@
 package de.d3web.costbenefit.inference.astar;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,8 +34,12 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.model.SearchModel;
+import de.d3web.costbenefit.model.Target;
 
 /**
  * This class can be used to explain the result of an AStar calculation.
@@ -116,6 +121,12 @@ public class AStarExplanationComponent {
 		return new AnalysisResult(bestNode.getPath(), bestNode.getfValue(), closed);
 	}
 
+	/**
+	 * Returns the f value of the start state of the calculation
+	 * 
+	 * @created 05.07.2012
+	 * @return start f value
+	 */
 	public double getPredictedPathCostsOnCalculationStart() {
 		for (Node n : astar.getClosedNodes()) {
 			if (n.getPath().getPath().isEmpty()) {
@@ -125,6 +136,13 @@ public class AStarExplanationComponent {
 		return Double.NaN;
 	}
 
+	/**
+	 * Returns the path which would have been expanded next, if the calculation
+	 * wouldn't have finished/aborted
+	 * 
+	 * @created 05.07.2012
+	 * @return best unexpanded path after calculation
+	 */
 	public AnalysisResult getBestPathAtCalculationEnd() {
 		Node peek = astar.getOpenNodes().peek();
 		return new AnalysisResult(peek.getPath(), peek.getfValue(), false);
@@ -178,7 +196,8 @@ public class AStarExplanationComponent {
 	 * @return a map containing the calculated conditions and its preparing
 	 *         QContainers
 	 */
-	public static Map<Condition, Set<QContainer>> findVariations(Session session, QContainer target) {
+	public static Map<Condition, Set<QContainer>> findVariations(Session session, Condition transitiveCondition) {
+		List<Condition> primitiveTransitiveConditions = TPHeuristic.getPrimitiveConditions(transitiveCondition);
 		KnowledgeBase kb = session.getKnowledgeBase();
 		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
 		// filter StateTransitions that cannot be applied due to final questions
@@ -191,8 +210,7 @@ public class AStarExplanationComponent {
 			}
 		}
 		Map<Condition, Set<QContainer>> result = new HashMap<Condition, Set<QContainer>>();
-		for (Condition condition : TPHeuristic.getPrimitiveConditions(TPHeuristic.calculateTransitiveCondition(
-				session, target))) {
+		for (Condition condition : primitiveTransitiveConditions) {
 			if (!Conditions.isTrue(condition, session)) {
 				Set<QContainer> transitionalQContainer = new HashSet<QContainer>();
 				for (StateTransition st : stateTransitions) {
@@ -211,5 +229,53 @@ public class AStarExplanationComponent {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Calculates all QContainers of the path to the last calculated target, not
+	 * needed to establish a transitive precondition of the chosen target
+	 * 
+	 * @created 05.07.2012
+	 * @return list of unexpected QContainers
+	 */
+	public Set<QContainer> getUnexpectedQContainers() {
+		SearchModel model = astar.getModel();
+		Target target = model.getBestCostBenefitTarget();
+		if (target == null) {
+			return Collections.emptySet();
+		}
+		if (target.getQContainers().size() != 1) {
+			throw new IllegalArgumentException("this method only works with single targets.");
+		}
+		Set<QContainer> result = new HashSet<QContainer>(target.getMinPath().getPath());
+		Map<Condition, Set<QContainer>> variations = findVariations(
+				model.getSession(),
+				getAndInitTPHeuristic(model).getTransitiveCondition(new AStarPath(null, null, 0),
+						StateTransition.getStateTransition(target.getQContainers().get(0))));
+		for (Set<QContainer> qcons : variations.values()) {
+			result.removeAll(qcons);
+		}
+		result.removeAll(target.getQContainers());
+		return result;
+	}
+
+	private static TPHeuristic getAndInitTPHeuristic(SearchModel model) {
+		Session session = model.getSession();
+		PSMethodCostBenefit cb = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		SearchAlgorithm searchAlgorithm = cb.getSearchAlgorithm();
+		if (searchAlgorithm instanceof PathExtender) {
+			searchAlgorithm = ((PathExtender) searchAlgorithm).getSubalgorithm();
+		}
+		if (searchAlgorithm instanceof AStarAlgorithm) {
+			Heuristic heuristic = ((AStarAlgorithm) searchAlgorithm).getHeuristic();
+			if (heuristic instanceof TPHeuristic) {
+				heuristic.init(model);
+				return (TPHeuristic) heuristic;
+			}
+		}
+		// if another heuristic is used, create and init a new one
+		TPHeuristic tpHeuristic = new TPHeuristic();
+		tpHeuristic.init(model);
+		return tpHeuristic;
 	}
 }

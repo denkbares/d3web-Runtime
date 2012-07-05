@@ -431,7 +431,19 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return result;
 	}
 
-	private Condition getTransitiveCondition(Path path, StateTransition stateTransition) {
+	/**
+	 * Creates a transitive condition for the specified stateTransition based on
+	 * the actual path. Important note: The heuristic has to be initialized
+	 * based on a search model, containing the qcontainer of the StateTransition
+	 * as a target. If no model is created yet, use the method
+	 * calculateTransitiveCondition(Session, QContainer)
+	 * 
+	 * @created 05.07.2012
+	 * @param path actual path
+	 * @param stateTransition specified {@link StateTransition}
+	 * @return transitive activation condition
+	 */
+	public Condition getTransitiveCondition(Path path, StateTransition stateTransition) {
 		Condition precondition = stateTransition.getActivationCondition();
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
