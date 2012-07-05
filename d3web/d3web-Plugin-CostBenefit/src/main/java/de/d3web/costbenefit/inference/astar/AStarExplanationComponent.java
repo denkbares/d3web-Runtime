@@ -33,13 +33,16 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class can be used to explain the result of an AStar calculation.
@@ -116,6 +119,9 @@ public class AStarExplanationComponent {
 					bestNode = n;
 				}
 			}
+		}
+		if (bestNode == null) {
+			return new AnalysisResult(new AStarPath(null, null, 0), 0, true);
 		}
 		boolean closed = astar.getClosedNodes().contains(bestNode);
 		return new AnalysisResult(bestNode.getPath(), bestNode.getfValue(), closed);
@@ -247,15 +253,31 @@ public class AStarExplanationComponent {
 		if (target.getQContainers().size() != 1) {
 			throw new IllegalArgumentException("this method only works with single targets.");
 		}
-		Set<QContainer> result = new HashSet<QContainer>(target.getMinPath().getPath());
-		Map<Condition, Set<QContainer>> variations = findVariations(
-				model.getSession(),
-				getAndInitTPHeuristic(model).getTransitiveCondition(new AStarPath(null, null, 0),
-						StateTransition.getStateTransition(target.getQContainers().get(0))));
+		Condition transitiveCondition = getAndInitTPHeuristic(model).getTransitiveCondition(
+				new AStarPath(null, null, 0),
+				StateTransition.getStateTransition(target.getQContainers().get(0)));
+
+		List<QContainer> path = new LinkedList<QContainer>(target.getMinPath().getPath());
+		path.removeAll(target.getQContainers());
+		return getUnexpectedQContainers(path, model.getSession(), transitiveCondition);
+	}
+
+	/**
+	 * Calculates all QContainers of the path, not needed to establish a
+	 * transitive precondition
+	 * 
+	 * @created 05.07.2012
+	 * @param path specified Path
+	 * @param session actual session
+	 * @param transitiveCondition transitive activation condition of the target
+	 * @return list of unexpected QContainers
+	 */
+	public static Set<QContainer> getUnexpectedQContainers(List<QContainer> path, Session session, Condition transitiveCondition) {
+		Set<QContainer> result = new HashSet<QContainer>(path);
+		Map<Condition, Set<QContainer>> variations = findVariations(session, transitiveCondition);
 		for (Set<QContainer> qcons : variations.values()) {
 			result.removeAll(qcons);
 		}
-		result.removeAll(target.getQContainers());
 		return result;
 	}
 
@@ -277,5 +299,49 @@ public class AStarExplanationComponent {
 		TPHeuristic tpHeuristic = new TPHeuristic();
 		tpHeuristic.init(model);
 		return tpHeuristic;
+	}
+
+	/**
+	 * Returns the path of the best cost benefit target or null if no path could
+	 * be found
+	 * 
+	 * @created 05.07.2012
+	 * @return path to target
+	 */
+	public Path getBestCostBenefit() {
+		Target bestCostBenefitTarget = astar.getModel().getBestCostBenefitTarget();
+		if (bestCostBenefitTarget == null) {
+			return null;
+		}
+		return bestCostBenefitTarget.getMinPath();
+	}
+
+	/**
+	 * Calculates the primitive conditions, wich are not fullfilled after the
+	 * specified path is processed
+	 * 
+	 * @created 05.07.2012
+	 * @param path specified path
+	 * @param transitiveCondition Condition to be fullfilled
+	 * @param session actual session
+	 * @return a set of unfullfilled (sub) conditions
+	 */
+	public Set<Condition> getUnfullfilledConditions(Path path, Condition transitiveCondition, Session session) {
+		List<Condition> primitiveConditions = TPHeuristic.getPrimitiveConditions(transitiveCondition);
+		Session copiedSession = Util.createSearchCopy(session);
+		for (QContainer qcon : path.getPath()) {
+			StateTransition stateTransition = StateTransition.getStateTransition(qcon);
+			if (stateTransition != null) {
+				Util.setNormalValues(copiedSession, qcon, PSMethodUserSelected.getInstance());
+				stateTransition.fire(copiedSession);
+			}
+		}
+		Set<Condition> falseConditions = new HashSet<Condition>();
+		for (Condition condition : primitiveConditions) {
+			if (!Conditions.isTrue(condition, copiedSession)) {
+				falseConditions.add(condition);
+			}
+		}
+		return falseConditions;
 	}
 }
