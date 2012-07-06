@@ -18,8 +18,11 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.Locale;
+
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
+import de.d3web.core.knowledge.terminology.NamedObject;
 
 /**
  * 
@@ -62,6 +65,13 @@ public class MMInfo {
 			"unknown_verbalisation", String.class);
 
 	/**
+	 * used for: Question the unit of numerical questions
+	 * 
+	 * @return String
+	 */
+	public static final Property<String> UNIT = Property.getProperty("unit", String.class);
+
+	/**
 	 * Checks if the link points to an {@link Resource} of the
 	 * {@link KnowledgeBase}
 	 * 
@@ -75,9 +85,21 @@ public class MMInfo {
 	}
 
 	/**
-	 * used for: Question the unit of numerical questions
+	 * Returns the prompt of the object for the specified name. If no prompt is
+	 * found for the locale or a parent (more common) locale, the object name is
+	 * returned. Thus this method will always return the name to be displayed
+	 * for the specified object.
 	 * 
-	 * @return String
+	 * @created 03.07.2012
+	 * @param object the object to get the prompt for
+	 * @param locale the language to get the prompt for
+	 * @return the prompt or name if no prompt exists
 	 */
-	public static final Property<String> UNIT = Property.getProperty("unit", String.class);
+	public static String getPrompt(NamedObject object, Locale locale) {
+		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, locale);
+		if (prompt == null) {
+			prompt = object.getName();
+		}
+		return prompt;
+	}
 }
