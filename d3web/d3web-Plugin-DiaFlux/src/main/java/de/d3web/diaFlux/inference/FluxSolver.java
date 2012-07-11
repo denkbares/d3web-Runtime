@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.TerminologyObject;
