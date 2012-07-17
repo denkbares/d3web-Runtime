@@ -31,12 +31,11 @@ import de.d3web.core.session.Value;
  */
 public class DefaultFinding implements Finding {
 
-	private TerminologyObject object;
-	private Value value;
-	private Date date;
+	private final TerminologyObject object;
+	private final Value value;
+	private final Date date;
 
 	public DefaultFinding(TerminologyObject object, Value value, Date date) {
-		super();
 		this.object = object;
 		this.value = value;
 		this.date = date;
@@ -55,6 +54,11 @@ public class DefaultFinding implements Finding {
 	@Override
 	public Date getDate() {
 		return date;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "[" + object.getName() + " = " + value.toString() + "]";
 	}
 
 }
