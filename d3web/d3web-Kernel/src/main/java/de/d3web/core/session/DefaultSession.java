@@ -356,7 +356,7 @@ public class DefaultSession implements Session {
 			}
 			else if (o1.getClass().equals(o2.getClass())) {
 				throw new IllegalArgumentException(
-						"Adding two variants of one psmethod to one session is not forbidden.");
+						"Adding two variants of one psmethod to one session is not allowed.");
 			}
 			else if (o1.getPriority() < o2.getPriority()) {
 				return -1;
