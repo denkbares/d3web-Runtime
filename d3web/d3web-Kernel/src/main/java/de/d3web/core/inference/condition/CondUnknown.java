@@ -51,7 +51,7 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondTextContains question: " + getQuestion().getName();
+		return "\u2190 CondUnknown question: " + getQuestion().getName();
 	}
 
 }
