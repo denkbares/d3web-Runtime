@@ -103,32 +103,31 @@ public class AbstractTerminologyObjectTest {
 	}
 
 	/**
-	 * Summary: Tests the
-	 * AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject,
-	 * int) method which moves a specified child to a new position in the
-	 * childrens-list
+	 * Summary: Tests the method
+	 * {@link AbstractTerminologyObject#addChild(AbstractTerminologyObject, int)}
+	 * which allows to insert children at specific positions in the children
+	 * list.
 	 * 
-	 * @see AbstractTerminologyObject#moveChildToPosition(AbstractTerminologyObject,
-	 *      int)
+	 * @see AbstractTerminologyObject#addChild(AbstractTerminologyObject, int)
 	 * 
 	 * @created 23.08.2010
 	 */
 	@Test
-	public void testMoveChildToPosition() {
-		// move linkedChildTwo (currently at index 4) to position at index 1
-		// verify all the new positions:
+	public void testAddChildAtPosition() {
 		TerminologyObject[] children = parent.getChildren();
 		assertThat(children[0], is(equalTo((TerminologyObject) childOne)));
 		assertThat(children[1], is(equalTo((TerminologyObject) childTwo)));
 		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
 
-		// now move the childOne (currently at index 0) at the end of the list
-		parent.addChild(childOne, Integer.MAX_VALUE);
+		// now move the childOne (currently at index 0) to index 1, between the
+		// other two children
+		parent.removeChild(childOne);
+		parent.addChild(childOne, 1);
 		// verify all the new positions:
 		children = parent.getChildren();
 		assertThat(children[0], is(equalTo((TerminologyObject) childTwo)));
-		assertThat(children[1], is(equalTo((TerminologyObject) childThree)));
-		assertThat(children[2], is(equalTo((TerminologyObject) childOne)));
+		assertThat(children[1], is(equalTo((TerminologyObject) childOne)));
+		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
 	}
 
 	/**
