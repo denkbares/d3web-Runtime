@@ -21,8 +21,10 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.DefaultKnowledgeStore;
@@ -67,11 +69,19 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	/**
 	 * The children of this object (including the linked children).
 	 */
-	private final List<AbstractTerminologyObject> children = new LinkedList<AbstractTerminologyObject>();
+	private final List<AbstractTerminologyObject> children = new ArrayList<AbstractTerminologyObject>();
+
+	/**
+	 * The children again as a set to speed up the very frequent contains
+	 * checks. We create it lazy.
+	 */
+	private Set<AbstractTerminologyObject> childrenSet = null;
 
 	private final InfoStore infoStore = new DefaultInfoStore();
 
 	private final KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
+
+	private static final int BOUNDARY = 10;
 
 	/**
 	 * Creates a new {@link AbstractTerminologyObject} instance with a given
@@ -107,17 +117,43 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	 * @see #addParent(AbstractTerminologyObject parent)
 	 */
 	protected void addChild(AbstractTerminologyObject child) {
-		if (!children.contains(child)) {
-			addParentChildLink(this, child);
+		addChild(child, children.size());
+	}
+
+	/**
+	 * Appends the specified {@link AbstractTerminologyObject} as a child to the
+	 * list of children at the given position. This object is also linked as a parent
+	 * to the specified child.
+	 * 
+	 * @created 15.02.2011
+	 * @param child the child you want to add to this  {@link AbstractTerminologyObject}
+	 * @param pos the position you want to add the child in this {@link AbstractTerminologyObject}'s list of children
+	 */
+	protected void addChild(AbstractTerminologyObject child, int pos) {
+		if (!containsChild(child)) {
+			addParentChildLink(this, child, pos);
 		}
 	}
 
-	private static void addParentChildLink(AbstractTerminologyObject parent, AbstractTerminologyObject child) {
+	private static void addParentChildLink(AbstractTerminologyObject parent, AbstractTerminologyObject child, int pos) {
 		if (parent.getKnowledgeBase() != child.getKnowledgeBase()) {
 			throw new IllegalArgumentException("Knowledge base beetween parent and child differs");
 		}
-		parent.children.add(child);
+		parent.children.add(pos, child);
+		if (parent.childrenSet == null) {
+			if (parent.children.size() > BOUNDARY) {
+				parent.childrenSet = new HashSet<AbstractTerminologyObject>(parent.children);
+			}
+		}
+		else {
+			parent.childrenSet.add(child);
+		}
 		child.parents.add(parent);
+	}
+
+	private boolean containsChild(AbstractTerminologyObject child) {
+		if (childrenSet == null) return children.contains(child);
+		else return childrenSet.contains(child);
 	}
 
 	/**
@@ -143,10 +179,16 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 		return name;
 	}
 
-	private static void removeParentChildLink(AbstractTerminologyObject parent,
+	private static boolean removeParentChildLink(AbstractTerminologyObject parent,
 			AbstractTerminologyObject child) {
-		parent.children.remove(child);
 		child.parents.remove(parent);
+		if (parent.childrenSet != null) {
+			parent.childrenSet.remove(child);
+			if (parent.childrenSet.isEmpty()) {
+				parent.childrenSet = null;
+			}
+		}
+		return parent.children.remove(child);
 	}
 
 	/**
@@ -155,11 +197,7 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	 * @param child the specified child to be removed from the list
 	 */
 	protected boolean removeChild(AbstractTerminologyObject child) {
-		if (children.contains(child)) {
-			removeParentChildLink(this, child);
-			return true;
-		}
-		return false;
+		return removeParentChildLink(this, child);
 	}
 
 	@Override
@@ -194,19 +232,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	@Override
 	public TerminologyObject[] getChildren() {
 		return children.toArray(new TerminologyObject[children.size()]);
-	}
-
-	/**
-	 * Inserts the child at the specified position. If it is already contained
-	 * in another position, this position will be overwritten
-	 * 
-	 * @created 15.02.2011
-	 * @param child
-	 * @param pos
-	 */
-	protected void addChild(AbstractTerminologyObject child, int pos) {
-		children.remove(child);
-		children.add(pos > children.size() ? children.size() : pos, child);
 	}
 
 	@Override
