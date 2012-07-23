@@ -60,7 +60,7 @@ public interface PSMethod {
 		 */
 		problem,
 		/**
-		 * a consumer does not act facts, it is used to get informed about
+		 * a consumer does not add facts, it is used to get informed about
 		 * propagation entries
 		 */
 		consumer
