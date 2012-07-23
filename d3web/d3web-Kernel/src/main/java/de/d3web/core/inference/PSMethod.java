@@ -26,7 +26,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
- * Interface representing the access to problen-solving methods. Each
+ * Interface representing the access to problem-solving methods. Each
  * {@link Session} has a list of currently used problem-solvers. They are
  * notified, if some value (question or solution) has changed. <br>
  * Creation date: (28.08.00 17:22:54)
@@ -35,10 +35,34 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public interface PSMethod {
 
+	/**
+	 * Each PSMethod can have one or more Types, describing which kind of
+	 * PSMethod it is.
+	 * 
+	 * Each type is described in it's own comment.
+	 * 
+	 * @author Markus Friedrich (denkbares GmbH)
+	 * @created 21.09.2010
+	 */
 	public enum Type {
+		/**
+		 * a source psm adds facts and does not react on other facts, e.g.
+		 * PSMetodUserSelected
+		 */
 		source,
+		/**
+		 * a strategic solver adds indication facts
+		 */
 		strategic,
+		/**
+		 * a psmethod of type problem adds facts, based on other propagation
+		 * entries
+		 */
 		problem,
+		/**
+		 * a consumer does not act facts, it is used to get informed about
+		 * propagation entries
+		 */
 		consumer
 	}
 
@@ -74,6 +98,14 @@ public interface PSMethod {
 	 */
 	Fact mergeFacts(Fact[] facts);
 
+	/**
+	 * Returns if the psmethod has the specified type. Note: A PSMethod can have
+	 * more then one type!
+	 * 
+	 * @created 21.09.2010
+	 * @param type Type to be checked
+	 * @return true if the PSMethod has the specified type
+	 */
 	boolean hasType(Type type);
 
 	/**
