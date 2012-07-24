@@ -78,6 +78,9 @@ public class Utils {
 	}
 
 	private static void testArguments(List<ArgsCheckResult> msgs, String testName, Test<?> test, String[] args) {
+		if(args.length < 1) {
+			throw new IllegalArgumentException("At least a test object identifier has to be defined");
+		}
 		args = Arrays.copyOfRange(args, 1, args.length);
 		ArgsCheckResult argsCheckResult = test.checkArgs(args);
 		msgs.add(argsCheckResult);
