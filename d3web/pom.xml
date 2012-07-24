@@ -276,5 +276,6 @@
 		<module>d3web-TestCase</module>
 		<module>d3web-Plugin-TestingFramework</module>
 		<module>d3web-Utils</module>
+		<module>d3web-Plugin-Tests</module>
 	</modules>
 </project>
