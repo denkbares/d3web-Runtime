@@ -18,6 +18,7 @@
  */
 package de.d3web.testing;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,10 @@ public class TestResult implements Comparable<TestResult> {
 
 	@Override
 	public int compareTo(TestResult tr) {
-		return getType().compareTo(tr.getType());
+		if(testName != tr.getTestName()) {
+			return testName.compareTo(tr.getTestName());
+		}
+		return args.toString().compareTo(tr.getArguments().toString());
 	}
 
 	/**
@@ -94,7 +98,7 @@ public class TestResult implements Comparable<TestResult> {
 		if (args == null) {
 			if (other.getArguments() != null) return false;
 		}
-		else if (!args.equals(other.getArguments())) return false;
+		else if (! Arrays.equals(args,other.args)) return false;
 		Collection<String> otherTestObjectNames = other.getTestObjectNames();
 		if (getTestObjectNames().size() != otherTestObjectNames.size()) return false;
 		// TODO: compare each message ?!

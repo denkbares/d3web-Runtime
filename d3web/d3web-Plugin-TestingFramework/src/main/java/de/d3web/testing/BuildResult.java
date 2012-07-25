@@ -20,9 +20,9 @@
 
 package de.d3web.testing;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public final class BuildResult {
 	/**
 	 * List of all test results of the executed tests
 	 */
-	private final List<TestResult> results = new LinkedList<TestResult>();
+	private final List<TestResult> results = new ArrayList<TestResult>();
 
 	/**
 	 * The number of this build
