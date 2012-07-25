@@ -287,7 +287,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			ChoiceValue cv = (ChoiceValue) v;
 			CondNot condNot = (CondNot) condition;
 			CondEqual condEqual = (CondEqual) condNot.getTerms().get(0);
-			return (cv.getChoiceID() != ((ChoiceValue) condEqual.getValue()).getChoiceID());
+			return !(cv.getChoiceID().equals(((ChoiceValue) condEqual.getValue()).getChoiceID()));
 		}
 		return false;
 	}
