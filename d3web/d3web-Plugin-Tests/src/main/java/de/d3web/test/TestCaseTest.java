@@ -50,10 +50,12 @@ public class TestCaseTest implements Test<TestCase> {
 		if (!testObject.isConsistent()) {
 			return new Message(Type.FAILURE, "Test is not consistent!");
 		}
+		
+		boolean failure = false;
+		String messageText = "Test '" + testObject.getName() + "' failed: \n";
 		TestCaseAnalysis analysis = new TestCaseAnalysis();
 		TestCaseAnalysisReport result = analysis.runAndAnalyze(testObject);
 		if (result.hasDiff()) {
-			String messageText = "Test '" + testObject.getName() + "' failed: \n";
 			List<SequentialTestCase> repository = testObject.getRepository();
 			for (SequentialTestCase sequentialTestCase : repository) {
 				if (result.hasDiff(sequentialTestCase)) {
@@ -62,19 +64,22 @@ public class TestCaseTest implements Test<TestCase> {
 					for (RatedTestCase ratedTestCase : casesWithDifference) {
 						if (diff.hasDiff(ratedTestCase)) {
 							RTCDiff rtcDiff = diff.getDiff(ratedTestCase);
-							Collection<TerminologyObject> diffObjects = rtcDiff.getDiffObjects();
+							Collection<TerminologyObject> diffObjects = rtcDiff.getExpectedButNotDerivedDiffObjects();
 							for (TerminologyObject terminologyObject : diffObjects) {
-								ValueDiff valueDiff = rtcDiff.getDiffFor(terminologyObject);
+								ValueDiff valueDiff = rtcDiff.getExpectedButNotDerivedDiffFor(terminologyObject);
 								Value expected = valueDiff.getExpected();
 								Value derived = valueDiff.getDerived();
 								messageText += "* Value of object '" + terminologyObject.toString()
 										+ "' was '" + derived + "' but expected was: '" + expected
 										+ "'; \n";
+								failure = true;
 							}
 						}
 					}
 				}
 			}
+		}
+		if(failure) {
 			return new Message(Type.FAILURE, messageText);
 		}
 		return new Message(Type.SUCCESS);
