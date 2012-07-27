@@ -88,15 +88,15 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
 		File[] listFiles = folder.listFiles();
 		int counter = 0;
-		for (File f : listFiles) {
-			String name = f.getName();
+		for (File file : listFiles) {
+			String name = file.getName();
 			float percent = listFiles.length / (float) counter++;
 			listener.updateProgress(percent, name);
-			if (!f.isFile() || !name.endsWith(".xml")) continue;
+			if (!file.isFile() || !name.endsWith(".xml")) continue;
 			int underscore = name.indexOf('_');
 			Date date = FILE_DATE_FORMAT.parse(name.substring(0, underscore));
 			String id = name.substring(underscore + 1, name.length() - 4);
-			add(new FileRecord(id, date, f));
+			add(new FileRecord(id, date, file));
 		}
 		listener.updateProgress(1f, "loading done");
 	}
@@ -133,30 +133,43 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		Collection<SessionRecord> records = sessionRecords.values();
 		int counter = 0;
-		for (SessionRecord sr : records) {
+		for (SessionRecord record : records) {
 			float percent = records.size() / (float) counter++;
-			listener.updateProgress(percent, sr.getName());
-			String date = FILE_DATE_FORMAT.format(sr.getCreationDate());
-			File file = new File(folder.getAbsolutePath() + "/" + date + "_" + sr.getId()
-					+ ".xml");
-			if (sr instanceof FileRecord && !((FileRecord) sr).modified) {
-				FileRecord fr = (FileRecord) sr;
-				if (fr.file.getCanonicalPath().equals(file.getCanonicalPath())) {
+			listener.updateProgress(percent, record.getName());
+			String filename = getRecordFilename(record);
+			File file = new File(folder, filename);
+			if (record instanceof FileRecord && !((FileRecord) record).modified) {
+				FileRecord fileRecord = (FileRecord) record;
+				if (fileRecord.file.getCanonicalPath().equals(file.getCanonicalPath())) {
 					// SessionRecord was not changed and should be saved to the
 					// same directory -> nothing to do
 					continue;
 				}
 				else {
-					copyFile(fr.file, file);
+					copyFile(fileRecord.file, file);
 				}
 			}
 			else {
 				List<SessionRecord> templist = new LinkedList<SessionRecord>();
-				templist.add(sr);
+				templist.add(record);
 				spm.saveSessions(file, templist, new DummyProgressListener());
 			}
 		}
 		listener.updateProgress(1f, "writing session records to disc done");
+	}
+
+	/**
+	 * Returns the filename of a specific record that will be used when the
+	 * record is stored with this session repository. The filename is relative
+	 * to the folder the files will be stored into.
+	 * 
+	 * @created 27.07.2012
+	 * @param record the record to get the filename for
+	 * @return the filename of this record
+	 */
+	public String getRecordFilename(SessionRecord record) {
+		String date = FILE_DATE_FORMAT.format(record.getCreationDate());
+		return date + "_" + record.getId() + ".xml";
 	}
 
 	/**
