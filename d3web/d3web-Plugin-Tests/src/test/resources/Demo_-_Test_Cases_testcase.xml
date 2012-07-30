@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SeqTestCaseRepository NumberOfCases="2" UsedSolutions="2" UsedFindings="10">
+	<STestCase Name="Leaking air intake system (Demo)">
+		<RatedTestCase Name="">
+			<Findings>
+				<Finding Question="Driving" Answer="insufficient power on partial load"/>
+			</Findings>
+			<ExpectedFindings>
+			</ExpectedFindings>
+			<Solutions>
+				<Solution Name="Leaking air intake system" Rating="SUGGESTED"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="">
+			<Findings>
+				<Finding Question="Driving" Answer="unsteady idle speed"/>
+			</Findings>
+			<ExpectedFindings>
+			</ExpectedFindings>
+			<Solutions>
+				<Solution Name="Clogged air filter" Rating="SUGGESTED"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="">
+			<Findings>
+				<Finding Question="Check: Air filter." Answer="ok"/>
+				<Finding Question="Average mileage /100km" Answer="10.0"/>
+				<Finding Question="Real mileage  /100km" Answer="12.0"/>
+				<Finding Question="Driving" Answer="insufficient power on full load"/>
+			</Findings>
+			<ExpectedFindings>
+			</ExpectedFindings>
+			<Solutions>
+				<Solution Name="Leaking air intake system" Rating="ESTABLISHED"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+	<STestCase Name="Clogged air filter (Demo)">
+		<RatedTestCase Name="">
+			<Findings>
+				<Finding Question="Exhaust pipe color" Answer="sooty black"/>
+				<Finding Question="Fuel" Answer="unleaded gasoline"/>
+			</Findings>
+			<ExpectedFindings>
+			</ExpectedFindings>
+			<Solutions>
+				<Solution Name="Clogged air filter" Rating="SUGGESTED"/>
+			</Solutions>
+		</RatedTestCase>
+		<RatedTestCase Name="">
+			<Findings>
+				<Finding Question="Driving" Answer="unsteady idle speed"/>
+				<Finding Question="Driving" Answer="weak acceleration"/>
+				<Finding Question="Check: Ignition timing." Answer="ok"/>
+			</Findings>
+			<ExpectedFindings>
+			</ExpectedFindings>
+			<Solutions>
+				<Solution Name="Clogged air filter" Rating="ESTABLISHED"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+</SeqTestCaseRepository>
