@@ -49,6 +49,11 @@ public class TestParameter {
 	public String getDescription() {
 		return description;
 	}
+	
+	@Override
+	public String toString() {
+		return "\""+name+"\", "+type.toString()+", "+mode.toString() +" ("+description+")";
+	}
 
 	public boolean checkParameterValue(String value) {
 		
