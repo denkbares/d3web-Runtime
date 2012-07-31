@@ -75,4 +75,9 @@ public class EmptyQuestionnaireTest implements Test<KnowledgeBase> {
 	public ArgsCheckResult checkArgs(String[] args) {
 		return Utils.testArgNumber(args, 0, this.getClass().getSimpleName());
 	}
+	
+	@Override
+	public String getDescription() {
+		return "Tests whether the knowledge base has questaionnieres that do not contain any questions or other questionnaires.";
+	}
 }

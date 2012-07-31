@@ -95,5 +95,10 @@ public class TestCaseTest implements Test<TestCase> {
 	public ArgsCheckResult checkArgs(String[] args) {
 		return Utils.testArgNumber(args, 0, this.getClass().getSimpleName());
 	}
+	
+	@Override
+	public String getDescription() {
+		return "This test executes (sequential) test cases. It compares the expected findings defined in the test cases with the findinds actually derived by the knowledge base.";
+	}
 
 }

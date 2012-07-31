@@ -64,5 +64,13 @@ public interface Test<T> {
 	 * @return
 	 */
 	Class<T> getTestObjectClass();
+	
+	/**
+	 * This method returns some documentation or description about the test.
+	 * The text may contain html markup and is intended to be shown to the user.
+	 * 
+	 * @return the test description
+	 */
+	String getDescription();
 
 }
