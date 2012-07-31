@@ -18,6 +18,8 @@
  */
 package de.d3web.testing;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import de.d3web.plugin.Extension;
@@ -55,6 +57,30 @@ public class TestManager {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Searches and returns all plugged tests.
+	 * 
+	 * @created 31.07.2012
+	 * @return 
+	 */
+	public static List<Test<?>> findAllTests() {
+		List<Test<?>> result = new ArrayList<Test<?>>();
+		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
+				Test.EXTENSION_POINT_ID);
+		for (Extension extension : extensions) {
+			if (extension.getNewInstance() instanceof Test) {
+				Test<?> t = (Test<?>) extension.getSingleton();
+				result.add(t);
+			}
+			else {
+				Logger.getLogger(TestManager.class.getName()).warning(
+						"extension of class '" + extension.getClass().getName() +
+								"' is not of the expected type " + Test.class.getName());
+			}
+		}
+		return result;
 	}
 
 }
