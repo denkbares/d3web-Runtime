@@ -78,6 +78,6 @@ public class EmptyQuestionnaireTest implements Test<KnowledgeBase> {
 	
 	@Override
 	public String getDescription() {
-		return "Tests whether the knowledge base has questaionnieres that do not contain any questions or other questionnaires.";
+		return "Tests whether the knowledge base has questionnaires that do not contain any questions or other questionnaires.";
 	}
 }

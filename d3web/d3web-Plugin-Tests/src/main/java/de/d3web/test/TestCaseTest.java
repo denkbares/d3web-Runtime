@@ -98,7 +98,7 @@ public class TestCaseTest implements Test<TestCase> {
 	
 	@Override
 	public String getDescription() {
-		return "This test executes (sequential) test cases. It compares the expected findings defined in the test cases with the findinds actually derived by the knowledge base.";
+		return "This test executes (sequential) test cases. It compares the expected findings defined in the test cases with the findings actually derived by the knowledge base.";
 	}
 
 }
