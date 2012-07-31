@@ -18,6 +18,8 @@
  */
 package de.d3web.testing;
 
+import java.util.List;
+
 /**
  * Interface for tests. Implement this class to create a test to be used within
  * the TestingFramework.
@@ -72,5 +74,13 @@ public interface Test<T> {
 	 * @return the test description
 	 */
 	String getDescription();
+	
+	/**
+	 * Returns the list of expected parameters of this test.
+	 * 
+	 * @created 31.07.2012
+	 * @return 
+	 */
+	List<TestParameter> getParameterSpecification();
 
 }

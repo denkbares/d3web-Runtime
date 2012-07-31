@@ -23,10 +23,9 @@ import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.testing.ArgsCheckResult;
+import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
-import de.d3web.testing.Test;
 
 /**
  * This Test searches for empty questionnaires in a knowledge base. It needs no
@@ -35,7 +34,7 @@ import de.d3web.testing.Test;
  * @author Jochen Reutelshoefer (denkbares GmbH)
  * @created 24.07.2012
  */
-public class EmptyQuestionnaireTest implements Test<KnowledgeBase> {
+public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
 
 	@Override
 	public Message execute(KnowledgeBase kb, String[] args2) {
@@ -71,13 +70,10 @@ public class EmptyQuestionnaireTest implements Test<KnowledgeBase> {
 		return KnowledgeBase.class;
 	}
 
-	@Override
-	public ArgsCheckResult checkArgs(String[] args) {
-		return Utils.testArgNumber(args, 0, this.getClass().getSimpleName());
-	}
 	
 	@Override
 	public String getDescription() {
 		return "Tests whether the knowledge base has questionnaires that do not contain any questions or other questionnaires.";
 	}
+
 }

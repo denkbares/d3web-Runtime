@@ -31,10 +31,9 @@ import de.d3web.empiricaltesting.caseAnalysis.ValueDiff;
 import de.d3web.empiricaltesting.caseAnalysis.functions.Diff;
 import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysis;
 import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysisReport;
-import de.d3web.testing.ArgsCheckResult;
+import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
-import de.d3web.testing.Test;
 
 /**
  * A simple test to execute test cases.
@@ -43,7 +42,7 @@ import de.d3web.testing.Test;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 29.06.2012
  */
-public class TestCaseTest implements Test<TestCase> {
+public class TestCaseTest extends  AbstractTest<TestCase> {
 
 	@Override
 	public Message execute(TestCase testObject, String[] args) {
@@ -90,11 +89,6 @@ public class TestCaseTest implements Test<TestCase> {
 		return TestCase.class;
 	}
 
-
-	@Override
-	public ArgsCheckResult checkArgs(String[] args) {
-		return Utils.testArgNumber(args, 0, this.getClass().getSimpleName());
-	}
 	
 	@Override
 	public String getDescription() {
