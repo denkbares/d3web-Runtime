@@ -219,14 +219,18 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		long time = System.currentTimeMillis();
 		preconditionCache.clear();
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
+		Collection<StateTransition> transitiveStateTransitions = new LinkedList<StateTransition>();
 		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
 			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
-			if (!targetOnly && !PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(),
+			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(),
 					qcontainer)) {
 				stateTransitions.add(st);
+				if (!targetOnly) {
+					transitiveStateTransitions.add(st);
+				}
 			}
 		}
 		// collect all CondEqual preconditions of all statetransitions (CondAnd
@@ -242,7 +246,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// execution of the condEqual
 			LinkedList<List<Condition>> neededConditions = new LinkedList<List<Condition>>();
 			Set<QContainer> transitionalQContainer = new HashSet<QContainer>();
-			for (StateTransition st : stateTransitions) {
+			for (StateTransition st : transitiveStateTransitions) {
 				for (ValueTransition vt : st.getPostTransitions()) {
 					if (vt.getQuestion() == condition.getTerminalObjects().iterator().next()) {
 						for (Value v : vt.calculatePossibleValues()) {
