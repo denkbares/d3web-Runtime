@@ -19,6 +19,7 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -44,10 +45,10 @@ public class TestManager {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			if (extension.getNewInstance() instanceof Test) {
-				Test<?> t = (Test<?>) extension.getSingleton();
-				if (t.getClass().getSimpleName().equals(testName)) {
-					return t;
+			Object singleton = extension.getSingleton();
+			if (singleton instanceof Test) {
+				if (extension.getName().equals(testName)) {
+					return (Test<?>) singleton;
 				}
 			}
 			else {
@@ -58,27 +59,43 @@ public class TestManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Searches and returns all plugged tests.
 	 * 
 	 * @created 31.07.2012
-	 * @return 
+	 * @return
 	 */
 	public static List<Test<?>> findAllTests() {
 		List<Test<?>> result = new ArrayList<Test<?>>();
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			if (extension.getNewInstance() instanceof Test) {
-				Test<?> t = (Test<?>) extension.getSingleton();
-				result.add(t);
+			Object singleton = extension.getSingleton();
+			if (singleton instanceof Test) {
+				result.add((Test<?>) singleton);
 			}
 			else {
 				Logger.getLogger(TestManager.class.getName()).warning(
 						"extension of class '" + extension.getClass().getName() +
 								"' is not of the expected type " + Test.class.getName());
 			}
+		}
+		return result;
+	}
+
+	/**
+	 * Searches and returns the name of all plugged tests.
+	 * 
+	 * @created 07.08.2012
+	 * @return the test names
+	 */
+	public static List<String> findAllTestNames() {
+		List<String> result = new LinkedList<String>();
+		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
+				Test.EXTENSION_POINT_ID);
+		for (Extension extension : extensions) {
+			result.add(extension.getName());
 		}
 		return result;
 	}
