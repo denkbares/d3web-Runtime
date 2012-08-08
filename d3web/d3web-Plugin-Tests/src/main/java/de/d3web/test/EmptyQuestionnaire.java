@@ -34,7 +34,7 @@ import de.d3web.testing.Message.Type;
  * @author Jochen Reutelshoefer (denkbares GmbH)
  * @created 24.07.2012
  */
-public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
+public class EmptyQuestionnaire extends AbstractTest<KnowledgeBase> {
 
 	@Override
 	public Message execute(KnowledgeBase kb, String[] args2) {
