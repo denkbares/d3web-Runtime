@@ -57,6 +57,38 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 		}
 	}
 
+	public Object getNewInstance(String className) {
+		PluginDescriptor declaringPluginDescriptor = extension
+				.getDeclaringPluginDescriptor();
+
+		ClassLoader classLoader = manager.getPluginClassLoader(declaringPluginDescriptor);
+		try {
+			Class<?> clazz = classLoader.loadClass(className);
+			return clazz.newInstance();
+		}
+		catch (ClassNotFoundException e) {
+			Logger.getLogger("Plugin").log(
+					Level.SEVERE,
+					"The class specified in the plugin was not found.  This is a strong evidence for an incorrect plugin.",
+					e);
+			throw new NoClassDefFoundError(e.getMessage());
+		}
+		catch (InstantiationException e) {
+			Logger.getLogger("Plugin").log(
+					Level.SEVERE,
+					"It was not possible to instantiate an object. This is a strong evidence for an incorrect plugin.",
+					e);
+			throw new InstantiationError(e.getMessage());
+		}
+		catch (IllegalAccessException e) {
+			Logger.getLogger("Plugin").log(
+					Level.SEVERE,
+					"The constructor or the class could not be accessed. This is a strong evidence for an incorrect plugin.",
+					e);
+			throw new IllegalAccessError(e.getMessage());
+		}
+	}
+
 	@Override
 	public Object getNewInstance() {
 		PluginDescriptor declaringPluginDescriptor = extension
