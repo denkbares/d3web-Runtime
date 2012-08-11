@@ -20,13 +20,176 @@
 
 package de.d3web.core.session;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
 public final class ValueFactory {
 
 	private ValueFactory() { // enforce noninstantiability
+	}
+
+	/**
+	 * Creates a {@link Value} for a {@link Question}. If the given String is no
+	 * valid representation for a Value for the given Question, <tt>null</tt>
+	 * will be returned.
+	 * 
+	 * @created 11.08.2012
+	 * @param question the question for which the {@link Value} is created
+	 * @param valueString a String representation of the {@link Value} to be
+	 *        created
+	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
+	 *          representation for a Value for the given Question
+	 */
+	public static Value createValue(Question question, String valueString) {
+		return createValue(question, valueString, null);
+	}
+
+	/**
+	 * Creates a {@link Value} for a {@link Question}. If the given String is no
+	 * valid representation for a Value for the given Question, <tt>null</tt>
+	 * will be returned.<br/>
+	 * In case of a {@link QuestionMC}, the new Value is merged with the
+	 * existing Value (if possible). The existing value is allowed to be
+	 * <tt>null</tt>!
+	 * 
+	 * @created 11.08.2012
+	 * @param question the question for which the {@link Value} is created
+	 * @param valueString a String representation of the {@link Value} to be
+	 *        created
+	 * @param existingValue the existing value for the question to be merged in
+	 *        case of a QuestionMC
+	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
+	 *          representation for a Value for the given Question
+	 */
+	public static Value createValue(Question question, String valueString, Value existingValue) {
+
+		Value value = null;
+
+		if (valueString.equals(Unknown.getInstance().getValue())) {
+			value = Unknown.getInstance();
+		}
+
+		else if (question instanceof QuestionChoice) {
+			value = createQuestionsChoiceValue((QuestionChoice) question, valueString,
+					existingValue);
+		}
+
+		else if (question instanceof QuestionNum) {
+			try {
+				value = new NumValue(Double.parseDouble(valueString.replace(',', '.')));
+			}
+			catch (IllegalArgumentException e) {
+				// null will be returned
+			}
+		}
+
+		else if (question instanceof QuestionText) {
+			value = new TextValue(valueString);
+		}
+
+		else if (question instanceof QuestionDate) {
+			try {
+				value = DateValue.createDateValue(valueString);
+			}
+			catch (IllegalArgumentException e) {
+				// null will be returned
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * Creates a {@link Value} for a {@link QuestionChoice}. If the given String
+	 * is no valid representation for a Value for the given Question,
+	 * <tt>null</tt> will be returned.<br/>
+	 * In case of a {@link QuestionMC}, the new Value is merged with the
+	 * existing Value (if possible). The existing value is allowed to be
+	 * <tt>null</tt>!
+	 * 
+	 * @created 11.08.2012
+	 * @param question the question for which the {@link Value} is created
+	 * @param valueString a String representation of the {@link Value} to be
+	 *        created
+	 * @param existingValue the existing value for the question to be merged in
+	 *        case of a QuestionMC
+	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
+	 *          representation for a Value for the given Question
+	 */
+	public static Value createQuestionsChoiceValue(QuestionChoice question, String valueString, Value existingValue) {
+		Value value = null;
+		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
+		if (question instanceof QuestionMC) {
+			value = createQuestionMCValue((QuestionMC) question, choice, existingValue);
+		}
+		else if (choice != null) {
+			value = new ChoiceValue(choice);
+		}
+		return value;
+	}
+
+	/**
+	 * Creates a {@link Value} for a {@link QuestionChoice}. If the given String
+	 * is no valid representation for a Value for the given Question,
+	 * <tt>null</tt> will be returned.<br/>
+	 * 
+	 * @created 11.08.2012
+	 * @param question the question for which the {@link Value} is created
+	 * @param valueString a String representation of the {@link Value} to be
+	 *        created
+	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
+	 *          representation for a Value for the given Question
+	 */
+	public static Value createQuestionsChoiceValue(QuestionChoice question, String valueString) {
+		Value value = null;
+		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
+		if (question instanceof QuestionMC) {
+			value = createQuestionMCValue((QuestionMC) question, choice, null);
+		}
+		else if (choice != null) {
+			value = new ChoiceValue(choice);
+		}
+		return value;
+	}
+
+	private static Value createQuestionMCValue(QuestionMC question, Choice choice, Value existingValue) {
+		Value value;
+		List<Choice> choices = new ArrayList<Choice>();
+		if (existingValue instanceof ChoiceValue) {
+			Choice existingChoice = ((ChoiceValue) existingValue)
+					.getChoice(question);
+			choices.add(existingChoice);
+		}
+		else if (existingValue instanceof MultipleChoiceValue) {
+			List<Choice> temp = ((MultipleChoiceValue) existingValue)
+					.asChoiceList(question);
+			choices.addAll(temp);
+		}
+		if (choice != null && !choices.remove(choice)) {
+			choices.add(choice);
+		}
+		if (choices.isEmpty()) {
+			value = Unknown.getInstance();
+		}
+		else {
+			value = MultipleChoiceValue.fromChoices(choices);
+		}
+		return value;
 	}
 
 	public static String getID_or_Value(Value value) { // NOSONAR this method
