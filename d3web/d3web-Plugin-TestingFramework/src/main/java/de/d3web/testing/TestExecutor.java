@@ -43,19 +43,27 @@ import de.d3web.testing.Message.Type;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
-public class TestExecutor {
+public class TestExecutor implements Runnable {
 
 	private final Collection<TestObjectProvider> testObjectProviders;
 	private final List<ExecutableTest> tests;
 	private final CombinedProgressListener progressListener;
+	private final int buildNumber;
+	private BuildResult build;
+
+	
+	public BuildResult getBuildResult() {
+		return build;
+	}
 
 	/**
 	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, CombinedProgressListener listener) {
+	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, CombinedProgressListener listener, int buildNumber) {
 		this.testObjectProviders = providers;
 		this.tests = testAndItsParameters;
 		this.progressListener = listener;
+		this.buildNumber = buildNumber;
 	}
 
 	private static <T> T cast(Object testObject, Class<T> testObjectClass) {
@@ -80,9 +88,10 @@ public class TestExecutor {
 	 * @param buildNumber Build number for this build.
 	 * @return
 	 */
-	public BuildResult runtTests(int buildNumber) {
+	@Override
+	public void run() {
 		long buildStartTime = System.currentTimeMillis();
-		BuildResult build = new BuildResult(buildNumber);
+		build = new BuildResult(buildNumber);
 
 		Map<ExecutableTest, Map<TestObjectProvider, List<?>>> allTestsAndTestobjects = new HashMap<ExecutableTest, Map<TestObjectProvider, List<?>>>();
 
@@ -140,7 +149,6 @@ public class TestExecutor {
 		}
 
 		build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
-		return build;
 	}
 
 	/**
