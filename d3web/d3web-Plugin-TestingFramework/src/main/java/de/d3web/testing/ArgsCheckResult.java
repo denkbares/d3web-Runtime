@@ -45,6 +45,12 @@ public class ArgsCheckResult {
 		result.setError(0, "Class for test could not be found: '" + clazzName + "'");
 		return result;
 	}
+	
+	public static ArgsCheckResult invalidTestObjectIdentifier(String identifier, String testname) {
+		ArgsCheckResult result = new ArgsCheckResult(new String[] { identifier });
+		result.setError(0, "Test object identifier for test '"+testname+"' is not a valid regular expression: '" + identifier + "'");
+		return result;
+	}
 
 	public String[] getArguments() {
 		return args;

@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * 
@@ -67,6 +68,17 @@ public class Utils {
 				// check arguments and create error messages if
 				// necessary
 				testArguments(msgs, testName, test, args);
+				
+				// check whether test object identifier string is a valid regex 
+				String testObjectIdentifierString = args[0];
+				try {
+					Pattern.compile(testObjectIdentifierString);
+				} catch (PatternSyntaxException e) {
+					// is not a valid regex, create message and return no executable test
+					msgs.add(ArgsCheckResult.invalidTestObjectIdentifier(testObjectIdentifierString, testName));
+					return null;
+				}
+				
 				return new ExecutableTest(test, args);
 			}
 			else {
@@ -81,6 +93,7 @@ public class Utils {
 		if(args.length < 1) {
 			throw new IllegalArgumentException("At least a test object identifier has to be defined");
 		}
+		
 		args = Arrays.copyOfRange(args, 1, args.length);
 		ArgsCheckResult argsCheckResult = test.checkArgs(args);
 		msgs.add(argsCheckResult);
