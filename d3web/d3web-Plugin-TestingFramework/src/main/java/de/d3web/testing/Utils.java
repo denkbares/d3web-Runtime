@@ -47,7 +47,7 @@ public class Utils {
 	 * @return
 	 */
 	public static ExecutableTest createExecutableTest(String command, List<ArgsCheckResult> msgs) {
-		Pattern pattern = Pattern.compile("(?:\\w+|\".+?\")");
+		Pattern pattern = Pattern.compile("(?:[^(\"|\\s)]+|\".+?\")");
 		Matcher matcher = pattern.matcher(command);
 		if (matcher.find()) {
 			// get the name of the test
