@@ -63,30 +63,26 @@ public abstract class AbstractTest<T> implements de.d3web.testing.Test<T> {
 			return r;
 		}
 		
-		ArgsCheckResult result = new ArgsCheckResult(args);
-		boolean problemFound = false;
 		for (int i =  0; i < args.length; i++) {
+			
+			// check whether array might be longer than registered number of arguments 
+			if(i >= parameters.size()) {
+				r.setWarning(args.length - 1,
+						"Too many arguments passend for test '" + this.getClass().getSimpleName()
+								+ "': Maximum expected number of arguments: "
+								+ parameters.size() + " - found: " + args.length);
+				return r;
+			}
+			
+			// get parameter no. i and check arg value
 			TestParameter parameter = parameters.get(i);
 			boolean ok = parameter.checkParameterValue(args[i]);
 			if(!ok) {
-				problemFound = true;
-			result.setError(i,
+				r.setError(i,
 					"Argument passend as '" + parameter.getName()
 							+ "' is not a valid "+ parameter.getType().toString() + " argument: \"" + args[i]+"\"");
 			}
 		}
-		if(problemFound)return result;
-		
-		
-		if (args.length > parameters.size()) {
-			ArgsCheckResult res = new ArgsCheckResult(args);
-			res.setWarning(args.length - 1,
-					"Too many arguments passend for test '" + this.getClass().getSimpleName()
-							+ "': Maximum expected number of arguments: "
-							+ parameters.size() + " - found: " + args.length);
-			return res;
-		}
-		
 		
 		return r;
 	}
