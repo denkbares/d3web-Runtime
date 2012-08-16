@@ -138,13 +138,13 @@ public class TestExecutor {
 			String testName = test.getTestName();
 			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
-			try {
-				Thread.sleep(3000);
-			}
-			catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			// try { // testing purposes only!!
+			// Thread.sleep(10000);
+			// }
+			// catch (InterruptedException e1) {
+			// // TODO Auto-generated catch block
+			// e1.printStackTrace();
+			// }
 			try {
 				executeTests(testName, test.getTest(),
 						testArgs, allTestsAndTestobjects.get(test), testResult);
