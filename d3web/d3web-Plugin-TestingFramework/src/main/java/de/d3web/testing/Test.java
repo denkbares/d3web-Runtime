@@ -44,7 +44,7 @@ public interface Test<T> {
 	 * @return a Message containing information about the outcome of the test
 	 * @throws NullPointerException if testObject or args is null
 	 */
-	Message execute(T testObject, String[] args);
+	Message execute(T testObject, String[] args) throws InterruptedException;
 
 	/**
 	 * Checks the config parameters for correctness. If the parameters are

@@ -10,11 +10,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
-import de.d3web.core.io.progress.CombinedProgressListener;
+import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.testing.Message.Type;
 
 /*
@@ -43,23 +42,32 @@ import de.d3web.testing.Message.Type;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
-public class TestExecutor implements Runnable {
+public class TestExecutor {
 
 	private final Collection<TestObjectProvider> testObjectProviders;
 	private final List<ExecutableTest> tests;
-	private final CombinedProgressListener progressListener;
+	private final ProgressListener progressListener;
 	private final int buildNumber;
 	private BuildResult build;
+	private float progress = 0;
+	private ExecutorService executor;
+	private Thread executorThread;
 
-	
+	/**
+	 * Returns the current build or null if the build has been terminated.
+	 * 
+	 * @created 14.08.2012
+	 * @return the current build
+	 */
 	public BuildResult getBuildResult() {
+		if (Thread.interrupted()) return null;
 		return build;
 	}
 
 	/**
 	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, CombinedProgressListener listener, int buildNumber) {
+	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, ProgressListener listener, int buildNumber) {
 		this.testObjectProviders = providers;
 		this.tests = testAndItsParameters;
 		this.progressListener = listener;
@@ -88,14 +96,15 @@ public class TestExecutor implements Runnable {
 	 * @param buildNumber Build number for this build.
 	 * @return
 	 */
-	@Override
 	public void run() {
+		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
 		build = new BuildResult(buildNumber);
+		progress = 0f;
+		executor = Executors.newSingleThreadExecutor();
 
 		Map<ExecutableTest, Map<TestObjectProvider, List<?>>> allTestsAndTestobjects = new HashMap<ExecutableTest, Map<TestObjectProvider, List<?>>>();
 
-		int testObjectsTotal = 0;
 		for (ExecutableTest testAndItsParameters : tests) {
 
 			String[] array = testAndItsParameters.getArguments();
@@ -116,39 +125,66 @@ public class TestExecutor implements Runnable {
 						);
 
 				allTestsAndTestobjects.put(testAndItsParameters, testObjectsForTest);
-				testObjectsTotal += countTestObjects(testObjectsForTest);
 			}
 		}
 
 		// now the total count of tests to be executed is clear and can be told
 		// to the progress listener
-		progressListener.setTotalSize(testObjectsTotal);
 
 		for (ExecutableTest test : allTestsAndTestobjects.keySet()) {
-			// next major step for combined progress listener
-			// here do a normalization of the task weights assuming that all
-			// major steps have equal weight
-			progressListener.next((long) ((float) testObjectsTotal / allTestsAndTestobjects.size()));
-
 			String[] array = test.getArguments();
-			String[] testArgs = Arrays.copyOfRange(array, 1,
-					array.length); // strip the first argument since it always
-									// is the test object name
-			TestResult testResult = executeTests(test.getTest(), testArgs,
-					allTestsAndTestobjects.get(test));
-
-			if (testResult == null) {
-				testResult = new TestResult(
-						test.getTest().getClass().getSimpleName(),
-						test.getArguments());
-				testResult.addMessage(test.getArguments()[0], new Message(
-						Message.Type.ERROR,
-						"Unexpected error while executing test."));
-			}
+			// strip the first argument since it always is the test object name
+			String[] testArgs = Arrays.copyOfRange(array, 1, array.length);
+			String testName = test.getTestName();
+			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
+			try {
+				Thread.sleep(3000);
+			}
+			catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				executeTests(testName, test.getTest(),
+						testArgs, allTestsAndTestobjects.get(test), testResult);
+			}
+			catch (InterruptedException e) {
+				progressListener.updateProgress(1f, "aborted, please wait...");
+				executor.shutdownNow();
+				// build is discarded, method call terminated
+				build = null;
+				return;
+			}
+			try {
+				Utils.checkInterrupt();
+			}
+			catch (InterruptedException e) {
+				progressListener.updateProgress(1f, "aborted, please wait...");
+				executor.shutdownNow();
+				// build is discarded, method call terminated
+				build = null;
+				return;
+			}
 		}
 
-		build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+
+		// wait until finished
+		try {
+			executor.shutdown();
+			while (!executor.awaitTermination(1, TimeUnit.SECONDS))
+				;
+			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+		}
+		catch (InterruptedException e) {
+			progressListener.updateProgress(1f, "aborted, please wait...");
+		}
+	}
+
+	public void terminate() {
+		System.out.println("Terminating executor");
+		executor.shutdownNow();
+		executorThread.interrupt();
 	}
 
 	/**
@@ -213,70 +249,73 @@ public class TestExecutor implements Runnable {
 		return count;
 	}
 
-	private <T> TestResult executeTests(final Test<T> t, final String[] args, final Map<TestObjectProvider, List<?>> allTestObjects) {
-		final String testName = t.getClass().getSimpleName();
-		ExecutorService executor = Executors.newSingleThreadExecutor();
+	private <T> void executeTests(final String testName, final Test<T> t, final String[] args, final Map<TestObjectProvider, List<?>> allTestObjects, final TestResult testResult) throws InterruptedException {
+		int totalCountOfTestobjects = countTestObjects(allTestObjects);
+		final float progessIncrement = 1f / tests.size() / totalCountOfTestobjects; 
 
-		Callable<TestResult> c = new Callable<TestResult>() {
+		if (totalCountOfTestobjects == 0) {
+			final Message message = new Message(Message.Type.ERROR, "No test-object found.");
+			testResult.addMessage("", message);
 
-			@Override
-			public TestResult call() throws Exception {
-				TestResult result = new TestResult(testName, args);
+			progress += 1f / tests.size();
+			progressListener.updateProgress(progress, testName);
+		}
 
-				int totalCountOfTestobjects = countTestObjects(allTestObjects);
+		// finally run the tests
+		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
+			for (final Object testObject : allTestObjects.get(testObjectProvider)) {
+				Callable<Void> c = new Callable<Void>() {
 
-				// finally run the tests
-				int currentIndex = 0;
-				for (TestObjectProvider testObjectProvider : testObjectProviders) {
-					for (Object testObject : allTestObjects.get(testObjectProvider)) {
+					@Override
+					public Void call() throws Exception {
 
-						if (testObject != null) {
-							Message message = t.execute(cast(testObject, t.getTestObjectClass()),
-									args);
-							result.addMessage(testObjectProvider.getTestObjectName(testObject),
-									message);
+						String testObjectName = testObjectProvider.getTestObjectName(testObject);
+						try {
+							if (testObject == null) {
+								testResult.addMessage(testObjectName, new Message(
+										Message.Type.ERROR, "Test-object was null."));
+								return null;
+							}
+							testResult.addMessage(testObjectName,
+									t.execute(cast(testObject, t.getTestObjectClass()), args));
+							return null;
 						}
-						else {
-							result.addMessage(testName, new Message(Message.Type.ERROR,
-									"Test-object was null. (Check TestObjectProviders)"));
+						catch (InterruptedException e) {
+							throw e;
 						}
-						currentIndex++;
-						// update progress listener
-						progressListener.updateProgress(
-								((float) (currentIndex)) / totalCountOfTestobjects,
-								t.getClass().getSimpleName() + ": "
-										+ testObjectProvider.getTestObjectName(testObject));
+						catch (Throwable e) {
+							testResult.addMessage(testObjectName,
+										new Message(Message.Type.ERROR,
+									"Unexpected error in test " + testName + ", during testing "
+											+ testObjectName +
+														": " + e));
+							return null;
+						}
+						finally {
+							// update progress listener
+							progress += progessIncrement;
+							progressListener.updateProgress(progress, testName + ": "
+									+ testObjectName);
 
+						}
 					}
-
+				};
+				try {
+					executor.submit(c).get();
 				}
-
-				if (totalCountOfTestobjects == 0) {
-					result.addMessage(testName, new Message(Message.Type.ERROR,
-							"No test-object found. (Check TestObjectProviders)"));
-
+				catch (InterruptedException e) {
+					throw e;
 				}
-				return result;
+				catch (RejectedExecutionException e) {
+					// happens when Executor is shut down
+					System.out.println("RejectedExecutionException");
+				}
+				catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-
-		};
-		Future<TestResult> future = executor.submit(c);
-
-		TestResult result = null;
-		try {
-			result = future.get();
 		}
-		catch (InterruptedException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Test execution was interrupted: '" + t.toString() + "'");
-		}
-		catch (ExecutionException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Exception in Test execution: '" + t.toString() + "'");
-			e.printStackTrace();
-		}
-
-		return result;
 	}
 
 	private void renderMessage(final String testObjectID, final String[] args, ArgsCheckResult argsCheckResult, TestResult result, int i, String type) {

@@ -28,13 +28,15 @@ public class ExecutableTest {
 
 	private final Test<?> test;
 	private final String[] args;
+	private final String testName;
 
 	/**
 	 * 
 	 */
-	public ExecutableTest(Test<?> t, String[] args) {
+	public ExecutableTest(Test<?> t, String[] args, String testName) {
 		this.test = t;
 		this.args = args;
+		this.testName = testName;
 	}
 
 	public Test<?> getTest() {
@@ -43,6 +45,10 @@ public class ExecutableTest {
 
 	public String[] getArguments() {
 		return args;
+	}
+
+	public String getTestName() {
+		return testName;
 	}
 
 }

@@ -79,7 +79,7 @@ public class Utils {
 					return null;
 				}
 				
-				return new ExecutableTest(test, args);
+				return new ExecutableTest(test, args, testName);
 			}
 			else {
 				msgs.add(ArgsCheckResult.classNotFoundResult(testName));
@@ -87,6 +87,19 @@ public class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Checks whether the calling thread has been interrupted and throws
+	 * InterruptedException in case.
+	 * 
+	 * @created 16.08.2012
+	 * @throws InterruptedException
+	 */
+	public static void checkInterrupt() throws InterruptedException {
+		if (Thread.interrupted()) {
+			throw new InterruptedException();
+		}
 	}
 
 	private static void testArguments(List<ArgsCheckResult> msgs, String testName, Test<?> test, String[] args) {

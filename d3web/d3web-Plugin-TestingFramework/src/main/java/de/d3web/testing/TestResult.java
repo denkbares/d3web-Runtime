@@ -126,6 +126,14 @@ public class TestResult implements Comparable<TestResult> {
 		return t;
 	}
 
+	/**
+	 * Adds a test object/message pair to this TestResult.
+	 * Note: If the type of the message is "SUCCESS" then the message text will be ignored.
+	 * 
+	 * @created 14.08.2012
+	 * @param testObjectName
+	 * @param message 
+	 */
 	public void addMessage(String testObjectName, Message message) {
 		this.messages.put(testObjectName, message);
 	}
