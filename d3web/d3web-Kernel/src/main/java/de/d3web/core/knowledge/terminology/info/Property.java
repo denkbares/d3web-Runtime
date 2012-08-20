@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -46,6 +47,7 @@ public final class Property<T> {
 
 	private static final String EXTENSIONPOINT_ID = "Property";
 	private static final Map<String, Property<?>> properties = new HashMap<String, Property<?>>();
+	private static final Map<String, Property<?>> synonyms = new HashMap<String, Property<?>>();
 	static {
 		parseProperties();
 	}
@@ -240,7 +242,9 @@ public final class Property<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Property<Object> getUntypedProperty(String name) throws NoSuchElementException {
-		Property<?> property = properties.get(name.toLowerCase());
+		String key = name.toLowerCase();
+		Property<?> property = properties.get(key);
+		if (property == null) property = synonyms.get(key);
 		if (property == null) {
 			throw new NoSuchElementException("unknown property " + name);
 		}
@@ -344,18 +348,40 @@ public final class Property<T> {
 	private static void parseProperties() {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(
 					"d3web-Kernel-ExtensionPoints", EXTENSIONPOINT_ID);
-		for (Extension e : extensions) {
-			String pname = e.getName();
-			Autosave pautosave = Autosave.valueOf(e.getParameter("autosave"));
-			boolean pmultilingual = Boolean.parseBoolean(e.getParameter("multilingual"));
-			String storedClassName = e.getParameter("instanceof");
-			String defaultValueString = e.getParameter("default");
-			String description = e.getParameter("description");
-			Property<?> p = new Property<Object>(e,
+		for (Extension extension : extensions) {
+			String pname = extension.getName();
+			Autosave pautosave = Autosave.valueOf(extension.getParameter("autosave"));
+			boolean pmultilingual = Boolean.parseBoolean(extension.getParameter("multilingual"));
+			String storedClassName = extension.getParameter("instanceof");
+			String defaultValueString = extension.getParameter("default");
+			String description = extension.getParameter("description");
+			Property<?> property = new Property<Object>(extension,
 					pautosave, pname, description, pmultilingual,
 					storedClassName, defaultValueString);
-			properties.put(pname.toLowerCase(), p);
+			properties.put(pname.toLowerCase(), property);
+
+			// also add deprecated names for this property
+			// to provide backward compatibility
+			List<String> depecatedNames = extension.getParameters("deprecated");
+			for (String depecatedName : depecatedNames) {
+				addSynonymProperty(depecatedName, property);
+			}
 		}
+	}
+
+	/**
+	 * Adds an existing property under a synonym name to the properties manager.
+	 * After this call there will be no difference when accessing the property
+	 * by its original name or its synonym name. This method may be used to
+	 * provide backward compatibility when renaming properties.
+	 * 
+	 * @created 20.08.2012
+	 * @param otherName the synonym name of the property (usually the old /
+	 *        original name of the property)
+	 * @param property the property to add the synonym for
+	 */
+	private static void addSynonymProperty(String otherName, Property<?> property) {
+		synonyms.put(otherName.toLowerCase(), property);
 	}
 
 	public String getDescription() {

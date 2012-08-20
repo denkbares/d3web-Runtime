@@ -21,6 +21,8 @@
 	
 	<extension-point id="Property">
 		<parameter-def id="name" />
+		<!-- defines a deprecated name of the property which may also be used to access the property -->
+		<parameter-def id="deprecated" multiplicity="any" />
 		<parameter-def id="description" />
 		<!-- defines if the property is multilingual, possibilities: true or false -->
 		<parameter-def id="multilingual" />

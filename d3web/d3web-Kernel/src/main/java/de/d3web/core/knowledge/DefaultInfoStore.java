@@ -67,25 +67,27 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key, Locale language) {
 		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
-		// check for entry
-		StoredType value = getEntry(key, language);
-		if (value != null) {
-			return value;
-		}
-		// Try to find the locale without variant
-		String variant = language.getVariant();
-		String country = language.getCountry();
-		if (variant != null && variant.length() > 0) {
-			value = getEntry(key, new Locale(language.getLanguage(), country));
+		if (language != null) {
+			// check for entry
+			StoredType value = getEntry(key, language);
 			if (value != null) {
 				return value;
 			}
-		}
-		// Try to find the locale without the country
-		if (country != null && country.length() > 0) {
-			value = getEntry(key, new Locale(language.getLanguage()));
-			if (value != null) {
-				return value;
+			// Try to find the locale without variant
+			String variant = language.getVariant();
+			String country = language.getCountry();
+			if (variant != null && variant.length() > 0) {
+				value = getEntry(key, new Locale(language.getLanguage(), country));
+				if (value != null) {
+					return value;
+				}
+			}
+			// Try to find the locale without the country
+			if (country != null && country.length() > 0) {
+				value = getEntry(key, new Locale(language.getLanguage()));
+				if (value != null) {
+					return value;
+				}
 			}
 		}
 		// if not available use no-language method

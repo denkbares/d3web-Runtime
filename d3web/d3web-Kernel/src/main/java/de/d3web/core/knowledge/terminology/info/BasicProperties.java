@@ -80,8 +80,8 @@ public class BasicProperties {
 	/**
 	 * TODO: Remove when UnknownChoice is implemented
 	 * 
-	 * used for: Question, Knowledgebase doc: should UNKNOWN be invisible in questions, If it
-	 * is set to the kb it represents the default.
+	 * used for: Question, Knowledgebase doc: should UNKNOWN be invisible in
+	 * questions, If it is set to the kb it represents the default.
 	 * 
 	 * @return Boolean
 	 */
@@ -150,4 +150,26 @@ public class BasicProperties {
 		return value != null && value.booleanValue();
 	}
 
+	/**
+	 * Returns if the "unknown" alternative of a specific question should be
+	 * offered to the user or not. This is defined by the property
+	 * "unknownVisible" for the question. If there is no such property, the
+	 * "unknownVisbible" property of the question's knowledge base object will
+	 * be used as the default value. If there is no such knowledge base specific
+	 * default value, false is returned.
+	 * 
+	 * @created 20.08.2012
+	 * @param question the question to get the unknown visibility for
+	 * @return if the question should have "unknown" as a possible answer
+	 */
+	public static boolean isUnknownVisible(Question question) {
+		Boolean visible = question.getInfoStore().getValue(UNKNOWN_VISIBLE);
+		if (visible == null) {
+			visible = question.getKnowledgeBase().getInfoStore().getValue(UNKNOWN_VISIBLE);
+		}
+		if (visible == null) {
+			return false;
+		}
+		return visible.booleanValue();
+	}
 }

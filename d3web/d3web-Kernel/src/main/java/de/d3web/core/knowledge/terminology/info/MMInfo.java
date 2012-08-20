@@ -20,9 +20,11 @@ package de.d3web.core.knowledge.terminology.info;
 
 import java.util.Locale;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * 
@@ -55,14 +57,19 @@ public class MMInfo {
 	public final static Property<String> LINK = Property.getProperty("link", String.class);
 
 	/**
-	 * TODO: Remove when UnknownChoice is implemented
-	 * 
-	 * used for: Question doc: return of getValue of Unknown
+	 * <b>Applies to</b>:<br>
+	 * Question, KnowledgeBase
+	 * <p>
+	 * <b>Documentation</b>:<br>
+	 * Specifies how the answer 'unknown' should be displayed to the user. If
+	 * this property is specified for the knowledge base it represents the
+	 * default value for all questions. See also 'unknownVisible' to specify if
+	 * 'unknown' is available to the user at all.
 	 * 
 	 * @return String
 	 */
 	public static final Property<String> UNKNOWN_VERBALISATION = Property.getProperty(
-			"unknown_verbalisation", String.class);
+			"unknownPrompt", String.class);
 
 	/**
 	 * used for: Question the unit of numerical questions
@@ -102,4 +109,31 @@ public class MMInfo {
 		}
 		return prompt;
 	}
+
+	/**
+	 * Return the prompt for the "unknown" alternative of a specific question.
+	 * The prompt is defined by the property "unknownPrompt" for the question.
+	 * If there is no such property, the "unknownPrompt" of the questions
+	 * knowledge base object will be used as the default value. If there is no
+	 * such knowledge base specific default value, "unknown" or "unbekannt" or
+	 * something similar is used, based on the specified locale. If locale is
+	 * null, {@link InfoStore#NO_LANGUAGE} is used.
+	 * 
+	 * @created 20.08.2012
+	 * @param question the question to get the unknown prompt for
+	 * @param locale the language to get the prompt for or null
+	 * @return the questions unknown prompt
+	 */
+	public static String getUnknownPrompt(Question question, Locale locale) {
+		String prompt = question.getInfoStore().getValue(UNKNOWN_VERBALISATION, locale);
+		if (prompt == null) {
+			prompt = question.getKnowledgeBase().getInfoStore().getValue(
+					UNKNOWN_VERBALISATION, locale);
+		}
+		if (prompt == null) {
+			prompt = "unknown";
+		}
+		return prompt;
+	}
+
 }

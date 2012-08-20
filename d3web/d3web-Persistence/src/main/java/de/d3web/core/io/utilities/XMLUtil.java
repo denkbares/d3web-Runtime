@@ -581,11 +581,12 @@ public final class XMLUtil {
 				property = Property.getUntypedProperty(child.getAttribute("property"));
 			}
 			catch (NoSuchElementException e) {
-				Logger.getLogger("Persistence").log(
+				Logger.getLogger(XMLUtil.class.getName()).log(
 						Level.WARNING,
-						"Property "
-								+ child.getAttribute("property")
-								+ " is not supported. Propably the corresponding plugin is missing. This property will be lost when saving the Knowledgebase.");
+						"Property '" + child.getAttribute("property") +
+								"' is not supported. Propably the corresponding plugin " +
+								"is missing. This property will be lost when saving " +
+								"the knowledge base.");
 				continue;
 			}
 			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
