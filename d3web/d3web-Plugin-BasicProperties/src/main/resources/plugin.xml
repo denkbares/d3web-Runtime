@@ -15,7 +15,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="cost">
 		<parameter id="name" value="cost" />
-		<parameter id="description" value="specifies what amount of costs is needed to perform the qaset" />
+		<parameter id="description" value="Specifies what amount of costs is needed to perform the qaset" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -26,7 +26,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="unit">
 		<parameter id="name" value="unit" />
-		<parameter id="description" value="the unit of numerical questions" />
+		<parameter id="description" value="The unit of numerical questions" />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
@@ -36,7 +36,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="abstractionQuestion">
 		<parameter id="name" value="abstractionQuestion" />
-		<parameter id="description" value="Marks a Question as abstraction question (derived) or not." />
+		<parameter id="description" value="Marks a question as abstraction question (derived) or not." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -57,7 +57,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="range">
 		<parameter id="name" value="range" />
-		<parameter id="description" value="valid range of numerical answers of QuestionNum" />
+		<parameter id="description" value="Valid range of numerical answers of QuestionNum" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -67,7 +67,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="INIT">
 		<parameter id="name" value="INIT" />
-		<parameter id="description" value="the ids of the answers(seperated by ;), which is  set in PSMethodInit" />
+		<parameter id="description" value="The ids of the answers (seperated by ;), which is set in PSMethodInit." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -87,7 +87,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="unknown_verbalisation">
 		<parameter id="name" value="unknown_verbalisation" />
-		<parameter id="description" value="verbalisation of Unknown" />
+		<parameter id="description" value="Verbalisation of answer alternative Unknown" />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
@@ -97,7 +97,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="version">
 		<parameter id="name" value="version" />
-		<parameter id="description" value="contains a version, for example of a knowledge base" />
+		<parameter id="description" value="Contains a version, for example of a knowledge base" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -107,7 +107,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="status">
 		<parameter id="name" value="status" />
-		<parameter id="description" value="contains a status, for example of a knowledge base" />
+		<parameter id="description" value="Contains a status, for example of a knowledge base" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -117,7 +117,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="affiliation">
 		<parameter id="name" value="affiliation" />
-		<parameter id="description" value="contains a affiliation, for example of the author or the knowledge base" />
+		<parameter id="description" value="Contains a affiliation, for example of the author or the knowledge base" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -127,7 +127,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="author">
 		<parameter id="name" value="author" />
-		<parameter id="description" value="contains a version, for example of a knowledge base" />
+		<parameter id="description" value="Contains a version, for example of a knowledge base" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -137,7 +137,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="filename">
 		<parameter id="name" value="filename" />
-		<parameter id="description" value="contains the desired filename of a knowledge base to be downloaded" />
+		<parameter id="description" value="Contains the desired filename of a knowledge base to be downloaded" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -147,7 +147,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="created">
 		<parameter id="name" value="created" />
-		<parameter id="description" value="contains the download date of a knowledge base (is persistently created when downloaded)" />
+		<parameter id="description" value="Contains the download date of a knowledge base (is persistently created when downloaded)" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -157,7 +157,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="description">
 		<parameter id="name" value="description" />
-		<parameter id="description" value="contains a description" />
+		<parameter id="description" value="Contains a description of the knowledge base object" />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
@@ -167,7 +167,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="prompt">
 		<parameter id="name" value="prompt" />
-		<parameter id="description" value="contains the full text wich should be prompted" />
+		<parameter id="description" value="Contains the full text which should be prompted (e.g., in a dialog)" />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
