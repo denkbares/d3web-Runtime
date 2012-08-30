@@ -32,7 +32,11 @@ public class NamedObjectComparator implements Comparator<NamedObject> {
 
 	@Override
 	public int compare(NamedObject r1, NamedObject r2) {
-		return (r1.getName().compareTo(r2.getName()));
+		String name1 = r1.getName();
+		if (name1 == null) name1 = "";
+		String name2 = r2.getName();
+		if (name2 == null) name2 = "";
+		return (name1.compareTo(name2));
 	}
 
 }
