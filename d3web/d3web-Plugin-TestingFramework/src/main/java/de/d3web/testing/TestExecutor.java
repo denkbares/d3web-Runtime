@@ -182,7 +182,7 @@ public class TestExecutor {
 	}
 
 	public void terminate() {
-		System.out.println("Terminating executor");
+		// System.out.println("Terminating executor");
 		executor.shutdownNow();
 		executorThread.interrupt();
 	}
@@ -308,7 +308,7 @@ public class TestExecutor {
 				}
 				catch (RejectedExecutionException e) {
 					// happens when Executor is shut down
-					System.out.println("RejectedExecutionException");
+					// System.out.println("RejectedExecutionException");
 				}
 				catch (ExecutionException e) {
 					// TODO Auto-generated catch block
