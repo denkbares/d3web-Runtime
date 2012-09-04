@@ -3,14 +3,14 @@ package de.d3web.testing;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.io.progress.ProgressListener;
@@ -50,8 +50,11 @@ public class TestExecutor {
 	private final int buildNumber;
 	private BuildResult build;
 	private float progress = 0;
+	private float currentlyProcessedTaskVolune = 0;
+	private float overallTasks;
 	private ExecutorService executor;
 	private Thread executorThread;
+	private boolean terminated = false;
 
 	/**
 	 * Returns the current build or null if the build has been terminated.
@@ -87,6 +90,32 @@ public class TestExecutor {
 		return testObjectClass.cast(testObject);
 	}
 
+	private synchronized void taskFinished(float volume, String message) {
+		currentlyProcessedTaskVolune += volume;
+		this.progressListener.updateProgress(currentlyProcessedTaskVolune / overallTasks, message);
+	}
+
+	class MyFutureTask extends FutureTask<Void> {
+
+		private final TestExecutor resultHandler;
+		private final Callable<Void> myCallable;
+
+		public MyFutureTask(Callable<Void> callable, TestExecutor resultHandler) {
+			super(callable);
+			this.resultHandler = resultHandler;
+			myCallable = callable;
+		}
+
+		@Override
+		protected void done() {
+			// update progress listener as task has been finished
+			if (this.myCallable instanceof CallableTest) {
+					resultHandler.taskFinished(((CallableTest<?>) myCallable).getTaskVolume(),
+							((CallableTest<?>) myCallable).getMessage());
+			}
+		}
+	}
+
 	/**
 	 * Runs the tests given by the task list using the provided
 	 * TestObjectProvider. A BuildResultSet with the given build-number is
@@ -101,7 +130,9 @@ public class TestExecutor {
 		long buildStartTime = System.currentTimeMillis();
 		build = new BuildResult(buildNumber);
 		progress = 0f;
-		executor = Executors.newSingleThreadExecutor();
+		executor = Executors.newFixedThreadPool(2);
+
+		overallTasks = 0;
 
 		Map<ExecutableTest, Map<TestObjectProvider, List<?>>> allTestsAndTestobjects = new HashMap<ExecutableTest, Map<TestObjectProvider, List<?>>>();
 
@@ -124,9 +155,12 @@ public class TestExecutor {
 						testArgs
 						);
 
+
 				allTestsAndTestobjects.put(testAndItsParameters, testObjectsForTest);
 			}
 		}
+
+		Map<ExecutableTest, Collection<CallableTest<?>>> futures = new HashMap<ExecutableTest, Collection<CallableTest<?>>>();
 
 		// now the total count of tests to be executed is clear and can be told
 		// to the progress listener
@@ -146,8 +180,11 @@ public class TestExecutor {
 			// e1.printStackTrace();
 			// }
 			try {
-				executeTests(testName, test.getTest(),
+				Collection<CallableTest<?>> futuresForExecutableTest = executeTests(testName,
+						test.getTest(),
 						testArgs, allTestsAndTestobjects.get(test), testResult);
+				futures.put(test, futuresForExecutableTest);
+				overallTasks += futuresForExecutableTest.size();
 			}
 			catch (InterruptedException e) {
 				progressListener.updateProgress(1f, "aborted, please wait...");
@@ -156,17 +193,31 @@ public class TestExecutor {
 				build = null;
 				return;
 			}
-			try {
-				Utils.checkInterrupt();
-			}
-			catch (InterruptedException e) {
-				progressListener.updateProgress(1f, "aborted, please wait...");
-				executor.shutdownNow();
-				// build is discarded, method call terminated
-				build = null;
-				return;
+
+		}
+
+
+		// finally run execute on callable tests
+		Set<ExecutableTest> keySet = futures.keySet();
+		for (ExecutableTest executableTest : keySet) {
+			Collection<CallableTest<?>> tasks = futures.get(executableTest);
+			for (CallableTest<?> callableTest : tasks) {
+				executor.execute(new MyFutureTask(callableTest, this));
+
+				try {
+					Utils.checkInterrupt();
+				}
+				catch (InterruptedException e) {
+					progressListener.updateProgress(1f, "aborted, please wait...");
+					executor.shutdownNow();
+					// build is discarded, method call terminated
+					build = null;
+					return;
+				}
+
 			}
 		}
+		
 
 
 		// wait until finished
@@ -179,12 +230,18 @@ public class TestExecutor {
 		catch (InterruptedException e) {
 			progressListener.updateProgress(1f, "aborted, please wait...");
 		}
+
+		if (terminated) {
+			// aborted, so discard build
+			build = null;
+		}
 	}
 
 	public void terminate() {
 		// System.out.println("Terminating executor");
 		executor.shutdownNow();
 		executorThread.interrupt();
+		terminated = true;
 	}
 
 	/**
@@ -249,9 +306,9 @@ public class TestExecutor {
 		return count;
 	}
 
-	private <T> void executeTests(final String testName, final Test<T> t, final String[] args, final Map<TestObjectProvider, List<?>> allTestObjects, final TestResult testResult) throws InterruptedException {
+	private <T> Collection<CallableTest<?>> executeTests(final String testName, final Test<T> t, final String[] args, final Map<TestObjectProvider, List<?>> allTestObjects, final TestResult testResult) throws InterruptedException {
+
 		int totalCountOfTestobjects = countTestObjects(allTestObjects);
-		final float progessIncrement = 1f / tests.size() / totalCountOfTestobjects; 
 
 		if (totalCountOfTestobjects == 0) {
 			final Message message = new Message(Message.Type.ERROR, "No test-object found.");
@@ -261,61 +318,92 @@ public class TestExecutor {
 			progressListener.updateProgress(progress, testName);
 		}
 
+		Collection<CallableTest<?>> result = new HashSet<CallableTest<?>>();
+
 		// finally run the tests
 		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
 			for (final Object testObject : allTestObjects.get(testObjectProvider)) {
-				Callable<Void> c = new Callable<Void>() {
-
-					@Override
-					public Void call() throws Exception {
-
-						String testObjectName = testObjectProvider.getTestObjectName(testObject);
-						try {
-							if (testObject == null) {
-								testResult.addMessage(testObjectName, new Message(
-										Message.Type.ERROR, "Test-object was null."));
-								return null;
-							}
-							testResult.addMessage(testObjectName,
-									t.execute(cast(testObject, t.getTestObjectClass()), args));
-							return null;
-						}
-						catch (InterruptedException e) {
-							throw e;
-						}
-						catch (Throwable e) {
-							testResult.addMessage(testObjectName,
-										new Message(Message.Type.ERROR,
-									"Unexpected error in test " + testName + ", during testing "
-											+ testObjectName +
-														": " + e));
-							return null;
-						}
-						finally {
-							// update progress listener
-							progress += progessIncrement;
-							progressListener.updateProgress(progress, testName + ": "
-									+ testObjectName);
-
-						}
-					}
-				};
-				try {
-					executor.submit(c).get();
-				}
-				catch (InterruptedException e) {
-					throw e;
-				}
-				catch (RejectedExecutionException e) {
-					// happens when Executor is shut down
-					// System.out.println("RejectedExecutionException");
-				}
-				catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				String testObjectName = testObjectProvider.getTestObjectName(testObject);
+				CallableTest<T> c = new CallableTest<T>(testObjectName, testObject, t, testName,
+						testResult, args);
+				result.add(c);
+				// try {
+				// Future<Void> future = executor.submit(c);
+				// }
+				// catch (RejectedExecutionException e) {
+				// // happens when Executor is shut down
+				// // System.out.println("RejectedExecutionException");
+				// }
 			}
 		}
+		return result;
+	}
+
+	class CallableTest<T> implements Callable<Void> {
+
+		private final String testObjectName;
+		private final Object testObject;
+		private final Test<T> t;
+		private final TestResult testResult;
+		private final String[] args;
+		private final String testname;
+
+		public CallableTest(String testObjectName, Object testObject, Test<T> t, String testname, TestResult testresult, String[] args) {
+			this.t = t;
+			this.testObject = testObject;
+			this.testObjectName = testObjectName;
+			this.testResult = testresult;
+			this.args = args;
+			this.testname = testname;
+		}
+
+		public float getTaskVolume() {
+			// maybe this can be derived somehow more precisely some time
+			return 1;
+		}
+
+		public String getMessage() {
+			return testname + ": "
+					+ testObjectName;
+		}
+
+		@Override
+		public Void call() throws Exception {
+
+			// for testing only
+			// Thread.sleep(500);
+
+			try {
+				if (testObject == null) {
+					testResult.addMessage(testObjectName, new Message(
+							Message.Type.ERROR, "Test-object was null."));
+					return null;
+				}
+				Message message = t.execute(cast(testObject, t.getTestObjectClass()), args);
+				testResult.addMessage(testObjectName,
+						message);
+				return null;
+			}
+			catch (InterruptedException e) {
+				throw e;
+			}
+			catch (Throwable e) {
+				testResult.addMessage(testObjectName,
+							new Message(Message.Type.ERROR,
+									"Unexpected error in test " + testname + ", during testing "
+								+ testObjectName +
+											": " + e));
+				return null;
+			}
+			// finally {
+			// // update progress listener
+			// progress += progessIncrement;
+			// progressListener.updateProgress(progress, t + ": "
+			// + testObjectName);
+			//
+			// }
+		}
+
 	}
 
 	private void renderMessage(final String testObjectID, final String[] args, ArgsCheckResult argsCheckResult, TestResult result, int i, String type) {
