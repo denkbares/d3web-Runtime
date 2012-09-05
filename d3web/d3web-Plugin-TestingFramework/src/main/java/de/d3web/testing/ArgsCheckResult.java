@@ -40,15 +40,16 @@ public class ArgsCheckResult {
 		}
 	}
 
-	public static ArgsCheckResult classNotFoundResult(String clazzName) {
-		ArgsCheckResult result = new ArgsCheckResult(new String[] { clazzName });
-		result.setError(0, "Class for test could not be found: '" + clazzName + "'");
+	public static ArgsCheckResult classNotFoundResult(String testName) {
+		ArgsCheckResult result = new ArgsCheckResult(new String[] { testName });
+		result.setError(0, "Test '" + testName + "' does not exist");
 		return result;
 	}
-	
+
 	public static ArgsCheckResult invalidTestObjectIdentifier(String identifier, String testname) {
 		ArgsCheckResult result = new ArgsCheckResult(new String[] { identifier });
-		result.setError(0, "Test object identifier for test '"+testname+"' is not a valid regular expression: '" + identifier + "'");
+		result.setError(0, "Test object identifier for test '" + testname
+				+ "' is not a valid regular expression: '" + identifier + "'");
 		return result;
 	}
 
