@@ -22,11 +22,28 @@ import java.util.Comparator;
 
 import de.d3web.xcl.XCLRelation;
 
-public class XCLRelationComparator implements Comparator<XCLRelation> {
+class XCLRelationComparator implements Comparator<XCLRelation> {
+
+	private static final XCLRelationComparator INSTANCE = new XCLRelationComparator();
+
+	private XCLRelationComparator() {
+	}
 
 	@Override
 	public int compare(XCLRelation o1, XCLRelation o2) {
-		return o1.getId().compareTo(o2.getId());
+		if (o1 == o2) return 0;
+		int h1 = o1 == null ? 0 : o1.hashCode();
+		int h2 = o2 == null ? 0 : o2.hashCode();
+		if (h1 < h2) return -1;
+		if (h1 > h2) return 1;
+		// same hashCode, use string representation
+		String s1 = o1.toString();
+		String s2 = o2.toString();
+		return s1.compareTo(s2);
+	}
+
+	public static Comparator<? super XCLRelation> getInstance() {
+		return INSTANCE;
 	}
 
 }

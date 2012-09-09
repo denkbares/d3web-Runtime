@@ -134,15 +134,31 @@ public final class HashCodeUtils {
 
 	/**
 	 * Appends an unordered set of objects onto the specified seed. This will
-	 * result on the same hash is the objects are equal, independent of the
+	 * result on the same hash if the objects are equal, independent of the
 	 * order of the objects in the specified collection.
 	 */
 	public static int hashUnordered(int aSeed, Collection<?> aCollection) {
 		int hash = 0;
 		// hashcode is independent from the order of the list
-		for (Object object : aCollection) {
-			hash += (object == null) ? 1 : object.hashCode();
+		if (aCollection != null) {
+			for (Object object : aCollection) {
+				hash += (object == null) ? 1 : object.hashCode();
+			}
 		}
 		return hash(aSeed, hash);
+	}
+
+	/**
+	 * Appends an ordered collection of objects onto the specified seed. This
+	 * will result on the same hash if the objects are equal, and the object
+	 * have the same order when iterating the specified collection.
+	 */
+	public static int hashOrdered(int aSeed, Collection<?> aCollection) {
+		if (aCollection != null) {
+			for (Object object : aCollection) {
+				aSeed = hash(aSeed, object);
+			}
+		}
+		return aSeed;
 	}
 }

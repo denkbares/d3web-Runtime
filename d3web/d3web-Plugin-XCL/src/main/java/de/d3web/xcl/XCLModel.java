@@ -113,21 +113,20 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		return (result == null) ? Collections.<XCLRelation> emptySet() : result;
 	}
 
-	public static String insertXCLRelation(KnowledgeBase kb,
+	public static void insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d) {
-		return insertXCLRelation(kb, theCondition, d, XCLRelationType.explains);
+		insertXCLRelation(kb, theCondition, d, XCLRelationType.explains);
 	}
 
-	public static String insertXCLRelation(KnowledgeBase kb,
+	public static void insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type) {
-		return insertXCLRelation(kb, theCondition, d, type, 1);
+		insertXCLRelation(kb, theCondition, d, type, 1);
 	}
 
-	public static String insertXCLRelation(KnowledgeBase kb,
+	public static void insertXCLRelation(KnowledgeBase kb,
 			Condition theCondition, Solution d, XCLRelationType type,
 			double weight) {
-		return insertAndReturnXCLRelation(kb, theCondition, d, type,
-				weight).getId();
+		insertAndReturnXCLRelation(kb, theCondition, d, type, weight);
 	}
 
 	public static XCLRelation insertAndReturnXCLRelation(KnowledgeBase kb,
@@ -146,8 +145,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			xclModel = new XCLModel(d);
 			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, xclModel);
 		}
-		relation = XCLRelation.createXCLRelation(theCondition, weight);
-		xclModel.addRelation(relation, type);
+		relation = new XCLRelation(theCondition, weight, type);
+		xclModel.addRelation(relation);
 		return relation;
 	}
 
@@ -178,11 +177,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	public boolean addRelation(XCLRelation relation) {
-		return addRelation(relation, XCLRelationType.explains);
-	}
-
-	public boolean addRelation(XCLRelation relation, XCLRelationType type) {
-		relation.initType(type);
 		for (TerminologyObject nob : relation.getConditionedFinding().getTerminalObjects()) {
 			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(
 					XCLContributedModelSet.KNOWLEDGE_KIND);
@@ -193,19 +187,17 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			}
 			set.addModel(this);
 		}
-		if (type.equals(XCLRelationType.explains)) {
+		switch (relation.getType()) {
+		case explains:
 			return addRelationTo(relation, relations);
-		}
-		else if (type.equals(XCLRelationType.contradicted)) {
+		case contradicted:
 			return addRelationTo(relation, contradictingRelations);
-		}
-		else if (type.equals(XCLRelationType.requires)) {
+		case requires:
 			return addRelationTo(relation, necessaryRelations);
-		}
-		else if (type.equals(XCLRelationType.sufficiently)) {
+		case sufficiently:
 			return addRelationTo(relation, sufficientRelations);
 		}
-		else return false;
+		return false;
 	}
 
 	public void removeRelation(XCLRelation rel) {
@@ -230,7 +222,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	private boolean addRelationTo(XCLRelation relation,
 			Collection<XCLRelation> theRelations) {
 
-		if (theRelations.contains(relation)) return false;
 		theRelations.add(relation);
 
 		boolean isPositive = !relation.hasType(XCLRelationType.contradicted);
@@ -245,20 +236,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 			if (isPositive) positiveCoveredSymptoms.add(no);
 		}
 		return true;
-	}
-
-	public XCLRelation findRelation(String id) {
-
-		Collection<XCLRelation> r = new ArrayList<XCLRelation>();
-		r.addAll(relations);
-		r.addAll(necessaryRelations);
-		r.addAll(sufficientRelations);
-
-		r.addAll(contradictingRelations);
-		for (XCLRelation relation : r) {
-			if (id.equals(relation.getId())) return relation;
-		}
-		return null;
 	}
 
 	@Override

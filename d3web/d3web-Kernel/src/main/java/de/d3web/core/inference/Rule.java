@@ -148,8 +148,8 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 		// should we undo the rule action ???
 		boolean undoRuleAction = false;
 
+		boolean hasFired = hasFired(session);
 		try {
-			boolean hasFired = hasFired(session);
 			boolean canFire = canFire(session);
 
 			if (!hasFired && canFire) {
@@ -160,29 +160,26 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 				undoRuleAction = true;
 			}
 
-			// if the action is a question setter action, changes in depending
-			// values (e.g. elements of a formula)
-			// will be noticed and stored in the boolean
-			// "isQuestionSetterActionWithChangedValues"
-			boolean isQuestionSetterActionWithChangedValues =
-					getAction().hasChangedValue(session);
 			// if this is a multipleFire-rule that has fired AND can fire again
-			// AND any depending value has
-			// changed, its action will be undone and executed again.
+			// AND any depending value has changed, its action will be undone
+			// and executed again.
 			// This change fixes the "fire-undo-fire-bug" (when a question gets
-			// the same
-			// value several times (see MQDialogController)) and some problems
-			// with the "cycle-check".
-			if (hasFired
-					&& canFire
-					&& isQuestionSetterActionWithChangedValues) {
-				undoRuleAction = true;
-				executeRuleAction = true;
+			// the same value several times (see MQDialogController)) and some
+			// problems with the "cycle-check".
+			if (hasFired && canFire) {
+				// if the action is a question setter action, changes in
+				// depending values (e.g. elements of a formula)
+				// will be noticed
+				boolean isQuestionSetterActionWithChangedValues =
+						getAction().hasChangedValue(session);
+				if (isQuestionSetterActionWithChangedValues) {
+					undoRuleAction = true;
+					executeRuleAction = true;
+				}
 			}
-
 		}
 		catch (UnknownAnswerException ex) {
-			if (hasFired(session)) {
+			if (hasFired) {
 				undoRuleAction = true;
 			}
 		}

@@ -33,62 +33,44 @@ import de.d3web.core.utilities.HashCodeUtils;
 public class XCLRelation {
 
 	public final static double DEFAULT_WEIGHT = 1;
-	private Condition conditionedFinding;
-	private double weight = DEFAULT_WEIGHT;
-	private String id;
-	private XCLRelationType type = null;
-	private static int count = 0;
 
-	private XCLRelation() {
-		super();
-		count++;
-		id = "XCLRelation_" + count;
+	private final Condition conditionedFinding;
+	private final double weight;
+	private final XCLRelationType type;
+
+	public XCLRelation(Condition condition) {
+		this(condition, DEFAULT_WEIGHT, XCLRelationType.explains);
 	}
 
-	private XCLRelation(String id) {
-		super();
-		this.id = id;
-		if (id.startsWith("XCLRelation_")) {
-			String number = id.substring("XCLRelation_".length());
-			int num = Integer.parseInt(number);
-			if (count < num) {
-				count = num + 1;
-			}
-		}
+	public XCLRelation(Condition condition, XCLRelationType type) {
+		this(condition, DEFAULT_WEIGHT, type);
 	}
 
-	public static XCLRelation createXCLRelation(Condition conditionedFinding,
-			double weight) {
-		XCLRelation r = new XCLRelation();
-		r.setConditionedFinding(conditionedFinding);
-		r.setWeight(weight);
-		return r;
+	public XCLRelation(Condition condition, double weight) {
+		this(condition, weight, XCLRelationType.explains);
 	}
 
-	public static XCLRelation createXCLRelation(Condition conditionedFinding,
-			double weight, String id) {
-		XCLRelation r = new XCLRelation(id);
-		r.setConditionedFinding(conditionedFinding);
-		r.setWeight(weight);
-		return r;
+	public XCLRelation(Condition condition, double weight, XCLRelationType type) {
+		this.conditionedFinding = condition;
+		this.weight = weight;
+		this.type = type;
+		if (type == null) throw new NullPointerException("type of relation must not be null");
 	}
 
-	public static XCLRelation createXCLRelation(Condition conditionedFinding) {
-		return createXCLRelation(conditionedFinding, DEFAULT_WEIGHT);
+	public XCLRelation(QuestionChoice question, Choice answer) {
+		this(new CondEqual(question, new ChoiceValue(answer)));
 	}
 
-	public static XCLRelation createXCLRelation(QuestionChoice question, Choice answer) {
-		return createXCLRelation(question, answer, DEFAULT_WEIGHT);
+	public XCLRelation(QuestionChoice question, Choice answer, XCLRelationType type) {
+		this(new CondEqual(question, new ChoiceValue(answer)), type);
 	}
 
-	public static XCLRelation createXCLRelation(QuestionChoice question, Choice answer, double weight) {
-		return createXCLRelation(new CondEqual(question, new ChoiceValue(answer)), weight);
+	public XCLRelation(QuestionChoice question, Choice answer, double weight) {
+		this(new CondEqual(question, new ChoiceValue(answer)), weight);
 	}
 
-	public static XCLRelation createXCLRelation(String id, QuestionChoice question, Choice answer) {
-		XCLRelation r = createXCLRelation(new CondEqual(question, new ChoiceValue(answer)));
-		r.setId(id);
-		return r;
+	public XCLRelation(QuestionChoice question, Choice answer, double weight, XCLRelationType type) {
+		this(new CondEqual(question, new ChoiceValue(answer)), weight, type);
 	}
 
 	public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
@@ -100,32 +82,16 @@ public class XCLRelation {
 		return conditionedFinding;
 	}
 
-	public void setConditionedFinding(Condition conditionedFinding) {
-		this.conditionedFinding = conditionedFinding;
-	}
-
 	public double getWeight() {
 		return weight;
-	}
-
-	public void setWeight(double weight) {
-		this.weight = weight;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof XCLRelation) {
 			XCLRelation r = (XCLRelation) o;
-			return id.equals(r.id) &&
-					conditionedFinding.equals(r.conditionedFinding) && weight == r.weight;
+			return conditionedFinding.equals(r.conditionedFinding)
+					&& weight == r.weight && type.equals(r.type);
 		}
 		return false;
 	}
@@ -140,15 +106,10 @@ public class XCLRelation {
 	@Override
 	public int hashCode() {
 		int hash = HashCodeUtils.SEED;
-		hash = HashCodeUtils.hash(hash, id);
 		hash = HashCodeUtils.hash(hash, conditionedFinding);
 		hash = HashCodeUtils.hash(hash, weight);
+		hash = HashCodeUtils.hash(hash, type.name());
 		return hash;
-	}
-
-	// TODO: init type in constructor and make it final
-	void initType(XCLRelationType type) {
-		this.type = type;
 	}
 
 	/**
@@ -165,7 +126,7 @@ public class XCLRelation {
 	 * Returns if this relation if of the specified relation type.
 	 * 
 	 * @created 31.05.2012
-	 * @param type the type to check aginst
+	 * @param type the type to check against
 	 * @return if the relation if of expected type, false otherwise
 	 */
 	public boolean hasType(XCLRelationType type) {

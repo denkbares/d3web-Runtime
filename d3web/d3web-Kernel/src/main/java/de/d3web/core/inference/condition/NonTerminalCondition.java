@@ -22,6 +22,7 @@ package de.d3web.core.inference.condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,12 +53,11 @@ public abstract class NonTerminalCondition implements Condition {
 	 * @param conditions the specified sub-conditions
 	 */
 	public NonTerminalCondition(List<Condition> conditions) {
-		terms = new ArrayList<Condition>(conditions);
+		terms = Collections.unmodifiableList(new ArrayList<Condition>(conditions));
 		// create hash code an cache it
 		int temphash = HashCodeUtils.SEED;
-		temphash = HashCodeUtils.hash(temphash, getClass());
-		temphash = HashCodeUtils.hash(temphash, terms);
-		// temphash = HashCodeUtils.hashUnordered(temphash, terms);
+		temphash = HashCodeUtils.hash(temphash, getClass().getName());
+		temphash = HashCodeUtils.hashOrdered(temphash, terms);
 		hash = temphash;
 	}
 

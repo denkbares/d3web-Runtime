@@ -39,7 +39,6 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
-import de.d3web.xcl.XCLRelationType;
 import de.d3web.xcl.io.XCLModelPersistenceHandler;
 
 /**
@@ -162,12 +161,9 @@ public class XCLModelTest extends TestCase {
 		// Player = Arnold
 		// Rated = 18+ weight 2
 		model = new XCLModel(terminator);
-		model.addRelation(XCLRelation.createXCLRelation("genre", genre, action),
-				XCLRelationType.explains);
-		model.addRelation(XCLRelation.createXCLRelation(player, arnold), XCLRelationType.explains);
-		XCLRelation temprel = XCLRelation.createXCLRelation(rated, plus18);
-		temprel.setWeight(2);
-		model.addRelation(temprel, XCLRelationType.explains);
+		model.addRelation(new XCLRelation(genre, action));
+		model.addRelation(new XCLRelation(player, arnold));
+		model.addRelation(new XCLRelation(rated, plus18, 2));
 		model.setMinSupport(0.3);
 		model.setSuggestedThreshold(0.7);
 		model.setEstablishedThreshold(0.8);

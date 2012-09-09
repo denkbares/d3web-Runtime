@@ -37,12 +37,15 @@ public class ConsoleProgressBarListener implements ProgressListener {
 				System.out.print("\u00AF");
 			}
 			System.out.println("|");
+			System.out.print("|");
+			lastProgress = 0;
 		}
 		if (lastProgress == progress) return;
 
+		for (int i = lastProgress + 1; i <= progress; i++) {
+			System.out.print("=");
+		}
 		lastProgress = progress;
-		if (progress == 0) System.out.print("|");
-		System.out.print("=");
 		if (progress == SIZE) System.out.println("|");
 	}
 
