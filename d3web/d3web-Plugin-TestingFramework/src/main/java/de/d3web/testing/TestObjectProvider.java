@@ -29,17 +29,17 @@ import java.util.List;
 public interface TestObjectProvider {
 
 	/**
-	 * Delivers a test-object of the given class for a regular expression for an
-	 * identifier.
+	 * Delivers a test objects of the given class for a regular expression or
+	 * for an identifier in a {@link TestObjectContainer}. The
+	 * {@link TestObjectContainer} contains the object itself and the name of
+	 * the object.
 	 * 
 	 * @created 22.05.2012
-	 * @param c Class of the test-object
+	 * @param clazz Class of the test-object
 	 * @param name regex for the desired test-object instance.
 	 * @return
 	 */
-	public <T> List<T> getTestObjects(Class<T> c, String name);
-
-	public <T> String getTestObjectName(T testObject);
+	public <T> List<TestObjectContainer<T>> getTestObjects(Class<T> clazz, String name);
 
 	public static final String EXTENSION_POINT_ID = "TestObjectProvider";
 

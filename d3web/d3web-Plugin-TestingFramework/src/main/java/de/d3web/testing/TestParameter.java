@@ -21,60 +21,66 @@ package de.d3web.testing;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-
 /**
  * Represents a test parameter.
- *
+ * 
  * @author jochenreutelshofer
- * @created 31.07.2012 
+ * @created 31.07.2012
  */
 public class TestParameter {
 
-	public enum Type {String, Regex, Number};
-	public enum Mode {Mandatory, Optional};
-	
+	public enum Type {
+		String, Regex, Number
+	};
+
+	public enum Mode {
+		Mandatory, Optional
+	};
+
 	private final Type type;
 	private final String name;
 	private final Mode mode;
 	private final String description;
-	
+
 	public TestParameter(String name, Type type, Mode mode, String description) {
 		this.type = type;
 		this.name = name;
 		this.mode = mode;
 		this.description = description;
 	}
-	
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "\""+name+"\", "+type.toString()+", "+mode.toString() +" ("+description+")";
+		return "\"" + name + "\" (" + type.toString() + ", " + mode.toString() + "): "
+				+ description;
 	}
 
 	public boolean checkParameterValue(String value) {
-		
-		if(value == null || value.trim().length() == 0) {
+
+		if (value == null || value.trim().length() == 0) {
 			return false;
 		}
-		
+
 		// check whether it is a valid regex
-		if(type.equals(Type.Regex)) {
+		if (type.equals(Type.Regex)) {
 			try {
-			Pattern.compile(value);
-			} catch (PatternSyntaxException e) {
+				Pattern.compile(value);
+			}
+			catch (PatternSyntaxException e) {
 				return false;
 			}
 		}
-		
+
 		// check whether it is a valid number
-		if(type.equals(Type.Number)) {
+		if (type.equals(Type.Number)) {
 			try {
-			Double.parseDouble(value);
-			} catch (NumberFormatException e) {
+				Double.parseDouble(value);
+			}
+			catch (NumberFormatException e) {
 				return false;
 			}
 		}
@@ -83,19 +89,16 @@ public class TestParameter {
 		return true;
 	}
 
-	
 	public Type getType() {
 		return type;
 	}
 
-	
 	public String getName() {
 		return name;
 	}
 
-	
 	public Mode getMode() {
 		return mode;
 	}
-	
+
 }

@@ -28,96 +28,82 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.TestPersistence;
 import de.d3web.plugin.test.InitPluginManager;
-import de.d3web.test.TestCaseTest;
+import de.d3web.testcase.model.TestCase;
+import de.d3web.testcase.stc.STCWrapper;
 import de.d3web.testing.Message;
-
+import de.d3web.testing.TestObjectProviderManager;
 
 /**
- * Test the behvavior of the class TestCaseTest
+ * Test the behavior of the class TestCaseTest
  * 
- * @author jochenreutelshofer
- * @created 30.07.2012 
+ * @author Jochen Reutelshöfer (denkbares GmbH)
+ * @created 30.07.2012
  */
 public class TestCaseTestTester {
-	
+
 	@Test
 	public void testTestCaseTestFalse() {
-		KnowledgeBase knowledgeBase = null;
 		try {
 			InitPluginManager.init();
-			knowledgeBase = PersistenceManager.getInstance().load(new File("./src/test/resources/Car faults diagnosis.d3web"));
+			TestObjectProviderManager.registerTestObjectProvider(new JUnitTestKnowledgeBaseProvider());
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		TestCaseTest test = new TestCaseTest();
-		
-		List<TestCase> testcases = readTestCases(knowledgeBase, new File("./src/test/resources/Demo_-_Test_Cases_testcase.xml"));
+
+		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+
+		List<TestCase> testcases = readTestCases(new File(
+				"./src/test/resources/Demo_-_Test_Cases_testcase.xml"));
 
 		TestCase case1 = testcases.get(0);
-		Message result1 = test.execute(case1, new String[]{});
-		assertEquals(result1.getType(),Message.Type.FAILURE);
-		
+		Message result1 = test.execute(case1, new String[] { "Car faults diagnosis" });
+		assertEquals(result1.getText(), Message.Type.SUCCESS, result1.getType());
+
 		TestCase case2 = testcases.get(1);
-		Message result2 = test.execute(case2, new String[]{});
-		assertEquals(result2.getType(),Message.Type.FAILURE);
-		
-		
+		Message result2 = test.execute(case2, new String[] { "Car faults diagnosis" });
+		assertEquals(result2.getText(), Message.Type.SUCCESS, result2.getType());
+
 	}
-	
+
 	@Test
 	public void testTestCaseTestTrue() {
-		KnowledgeBase knowledgeBase = null;
 		try {
 			InitPluginManager.init();
-			knowledgeBase = PersistenceManager.getInstance().load(new File("./src/test/resources/Car faults diagnosis.d3web"));
+			TestObjectProviderManager.registerTestObjectProvider(new JUnitTestKnowledgeBaseProvider());
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		TestCaseTest test = new TestCaseTest();
-		
-		List<TestCase> testcases = readTestCases(knowledgeBase, new File("./src/test/resources/Demo_-_Test_Cases_testcase2.xml"));
+
+		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+
+		List<TestCase> testcases = readTestCases(new File(
+				"./src/test/resources/Demo_-_Test_Cases_testcase2.xml"));
 		// Leaking air intake system: Derived: UNCLEAR; expected: UNCLEAR;
 		TestCase case1 = testcases.get(0);
-		Message result1 = test.execute(case1, new String[]{});
-		assertEquals(result1.getType(),Message.Type.SUCCESS);
-		
+		Message result1 = test.execute(case1, new String[] { "Car faults diagnosis" });
+		assertEquals(result1.getText(), Message.Type.FAILURE, result1.getType());
 	}
 
-	private List<TestCase> readTestCases(KnowledgeBase kb, File file) {
+	private List<TestCase> readTestCases(File file) {
 		List<SequentialTestCase> stcaList = readSTC(file);
 		List<TestCase> result = new ArrayList<TestCase>();
-			for (SequentialTestCase sequentialTestCase : stcaList) {
-				TestCase tc = new TestCase();
-				tc.setKb(kb);
-				tc.getRepository().add(sequentialTestCase);
-				tc.setName(sequentialTestCase.getName());
-				result.add(tc);
-			}
+		for (SequentialTestCase sequentialTestCase : stcaList) {
+			TestCase tc = new STCWrapper(sequentialTestCase);
+			result.add(tc);
+		}
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @created 17.07.2012
-	 * @param file
-	 * @return
-	 */
+
 	private List<SequentialTestCase> readSTC(File file) {
 		try {
 			KnowledgeBase lkb = new LazyKnowledgeBase();
@@ -126,7 +112,6 @@ public class TestCaseTestTester {
 			return cases;
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new ArrayList<SequentialTestCase>(0);
@@ -176,4 +161,3 @@ class LazyKnowledgeBase extends KnowledgeBase {
 
 	}
 }
-

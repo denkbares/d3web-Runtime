@@ -18,22 +18,22 @@
  */
 package de.d3web.test;
 
-import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.session.Value;
-import de.d3web.empiricaltesting.RatedTestCase;
-import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestCase;
-import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
-import de.d3web.empiricaltesting.caseAnalysis.ValueDiff;
-import de.d3web.empiricaltesting.caseAnalysis.functions.Diff;
-import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysis;
-import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysisReport;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
+import de.d3web.testcase.TestCaseUtils;
+import de.d3web.testcase.model.Check;
+import de.d3web.testcase.model.TestCase;
 import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
+import de.d3web.testing.TestObjectContainer;
+import de.d3web.testing.TestObjectProvider;
+import de.d3web.testing.TestObjectProviderManager;
+import de.d3web.testing.TestParameter;
 
 /**
  * A simple test to execute test cases.
@@ -42,46 +42,54 @@ import de.d3web.testing.Message.Type;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 29.06.2012
  */
-public class TestCaseTest extends  AbstractTest<TestCase> {
+public class TestCaseTest extends AbstractTest<TestCase> {
+
+	private static final String SEARCH_STRING_DESCRIPTION = "Specifies the knowledge base with which the test case is to be tested.";
+
+	public TestCaseTest() {
+		this.addParameter("KnowledgeBase", TestParameter.Type.String, TestParameter.Mode.Mandatory,
+				SEARCH_STRING_DESCRIPTION);
+	}
 
 	@Override
-	public Message execute(TestCase testObject, String[] args) {
-		if (!testObject.isConsistent()) {
+	public Message execute(TestCase testCase, String[] args) {
+		KnowledgeBase kb = getKnowledgeBase(args);
+		if (kb == null) {
+			return new Message(Type.FAILURE, "Knowledge base not found!");
+		}
+		if (!testCase.check(kb).isEmpty()) {
 			return new Message(Type.FAILURE, "Test is not consistent!");
 		}
-		
-		boolean failure = false;
-		String messageText = "Test '" + testObject.getName() + "' failed: \n";
-		TestCaseAnalysis analysis = new TestCaseAnalysis();
-		TestCaseAnalysisReport result = analysis.runAndAnalyze(testObject);
-		if (result.hasDiff()) {
-			List<SequentialTestCase> repository = testObject.getRepository();
-			for (SequentialTestCase sequentialTestCase : repository) {
-				if (result.hasDiff(sequentialTestCase)) {
-					Diff diff = result.getDiffFor(sequentialTestCase);
-					Collection<RatedTestCase> casesWithDifference = diff.getCasesWithDifference();
-					for (RatedTestCase ratedTestCase : casesWithDifference) {
-						if (diff.hasDiff(ratedTestCase)) {
-							RTCDiff rtcDiff = diff.getDiff(ratedTestCase);
-							Collection<TerminologyObject> diffObjects = rtcDiff.getExpectedButNotDerivedDiffObjects();
-							for (TerminologyObject terminologyObject : diffObjects) {
-								ValueDiff valueDiff = rtcDiff.getExpectedButNotDerivedDiffFor(terminologyObject);
-								Value expected = valueDiff.getExpected();
-								Value derived = valueDiff.getDerived();
-								messageText += "* Value of object '" + terminologyObject.toString()
-										+ "' was '" + derived + "' but expected was: '" + expected
-										+ "'; \n";
-								failure = true;
-							}
-						}
-					}
+
+		Session session = SessionFactory.createSession(kb, testCase.getStartDate());
+		for (Date date : testCase.chronology()) {
+			TestCaseUtils.applyFindings(session, testCase, date);
+			for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
+				String time = (date.getTime() < 1000)
+						? ("line " + date.getTime()) : ("time " + date);
+				if (!check.check(session)) {
+					String messageText = "Check '" + check.getCondition() +
+							"' failed in case '" + testCase.toString() +
+							"', at " + time;
+
+					return new Message(Type.FAILURE, messageText);
 				}
 			}
 		}
-		if(failure) {
-			return new Message(Type.FAILURE, messageText);
-		}
+
 		return new Message(Type.SUCCESS);
+	}
+
+	private KnowledgeBase getKnowledgeBase(String[] args) {
+		if (args.length == 0) return null;
+		for (TestObjectProvider testObjectProvider : TestObjectProviderManager.getTestObjectProviders()) {
+			List<TestObjectContainer<KnowledgeBase>> testObjects = testObjectProvider.getTestObjects(
+					KnowledgeBase.class, args[0]);
+			if (!testObjects.isEmpty()) {
+				return testObjects.get(0).getTestObject();
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -89,10 +97,9 @@ public class TestCaseTest extends  AbstractTest<TestCase> {
 		return TestCase.class;
 	}
 
-	
 	@Override
 	public String getDescription() {
-		return "This test executes (sequential) test cases. It compares the expected findings defined in the test cases with the findings actually derived by the knowledge base.";
+		return "This test executes test cases. It compares the expected findings defined in the test cases with the findings actually derived by the knowledge base.";
 	}
 
 }

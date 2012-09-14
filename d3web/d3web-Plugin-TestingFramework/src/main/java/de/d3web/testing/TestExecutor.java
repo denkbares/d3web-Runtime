@@ -1,5 +1,6 @@
 package de.d3web.testing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -110,8 +111,8 @@ public class TestExecutor {
 		protected void done() {
 			// update progress listener as task has been finished
 			if (this.myCallable instanceof CallableTest) {
-					resultHandler.taskFinished(((CallableTest<?>) myCallable).getTaskVolume(),
-							((CallableTest<?>) myCallable).getMessage());
+				resultHandler.taskFinished(((CallableTest<?>) myCallable).getTaskVolume(),
+						((CallableTest<?>) myCallable).getMessage());
 			}
 		}
 	}
@@ -134,7 +135,8 @@ public class TestExecutor {
 
 		overallTasks = 0;
 
-		Map<ExecutableTest, Map<TestObjectProvider, List<?>>> allTestsAndTestobjects = new HashMap<ExecutableTest, Map<TestObjectProvider, List<?>>>();
+		Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects =
+				new HashMap<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>>();
 
 		for (ExecutableTest testAndItsParameters : tests) {
 
@@ -150,11 +152,10 @@ public class TestExecutor {
 				build.addTestResult(checkArgs);
 			}
 			else {
-				Map<TestObjectProvider, List<?>> testObjectsForTest = this.collectTestObjects(
+				Map<TestObjectProvider, List<TestObjectContainer<?>>> testObjectsForTest = this.collectTestObjects(
 						testAndItsParameters.getTest(), testObjectID,
 						testArgs
 						);
-
 
 				allTestsAndTestobjects.put(testAndItsParameters, testObjectsForTest);
 			}
@@ -196,7 +197,6 @@ public class TestExecutor {
 
 		}
 
-
 		// finally run execute on callable tests
 		Set<ExecutableTest> keySet = futures.keySet();
 		for (ExecutableTest executableTest : keySet) {
@@ -217,8 +217,6 @@ public class TestExecutor {
 
 			}
 		}
-		
-
 
 		// wait until finished
 		try {
@@ -250,33 +248,45 @@ public class TestExecutor {
 	 * 
 	 * @created 22.05.2012
 	 * @param <T>
-	 * @param t The test to be executed.
+	 * @param test The test to be executed.
 	 * @param testObjectID Identifier for the test-object
 	 * @param args The parameters for the test execution
 	 * @return
 	 */
-	public <T> Map<TestObjectProvider, List<?>> collectTestObjects(final Test<T> t, final String testObjectID, final String[] args) {
+	public <T> Map<TestObjectProvider, List<TestObjectContainer<?>>> collectTestObjects(final Test<T> test, final String testObjectID, final String[] args) {
 
-		final Map<TestObjectProvider, List<?>> allTestObjects = new HashMap<TestObjectProvider, List<?>>();
+		final Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects = new HashMap<TestObjectProvider, List<TestObjectContainer<?>>>();
 
 		// retrieve all test objects
 		for (TestObjectProvider testObjectProvider : testObjectProviders) {
 
-			List<? extends Object> testObjects = testObjectProvider.getTestObjects(
-					t.getTestObjectClass(),
-					testObjectID);
-			allTestObjects.put(testObjectProvider, testObjects);
+			List<TestObjectContainer<T>> testObjects = testObjectProvider.getTestObjects(
+					test.getTestObjectClass(), testObjectID);
+			List<TestObjectContainer<?>> genericTestObjects = castTestObjects(testObjects);
+			allTestObjects.put(testObjectProvider, genericTestObjects);
 
 		}
 
 		return allTestObjects;
 	}
 
-	private <T> TestResult checkArgs(final Test<T> t, final String testObjectID, final String[] args) {
+	private <T> List<TestObjectContainer<?>> castTestObjects(List<TestObjectContainer<T>> testObjects) {
+		// generics fail here, so we need to cast
+		List<TestObjectContainer<?>> genericTestObjects = new ArrayList<TestObjectContainer<?>>(
+				testObjects.size());
+		for (TestObjectContainer<?> testObjectContainer : testObjects) {
+			genericTestObjects.add(new TestObjectContainer<Object>(
+					testObjectContainer.getTestObjectName(),
+					testObjectContainer.getTestObject()));
+		}
+		return genericTestObjects;
+	}
 
-		ArgsCheckResult argsCheckResult = t.checkArgs(args);
+	private <T> TestResult checkArgs(final Test<T> test, final String testObjectID, final String[] args) {
+
+		ArgsCheckResult argsCheckResult = test.checkArgs(args);
 		if (argsCheckResult.hasError()) {
-			TestResult result = new TestResult(t.getClass().getSimpleName(),
+			TestResult result = new TestResult(test.getClass().getSimpleName(),
 					args);
 			String[] arguments = argsCheckResult.getArguments();
 			for (int i = 0; i < arguments.length; i++) {
@@ -296,7 +306,7 @@ public class TestExecutor {
 		return null;
 	}
 
-	private static int countTestObjects(Map<TestObjectProvider, List<?>> allTestObjects) {
+	private static int countTestObjects(Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects) {
 		int count = 0;
 		Set<TestObjectProvider> keySet = allTestObjects.keySet();
 		for (TestObjectProvider p : keySet) {
@@ -306,7 +316,14 @@ public class TestExecutor {
 		return count;
 	}
 
-	private <T> Collection<CallableTest<?>> executeTests(final String testName, final Test<T> t, final String[] args, final Map<TestObjectProvider, List<?>> allTestObjects, final TestResult testResult) throws InterruptedException {
+	private <T> Collection<CallableTest<?>> executeTests(
+			final String testName,
+			final Test<T> t,
+			final String[] args,
+			final Map<TestObjectProvider,
+			List<TestObjectContainer<?>>> allTestObjects,
+			final TestResult testResult)
+			throws InterruptedException {
 
 		int totalCountOfTestobjects = countTestObjects(allTestObjects);
 
@@ -322,8 +339,9 @@ public class TestExecutor {
 
 		// finally run the tests
 		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
-			for (final Object testObject : allTestObjects.get(testObjectProvider)) {
-				String testObjectName = testObjectProvider.getTestObjectName(testObject);
+			for (final TestObjectContainer<?> testObjectContainer : allTestObjects.get(testObjectProvider)) {
+				String testObjectName = testObjectContainer.getTestObjectName();
+				Object testObject = testObjectContainer.getTestObject();
 				CallableTest<T> c = new CallableTest<T>(testObjectName, testObject, t, testName,
 						testResult, args);
 				result.add(c);
@@ -389,10 +407,10 @@ public class TestExecutor {
 			}
 			catch (Throwable e) {
 				testResult.addMessage(testObjectName,
-							new Message(Message.Type.ERROR,
-									"Unexpected error in test " + testname + ", during testing "
-								+ testObjectName +
-											": " + e));
+						new Message(Message.Type.ERROR,
+								"Unexpected error in test " + testname + ", during testing "
+										+ testObjectName +
+										": " + e));
 				return null;
 			}
 			// finally {
@@ -406,13 +424,20 @@ public class TestExecutor {
 
 	}
 
-	private void renderMessage(final String testObjectID, final String[] args, ArgsCheckResult argsCheckResult, TestResult result, int i, String type) {
+	private void renderMessage(
+			final String testObjectID,
+			final String[] args,
+			ArgsCheckResult argsCheckResult,
+			TestResult result,
+			int i,
+			String type) {
+
 		if (argsCheckResult.getMessage(i) != null) {
 			String arg = "none";
 			if (i < args.length) {
 				arg = args[i];
 			}
-			String message = type + ": " + argsCheckResult.getMessage(i);
+			String message = argsCheckResult.getMessage(i);
 			result.addMessage(testObjectID, new Message(Message.Type.ERROR,
 					"Invalid argument: "
 							+ arg + " (" + message + ")"));

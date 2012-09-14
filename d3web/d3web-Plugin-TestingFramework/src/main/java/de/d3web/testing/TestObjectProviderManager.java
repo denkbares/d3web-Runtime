@@ -19,7 +19,9 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
@@ -31,16 +33,23 @@ import de.d3web.plugin.PluginManager;
  */
 public class TestObjectProviderManager {
 
+	public static final Set<TestObjectProvider> registeredProviders = new HashSet<TestObjectProvider>();
+
 	/**
+	 * Can be used for tests to add special {@link TestObjectProvider}s without
+	 * adding it as an extension.
 	 * 
-	 * @created 04.05.2012
-	 * @param testName
-	 * @return
+	 * @created 14.09.2012
 	 */
-	public static List<TestObjectProvider> findTestObjectProviders() {
+	public static void registerTestObjectProvider(TestObjectProvider provider) {
+		registeredProviders.add(provider);
+	}
+
+	public static List<TestObjectProvider> getTestObjectProviders() {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				TestObjectProvider.EXTENSION_POINT_ID);
-		List<TestObjectProvider> pluggedProviders = new ArrayList<TestObjectProvider>();
+		List<TestObjectProvider> pluggedProviders = new ArrayList<TestObjectProvider>(
+				registeredProviders);
 		for (Extension extension : extensions) {
 			if (extension.getNewInstance() instanceof TestObjectProvider) {
 				TestObjectProvider t = (TestObjectProvider) extension.getSingleton();

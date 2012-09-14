@@ -18,7 +18,6 @@
  */
 package de.d3web.testing;
 
-
 /**
  * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an
  * (optional) message text.
@@ -26,7 +25,7 @@ package de.d3web.testing;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 21.05.2012
  */
-public class Message {
+public class Message implements Comparable<Message> {
 
 	private final Type type;
 	private final String message;
@@ -53,8 +52,17 @@ public class Message {
 	}
 
 	public enum Type {
-		SUCCESS,
 		FAILURE,
-		ERROR
+		ERROR,
+		SUCCESS
+	}
+
+	@Override
+	public int compareTo(Message o) {
+		if (this.type == Type.FAILURE && o.type != Type.FAILURE) return -1;
+		if (this.type == Type.ERROR && o.type == Type.SUCCESS) return -1;
+		if (this.type != Type.FAILURE && o.type == Type.FAILURE) return 1;
+		if (this.type == Type.SUCCESS && o.type == Type.ERROR) return 1;
+		return this.message.compareTo(o.message);
 	}
 }
