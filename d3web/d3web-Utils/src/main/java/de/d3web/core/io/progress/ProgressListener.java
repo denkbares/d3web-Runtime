@@ -32,7 +32,8 @@ package de.d3web.core.io.progress;
 public interface ProgressListener {
 
 	/**
-	 * Updates ProgressListener
+	 * Updates this ProgressListener to a new completion value. The percent must
+	 * be between 0.0 and 1.0.
 	 * 
 	 * @param percent the actual percentage of the progress
 	 * @param message a message containing information about the actual state
