@@ -402,7 +402,7 @@ public final class XMLUtil {
 	 *         other nodes such as text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list) {
-		List<Element> col = new ArrayList<Element>();
+		List<Element> col = new ArrayList<Element>(list.getLength());
 		for (int i = 0; i < list.getLength(); i++) {
 			if (list.item(i) instanceof Element) {
 				col.add((Element) list.item(i));
