@@ -8,7 +8,7 @@ import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.test.EmptyQuestionnaire;
+import de.d3web.test.EmptyQuestionnaireTest;
 import de.d3web.testing.Message;
 
 /*
@@ -49,7 +49,7 @@ public class EmptyQuestionnaireTester {
 		Question q = new QuestionNum(nonEmptyQContainer,"qnum");
 		mgr.putTerminologyObject(q);
 		
-		EmptyQuestionnaire test = new EmptyQuestionnaire();
+		EmptyQuestionnaireTest test = new EmptyQuestionnaireTest();
 		Message execute = test.execute(kb, new String[]{});
 		
 		assertTrue(execute.getType().equals(Message.Type.SUCCESS));
@@ -63,7 +63,7 @@ public class EmptyQuestionnaireTester {
 		TerminologyManager mgr = new TerminologyManager(kb);
 		mgr.putTerminologyObject(new QContainer(kb.getRootQASet(),"Empty Questionnaire"));
 		
-		EmptyQuestionnaire test = new EmptyQuestionnaire();
+		EmptyQuestionnaireTest test = new EmptyQuestionnaireTest();
 		Message execute = test.execute(kb, new String[]{});
 		
 		assertTrue(execute.getType().equals(Message.Type.FAILURE));

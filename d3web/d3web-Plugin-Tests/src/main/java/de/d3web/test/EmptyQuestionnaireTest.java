@@ -38,9 +38,9 @@ import de.d3web.testing.TestParameter.Mode;
  * @author Jochen Reutelshoefer (denkbares GmbH)
  * @created 24.07.2012
  */
-public class EmptyQuestionnaire extends AbstractTest<KnowledgeBase> {
+public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
 
-	public EmptyQuestionnaire() {
+	public EmptyQuestionnaireTest() {
 		addIgnoreParameter(
 				"questionnaire",
 				de.d3web.testing.TestParameter.Type.Regex,

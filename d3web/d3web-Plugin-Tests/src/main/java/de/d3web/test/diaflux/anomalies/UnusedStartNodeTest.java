@@ -30,7 +30,7 @@ import de.d3web.test.SimpleTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 
-public class LazyStartNode extends SimpleTest {
+public class UnusedStartNodeTest extends SimpleTest {
 
 	@Override
 	public Message check(KnowledgeBase kb, String[] args) {

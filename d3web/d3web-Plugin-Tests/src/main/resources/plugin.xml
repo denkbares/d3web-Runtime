@@ -14,9 +14,9 @@
 
 
 	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
-		id="EmptyQuestionnaire">
+		id="EmptyQuestionnaireTest">
 		<parameter id="class"
-			value="de.d3web.test.EmptyQuestionnaire" />
+			value="de.d3web.test.EmptyQuestionnaireTest" />
 		<parameter id="name" value="EmptyQuestionnaire" />
 		<parameter id="description" value="CITest EmptyQuestionnaire" />
 		<parameter id="version" value="1.0" />
@@ -34,11 +34,11 @@
 	</extension>
 	
 	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
-		id="LazyStartNode">
+		id="UnusedStartNodeTest">
 		<parameter id="class"
-			value="de.d3web.test.diaflux.anomalies.LazyStartNode" />
-		<parameter id="name" value="LazyStartNode" />
-		<parameter id="description" value="CITest LazyStartNode" />
+			value="de.d3web.test.diaflux.anomalies.UnusedStartNodeTest" />
+		<parameter id="name" value="UnusedStartNode" />
+		<parameter id="description" value="CITest UnusedStartNode" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
