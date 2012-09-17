@@ -35,7 +35,7 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 	public static final Message SUCCESS = new Message(Type.SUCCESS, "");
 
 	@Override
-	public Message execute(KnowledgeBase knowledge, String[] args) {
+	public Message execute(KnowledgeBase knowledge, String[] args, String[]... ignores) {
 
 		// Run the particular checks and collect the messages
 		if (knowledge != null) {

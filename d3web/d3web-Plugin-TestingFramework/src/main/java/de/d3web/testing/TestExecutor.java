@@ -1,7 +1,6 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -138,27 +137,32 @@ public class TestExecutor {
 		Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects =
 				new HashMap<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>>();
 
-		for (ExecutableTest testAndItsParameters : tests) {
+		prepareTests: for (ExecutableTest executableTest : tests) {
 
-			String[] array = testAndItsParameters.getArguments();
+			String[] testArgs = executableTest.getArguments();
+			String testObjectID = executableTest.getTestObject();
+			Test<?> test = executableTest.getTest();
 
-			String[] testArgs = Arrays.copyOfRange(array, 1,
-					array.length);
-			String testObjectID = array[0];
-			TestResult checkArgs = checkArgs(testAndItsParameters.getTest(), testObjectID,
-					testArgs);
-
-			if (checkArgs != null && checkArgs.getType().equals(Type.ERROR)) {
-				build.addTestResult(checkArgs);
+			// check arguments and create error if erroneous
+			ArgsCheckResult argsCheckResult = test.checkArgs(testArgs);
+			if (argsCheckResult.hasError()) {
+				TestResult testResult = toTestResult(test, testObjectID, argsCheckResult);
+				build.addTestResult(testResult);
+				continue prepareTests;
 			}
-			else {
-				Map<TestObjectProvider, List<TestObjectContainer<?>>> testObjectsForTest = this.collectTestObjects(
-						testAndItsParameters.getTest(), testObjectID,
-						testArgs
-						);
 
-				allTestsAndTestobjects.put(testAndItsParameters, testObjectsForTest);
+			// check ignores and create error if erroneous
+			for (String[] ignoreArgs : executableTest.getIgnores()) {
+				ArgsCheckResult ignoreCheckResult = test.checkIgnore(ignoreArgs);
+				if (ignoreCheckResult.hasError()) {
+					TestResult testResult = toTestResult(test, testObjectID, ignoreCheckResult);
+					build.addTestResult(testResult);
+					continue prepareTests;
+				}
 			}
+
+			// only execute test if argument checks haven't created an error
+			allTestsAndTestobjects.put(executableTest, collectTestObjects(test, testObjectID));
 		}
 
 		Map<ExecutableTest, Collection<CallableTest<?>>> futures = new HashMap<ExecutableTest, Collection<CallableTest<?>>>();
@@ -167,9 +171,7 @@ public class TestExecutor {
 		// to the progress listener
 
 		for (ExecutableTest test : allTestsAndTestobjects.keySet()) {
-			String[] array = test.getArguments();
-			// strip the first argument since it always is the test object name
-			String[] testArgs = Arrays.copyOfRange(array, 1, array.length);
+			String[] testArgs = test.getArguments();
 			String testName = test.getTestName();
 			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
@@ -250,10 +252,9 @@ public class TestExecutor {
 	 * @param <T>
 	 * @param test The test to be executed.
 	 * @param testObjectID Identifier for the test-object
-	 * @param args The parameters for the test execution
 	 * @return
 	 */
-	public <T> Map<TestObjectProvider, List<TestObjectContainer<?>>> collectTestObjects(final Test<T> test, final String testObjectID, final String[] args) {
+	public <T> Map<TestObjectProvider, List<TestObjectContainer<?>>> collectTestObjects(Test<T> test, String testObjectID) {
 
 		final Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects = new HashMap<TestObjectProvider, List<TestObjectContainer<?>>>();
 
@@ -282,28 +283,23 @@ public class TestExecutor {
 		return genericTestObjects;
 	}
 
-	private <T> TestResult checkArgs(final Test<T> test, final String testObjectID, final String[] args) {
-
-		ArgsCheckResult argsCheckResult = test.checkArgs(args);
-		if (argsCheckResult.hasError()) {
-			TestResult result = new TestResult(test.getClass().getSimpleName(),
-					args);
-			String[] arguments = argsCheckResult.getArguments();
-			for (int i = 0; i < arguments.length; i++) {
-				if (argsCheckResult.hasError(i)) {
-					renderMessage(testObjectID, args, argsCheckResult, result, i, "Error");
-				}
-				if (argsCheckResult.hasWarning(i)) {
-					renderMessage(testObjectID, args, argsCheckResult, result, i, "Warning");
-				}
+	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult) {
+		Message message = null;
+		String[] arguments = checkResult.getArguments();
+		for (int i = 0; i < arguments.length; i++) {
+			if (checkResult.hasError(i)) {
+				message = new Message(Type.ERROR,
+						"invalid argument " + arguments[i] + ": " + checkResult.getMessage(i));
+				break;
 			}
-			if (arguments.length == 0 && argsCheckResult.hasError(0)) {
-				renderMessage(testObjectID, args, argsCheckResult, result, 0, "Error");
-			}
-
-			return result;
 		}
-		return null;
+		if (arguments.length == 0 && checkResult.hasError(0)) {
+			message = new Message(Type.ERROR, checkResult.getMessage(0));
+		}
+
+		TestResult result = new TestResult(test.getName(), checkResult.getArguments());
+		if (message != null) result.addMessage(testObjectName, message);
+		return result;
 	}
 
 	private static int countTestObjects(Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects) {
@@ -422,26 +418,6 @@ public class TestExecutor {
 			// }
 		}
 
-	}
-
-	private void renderMessage(
-			final String testObjectID,
-			final String[] args,
-			ArgsCheckResult argsCheckResult,
-			TestResult result,
-			int i,
-			String type) {
-
-		if (argsCheckResult.getMessage(i) != null) {
-			String arg = "none";
-			if (i < args.length) {
-				arg = args[i];
-			}
-			String message = argsCheckResult.getMessage(i);
-			result.addMessage(testObjectID, new Message(Message.Type.ERROR,
-					"Invalid argument: "
-							+ arg + " (" + message + ")"));
-		}
 	}
 
 }

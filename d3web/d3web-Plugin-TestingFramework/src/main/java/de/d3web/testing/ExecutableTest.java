@@ -18,25 +18,27 @@
  */
 package de.d3web.testing;
 
-
 /**
+ * Class holding a test instance ready to be executed with all specified
+ * declarations.
  * 
- * @author Jochen Reutelshöfer (denkbares GmbH)
+ * @author Jochen Reutelshöfer, Volker Belli (denkbares GmbH)
  * @created 30.05.2012
  */
 public class ExecutableTest {
 
 	private final Test<?> test;
-	private final String[] args;
 	private final String testName;
+	private final String testObject;
+	private final String[] args;
+	private final String[][] ignores;
 
-	/**
-	 * 
-	 */
-	public ExecutableTest(Test<?> t, String[] args, String testName) {
+	public ExecutableTest(String testName, Test<?> t, String testObject, String[] args, String[][] ignores) {
 		this.test = t;
 		this.args = args;
 		this.testName = testName;
+		this.testObject = testObject;
+		this.ignores = ignores;
 	}
 
 	public Test<?> getTest() {
@@ -47,8 +49,16 @@ public class ExecutableTest {
 		return args;
 	}
 
+	public String[][] getIgnores() {
+		return ignores;
+	}
+
 	public String getTestName() {
 		return testName;
+	}
+
+	public String getTestObject() {
+		return testObject;
 	}
 
 }

@@ -52,7 +52,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	}
 
 	@Override
-	public Message execute(TestCase testCase, String[] args) {
+	public Message execute(TestCase testCase, String[] args, String[]... ignores) {
 		KnowledgeBase kb = getKnowledgeBase(args);
 		if (kb == null) {
 			return new Message(Type.FAILURE, "Knowledge base not found!");

@@ -23,41 +23,52 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Abstract implementation of a test that easily enables basic argument
+ * checking.
  * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 30.05.2012
  */
-public abstract class AbstractTest<T> implements de.d3web.testing.Test<T> {
+public abstract class AbstractTest<T> implements Test<T> {
 
-	private final List<TestParameter> parameters = new ArrayList<TestParameter>();
+	private final List<TestParameter> argParameters = new ArrayList<TestParameter>();
+	private final List<TestParameter> ignoreParameters = new ArrayList<TestParameter>();
 
 	@Override
 	public List<TestParameter> getParameterSpecification() {
-		return Collections.unmodifiableList(parameters);
+		return Collections.unmodifiableList(argParameters);
+	}
+
+	@Override
+	public List<TestParameter> getIgnoreSpecification() {
+		return Collections.unmodifiableList(ignoreParameters);
 	}
 
 	protected void addParameter(String name, TestParameter.Type type, TestParameter.Mode mode, String description) {
-		parameters.add(new TestParameter(name, type, mode, description));
+		argParameters.add(new TestParameter(name, type, mode, description));
 	}
 
-	protected int getNumberOfMandatoryParameters() {
-		int count = 0;
-		for (TestParameter p : parameters) {
-			if (p.getMode().equals(TestParameter.Mode.Mandatory)) {
-				count++;
-			}
-		}
-		return count;
+	protected void addIgnoreParameter(String name, TestParameter.Type type, TestParameter.Mode mode, String description) {
+		ignoreParameters.add(new TestParameter(name, type, mode, description));
 	}
 
 	@Override
 	public ArgsCheckResult checkArgs(String[] args) {
+		return checkParameter(this, args, argParameters);
+	}
 
+	@Override
+	public ArgsCheckResult checkIgnore(String[] args) {
+		return checkParameter(this, args, ignoreParameters);
+	}
+
+	private static ArgsCheckResult checkParameter(Test<?> test, String[] args, List<TestParameter> parameters) {
 		ArgsCheckResult r = new ArgsCheckResult(args);
-		if (args.length < getNumberOfMandatoryParameters()) {
+		int minParamCount = getNumberOfMandatoryParameters(parameters);
+		if (args.length < minParamCount) {
 			r.setError(0,
 					"Not enough arguments for execution of test '"
-							+ this.getClass().getSimpleName()
+							+ test.getName()
 							+ "'. Expected " + parameters.size() + " argument"
 							+ (parameters.size() == 1 ? "" : "s") + ", but found "
 							+ args.length + ".");
@@ -69,9 +80,9 @@ public abstract class AbstractTest<T> implements de.d3web.testing.Test<T> {
 			// check whether array might be longer than registered number of
 			// arguments
 			if (i >= parameters.size()) {
-				r.setWarning(args.length - 1,
-						"Too many arguments passend for test '" + this.getClass().getSimpleName()
-								+ "': Expected a maximum of " + parameters.size() + " argument"
+				r.setError(args.length - 1,
+						"Too many arguments passend for test '" + test.getName()
+								+ "': Expected " + parameters.size() + " argument"
 								+ (parameters.size() == 1 ? "" : "s") + ", but found "
 								+ args.length + ".");
 				return r;
@@ -89,6 +100,21 @@ public abstract class AbstractTest<T> implements de.d3web.testing.Test<T> {
 		}
 
 		return r;
+	}
+
+	@Override
+	public String getName() {
+		return TestManager.getTestName(this);
+	}
+
+	private static int getNumberOfMandatoryParameters(List<TestParameter> parameters) {
+		int count = 0;
+		for (TestParameter p : parameters) {
+			if (p.getMode().equals(TestParameter.Mode.Mandatory)) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }

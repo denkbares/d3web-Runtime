@@ -115,7 +115,7 @@ public final class BuildResult {
 		Message.Type overallResult = Message.Type.SUCCESS;
 		for (TestResult testResult : results) {
 			if (testResult != null && testResult.getType().
-					compareTo(overallResult) > 0) {
+					compareTo(overallResult) < 0) {
 				overallResult = testResult.getType();
 			}
 		}

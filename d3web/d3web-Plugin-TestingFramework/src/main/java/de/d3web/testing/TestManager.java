@@ -61,6 +61,27 @@ public class TestManager {
 	}
 
 	/**
+	 * Returns the name of the specified test as declared in the plugin
+	 * declaration. The method returns null if the test cannot be found. This
+	 * may only occur if the specified test instance is not the singleton
+	 * specified through an extension declaration and if it if also not "equals"
+	 * to such a singleton.
+	 * 
+	 * @created 15.09.2012
+	 * @param test the test to get the name for
+	 * @return the name of the test as specified in the extension
+	 */
+	public static String getTestName(Test<?> test) {
+		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
+				Test.EXTENSION_POINT_ID);
+		for (Extension extension : extensions) {
+			Object singleton = extension.getSingleton();
+			if (singleton.equals(test)) return extension.getName();
+		}
+		return null;
+	}
+
+	/**
 	 * Searches and returns all plugged tests.
 	 * 
 	 * @created 31.07.2012

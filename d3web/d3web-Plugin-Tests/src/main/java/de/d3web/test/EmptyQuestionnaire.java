@@ -19,13 +19,17 @@
 package de.d3web.test;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
+import de.d3web.testing.TestParameter.Mode;
 
 /**
  * This Test searches for empty questionnaires in a knowledge base. It needs no
@@ -36,24 +40,46 @@ import de.d3web.testing.Message.Type;
  */
 public class EmptyQuestionnaire extends AbstractTest<KnowledgeBase> {
 
+	public EmptyQuestionnaire() {
+		addIgnoreParameter(
+				"questionnaire",
+				de.d3web.testing.TestParameter.Type.Regex,
+				Mode.Mandatory,
+				"A regular expression naming those d3web qcontainers to be excluded from the tests.");
+	}
+
 	@Override
-	public Message execute(KnowledgeBase kb, String[] args2) {
-		if(kb == null) throw new IllegalArgumentException("test called with out test object ");
-		 
-			List<String> emptyQASets = new ArrayList<String>();
-			// iterate over QAsets and check if they are empty
-			for (QASet qaset : kb.getManager().getQASets()) {
-				if (!qaset.isQuestionOrHasQuestions()) {
-					emptyQASets.add(qaset.getName());
-				}
+	public Message execute(KnowledgeBase kb, String[] args2, String[]... ignores) {
+		if (kb == null) throw new IllegalArgumentException("test called with out test object ");
+
+		Collection<Pattern> ignorePatterns = new LinkedList<Pattern>();
+		for (String[] ignore : ignores) {
+			ignorePatterns.add(Pattern.compile(ignore[0]));
+		}
+
+		List<String> emptyQASets = new ArrayList<String>();
+		// iterate over QAsets and check if they are empty
+		for (QASet qaset : kb.getManager().getQASets()) {
+			if (!qaset.isQuestionOrHasQuestions()) {
+				if (isIgnored(qaset, ignorePatterns)) continue;
+				emptyQASets.add(qaset.getName());
 			}
-			if (emptyQASets.size() > 0) {// empty QASets were found:
-				String failedMessage = "Knowledge base has empty questionnaires: " + "\n" +
+		}
+		if (emptyQASets.size() > 0) {// empty QASets were found:
+			String failedMessage = "Knowledge base has empty questionnaires: " + "\n" +
 						createTextFromStringList(emptyQASets);
-				return new Message(Type.FAILURE, failedMessage);
+			return new Message(Type.FAILURE, failedMessage);
 		}
 		// it seems everything was fine:
 		return new Message(Type.SUCCESS, null);
+	}
+
+	private boolean isIgnored(QASet qaset, Collection<Pattern> ignorePatterns) {
+		String name = qaset.getName();
+		for (Pattern pattern : ignorePatterns) {
+			if (pattern.matcher(name).matches()) return true;
+		}
+		return false;
 	}
 
 	private String createTextFromStringList(List<String> list) {
@@ -70,7 +96,6 @@ public class EmptyQuestionnaire extends AbstractTest<KnowledgeBase> {
 		return KnowledgeBase.class;
 	}
 
-	
 	@Override
 	public String getDescription() {
 		return "Tests whether the knowledge base has questionnaires that do not contain any questions or other questionnaires.";
