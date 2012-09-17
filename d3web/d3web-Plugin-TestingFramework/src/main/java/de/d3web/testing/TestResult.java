@@ -32,13 +32,21 @@ import de.d3web.testing.Message.Type;
  */
 public class TestResult implements Comparable<TestResult> {
 
-	private final String[] args;
+	private final String[] configuration;
 	private final String testName;
 
 	private final Map<String, Message> messages = new HashMap<String, Message>();
 
-	public TestResult(String testName, String[] arguments) {
-		this.args = arguments;
+	/**
+	 * Creates a new TestResult for the specified test with the specified
+	 * arguments.
+	 * 
+	 * @param testName name of the test
+	 * @param configuration configuration parameters, if there are any, null or
+	 *        empty array otherwise
+	 */
+	public TestResult(String testName, String[] configuration) {
+		this.configuration = configuration;
 		this.testName = testName;
 	}
 
@@ -53,20 +61,29 @@ public class TestResult implements Comparable<TestResult> {
 	/**
 	 * Returns the arguments/parameters with which the test was executed.
 	 * 
-	 * 
 	 * @created 22.05.2012
 	 * @return
 	 */
-	public String[] getArguments() {
-		return args;
+	public String[] getConfiguration() {
+		return configuration;
+	}
+
+	public String getConfigurationString() {
+		if (configuration == null) return "";
+		StringBuilder result = new StringBuilder();
+		for (String item : configuration) {
+			if (result.length() > 0) result.append(" ");
+			result.append(item);
+		}
+		return result.toString();
 	}
 
 	@Override
 	public int compareTo(TestResult tr) {
-		if(testName != tr.getTestName()) {
+		if (testName != tr.getTestName()) {
 			return testName.compareTo(tr.getTestName());
 		}
-		return args.toString().compareTo(tr.getArguments().toString());
+		return getConfigurationString().compareTo(tr.getConfigurationString());
 	}
 
 	/**
@@ -76,15 +93,15 @@ public class TestResult implements Comparable<TestResult> {
 	 * @return if this result has a configuration
 	 */
 	public boolean hasConfiguration() {
-		return this.args != null && !(this.args.length == 0);
+		return this.configuration != null && !(this.configuration.length == 0);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((args == null) ? 0 : args.hashCode());
-		result = prime * result + ((messages == null) ? 0 : hashCode());
+		result = prime * result + ((configuration == null) ? 0 : configuration.hashCode());
+		result = prime * result + ((messages == null) ? 0 : messages.hashCode());
 		result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
 		return result;
 	}
@@ -95,14 +112,14 @@ public class TestResult implements Comparable<TestResult> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		TestResult other = (TestResult) obj;
-		if (args == null) {
-			if (other.getArguments() != null) return false;
+		if (configuration == null) {
+			if (other.configuration != null) return false;
 		}
-		else if (! Arrays.equals(args,other.args)) return false;
+		else if (!Arrays.equals(configuration, other.configuration)) return false;
 		Collection<String> otherTestObjectNames = other.getTestObjectNames();
 		if (getTestObjectNames().size() != otherTestObjectNames.size()) return false;
-		// TODO: compare each message ?!
 		if (getType() != other.getType()) return false;
+		if (!messages.equals(other.messages)) return false;
 		return true;
 	}
 
@@ -127,12 +144,12 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	/**
-	 * Adds a test object/message pair to this TestResult.
-	 * Note: If the type of the message is "SUCCESS" then the message text will be ignored.
+	 * Adds a test object/message pair to this TestResult. Note: If the type of
+	 * the message is "SUCCESS" then the message text will be ignored.
 	 * 
 	 * @created 14.08.2012
 	 * @param testObjectName
-	 * @param message 
+	 * @param message
 	 */
 	public void addMessage(String testObjectName, Message message) {
 		this.messages.put(testObjectName, message);

@@ -173,15 +173,9 @@ public class TestExecutor {
 		for (ExecutableTest test : allTestsAndTestobjects.keySet()) {
 			String[] testArgs = test.getArguments();
 			String testName = test.getTestName();
+			// create result
 			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
-			// try { // testing purposes only!!
-			// Thread.sleep(10000);
-			// }
-			// catch (InterruptedException e1) {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
 			try {
 				Collection<CallableTest<?>> futuresForExecutableTest = executeTests(testName,
 						test.getTest(),

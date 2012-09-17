@@ -87,8 +87,8 @@ public class BuildResultPersistenceDocumentWriter {
 			test.setAttribute(NAME, result.getTestName());
 
 			// add optional test attributes
-			if (result.getArguments() != null) {
-				test.setAttribute(CONFIGURATION, ArgumentUtils.concat(result.getArguments()));
+			if (result.getConfiguration() != null) {
+				test.setAttribute(CONFIGURATION, ArgumentUtils.concat(result.getConfiguration()));
 			}
 
 			for (String testObjectName : result.getTestObjectNames()) {
