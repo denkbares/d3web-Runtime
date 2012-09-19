@@ -50,8 +50,6 @@ public class BuildResultPersistenceDocumentWriter {
 
 	private static final String TEXT = "text";
 
-	private static final String NUMBER = "number";
-
 	private static final String TYPE = "type";
 
 	private static final String CONFIGURATION = "configuration";
@@ -72,7 +70,6 @@ public class BuildResultPersistenceDocumentWriter {
 		document.appendChild(root);
 
 		// required Attributes
-		root.setAttribute(NUMBER, String.valueOf(build.getBuildNumber()));
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
 		root.setAttribute(DATE, DATE_FORMAT.format(build.getBuildDate()));
 
@@ -109,12 +106,11 @@ public class BuildResultPersistenceDocumentWriter {
 		Element root = (Element) document.getElementsByTagName(BUILD).item(0);
 
 		// parse attributes
-		int number = Integer.parseInt(root.getAttribute(NUMBER));
 		long duration = Long.parseLong(root.getAttribute(DURATION));
 		Date date = DATE_FORMAT.parse(root.getAttribute(DATE));
 
 		// create test item
-		BuildResult build = new BuildResult(number, date);
+		BuildResult build = new BuildResult(date);
 		build.setBuildDuration(duration);
 
 		// parse single child tests

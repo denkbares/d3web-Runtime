@@ -47,7 +47,6 @@ public class TestExecutor {
 	private final Collection<TestObjectProvider> testObjectProviders;
 	private final List<ExecutableTest> tests;
 	private final ProgressListener progressListener;
-	private final int buildNumber;
 	private BuildResult build;
 	private float progress = 0;
 	private float currentlyProcessedTaskVolune = 0;
@@ -70,11 +69,10 @@ public class TestExecutor {
 	/**
 	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, ProgressListener listener, int buildNumber) {
+	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, ProgressListener listener) {
 		this.testObjectProviders = providers;
 		this.tests = testAndItsParameters;
 		this.progressListener = listener;
-		this.buildNumber = buildNumber;
 	}
 
 	private static <T> T cast(Object testObject, Class<T> testObjectClass) {
@@ -128,7 +126,7 @@ public class TestExecutor {
 	public void run() {
 		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
-		build = new BuildResult(buildNumber);
+		build = new BuildResult();
 		progress = 0f;
 		executor = Executors.newFixedThreadPool(2);
 

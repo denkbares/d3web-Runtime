@@ -38,11 +38,6 @@ public final class BuildResult {
 	private final List<TestResult> results = new ArrayList<TestResult>();
 
 	/**
-	 * The number of this build
-	 */
-	private final int buildNumber;
-
-	/**
 	 * time/date of build execution
 	 */
 	private final Date buildDate;
@@ -52,12 +47,16 @@ public final class BuildResult {
 	 */
 	private long buildDuration = 0;
 
-	public BuildResult(int buildNumber) {
-		this(buildNumber, new Date());
+	/**
+	 * The number of this build
+	 */
+	private int buildNumber = 0;
+
+	public BuildResult() {
+		this(new Date());
 	}
 
-	public BuildResult(int buildNumber, Date buildDate) {
-		this.buildNumber = buildNumber;
+	public BuildResult(Date buildDate) {
 		this.buildDate = buildDate;
 	}
 
@@ -84,6 +83,17 @@ public final class BuildResult {
 	}
 
 	/**
+	 * Sets the build number of this {@link BuildResult}. Can be used for
+	 * distinguishing builds later on, e.g. for rendering.
+	 * 
+	 * @created 18.09.2012
+	 * @param buildNumber
+	 */
+	public void setBuildNumber(int buildNumber) {
+		this.buildNumber = buildNumber;
+	}
+
+	/**
 	 * Returns the date this build has been started.
 	 * 
 	 * @created 19.05.2012
@@ -91,6 +101,17 @@ public final class BuildResult {
 	 */
 	public Date getBuildDate() {
 		return buildDate;
+	}
+
+	/**
+	 * Return the build number of this build, or 0 if it is not set via
+	 * {@link BuildResult#setBuildNumber(int)}.
+	 * 
+	 * @created 18.09.2012
+	 * @return the build number of this build
+	 */
+	public int getBuildNumber() {
+		return buildNumber;
 	}
 
 	/**
@@ -124,9 +145,5 @@ public final class BuildResult {
 
 	public void addTestResult(TestResult testResult) {
 		results.add(testResult);
-	}
-
-	public int getBuildNumber() {
-		return buildNumber;
 	}
 }
