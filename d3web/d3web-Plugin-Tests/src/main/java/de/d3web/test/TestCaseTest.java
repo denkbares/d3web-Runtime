@@ -34,6 +34,7 @@ import de.d3web.testing.TestObjectContainer;
 import de.d3web.testing.TestObjectProvider;
 import de.d3web.testing.TestObjectProviderManager;
 import de.d3web.testing.TestParameter;
+import de.d3web.testing.Utils;
 
 /**
  * A simple test to execute test cases.
@@ -52,7 +53,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	}
 
 	@Override
-	public Message execute(TestCase testCase, String[] args, String[]... ignores) {
+	public Message execute(TestCase testCase, String[] args, String[]... ignores) throws InterruptedException {
 		KnowledgeBase kb = getKnowledgeBase(args);
 		if (kb == null) {
 			return new Message(Type.FAILURE, "Knowledge base not found!");
@@ -74,6 +75,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 					return new Message(Type.FAILURE, messageText);
 				}
+				Utils.checkInterrupt();
 			}
 		}
 

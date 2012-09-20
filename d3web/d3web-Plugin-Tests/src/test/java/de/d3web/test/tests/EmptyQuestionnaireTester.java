@@ -1,4 +1,5 @@
 package de.d3web.test.tests;
+
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -34,40 +35,39 @@ import de.d3web.testing.Message;
  * Test the behvavior of the class EmptyQuestionnaireTest
  * 
  * @author jochenreutelshofer
- * @created 30.07.2012 
+ * @created 30.07.2012
  */
 public class EmptyQuestionnaireTester {
-	
 
 	@Test
-	public void testEmptyQuestionnaireFalse() {
+	public void testEmptyQuestionnaireFalse() throws InterruptedException {
 		KnowledgeBase kb = createKB();
-		
+
 		TerminologyManager mgr = new TerminologyManager(kb);
-		QContainer nonEmptyQContainer = new QContainer(kb.getRootQASet(),"Non Empty Questionnaire");
+		QContainer nonEmptyQContainer = new QContainer(kb.getRootQASet(), "Non Empty Questionnaire");
 		mgr.putTerminologyObject(nonEmptyQContainer);
-		Question q = new QuestionNum(nonEmptyQContainer,"qnum");
+		Question q = new QuestionNum(nonEmptyQContainer, "qnum");
 		mgr.putTerminologyObject(q);
-		
+
 		EmptyQuestionnaireTest test = new EmptyQuestionnaireTest();
-		Message execute = test.execute(kb, new String[]{});
-		
+		Message execute = test.execute(kb, new String[] {});
+
 		assertTrue(execute.getType().equals(Message.Type.SUCCESS));
-	
+
 	}
 
 	@Test
-	public void testEmptyQuestionnaireTrue() {
+	public void testEmptyQuestionnaireTrue() throws InterruptedException {
 		KnowledgeBase kb = createKB();
-		
+
 		TerminologyManager mgr = new TerminologyManager(kb);
-		mgr.putTerminologyObject(new QContainer(kb.getRootQASet(),"Empty Questionnaire"));
-		
+		mgr.putTerminologyObject(new QContainer(kb.getRootQASet(), "Empty Questionnaire"));
+
 		EmptyQuestionnaireTest test = new EmptyQuestionnaireTest();
-		Message execute = test.execute(kb, new String[]{});
-		
+		Message execute = test.execute(kb, new String[] {});
+
 		assertTrue(execute.getType().equals(Message.Type.FAILURE));
-	
+
 	}
 
 	private KnowledgeBase createKB() {
@@ -76,5 +76,5 @@ public class EmptyQuestionnaireTester {
 		kb.setRootQASet(root);
 		return kb;
 	}
-	
+
 }

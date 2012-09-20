@@ -2,8 +2,10 @@ package de.d3web.testing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +51,8 @@ public class TestExecutor {
 	private final ProgressListener progressListener;
 	private BuildResult build;
 	private float progress = 0;
+	private String message = "Initializing...";
+	private final List<String> currentlyRunning = Collections.synchronizedList(new LinkedList<String>());
 	private float currentlyProcessedTaskVolune = 0;
 	private float overallTasks;
 	private ExecutorService executor;
@@ -88,32 +92,6 @@ public class TestExecutor {
 		return testObjectClass.cast(testObject);
 	}
 
-	private synchronized void taskFinished(float volume, String message) {
-		currentlyProcessedTaskVolune += volume;
-		this.progressListener.updateProgress(currentlyProcessedTaskVolune / overallTasks, message);
-	}
-
-	class MyFutureTask extends FutureTask<Void> {
-
-		private final TestExecutor resultHandler;
-		private final Callable<Void> myCallable;
-
-		public MyFutureTask(Callable<Void> callable, TestExecutor resultHandler) {
-			super(callable);
-			this.resultHandler = resultHandler;
-			myCallable = callable;
-		}
-
-		@Override
-		protected void done() {
-			// update progress listener as task has been finished
-			if (this.myCallable instanceof CallableTest) {
-				resultHandler.taskFinished(((CallableTest<?>) myCallable).getTaskVolume(),
-						((CallableTest<?>) myCallable).getMessage());
-			}
-		}
-	}
-
 	/**
 	 * Runs the tests given by the task list using the provided
 	 * TestObjectProvider. A BuildResultSet with the given build-number is
@@ -135,6 +113,16 @@ public class TestExecutor {
 		Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects =
 				new HashMap<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>>();
 
+		checkAndAddTests(allTestsAndTestobjects);
+
+		Map<ExecutableTest, Collection<CallableTest<?>>> futures = getFutures(allTestsAndTestobjects);
+
+		executeTests(futures);
+
+		shutdown(buildStartTime);
+	}
+
+	private void checkAndAddTests(Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects) {
 		prepareTests: for (ExecutableTest executableTest : tests) {
 
 			String[] testArgs = executableTest.getArguments();
@@ -162,11 +150,10 @@ public class TestExecutor {
 			// only execute test if argument checks haven't created an error
 			allTestsAndTestobjects.put(executableTest, collectTestObjects(test, testObjectID));
 		}
+	}
 
+	private Map<ExecutableTest, Collection<CallableTest<?>>> getFutures(Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects) {
 		Map<ExecutableTest, Collection<CallableTest<?>>> futures = new HashMap<ExecutableTest, Collection<CallableTest<?>>>();
-
-		// now the total count of tests to be executed is clear and can be told
-		// to the progress listener
 
 		for (ExecutableTest test : allTestsAndTestobjects.keySet()) {
 			String[] testArgs = test.getArguments();
@@ -174,66 +161,92 @@ public class TestExecutor {
 			// create result
 			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
-			try {
-				Collection<CallableTest<?>> futuresForExecutableTest = executeTests(testName,
-						test.getTest(),
-						testArgs, allTestsAndTestobjects.get(test), testResult);
-				futures.put(test, futuresForExecutableTest);
-				overallTasks += futuresForExecutableTest.size();
-			}
-			catch (InterruptedException e) {
-				progressListener.updateProgress(1f, "aborted, please wait...");
-				executor.shutdownNow();
-				// build is discarded, method call terminated
-				build = null;
-				return;
-			}
-
+			Collection<CallableTest<?>> futuresForCallableTest = getCallableTests(testName,
+					test.getTest(), testArgs, allTestsAndTestobjects.get(test), testResult);
+			futures.put(test, futuresForCallableTest);
+			overallTasks += futuresForCallableTest.size();
 		}
+		return futures;
+	}
 
+	private <T> Collection<CallableTest<?>> getCallableTests(
+			final String testName,
+			final Test<T> test,
+			final String[] args,
+			final Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects,
+			final TestResult testResult) {
+
+		Collection<CallableTest<?>> result = new HashSet<CallableTest<?>>();
+
+		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
+			for (final TestObjectContainer<?> testObjectContainer : allTestObjects.get(testObjectProvider)) {
+				String testObjectName = testObjectContainer.getTestObjectName();
+				Object testObject = testObjectContainer.getTestObject();
+				CallableTest<T> callableTest = new CallableTest<T>(testObjectName, testObject,
+						test, testName,
+						testResult, args);
+				result.add(callableTest);
+			}
+		}
+		return result;
+	}
+
+	private void executeTests(Map<ExecutableTest, Collection<CallableTest<?>>> futures) {
 		// finally run execute on callable tests
 		Set<ExecutableTest> keySet = futures.keySet();
-		for (ExecutableTest executableTest : keySet) {
+		outerLoop: for (ExecutableTest executableTest : keySet) {
 			Collection<CallableTest<?>> tasks = futures.get(executableTest);
 			for (CallableTest<?> callableTest : tasks) {
-				executor.execute(new MyFutureTask(callableTest, this));
+				executor.execute(new FutureTestTask(callableTest));
 
 				try {
 					Utils.checkInterrupt();
 				}
 				catch (InterruptedException e) {
-					progressListener.updateProgress(1f, "aborted, please wait...");
+					progressListener.updateProgress(1f, "Aborted, please wait...");
 					executor.shutdownNow();
 					// build is discarded, method call terminated
 					build = null;
-					return;
+					break outerLoop;
 				}
-
 			}
-		}
-
-		// wait until finished
-		try {
-			executor.shutdown();
-			while (!executor.awaitTermination(1, TimeUnit.SECONDS))
-				;
-			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
-		}
-		catch (InterruptedException e) {
-			progressListener.updateProgress(1f, "aborted, please wait...");
-		}
-
-		if (terminated) {
-			// aborted, so discard build
-			build = null;
 		}
 	}
 
+	private void shutdown(long buildStartTime) {
+		try {
+			executor.shutdown();
+			while (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
+				build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+			}
+		}
+		catch (InterruptedException e) {
+			progressListener.updateProgress(1f, "Aborted, please wait...");
+		}
+		finally {
+			if (terminated) {
+				build = null;
+			}
+		}
+	}
+
+	/**
+	 * Terminates all running tests as fast as possible. Returns at the latest
+	 * after 5 seconds, even if the termination is not quite complete.
+	 * 
+	 * @created 21.09.2012
+	 */
 	public void terminate() {
+		// aborted, so discard build
+		terminated = true;
 		// System.out.println("Terminating executor");
 		executor.shutdownNow();
 		executorThread.interrupt();
-		terminated = true;
+		try {
+			executor.awaitTermination(5, TimeUnit.SECONDS);
+		}
+		catch (InterruptedException e) {
+		}
 	}
 
 	/**
@@ -246,7 +259,7 @@ public class TestExecutor {
 	 * @param testObjectID Identifier for the test-object
 	 * @return
 	 */
-	public <T> Map<TestObjectProvider, List<TestObjectContainer<?>>> collectTestObjects(Test<T> test, String testObjectID) {
+	private <T> Map<TestObjectProvider, List<TestObjectContainer<?>>> collectTestObjects(Test<T> test, String testObjectID) {
 
 		final Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects = new HashMap<TestObjectProvider, List<TestObjectContainer<?>>>();
 
@@ -294,73 +307,65 @@ public class TestExecutor {
 		return result;
 	}
 
-	private static int countTestObjects(Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects) {
-		int count = 0;
-		Set<TestObjectProvider> keySet = allTestObjects.keySet();
-		for (TestObjectProvider p : keySet) {
-			List<?> list = allTestObjects.get(p);
-			count += list.size();
-		}
-		return count;
+	private synchronized void updateProgressListener() {
+		progress = currentlyProcessedTaskVolune / overallTasks;
+		progressListener.updateProgress(progress, message);
 	}
 
-	private <T> Collection<CallableTest<?>> executeTests(
-			final String testName,
-			final Test<T> t,
-			final String[] args,
-			final Map<TestObjectProvider,
-			List<TestObjectContainer<?>>> allTestObjects,
-			final TestResult testResult)
-			throws InterruptedException {
+	class FutureTestTask extends FutureTask<Void> {
 
-		int totalCountOfTestobjects = countTestObjects(allTestObjects);
+		private final CallableTest<?> callable;
 
-		if (totalCountOfTestobjects == 0) {
-			final Message message = new Message(Message.Type.ERROR, "No test-object found.");
-			testResult.addMessage("", message);
-
-			progress += 1f / tests.size();
-			progressListener.updateProgress(progress, testName);
+		public FutureTestTask(CallableTest<?> callable) {
+			super(callable);
+			this.callable = callable;
 		}
 
-		Collection<CallableTest<?>> result = new HashSet<CallableTest<?>>();
-
-		// finally run the tests
-		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
-			for (final TestObjectContainer<?> testObjectContainer : allTestObjects.get(testObjectProvider)) {
-				String testObjectName = testObjectContainer.getTestObjectName();
-				Object testObject = testObjectContainer.getTestObject();
-				CallableTest<T> c = new CallableTest<T>(testObjectName, testObject, t, testName,
-						testResult, args);
-				result.add(c);
-				// try {
-				// Future<Void> future = executor.submit(c);
-				// }
-				// catch (RejectedExecutionException e) {
-				// // happens when Executor is shut down
-				// // System.out.println("RejectedExecutionException");
-				// }
-			}
+		@Override
+		protected void done() {
+			// update progress listener as task has been finished
+			callable.testFinished();
 		}
-		return result;
 	}
 
 	class CallableTest<T> implements Callable<Void> {
 
 		private final String testObjectName;
 		private final Object testObject;
-		private final Test<T> t;
+		private final Test<T> test;
 		private final TestResult testResult;
 		private final String[] args;
 		private final String testname;
 
-		public CallableTest(String testObjectName, Object testObject, Test<T> t, String testname, TestResult testresult, String[] args) {
-			this.t = t;
+		public CallableTest(String testObjectName, Object testObject, Test<T> test, String testname, TestResult testresult, String[] args) {
+			this.test = test;
 			this.testObject = testObject;
 			this.testObjectName = testObjectName;
 			this.testResult = testresult;
 			this.args = args;
 			this.testname = testname;
+		}
+
+		public void testStarted() {
+			currentlyRunning.add(getMessage());
+			message = getMessage();
+			updateProgressListener();
+		}
+
+		public void testFinished() {
+			currentlyRunning.remove(getMessage());
+			String tempMessage = null;
+			try {
+				tempMessage = currentlyRunning.get(0);
+			}
+			catch (IndexOutOfBoundsException e) {
+				// since another thread could remove the last element between
+				// checking for not empty and actually retrieving it, we just
+				// try to retrieve it and catch a possible exception
+			}
+			if (message != null) message = tempMessage;
+			currentlyProcessedTaskVolune += getTaskVolume();
+			updateProgressListener();
 		}
 
 		public float getTaskVolume() {
@@ -369,15 +374,13 @@ public class TestExecutor {
 		}
 
 		public String getMessage() {
-			return testname + ": "
-					+ testObjectName;
+			return testname + ": " + testObjectName;
 		}
 
 		@Override
 		public Void call() throws Exception {
 
-			// for testing only
-			// Thread.sleep(500);
+			testStarted();
 
 			try {
 				if (testObject == null) {
@@ -385,7 +388,7 @@ public class TestExecutor {
 							Message.Type.ERROR, "Test-object was null."));
 					return null;
 				}
-				Message message = t.execute(cast(testObject, t.getTestObjectClass()), args);
+				Message message = test.execute(cast(testObject, test.getTestObjectClass()), args);
 				testResult.addMessage(testObjectName,
 						message);
 				return null;
@@ -401,15 +404,7 @@ public class TestExecutor {
 										": " + e));
 				return null;
 			}
-			// finally {
-			// // update progress listener
-			// progress += progessIncrement;
-			// progressListener.updateProgress(progress, t + ": "
-			// + testObjectName);
-			//
-			// }
 		}
-
 	}
 
 }

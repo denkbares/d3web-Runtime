@@ -29,11 +29,12 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.test.SimpleTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
+import de.d3web.testing.Utils;
 
 public class UnusedStartNodeTest extends SimpleTest {
 
 	@Override
-	public Message check(KnowledgeBase kb, String[] args) {
+	public Message check(KnowledgeBase kb, String[] args) throws InterruptedException {
 		String errormsg = "";
 		if (null != kb) {
 			List<Flow> flowcharts =
@@ -50,6 +51,7 @@ public class UnusedStartNodeTest extends SimpleTest {
 						allStartNodes.add(start);
 					}
 				}
+				Utils.checkInterrupt();
 			}
 
 			// List of all ComposedNodes
@@ -61,6 +63,7 @@ public class UnusedStartNodeTest extends SimpleTest {
 						cNodes.add(cNode);
 					}
 				}
+				Utils.checkInterrupt();
 			}
 
 			// Comparing Flowchartcallings with Startnodenames
@@ -76,6 +79,7 @@ public class UnusedStartNodeTest extends SimpleTest {
 						}
 					}
 				}
+				Utils.checkInterrupt();
 			}
 			if (!allStartNodes.isEmpty()) {
 				String redStarts = "";

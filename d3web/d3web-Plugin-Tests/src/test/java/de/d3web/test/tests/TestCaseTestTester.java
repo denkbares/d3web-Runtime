@@ -50,7 +50,7 @@ import de.d3web.testing.TestObjectProviderManager;
 public class TestCaseTestTester {
 
 	@Test
-	public void testTestCaseTestFalse() {
+	public void testTestCaseTestFalse() throws InterruptedException {
 		try {
 			InitPluginManager.init();
 			TestObjectProviderManager.registerTestObjectProvider(new JUnitTestKnowledgeBaseProvider());
@@ -75,7 +75,7 @@ public class TestCaseTestTester {
 	}
 
 	@Test
-	public void testTestCaseTestTrue() {
+	public void testTestCaseTestTrue() throws InterruptedException {
 		try {
 			InitPluginManager.init();
 			TestObjectProviderManager.registerTestObjectProvider(new JUnitTestKnowledgeBaseProvider());

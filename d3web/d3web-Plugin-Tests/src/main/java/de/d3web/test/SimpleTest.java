@@ -35,7 +35,7 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 	public static final Message SUCCESS = new Message(Type.SUCCESS, "");
 
 	@Override
-	public Message execute(KnowledgeBase knowledge, String[] args, String[]... ignores) {
+	public Message execute(KnowledgeBase knowledge, String[] args, String[]... ignores) throws InterruptedException {
 
 		// Run the particular checks and collect the messages
 		if (knowledge != null) {
@@ -50,7 +50,7 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 		return KnowledgeBase.class;
 	}
 
-	private Message performCheck(KnowledgeBase knowledgeBase, String[] args) {
+	private Message performCheck(KnowledgeBase knowledgeBase, String[] args) throws InterruptedException {
 		Type type = Type.SUCCESS;
 		String message = "";
 		Message testResult = check(knowledgeBase, args);
@@ -66,6 +66,6 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 		return new Message(type, message);
 	}
 
-	public abstract Message check(KnowledgeBase knowledge, String[] args);
+	public abstract Message check(KnowledgeBase knowledge, String[] args) throws InterruptedException;
 
 }

@@ -49,7 +49,7 @@ public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
 	}
 
 	@Override
-	public Message execute(KnowledgeBase kb, String[] args2, String[]... ignores) {
+	public Message execute(KnowledgeBase kb, String[] args2, String[]... ignores) throws InterruptedException {
 		if (kb == null) throw new IllegalArgumentException("test called with out test object ");
 
 		Collection<Pattern> ignorePatterns = new LinkedList<Pattern>();
@@ -67,9 +67,11 @@ public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
 		}
 		if (emptyQASets.size() > 0) {// empty QASets were found:
 			String failedMessage = "Knowledge base has empty questionnaires: " + "\n" +
-						createTextFromStringList(emptyQASets);
+					createTextFromStringList(emptyQASets);
 			return new Message(Type.FAILURE, failedMessage);
 		}
+
+		// Utils.slowDowntest(this.getClass(), 10000, true);
 		// it seems everything was fine:
 		return new Message(Type.SUCCESS, null);
 	}
