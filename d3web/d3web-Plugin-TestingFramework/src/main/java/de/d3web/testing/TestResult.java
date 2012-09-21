@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.d3web.testing.Message.Type;
 
@@ -141,6 +142,20 @@ public class TestResult implements Comparable<TestResult> {
 			}
 		}
 		return t;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append(getTestName() + " (" + getConfigurationString() + "): {");
+		boolean first = true;
+		for (Entry<String, Message> messageEntry : this.messages.entrySet()) {
+			if (first) first = false;
+			else result.append(", ");
+			result.append(messageEntry.getKey() + ": " + messageEntry.getValue());
+		}
+		result.append("}");
+		return result.toString();
 	}
 
 	/**

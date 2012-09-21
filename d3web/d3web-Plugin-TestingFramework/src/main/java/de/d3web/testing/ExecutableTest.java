@@ -33,8 +33,8 @@ public class ExecutableTest {
 	private final String[] args;
 	private final String[][] ignores;
 
-	public ExecutableTest(String testName, Test<?> t, String testObject, String[] args, String[][] ignores) {
-		this.test = t;
+	public ExecutableTest(String testName, Test<?> test, String testObject, String[] args, String[][] ignores) {
+		this.test = test;
 		this.args = args;
 		this.testName = testName;
 		this.testObject = testObject;

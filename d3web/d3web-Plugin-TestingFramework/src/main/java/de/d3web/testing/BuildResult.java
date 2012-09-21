@@ -146,4 +146,15 @@ public final class BuildResult {
 	public void addTestResult(TestResult testResult) {
 		results.add(testResult);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder build = new StringBuilder();
+		build.append("Build #" + getBuildNumber() + ", date: "
+				+ getBuildDate() + ", duration: " + buildDuration);
+		for (TestResult result : getResults()) {
+			build.append("\n    " + result);
+		}
+		return build.toString();
+	}
 }
