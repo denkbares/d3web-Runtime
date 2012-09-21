@@ -147,12 +147,14 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				List<Condition> conditions = getPrimitiveConditions(activationCondition);
 				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 				List<Condition> conditionsToExamine = conditions;
+				Set<Condition> alreadyExaminedConditions = new HashSet<Condition>();
 				while (!conditionsToExamine.isEmpty()) {
 					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(session,
 							conditionsToExamine, conditions,
 							activationCondition.getTerminalObjects(), forbiddenTermObjects);
 					additionalConditions.addAll(temppairs);
-					conditionsToExamine = getPrimitiveConditions(temppairs);
+					conditionsToExamine = getPrimitiveConditions(temppairs,
+							alreadyExaminedConditions);
 				}
 				targetCache.put(qcon, additionalConditions);
 			}
@@ -160,25 +162,26 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
-	private static List<Condition> getPrimitiveConditions(List<Pair<List<Condition>, Set<QContainer>>> temppairs) {
+	private static List<Condition> getPrimitiveConditions(List<Pair<List<Condition>, Set<QContainer>>> temppairs, Set<Condition> alreadyExaminedConditions) {
 		List<Condition> list = new LinkedList<Condition>();
 		for (Pair<List<Condition>, Set<QContainer>> p : temppairs) {
 			for (Condition cond : p.getA()) {
 				if (cond instanceof CondEqual) {
-					list.add(cond);
+					if (!alreadyExaminedConditions.contains(cond)) list.add(cond);
 				}
 				else if (cond instanceof CondOr) {
 					if (checkCondOr((CondOr) cond)) {
-						list.add(cond);
+						if (!alreadyExaminedConditions.contains(cond)) list.add(cond);
 					}
 				}
 				else if (cond instanceof CondNot) {
 					if (checkCondNot((CondNot) cond)) {
-						list.add(cond);
+						if (!alreadyExaminedConditions.contains(cond)) list.add(cond);
 					}
 				}
 			}
 		}
+		alreadyExaminedConditions.addAll(list);
 		return list;
 	}
 
