@@ -177,9 +177,10 @@ public class TestExecutor {
 			final TestResult testResult) {
 
 		Collection<CallableTest<?>> result = new HashSet<CallableTest<?>>();
-
+		boolean noTestObjects = true;
 		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
 			for (final TestObjectContainer<?> testObjectContainer : allTestObjects.get(testObjectProvider)) {
+				noTestObjects = false;
 				String testObjectName = testObjectContainer.getTestObjectName();
 				Object testObject = testObjectContainer.getTestObject();
 				CallableTest<T> callableTest = new CallableTest<T>(testObjectName, testObject,
@@ -187,6 +188,9 @@ public class TestExecutor {
 						testResult, args);
 				result.add(callableTest);
 			}
+		}
+		if (noTestObjects) {
+			testResult.addMessage("", new Message(Message.Type.ERROR, "No test-object found."));
 		}
 		return result;
 	}
