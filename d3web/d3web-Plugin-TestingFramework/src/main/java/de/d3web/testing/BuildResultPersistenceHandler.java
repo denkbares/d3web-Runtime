@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,7 +37,7 @@ import org.w3c.dom.NodeList;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 13.06.2012
  */
-public class BuildResultPersistenceDocumentWriter {
+public class BuildResultPersistenceHandler {
 
 	private static final String DATE = "date";
 
@@ -85,7 +86,8 @@ public class BuildResultPersistenceDocumentWriter {
 
 			// add optional test attributes
 			if (result.getConfiguration() != null) {
-				test.setAttribute(CONFIGURATION, ArgumentUtils.concat(result.getConfiguration()));
+				test.setAttribute(CONFIGURATION,
+						TestParser.concatParameters(result.getConfiguration()));
 			}
 
 			for (String testObjectName : result.getTestObjectNames()) {
@@ -127,7 +129,9 @@ public class BuildResultPersistenceDocumentWriter {
 
 			// parse every single message
 			NodeList messageElements = test.getElementsByTagName(MESSAGE);
-			TestResult result = new TestResult(testName, ArgumentUtils.split(configuration));
+			List<String> configParameters = TestParser.splitParameters(configuration);
+			TestResult result = new TestResult(testName,
+					configParameters.toArray(new String[configParameters.size()]));
 
 			for (int j = 0; j < messageElements.getLength(); j++) {
 				Element messageElement = (Element) messageElements.item(j);
@@ -149,31 +153,4 @@ public class BuildResultPersistenceDocumentWriter {
 		return build;
 	}
 
-	/**
-	 * Small hack to handle config parameters
-	 * 
-	 * @author Jochen Reutelshöfer (denkbares GmbH)
-	 * @created 30.05.2012
-	 */
-	static class ArgumentUtils {
-
-		private static final String separator = "\\|";
-
-		public static String[] split(String arguments) {
-			return arguments.split(separator);
-		}
-
-		public static String concat(String[] args) {
-			StringBuffer buffy = new StringBuffer();
-			for (String string : args) {
-				buffy.append(string + separator);
-			}
-
-			String result = buffy.toString();
-			if (result.endsWith(separator)) {
-				result = result.substring(0, result.length() - 1);
-			}
-			return result;
-		}
-	}
 }

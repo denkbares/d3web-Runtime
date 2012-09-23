@@ -41,9 +41,9 @@ public class TestParser {
 	public static final Pattern PARAMETER_PATTERN = Pattern.compile("(?:[^(\"|\\s)]+|\".+?\")");
 
 	private String testCommand;
-	private List<String> ignoreCommands = new LinkedList<String>();
+	private final List<String> ignoreCommands = new LinkedList<String>();
 	private ArgsCheckResult parameterCheckResult;
-	private List<ArgsCheckResult> ignoreCheckResults = new LinkedList<ArgsCheckResult>();
+	private final List<ArgsCheckResult> ignoreCheckResults = new LinkedList<ArgsCheckResult>();
 	private ExecutableTest executableTest;
 
 	/**
@@ -74,7 +74,7 @@ public class TestParser {
 		}
 
 		// parse test's command line
-		List<String> paramters = splitParameter(testCommand);
+		List<String> paramters = splitParameters(testCommand);
 		if (paramters.isEmpty()) {
 			this.parameterCheckResult = ArgsCheckResult.emptyTestDeclaration();
 			return;
@@ -103,7 +103,7 @@ public class TestParser {
 		catch (PatternSyntaxException e) {
 			// create message and return no executable test
 			this.parameterCheckResult = ArgsCheckResult.invalidTestObjectIdentifier(
-							testObject, testName);
+					testObject, testName);
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class TestParser {
 		String[][] ignores = new String[ignoreCommands.size()][];
 		int index = 0;
 		for (String ingore : ignoreCommands) {
-			List<String> args = splitParameter(ingore);
+			List<String> args = splitParameters(ingore);
 			String[] array = args.toArray(new String[args.size()]);
 			ignores[index++] = array;
 			ignoreCheckResults.add(test.checkIgnore(array));
@@ -124,8 +124,17 @@ public class TestParser {
 		this.executableTest = new ExecutableTest(testName, test, testObject, params, ignores);
 	}
 
-	private static List<String> splitParameter(String command) {
-		Matcher matcher = PARAMETER_PATTERN.matcher(command);
+	/**
+	 * Splits the given parameter String into its single parameters. Parameters
+	 * containing white spaces have to be quoted, the quotes will not be part of
+	 * that parameter.
+	 * 
+	 * @created 23.09.2012
+	 * @param parameters the parameters as a String
+	 * @return the single parameters from the given String in a List
+	 */
+	public static List<String> splitParameters(String parameters) {
+		Matcher matcher = PARAMETER_PATTERN.matcher(parameters);
 		List<String> paramters = new ArrayList<String>();
 		while (matcher.find()) {
 			String parameter = matcher.group();
@@ -135,6 +144,28 @@ public class TestParser {
 			paramters.add(parameter);
 		}
 		return paramters;
+	}
+
+	/**
+	 * Utility method to concatenate test parameters following the same rules by
+	 * which they are split.
+	 * 
+	 * @created 23.09.2012
+	 * @param parameters the parameters to be concatenated
+	 * @return the concatenated parameters
+	 */
+	public static String concatParameters(String[] parameters) {
+		StringBuilder concatenated = new StringBuilder();
+		boolean first = true;
+		for (String parameter : parameters) {
+			if (first) first = false;
+			else concatenated.append(" ");
+			boolean quote = parameter.contains(" ");
+			if (quote) concatenated.append("\"");
+			concatenated.append(parameter);
+			if (quote) concatenated.append("\"");
+		}
+		return concatenated.toString();
 	}
 
 	public String getTestCommand() {

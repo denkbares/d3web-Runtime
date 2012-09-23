@@ -69,7 +69,7 @@ public class TestResult implements Comparable<TestResult> {
 		return configuration;
 	}
 
-	public String getConfigurationString() {
+	private String getConfigurationString() {
 		if (configuration == null) return "";
 		StringBuilder result = new StringBuilder();
 		for (String item : configuration) {
