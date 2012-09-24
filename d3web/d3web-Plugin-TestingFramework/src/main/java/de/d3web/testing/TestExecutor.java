@@ -367,7 +367,7 @@ public class TestExecutor {
 				// checking for not empty and actually retrieving it, we just
 				// try to retrieve it and catch a possible exception
 			}
-			if (message != null) message = tempMessage;
+			if (tempMessage != null) message = tempMessage;
 			currentlyProcessedTaskVolune += getTaskVolume();
 			updateProgressListener();
 		}
