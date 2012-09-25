@@ -73,6 +73,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 	private double negativeSum;
 
+	private Map<Question, Value> finalValues;
+
 	@Override
 	public double getDistance(Path path, State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
@@ -91,7 +93,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	public void init(SearchModel model) {
 		// check if no further initialization required
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
-
+		finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
 		// otherwise prepare some information
 		this.knowledgeBase = kb;
 		this.allStateTransitions = new LinkedList<StateTransition>();
@@ -377,6 +379,10 @@ public class DividedTransitionHeuristic implements Heuristic {
 				// matches the values that can be set up
 				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
 				Set<Value> possibleValues = vt.calculatePossibleValues();
+				// values that are possible, but are already finally set, can be
+				// removed -> heuristic gets more precise
+				Value value = finalValues.get(vt.getQuestion());
+				if (value != null) possibleValues.remove(value);
 				if (!Collections.disjoint(requiredValues, possibleValues)) {
 					// the values that can be set up are common with
 					// the required ones, so count that question

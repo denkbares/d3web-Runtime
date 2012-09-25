@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -497,19 +499,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			return false;
 		}
 		Session emptySession = new CopiedSession(session.getKnowledgeBase());
-		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
-			if (q.getInfoStore().getValue(FINAL_QUESTION)) {
-				// check if q has not the init value
-				Value initValue = PSMethodInit.getValue(q,
-						q.getInfoStore().getValue(BasicProperties.INIT));
-				Value actualValue = session.getBlackboard().getValue(q);
-				if (!initValue.equals(actualValue)) {
-					emptySession.getBlackboard().addValueFact(
-							FactFactory.createUserEnteredFact(q, actualValue));
-				}
-			}
-		}
+		Map<Question, Value> finalValues = getFinalValues(session);
 		// now all unmutable facts are added to the emptySession
+		for (Entry<Question, Value> e : finalValues.entrySet()) {
+			emptySession.getBlackboard().addValueFact(
+					FactFactory.createUserEnteredFact(e.getKey(), e.getValue()));
+		}
 		try {
 			return (!activationCondition.eval(emptySession));
 		}
@@ -519,6 +514,34 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		catch (UnknownAnswerException e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Calculates a map of all values of final questions, being different from
+	 * their initial value respectively undefined
+	 * 
+	 * @created 25.09.2012
+	 * @param session specified session
+	 * @return a map of all final questions to their values being set in the
+	 *         specified session
+	 */
+	public static Map<Question, Value> getFinalValues(Session session) {
+		Map<Question, Value> finalValues = new HashMap<Question, Value>();
+		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
+			if (q.getInfoStore().getValue(FINAL_QUESTION)) {
+				// check if q has not the init value
+				String initString = q.getInfoStore().getValue(BasicProperties.INIT);
+				Value initValue = initString == null
+						? UndefinedValue.getInstance()
+						: PSMethodInit.getValue(q,
+								initString);
+				Value actualValue = session.getBlackboard().getValue(q);
+				if (!initValue.equals(actualValue)) {
+					finalValues.put(q, actualValue);
+				}
+			}
+		}
+		return finalValues;
 	}
 
 	/**
