@@ -18,6 +18,10 @@
  */
 package de.d3web.testing;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 /**
  * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an
  * (optional) message text.
@@ -29,6 +33,7 @@ public class Message implements Comparable<Message> {
 
 	private final Type type;
 	private final String message;
+	private Collection<MessageObject> objects = new ArrayList<MessageObject>();
 
 	public Message(Type type) {
 		this(type, null);
@@ -47,8 +52,22 @@ public class Message implements Comparable<Message> {
 		this.message = message;
 	}
 
+	public Message(Type type, String message, Collection<MessageObject> objects) {
+		this(type, message);
+		setObjects(objects);
+
+	}
+
 	public boolean isSuccess() {
 		return type == Type.SUCCESS;
+	}
+
+	public void setObjects(Collection<MessageObject> objects) {
+		this.objects = objects;
+	}
+
+	public Collection<MessageObject> getObjects() {
+		return Collections.unmodifiableCollection(objects);
 	}
 
 	public enum Type {
@@ -93,4 +112,5 @@ public class Message implements Comparable<Message> {
 		if (this.type == Type.SUCCESS && o.type == Type.ERROR) return 1;
 		return this.message.compareTo(o.message);
 	}
+
 }

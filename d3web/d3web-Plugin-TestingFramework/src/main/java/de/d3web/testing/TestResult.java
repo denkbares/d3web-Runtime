@@ -20,9 +20,9 @@ package de.d3web.testing;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import de.d3web.testing.Message.Type;
 
@@ -36,7 +36,7 @@ public class TestResult implements Comparable<TestResult> {
 	private final String[] configuration;
 	private final String testName;
 
-	private final Map<String, Message> messages = new HashMap<String, Message>();
+	private final Map<String, Message> messages = new TreeMap<String, Message>();
 
 	/**
 	 * Creates a new TestResult for the specified test with the specified

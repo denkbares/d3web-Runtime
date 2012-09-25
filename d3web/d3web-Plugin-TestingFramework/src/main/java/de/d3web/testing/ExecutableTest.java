@@ -28,15 +28,13 @@ package de.d3web.testing;
 public class ExecutableTest {
 
 	private final Test<?> test;
-	private final String testName;
 	private final String testObject;
 	private final String[] args;
 	private final String[][] ignores;
 
-	public ExecutableTest(String testName, Test<?> test, String testObject, String[] args, String[][] ignores) {
+	public ExecutableTest(Test<?> test, String testObject, String[] args, String[][] ignores) {
 		this.test = test;
 		this.args = args;
-		this.testName = testName;
 		this.testObject = testObject;
 		this.ignores = ignores;
 	}
@@ -54,7 +52,7 @@ public class ExecutableTest {
 	}
 
 	public String getTestName() {
-		return testName;
+		return test.getName();
 	}
 
 	public String getTestObject() {

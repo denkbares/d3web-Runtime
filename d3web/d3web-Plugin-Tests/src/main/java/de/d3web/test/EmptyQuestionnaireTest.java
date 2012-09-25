@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
+import de.d3web.testing.MessageObject;
 import de.d3web.testing.TestParameter.Mode;
 
 /**
@@ -68,7 +70,11 @@ public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
 		if (emptyQASets.size() > 0) {// empty QASets were found:
 			String failedMessage = "Knowledge base has empty questionnaires: " + "\n" +
 					createTextFromStringList(emptyQASets);
-			return new Message(Type.FAILURE, failedMessage);
+			ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
+			for (String string : emptyQASets) {
+				messageObject.add(new MessageObject(string, NamedObject.class));
+			}
+			return new Message(Type.FAILURE, failedMessage, messageObject);
 		}
 
 		// Utils.slowDowntest(this.getClass(), 10000, true);

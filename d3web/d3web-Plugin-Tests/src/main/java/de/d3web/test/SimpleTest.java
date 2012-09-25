@@ -39,7 +39,7 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 
 		// Run the particular checks and collect the messages
 		if (knowledge != null) {
-			return performCheck(knowledge, args);
+			return check(knowledge, args);
 
 		}
 		return new Message(Type.FAILURE, "Knowledge base not found.");
@@ -48,22 +48,6 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 	@Override
 	public Class<KnowledgeBase> getTestObjectClass() {
 		return KnowledgeBase.class;
-	}
-
-	private Message performCheck(KnowledgeBase knowledgeBase, String[] args) throws InterruptedException {
-		Type type = Type.SUCCESS;
-		String message = "";
-		Message testResult = check(knowledgeBase, args);
-		if (!testResult.isSuccess()) {
-			type = Type.FAILURE;
-			if (testResult.getText() != null) {
-				message += testResult.getText();
-			}
-		}
-		else {
-			if (testResult.getText() != null) message += testResult.getText();
-		}
-		return new Message(type, message);
 	}
 
 	public abstract Message check(KnowledgeBase knowledge, String[] args) throws InterruptedException;

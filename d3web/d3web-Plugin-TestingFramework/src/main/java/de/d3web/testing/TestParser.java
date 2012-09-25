@@ -121,7 +121,7 @@ public class TestParser {
 			ignoreCheckResults.add(test.checkIgnore(array));
 		}
 
-		this.executableTest = new ExecutableTest(testName, test, testObject, params, ignores);
+		this.executableTest = new ExecutableTest(test, testObject, params, ignores);
 	}
 
 	/**

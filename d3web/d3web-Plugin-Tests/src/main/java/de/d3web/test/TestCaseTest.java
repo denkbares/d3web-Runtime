@@ -20,6 +20,7 @@ package de.d3web.test;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.Session;
@@ -40,11 +41,12 @@ import de.d3web.testing.Utils;
  * A simple test to execute test cases.
  * 
  * 
- * @author Jochen Reutelshöfer (denkbares GmbH)
+ * @author Jochen Reutelshöfer, Albrecht Striffler (denkbares GmbH)
  * @created 29.06.2012
  */
 public class TestCaseTest extends AbstractTest<TestCase> {
 
+	private static final long year = TimeUnit.DAYS.toMillis(365);
 	private static final String SEARCH_STRING_DESCRIPTION = "Specifies the knowledge base with which the test case is to be tested.";
 
 	public TestCaseTest() {
@@ -66,12 +68,17 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		for (Date date : testCase.chronology()) {
 			TestCaseUtils.applyFindings(session, testCase, date);
 			for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
-				String time = (date.getTime() < 1000)
-						? ("line " + date.getTime()) : ("time " + date);
+				String time = "(time ";
+				if (date.getTime() < year) {
+					time += date.getTime() + "ms";
+				}
+				else {
+					time += date;
+				}
+				time += ")";
 				if (!check.check(session)) {
-					String messageText = "Check '" + check.getCondition() +
-							"' failed in case '" + testCase.toString() +
-							"', at " + time;
+					String messageText = "Check '" + check.getCondition().trim() +
+							"' " + time + " failed.";
 
 					return new Message(Type.FAILURE, messageText);
 				}
