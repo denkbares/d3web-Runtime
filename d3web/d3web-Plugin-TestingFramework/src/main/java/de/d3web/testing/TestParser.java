@@ -40,11 +40,11 @@ public class TestParser {
 
 	public static final Pattern PARAMETER_PATTERN = Pattern.compile("(?:[^(\"|\\s)]+|\".+?\")");
 
-	private String testCommand;
-	private final List<String> ignoreCommands = new LinkedList<String>();
+	private String declaration;
+	private final List<String> ignoreParameters = new LinkedList<String>();
 	private ArgsCheckResult parameterCheckResult;
 	private final List<ArgsCheckResult> ignoreCheckResults = new LinkedList<ArgsCheckResult>();
-	private ExecutableTest executableTest;
+	private TestSpecification<?> testSpecification;
 
 	/**
 	 * Creates an ExecutableTest object from a test command line string. The
@@ -55,26 +55,28 @@ public class TestParser {
 	 * providers.)
 	 * 
 	 * @created 13.06.2012
-	 * @param testCommand
+	 * @param testDeclaration
 	 * @param msgs
 	 * @return
 	 */
+	@SuppressWarnings({
+			"unchecked", "rawtypes" })
 	public TestParser(String testDeclaration) {
-		this.testCommand = testDeclaration;
+		this.declaration = testDeclaration;
 
 		// parse ignores and remove them from test's command line
 		Matcher ignoreMatcher = IGNORE_PATTERN.matcher(testDeclaration);
 		if (ignoreMatcher.find()) {
-			testCommand = testDeclaration.substring(0, ignoreMatcher.start());
+			this.declaration = testDeclaration.substring(0, ignoreMatcher.start());
 			do {
 				int start = ignoreMatcher.start(1);
 				int end = ignoreMatcher.end(1);
-				ignoreCommands.add(testDeclaration.substring(start, end));
+				ignoreParameters.add(testDeclaration.substring(start, end));
 			} while (ignoreMatcher.find());
 		}
 
 		// parse test's command line
-		List<String> paramters = splitParameters(testCommand);
+		List<String> paramters = splitParameters(this.declaration);
 		if (paramters.isEmpty()) {
 			this.parameterCheckResult = ArgsCheckResult.emptyTestDeclaration();
 			return;
@@ -112,16 +114,16 @@ public class TestParser {
 		this.parameterCheckResult = test.checkArgs(params);
 
 		// check ignores and create error messages if necessary
-		String[][] ignores = new String[ignoreCommands.size()][];
+		String[][] ignores = new String[ignoreParameters.size()][];
 		int index = 0;
-		for (String ingore : ignoreCommands) {
+		for (String ingore : ignoreParameters) {
 			List<String> args = splitParameters(ingore);
 			String[] array = args.toArray(new String[args.size()]);
 			ignores[index++] = array;
 			ignoreCheckResults.add(test.checkIgnore(array));
 		}
 
-		this.executableTest = new ExecutableTest(test, testObject, params, ignores);
+		this.testSpecification = new TestSpecification(test, testObject, params, ignores);
 	}
 
 	/**
@@ -168,12 +170,12 @@ public class TestParser {
 		return concatenated.toString();
 	}
 
-	public String getTestCommand() {
-		return testCommand;
+	public String getTestDeclaration() {
+		return declaration;
 	}
 
 	public List<String> getIgnoreCommands() {
-		return Collections.unmodifiableList(ignoreCommands);
+		return Collections.unmodifiableList(ignoreParameters);
 	}
 
 	public ArgsCheckResult getParameterCheckResult() {
@@ -184,7 +186,7 @@ public class TestParser {
 		return Collections.unmodifiableList(ignoreCheckResults);
 	}
 
-	public ExecutableTest getExecutableTest() {
-		return executableTest;
+	public TestSpecification<?> getTestSpecification() {
+		return testSpecification;
 	}
 }

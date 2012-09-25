@@ -25,21 +25,21 @@ package de.d3web.testing;
  * @author Jochen Reutelshöfer, Volker Belli (denkbares GmbH)
  * @created 30.05.2012
  */
-public class ExecutableTest {
+public class TestSpecification<T> {
 
-	private final Test<?> test;
+	private final Test<T> test;
 	private final String testObject;
 	private final String[] args;
 	private final String[][] ignores;
 
-	public ExecutableTest(Test<?> test, String testObject, String[] args, String[][] ignores) {
+	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
 		this.test = test;
 		this.args = args;
 		this.testObject = testObject;
 		this.ignores = ignores;
 	}
 
-	public Test<?> getTest() {
+	public Test<T> getTest() {
 		return test;
 	}
 

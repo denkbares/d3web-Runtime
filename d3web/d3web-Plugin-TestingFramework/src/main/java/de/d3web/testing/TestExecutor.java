@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,21 +39,19 @@ import de.d3web.testing.Message.Type;
 /**
  * A TestExecutor executes a set of tests.
  * 
- * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public class TestExecutor {
 
-	private final Collection<TestObjectProvider> testObjectProviders;
-	private final List<ExecutableTest> tests;
+	private final Collection<TestObjectProvider> objectProviders;
+	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
 	private BuildResult build;
-	private float progress = 0;
-	private String message = "Initializing...";
-	private final List<String> currentlyRunning = Collections.synchronizedList(new LinkedList<String>());
-	private float currentlyProcessedTaskVolune = 0;
-	private float overallTasks;
+	private String currentMessage;
+	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
+	private float finishedTests;
+	private float overallTestsCount;
 	private ExecutorService executor;
 	private Thread executorThread;
 	private boolean terminated = false;
@@ -73,23 +70,10 @@ public class TestExecutor {
 	/**
 	 * Creates a TestExecutor with the given task list and TestObjectProvider.
 	 */
-	public TestExecutor(Collection<TestObjectProvider> providers, List<ExecutableTest> testAndItsParameters, ProgressListener listener) {
-		this.testObjectProviders = providers;
-		this.tests = testAndItsParameters;
+	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener) {
+		this.objectProviders = providers;
+		this.specifications = specifications;
 		this.progressListener = listener;
-	}
-
-	private static <T> T cast(Object testObject, Class<T> testObjectClass) {
-		// first check null, because Class.isInstance differs from
-		// "instanceof"-operator for null objects
-		if (testObject == null) return null;
-
-		// check the type of the test-object
-		if (!testObjectClass.isInstance(testObject)) {
-			throw new ClassCastException();
-		}
-		// and securely cast
-		return testObjectClass.cast(testObject);
 	}
 
 	/**
@@ -105,29 +89,59 @@ public class TestExecutor {
 		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
 		build = new BuildResult();
-		progress = 0f;
 		executor = Executors.newFixedThreadPool(2);
 
-		overallTasks = 0;
+		// checks the given tests of validity and only returns the valid ones
+		Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
 
-		Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects =
-				new HashMap<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>>();
+		// creates and returns a CallableTest for each Test and TestObject
+		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = getCallableTestsMap(validSpecifications);
 
-		checkAndAddTests(allTestsAndTestobjects);
+		initProgressFields(callableTests);
 
-		Map<ExecutableTest, Collection<CallableTest<?>>> futures = getFutures(allTestsAndTestobjects);
-
-		executeTests(futures);
+		executeTests(callableTests);
 
 		shutdown(buildStartTime);
 	}
 
-	private void checkAndAddTests(Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects) {
-		prepareTests: for (ExecutableTest executableTest : tests) {
+	private void initProgressFields(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests) {
+		overallTestsCount = getNumberOfTests(callableTests);
+		finishedTests = 0f;
+		currentMessage = "Initializing...";
+	}
 
-			String[] testArgs = executableTest.getArguments();
-			String testObjectID = executableTest.getTestObject();
-			Test<?> test = executableTest.getTest();
+	private float getNumberOfTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
+		int count = 0;
+		for (Collection<CallableTest<?>> callablesOfTest : callablesMap.values()) {
+			count += callablesOfTest.size();
+		}
+		return count;
+	}
+
+	private <T> Collection<TestObjectContainer<T>> getTestObjects(TestSpecification<T> specification) {
+
+		Collection<TestObjectContainer<T>> allTestObjects = new LinkedList<TestObjectContainer<T>>();
+		Test<T> test = specification.getTest();
+		String testObjectID = specification.getTestObject();
+
+		for (TestObjectProvider testObjectProvider : objectProviders) {
+
+			List<TestObjectContainer<T>> testObjects = testObjectProvider.getTestObjects(
+					test.getTestObjectClass(), testObjectID);
+
+			allTestObjects.addAll(testObjects);
+		}
+
+		return allTestObjects;
+	}
+
+	private Collection<TestSpecification<?>> getValidSpecifications() {
+		Collection<TestSpecification<?>> validTests = new ArrayList<TestSpecification<?>>();
+		prepareTests: for (TestSpecification<?> specification : specifications) {
+
+			String[] testArgs = specification.getArguments();
+			String testObjectID = specification.getTestObject();
+			Test<?> test = specification.getTest();
 
 			// check arguments and create error if erroneous
 			ArgsCheckResult argsCheckResult = test.checkArgs(testArgs);
@@ -138,7 +152,7 @@ public class TestExecutor {
 			}
 
 			// check ignores and create error if erroneous
-			for (String[] ignoreArgs : executableTest.getIgnores()) {
+			for (String[] ignoreArgs : specification.getIgnores()) {
 				ArgsCheckResult ignoreCheckResult = test.checkIgnore(ignoreArgs);
 				if (ignoreCheckResult.hasError()) {
 					TestResult testResult = toTestResult(test, testObjectID, ignoreCheckResult);
@@ -146,61 +160,55 @@ public class TestExecutor {
 					continue prepareTests;
 				}
 			}
-
-			// only execute test if argument checks haven't created an error
-			allTestsAndTestobjects.put(executableTest, collectTestObjects(test, testObjectID));
+			validTests.add(specification);
 		}
+		return validTests;
 	}
 
-	private Map<ExecutableTest, Collection<CallableTest<?>>> getFutures(Map<ExecutableTest, Map<TestObjectProvider, List<TestObjectContainer<?>>>> allTestsAndTestobjects) {
-		Map<ExecutableTest, Collection<CallableTest<?>>> futures = new HashMap<ExecutableTest, Collection<CallableTest<?>>>();
+	private Map<TestSpecification<?>, Collection<CallableTest<?>>> getCallableTestsMap(Collection<TestSpecification<?>> validSpecifications) {
 
-		for (ExecutableTest test : allTestsAndTestobjects.keySet()) {
-			String[] testArgs = test.getArguments();
-			String testName = test.getTestName();
+		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = new HashMap<TestSpecification<?>, Collection<CallableTest<?>>>();
+
+		for (TestSpecification<?> specification : validSpecifications) {
+			String[] testArgs = specification.getArguments();
+			String testName = specification.getTestName();
 			// create result
 			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
-			Collection<CallableTest<?>> futuresForCallableTest = getCallableTests(testName,
-					test.getTest(), testArgs, allTestsAndTestobjects.get(test), testResult);
-			futures.put(test, futuresForCallableTest);
-			overallTasks += futuresForCallableTest.size();
+			Collection<CallableTest<?>> futuresForCallableTest = getCallableTests(specification,
+					testResult);
+			callableTests.put(specification, futuresForCallableTest);
 		}
-		return futures;
+		return callableTests;
 	}
 
 	private <T> Collection<CallableTest<?>> getCallableTests(
-			final String testName,
-			final Test<T> test,
-			final String[] args,
-			final Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects,
+			final TestSpecification<T> specification,
 			final TestResult testResult) {
 
 		Collection<CallableTest<?>> result = new HashSet<CallableTest<?>>();
 		boolean noTestObjects = true;
-		for (final TestObjectProvider testObjectProvider : testObjectProviders) {
-			for (final TestObjectContainer<?> testObjectContainer : allTestObjects.get(testObjectProvider)) {
-				noTestObjects = false;
-				String testObjectName = testObjectContainer.getTestObjectName();
-				Object testObject = testObjectContainer.getTestObject();
-				CallableTest<T> callableTest = new CallableTest<T>(testObjectName, testObject,
-						test, testName,
-						testResult, args);
-				result.add(callableTest);
-			}
+
+		for (final TestObjectContainer<T> testObjectContainer : getTestObjects(specification)) {
+			noTestObjects = false;
+			String testObjectName = testObjectContainer.getTestObjectName();
+			T testObject = testObjectContainer.getTestObject();
+			CallableTest<T> callableTest = new CallableTest<T>(specification, testObjectName,
+					testObject, testResult);
+			result.add(callableTest);
 		}
+
 		if (noTestObjects) {
 			testResult.addMessage("", new Message(Message.Type.ERROR, "No test-object found."));
 		}
 		return result;
 	}
 
-	private void executeTests(Map<ExecutableTest, Collection<CallableTest<?>>> futures) {
+	private void executeTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
 		// finally run execute on callable tests
-		Set<ExecutableTest> keySet = futures.keySet();
-		outerLoop: for (ExecutableTest executableTest : keySet) {
-			Collection<CallableTest<?>> tasks = futures.get(executableTest);
-			for (CallableTest<?> callableTest : tasks) {
+		outerLoop: for (TestSpecification<?> specification : callablesMap.keySet()) {
+			Collection<CallableTest<?>> callableTests = callablesMap.get(specification);
+			for (CallableTest<?> callableTest : callableTests) {
 				executor.execute(new FutureTestTask(callableTest));
 
 				try {
@@ -253,43 +261,17 @@ public class TestExecutor {
 		}
 	}
 
-	/**
-	 * Runs the given test with the given parameters on a test-object specified
-	 * by the string testObjectID.
-	 * 
-	 * @created 22.05.2012
-	 * @param <T>
-	 * @param test The test to be executed.
-	 * @param testObjectID Identifier for the test-object
-	 * @return
-	 */
-	private <T> Map<TestObjectProvider, List<TestObjectContainer<?>>> collectTestObjects(Test<T> test, String testObjectID) {
+	private static <T> T cast(Object object, Class<T> objectClass) {
+		// first check null, because Class.isInstance differs from
+		// "instanceof"-operator for null objects
+		if (object == null) return null;
 
-		final Map<TestObjectProvider, List<TestObjectContainer<?>>> allTestObjects = new HashMap<TestObjectProvider, List<TestObjectContainer<?>>>();
-
-		// retrieve all test objects
-		for (TestObjectProvider testObjectProvider : testObjectProviders) {
-
-			List<TestObjectContainer<T>> testObjects = testObjectProvider.getTestObjects(
-					test.getTestObjectClass(), testObjectID);
-			List<TestObjectContainer<?>> genericTestObjects = castTestObjects(testObjects);
-			allTestObjects.put(testObjectProvider, genericTestObjects);
-
+		// check the type of the test-object
+		if (!objectClass.isInstance(object)) {
+			throw new ClassCastException();
 		}
-
-		return allTestObjects;
-	}
-
-	private <T> List<TestObjectContainer<?>> castTestObjects(List<TestObjectContainer<T>> testObjects) {
-		// generics fail here, so we need to cast
-		List<TestObjectContainer<?>> genericTestObjects = new ArrayList<TestObjectContainer<?>>(
-				testObjects.size());
-		for (TestObjectContainer<?> testObjectContainer : testObjects) {
-			genericTestObjects.add(new TestObjectContainer<Object>(
-					testObjectContainer.getTestObjectName(),
-					testObjectContainer.getTestObject()));
-		}
-		return genericTestObjects;
+		// and securely cast
+		return objectClass.cast(object);
 	}
 
 	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult) {
@@ -312,8 +294,7 @@ public class TestExecutor {
 	}
 
 	private synchronized void updateProgressListener() {
-		progress = currentlyProcessedTaskVolune / overallTasks;
-		progressListener.updateProgress(progress, message);
+		progressListener.updateProgress(finishedTests / overallTestsCount, currentMessage);
 	}
 
 	class FutureTestTask extends FutureTask<Void> {
@@ -335,40 +316,42 @@ public class TestExecutor {
 	class CallableTest<T> implements Callable<Void> {
 
 		private final String testObjectName;
-		private final Object testObject;
+		private final T testObject;
 		private final Test<T> test;
 		private final TestResult testResult;
 		private final String[] args;
 		private final String testname;
+		private final String[][] ignores;
 
-		public CallableTest(String testObjectName, Object testObject, Test<T> test, String testname, TestResult testresult, String[] args) {
-			this.test = test;
+		public CallableTest(TestSpecification<T> specification, String testObjectName, T testObject, TestResult testresult) {
+			this.test = specification.getTest();
 			this.testObject = testObject;
 			this.testObjectName = testObjectName;
 			this.testResult = testresult;
-			this.args = args;
-			this.testname = testname;
+			this.args = specification.getArguments();
+			this.ignores = specification.getIgnores();
+			this.testname = specification.getTestName();
 		}
 
 		public void testStarted() {
-			currentlyRunning.add(getMessage());
-			message = getMessage();
+			currentlyRunningTests.add(getMessage());
+			currentMessage = getMessage();
 			updateProgressListener();
 		}
 
 		public void testFinished() {
-			currentlyRunning.remove(getMessage());
+			currentlyRunningTests.remove(getMessage());
 			String tempMessage = null;
 			try {
-				tempMessage = currentlyRunning.get(0);
+				tempMessage = currentlyRunningTests.get(0);
 			}
 			catch (IndexOutOfBoundsException e) {
 				// since another thread could remove the last element between
 				// checking for not empty and actually retrieving it, we just
 				// try to retrieve it and catch a possible exception
 			}
-			if (tempMessage != null) message = tempMessage;
-			currentlyProcessedTaskVolune += getTaskVolume();
+			if (tempMessage != null) currentMessage = tempMessage;
+			finishedTests += getTaskVolume();
 			updateProgressListener();
 		}
 
@@ -392,9 +375,9 @@ public class TestExecutor {
 							Message.Type.ERROR, "Test-object was null."));
 					return null;
 				}
-				Message message = test.execute(cast(testObject, test.getTestObjectClass()), args);
-				testResult.addMessage(testObjectName,
-						message);
+				Message message = test.execute(cast(testObject, test.getTestObjectClass()), args,
+						ignores);
+				testResult.addMessage(testObjectName, message);
 				return null;
 			}
 			catch (InterruptedException e) {

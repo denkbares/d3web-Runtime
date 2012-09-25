@@ -54,20 +54,21 @@ public abstract class AbstractTest<T> implements Test<T> {
 
 	@Override
 	public ArgsCheckResult checkArgs(String[] args) {
-		return checkParameter(this, args, argParameters);
+		return checkParameter(this, args, argParameters, false);
 	}
 
 	@Override
 	public ArgsCheckResult checkIgnore(String[] args) {
-		return checkParameter(this, args, ignoreParameters);
+		return checkParameter(this, args, ignoreParameters, true);
 	}
 
-	private static ArgsCheckResult checkParameter(Test<?> test, String[] args, List<TestParameter> parameters) {
+	private static ArgsCheckResult checkParameter(Test<?> test, String[] args, List<TestParameter> parameters, boolean ignoreParams) {
 		ArgsCheckResult r = new ArgsCheckResult(args);
 		int minParamCount = getNumberOfMandatoryParameters(parameters);
 		if (args.length < minParamCount) {
 			r.setError(0,
-					"Not enough arguments for execution of test '"
+					"Not enough " + (ignoreParams ? "ignore " : "")
+							+ "arguments for execution of test '"
 							+ test.getName()
 							+ "'. Expected " + parameters.size() + " argument"
 							+ (parameters.size() == 1 ? "" : "s") + ", but found "
@@ -81,7 +82,8 @@ public abstract class AbstractTest<T> implements Test<T> {
 			// arguments
 			if (i >= parameters.size()) {
 				r.setError(args.length - 1,
-						"Too many arguments passend for test '" + test.getName()
+						"Too many " + (ignoreParams ? "ignore " : "")
+								+ "arguments passend for test '" + test.getName()
 								+ "': Expected " + parameters.size() + " argument"
 								+ (parameters.size() == 1 ? "" : "s") + ", but found "
 								+ args.length + ".");
@@ -92,10 +94,10 @@ public abstract class AbstractTest<T> implements Test<T> {
 			TestParameter parameter = parameters.get(i);
 			boolean ok = parameter.checkParameterValue(args[i]);
 			if (!ok) {
-				r.setError(i,
-						"Argument passend as '" + parameter.getName()
-								+ "' is not a valid " + parameter.getType().toString()
-								+ " argument: \"" + args[i] + "\".");
+				r.setError(i, (ignoreParams ? "Ignore a" : "A") + "rgument passend as '"
+						+ parameter.getName()
+						+ "' is not a valid " + parameter.getType().toString()
+						+ " argument: \"" + args[i] + "\".");
 			}
 		}
 

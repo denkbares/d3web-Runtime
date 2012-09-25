@@ -34,7 +34,7 @@ import de.d3web.testing.Utils;
 public class UnusedStartNodeTest extends SimpleTest {
 
 	@Override
-	public Message check(KnowledgeBase kb, String[] args) throws InterruptedException {
+	public Message check(KnowledgeBase kb, String[] args, String[]... ignores) throws InterruptedException {
 		String errormsg = "";
 		if (null != kb) {
 			List<Flow> flowcharts =
