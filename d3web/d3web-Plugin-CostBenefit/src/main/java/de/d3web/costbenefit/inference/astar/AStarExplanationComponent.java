@@ -317,8 +317,8 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Calculates the primitive conditions, wich are not fullfilled after the
-	 * specified path is processed
+	 * Calculates the primitive conditions, which are not fullfilled after or
+	 * while the specified path is processed
 	 * 
 	 * @created 05.07.2012
 	 * @param path specified path
@@ -326,22 +326,29 @@ public class AStarExplanationComponent {
 	 * @param session actual session
 	 * @return a set of unfullfilled (sub) conditions
 	 */
-	public Set<Condition> getUnfullfilledConditions(Path path, Condition transitiveCondition, Session session) {
-		List<Condition> primitiveConditions = TPHeuristic.getPrimitiveConditions(transitiveCondition);
+	public static Set<Condition> getUnfullfilledConditions(Path path, Condition transitiveCondition, Session session) {
+		Set<Condition> result = new HashSet<Condition>(
+				TPHeuristic.getPrimitiveConditions(transitiveCondition));
+		Set<Condition> fullfilledConditions = new HashSet<Condition>();
 		Session copiedSession = Util.createSearchCopy(session);
+		addFullfilledConditions(result, copiedSession, fullfilledConditions);
 		for (QContainer qcon : path.getPath()) {
 			StateTransition stateTransition = StateTransition.getStateTransition(qcon);
 			if (stateTransition != null) {
 				Util.setNormalValues(copiedSession, qcon, PSMethodUserSelected.getInstance());
 				stateTransition.fire(copiedSession);
+				addFullfilledConditions(result, copiedSession, fullfilledConditions);
 			}
 		}
-		Set<Condition> falseConditions = new HashSet<Condition>();
-		for (Condition condition : primitiveConditions) {
-			if (!Conditions.isTrue(condition, copiedSession)) {
-				falseConditions.add(condition);
+		result.removeAll(fullfilledConditions);
+		return result;
+	}
+
+	private static void addFullfilledConditions(Collection<Condition> conditions, Session session, Collection<Condition> fullfilledConditions) {
+		for (Condition condition : conditions) {
+			if (Conditions.isTrue(condition, session)) {
+				fullfilledConditions.add(condition);
 			}
 		}
-		return falseConditions;
 	}
 }
