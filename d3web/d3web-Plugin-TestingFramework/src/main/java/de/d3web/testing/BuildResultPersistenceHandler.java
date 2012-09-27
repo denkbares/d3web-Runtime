@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -92,6 +93,9 @@ public class BuildResultPersistenceHandler {
 
 			for (String testObjectName : result.getTestObjectNames()) {
 				Message message = result.getMessage(testObjectName);
+				if (message == null) Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
+						"No message found for test object '" + testObjectName + "' in test '"
+								+ result.getTestName() + "'.");
 				Element messageElement = document.createElement(MESSAGE);
 				messageElement.setAttribute(TYPE, message.getType().toString());
 				messageElement.setAttribute(TEXT, message.getText());

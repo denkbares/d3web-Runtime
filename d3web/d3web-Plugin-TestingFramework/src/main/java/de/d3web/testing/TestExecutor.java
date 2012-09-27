@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.testing.Message.Type;
@@ -384,11 +386,12 @@ public class TestExecutor {
 				throw e;
 			}
 			catch (Throwable e) {
+				String message = "Unexpected error in test " + testname + ", during testing "
+						+ testObjectName;
 				testResult.addMessage(testObjectName,
 						new Message(Message.Type.ERROR,
-								"Unexpected error in test " + testname + ", during testing "
-										+ testObjectName +
-										": " + e));
+								message + ": " + e));
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, e);
 				return null;
 			}
 		}
