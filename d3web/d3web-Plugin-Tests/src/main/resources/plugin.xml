@@ -33,14 +33,6 @@
 		<parameter id="priority" value="5" />
 	</extension>
 	
-	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
-		id="UnusedStartNodeTest">
-		<parameter id="class"
-			value="de.d3web.test.diaflux.anomalies.UnusedStartNodeTest" />
-		<parameter id="name" value="UnusedStartNode" />
-		<parameter id="description" value="CITest UnusedStartNode" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
+
 	
 </plugin>
