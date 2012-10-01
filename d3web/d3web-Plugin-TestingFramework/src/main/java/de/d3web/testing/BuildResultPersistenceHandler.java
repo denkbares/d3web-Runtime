@@ -93,9 +93,12 @@ public class BuildResultPersistenceHandler {
 
 			for (String testObjectName : result.getTestObjectNames()) {
 				Message message = result.getMessage(testObjectName);
-				if (message == null) Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
-						"No message found for test object '" + testObjectName + "' in test '"
-								+ result.getTestName() + "'.");
+				if (message == null) {
+					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
+							"No message found for test object '" + testObjectName + "' in test '"
+									+ result.getTestName() + "'.");
+					continue;
+				}
 				Element messageElement = document.createElement(MESSAGE);
 				messageElement.setAttribute(TYPE, message.getType().toString());
 				messageElement.setAttribute(TEXT, message.getText());
