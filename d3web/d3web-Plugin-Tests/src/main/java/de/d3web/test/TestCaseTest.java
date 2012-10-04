@@ -18,6 +18,8 @@
  */
 package de.d3web.test;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -50,55 +52,111 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	private static final String SEARCH_STRING_DESCRIPTION = "Specifies the knowledge base with which the test case is to be tested.";
 
 	public TestCaseTest() {
-		this.addParameter("KnowledgeBase", TestParameter.Type.String, TestParameter.Mode.Mandatory,
+		this.addParameter("KnowledgeBase", TestParameter.Type.Regex, TestParameter.Mode.Mandatory,
 				SEARCH_STRING_DESCRIPTION);
 	}
 
 	@Override
 	public Message execute(TestCase testCase, String[] args, String[]... ignores) throws InterruptedException {
-		KnowledgeBase kb = getKnowledgeBase(args);
-		if (kb == null) {
-			return new Message(Type.FAILURE, "Knowledge base not found!");
-		}
-		if (!testCase.check(kb).isEmpty()) {
-			return new Message(Type.FAILURE, "Test is not consistent!");
+		Collection<KnowledgeBase> kbs = getKnowledgeBases(args);
+		if (kbs.size() == 0) {
+			return new Message(Type.FAILURE, "No Knowledge base found!");
 		}
 
-		Session session = SessionFactory.createSession(kb, testCase.getStartDate());
-		for (Date date : testCase.chronology()) {
-			TestCaseUtils.applyFindings(session, testCase, date);
-			for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
-				String time = "(time ";
-				if (date.getTime() < year) {
-					time += date.getTime() + "ms";
-				}
-				else {
-					time += date;
-				}
-				time += ")";
-				if (!check.check(session)) {
-					String messageText = "Check '" + check.getCondition().trim() +
-							"' " + time + " failed.";
+		// we have to check each test against (potentially) multiple KBs
+		// that makes message generate a bit more complicated
+		List<String> inconsistentKBs = new ArrayList<String>();
+		List<String> failedKBs = new ArrayList<String>();
+		List<String> passedKBs = new ArrayList<String>();
 
-					return new Message(Type.FAILURE, messageText);
-				}
-				Utils.checkInterrupt();
+		for (KnowledgeBase kb : kbs) {
+
+			if (!testCase.check(kb).isEmpty()) {
+				inconsistentKBs.add(kb.getId());
+				continue;
 			}
+
+			Session session = SessionFactory.createSession(kb, testCase.getStartDate());
+			boolean failed = false;
+			for (Date date : testCase.chronology()) {
+				TestCaseUtils.applyFindings(session, testCase, date);
+				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
+					String time = "(time ";
+					if (date.getTime() < year) {
+						time += date.getTime() + "ms";
+					}
+					else {
+						time += date;
+					}
+					time += ")";
+					if (!check.check(session)) {
+						String messageText = "Check '" + check.getCondition().trim() +
+								"' " + time + " failed.";
+						failedKBs.add("KB " + kb.getId() + " failed: " + messageText);
+						failed = true;
+					}
+
+					Utils.checkInterrupt();
+				}
+
+			}
+			if (!failed) {
+				passedKBs.add(kb.getId());
+			}
+		}
+
+		if (inconsistentKBs.size() > 0 || failedKBs.size() > 0) {
+			String message = renderFailureMessage(inconsistentKBs, failedKBs, passedKBs);
+			return new Message(Type.FAILURE, message);
 		}
 
 		return new Message(Type.SUCCESS);
 	}
 
-	private KnowledgeBase getKnowledgeBase(String[] args) {
+	private String renderFailureMessage(List<String> inconsistentKBs, List<String> failedKBs, List<String> passedKBs) {
+		String message = "";
+		if (inconsistentKBs.size() > 0) {
+			message += "Knowledge base(s) inconsistent with test: ";
+			for (String inconsistentKB : inconsistentKBs) {
+				// enumerate inconsistent KBs in one line
+				message += " " + inconsistentKB + ";";
+			}
+			// add line break afterwards
+			if (message.endsWith(";")) {
+				message = message.substring(0, message.length() - 1) + "\n";
+			}
+		}
+		// enumerate failed KBs one per line
+		for (String failedMessage : failedKBs) {
+			message += failedMessage + "\n";
+		}
+		if (passedKBs.size() > 0) {
+			message += "Knowledge base(s) passed test: ";
+			for (String passedKB : passedKBs) {
+				// enumerate inconsistent KBs in one line
+				message += " " + passedKB + ";";
+			}
+			// add line break afterwards
+			if (message.endsWith(";")) {
+				message = message.substring(0, message.length() - 1) + "\n";
+			}
+		}
+		return message;
+	}
+
+	private Collection<KnowledgeBase> getKnowledgeBases(String[] args) {
 		if (args.length == 0) return null;
+		Collection<KnowledgeBase> result = new ArrayList<KnowledgeBase>();
 		for (TestObjectProvider testObjectProvider : TestObjectProviderManager.getTestObjectProviders()) {
 			List<TestObjectContainer<KnowledgeBase>> testObjects = testObjectProvider.getTestObjects(
 					KnowledgeBase.class, args[0]);
 			if (!testObjects.isEmpty()) {
-				return testObjects.get(0).getTestObject();
+				for (TestObjectContainer<KnowledgeBase> testObjectContainer : testObjects) {
+					result.add(testObjectContainer.getTestObject());
+				}
 			}
 		}
-		return null;
+		return result;
 	}
 
 	@Override
