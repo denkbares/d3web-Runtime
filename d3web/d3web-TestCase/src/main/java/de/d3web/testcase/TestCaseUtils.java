@@ -117,6 +117,9 @@ public class TestCaseUtils {
 	 * @param value {@link Value}
 	 */
 	public static void checkValues(Collection<String> errors, TerminologyObject object, Value value) {
+		if (object == null) {
+			throw new NullPointerException();
+		}
 		if (value == null) {
 			errors.add("The question \"" + object.getName() + "\" has no valid value.");
 		}
