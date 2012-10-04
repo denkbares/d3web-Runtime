@@ -71,6 +71,11 @@ public class BuildResultPersistenceHandler {
 		Element root = document.createElement(BUILD);
 		document.appendChild(root);
 
+		// set namespaces for xsd
+		root.setAttribute("xmlns", "http://www.denkbares.com");
+		root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		root.setAttribute("xsi:schemaLocation", "http://www.denkbares.com/build_result.xsd");
+
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
 		root.setAttribute(DATE, DATE_FORMAT.format(build.getBuildDate()));
