@@ -74,7 +74,7 @@ public class BuildResultPersistenceHandler {
 		// set namespaces for xsd
 		root.setAttribute("xmlns", "http://www.denkbares.com");
 		root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		root.setAttribute("xsi:schemaLocation", "http://www.denkbares.com/build_result.xsd");
+		root.setAttribute("xsi:schemaLocation", "http://www.denkbares.com build_result.xsd");
 
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
