@@ -37,7 +37,7 @@ import de.d3web.testing.Message;
  * @author jochenreutelshofer
  * @created 30.07.2012
  */
-public class EmptyQuestionnaireTester {
+public class EmptyQuestionnaireTestTest {
 
 	@Test
 	public void testEmptyQuestionnaireFalse() throws InterruptedException {
