@@ -134,7 +134,7 @@ public class TestResult implements Comparable<TestResult> {
 		Type t = Message.Type.SUCCESS;
 		for (String testObjectName : this.messages.keySet()) {
 			Message test = messages.get(testObjectName);
-			if (test.getType().equals(Type.ERROR)) {
+			if (test == null || test.getType().equals(Type.ERROR)) {
 				return Type.ERROR;
 			}
 			if (test.getType().equals(Type.FAILURE)) {
