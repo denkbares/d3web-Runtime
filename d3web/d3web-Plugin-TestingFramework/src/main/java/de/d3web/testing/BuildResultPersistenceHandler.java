@@ -60,6 +60,20 @@ public class BuildResultPersistenceHandler {
 
 	private static final String TEST = "test";
 
+	private static final String TESTOBJECT_COUNT = "testobjects";
+
+	private static final String XMLNS = "xmlns";
+
+	private static final String DENKBARES = "http://www.denkbares.com";
+
+	private static final String RESULT_SCHEMA_FILE = "build_result.xsd";
+
+	private static final String XMLNS_XSI = "xmlns:xsi";
+
+	private static final String XML_SCHEM_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
+
+	private static final String XSI_SCHEMA_LOCATION = "xsi:schemaLocation";
+
 	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
 
 	public static Document toXML(BuildResult build) throws IOException, ParserConfigurationException {
@@ -72,9 +86,9 @@ public class BuildResultPersistenceHandler {
 		document.appendChild(root);
 
 		// set namespaces for xsd
-		root.setAttribute("xmlns", "http://www.denkbares.com");
-		root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		root.setAttribute("xsi:schemaLocation", "http://www.denkbares.com build_result.xsd");
+		root.setAttribute(XMLNS, DENKBARES);
+		root.setAttribute(XMLNS_XSI, XML_SCHEM_NAMESPACE);
+		root.setAttribute(XSI_SCHEMA_LOCATION, DENKBARES + " " + RESULT_SCHEMA_FILE);
 
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
@@ -90,6 +104,10 @@ public class BuildResultPersistenceHandler {
 			// add required test attributes
 			test.setAttribute(NAME, result.getTestName());
 
+			// add total number of test objects for this test
+			int numberOfTestObjects = result.getTestObjectNames().size();
+			test.setAttribute(TESTOBJECT_COUNT, String.valueOf(numberOfTestObjects));
+
 			// add optional test attributes
 			if (result.getConfiguration() != null) {
 				test.setAttribute(CONFIGURATION,
@@ -102,6 +120,12 @@ public class BuildResultPersistenceHandler {
 					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
 							"No message found for test object '" + testObjectName + "' in test '"
 									+ result.getTestName() + "'.");
+					continue;
+				}
+				if (message.getType().equals(Message.Type.SUCCESS)) {
+					// messages of successful tests are not listed explicitly
+					// instead we count the number of overall test objects as
+					// attribute of test
 					continue;
 				}
 				Element messageElement = document.createElement(MESSAGE);
