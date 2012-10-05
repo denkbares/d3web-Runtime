@@ -105,8 +105,9 @@ public class BuildResultPersistenceHandler {
 			test.setAttribute(NAME, result.getTestName());
 
 			// add total number of test objects for this test
-			int numberOfTestObjects = result.getTestObjectNames().size();
-			test.setAttribute(TESTOBJECT_COUNT, String.valueOf(numberOfTestObjects));
+			// int numberOfTestObjects = result.getTestObjectNames().size();
+			// test.setAttribute(TESTOBJECT_COUNT,
+			// String.valueOf(numberOfTestObjects));
 
 			// add optional test attributes
 			if (result.getConfiguration() != null) {
@@ -120,12 +121,6 @@ public class BuildResultPersistenceHandler {
 					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
 							"No message found for test object '" + testObjectName + "' in test '"
 									+ result.getTestName() + "'.");
-					continue;
-				}
-				if (message.getType().equals(Message.Type.SUCCESS)) {
-					// messages of successful tests are not listed explicitly
-					// instead we count the number of overall test objects as
-					// attribute of test
 					continue;
 				}
 				Element messageElement = document.createElement(MESSAGE);
