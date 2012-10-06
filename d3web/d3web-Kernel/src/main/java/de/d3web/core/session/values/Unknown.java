@@ -39,9 +39,10 @@ public class Unknown implements QuestionValue {
 	}
 
 	/**
-	 * Checks if the specified value is assigned to Unknown
+	 * Checks if the specified value is assigned to Unknown. If the specified
+	 * value is null, false is returned.
 	 * 
-	 * @param value
+	 * @param value the value to be checked against unknown
 	 * @return true if the value is set to unknown, false otherwise
 	 * @author joba
 	 * @date 09.04.2010
