@@ -18,6 +18,9 @@
  */
 package de.d3web.testing;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Provides the actual TestObject and its name. We need this container, since
  * the test objects do not necessarily know their own names.
@@ -31,8 +34,15 @@ public class TestObjectContainer<T> {
 	private final String testObjectname;
 
 	public TestObjectContainer(String testObjectName, T testObject) {
-		this.testObjectname = testObjectName;
 		this.testObject = testObject;
+		if (testObjectName == null) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"test object name was null, using toString() as test object name");
+			this.testObjectname = testObject.toString();
+		}
+		else {
+			this.testObjectname = testObjectName;
+		}
 	}
 
 	public T getTestObject() {
