@@ -60,8 +60,6 @@ public class BuildResultPersistenceHandler {
 
 	private static final String TEST = "test";
 
-	private static final String TESTOBJECT_COUNT = "testobjects";
-
 	private static final String XMLNS = "xmlns";
 
 	private static final String DENKBARES = "http://www.denkbares.com";
