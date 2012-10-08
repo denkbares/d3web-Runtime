@@ -37,6 +37,7 @@ public class Message implements Comparable<Message> {
 
 	public Message(Type type) {
 		this(type, null);
+		if (type == null) throw new NullPointerException();
 	}
 
 	public Type getType() {
