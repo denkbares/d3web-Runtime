@@ -110,6 +110,9 @@ public class Message implements Comparable<Message> {
 		if (this.type == Type.ERROR && o.type == Type.SUCCESS) return -1;
 		if (this.type != Type.FAILURE && o.type == Type.FAILURE) return 1;
 		if (this.type == Type.SUCCESS && o.type == Type.ERROR) return 1;
+		if (this.message != null && o.message == null) return -1;
+		if (this.message == null && o.message != null) return 1;
+		if (this.message == null && o.message == null) return 0;
 		return this.message.compareTo(o.message);
 	}
 
