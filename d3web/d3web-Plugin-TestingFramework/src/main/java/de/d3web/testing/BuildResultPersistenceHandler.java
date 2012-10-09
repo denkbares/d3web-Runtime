@@ -171,6 +171,7 @@ public class BuildResultPersistenceHandler {
 						type = Message.Type.valueOf(typeString);
 					}
 					String text = messageElement.getAttribute(TEXT);
+					if(text.length() == 0) { text = null;}
 					String testObjectName = messageElement.getAttribute(TEST_OBJECT);
 					Message m = new Message(type, text);
 					result.addMessage(testObjectName, m);

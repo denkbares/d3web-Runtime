@@ -23,7 +23,9 @@ package de.d3web.testing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An instance of this class holds the result of a ci build
@@ -101,6 +103,43 @@ public final class BuildResult {
 	 */
 	public Date getBuildDate() {
 		return buildDate;
+	}
+
+	@Override
+	public int hashCode() {
+		List<TestResult> testResults = this.getResults();
+		int hashCode = 31;
+		for (TestResult testResult : testResults) {
+			hashCode += testResult.hashCode();
+		}
+		return hashCode;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (obj instanceof BuildResult) {
+			// build results are considered equal if containing the same test
+			// results (disregarding build date, duration, number..)
+			BuildResult other = (BuildResult) obj;
+			Set<TestResult> otherSet = new HashSet<TestResult>();
+			otherSet.addAll(other.getResults());
+
+			Set<TestResult> thisSet = new HashSet<TestResult>();
+			thisSet.addAll(this.getResults());
+
+			if (!(thisSet.size() == otherSet.size())) {
+				return false;
+			}
+
+			thisSet.removeAll(otherSet);
+			if (thisSet.size() > 0) {
+				return false;
+			}
+			// sets have equal size and contain same elements
+			return true;
+		}
+		return false;
 	}
 
 	/**
