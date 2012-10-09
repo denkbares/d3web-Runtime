@@ -101,7 +101,9 @@ public class TestResult implements Comparable<TestResult> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((configuration == null) ? 0 : configuration.hashCode());
+		for (String configString : configuration) {
+			result = prime * result + ((configString == null) ? 0 : configString.hashCode());
+		}
 		result = prime * result + ((messages == null) ? 0 : messages.hashCode());
 		result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
 		return result;
