@@ -3,8 +3,8 @@ package de.d3web.testing;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -169,7 +169,7 @@ public class TestExecutor {
 
 	private Map<TestSpecification<?>, Collection<CallableTest<?>>> getCallableTestsMap(Collection<TestSpecification<?>> validSpecifications) {
 
-		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = new HashMap<TestSpecification<?>, Collection<CallableTest<?>>>();
+		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = new LinkedHashMap<TestSpecification<?>, Collection<CallableTest<?>>>();
 
 		for (TestSpecification<?> specification : validSpecifications) {
 			String[] testArgs = specification.getArguments();
