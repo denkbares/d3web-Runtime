@@ -24,8 +24,7 @@ import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 
 /**
- * This class prepares a template for a simple CI Test, that only requires one
- * argument for calling the test: The name of the master article.
+ * This class prepares a template for a simple CI Test
  * 
  * @author Joachim Baumeister (denkbares GmbH)
  * @created 26.05.2011
@@ -36,13 +35,7 @@ public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 
 	@Override
 	public Message execute(KnowledgeBase knowledge, String[] args, String[]... ignores) throws InterruptedException {
-
-		// Run the particular checks and collect the messages
-		if (knowledge != null) {
-			return check(knowledge, args, ignores);
-
-		}
-		return new Message(Type.FAILURE, "Knowledge base not found.");
+		return check(knowledge, args, ignores);
 	}
 
 	@Override
