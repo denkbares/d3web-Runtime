@@ -169,6 +169,7 @@ public class TestResult implements Comparable<TestResult> {
 	 * @param message
 	 */
 	public void addMessage(String testObjectName, Message message) {
+		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
 		if (message == null) throw new NullPointerException("Message cannot be null");
 		this.messages.put(testObjectName, message);
 	}
