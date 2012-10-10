@@ -32,7 +32,7 @@ import de.d3web.testing.Message.Type;
  */
 public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
 
-	public static final Message SUCCESS = new Message(Type.SUCCESS, "");
+	public static final Message SUCCESS = new Message(Type.SUCCESS, null);
 
 	@Override
 	public Message execute(KnowledgeBase knowledge, String[] args, String[]... ignores) throws InterruptedException {
