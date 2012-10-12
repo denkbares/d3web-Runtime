@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 import de.d3web.testing.MessageObject;
@@ -40,7 +39,7 @@ import de.d3web.testing.TestParameter.Mode;
  * @author Jochen Reutelshoefer (denkbares GmbH)
  * @created 24.07.2012
  */
-public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
+public class EmptyQuestionnaireTest extends KBTest {
 
 	public EmptyQuestionnaireTest() {
 		addIgnoreParameter(
@@ -97,11 +96,6 @@ public class EmptyQuestionnaireTest extends AbstractTest<KnowledgeBase> {
 			htmlList.append("\n");
 		}
 		return htmlList.toString();
-	}
-
-	@Override
-	public Class<KnowledgeBase> getTestObjectClass() {
-		return KnowledgeBase.class;
 	}
 
 	@Override

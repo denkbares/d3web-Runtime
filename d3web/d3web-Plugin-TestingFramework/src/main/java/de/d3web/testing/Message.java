@@ -31,6 +31,12 @@ import java.util.Collections;
  */
 public class Message implements Comparable<Message> {
 
+	/**
+	 * General success message, can be returned by tests in case of success if
+	 * no text message is needed
+	 */
+	public static final Message SUCCESS = new Message(Type.SUCCESS, null);
+
 	private final Type type;
 	private final String message;
 	private Collection<MessageObject> objects = new ArrayList<MessageObject>();

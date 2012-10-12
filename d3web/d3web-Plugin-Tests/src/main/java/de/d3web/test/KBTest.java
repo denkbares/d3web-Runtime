@@ -20,29 +20,18 @@ package de.d3web.test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.testing.AbstractTest;
-import de.d3web.testing.Message;
-import de.d3web.testing.Message.Type;
 
 /**
- * This class prepares a template for a simple CI Test
+ * This class prepares a template for a simple CI Test for d3web knowledge bases
  * 
  * @author Joachim Baumeister (denkbares GmbH)
  * @created 26.05.2011
  */
-public abstract class SimpleTest extends AbstractTest<KnowledgeBase> {
-
-	public static final Message SUCCESS = new Message(Type.SUCCESS, null);
-
-	@Override
-	public Message execute(KnowledgeBase knowledge, String[] args, String[]... ignores) throws InterruptedException {
-		return check(knowledge, args, ignores);
-	}
+public abstract class KBTest extends AbstractTest<KnowledgeBase> {
 
 	@Override
 	public Class<KnowledgeBase> getTestObjectClass() {
 		return KnowledgeBase.class;
 	}
-
-	public abstract Message check(KnowledgeBase knowledge, String[] args, String[]... ignores) throws InterruptedException;
 
 }
