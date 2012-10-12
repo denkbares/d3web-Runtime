@@ -20,6 +20,7 @@ package de.d3web.testing;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -36,7 +37,7 @@ public class TestResult implements Comparable<TestResult> {
 	private final String[] configuration;
 	private final String testName;
 
-	private final Map<String, Message> messages = new TreeMap<String, Message>();
+	private final Map<String, Message> messages = Collections.synchronizedMap(new TreeMap<String, Message>());
 
 	/**
 	 * Creates a new TestResult for the specified test with the specified
