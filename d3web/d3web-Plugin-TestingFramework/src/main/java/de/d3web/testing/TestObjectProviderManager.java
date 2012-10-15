@@ -27,6 +27,7 @@ import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
 
 /**
+ * Utility class for plugins of the type TestObjectProvider.
  * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 30.05.2012

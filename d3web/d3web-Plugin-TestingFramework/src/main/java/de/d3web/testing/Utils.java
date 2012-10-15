@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * 
+ * General utility class of the Testing Framework.
  * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 11.06.2012

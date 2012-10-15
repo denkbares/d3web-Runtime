@@ -39,12 +39,20 @@ import de.d3web.testing.Message.Type;
  */
 
 /**
- * A TestExecutor executes a set of tests.
+ * A TestExecutor executes a set of tests. It can use multiple threads to
+ * execute the testing tasks in parallel. It uses updates a ProgressListener on
+ * finished tasks.
  * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public class TestExecutor {
+
+	/**
+	 * Here the number of (parllel) threads are configured that will be used to
+	 * execute the testing tasks.
+	 */
+	private static final int NUMBER_OF_PARALLEL_THREADS = 2;
 
 	private final Collection<TestObjectProvider> objectProviders;
 	private final List<TestSpecification<?>> specifications;
@@ -91,7 +99,7 @@ public class TestExecutor {
 		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
 		build = new BuildResult();
-		executor = Executors.newFixedThreadPool(2);
+		executor = Executors.newFixedThreadPool(NUMBER_OF_PARALLEL_THREADS);
 
 		// checks the given tests of validity and only returns the valid ones
 		Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();

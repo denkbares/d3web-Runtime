@@ -49,6 +49,14 @@ public class TestObjectContainer<T> {
 		return testObject;
 	}
 
+	/**
+	 * Returns the name of the test object. If null was passed to the
+	 * TestObjectContainer by the TestObjectProvider the toString() value of the
+	 * test object is returned.
+	 * 
+	 * @created 15.10.2012
+	 * @return name of the test object
+	 */
 	public String getTestObjectName() {
 		return testObjectname;
 	}

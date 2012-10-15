@@ -32,6 +32,15 @@ public class TestSpecification<T> {
 	private final String[] args;
 	private final String[][] ignores;
 
+	/**
+	 * @param test Instance of the test to be executed. (mandatory)
+	 * @param testObject The test object the test will be executed on (target).
+	 *        (mandatory)
+	 * @param args The configuration parameters for the execution of the tests
+	 *        (depends on test).
+	 * @param ignores Information about entities that have to be ignored during
+	 *        testing. (optional)
+	 */
 	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
 		this.test = test;
 		this.args = args;

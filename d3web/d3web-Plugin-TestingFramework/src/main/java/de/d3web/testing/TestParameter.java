@@ -24,7 +24,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Represents a test parameter.
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshoefer (denkbares GmbH)
  * @created 31.07.2012
  */
 public class TestParameter {
@@ -59,6 +59,15 @@ public class TestParameter {
 				+ description;
 	}
 
+	/**
+	 * Checks whether the passed string value complies to the type of this
+	 * parameter.
+	 * 
+	 * 
+	 * @created 15.10.2012
+	 * @param value
+	 * @return Compliance of the string to the parameter type
+	 */
 	public boolean checkParameterValue(String value) {
 
 		if (value == null || value.trim().length() == 0) {

@@ -18,6 +18,13 @@
  */
 package de.d3web.testing;
 
+/**
+ * Objects (e.g. of a knowledge base) can be associated with an error message.
+ * In that way a system displaying the message can render the object in a
+ * special way (if a corresponding renderer is at hand).
+ * 
+ * @author Albrecht Striffler
+ */
 public class MessageObject {
 
 	String objectName;
