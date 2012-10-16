@@ -48,7 +48,7 @@ public class TestResult implements Comparable<TestResult> {
 	 *        empty array otherwise
 	 */
 	public TestResult(String testName, String[] configuration) {
-		this.configuration = configuration;
+		this.configuration = Arrays.copyOf(configuration, configuration.length);
 		this.testName = testName;
 	}
 

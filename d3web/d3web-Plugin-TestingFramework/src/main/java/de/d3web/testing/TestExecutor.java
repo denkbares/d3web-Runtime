@@ -393,7 +393,7 @@ public class TestExecutor {
 			catch (InterruptedException e) {
 				throw e;
 			}
-			catch (Throwable e) {
+			catch (Exception e) {
 				String message = "Unexpected error in test " + testname + ", during testing "
 						+ testObjectName;
 				testResult.addMessage(testObjectName,

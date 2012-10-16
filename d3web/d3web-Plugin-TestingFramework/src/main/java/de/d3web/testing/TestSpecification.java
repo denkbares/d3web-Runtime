@@ -18,6 +18,8 @@
  */
 package de.d3web.testing;
 
+import java.util.Arrays;
+
 /**
  * Class holding a test instance ready to be executed with all specified
  * declarations.
@@ -43,9 +45,13 @@ public class TestSpecification<T> {
 	 */
 	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
 		this.test = test;
-		this.args = args;
+		this.args = Arrays.copyOf(args, args.length);
 		this.testObject = testObject;
-		this.ignores = ignores;
+		this.ignores = new String[ignores.length][];
+		for (int i = 0; i < ignores.length; i++) {
+			this.ignores[i] = Arrays.copyOf(ignores[i], ignores[i].length);
+		}
+
 	}
 
 	public Test<T> getTest() {

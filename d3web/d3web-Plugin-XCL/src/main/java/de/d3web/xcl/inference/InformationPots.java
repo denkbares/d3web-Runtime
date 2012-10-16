@@ -49,7 +49,7 @@ public class InformationPots<K> {
 		private final int hashCode;
 
 		public MultiKey(K[] keys) {
-			this.keys = keys;
+			this.keys = keys; // NOSONAR
 			this.hashCode = Arrays.hashCode(keys);
 		}
 

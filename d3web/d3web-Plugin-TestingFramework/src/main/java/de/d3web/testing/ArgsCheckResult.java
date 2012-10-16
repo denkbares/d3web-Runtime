@@ -18,6 +18,8 @@
  */
 package de.d3web.testing;
 
+import java.util.Arrays;
+
 /**
  * Class to represent the results for checking arguments of a test. This class
  * is used for both, test arguments, and ignore arguments for tests.
@@ -37,7 +39,7 @@ public class ArgsCheckResult {
 	 * @param args the arguments that have been checked
 	 */
 	public ArgsCheckResult(String[] args) {
-		this.args = args;
+		this.args = Arrays.copyOf(args, args.length);
 		if (args.length > 0) {
 			errors = new String[args.length];
 			warnings = new String[args.length];
