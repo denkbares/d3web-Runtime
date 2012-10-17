@@ -163,8 +163,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 		private final CompiledCostsFunction[] children;
 
-		public CompiledCondAnd(CompiledCostsFunction[] children) {
-			this.children = children; // NOSONAR
+		public CompiledCondAnd(CompiledCostsFunction[] children) { // NOSONAR
+			this.children = children;
 		}
 
 		@Override
@@ -182,8 +182,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 		private final CompiledCostsFunction[] children;
 
-		public CompiledCondOr(CompiledCostsFunction[] children) {
-			this.children = children; // NOSONAR
+		public CompiledCondOr(CompiledCostsFunction[] children) { // NOSONAR
+			this.children = children;
 		}
 
 		@Override

@@ -48,8 +48,8 @@ public class InformationPots<K> {
 		private K[] keys;
 		private final int hashCode;
 
-		public MultiKey(K[] keys) {
-			this.keys = keys; // NOSONAR
+		public MultiKey(K[] keys) { // NOSONAR
+			this.keys = keys;
 			this.hashCode = Arrays.hashCode(keys);
 		}
 
