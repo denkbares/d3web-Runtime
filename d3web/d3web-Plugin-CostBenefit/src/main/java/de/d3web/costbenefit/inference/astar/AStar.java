@@ -118,7 +118,8 @@ public class AStar {
 		// transitions, so they are checked as targets before the calculation
 		// starts
 		for (QContainer qcon : session.getKnowledgeBase().getManager().getQContainers()) {
-			if (StateTransition.getStateTransition(qcon) == null) {
+			StateTransition stateTransition = StateTransition.getStateTransition(qcon);
+			if (stateTransition == null || stateTransition.getActivationCondition() == null) {
 				updateTargets(new AStarPath(qcon, null, costFunction.getCosts(qcon, session)));
 			}
 		}

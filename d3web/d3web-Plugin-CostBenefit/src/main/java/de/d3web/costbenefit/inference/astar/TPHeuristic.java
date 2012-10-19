@@ -143,6 +143,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				// qcontainers without Statetransition are handled separately
 				if (st == null) continue;
 				Condition activationCondition = st.getActivationCondition();
+				if (activationCondition == null) continue;
 				Collection<TerminologyObject> forbiddenTermObjects = getForbiddenObjects(activationCondition);
 				List<Condition> conditions = getPrimitiveConditions(activationCondition);
 				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
