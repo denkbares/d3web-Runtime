@@ -253,9 +253,14 @@ public class AStarExplanationComponent {
 		if (target.getQContainers().size() != 1) {
 			throw new IllegalArgumentException("this method only works with single targets.");
 		}
+		StateTransition stateTransition = StateTransition.getStateTransition(target.getQContainers().get(
+				0));
+		if (stateTransition == null) {
+			return Collections.emptySet();
+		}
 		Condition transitiveCondition = getAndInitTPHeuristic(model).getTransitiveCondition(
 				new AStarPath(null, null, 0),
-				StateTransition.getStateTransition(target.getQContainers().get(0)));
+				stateTransition);
 
 		List<QContainer> path = new LinkedList<QContainer>(target.getMinPath().getPath());
 		path.removeAll(target.getQContainers());
