@@ -239,13 +239,14 @@ public class TestExecutor {
 		try {
 			executor.shutdown();
 			while (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
-				build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+				// wait
 			}
 		}
 		catch (InterruptedException e) {
 			progressListener.updateProgress(1f, "Aborted, please wait...");
 		}
 		finally {
+			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
 			if (terminated) {
 				build = null;
 			}
