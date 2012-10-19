@@ -455,7 +455,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		Condition precondition = stateTransition.getActivationCondition();
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
-		for (Pair<List<Condition>, Set<QContainer>> p : targetCache.get(stateTransition.getQcontainer())) {
+		List<Pair<List<Condition>, Set<QContainer>>> list = targetCache.get(stateTransition.getQcontainer());
+		if (list == null) {
+			return precondition;
+		}
+		for (Pair<List<Condition>, Set<QContainer>> p : list) {
 			// if no qcontainer was on the path, add the conditions
 			if (!path.contains(p.getB())) {
 				conditions.addAll(p.getA());
