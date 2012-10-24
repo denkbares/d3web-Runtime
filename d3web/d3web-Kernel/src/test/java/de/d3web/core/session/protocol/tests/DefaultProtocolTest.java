@@ -81,4 +81,14 @@ public class DefaultProtocolTest {
 		assertThat(history.contains(new FactProtocolEntry(now, numFact)), is(true));
 		assertThat(history.contains(new FactProtocolEntry(now, textFact)), is(true));
 	}
+
+	@Test
+	public void testDeletion() {
+		assertThat(defaultProtocolUnderTest.getProtocolHistory().size(), is(2));
+		FactProtocolEntry entry = new FactProtocolEntry(now, textFact);
+		assertThat(defaultProtocolUnderTest.getProtocolHistory().contains(entry), is(true));
+		assertThat(defaultProtocolUnderTest.removeEntry(entry), is(true));
+		assertThat(defaultProtocolUnderTest.getProtocolHistory().size(), is(1));
+		assertThat(defaultProtocolUnderTest.getProtocolHistory().contains(entry), is(false));
+	}
 }

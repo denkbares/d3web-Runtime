@@ -83,4 +83,14 @@ public interface Protocol {
 	 * @created 26.10.2010
 	 */
 	public void clear();
+
+	/**
+	 * Removes the first occurrence of the specified ProtocolEntry from this
+	 * Protocol.
+	 * 
+	 * @created 24.10.2012
+	 * @param entry
+	 * @return true if entry was contained in this protocol
+	 */
+	public boolean removeEntry(ProtocolEntry entry);
 }

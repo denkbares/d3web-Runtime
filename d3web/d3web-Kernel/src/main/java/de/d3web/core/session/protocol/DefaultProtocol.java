@@ -82,4 +82,9 @@ public class DefaultProtocol implements Protocol {
 		this.entries.clear();
 	}
 
+	@Override
+	public boolean removeEntry(ProtocolEntry entry) {
+		return entries.remove(entry);
+	}
+
 }
