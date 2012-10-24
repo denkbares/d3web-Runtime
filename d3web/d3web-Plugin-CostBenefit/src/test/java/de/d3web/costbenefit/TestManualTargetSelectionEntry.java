@@ -76,7 +76,7 @@ public class TestManualTargetSelectionEntry {
 		em.selectTarget(target1);
 		em.selectTarget(target2);
 		em.selectTarget(multiTarget);
-		checkEntries(target1, target2, session);
+		checkEntries(target1, target2, session, true);
 		// test persistence
 		file.getParentFile().mkdirs();
 		SessionRecord sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
@@ -86,25 +86,46 @@ public class TestManualTargetSelectionEntry {
 		Assert.assertEquals(1, loadedRecords.size());
 		Session reloadedSession = SessionConversionFactory.copyToSession(kb,
 				loadedRecords.iterator().next());
-		checkEntries(target1, target2, reloadedSession);
-
+		checkEntries(target1, target2, reloadedSession, true);
+		Assert.assertTrue(removeLastEntry(reloadedSession));
+		checkEntries(target1, target2, reloadedSession, false);
 	}
 
-	private void checkEntries(QContainer target1, QContainer target2, Session session) {
+	private void checkEntries(QContainer target1, QContainer target2, Session session, boolean containsMultitarget) {
+		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = getEntries(session);
+		Assert.assertEquals(target1.getName(),
+				manualTargetSelectionEntries.get(0).getTargetNames()[0]);
+		Assert.assertEquals(target2.getName(),
+				manualTargetSelectionEntries.get(1).getTargetNames()[0]);
+		if (containsMultitarget) {
+			Assert.assertEquals(target1.getName(),
+					manualTargetSelectionEntries.get(2).getTargetNames()[0]);
+			Assert.assertEquals(target2.getName(),
+					manualTargetSelectionEntries.get(2).getTargetNames()[1]);
+		}
+	}
+
+	public List<ManualTargetSelectionEntry> getEntries(Session session) {
 		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = new LinkedList<ManualTargetSelectionEntry>();
 		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
 			if (entry instanceof ManualTargetSelectionEntry) {
 				manualTargetSelectionEntries.add((ManualTargetSelectionEntry) entry);
 			}
 		}
-		Assert.assertEquals(target1.getName(),
-				manualTargetSelectionEntries.get(0).getTargetNames()[0]);
-		Assert.assertEquals(target2.getName(),
-				manualTargetSelectionEntries.get(1).getTargetNames()[0]);
-		Assert.assertEquals(target1.getName(),
-				manualTargetSelectionEntries.get(2).getTargetNames()[0]);
-		Assert.assertEquals(target2.getName(),
-				manualTargetSelectionEntries.get(2).getTargetNames()[1]);
+		return manualTargetSelectionEntries;
+	}
+
+	private boolean removeLastEntry(Session session) {
+		ManualTargetSelectionEntry lastTargetEntry = null;
+		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
+			if (entry instanceof ManualTargetSelectionEntry) {
+				lastTargetEntry = (ManualTargetSelectionEntry) entry;
+			}
+		}
+		if (lastTargetEntry != null) {
+			return session.getProtocol().removeEntry(lastTargetEntry);
+		}
+		return false;
 	}
 
 }
