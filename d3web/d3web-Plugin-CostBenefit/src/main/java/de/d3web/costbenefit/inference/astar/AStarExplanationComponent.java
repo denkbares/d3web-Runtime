@@ -207,11 +207,11 @@ public class AStarExplanationComponent {
 		KnowledgeBase kb = session.getKnowledgeBase();
 		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
 		// filter StateTransitions that cannot be applied due to final questions
+		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
 			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
-			if (!targetOnly && !PSMethodCostBenefit.isBlockedByFinalQuestions(session,
-					qcontainer)) {
+			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
 				stateTransitions.add(st);
 			}
 		}

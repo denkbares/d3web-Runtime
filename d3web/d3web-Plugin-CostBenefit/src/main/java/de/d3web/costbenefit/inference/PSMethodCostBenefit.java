@@ -308,12 +308,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					.getDiscriminatingQuestions(solutions, session);
 			Collection<Target> targets = targetFunction.getTargets(session,
 					discriminatingQuestions, solutions, strategicSupport);
-
+			Set<QContainer> blockedQContainers = getBlockedQContainers(session);
 			for (Target target : targets) {
 				boolean skipTarget = false;
 				for (QContainer qcontainer : target.getQContainers()) {
 					if (session.getBlackboard().getIndication(qcontainer).isContraIndicated()
-							|| isBlockedByFinalQuestions(session, qcontainer)) {
+							|| blockedQContainers.contains(qcontainer)) {
 						skipTarget = true;
 						continue;
 					}
@@ -480,24 +480,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * Checks if the given QContainer is blocked by an answered final question
-	 * (so that it cannot be applied in the session)
+	 * Calculates a set of all QContainers, which are blocked by final questions
 	 * 
-	 * @created 25.11.2011
-	 * @param session Actual Session
-	 * @param qContainer {@link QContainer}
-	 * @return true when the {@link QContainer} cannot be applied due to
-	 *         finalQuestions
+	 * @created 24.10.2012
+	 * @param session actual session
+	 * @return set of blocked QContainers
 	 */
-	public static boolean isBlockedByFinalQuestions(Session session, QContainer qContainer) {
-		StateTransition stateTransition = StateTransition.getStateTransition(qContainer);
-		if (stateTransition == null) {
-			return false;
-		}
-		Condition activationCondition = stateTransition.getActivationCondition();
-		if (activationCondition == null) {
-			return false;
-		}
+	public static Set<QContainer> getBlockedQContainers(Session session) {
+		Set<QContainer> result = new HashSet<QContainer>();
 		Session emptySession = new CopiedSession(session.getKnowledgeBase());
 		Map<Question, Value> finalValues = getFinalValues(session);
 		// now all unmutable facts are added to the emptySession
@@ -505,15 +495,25 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			emptySession.getBlackboard().addValueFact(
 					FactFactory.createUserEnteredFact(e.getKey(), e.getValue()));
 		}
-		try {
-			return (!activationCondition.eval(emptySession));
+		for (StateTransition stateTransition : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+				StateTransition.KNOWLEDGE_KIND)) {
+			Condition activationCondition = stateTransition.getActivationCondition();
+			if (activationCondition == null) {
+				continue;
+			}
+			try {
+				if (!activationCondition.eval(emptySession)) {
+					result.add(stateTransition.getQcontainer());
+				}
+			}
+			catch (NoAnswerException e) {
+				continue;
+			}
+			catch (UnknownAnswerException e) {
+				continue;
+			}
 		}
-		catch (NoAnswerException e) {
-			return false;
-		}
-		catch (UnknownAnswerException e) {
-			return false;
-		}
+		return result;
 	}
 
 	/**

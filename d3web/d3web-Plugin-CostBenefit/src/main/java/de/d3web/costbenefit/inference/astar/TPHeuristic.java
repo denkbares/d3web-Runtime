@@ -225,12 +225,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
 		Collection<StateTransition> transitiveStateTransitions = new LinkedList<StateTransition>();
 		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
+		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(model.getSession());
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
-			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
-			if (!PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(),
-					qcontainer)) {
+			if (!blockedQContainers.contains(qcontainer)) {
+				Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
 				stateTransitions.add(st);
 				if (!targetOnly) {
 					transitiveStateTransitions.add(st);

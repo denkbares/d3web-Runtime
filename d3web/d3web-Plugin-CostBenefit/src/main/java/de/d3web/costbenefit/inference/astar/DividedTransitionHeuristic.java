@@ -97,12 +97,12 @@ public class DividedTransitionHeuristic implements Heuristic {
 		// otherwise prepare some information
 		this.knowledgeBase = kb;
 		this.allStateTransitions = new LinkedList<StateTransition>();
+		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(model.getSession());
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
 			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
-			if (!targetOnly && !PSMethodCostBenefit.isBlockedByFinalQuestions(model.getSession(),
-					qcontainer)) {
+			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
 				allStateTransitions.add(st);
 			}
 		}
