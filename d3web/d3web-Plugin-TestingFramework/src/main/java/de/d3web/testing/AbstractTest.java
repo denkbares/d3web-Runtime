@@ -83,7 +83,7 @@ public abstract class AbstractTest<T> implements Test<T> {
 			if (i >= parameters.size()) {
 				r.setError(args.length - 1,
 						"Too many " + (ignoreParams ? "ignore " : "")
-								+ "arguments passend for test '" + test.getName()
+								+ "arguments passed for test '" + test.getName()
 								+ "': Expected " + parameters.size() + " argument"
 								+ (parameters.size() == 1 ? "" : "s") + ", but found "
 								+ args.length + ".");
@@ -94,7 +94,7 @@ public abstract class AbstractTest<T> implements Test<T> {
 			TestParameter parameter = parameters.get(i);
 			boolean ok = parameter.checkParameterValue(args[i]);
 			if (!ok) {
-				r.setError(i, (ignoreParams ? "Ignore a" : "A") + "rgument passend as '"
+				r.setError(i, (ignoreParams ? "Ignore a" : "A") + "rgument passed as '"
 						+ parameter.getName()
 						+ "' is not a valid " + parameter.getType().toString()
 						+ " argument: \"" + args[i] + "\".");
