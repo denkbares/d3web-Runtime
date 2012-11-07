@@ -78,8 +78,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @created 20.09.2010
 	 * @param folder Folder which represents the SessionRepository
 	 * @param listener the progress listener to observe the progress of reading
-	 * @throws IOException
-	 * @throws ParseException
+	 * @throws IOException if any xml file could not be loaded as a session
+	 *         record
+	 * @throws ParseException if any xml filename does not have the expected
+	 *         filename layout: "yyyy-MM-dd HH.mm.ss.SS_<ID>.xml"
 	 */
 	public void load(File folder, ProgressListener listener) throws IOException, ParseException {
 		if (folder == null) throw new NullPointerException(

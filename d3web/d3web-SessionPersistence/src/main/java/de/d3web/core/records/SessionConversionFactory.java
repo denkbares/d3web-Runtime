@@ -113,7 +113,7 @@ public final class SessionConversionFactory {
 		List<Fact> resultFacts = new LinkedList<Fact>();
 		for (FactRecord factRecord : factRecords) {
 			// ignore merged facts
-			String psm = factRecord.getPsm();
+			String psm = factRecord.getPSM();
 			if (psm == null) continue;
 			PSMethod psMethod = psMethods.get(psm);
 

@@ -75,6 +75,11 @@ public class DefaultSessionRepository implements SessionRepository {
 	}
 
 	@Override
+	public int size() {
+		return sessionRecords.size();
+	}
+
+	@Override
 	public boolean remove(SessionRecord sessionRecord) {
 		if (sessionRecord == null) throw new NullPointerException(
 				"null can't be removed from the SessionRepository.");

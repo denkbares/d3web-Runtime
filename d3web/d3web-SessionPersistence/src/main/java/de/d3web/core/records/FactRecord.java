@@ -43,14 +43,45 @@ public class FactRecord {
 		this(object.getName(), psm, value);
 	}
 
+	/**
+	 * Returns the name of the object values by this fact.
+	 * 
+	 * @created 07.11.2012
+	 * @return object name the fact has been created for
+	 */
 	public String getObjectName() {
 		return objectName;
 	}
 
+	/**
+	 * Returns the class-name of the problem solver or strategic solver that has
+	 * created that fact. I may be null if the fact has been merged from
+	 * multiple problem solvers. In this case you usually find also at least two
+	 * additional facts for the same object, denoting the original facts before
+	 * merging.
+	 * 
+	 * @created 07.11.2012
+	 * @return name of the problem solver created this fact
+	 */
+	public String getPSM() {
+		return psm;
+	}
+
+	/**
+	 * @deprecated use {@link #getPSM()} instead
+	 */
+	@Deprecated
 	public String getPsm() {
 		return psm;
 	}
 
+	/**
+	 * The value of this fact that has been stored for the object denoted by
+	 * {@link #getObjectName()}.
+	 * 
+	 * @created 07.11.2012
+	 * @return the value of the object, represented by this fact
+	 */
 	public Value getValue() {
 		return value;
 	}

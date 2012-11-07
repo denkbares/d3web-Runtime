@@ -151,7 +151,7 @@ public class DefaultSessionRecord implements SessionRecord {
 				}
 				// if the psm is null, it is a merged fact, so this fact should
 				// be used
-				else if (fact.getPsm() == null) {
+				else if (fact.getPSM() == null) {
 					map.put(solution, fact);
 				}
 			}

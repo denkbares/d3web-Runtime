@@ -81,6 +81,15 @@ public interface SessionRepository {
 	Iterator<SessionRecord> iterator();
 
 	/**
+	 * Returns the number of {@link SessionRecord}s currently stored in this
+	 * SessionRepository.
+	 * 
+	 * @created 07.11.2012
+	 * @return the number of session records
+	 */
+	int size();
+
+	/**
 	 * Traverses the SessionRepository for a {@link SessionRecord} with the
 	 * specified unique identifier. If a SessionRecord with this identifier was
 	 * found, the it will be returned. Otherwise the returned value will be
