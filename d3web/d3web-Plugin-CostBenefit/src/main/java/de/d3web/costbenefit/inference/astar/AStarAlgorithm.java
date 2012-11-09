@@ -77,7 +77,7 @@ public class AStarAlgorithm implements SearchAlgorithm {
 	 */
 	public AStarExplanationComponent getExplanationComponent() throws IllegalStateException {
 		if (lastSearch == null) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("No search executed yet.");
 		}
 		return new AStarExplanationComponent(lastSearch);
 	}
