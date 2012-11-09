@@ -104,7 +104,7 @@ public interface Blackboard {
 	/**
 	 * Returns a collection of all terminology objects that have a value. This
 	 * means this method delivers all terminology objects that currently have at
-	 * lead one value fact added for it to this blackboard. The collection may
+	 * least one value fact added for it to this blackboard. The collection may
 	 * be unmodifiable.
 	 * 
 	 * @return the collection of valued terminology objects
