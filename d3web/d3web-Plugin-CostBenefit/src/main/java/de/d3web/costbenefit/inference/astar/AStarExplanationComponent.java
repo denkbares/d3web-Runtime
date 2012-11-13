@@ -243,8 +243,10 @@ public class AStarExplanationComponent {
 	 * 
 	 * @created 05.07.2012
 	 * @return list of unexpected QContainers
+	 * @throws IllegalArgumentException if the method is called after an
+	 *         calculation with a multi target having the best cost benefit
 	 */
-	public Set<QContainer> getUnexpectedQContainers() {
+	public Set<QContainer> getUnexpectedQContainers() throws IllegalArgumentException {
 		SearchModel model = astar.getModel();
 		Target target = model.getBestCostBenefitTarget();
 		if (target == null) {
@@ -355,5 +357,33 @@ public class AStarExplanationComponent {
 				fullfilledConditions.add(condition);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @created 13.11.2012
+	 * @return all targets of the last calculation
+	 */
+	public Set<Target> getTargets() {
+		return Collections.unmodifiableSet(astar.getModel().getTargets());
+	}
+
+	/**
+	 * Returns if the specified QContainer was part of a target in the last
+	 * search
+	 * 
+	 * @created 13.11.2012
+	 * @param qContainer specified {@link QContainer}
+	 * @return true if the QContainer was part of a target
+	 */
+	public boolean wasTarget(QContainer qContainer) {
+		for (Target t : astar.getModel().getTargets()) {
+			for (QContainer q : t.getQContainers()) {
+				if (q == qContainer) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
