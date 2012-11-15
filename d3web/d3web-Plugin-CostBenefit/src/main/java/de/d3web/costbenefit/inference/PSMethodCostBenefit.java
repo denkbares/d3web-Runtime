@@ -628,7 +628,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// only proceed if we have received reals answers
 		if (answeredQuestionnaires.isEmpty()) return;
 
-		// for every finished QContainter fire its post transitions
 		boolean isAnyQuesionnaireDone = false;
 		for (QContainer qcon : answeredQuestionnaires) {
 			if (Util.isDone(qcon, session)) {
