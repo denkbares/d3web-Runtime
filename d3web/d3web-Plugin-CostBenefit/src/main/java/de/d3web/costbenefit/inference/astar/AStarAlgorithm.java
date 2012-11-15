@@ -69,15 +69,14 @@ public class AStarAlgorithm implements SearchAlgorithm {
 
 	/**
 	 * Returns an explanation component of the last search started. If there was
-	 * no search yet, an {@link IllegalStateException} is thrown
+	 * no search yet, null is returned
 	 * 
 	 * @created 03.07.2012
 	 * @return {@link AStarExplanationComponent}
-	 * @throws IllegalStateException if no search was done yet
 	 */
-	public AStarExplanationComponent getExplanationComponent() throws IllegalStateException {
+	public AStarExplanationComponent getExplanationComponent() {
 		if (lastSearch == null) {
-			throw new IllegalStateException("No search executed yet.");
+			return null;
 		}
 		return new AStarExplanationComponent(lastSearch);
 	}
