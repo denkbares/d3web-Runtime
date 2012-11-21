@@ -19,9 +19,12 @@
 package de.d3web.costbenefit.inference.astar;
 
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.DefaultAbortStrategy;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
+import de.d3web.costbenefit.inference.astar.AStarAlgorithm.AStarSessionObject;
 import de.d3web.costbenefit.model.SearchModel;
 
 /**
@@ -30,16 +33,16 @@ import de.d3web.costbenefit.model.SearchModel;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
  */
-public class AStarAlgorithm implements SearchAlgorithm {
+public class AStarAlgorithm implements SearchAlgorithm, SessionObjectSource<AStarSessionObject> {
 
 	private Heuristic heuristic = new TPHeuristic();
 	private AbortStrategy abortStrategy = new DefaultAbortStrategy(500000, 4);
 	private boolean multiCore = true;
-	private AStar lastSearch;
 
 	@Override
 	public void search(Session session, SearchModel model) {
-		lastSearch = new AStar(session, model, this);
+		AStar lastSearch = new AStar(session, model, this);
+		session.getSessionObject(this).lastSearch = lastSearch;
 		lastSearch.search();
 	}
 
@@ -74,10 +77,28 @@ public class AStarAlgorithm implements SearchAlgorithm {
 	 * @created 03.07.2012
 	 * @return {@link AStarExplanationComponent}
 	 */
-	public AStarExplanationComponent getExplanationComponent() {
+	public AStarExplanationComponent getExplanationComponent(Session session) {
+		AStar lastSearch = session.getSessionObject(this).lastSearch;
 		if (lastSearch == null) {
 			return null;
 		}
 		return new AStarExplanationComponent(lastSearch);
 	}
+
+	@Override
+	public AStarSessionObject createSessionObject(Session session) {
+		return new AStarSessionObject();
+	}
+
+	/**
+	 * Holds a reference to the last calculation of a session
+	 * 
+	 * @author Markus Friedrich (denkbares GmbH)
+	 * @created 21.11.2012
+	 */
+	public class AStarSessionObject implements SessionObject {
+
+		private AStar lastSearch;
+	}
+
 }
