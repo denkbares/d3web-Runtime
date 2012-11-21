@@ -34,6 +34,7 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -43,9 +44,11 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -81,6 +84,12 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 */
 	private Map<Condition, ActivationCacheEntry> costCache;
 
+	private Map<ValueTransition, Value> valueCache;
+
+	// a copy of the actual session, all unanswered questions of transitional
+	// qcontainers are set to their normal values
+	private Session answeredSession;
+
 	@Override
 	public double getDistance(Path path, State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
@@ -104,12 +113,15 @@ public class DividedTransitionHeuristic implements Heuristic {
 		this.knowledgeBase = kb;
 		this.allStateTransitions = new LinkedList<StateTransition>();
 		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(model.getSession());
+		answeredSession = Util.createSearchCopy(model.getSession());
+		valueCache = new HashMap<ValueTransition, Value>();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
 			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
 			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
 				allStateTransitions.add(st);
+				Util.setNormalValues(answeredSession, st.getQcontainer(), this);
 			}
 		}
 
@@ -327,8 +339,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * @param target the target QContainer to be prepared
 	 * @return the minimal costs per question of the target's precondition
 	 */
-	private double calculateCosts(StateTransition preparingTransition, Condition activationCondition, Question stateQuestion) {
-		Set<Question> set = getQuestionSet(preparingTransition, activationCondition);
+	private double calculateCosts(StateTransition preparingTransition, Set<Question> set, Question stateQuestion) {
 
 		// if no question has been found, return infinite costs
 		// because this state transition cannot set up the target
@@ -368,29 +379,42 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * @param activationCondition
 	 * @return
 	 */
-	private Set<Question> getQuestionSet(StateTransition preparingTransition, Condition activationCondition) {
+	private Map<Question, Value> getQuestionSet(StateTransition preparingTransition, Condition activationCondition) {
 		Collection<? extends TerminologyObject> terminalObjects = activationCondition.getTerminalObjects();
-		Set<Question> set = new HashSet<Question>();
+		Map<Question, Value> set = new HashMap<Question, Value>();
 		for (ValueTransition vt : preparingTransition.getPostTransitions()) {
 			Question question = vt.getQuestion();
-			// the question is relevant (and not yet accepted)
-			if (terminalObjects.contains(question) && !set.contains(question)) {
+			// the question is relevant
+			if (terminalObjects.contains(question)) {
 				// check if the values required for that questions
 				// matches the values that can be set up
 				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
-				Set<Value> possibleValues = vt.calculatePossibleValues();
+				Value value = getValue(vt);
 				// values that are possible, but are already finally set, can be
-				// removed -> heuristic gets more precise
-				Value value = finalValues.get(vt.getQuestion());
-				if (value != null) possibleValues.remove(value);
-				if (!Collections.disjoint(requiredValues, possibleValues)) {
-					// the values that can be set up are common with
-					// the required ones, so count that question
-					set.add(question);
+				// ignored -> heuristic gets more precise
+				Value finalValue = finalValues.get(vt.getQuestion());
+				if (value != null && finalValue == null && requiredValues.contains(value)) {
+					set.put(question, value);
 				}
 			}
 		}
 		return set;
+	}
+
+	protected Value getValue(ValueTransition vt) {
+		Value value = valueCache.get(vt);
+		if (value != null) {
+			return value;
+		}
+		List<ConditionalValueSetter> setters = vt.getSetters();
+		for (ConditionalValueSetter cvs : setters) {
+			Condition condition = cvs.getCondition();
+			if (condition == null || Conditions.isTrue(cvs.getCondition(), answeredSession)) {
+				valueCache.put(vt, cvs.getAnswer());
+				return cvs.getAnswer();
+			}
+		}
+		return null;
 	}
 
 	private Set<Value> calculateRequiredValues(Question question, Condition condition) {
@@ -455,9 +479,10 @@ public class DividedTransitionHeuristic implements Heuristic {
 					questionMap = new HashMap<Value, Double>();
 					targetMap.put(stateQuestion, questionMap);
 				}
-				double costs = calculateCosts(st, activationCondition, stateQuestion);
-				for (ConditionalValueSetter cvs : vt.getSetters()) {
-					Value stateValue = cvs.getAnswer();
+				Map<Question, Value> set = getQuestionSet(st, activationCondition);
+				double costs = calculateCosts(st, set.keySet(), stateQuestion);
+				for (Entry<Question, Value> entry : set.entrySet()) {
+					Value stateValue = entry.getValue();
 					Double minimum = questionMap.get(stateValue);
 					if (minimum == null || minimum > costs) {
 						questionMap.put(stateValue, costs);
