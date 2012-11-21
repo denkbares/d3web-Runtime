@@ -20,6 +20,7 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public abstract class QuestionChoice extends Question {
 	 *         RuleSuppress
 	 **/
 	public List<Choice> getAllAlternatives() {
-		return alternatives;
+		return Collections.unmodifiableList(alternatives);
 	}
 
 	/**
