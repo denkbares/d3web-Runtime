@@ -75,6 +75,12 @@ public class DividedTransitionHeuristic implements Heuristic {
 
 	private Map<Question, Value> finalValues;
 
+	/**
+	 * Stores the costs of the cheapest state transition per Question and Value
+	 * for each target
+	 */
+	private Map<Condition, ActivationCacheEntry> costCache;
+
 	@Override
 	public double getDistance(Path path, State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
@@ -123,12 +129,6 @@ public class DividedTransitionHeuristic implements Heuristic {
 		private List<TerminologyObject> objects;
 		private CompiledCostsFunction costFunction;
 	}
-
-	/**
-	 * Stores the costs of the cheapest state transition per Question and Value
-	 * for each target
-	 */
-	private Map<Condition, ActivationCacheEntry> costCache;
 
 	protected double estimatePathCosts(State state, Condition activationCondition) {
 		ActivationCacheEntry entry = costCache.get(activationCondition);
@@ -448,6 +448,8 @@ public class DividedTransitionHeuristic implements Heuristic {
 		for (StateTransition st : allStateTransitions) {
 			for (ValueTransition vt : st.getPostTransitions()) {
 				Question stateQuestion = vt.getQuestion();
+				// is already finally set, cannot be changed
+				if (finalValues.containsKey(stateQuestion)) continue;
 				Map<Value, Double> questionMap = targetMap.get(stateQuestion);
 				if (questionMap == null) {
 					questionMap = new HashMap<Value, Double>();
@@ -462,6 +464,11 @@ public class DividedTransitionHeuristic implements Heuristic {
 					}
 				}
 			}
+		}
+		for (Entry<Question, Value> entry : finalValues.entrySet()) {
+			Map<Value, Double> valueMap = new HashMap<Value, Double>();
+			valueMap.put(entry.getValue(), 0.0);
+			targetMap.put(entry.getKey(), valueMap);
 		}
 
 		// for debug only
