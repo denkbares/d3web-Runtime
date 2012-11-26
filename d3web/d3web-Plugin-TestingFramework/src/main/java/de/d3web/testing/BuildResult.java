@@ -35,9 +35,9 @@ import java.util.Set;
 public final class BuildResult {
 
 	/**
-	 * List of all test results of the executed tests
+	 * List of test results of executed tests with unexpected outcome
 	 */
-	private final List<TestResult> results = new ArrayList<TestResult>();
+	private final List<TestResult> testResults = new ArrayList<TestResult>();
 
 	/**
 	 * time/date of build execution
@@ -60,6 +60,16 @@ public final class BuildResult {
 
 	public BuildResult(Date buildDate) {
 		this.buildDate = buildDate;
+	}
+
+	private BuildResult(long buildDuration, Date buildDate, List<TestResult> testResults) {
+		this.buildDuration = buildDuration;
+		this.buildDate = buildDate;
+		this.testResults.addAll(testResults);
+	}
+
+	public static BuildResult createBuildResult(long buildDuration, Date buildDate, List<TestResult> testResults, int successfulTests) {
+		return new BuildResult(buildDuration, buildDate, testResults);
 	}
 
 	/**
@@ -160,7 +170,7 @@ public final class BuildResult {
 	 * @return the results of this build
 	 */
 	public List<TestResult> getResults() {
-		return Collections.unmodifiableList(results);
+		return Collections.unmodifiableList(testResults);
 	}
 
 	/**
@@ -173,7 +183,7 @@ public final class BuildResult {
 	public Message.Type getOverallResult() {
 
 		Message.Type overallResult = Message.Type.SUCCESS;
-		for (TestResult testResult : results) {
+		for (TestResult testResult : testResults) {
 			if (testResult != null && testResult.getType().
 					compareTo(overallResult) < 0) {
 				overallResult = testResult.getType();
@@ -183,7 +193,7 @@ public final class BuildResult {
 	}
 
 	public void addTestResult(TestResult testResult) {
-		results.add(testResult);
+		testResults.add(testResult);
 	}
 
 	@Override

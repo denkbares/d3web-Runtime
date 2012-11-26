@@ -21,8 +21,13 @@ package de.d3web.testing;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -43,6 +48,8 @@ public class BuildResultPersistenceHandler {
 	private static final String DATE = "date";
 
 	private static final String DURATION = "duration";
+
+	private static final String SUCCESSES = "numberOfSuccessfullyTestedObjects";
 
 	private static final String BUILD = "build";
 
@@ -102,6 +109,10 @@ public class BuildResultPersistenceHandler {
 			// add required test attributes
 			test.setAttribute(NAME, result.getTestName());
 
+			// add required test attributes
+			String numberOfSuccessfulTestsString = "" + result.getSuccessfullTestObjectRuns();
+			test.setAttribute(SUCCESSES, numberOfSuccessfulTestsString);
+
 			// add total number of test objects for this test
 			// int numberOfTestObjects = result.getTestObjectNames().size();
 			// test.setAttribute(TESTOBJECT_COUNT,
@@ -113,14 +124,19 @@ public class BuildResultPersistenceHandler {
 						TestParser.concatParameters(result.getConfiguration()));
 			}
 
-			for (String testObjectName : result.getTestObjectNames()) {
-				Message message = result.getMessage(testObjectName);
+			for (String testObjectName : result.getTestObjectsWithUnexpectedOutcome()) {
+				Message message = result.getUnexpectedMessageForTestObject(testObjectName);
 				if (message == null) {
 					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
 							"No message found for test object '" + testObjectName + "' in test '"
 									+ result.getTestName() + "'.");
 					continue;
 				}
+				if (message.getType().equals(Message.Type.SUCCESS)) {
+					throw new InputMismatchException("success logged as full message: "
+							+ message.toString());
+				}
+
 				Element messageElement = document.createElement(MESSAGE);
 				messageElement.setAttribute(TYPE, message.getType().toString());
 				messageElement.setAttribute(TEXT, message.getText());
@@ -139,10 +155,13 @@ public class BuildResultPersistenceHandler {
 		// parse attributes
 		long duration = Long.parseLong(root.getAttribute(DURATION));
 		Date date = DATE_FORMAT.parse(root.getAttribute(DATE));
+		int successfulTests = 0;
 
 		// create test item
-		BuildResult build = new BuildResult(date);
-		build.setBuildDuration(duration);
+		// BuildResult build = new BuildResult(date);
+		// build.setBuildDuration(duration);
+
+		List<TestResult> resultList = new ArrayList<TestResult>();
 
 		// parse single child tests
 		NodeList testElements = document.getElementsByTagName(TEST);
@@ -153,14 +172,20 @@ public class BuildResultPersistenceHandler {
 			// read required attributes
 			String testName = test.getAttribute(NAME);
 
+			// read number of successful test object runs
+			String numberOfSuccessfulRuns = test.getAttribute(SUCCESSES);
+			if (numberOfSuccessfulRuns != null) {
+				// when reading old build report this value does not exist
+				successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
+			}
+
 			// read optional attributes
 			String configuration = test.getAttribute(CONFIGURATION);
 
 			// parse every single message
 			NodeList messageElements = test.getElementsByTagName(MESSAGE);
 			List<String> configParameters = TestParser.splitParameters(configuration);
-			TestResult result = new TestResult(testName,
-					configParameters.toArray(new String[configParameters.size()]));
+			Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
 
 			for (int j = 0; j < messageElements.getLength(); j++) {
 				Element messageElement = (Element) messageElements.item(j);
@@ -171,16 +196,28 @@ public class BuildResultPersistenceHandler {
 						type = Message.Type.valueOf(typeString);
 					}
 					String text = messageElement.getAttribute(TEXT);
-					if(text.length() == 0) { text = null;}
-					String testObjectName = messageElement.getAttribute(TEST_OBJECT);
-					Message m = new Message(type, text);
-					result.addMessage(testObjectName, m);
+					if (text.length() == 0) {
+						text = null;
+					}
+					if (typeString.equals(Message.Type.SUCCESS.toString())) {
+						// this cannot happen with current persistence, but
+						// enables to read old report files
+						successfulTests++;
+					}
+					else {
+						String testObjectName = messageElement.getAttribute(TEST_OBJECT);
+						Message m = new Message(type, text);
+						unexpectedMessages.put(testObjectName, m);
+					}
 				}
 			}
-			build.addTestResult(result);
+			resultList.add(TestResult.createTestResult(testName,
+					configParameters.toArray(new String[configParameters.size()]),
+					unexpectedMessages,
+					successfulTests));
 		}
 
-		return build;
+		return BuildResult.createBuildResult(duration, date, resultList,
+				successfulTests);
 	}
-
 }

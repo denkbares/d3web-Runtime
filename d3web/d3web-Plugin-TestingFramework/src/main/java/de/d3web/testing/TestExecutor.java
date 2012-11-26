@@ -209,7 +209,8 @@ public class TestExecutor {
 		}
 
 		if (noTestObjects) {
-			testResult.addMessage("", new Message(Message.Type.ERROR, "No test-object found."));
+			testResult.addUnexpectedMessage("", new Message(Message.Type.ERROR,
+					"No test-object found."));
 		}
 		return result;
 	}
@@ -300,7 +301,7 @@ public class TestExecutor {
 		}
 
 		TestResult result = new TestResult(test.getName(), checkResult.getArguments());
-		if (message != null) result.addMessage(testObjectName, message);
+		if (message != null) result.addUnexpectedMessage(testObjectName, message);
 		return result;
 	}
 
@@ -382,13 +383,19 @@ public class TestExecutor {
 
 			try {
 				if (testObject == null) {
-					testResult.addMessage(testObjectName, new Message(
+					testResult.addUnexpectedMessage(testObjectName, new Message(
 							Message.Type.ERROR, "Test-object was null."));
 					return null;
 				}
 				Message message = test.execute(cast(testObject, test.getTestObjectClass()), args,
 						ignores);
-				testResult.addMessage(testObjectName, message);
+				if (message.getType().equals(Message.Type.SUCCESS)) {
+					// successful runs are only counted, not logged verbosely
+					testResult.incSuccessfulTestObjectRuns();
+				}
+				else {
+					testResult.addUnexpectedMessage(testObjectName, message);
+				}
 				return null;
 			}
 			catch (InterruptedException e) {
@@ -397,7 +404,7 @@ public class TestExecutor {
 			catch (Exception e) {
 				String message = "Unexpected error in test " + testname + ", during testing "
 						+ testObjectName;
-				testResult.addMessage(testObjectName,
+				testResult.addUnexpectedMessage(testObjectName,
 						new Message(Message.Type.ERROR,
 								message + ": " + e));
 				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, e);
