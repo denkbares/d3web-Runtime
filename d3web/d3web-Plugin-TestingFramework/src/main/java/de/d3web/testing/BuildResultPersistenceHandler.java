@@ -176,7 +176,14 @@ public class BuildResultPersistenceHandler {
 			String numberOfSuccessfulRuns = test.getAttribute(SUCCESSES);
 			if (numberOfSuccessfulRuns != null) {
 				// when reading old build report this value does not exist
-				successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
+				try {
+					successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
+				}
+				catch (NumberFormatException e) {
+					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
+							"NumberFormatException in build result persistence when loading number of succesful test object runs: "
+									+ successfulTests);
+				}
 			}
 
 			// read optional attributes
