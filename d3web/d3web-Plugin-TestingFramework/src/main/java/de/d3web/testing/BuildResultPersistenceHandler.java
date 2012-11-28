@@ -174,7 +174,7 @@ public class BuildResultPersistenceHandler {
 
 			// read number of successful test object runs
 			String numberOfSuccessfulRuns = test.getAttribute(SUCCESSES);
-			if (numberOfSuccessfulRuns != null) {
+			if (numberOfSuccessfulRuns != null && numberOfSuccessfulRuns.length() != 0) {
 				// when reading old build report this value does not exist
 				try {
 					successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
