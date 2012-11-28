@@ -310,11 +310,11 @@ public class SearchModel {
 	}
 
 	/**
-	 * Calculates all unblocked state transitions having a qcontainer being part
-	 * of an actual target
+	 * Calculates all unblocked state transitions having a {@link QContainer}
+	 * being part of an actual target
 	 * 
 	 * @created 28.11.2012
-	 * @return List of unblocket traget StateTransitions
+	 * @return List of unblocked target StateTransitions
 	 */
 	public Set<StateTransition> getTargetStateTransitions() {
 		HashSet<StateTransition> result = new HashSet<StateTransition>();
