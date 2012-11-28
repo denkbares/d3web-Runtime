@@ -45,7 +45,9 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.Util;
@@ -53,6 +55,7 @@ import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.inference.astar.DividedTransitionHeuristic.DividedTransitionHeuristicSessionObject;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 
@@ -61,76 +64,72 @@ import de.d3web.costbenefit.model.SearchModel;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
  */
-public class DividedTransitionHeuristic implements Heuristic {
+public class DividedTransitionHeuristic implements Heuristic, SessionObjectSource<DividedTransitionHeuristicSessionObject> {
 
-	/**
-	 * Stores the {@link KnowledgeBase} this heuristic is initialized for
-	 */
-	protected KnowledgeBase knowledgeBase;
+	public static class DividedTransitionHeuristicSessionObject implements SessionObject {
 
-	/**
-	 * Stores all available state transitions of the knowledge base of the
-	 * initialized session
-	 */
-	private Collection<StateTransition> allStateTransitions;
+		/**
+		 * Stores the {@link KnowledgeBase} this heuristic is initialized for
+		 */
+		protected KnowledgeBase knowledgeBase;
 
-	private double negativeSum;
+		/**
+		 * Stores all available state transitions of the knowledge base of the
+		 * initialized session
+		 */
+		private Collection<StateTransition> transitionalStateTransitions;
+		private double negativeSum;
+		private Map<Question, Value> finalValues;
+		/**
+		 * Stores the costs of the cheapest state transition per Question and
+		 * Value for each target
+		 */
+		private Map<Condition, ActivationCacheEntry> costCache;
+		private Map<ValueTransition, Value> valueCache;
+		private Session answeredSession;
 
-	private Map<Question, Value> finalValues;
-
-	/**
-	 * Stores the costs of the cheapest state transition per Question and Value
-	 * for each target
-	 */
-	private Map<Condition, ActivationCacheEntry> costCache;
-
-	private Map<ValueTransition, Value> valueCache;
-
-	// a copy of the actual session, all unanswered questions of transitional
-	// qcontainers are set to their normal values
-	private Session answeredSession;
+	}
 
 	@Override
-	public double getDistance(Path path, State state, QContainer target) {
+	public double getDistance(SearchModel model, Path path, State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		return estimatePathCosts(state, precondition)
-				+ calculateUnusedNegatives(path);
+		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
+				this);
+		return estimatePathCosts(sessionObject, state, precondition)
+				+ calculateUnusedNegatives(sessionObject, path);
 	}
 
-	protected double calculateUnusedNegatives(Path path) {
-		return negativeSum * 0.75 - path.getNegativeCosts();
+	protected static double calculateUnusedNegatives(DividedTransitionHeuristicSessionObject sessionObject, Path path) {
+		return sessionObject.negativeSum * 0.75 - path.getNegativeCosts();
 	}
 
 	@Override
 	public void init(SearchModel model) {
+		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
+				this);
 		// check if no further initialization required
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
-		finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
+		sessionObject.finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
 		// otherwise prepare some information
-		this.knowledgeBase = kb;
-		this.allStateTransitions = new LinkedList<StateTransition>();
-		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(model.getSession());
-		answeredSession = Util.createSearchCopy(model.getSession());
-		valueCache = new HashMap<ValueTransition, Value>();
-		// filter StateTransitions that cannot be applied due to final questions
-		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
-			QContainer qcontainer = st.getQcontainer();
-			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
-			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
-				allStateTransitions.add(st);
-				Util.setNormalValues(answeredSession, st.getQcontainer(), this);
-			}
+		sessionObject.knowledgeBase = kb;
+		sessionObject.transitionalStateTransitions = new LinkedList<StateTransition>();
+		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
+		sessionObject.answeredSession = Util.createSearchCopy(model.getSession());
+		sessionObject.valueCache = new HashMap<ValueTransition, Value>();
+		// set normal values of all questions in transitional qcontainers
+		for (StateTransition st : sessionObject.transitionalStateTransitions) {
+			Util.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
 		}
 
-		this.costCache = Collections.synchronizedMap(new HashMap<Condition, ActivationCacheEntry>());
-		negativeSum = 0;
+		sessionObject.costCache = Collections.synchronizedMap(new HashMap<Condition, ActivationCacheEntry>());
+		sessionObject.negativeSum = 0;
 		for (QContainer qcon : kb.getManager().getQContainers()) {
 			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
 			if (costs < 0) {
-				negativeSum += costs;
+				sessionObject.negativeSum += costs;
 			}
 		}
 	}
@@ -142,15 +141,15 @@ public class DividedTransitionHeuristic implements Heuristic {
 		private CompiledCostsFunction costFunction;
 	}
 
-	protected double estimatePathCosts(State state, Condition activationCondition) {
-		ActivationCacheEntry entry = costCache.get(activationCondition);
+	protected static double estimatePathCosts(DividedTransitionHeuristicSessionObject sessionObject, State state, Condition activationCondition) {
+		ActivationCacheEntry entry = sessionObject.costCache.get(activationCondition);
 		if (entry == null) {
 			entry = new ActivationCacheEntry();
-			entry.targetMap = getTargetMap(activationCondition);
+			entry.targetMap = getTargetMap(sessionObject, activationCondition);
 			entry.objects = new ArrayList<TerminologyObject>(
 					activationCondition.getTerminalObjects());
 			entry.costFunction = compile(activationCondition, entry.objects, entry.targetMap);
-			costCache.put(activationCondition, entry);
+			sessionObject.costCache.put(activationCondition, entry);
 		}
 
 		ArrayList<Value> key = new ArrayList<Value>(entry.objects.size());
@@ -250,7 +249,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private CompiledCostsFunction compile(Condition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
+	private static CompiledCostsFunction compile(Condition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
 		if (cond instanceof CondAnd) {
 			CompiledCostsFunction[] children =
 					getCompiledChildren((CondAnd) cond, objects, targetMap);
@@ -309,7 +308,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private CompiledCostsFunction[] getCompiledChildren(NonTerminalCondition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
+	private static CompiledCostsFunction[] getCompiledChildren(NonTerminalCondition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
 		List<Condition> terms = cond.getTerms();
 		CompiledCostsFunction[] children = new CompiledCostsFunction[terms.size()];
 		int index = 0;
@@ -319,7 +318,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 		return children;
 	}
 
-	private Map<Value, Double> getCosts(Map<Question, Map<Value, Double>> targetMap, QuestionChoice question) {
+	private static Map<Value, Double> getCosts(Map<Question, Map<Value, Double>> targetMap, QuestionChoice question) {
 		Map<Value, Double> questionMap = targetMap.get(question);
 		return questionMap;
 	}
@@ -339,7 +338,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * @param target the target QContainer to be prepared
 	 * @return the minimal costs per question of the target's precondition
 	 */
-	private double calculateCosts(StateTransition preparingTransition, Set<Question> set, Question stateQuestion) {
+	private static double calculateCosts(StateTransition preparingTransition, Set<Question> set, Question stateQuestion) {
 
 		// if no question has been found, return infinite costs
 		// because this state transition cannot set up the target
@@ -379,7 +378,7 @@ public class DividedTransitionHeuristic implements Heuristic {
 	 * @param activationCondition
 	 * @return
 	 */
-	private Map<Question, Value> getQuestionSet(StateTransition preparingTransition, Condition activationCondition) {
+	private static Map<Question, Value> getQuestionSet(DividedTransitionHeuristicSessionObject sessionObject, StateTransition preparingTransition, Condition activationCondition) {
 		Collection<? extends TerminologyObject> terminalObjects = activationCondition.getTerminalObjects();
 		Map<Question, Value> set = new HashMap<Question, Value>();
 		for (ValueTransition vt : preparingTransition.getPostTransitions()) {
@@ -389,10 +388,10 @@ public class DividedTransitionHeuristic implements Heuristic {
 				// check if the values required for that questions
 				// matches the values that can be set up
 				Set<Value> requiredValues = calculateRequiredValues(question, activationCondition);
-				Value value = getValue(vt);
+				Value value = getValue(sessionObject, vt);
 				// values that are possible, but are already finally set, can be
 				// ignored -> heuristic gets more precise
-				Value finalValue = finalValues.get(vt.getQuestion());
+				Value finalValue = sessionObject.finalValues.get(vt.getQuestion());
 				if (value != null && finalValue == null && requiredValues.contains(value)) {
 					set.put(question, value);
 				}
@@ -401,23 +400,24 @@ public class DividedTransitionHeuristic implements Heuristic {
 		return set;
 	}
 
-	protected Value getValue(ValueTransition vt) {
-		Value value = valueCache.get(vt);
+	protected static Value getValue(DividedTransitionHeuristicSessionObject sessionObject, ValueTransition vt) {
+		Value value = sessionObject.valueCache.get(vt);
 		if (value != null) {
 			return value;
 		}
 		List<ConditionalValueSetter> setters = vt.getSetters();
 		for (ConditionalValueSetter cvs : setters) {
 			Condition condition = cvs.getCondition();
-			if (condition == null || Conditions.isTrue(cvs.getCondition(), answeredSession)) {
-				valueCache.put(vt, cvs.getAnswer());
+			if (condition == null
+					|| Conditions.isTrue(cvs.getCondition(), sessionObject.answeredSession)) {
+				sessionObject.valueCache.put(vt, cvs.getAnswer());
 				return cvs.getAnswer();
 			}
 		}
 		return null;
 	}
 
-	private Set<Value> calculateRequiredValues(Question question, Condition condition) {
+	private static Set<Value> calculateRequiredValues(Question question, Condition condition) {
 		if (condition instanceof CondAnd) {
 			CondAnd cand = (CondAnd) condition;
 			Set<Value> result = new HashSet<Value>();
@@ -467,19 +467,19 @@ public class DividedTransitionHeuristic implements Heuristic {
 		}
 	}
 
-	private HashMap<Question, Map<Value, Double>> getTargetMap(Condition activationCondition) {
+	private static HashMap<Question, Map<Value, Double>> getTargetMap(DividedTransitionHeuristicSessionObject sessionObject, Condition activationCondition) {
 		HashMap<Question, Map<Value, Double>> targetMap = new HashMap<Question, Map<Value, Double>>();
-		for (StateTransition st : allStateTransitions) {
+		for (StateTransition st : sessionObject.transitionalStateTransitions) {
 			for (ValueTransition vt : st.getPostTransitions()) {
 				Question stateQuestion = vt.getQuestion();
 				// is already finally set, cannot be changed
-				if (finalValues.containsKey(stateQuestion)) continue;
+				if (sessionObject.finalValues.containsKey(stateQuestion)) continue;
 				Map<Value, Double> questionMap = targetMap.get(stateQuestion);
 				if (questionMap == null) {
 					questionMap = new HashMap<Value, Double>();
 					targetMap.put(stateQuestion, questionMap);
 				}
-				Map<Question, Value> set = getQuestionSet(st, activationCondition);
+				Map<Question, Value> set = getQuestionSet(sessionObject, st, activationCondition);
 				double costs = calculateCosts(st, set.keySet(), stateQuestion);
 				for (Entry<Question, Value> entry : set.entrySet()) {
 					Value stateValue = entry.getValue();
@@ -490,21 +490,17 @@ public class DividedTransitionHeuristic implements Heuristic {
 				}
 			}
 		}
-		for (Entry<Question, Value> entry : finalValues.entrySet()) {
+		for (Entry<Question, Value> entry : sessionObject.finalValues.entrySet()) {
 			Map<Value, Double> valueMap = new HashMap<Value, Double>();
 			valueMap.put(entry.getValue(), 0.0);
 			targetMap.put(entry.getKey(), valueMap);
 		}
 
-		// for debug only
-		// for (Question stateQuestion : targetMap.keySet()) {
-		// Map<Value, Double> questionMap = targetMap.get(stateQuestion);
-		// for (Value stateValue : questionMap.keySet()) {
-		// System.out.println(
-		// "heuristic (" + stateQuestion + "-->" + stateValue +
-		// " for " + target + ") = " + questionMap.get(stateValue));
-		// }
-		// }
 		return targetMap;
+	}
+
+	@Override
+	public DividedTransitionHeuristicSessionObject createSessionObject(Session session) {
+		return new DividedTransitionHeuristicSessionObject();
 	}
 }

@@ -19,15 +19,19 @@
 package de.d3web.costbenefit.model;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.StateTransition;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search
@@ -44,6 +48,8 @@ public class SearchModel {
 	private boolean aborted = false;
 	private CostFunction costFunction;
 	private final Session session;
+	private final Set<StateTransition> transitionalStateTransitions;
+	private final Set<QContainer> blockedQContainers;
 
 	public SearchModel(Session session) {
 		this.session = session;
@@ -56,8 +62,22 @@ public class SearchModel {
 			costFunction = new DefaultCostFunction();
 			Logger.getLogger(this.getClass().getName()).throwing(
 					this.getClass().getName(),
-					"Kein Costbenefit-Problemlöser im Fall. Es wird die Standartkostenfunktion verwendet.",
+					"No Costbenefit-PSMethod included in the session, using default cost function.",
 					null);
+		}
+		blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
+		transitionalStateTransitions = new HashSet<StateTransition>();
+		// filter StateTransitions that cannot be applied due to final questions
+		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+				StateTransition.KNOWLEDGE_KIND)) {
+			QContainer qcontainer = st.getQcontainer();
+			if (!blockedQContainers.contains(qcontainer)) {
+				Boolean targetOnly = qcontainer.getInfoStore().getValue(
+						PSMethodCostBenefit.TARGET_ONLY);
+				if (!targetOnly) {
+					transitionalStateTransitions.add(st);
+				}
+			}
 		}
 	}
 
@@ -130,7 +150,7 @@ public class SearchModel {
 	}
 
 	public void removeTarget(Target target) {
-		 targets.remove(target);
+		targets.remove(target);
 		if (bestCostBenefitTarget != null) {
 			throw new IllegalStateException("cannot remove targets during search");
 		}
@@ -279,6 +299,36 @@ public class SearchModel {
 	 */
 	public boolean isAborted() {
 		return aborted;
+	}
+
+	public Set<QContainer> getBlockedQContainers() {
+		return blockedQContainers;
+	}
+
+	public Set<StateTransition> getTransitionalStateTransitions() {
+		return transitionalStateTransitions;
+	}
+
+	/**
+	 * Calculates all unblocked state transitions having a qcontainer being part
+	 * of an actual target
+	 * 
+	 * @created 28.11.2012
+	 * @return List of unblocket traget StateTransitions
+	 */
+	public Set<StateTransition> getTargetStateTransitions() {
+		HashSet<StateTransition> result = new HashSet<StateTransition>();
+		for (Target t : targets) {
+			for (QContainer qcon : t.getQContainers()) {
+				if (!blockedQContainers.contains(qcon)) {
+					StateTransition stateTransition = StateTransition.getStateTransition(qcon);
+					if (stateTransition != null) {
+						result.add(stateTransition);
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	private static class TargetComparator implements Comparator<Target> {

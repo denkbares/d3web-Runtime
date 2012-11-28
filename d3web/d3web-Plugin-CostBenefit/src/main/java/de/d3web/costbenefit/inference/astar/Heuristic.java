@@ -36,6 +36,7 @@ public interface Heuristic {
 	 * costs to reach that target.
 	 * 
 	 * @created 06.09.2011
+	 * @param model the actual SearchModel
 	 * @param path Path from the start of the search to the state
 	 * @param state the state to start from
 	 * @param target the target to be reached
@@ -43,7 +44,7 @@ public interface Heuristic {
 	 *        questionnaire
 	 * @return optimistic estimation of the minimal distance
 	 */
-	double getDistance(Path path, State state, QContainer target);
+	double getDistance(SearchModel model, Path path, State state, QContainer target);
 
 	/**
 	 * Initializes the heuristic to be used for a specific {@link SearchModel}.

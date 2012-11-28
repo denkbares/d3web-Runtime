@@ -99,14 +99,15 @@ public class TestHeuristicFinalQuestionBehaviour {
 		Session session = SessionFactory.createSession(kb);
 		DividedTransitionHeuristic heuristic = new DividedTransitionHeuristic();
 		AStarPath emptyPath = new AStarPath(null, null, 0);
-		heuristic.init(new SearchModel(session));
-		double distance = heuristic.getDistance(emptyPath,
+		SearchModel model = new SearchModel(session);
+		heuristic.init(model);
+		double distance = heuristic.getDistance(model, emptyPath,
 				new State(session, Collections.<Question, Value> emptyMap()), target);
 		Assert.assertEquals(1.0, distance);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(finalQuestion, value));
-		heuristic.init(new SearchModel(session));
-		distance = heuristic.getDistance(emptyPath,
+		heuristic.init(model);
+		distance = heuristic.getDistance(model, emptyPath,
 				new State(session, Collections.<Question, Value> emptyMap()), target);
 		Assert.assertEquals(1.0, distance);
 	}

@@ -61,45 +61,51 @@ import de.d3web.costbenefit.model.Target;
  */
 public class TPHeuristic extends DividedTransitionHeuristic {
 
+	public static class TPHeuristicSessionObject extends DividedTransitionHeuristicSessionObject {
+
+		/**
+		 * Stores for each CondEqual a Pair of Conditions and QContainers. If
+		 * the condition is false when starting a search and none of the
+		 * QContainers is in the actual path, the conditions can be added to the
+		 * condequal if there are no conflicts (e.g. same termobjects in an
+		 * CondOr and CondEqual)
+		 */
+		private Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<Condition, Pair<List<Condition>, Set<QContainer>>>();
+
+		/**
+		 * Stores a List of Pairs of Conditions and QContainers establishing a
+		 * state where the conditions of the targetQContainer is applicable
+		 */
+		private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
+
+		private Collection<Question> cachedFinalQuestions = new HashSet<Question>();
+	}
+
 	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
-
-	/**
-	 * Stores for each CondEqual a Pair of Conditions and QContainers. If the
-	 * condition is false when starting a search and none of the QContainers is
-	 * in the actual path, the conditions can be added to the condequal if there
-	 * are no conflicts (e.g. same termobjects in an CondOr and CondEqual)
-	 */
-	private Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<Condition, Pair<List<Condition>, Set<QContainer>>>();
-
-	/**
-	 * Stores a List of Pairs of Conditions and QContainers establishing a state
-	 * where the conditions of the targetQContainer is applicable
-	 */
-	private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
-
-	private Collection<Question> cachedFinalQuestions = new HashSet<Question>();
 
 	@Override
 	public void init(SearchModel model) {
+		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(
+				this);
 		// initgeneral in only called when the kb or the list of cached final
 		// questions changes
-		if (model.getSession().getKnowledgeBase() != knowledgeBase) {
-			initGeneralCache(model);
+		if (model.getSession().getKnowledgeBase() != sessionObject.knowledgeBase) {
+			initGeneralCache(sessionObject, model);
 			// knowledbase gets updated in super.init(model)
-			cachedFinalQuestions = calculateAnsweredFinalQuestions(model);
+			sessionObject.cachedFinalQuestions = calculateAnsweredFinalQuestions(model);
 		}
 		else {
 			HashSet<Question> answeredFinalQuestions = calculateAnsweredFinalQuestions(model);
-			if (!answeredFinalQuestions.equals(cachedFinalQuestions)) {
-				cachedFinalQuestions = answeredFinalQuestions;
-				initGeneralCache(model);
+			if (!answeredFinalQuestions.equals(sessionObject.cachedFinalQuestions)) {
+				sessionObject.cachedFinalQuestions = answeredFinalQuestions;
+				initGeneralCache(sessionObject, model);
 			}
 		}
 		super.init(model);
-		initTargetCache(model);
+		initTargetCache(sessionObject, model);
 	}
 
-	private HashSet<Question> calculateAnsweredFinalQuestions(SearchModel model) {
+	private static HashSet<Question> calculateAnsweredFinalQuestions(SearchModel model) {
 		HashSet<Question> answeredFinalQuestions = new HashSet<Question>();
 		for (Question q : model.getSession().getKnowledgeBase().getManager().getQuestions()) {
 			if (q.getInfoStore().getValue(PSMethodCostBenefit.FINAL_QUESTION)) {
@@ -128,17 +134,18 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * activation condition.
 	 * 
 	 * @created 05.10.2011
+	 * @param sessionObject actual SessionObject
 	 * @param model {@link SearchModel}
 	 */
-	private void initTargetCache(SearchModel model) {
+	private static void initTargetCache(TPHeuristicSessionObject sessionObject, SearchModel model) {
 		long time = System.currentTimeMillis();
-		targetCache.clear();
+		sessionObject.targetCache.clear();
 		Session session = model.getSession();
 		for (Target target : model.getTargets()) {
 			// iterate over all QContainers of all targets
 			for (QContainer qcon : target.getQContainers()) {
 				// skip qcontainer if it is already initialized
-				if (targetCache.get(qcon) != null) continue;
+				if (sessionObject.targetCache.get(qcon) != null) continue;
 				StateTransition st = StateTransition.getStateTransition(qcon);
 				// qcontainers without Statetransition are handled separately
 				if (st == null) continue;
@@ -150,14 +157,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				List<Condition> conditionsToExamine = conditions;
 				Set<Condition> alreadyExaminedConditions = new HashSet<Condition>();
 				while (!conditionsToExamine.isEmpty()) {
-					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(session,
+					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(
+							sessionObject, session,
 							conditionsToExamine, conditions,
 							activationCondition.getTerminalObjects(), forbiddenTermObjects);
 					additionalConditions.addAll(temppairs);
 					conditionsToExamine = getPrimitiveConditions(temppairs,
 							alreadyExaminedConditions);
 				}
-				targetCache.put(qcon, additionalConditions);
+				sessionObject.targetCache.put(qcon, additionalConditions);
 			}
 		}
 		log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
@@ -186,11 +194,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return list;
 	}
 
-	private List<Pair<List<Condition>, Set<QContainer>>> getPairs(Session session, List<Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
+	private static List<Pair<List<Condition>, Set<QContainer>>> getPairs(TPHeuristicSessionObject sessionObject, Session session, List<Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
 		List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 		for (Condition cond : targetConditions) {
 			if (Conditions.isTrue(cond, session)) continue;
-			Pair<List<Condition>, Set<QContainer>> generalPair = preconditionCache.get(cond);
+			Pair<List<Condition>, Set<QContainer>> generalPair = sessionObject.preconditionCache.get(cond);
 			if (generalPair == null) continue;
 			List<Condition> checkedConditions = new LinkedList<Condition>();
 			for (Condition precondition : generalPair.getA()) {
@@ -219,22 +227,18 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return additionalConditions;
 	}
 
-	private void initGeneralCache(SearchModel model) {
+	private static void initGeneralCache(TPHeuristicSessionObject sessionObject, SearchModel model) {
 		long time = System.currentTimeMillis();
-		preconditionCache.clear();
+		sessionObject.preconditionCache.clear();
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
-		Collection<StateTransition> transitiveStateTransitions = new LinkedList<StateTransition>();
+		Collection<StateTransition> transitiveStateTransitions = model.getTransitionalStateTransitions();
 		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
-		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(model.getSession());
+		Set<QContainer> blockedQContainers = model.getBlockedQContainers();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
 			if (!blockedQContainers.contains(qcontainer)) {
-				Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
 				stateTransitions.add(st);
-				if (!targetOnly) {
-					transitiveStateTransitions.add(st);
-				}
 			}
 		}
 		// collect all CondEqual preconditions of all statetransitions (CondAnd
@@ -266,9 +270,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// TODO: add a hashmap finalquestion -> conditions which must be
 			// recalculated
 			// put all common conditions in the cache
-			preconditionCache.put(condition, new Pair<List<Condition>, Set<QContainer>>(
-					getCommonConditions(neededConditions),
-					transitionalQContainer));
+			sessionObject.preconditionCache.put(condition,
+					new Pair<List<Condition>, Set<QContainer>>(
+							getCommonConditions(neededConditions),
+							transitionalQContainer));
 		}
 		log.info("General init: " + (System.currentTimeMillis() - time) + "ms");
 	}
@@ -427,14 +432,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	@Override
-	public double getDistance(Path path, State state, QContainer target) {
+	public double getDistance(SearchModel model, Path path, State state, QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
-		Condition condition = getTransitiveCondition(path, stateTransition);
-
-		double result = estimatePathCosts(state, condition)
-				+ calculateUnusedNegatives(path);
+		Condition condition = getTransitiveCondition(model.getSession(), path, stateTransition);
+		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
+				this);
+		double result = estimatePathCosts(sessionObject, state, condition)
+				+ calculateUnusedNegatives(sessionObject, path);
 
 		return result;
 	}
@@ -447,15 +453,17 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * calculateTransitiveCondition(Session, QContainer)
 	 * 
 	 * @created 05.07.2012
+	 * @param session the actual session
 	 * @param path actual path
 	 * @param stateTransition specified {@link StateTransition}
 	 * @return transitive activation condition
 	 */
-	public Condition getTransitiveCondition(Path path, StateTransition stateTransition) {
+	public Condition getTransitiveCondition(Session session, Path path, StateTransition stateTransition) {
 		Condition precondition = stateTransition.getActivationCondition();
+		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) session.getSessionObject(this);
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
-		List<Pair<List<Condition>, Set<QContainer>>> list = targetCache.get(stateTransition.getQcontainer());
+		List<Pair<List<Condition>, Set<QContainer>>> list = sessionObject.targetCache.get(stateTransition.getQcontainer());
 		if (list == null) {
 			return precondition;
 		}
@@ -561,6 +569,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		if (stateTransition == null) return new CondAnd(Collections.<Condition> emptyList());
 		Path path = new AStarPath(null, null, 0);
-		return heuristic.getTransitiveCondition(path, stateTransition);
+		return heuristic.getTransitiveCondition(session, path, stateTransition);
+	}
+
+	@Override
+	public TPHeuristicSessionObject createSessionObject(Session session) {
+		return new TPHeuristicSessionObject();
 	}
 }

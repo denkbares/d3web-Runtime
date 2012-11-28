@@ -51,7 +51,6 @@ import de.d3web.costbenefit.inference.ExpertMode;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
-import de.d3web.costbenefit.inference.astar.AStar;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.costbenefit.inference.astar.AStarPath;
 import de.d3web.costbenefit.inference.astar.State;
@@ -124,7 +123,7 @@ public class TargetOnlyTest {
 		new StateTransition(new CondAnd(Collections.<Condition> emptyList()), Arrays.asList(vt3),
 				targetOnly);
 		targetOnly.getInfoStore().addValue(BasicProperties.COST, 1.0);
-		targetOnly.getInfoStore().addValue(AStar.TARGET_ONLY, true);
+		targetOnly.getInfoStore().addValue(PSMethodCostBenefit.TARGET_ONLY, true);
 
 		TPHeuristic tpHeuristic = new TPHeuristic();
 		AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
@@ -142,8 +141,8 @@ public class TargetOnlyTest {
 		AStarPath emptyPath = new AStarPath(null, null, 0);
 		State startState = new State(session, Collections.<Question, Value> emptyMap());
 		// heuristic ignores targetOnly as intermediate step
-		Assert.assertEquals(2.0, tpHeuristic.getDistance(emptyPath, startState, target));
-		Assert.assertEquals(0.0, tpHeuristic.getDistance(emptyPath, startState, targetOnly));
+		Assert.assertEquals(2.0, tpHeuristic.getDistance(model, emptyPath, startState, target));
+		Assert.assertEquals(0.0, tpHeuristic.getDistance(model, emptyPath, startState, targetOnly));
 
 		ExpertMode em = ExpertMode.getExpertMode(session);
 		// calculate path to target

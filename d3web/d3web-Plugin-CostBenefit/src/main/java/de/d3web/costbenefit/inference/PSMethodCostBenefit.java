@@ -100,6 +100,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public static final Property<Boolean> FINAL_QUESTION = Property.getProperty("finalQuestion",
 			Boolean.class);
 
+	public static final Property<Boolean> TARGET_ONLY = Property.getProperty(
+			"targetOnly", Boolean.class);
+
 	public double getStrategicBenefitFactor() {
 		return strategicBenefitFactor;
 	}
@@ -308,7 +311,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					.getDiscriminatingQuestions(solutions, session);
 			Collection<Target> targets = targetFunction.getTargets(session,
 					discriminatingQuestions, solutions, strategicSupport);
-			Set<QContainer> blockedQContainers = getBlockedQContainers(session);
+			Set<QContainer> blockedQContainers = searchModel.getBlockedQContainers();
 			for (Target target : targets) {
 				boolean skipTarget = false;
 				for (QContainer qcontainer : target.getQContainers()) {

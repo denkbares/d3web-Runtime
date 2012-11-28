@@ -44,8 +44,8 @@ public class SwitchingHeuristic implements Heuristic {
 	}
 
 	@Override
-	public double getDistance(Path path, State state, QContainer target) {
-		return actual.getDistance(path, state, target);
+	public double getDistance(SearchModel model, Path path, State state, QContainer target) {
+		return actual.getDistance(model, path, state, target);
 	}
 
 	@Override

@@ -22,12 +22,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -97,8 +99,11 @@ public class AStar {
 	private final Session session;
 	private final Map<Pair<Path, QContainer>, Double> hValueCache = Collections.synchronizedMap(new HashMap<Pair<Path, QContainer>, Double>());
 
-	public static final Property<Boolean> TARGET_ONLY = Property.getProperty(
-			"targetOnly", Boolean.class);
+	/**
+	 * @deprecated use PSMethodCostBenefit.TARGET_ONLY
+	 */
+	@Deprecated
+	public static final Property<Boolean> TARGET_ONLY = PSMethodCostBenefit.TARGET_ONLY;
 
 	// some information about the current search
 	private final transient long initTime;
@@ -111,8 +116,14 @@ public class AStar {
 		this.model = model;
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 
-		successors = session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND);
+		// collect all target QContainers
+		Set<QContainer> targets = new HashSet<QContainer>();
+		for (Target t : model.getTargets()) {
+			targets.addAll(t.getQContainers());
+		}
+		successors = new HashSet<StateTransition>();
+		successors.addAll(model.getTransitionalStateTransitions());
+		successors.addAll(model.getTargetStateTransitions());
 		// QContainers without a StateTransition can be executed at any time,
 		// but they cannot be used as intermediate steps because they have no
 		// transitions, so they are checked as targets before the calculation
@@ -183,9 +194,11 @@ public class AStar {
 			Heuristic heuristic = algorithm.getHeuristic();
 			QContainer qcontainer = target.getQContainers().get(0);
 			double distance =
-					heuristic.getDistance(startNode.getPath(), startNode.getState(), qcontainer);
+					heuristic.getDistance(model, startNode.getPath(), startNode.getState(),
+							qcontainer);
 			if (distance == Double.POSITIVE_INFINITY) {
 				model.removeTarget(target);
+				successors.remove(qcontainer);
 			}
 		}
 	}
@@ -205,7 +218,7 @@ public class AStar {
 			// if a target has been reached and its cost/benefit is better than
 			// the optimistic fValue of the best node, terminate the algorithm
 			if (model.getBestCostBenefitTarget() != null
-					&& model.getBestCostBenefitTarget().getCostBenefit() < node.getfValue()) {
+					&& model.getBestCostBenefitTarget().getCostBenefit() <= node.getfValue()) {
 				checkPathFValues(node);
 				break;
 			}
@@ -322,7 +335,7 @@ public class AStar {
 	private void installNode(Node newFollower) {
 		updateTargets(newFollower.getPath());
 		Boolean targetOnly = newFollower.getPath().getQContainer().getInfoStore().getValue(
-				TARGET_ONLY);
+				PSMethodCostBenefit.TARGET_ONLY);
 		if (targetOnly) {
 			// do not add this node to our pathes, it cannot be reused because
 			// the last QContainer can not be used to establish preconditions
@@ -451,7 +464,8 @@ public class AStar {
 					}
 				}
 				// adding the costs calculated by the heuristic
-				double distance = algorithm.getHeuristic().getDistance(path, state, qContainer);
+				double distance = algorithm.getHeuristic().getDistance(model, path, state,
+						qContainer);
 				costs += distance;
 				Pair<Path, QContainer> key = new Pair<Path, QContainer>(path, qContainer);
 				hValueCache.put(key, distance);

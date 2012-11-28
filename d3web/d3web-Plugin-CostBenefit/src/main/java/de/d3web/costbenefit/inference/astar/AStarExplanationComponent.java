@@ -210,7 +210,7 @@ public class AStarExplanationComponent {
 		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
-			Boolean targetOnly = qcontainer.getInfoStore().getValue(AStar.TARGET_ONLY);
+			Boolean targetOnly = qcontainer.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY);
 			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
 				stateTransitions.add(st);
 			}
@@ -222,6 +222,8 @@ public class AStarExplanationComponent {
 				for (StateTransition st : stateTransitions) {
 					for (ValueTransition vt : st.getPostTransitions()) {
 						if (vt.getQuestion() == condition.getTerminalObjects().iterator().next()) {
+							// could be replaced by one value, calculated analog
+							// to DividedTransitionHeuristic.getValue()
 							for (Value v : vt.calculatePossibleValues()) {
 								if (TPHeuristic.checkValue(condition, v)) {
 									transitionalQContainer.add(st.getQcontainer());
@@ -261,6 +263,7 @@ public class AStarExplanationComponent {
 			return Collections.emptySet();
 		}
 		Condition transitiveCondition = getAndInitTPHeuristic(model).getTransitiveCondition(
+				model.getSession(),
 				new AStarPath(null, null, 0),
 				stateTransition);
 
