@@ -51,6 +51,9 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.SearchAlgorithm;
+import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
@@ -176,6 +179,20 @@ public final class Util {
 		}
 	}
 
+	/**
+	 * Collects a list of all {@link QuestionOC}, being child of the defined
+	 * QContainer
+	 * 
+	 * @created 30.11.2012
+	 * @param qContainer defined QContainer
+	 * @return List of QuestionOC
+	 */
+	public static List<QuestionOC> getQuestionOCs(QContainer qContainer) {
+		LinkedList<QuestionOC> result = new LinkedList<QuestionOC>();
+		collectQuestions(qContainer, result);
+		return result;
+	}
+
 	private static void collectQuestions(TerminologyObject namedObject, List<QuestionOC> result) {
 		if (namedObject instanceof QuestionOC && !result.contains(namedObject)) {
 			result.add((QuestionOC) namedObject);
@@ -284,5 +301,30 @@ public final class Util {
 			return done;
 		}
 		return true;
+	}
+
+	/**
+	 * Offers easy access to the AStarAlgorithm even if it is capsuled with the
+	 * path extender. If no AStar is used in the {@link PSMethodCostBenefit},
+	 * null is returned
+	 * 
+	 * @created 04.12.2012
+	 * @param psMethodCostBenefit specified PSMethod
+	 * @return configured instance of AStarAlgorithm or null, if another
+	 *         algorithm is used.
+	 */
+	public static AStarAlgorithm getAStarAlogrithm(PSMethodCostBenefit psMethodCostBenefit) {
+		SearchAlgorithm searchAlgorithm = psMethodCostBenefit.getSearchAlgorithm();
+		AStarAlgorithm aStar = null;
+		if (searchAlgorithm instanceof PathExtender) {
+			PathExtender extender = (PathExtender) searchAlgorithm;
+			if (extender.getSubalgorithm() instanceof AStarAlgorithm) {
+				aStar = (AStarAlgorithm) extender.getSubalgorithm();
+			}
+		}
+		else if (searchAlgorithm instanceof AStarAlgorithm) {
+			aStar = (AStarAlgorithm) searchAlgorithm;
+		}
+		return aStar;
 	}
 }
