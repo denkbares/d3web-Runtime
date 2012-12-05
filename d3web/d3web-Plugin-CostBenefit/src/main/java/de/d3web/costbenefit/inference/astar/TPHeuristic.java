@@ -244,11 +244,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// collect all CondEqual preconditions of all statetransitions (CondAnd
 		// are splitted, other condition types can not be used to extend
 		// condition
-		Set<Condition> precondions = new HashSet<Condition>();
+		Set<Condition> preconditions = new HashSet<Condition>();
 		for (StateTransition st : stateTransitions) {
-			precondions.addAll(getPrimitiveConditions(st.getActivationCondition()));
+			preconditions.addAll(getPrimitiveConditions(st.getActivationCondition()));
 		}
-		for (Condition condition : precondions) {
+		for (Condition condition : preconditions) {
 			// collect all conditions of state transitions establishing a state
 			// that enables
 			// execution of the condEqual
@@ -259,7 +259,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					if (vt.getQuestion() == condition.getTerminalObjects().iterator().next()) {
 						for (Value v : vt.calculatePossibleValues()) {
 							if (checkValue(condition, v)) {
-								neededConditions.add(getConds(st.getActivationCondition()));
+								neededConditions.add(flattenCondAnds(st.getActivationCondition()));
 								transitionalQContainer.add(st.getQcontainer());
 								break;
 							}
@@ -417,12 +417,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return choices;
 	}
 
-	private static List<Condition> getConds(Condition cond) {
+	private static List<Condition> flattenCondAnds(Condition cond) {
 		List<Condition> conds = new LinkedList<Condition>();
 		if (cond instanceof CondAnd) {
 			CondAnd condAnd = (CondAnd) cond;
 			for (Condition c : condAnd.getTerms()) {
-				conds.addAll(getConds(c));
+				conds.addAll(flattenCondAnds(c));
 			}
 		}
 		else if (cond != null) {
