@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
@@ -41,12 +40,16 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.utilities.Pair;
-import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.Util;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
@@ -78,7 +81,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		 */
 		private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
 
-		private Collection<Question> cachedFinalQuestions = new HashSet<Question>();
+		private Collection<Question> cachedAbnormalQuestions = new HashSet<Question>();
 	}
 
 	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
@@ -87,40 +90,45 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	public void init(SearchModel model) {
 		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(
 				this);
-		// initgeneral in only called when the kb or the list of cached final
+		// KB has to be remembered before super.init
+		KnowledgeBase oldkb = sessionObject.knowledgeBase;
+		super.init(model);
+		// initgeneral in only called when the kb or the list of cached abnormal
 		// questions changes
-		if (model.getSession().getKnowledgeBase() != sessionObject.knowledgeBase) {
+		if (model.getSession().getKnowledgeBase() != oldkb) {
 			initGeneralCache(sessionObject, model);
 			// knowledbase gets updated in super.init(model)
-			sessionObject.cachedFinalQuestions = calculateAnsweredFinalQuestions(model);
+			sessionObject.cachedAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
 		}
 		else {
-			HashSet<Question> answeredFinalQuestions = calculateAnsweredFinalQuestions(model);
-			if (!answeredFinalQuestions.equals(sessionObject.cachedFinalQuestions)) {
-				sessionObject.cachedFinalQuestions = answeredFinalQuestions;
+			Set<Question> answeredAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
+			if (!answeredAbnormalQuestions.equals(sessionObject.cachedAbnormalQuestions)) {
+				sessionObject.cachedAbnormalQuestions = answeredAbnormalQuestions;
 				initGeneralCache(sessionObject, model);
 			}
 		}
-		super.init(model);
 		initTargetCache(sessionObject, model);
 	}
 
-	private static HashSet<Question> calculateAnsweredFinalQuestions(SearchModel model) {
-		HashSet<Question> answeredFinalQuestions = new HashSet<Question>();
-		for (Question q : model.getSession().getKnowledgeBase().getManager().getQuestions()) {
-			if (q.getInfoStore().getValue(PSMethodCostBenefit.FINAL_QUESTION)) {
-				// check if q has not the init value
-				Value initValue = PSMethodInit.getValue(q,
-						q.getInfoStore().getValue(BasicProperties.INIT));
-				Value actualValue = model.getSession().getBlackboard().getValue(q);
-				// equality has to be checked, it is not sufficient to check the
-				// sizes, because another session could have been loaded
-				if (!initValue.equals(actualValue)) {
-					answeredFinalQuestions.add(q);
+	private static Set<Question> calculateAnsweredAbnormalQuestions(SearchModel model) {
+		Set<Question> result = new HashSet<Question>();
+		Blackboard blackboard = model.getSession().getBlackboard();
+		for (StateTransition st : model.getTransitionalStateTransitions()) {
+			for (Question q : Util.getQuestionOCs(st.getQcontainer())) {
+				DefaultAbnormality abnormality = q.getInfoStore().getValue(
+						BasicProperties.DEFAULT_ABNORMALITIY);
+				Value value = blackboard.getValue(q);
+				if (UndefinedValue.isNotUndefinedValue(value)) {
+					boolean abnormal = (abnormality == null)
+							? true
+							: abnormality.getValue(value) == Abnormality.A5;
+					if (abnormal) {
+						result.add(q);
+					}
 				}
 			}
 		}
-		return answeredFinalQuestions;
+		return result;
 	}
 
 	/**
@@ -257,12 +265,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			for (StateTransition st : transitiveStateTransitions) {
 				for (ValueTransition vt : st.getPostTransitions()) {
 					if (vt.getQuestion() == condition.getTerminalObjects().iterator().next()) {
-						for (Value v : vt.calculatePossibleValues()) {
-							if (checkValue(condition, v)) {
-								neededConditions.add(flattenCondAnds(st.getActivationCondition()));
-								transitionalQContainer.add(st.getQcontainer());
-								break;
-							}
+						Value v = getValue(sessionObject, vt);
+						if (checkValue(condition, v)) {
+							neededConditions.add(flattenCondAnds(st.getActivationCondition()));
+							transitionalQContainer.add(st.getQcontainer());
+							break;
 						}
 					}
 				}
