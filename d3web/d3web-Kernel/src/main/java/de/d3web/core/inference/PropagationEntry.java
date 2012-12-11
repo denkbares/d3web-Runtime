@@ -29,6 +29,13 @@ public class PropagationEntry {
 	private final Value oldValue;
 	private final Value newValue;
 	private boolean strategic = false;
+	private boolean forced = false;
+
+	public PropagationEntry(TerminologyObject object, Value oldValue, Value newValue) {
+		this.object = object;
+		this.oldValue = oldValue;
+		this.newValue = newValue;
+	}
 
 	public boolean isStrategic() {
 		return strategic;
@@ -38,10 +45,12 @@ public class PropagationEntry {
 		this.strategic = strategic;
 	}
 
-	public PropagationEntry(TerminologyObject object, Value oldValue, Value newValue) {
-		this.object = object;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
+	public void setForced(boolean forced) {
+		this.forced = forced;
+	}
+
+	public boolean isForced() {
+		return this.forced;
 	}
 
 	public TerminologyObject getObject() {
@@ -79,16 +88,11 @@ public class PropagationEntry {
 	}
 
 	public boolean hasChanged() {
-		if (newValue == null && oldValue == null) {
-			return false;
-		}
-		else if (newValue != null) {
-			return !newValue.equals(oldValue);
-		}
-		else {
-			// newValue is null, oldvalue is not null
-			return true;
-		}
+		if (isForced()) return true;
+		if (newValue == null && oldValue == null) return false;
+		if (newValue != null) return !newValue.equals(oldValue);
+		// newValue is null, oldvalue is not null
+		return true;
 	}
 
 }

@@ -23,11 +23,13 @@ package de.d3web.core.inference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +40,9 @@ import de.d3web.core.session.Value;
 
 public class DefaultPropagationManager implements PropagationManager {
 
-	private Collection<PropagationListener> listeners = new LinkedList<PropagationListener>();
+	private final Collection<PropagationListener> listeners = new LinkedList<PropagationListener>();
+
+	private final Set<ValueObject> forcedPropagationEntries = new HashSet<ValueObject>();
 
 	private final Map<ValueObject, Value> postPropagationEntries = new HashMap<ValueObject, Value>();
 	private final Map<InterviewObject, Value> postInterviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
@@ -257,6 +261,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		Collection<PropagationEntry> entries = convertMapsToEntries(
 				globalPropagationEntries,
 				globalInterviewPropagationEntries, true);
+		forcedPropagationEntries.clear();
 		for (PropagationListener listener : listeners) {
 			listener.propagationFinished(session, entries);
 		}
@@ -270,6 +275,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			Value oldValue = change.getValue();
 			Value value = session.getBlackboard().getValue(object);
 			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+			if (forcedPropagationEntries.contains(object)) entry.setForced(true);
 			entries.add(entry);
 		}
 		for (Entry<InterviewObject, Value> change : interviewPropagationEntries.entrySet()) {
@@ -277,6 +283,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			Value oldValue = interviewPropagationEntries.get(object);
 			Value value = session.getBlackboard().getIndication(object);
 			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
+			if (forcedPropagationEntries.contains(object)) entry.setForced(true);
 			entry.setStrategic(true);
 			entries.add(entry);
 		}
@@ -302,6 +309,12 @@ public class DefaultPropagationManager implements PropagationManager {
 		return null;
 	}
 
+	@Override
+	public void forcePropagate(ValueObject object) {
+		forcedPropagationEntries.add(object);
+		propagate(object, session.getBlackboard().getValue(object), null);
+	}
+
 	/**
 	 * Propagates a change value of an object through the different PSMethods.
 	 * <p>
@@ -314,7 +327,6 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
-	 * @param newValue the new value of the object within the case
 	 */
 	@Override
 	public void propagate(ValueObject object, Value oldValue) {
@@ -324,7 +336,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	/**
 	 * Propagates a change value of an object through one selected PSMethod. All
 	 * changes that will be derived by that PSMethod will be propagated normally
-	 * thoughout the whole system.
+	 * throughout the whole system.
 	 * <p>
 	 * This method may be used after a problem solver has been added to
 	 * distribute existing facts to him and enable him to derive additional
@@ -335,7 +347,6 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
-	 * @param newValue the new value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
 	@Override

@@ -119,6 +119,19 @@ public interface PropagationManager {
 	long getPropagationTime();
 
 	/**
+	 * This method does the same as
+	 * {@link PropagationManager#propagate(ValueObject, Value)}, but produced
+	 * {@link PropagationEntry}s will always indicate a change. This forces the
+	 * propagation in PSMethods, that might otherwise only propagate in case of
+	 * a change in the value of the {@link ValueObject}.
+	 * 
+	 * @created 07.12.2012
+	 * @param object
+	 * @param oldValue
+	 */
+	void forcePropagate(ValueObject object);
+
+	/**
 	 * Propagates a change value of an {@link ValueObject} through the different
 	 * PSMethods.
 	 * <p>
