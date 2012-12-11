@@ -74,7 +74,7 @@ public interface SessionRepository {
 
 	/**
 	 * Returns an {@link Iterator} instance, that offers access to the
-	 * {@link DefaultSessionRecord} instances stored in this SessionRepository.
+	 * {@link SessionRecord} instances stored in this SessionRepository.
 	 * 
 	 * @return the Iterator which offers access to the stored SessionRecords.
 	 */
