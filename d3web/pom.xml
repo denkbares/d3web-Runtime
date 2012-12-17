@@ -11,8 +11,8 @@
 	<url>http://www.d3web.de/</url>
 
 	<issueManagement>
-		<system>Trac</system>
-		<url>https://isci.informatik.uni-wuerzburg.de/trac/</url>
+		<system>Bugzilla</system>
+		<url>https://tickets.denkbares.com</url>
 	</issueManagement>
 
 	<ciManagement>
