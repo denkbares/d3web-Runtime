@@ -10,7 +10,7 @@
 	<artifactId>d3web-Plugin-Tests</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<name>d3web-Plugin-Tests</name>
-	<description>Contains tests for testing d3web knowledge bases using the TestingFramework</description>
+	<description>Contains tests for testing d3web knowledge bases using the TestingFramework.</description>
 
 	<build>
 		<plugins>
