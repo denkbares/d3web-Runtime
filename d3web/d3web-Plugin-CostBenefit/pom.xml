@@ -13,6 +13,7 @@
 	<name>d3web Plugin: CostBenefit</name>
 	<version>0.2-SNAPSHOT</version>
 	
+	<description>This project provides the possibility to add preconditions and post transitions to QContainers. Post transitions are executed in a session, when all questions, defined as children of the specified QContainer are answered. In order to be able to execute a QContainer it can be necessary to calculate a sequence of QContainers, establishing its precondition. The cost benefit problemsolver tries to find a sequence to the best cost benefit QContainer. The costs are defined as the costs for the preparing QContainers and the costs of the QContainer itself. The benefit is calculated by the stratigic solvers, being present in the actual session.</description>
 	<build>
 		<plugins>
 			<plugin>
@@ -96,4 +97,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<properties>
+		<license>LGPL</license>
+		<quality>release</quality>
+	</properties>
 </project>
