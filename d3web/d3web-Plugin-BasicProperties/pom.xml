@@ -8,5 +8,6 @@
   <groupId>de.uniwue.d3web</groupId>
   <artifactId>d3web-Plugin-BasicProperties</artifactId>
   <name>d3web Plugin: BasicProperties</name>
+  <description>Basic Properties</description>
   <version>0.2-SNAPSHOT</version>
 </project>
