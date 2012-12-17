@@ -12,6 +12,7 @@
 	<artifactId>d3web-Kernel</artifactId>
 	<name>d3web-Kernel</name>
 	<version>0.2-SNAPSHOT</version>
+	<description>The d3web kernel</description>
 	
 	<build>
 		<plugins>
