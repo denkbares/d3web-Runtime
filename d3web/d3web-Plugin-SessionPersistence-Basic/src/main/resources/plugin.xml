@@ -123,6 +123,16 @@
 	</extension>
 	
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="ActualQActualQContainerEntries">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.ActualQContainerEntryHandler" />
+		<parameter id="name" value="ActualQContainerEntryHandler" />
+		<parameter id="description" value="Handler to read/write ActualQActualQContainerEntries" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="TextProtocolEntryHandler">
 		<parameter id="class"
 			value="de.d3web.core.records.io.fragments.TextProtocolEntryHandler" />
