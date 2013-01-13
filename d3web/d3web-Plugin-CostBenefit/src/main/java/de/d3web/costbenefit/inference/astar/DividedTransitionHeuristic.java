@@ -214,6 +214,9 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		private final int index;
 		private final Value value;
 		private final double costs;
+		// if there are two cond equal of the same Question as children of a
+		// condand, they are conflicting
+		private boolean conflicting = false;
 
 		public CompiledCondEqual(Value value, int index, double costs) {
 			this.costs = costs;
@@ -224,7 +227,17 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		@Override
 		public double eval(ArrayList<Value> values) {
 			Value value = values.get(index);
-			if (this.value.equals(value)) return 0.0;
+			if (this.value.equals(value)) {
+				if (!conflicting) {
+					return 0.0;
+				}
+				// if the condition is conflicting, the costs have to be added
+				// even
+				// if the value is equal to the actual value
+				else {
+					return costs;
+				}
+			}
 			return costs;
 		}
 	}
@@ -253,6 +266,21 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		if (cond instanceof CondAnd) {
 			CompiledCostsFunction[] children =
 					getCompiledChildren((CondAnd) cond, objects, targetMap);
+			// mark condequal of the same question as conflicting
+			Map<Integer, CompiledCondEqual> map = new HashMap<Integer, DividedTransitionHeuristic.CompiledCondEqual>();
+			for (CompiledCostsFunction function : children) {
+				if (function instanceof CompiledCondEqual) {
+					CompiledCondEqual cce = (CompiledCondEqual) function;
+					CompiledCondEqual sameQuestion = map.get(cce.index);
+					if (sameQuestion != null) {
+						sameQuestion.conflicting = true;
+						cce.conflicting = true;
+					}
+					else {
+						map.put(cce.index, cce);
+					}
+				}
+			}
 			if (children.length == 1) return children[0];
 			return new CompiledCondAnd(children);
 		}

@@ -141,7 +141,7 @@ public class AStar {
 		for (AStarPath pre = targetNode.getPath(); pre != null; pre = pre.getPredecessor()) {
 			for (Node node : nodes.values()) {
 				if (node.getPath() == pre) {
-					if (node.getfValue() > targetNode.getfValue()) {
+					if (node.getfValue() * 0.999 > targetNode.getfValue()) {
 						log.severe("Heuristic of " + targetNode.getPath()
 								+ " was not optimistic, f Value: " + node.getfValue()
 								+ ", max: " + targetNode.getfValue() + ", node: "

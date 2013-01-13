@@ -443,7 +443,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
-		Condition condition = getTransitiveCondition(model.getSession(), path, stateTransition);
+		Condition condition = getTransitiveCondition(model.getSession(), path, stateTransition,
+				state.getSession());
+		List<Condition> flattenedConditions = flattenCondAnds(condition);
+		condition = new CondAnd(flattenedConditions);
 		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
 				this);
 		double result = estimatePathCosts(sessionObject, state, condition)
@@ -460,14 +463,14 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * calculateTransitiveCondition(Session, QContainer)
 	 * 
 	 * @created 05.07.2012
-	 * @param session the actual session
+	 * @param sessionContainingObject the actual session
 	 * @param path actual path
 	 * @param stateTransition specified {@link StateTransition}
 	 * @return transitive activation condition
 	 */
-	public Condition getTransitiveCondition(Session session, Path path, StateTransition stateTransition) {
+	public Condition getTransitiveCondition(Session sessionContainingObject, Path path, StateTransition stateTransition, Session sessionRepresentingTheActualState) {
 		Condition precondition = stateTransition.getActivationCondition();
-		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) session.getSessionObject(this);
+		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) sessionContainingObject.getSessionObject(this);
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
 		List<Pair<List<Condition>, Set<QContainer>>> list = sessionObject.targetCache.get(stateTransition.getQcontainer());
@@ -482,11 +485,17 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		}
 		Condition condition;
 		if (conditions.size() > 0) {
+			// TODO eval: check if a conditionequal of the original condition is
+			// true and a conditionequal conflicting with it is added, add
+			// conditions needed to establish the original condition, maybe even
+			// add conditions needed to establish those conditions, if the are
+			// not true and not conflicting?
 			List<Condition> conditionsToUse = new LinkedList<Condition>();
 			// add the original condition
 			conditionsToUse.add(precondition);
 			Set<Condition> nonCondEqual = new HashSet<Condition>();
 			for (Condition additionalCondition : conditions) {
+				if (Conditions.isTrue(additionalCondition, sessionRepresentingTheActualState)) continue;
 				if (additionalCondition instanceof CondEqual) {
 					conditionsToUse.add(additionalCondition);
 				}
@@ -576,7 +585,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		if (stateTransition == null) return new CondAnd(Collections.<Condition> emptyList());
 		Path path = new AStarPath(null, null, 0);
-		return heuristic.getTransitiveCondition(session, path, stateTransition);
+		return heuristic.getTransitiveCondition(session, path, stateTransition, session);
 	}
 
 	@Override

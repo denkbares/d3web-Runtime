@@ -81,12 +81,12 @@ public class State {
 	 * @return true, if the Question q has the Value v, false otherwise
 	 */
 	public boolean hasValue(Question question, Value value) {
-		Value storedValue = session.getBlackboard().getValue(question);
+		Value storedValue = getSession().getBlackboard().getValue(question);
 		return equals(value, storedValue);
 	}
 
 	public final Value getValue(Question question) {
-		return session.getBlackboard().getValue(question);
+		return getSession().getBlackboard().getValue(question);
 	}
 
 	private boolean equals(Value o1, Value o2) { // NOSONAR
@@ -107,8 +107,8 @@ public class State {
 				for (Question question : usedQuestions.keySet()) {
 					// only check if the bit for this question is set
 					if (!changedQuestions.get(bitIndex++)) continue;
-					Value value1 = session.getBlackboard().getValue(question);
-					Value value2 = otherState.session.getBlackboard().getValue(question);
+					Value value1 = getSession().getBlackboard().getValue(question);
+					Value value2 = otherState.getSession().getBlackboard().getValue(question);
 					if (!equals(value1, value2)) {
 						return false;
 					}
@@ -122,5 +122,9 @@ public class State {
 	@Override
 	public int hashCode() {
 		return hashCode;
+	}
+
+	public Session getSession() {
+		return session;
 	}
 }

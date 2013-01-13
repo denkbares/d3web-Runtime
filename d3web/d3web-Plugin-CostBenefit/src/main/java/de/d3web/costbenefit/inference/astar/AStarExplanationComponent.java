@@ -265,7 +265,7 @@ public class AStarExplanationComponent {
 		Condition transitiveCondition = getAndInitTPHeuristic(model).getTransitiveCondition(
 				model.getSession(),
 				new AStarPath(null, null, 0),
-				stateTransition);
+				stateTransition, model.getSession());
 
 		List<QContainer> path = new LinkedList<QContainer>(target.getMinPath().getPath());
 		path.removeAll(target.getQContainers());
