@@ -283,6 +283,26 @@ public interface Blackboard {
 	Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod);
 
 	/**
+	 * Returns whether the {@link TerminologyObject} has a Value Fact for the
+	 * given {@link PSMethod}.
+	 * 
+	 * @created 21.09.2012
+	 * @param terminologyObject {@link TerminologyObject}
+	 * @param psmethod {@link PSMethod}
+	 * @return {@link Fact}
+	 */
+	boolean hasValueFact(TerminologyObject terminologyObject, PSMethod psmethod);
+
+	/**
+	 * Returns whether the {@link TerminologyObject} has a Value Fact.
+	 * 
+	 * @created 21.09.2012
+	 * @param terminologyObject {@link TerminologyObject}
+	 * @return {@link Fact}
+	 */
+	boolean hasValueFact(TerminologyObject terminologyObject);
+
+	/**
 	 * Returns the Interview Fact of one {@link PSMethod} of a
 	 * {@link TerminologyObject}.
 	 * 
