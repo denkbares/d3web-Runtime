@@ -168,7 +168,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(
 							sessionObject, session,
 							conditionsToExamine, conditions,
-							activationCondition.getTerminalObjects(), forbiddenTermObjects);
+							activationCondition.getTerminalObjects(), forbiddenTermObjects, true);
 					additionalConditions.addAll(temppairs);
 					conditionsToExamine = getPrimitiveConditions(temppairs,
 							alreadyExaminedConditions);
@@ -202,10 +202,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return list;
 	}
 
-	private static List<Pair<List<Condition>, Set<QContainer>>> getPairs(TPHeuristicSessionObject sessionObject, Session session, List<Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects) {
+	private static List<Pair<List<Condition>, Set<QContainer>>> getPairs(TPHeuristicSessionObject sessionObject, Session session, Collection<? extends Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects, boolean skipTrueConds) {
 		List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 		for (Condition cond : targetConditions) {
-			if (Conditions.isTrue(cond, session)) continue;
+			if (skipTrueConds && Conditions.isTrue(cond, session)) continue;
 			Pair<List<Condition>, Set<QContainer>> generalPair = sessionObject.preconditionCache.get(cond);
 			if (generalPair == null) continue;
 			List<Condition> checkedConditions = new LinkedList<Condition>();
@@ -470,6 +470,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 */
 	public Condition getTransitiveCondition(Session sessionContainingObject, Path path, StateTransition stateTransition, Session sessionRepresentingTheActualState) {
 		Condition precondition = stateTransition.getActivationCondition();
+		Map<Question, CondEqual> originalFullfilledCondEqual = new HashMap<Question, CondEqual>();
+		List<Condition> originalPrimitiveConditions = getPrimitiveConditions(precondition);
+		for (Condition condition : originalPrimitiveConditions) {
+			if (condition instanceof CondEqual
+					&& Conditions.isTrue(condition, sessionRepresentingTheActualState)) {
+				CondEqual condEqual = (CondEqual) condition;
+				originalFullfilledCondEqual.put(condEqual.getQuestion(), condEqual);
+			}
+		}
 		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) sessionContainingObject.getSessionObject(this);
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
@@ -494,10 +503,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// add the original condition
 			conditionsToUse.add(precondition);
 			Set<Condition> nonCondEqual = new HashSet<Condition>();
+			Set<CondEqual> conflictingOriginalConds = new HashSet<CondEqual>();
 			for (Condition additionalCondition : conditions) {
 				if (Conditions.isTrue(additionalCondition, sessionRepresentingTheActualState)) continue;
 				if (additionalCondition instanceof CondEqual) {
 					conditionsToUse.add(additionalCondition);
+					CondEqual conflicting = originalFullfilledCondEqual.get(((CondEqual) additionalCondition).getQuestion());
+					if (conflicting != null) {
+						conflictingOriginalConds.add(conflicting);
+					}
 				}
 				else {
 					nonCondEqual.add(additionalCondition);
@@ -536,6 +550,20 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				}
 			}
 			condition = new CondAnd(conditionsToUse);
+			if (conflictingOriginalConds.size() > 0) {
+				List<Pair<List<Condition>, Set<QContainer>>> pairs = getPairs(sessionObject,
+						sessionContainingObject, conflictingOriginalConds,
+						getPrimitiveConditions(condition), condition.getTerminalObjects(),
+						getForbiddenObjects(condition), false);
+				for (Pair<List<Condition>, Set<QContainer>> pair : pairs) {
+					// add the condition, even if one of their qcontainers is on
+					// the path -> the condition is conflicting, so the
+					// qcontainer will have to be visited again to fullfill the
+					// condition again
+					conditionsToUse.addAll(pair.getA());
+				}
+				condition = new CondAnd(conditionsToUse);
+			}
 		}
 		else {
 			condition = precondition;
@@ -546,6 +574,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	/**
 	 * Returns all term objects of a condition, being part of a condition other
 	 * than CondEqual or CondAnd
+	 * 
+	 * TODO replace forbidden objects by forbidden values!
 	 * 
 	 * @created 05.10.2011
 	 * @param condition Condition
