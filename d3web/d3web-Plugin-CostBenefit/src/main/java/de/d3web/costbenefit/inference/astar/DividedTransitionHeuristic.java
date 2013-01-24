@@ -167,7 +167,11 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 	private static interface CompiledCostsFunction {
 
+		void setConflicting(int index);
+
 		double eval(ArrayList<Value> values);
+
+		Set<Integer> getIndexes();
 	}
 
 	private static final class CompiledCondAnd implements CompiledCostsFunction {
@@ -187,6 +191,23 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 			}
 			return sum;
 		}
+
+		@Override
+		public Set<Integer> getIndexes() {
+			Set<Integer> indexes = new HashSet<Integer>();
+			for (CompiledCostsFunction child : children) {
+				indexes.addAll(child.getIndexes());
+			}
+			return indexes;
+		}
+
+		@Override
+		public void setConflicting(int index) {
+			for (CompiledCostsFunction child : children) {
+				child.setConflicting(index);
+			}
+		}
+
 	}
 
 	private static final class CompiledCondOr implements CompiledCostsFunction {
@@ -206,6 +227,25 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				if (cheapest == 0.0) break;
 			}
 			return cheapest;
+		}
+
+		@Override
+		public Set<Integer> getIndexes() {
+			Set<Integer> indexes = new HashSet<Integer>();
+			for (CompiledCostsFunction child : children) {
+				indexes.addAll(child.getIndexes());
+			}
+			return indexes;
+		}
+
+		@Override
+		public void setConflicting(int index) {
+			Set<Integer> indexes = getIndexes();
+			if (indexes.size() == 1) {
+				for (CompiledCostsFunction child : children) {
+					child.setConflicting(index);
+				}
+			}
 		}
 	}
 
@@ -240,6 +280,20 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 			}
 			return costs;
 		}
+
+		@Override
+		public Set<Integer> getIndexes() {
+			Set<Integer> indexes = new HashSet<Integer>();
+			indexes.add(index);
+			return indexes;
+		}
+
+		@Override
+		public void setConflicting(int index) {
+			if (index == this.index) {
+				conflicting = true;
+			}
+		}
 	}
 
 	private static final class CompiledCondNotEqual implements CompiledCostsFunction {
@@ -247,6 +301,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		private final int index;
 		private final Value value;
 		private final double costs;
+		private boolean conflicting = false;
 
 		public CompiledCondNotEqual(Value value, int index, double costs) {
 			this.costs = costs;
@@ -257,8 +312,29 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		@Override
 		public double eval(ArrayList<Value> values) {
 			Value value = values.get(index);
-			if (!this.value.equals(value)) return 0.0;
+			if (!this.value.equals(value)) {
+				if (!conflicting) {
+					return 0.0;
+				}
+				else {
+					return costs;
+				}
+			}
 			return costs;
+		}
+
+		@Override
+		public Set<Integer> getIndexes() {
+			Set<Integer> indexes = new HashSet<Integer>();
+			indexes.add(index);
+			return indexes;
+		}
+
+		@Override
+		public void setConflicting(int index) {
+			if (index == this.index) {
+				conflicting = true;
+			}
 		}
 	}
 
@@ -266,19 +342,23 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		if (cond instanceof CondAnd) {
 			CompiledCostsFunction[] children =
 					getCompiledChildren((CondAnd) cond, objects, targetMap);
-			// mark condequal of the same question as conflicting
-			Map<Integer, CompiledCondEqual> map = new HashMap<Integer, DividedTransitionHeuristic.CompiledCondEqual>();
+			// mark conds of the same question as conflicting
+			Map<Integer, CompiledCostsFunction> map = new HashMap<Integer, CompiledCostsFunction>();
 			for (CompiledCostsFunction function : children) {
-				if (function instanceof CompiledCondEqual) {
-					CompiledCondEqual cce = (CompiledCondEqual) function;
-					CompiledCondEqual sameQuestion = map.get(cce.index);
+				Set<Integer> indexes = function.getIndexes();
+				// only for condand more than one index is allowed, but condand
+				// are flattend by tpheuristic
+				if (indexes.size() == 1) {
+					Integer index = indexes.iterator().next();
+					CompiledCostsFunction sameQuestion = map.get(index);
 					if (sameQuestion != null) {
-						sameQuestion.conflicting = true;
-						cce.conflicting = true;
+						sameQuestion.setConflicting(index);
+						function.setConflicting(index);
 					}
 					else {
-						map.put(cce.index, cce);
+						map.put(index, function);
 					}
+
 				}
 			}
 			if (children.length == 1) return children[0];

@@ -62,6 +62,7 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 		// entries and put indicated questions to the beginning of the list
 		Map<Question, AgendaEntry> questions = new HashMap<Question, AgendaEntry>();
 		List<AgendaEntry> other = new LinkedList<AgendaEntry>();
+		int currentPathIndex = co.getCurrentPathIndex();
 		List<QContainer> currentSequence = co.getCurrentSequence() == null
 				? new LinkedList<QContainer>()
 				: Arrays.asList(co.getCurrentSequence());
@@ -74,6 +75,15 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 				}
 				else {
 					int indexOfQCon = currentSequence.indexOf(agendaEntry.getInterviewObject());
+					// handle duplicate occurencies
+					if (indexOfQCon < currentPathIndex) {
+						for (int i = currentPathIndex; i < currentSequence.size(); i++) {
+							if (currentSequence.get(i) == agendaEntry.getInterviewObject()) {
+								indexOfQCon = i;
+								break;
+							}
+						}
+					}
 					if (indexOfQCon != -1) {
 						sequenceEntries[indexOfQCon] = agendaEntry;
 					}
@@ -83,11 +93,24 @@ public class CostBenefitAgendaSortingStrategy implements AgendaSortingStrategy {
 				}
 			}
 			else {
-				for (Fact fact : co.getIndicatedFacts()) {
-					if (fact.getTerminologyObject() == agendaEntry.getInterviewObject()) {
-						co.getSession().getBlackboard().removeInterviewFact(fact);
-						co.removeIndicatedFact(fact);
-						break;
+				// check if it is contained again
+				boolean containedAgain = false;
+				if (currentPathIndex > 0) {
+					for (int i = currentPathIndex + 1; i < currentSequence.size(); i++) {
+						if (currentSequence.get(i) == agendaEntry.getInterviewObject()) {
+							containedAgain = true;
+							sequenceEntries[i] = agendaEntry;
+							agendaEntry.setInterviewState(InterviewState.ACTIVE);
+						}
+					}
+				}
+				if (!containedAgain) {
+					for (Fact fact : co.getIndicatedFacts()) {
+						if (fact.getTerminologyObject() == agendaEntry.getInterviewObject()) {
+							co.getSession().getBlackboard().removeInterviewFact(fact);
+							co.removeIndicatedFact(fact);
+							break;
+						}
 					}
 				}
 			}

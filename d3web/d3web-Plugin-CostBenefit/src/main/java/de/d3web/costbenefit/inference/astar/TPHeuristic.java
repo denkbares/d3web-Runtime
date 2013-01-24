@@ -34,10 +34,13 @@ import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
+import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
@@ -159,7 +162,9 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				if (st == null) continue;
 				Condition activationCondition = st.getActivationCondition();
 				if (activationCondition == null) continue;
-				Collection<TerminologyObject> forbiddenTermObjects = getForbiddenObjects(activationCondition);
+				// Collection<TerminologyObject> forbiddenTermObjects =
+				// getForbiddenObjects(activationCondition);
+				Map<Question, Set<Value>> forbiddenValues = getCoveredValues(activationCondition);
 				List<Condition> conditions = getPrimitiveConditions(activationCondition);
 				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 				List<Condition> conditionsToExamine = conditions;
@@ -167,8 +172,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				while (!conditionsToExamine.isEmpty()) {
 					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(
 							sessionObject, session,
-							conditionsToExamine, conditions,
-							activationCondition.getTerminalObjects(), forbiddenTermObjects, true);
+							conditionsToExamine, forbiddenValues,
+							true);
 					additionalConditions.addAll(temppairs);
 					conditionsToExamine = getPrimitiveConditions(temppairs,
 							alreadyExaminedConditions);
@@ -202,7 +207,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return list;
 	}
 
-	private static List<Pair<List<Condition>, Set<QContainer>>> getPairs(TPHeuristicSessionObject sessionObject, Session session, Collection<? extends Condition> targetConditions, List<Condition> originalPrimitiveConditions, Collection<? extends TerminologyObject> collection, Collection<TerminologyObject> forbiddenTermObjects, boolean skipTrueConds) {
+	private static List<Pair<List<Condition>, Set<QContainer>>> getPairs(TPHeuristicSessionObject sessionObject, Session session, Collection<? extends Condition> targetConditions, Map<Question, Set<Value>> forbiddenValues, boolean skipTrueConds) {
 		List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<Pair<List<Condition>, Set<QContainer>>>();
 		for (Condition cond : targetConditions) {
 			if (skipTrueConds && Conditions.isTrue(cond, session)) continue;
@@ -215,17 +220,32 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					CondEqual condEqual = (CondEqual) precondition;
 					// condequals must not be already contained and must
 					// not have a forbidden termobject
-					if (!originalPrimitiveConditions.contains(precondition)
-							&& !forbiddenTermObjects.contains(condEqual.getQuestion())) {
+					Set<Value> set = forbiddenValues.get(condEqual.getQuestion());
+					if (set == null || !set.contains(condEqual.getValue())) {
 						checkedConditions.add(condEqual);
+					}
+				}
+				else {
+					Map<Question, Set<Value>> preconditionValues = getCoveredValues(precondition);
+					boolean conflicting = false;
+					for (Question q : preconditionValues.keySet()) {
+						Set<Value> forbiddenSet = forbiddenValues.get(q);
+						if (forbiddenSet != null
+								&& !Collections.disjoint(forbiddenSet, preconditionValues.get(q))) {
+							conflicting = true;
+							break;
+						}
+					}
+					if (!conflicting) {
+						checkedConditions.add(precondition);
 					}
 				}
 				// all other conditions must not have any term object
 				// already contained in the activation condition
-				else if (Collections.disjoint(collection,
-						precondition.getTerminalObjects())) {
-					checkedConditions.add(precondition);
-				}
+				// else if (Collections.disjoint(collection,
+				// precondition.getTerminalObjects())) {
+				// checkedConditions.add(precondition);
+				// }
 			}
 			if (!checkedConditions.isEmpty()) {
 				additionalConditions.add(new Pair<List<Condition>, Set<QContainer>>(
@@ -406,10 +426,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * @created 22.03.2012
 	 */
 	private static boolean checkCondNot(CondNot condNot) {
-		Condition negatedCondition = condNot.getTerms().get(0);
-		if (negatedCondition instanceof CondEqual) {
-			CondEqual condEqual = (CondEqual) negatedCondition;
-			return (condEqual.getValue() instanceof ChoiceValue);
+		if (condNot.getTerms().size() == 1) {
+			Condition negatedCondition = condNot.getTerms().get(0);
+			if (negatedCondition instanceof CondEqual) {
+				CondEqual condEqual = (CondEqual) negatedCondition;
+				return (condEqual.getValue() instanceof ChoiceValue);
+			}
 		}
 		return false;
 	}
@@ -553,8 +575,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			if (conflictingOriginalConds.size() > 0) {
 				List<Pair<List<Condition>, Set<QContainer>>> pairs = getPairs(sessionObject,
 						sessionContainingObject, conflictingOriginalConds,
-						getPrimitiveConditions(condition), condition.getTerminalObjects(),
-						getForbiddenObjects(condition), false);
+						getCoveredValues(condition), false);
 				for (Pair<List<Condition>, Set<QContainer>> pair : pairs) {
 					// add the condition, even if one of their qcontainers is on
 					// the path -> the condition is conflicting, so the
@@ -571,31 +592,68 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return condition;
 	}
 
-	/**
-	 * Returns all term objects of a condition, being part of a condition other
-	 * than CondEqual or CondAnd
-	 * 
-	 * TODO replace forbidden objects by forbidden values!
-	 * 
-	 * @created 05.10.2011
-	 * @param condition Condition
-	 */
-	private static Collection<TerminologyObject> getForbiddenObjects(Condition cond) {
-		List<TerminologyObject> terms = new LinkedList<TerminologyObject>();
-		if (cond instanceof CondEqual) {
-			return terms;
+	private static Map<Question, Set<Value>> getCoveredValues(Condition condition) {
+		Map<Question, Set<Value>> forbiddenValues = new HashMap<Question, Set<Value>>();
+		getForbiddenObjects(condition, forbiddenValues);
+		return forbiddenValues;
+	}
+
+	private static void getForbiddenObjects(Condition condition, Map<Question, Set<Value>> forbiddenValues) {
+		if (condition instanceof CondEqual) {
+			getSet(forbiddenValues, ((CondEqual) condition).getQuestion()).add(
+					((CondEqual) condition).getValue());
 		}
-		else if (cond instanceof CondAnd) {
-			CondAnd condAnd = (CondAnd) cond;
-			for (Condition c : condAnd.getTerms()) {
-				terms.addAll(getForbiddenObjects(c));
+		else if (condition instanceof CondNot) {
+			List<Condition> terms = ((CondNot) condition).getTerms();
+			if (checkCondNot((CondNot) condition)) {
+				CondEqual negatedCondition = (CondEqual) terms.get(0);
+				Set<Value> set = getSet(forbiddenValues, negatedCondition.getQuestion());
+				for (ChoiceValue cv : getAllChoiceValues((QuestionChoice) negatedCondition.getQuestion())) {
+					if (!cv.equals(negatedCondition.getValue())) {
+						set.add(cv);
+					}
+				}
 			}
-			return terms;
+			else {
+				for (TerminologyObject to : condition.getTerminalObjects()) {
+					if (to instanceof QuestionChoice) {
+						Set<Value> set = getSet(forbiddenValues, (Question) to);
+						set.addAll(getAllChoiceValues((QuestionChoice) to));
+					}
+				}
+			}
+		}
+		else if (condition instanceof CondOr || condition instanceof CondAnd) {
+			for (Condition subcondition : ((NonTerminalCondition) condition).getTerms()) {
+				getForbiddenObjects(subcondition, forbiddenValues);
+			}
 		}
 		else {
-			terms.addAll(cond.getTerminalObjects());
-			return terms;
+			for (TerminologyObject to : condition.getTerminalObjects()) {
+				if (to instanceof QuestionChoice) {
+					Set<Value> set = getSet(forbiddenValues, (Question) to);
+					set.addAll(getAllChoiceValues((QuestionChoice) to));
+				}
+			}
 		}
+
+	}
+
+	private static Set<Value> getSet(Map<Question, Set<Value>> forbiddenValues, Question question) {
+		Set<Value> set = forbiddenValues.get(question);
+		if (set == null) {
+			set = new HashSet<Value>();
+			forbiddenValues.put(question, set);
+		}
+		return set;
+	}
+
+	private static List<ChoiceValue> getAllChoiceValues(QuestionChoice qc) {
+		List<ChoiceValue> values = new LinkedList<ChoiceValue>();
+		for (Choice c : qc.getAllAlternatives()) {
+			values.add(new ChoiceValue(c));
+		}
+		return values;
 	}
 
 	/**

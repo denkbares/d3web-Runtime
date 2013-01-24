@@ -157,6 +157,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// (or no current one has been activated yet)
 		if (caseObject.getCurrentPathIndex() == -1
 					|| Util.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
+			// normally ok questions are made undone when starting a sequence,
+			// but one item can occur more than once in a sequence, so it's
+			// questions have to be handled earlier.
+			if (caseObject.getCurrentPathIndex() != -1) {
+				makeOKQuestionsUndone(currentSequence[caseObject.getCurrentPathIndex()], session);
+			}
 			caseObject.incCurrentPathIndex();
 			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
 				calculateNewPath(caseObject);
