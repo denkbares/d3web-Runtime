@@ -49,4 +49,11 @@ public class DerivedSolutionCheck implements Check {
 		return solution.getName() + " = " + rating.toString();
 	}
 
+	public Solution getSolution() {
+		return solution;
+	}
+
+	public Rating getRating() {
+		return rating;
+	}
 }

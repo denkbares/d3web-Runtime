@@ -59,4 +59,12 @@ public class DerivedQuestionCheck implements Check {
 		return question.getName() + " = " + value.toString();
 	}
 
+	public Question getQuestion() {
+		return question;
+	}
+
+	public QuestionValue getValue() {
+		return value;
+	}
+
 }
