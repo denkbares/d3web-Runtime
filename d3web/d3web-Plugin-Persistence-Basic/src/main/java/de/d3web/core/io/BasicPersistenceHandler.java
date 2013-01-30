@@ -36,7 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethodRulebased;
@@ -411,7 +411,7 @@ public class BasicPersistenceHandler implements
 		else if (action instanceof ActionNextQASet) {
 			return PSMethodStrategic.class;
 		}
-		else if (action instanceof ActionSetValue) {
+		else if (action instanceof ActionSetQuestion) {
 			return PSMethodAbstraction.class;
 		}
 		else if (action instanceof ActionSuppressAnswer) {

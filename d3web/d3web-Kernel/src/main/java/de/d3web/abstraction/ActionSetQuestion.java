@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.abstraction.formula.FormulaElement;
-import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.ActionAddValueFact;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -45,7 +45,7 @@ import de.d3web.core.utilities.EqualsUtils;
  * 
  * @author Joachim Baumeister
  */
-public class ActionSetValue extends PSAction {
+public class ActionSetQuestion extends ActionAddValueFact {
 
 	private Question question;
 	private Object value;
@@ -102,7 +102,7 @@ public class ActionSetValue extends PSAction {
 	/**
 	 * creates a new ActionSetValue for the given corresponding rule
 	 */
-	public ActionSetValue() {
+	public ActionSetQuestion() {
 		super();
 	}
 
@@ -159,8 +159,8 @@ public class ActionSetValue extends PSAction {
 		if (o == this) {
 			return true;
 		}
-		if (o instanceof ActionSetValue) {
-			ActionSetValue a = (ActionSetValue) o;
+		if (o instanceof ActionSetQuestion) {
+			ActionSetQuestion a = (ActionSetQuestion) o;
 			return (EqualsUtils.isSame(a.getQuestion(), getQuestion()) && a.getValue()
 					.equals(getValue()));
 		}

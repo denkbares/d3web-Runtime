@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.Operator.Operation;
@@ -76,7 +76,7 @@ public class WaitTest {
 		Node waitB = new StartNode("Wait_B", "Wait_B");
 		Node snapshotA = new SnapshotNode("SS_A", "SS_A");
 		Node snapshotB = new SnapshotNode("SS_B", "SS_B");
-		ActionSetValue action = new ActionSetValue();
+		ActionSetQuestion action = new ActionSetQuestion();
 		action.setQuestion(time);
 		QNumWrapper qnumWrapper = new QNumWrapper(time);
 		action.setValue(new Operator(qnumWrapper, new FormulaNumber(10.0), Operation.Add));
@@ -133,7 +133,7 @@ public class WaitTest {
 		// creating global flow
 		Node start = new StartNode("Start", "Start");
 		Node start2 = new StartNode("Start2", "Start2");
-		ActionSetValue actionSetValue = new ActionSetValue();
+		ActionSetQuestion actionSetValue = new ActionSetQuestion();
 		actionSetValue.setQuestion(time);
 		actionSetValue.setValue(new NumValue(0));
 

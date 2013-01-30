@@ -23,7 +23,7 @@ package de.d3web.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.d3web.core.inference.PSAction;
+import de.d3web.core.inference.ActionAddValueFact;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -38,7 +38,7 @@ import de.d3web.core.utilities.EqualsUtils;
  * 
  * @author Joachim Baumeister
  */
-public class ActionHeuristicPS extends PSAction {
+public class ActionHeuristicPS extends ActionAddValueFact {
 
 	private Solution solution;
 	private Score score;

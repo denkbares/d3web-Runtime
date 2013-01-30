@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.FragmentHandler;
@@ -59,7 +59,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return (object instanceof ActionSetValue);
+		return (object instanceof ActionSetQuestion);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			}
 		}
 
-		ActionSetValue action = new ActionSetValue();
+		ActionSetQuestion action = new ActionSetQuestion();
 		action.setQuestion(question);
 		action.setValue(value);
 		return action;
@@ -118,10 +118,10 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 
 	@Override
 	public Element write(Object object, Document doc) throws IOException {
-		ActionSetValue action = (ActionSetValue) object;
+		ActionSetQuestion action = (ActionSetQuestion) object;
 		Question question = action.getQuestion();
 		Element element = doc.createElement("Action");
-		if (action instanceof ActionSetValue) {
+		if (action instanceof ActionSetQuestion) {
 			element.setAttribute("type", "ActionSetValue");
 		}
 		Element questionNode = doc.createElement("Question");

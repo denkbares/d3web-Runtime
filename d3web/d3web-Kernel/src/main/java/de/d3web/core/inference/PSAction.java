@@ -44,17 +44,23 @@ public abstract class PSAction {
 	public abstract void doIt(Session session, Object source, PSMethod psmethod);
 
 	/**
-	 * @return all objects participating on the action.<BR>
-	 *         Needed from RuleComplex to manage dynamic references of knowledge
-	 *         maps.
+	 * Returns all {@link TerminologyObject}s the action has direct influence on
+	 * by modifying them. E.g. these are the question(s) that may be changed by
+	 * the action. The method is utilized by {@link Rule} to manage dynamic
+	 * references of knowledge maps.
+	 * 
+	 * @return the backward (potentially modified) objects
 	 */
 	public abstract List<? extends TerminologyObject> getBackwardObjects();
 
 	/**
-	 * Returns Terminology objects, which are part of the forward Knowledge
+	 * Returns all {@link TerminologyObject}s, which are part of the forward
+	 * knowledge, that means that the action and the action's outcome depends on
+	 * these objects. For example the list contains all objects a value-setting
+	 * action requires to calculate the value to be set.
 	 * 
 	 * @created 30.09.2010
-	 * @return List of {@link TerminologyObject}
+	 * @return the forward (utilized) objects
 	 */
 	public List<? extends TerminologyObject> getForwardObjects() {
 		return new LinkedList<TerminologyObject>();

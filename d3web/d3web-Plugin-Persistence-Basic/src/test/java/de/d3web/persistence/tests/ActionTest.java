@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
@@ -220,7 +220,7 @@ public class ActionTest {
 	}
 
 	@Test
-	public void testActionSetValueValue() throws Exception {
+	public void testActionSetQuestionValue() throws Exception {
 		FormulaNumber fn = new FormulaNumber(new Double(13));
 
 		List<Object> setValueList = new LinkedList<Object>();
@@ -229,12 +229,12 @@ public class ActionTest {
 		setValueList.add(answerYes);
 
 		rule.setProblemsolverContext(PSMethodAbstraction.class);
-		ActionSetValue aav = new ActionSetValue();
+		ActionSetQuestion aav = new ActionSetQuestion();
 		rule.setAction(aav);
 		aav.setQuestion(questionMC);
 		aav.setValue(setValueList.toArray());
 
-		ActionSetValue asv = new ActionSetValue();
+		ActionSetQuestion asv = new ActionSetQuestion();
 		rule.setAction(asv);
 		asv.setQuestion(questionMC);
 		asv.setValue(setValueList.toArray());
@@ -302,12 +302,12 @@ public class ActionTest {
 		FormulaElement fn = new FormulaNumber(new Double(13));
 
 		rule.setProblemsolverContext(PSMethodAbstraction.class);
-		ActionSetValue aav = new ActionSetValue();
+		ActionSetQuestion aav = new ActionSetQuestion();
 		rule.setAction(aav);
 		aav.setQuestion(questionDate);
 		aav.setValue(fn);
 
-		ActionSetValue asv = new ActionSetValue();
+		ActionSetQuestion asv = new ActionSetQuestion();
 		rule.setAction(asv);
 		asv.setQuestion(questionDate);
 		asv.setValue(fn);

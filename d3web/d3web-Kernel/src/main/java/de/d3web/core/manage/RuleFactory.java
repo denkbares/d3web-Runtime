@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.abstraction.ActionSetValue;
+import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
@@ -302,7 +302,7 @@ public final class RuleFactory {
 
 		Rule rule = new Rule(PSMethodAbstraction.class);
 
-		ActionSetValue theAction = new ActionSetValue();
+		ActionSetQuestion theAction = new ActionSetQuestion();
 		theAction.setQuestion(theQuestion);
 		theAction.setValue(theValue);
 
@@ -338,7 +338,7 @@ public final class RuleFactory {
 
 		Rule rule = new Rule(PSMethodAbstraction.class);
 
-		ActionSetValue theAction = new ActionSetValue();
+		ActionSetQuestion theAction = new ActionSetQuestion();
 		theAction.setQuestion(theQuestion);
 		theAction.setValue(theValue);
 
