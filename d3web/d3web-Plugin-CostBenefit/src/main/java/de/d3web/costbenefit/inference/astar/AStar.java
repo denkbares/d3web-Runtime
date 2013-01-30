@@ -143,7 +143,7 @@ public class AStar {
 				if (node.getPath() == pre) {
 					if (node.getfValue() * 0.999 > targetNode.getfValue()) {
 						log.severe("Heuristic of " + targetNode.getPath()
-								+ " was not optimistic, f Value: " + node.getfValue()
+								+ " was not monotonous, f Value: " + node.getfValue()
 								+ ", max: " + targetNode.getfValue() + ", node: "
 								+ node.getPath().getQContainer().getName());
 					}
