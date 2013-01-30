@@ -516,11 +516,11 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			Map<Question, Set<Value>> forbiddenValues = getCoveredValues(precondition,
 					sessionObject);
 			List<Condition> conditionsToExamine = new LinkedList<Condition>();
-			Set<Condition> alreadyExaminedConditions = new HashSet<Condition>();
+
 			for (Condition condition : originalPrimitiveConditions) {
 				boolean conditionFullfilled = Conditions.isTrue(condition,
 						sessionRepresentingTheActualState);
-				if (conditionFullfilled && condition.getTerminalObjects().size() == 0) {
+				if (conditionFullfilled && condition.getTerminalObjects().size() == 1) {
 					TerminologyObject object = condition.getTerminalObjects().iterator().next();
 					if (object instanceof Question) {
 						originalFullfilledConditions.put((Question) object, condition);
@@ -530,19 +530,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					conditionsToExamine.add(condition);
 				}
 			}
-			while (!conditionsToExamine.isEmpty()) {
-				// all conditions in conditionToExamine are false, it doesn't
-				// have to be checked again
-				List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(
-						sessionObject, sessionRepresentingTheActualState,
-						conditionsToExamine, forbiddenValues,
-						false);
-				for (Pair<List<Condition>, Set<QContainer>> pair : temppairs) {
-					conditions.addAll(pair.getA());
-				}
-				conditionsToExamine = getPrimitiveConditions(temppairs,
-						alreadyExaminedConditions);
-			}
+			conditions = getPreparingConditions(sessionRepresentingTheActualState,
+					sessionObject, forbiddenValues, conditionsToExamine);
 
 		}
 		Condition condition;
@@ -550,58 +539,87 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			List<Condition> conditionsToUse = new LinkedList<Condition>();
 			// add the original condition
 			conditionsToUse.add(precondition);
-			Set<Condition> nonCondEqual = new HashSet<Condition>();
 			Set<Condition> conflictingOriginalConds = new HashSet<Condition>();
-			for (Condition additionalCondition : conditions) {
-				if (Conditions.isTrue(additionalCondition, sessionRepresentingTheActualState)) continue;
-				// adding condequal is preferred, because they are less
-				// conflicting (covering only one value)
-				if (additionalCondition instanceof CondEqual) {
-					conditionsToUse.add(additionalCondition);
+			addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject,
+					originalFullfilledConditions, conditions, conditionsToUse,
+					conflictingOriginalConds);
+			condition = new CondAnd(conditionsToUse);
+			if (!targetCaching && conflictingOriginalConds.size() > 0) {
+				Set<Condition> conditionsPreparingConflictingOriginalConditions = getPreparingConditions(
+						sessionRepresentingTheActualState, sessionObject,
+						getCoveredValues(condition, sessionObject), conflictingOriginalConds);
+				addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject, null,
+						conditionsPreparingConflictingOriginalConditions, conditionsToUse, null);
+				condition = new CondAnd(conditionsToUse);
+			}
+		}
+		else {
+			condition = precondition;
+		}
+		return condition;
+	}
+
+	/**
+	 * Adds conditions not conflicting with other potential conditions to
+	 * conditionToUse
+	 * 
+	 * @created 30.01.2013
+	 */
+	private void addConditionsNotConflicting(Session sessionRepresentingTheActualState, TPHeuristicSessionObject sessionObject, Map<Question, Condition> originalFullfilledConditions, Set<Condition> conditions, List<Condition> conditionsToUse, Set<Condition> conflictingOriginalConds) {
+		Set<Condition> nonCondEqual = new HashSet<Condition>();
+		for (Condition additionalCondition : conditions) {
+			if (Conditions.isTrue(additionalCondition, sessionRepresentingTheActualState)) continue;
+			// adding condequal is preferred, because they are less
+			// conflicting (covering only one value)
+			if (additionalCondition instanceof CondEqual) {
+				conditionsToUse.add(additionalCondition);
+				if (originalFullfilledConditions != null) {
 					Condition conflicting = originalFullfilledConditions.get(((CondEqual) additionalCondition).getQuestion());
 					if (conflicting != null) {
 						conflictingOriginalConds.add(conflicting);
 					}
 				}
-				else {
-					nonCondEqual.add(additionalCondition);
-				}
 			}
-			Set<Condition> blacklist = new HashSet<Condition>();
-			additional: for (Condition additionalCondition : nonCondEqual) {
-				if (blacklist.contains(additionalCondition)) {
-					continue;
-				}
-				// using a HashSet to fasten Collections.disjoint
-				Map<Question, Set<Value>> coveredValues = getCoveredValues(additionalCondition,
-						sessionObject);
-				// the term objects of the other conditions must be disjunct
-				boolean disjunct = true;
-				// NOTE: usually there is only one entry
-				for (Entry<Question, Set<Value>> entry : coveredValues.entrySet()) {
-					for (Condition reference : conditions) {
-						if (reference != additionalCondition) {
-							Map<Question, Set<Value>> reverenceCoveredValues = getCoveredValues(
-									reference, sessionObject);
-							Set<Value> referenceValues = reverenceCoveredValues.get(entry.getKey());
-							if (referenceValues != null) {
-								if (!Collections.disjoint(entry.getValue(), referenceValues)) {
-									// adding of this condition could violate
-									// the
-									// optimism, continue with next condition
-									disjunct = false;
-									// reference condition cannot be used either
-									blacklist.add(reference);
-									continue additional;
-								}
+			else {
+				nonCondEqual.add(additionalCondition);
+			}
+		}
+		Set<Condition> blacklist = new HashSet<Condition>();
+		additional: for (Condition additionalCondition : nonCondEqual) {
+			if (blacklist.contains(additionalCondition)) {
+				continue;
+			}
+			// using a HashSet to fasten Collections.disjoint
+			Map<Question, Set<Value>> coveredValues = getCoveredValues(additionalCondition,
+					sessionObject);
+			// the term objects of the other conditions must be disjunct
+			boolean disjunct = true;
+			// NOTE: usually there is only one entry
+			for (Entry<Question, Set<Value>> entry : coveredValues.entrySet()) {
+				for (Condition reference : conditions) {
+					if (reference != additionalCondition) {
+						Map<Question, Set<Value>> reverenceCoveredValues = getCoveredValues(
+								reference, sessionObject);
+						Set<Value> referenceValues = reverenceCoveredValues.get(entry.getKey());
+						if (referenceValues != null) {
+							if (!Collections.disjoint(entry.getValue(), referenceValues)) {
+								// adding of this condition could violate
+								// the
+								// optimism, continue with next condition
+								disjunct = false;
+								// reference condition cannot be used either
+								blacklist.add(reference);
+								continue additional;
 							}
 						}
 					}
 				}
-				// if the terms objects are disjunct from all other
-				// additional conditions, the condition can be added
-				if (disjunct) {
-					conditionsToUse.add(additionalCondition);
+			}
+			// if the terms objects are disjunct from all other
+			// additional conditions, the condition can be added
+			if (disjunct) {
+				conditionsToUse.add(additionalCondition);
+				if (originalFullfilledConditions != null) {
 					if (additionalCondition.getTerminalObjects().size() == 1) {
 						TerminologyObject object = additionalCondition.getTerminalObjects().iterator().next();
 						if (object instanceof Question) {
@@ -613,28 +631,27 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					}
 				}
 			}
-			condition = new CondAnd(conditionsToUse);
-			if (!targetCaching && conflictingOriginalConds.size() > 0) {
-				List<Pair<List<Condition>, Set<QContainer>>> pairs =
-						getPairs(sessionObject, sessionRepresentingTheActualState,
-								conflictingOriginalConds,
-								getCoveredValues(condition, sessionObject), false);
-				// TODO rekursive, handle adding cond conflicting with each
-				// other!
-				for (Pair<List<Condition>, Set<QContainer>> pair : pairs) {
-					// add the condition, even if one of their qcontainers is on
-					// the path -> the condition is conflicting, so the
-					// qcontainer will have to be visited again to fullfill the
-					// condition again
-					conditionsToUse.addAll(pair.getA());
-				}
-				condition = new CondAnd(conditionsToUse);
+		}
+	}
+
+	private Set<Condition> getPreparingConditions(Session sessionRepresentingTheActualState, TPHeuristicSessionObject sessionObject, Map<Question, Set<Value>> forbiddenValues, Collection<Condition> conditionsToExamine) {
+		Set<Condition> conditions = new HashSet<Condition>();
+		Set<Condition> alreadyExaminedConditions = new HashSet<Condition>();
+		while (!conditionsToExamine.isEmpty()) {
+			// all conditions in conditionToExamine are false or conflicting
+			// original conditions, it doesn't
+			// have to be checked again
+			List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(
+					sessionObject, sessionRepresentingTheActualState,
+					conditionsToExamine, forbiddenValues,
+					false);
+			for (Pair<List<Condition>, Set<QContainer>> pair : temppairs) {
+				conditions.addAll(pair.getA());
 			}
+			conditionsToExamine = getPrimitiveConditions(temppairs,
+					alreadyExaminedConditions);
 		}
-		else {
-			condition = precondition;
-		}
-		return condition;
+		return conditions;
 	}
 
 	private static Map<Question, Set<Value>> getCoveredValues(Condition condition, TPHeuristicSessionObject sessionObject) {
