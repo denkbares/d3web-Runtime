@@ -259,7 +259,7 @@ public class AStarExplanationComponent {
 		}
 		StateTransition stateTransition = StateTransition.getStateTransition(target.getQContainers().get(
 				0));
-		if (stateTransition == null) {
+		if (stateTransition == null || stateTransition.getActivationCondition() == null) {
 			return Collections.emptySet();
 		}
 		Condition transitiveCondition = getAndInitTPHeuristic(model).getTransitiveCondition(
