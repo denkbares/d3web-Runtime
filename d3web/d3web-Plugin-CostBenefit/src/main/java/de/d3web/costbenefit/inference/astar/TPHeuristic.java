@@ -101,13 +101,14 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// KB has to be remembered before super.init
 		KnowledgeBase oldkb = sessionObject.knowledgeBase;
 		super.init(model);
+		// reset cachedCoveredValues to save heapsize
+		sessionObject.cachedCoveredValues = new HashMap<Condition, Map<Question, Set<Value>>>();
 		// initgeneral in only called when the kb or the list of cached abnormal
 		// questions changes
 		if (model.getSession().getKnowledgeBase() != oldkb) {
 			initGeneralCache(sessionObject, model);
 			// knowledbase gets updated in super.init(model)
 			sessionObject.cachedAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
-			sessionObject.cachedCoveredValues = new HashMap<Condition, Map<Question, Set<Value>>>();
 		}
 		else {
 			Set<Question> answeredAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
@@ -497,6 +498,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		Condition precondition = stateTransition.getActivationCondition();
 		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) sessionContainingObject.getSessionObject(this);
 		Map<Question, Condition> originalFullfilledConditions = new HashMap<Question, Condition>();
+		Map<Question, Condition> originalUnFullfilledConditions = new HashMap<Question, Condition>();
 		// use a set to filter duplicated conditions
 		Set<Condition> conditions = new HashSet<Condition>();
 		if (targetCaching) {
@@ -520,13 +522,18 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			for (Condition condition : originalPrimitiveConditions) {
 				boolean conditionFullfilled = Conditions.isTrue(condition,
 						sessionRepresentingTheActualState);
-				if (conditionFullfilled && condition.getTerminalObjects().size() == 1) {
+				if (condition.getTerminalObjects().size() == 1) {
 					TerminologyObject object = condition.getTerminalObjects().iterator().next();
 					if (object instanceof Question) {
-						originalFullfilledConditions.put((Question) object, condition);
+						if (conditionFullfilled) {
+							originalFullfilledConditions.put((Question) object, condition);
+						}
+						else {
+							originalUnFullfilledConditions.put((Question) object, condition);
+						}
 					}
 				}
-				else if (!conditionFullfilled) {
+				if (!conditionFullfilled) {
 					conditionsToExamine.add(condition);
 				}
 			}
@@ -539,18 +546,89 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			List<Condition> conditionsToUse = new LinkedList<Condition>();
 			// add the original condition
 			conditionsToUse.add(precondition);
-			Set<Condition> conflictingOriginalConds = new HashSet<Condition>();
+			Set<Condition> conflictingfullfilledOriginalConds = new HashSet<Condition>();
+			Set<Condition> conflictingUnfullfilledOriginalConds = new HashSet<Condition>();
 			addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject,
-					originalFullfilledConditions, conditions, conditionsToUse,
-					conflictingOriginalConds);
+					conditions, conditionsToUse, originalFullfilledConditions,
+					conflictingfullfilledOriginalConds, originalUnFullfilledConditions,
+					conflictingUnfullfilledOriginalConds);
 			condition = new CondAnd(conditionsToUse);
-			if (!targetCaching && conflictingOriginalConds.size() > 0) {
+			// if a original precondition is fullfilled, but we have expanded a
+			// condition conflicting with it, it will be destroyed during the
+			// path, so we have to add its preparing transitions again (if not
+			// fullfilled)
+			if (!targetCaching && conflictingfullfilledOriginalConds.size() > 0) {
 				Set<Condition> conditionsPreparingConflictingOriginalConditions = getPreparingConditions(
 						sessionRepresentingTheActualState, sessionObject,
-						getCoveredValues(condition, sessionObject), conflictingOriginalConds);
-				addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject, null,
-						conditionsPreparingConflictingOriginalConditions, conditionsToUse, null);
+						getCoveredValues(condition, sessionObject),
+						conflictingfullfilledOriginalConds);
+				addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject,
+						conditionsPreparingConflictingOriginalConditions,
+						conditionsToUse, null, null, originalUnFullfilledConditions,
+						conflictingUnfullfilledOriginalConds);
 				condition = new CondAnd(conditionsToUse);
+			}
+			// add fullfilled conditions preparing conflicting original
+			// conditions, if they have the same question as termobject (Reason:
+			// if F1=C is part of the original condition, we expand F1=A and
+			// F1=B is needed to prepare F1=C, then F1=B can also be added).
+			// TODO: create a JUnit Test testing this functionality, especially
+			// recursive adding of conditions
+			if (!targetCaching && conflictingUnfullfilledOriginalConds.size() > 0) {
+				Map<Question, Set<Value>> coveredValueMap = getCoveredValues(condition,
+						sessionObject);
+				for (Condition conflicting : conflictingUnfullfilledOriginalConds) {
+					Pair<List<Condition>, Set<QContainer>> pair = sessionObject.preconditionCache.get(conflicting);
+					Question question = (Question) conflicting.getTerminalObjects().iterator().next();
+					Set<Value> coveredValues = coveredValueMap.get(question);
+					for (Condition candidate : pair.getA()) {
+						if (candidate.getTerminalObjects().size() == 1
+								&& candidate.getTerminalObjects().iterator().next() == question
+								&& Conditions.isTrue(candidate, sessionRepresentingTheActualState)) {
+							Set<Value> coveredCandidateValues = getCoveredValues(candidate,
+									sessionObject).get(question);
+							if (Collections.disjoint(coveredValues, coveredCandidateValues)) {
+								conditionsToUse.add(candidate);
+								// this is very rare in one call, so we can
+								// directly update the condition and the covered
+								// values
+								condition = new CondAnd(conditionsToUse);
+								coveredValueMap = getCoveredValues(condition,
+										sessionObject);
+								coveredValues = coveredValueMap.get(question);
+								// even try adding recursively more conditions
+								// not covering already covered values
+								LinkedList<Condition> found = new LinkedList<Condition>();
+								found.add(candidate);
+								while (!found.isEmpty()) {
+									Pair<List<Condition>, Set<QContainer>> recursivePair = sessionObject.preconditionCache.get(found.pop());
+									for (Condition recursiveCandidate : recursivePair.getA()) {
+										if (recursiveCandidate.getTerminalObjects().size() == 1
+												&& recursiveCandidate.getTerminalObjects().iterator().next() == question) {
+											Set<Value> coveredRecursiveValues = getCoveredValues(
+													recursiveCandidate, sessionObject).get(question);
+											if (Collections.disjoint(coveredValues,
+													coveredRecursiveValues)) {
+												conditionsToUse.add(recursiveCandidate);
+												// this is very, very rare in
+												// one call, so we can
+												// directly update the condition
+												// and the covered
+												// values
+												condition = new CondAnd(conditionsToUse);
+												coveredValueMap = getCoveredValues(condition,
+														sessionObject);
+												coveredValues = coveredValueMap.get(question);
+												found.add(recursiveCandidate);
+											}
+										}
+									}
+
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		else {
@@ -565,7 +643,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * 
 	 * @created 30.01.2013
 	 */
-	private void addConditionsNotConflicting(Session sessionRepresentingTheActualState, TPHeuristicSessionObject sessionObject, Map<Question, Condition> originalFullfilledConditions, Set<Condition> conditions, List<Condition> conditionsToUse, Set<Condition> conflictingOriginalConds) {
+	private void addConditionsNotConflicting(Session sessionRepresentingTheActualState, TPHeuristicSessionObject sessionObject, Set<Condition> conditions, List<Condition> conditionsToUse, Map<Question, Condition> originalFullfilledConditions, Set<Condition> conflictingFullfilledOriginalConds, Map<Question, Condition> originalUnFullfilledConditions, Set<Condition> conflictingUnfullfilledOriginalConds) {
 		Set<Condition> nonCondEqual = new HashSet<Condition>();
 		for (Condition additionalCondition : conditions) {
 			if (Conditions.isTrue(additionalCondition, sessionRepresentingTheActualState)) continue;
@@ -573,12 +651,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// conflicting (covering only one value)
 			if (additionalCondition instanceof CondEqual) {
 				conditionsToUse.add(additionalCondition);
-				if (originalFullfilledConditions != null) {
-					Condition conflicting = originalFullfilledConditions.get(((CondEqual) additionalCondition).getQuestion());
-					if (conflicting != null) {
-						conflictingOriginalConds.add(conflicting);
-					}
-				}
+				Question question = ((CondEqual) additionalCondition).getQuestion();
+				updateConflictingConditions(originalFullfilledConditions,
+						conflictingFullfilledOriginalConds, originalUnFullfilledConditions,
+						conflictingUnfullfilledOriginalConds, question);
 			}
 			else {
 				nonCondEqual.add(additionalCondition);
@@ -619,17 +695,30 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// additional conditions, the condition can be added
 			if (disjunct) {
 				conditionsToUse.add(additionalCondition);
-				if (originalFullfilledConditions != null) {
-					if (additionalCondition.getTerminalObjects().size() == 1) {
-						TerminologyObject object = additionalCondition.getTerminalObjects().iterator().next();
-						if (object instanceof Question) {
-							Condition conflicting = originalFullfilledConditions.get(object);
-							if (conflicting != null) {
-								conflictingOriginalConds.add(conflicting);
-							}
-						}
+				if (additionalCondition.getTerminalObjects().size() == 1) {
+					TerminologyObject object = additionalCondition.getTerminalObjects().iterator().next();
+					if (object instanceof Question) {
+						Question question = (Question) object;
+						updateConflictingConditions(originalFullfilledConditions,
+								conflictingFullfilledOriginalConds, originalUnFullfilledConditions,
+								conflictingUnfullfilledOriginalConds, question);
 					}
 				}
+			}
+		}
+	}
+
+	private void updateConflictingConditions(Map<Question, Condition> originalFullfilledConditions, Set<Condition> conflictingFullfilledOriginalConds, Map<Question, Condition> originalUnFullfilledConditions, Set<Condition> conflictingUnfullfilledOriginalConds, Question question) {
+		if (originalFullfilledConditions != null) {
+			Condition conflicting = originalFullfilledConditions.get(question);
+			if (conflicting != null) {
+				conflictingFullfilledOriginalConds.add(conflicting);
+			}
+		}
+		if (originalUnFullfilledConditions != null) {
+			Condition conflicting = originalUnFullfilledConditions.get(question);
+			if (conflicting != null) {
+				conflictingUnfullfilledOriginalConds.add(conflicting);
 			}
 		}
 	}
