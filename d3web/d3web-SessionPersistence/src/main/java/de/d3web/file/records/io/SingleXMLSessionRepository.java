@@ -19,6 +19,7 @@
 package de.d3web.file.records.io;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -56,6 +57,57 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 		Collection<SessionRecord> records = spm.loadSessions(file, listener);
 		for (SessionRecord sr : records) {
 			add(sr);
+		}
+	}
+
+	/**
+	 * Loads all the files that end by ".xml" from the directory as session
+	 * repositories and adds all of the records to this session repository.
+	 * <p>
+	 * Please note that this method is meant to be a legacy method for importing
+	 * multiple protocols in one repository without collision checking at all.
+	 * 
+	 * @created 04.02.2013
+	 * @param directory the directory to load the xml files from
+	 * @throws IOException is any file cannot be loaded or parsed correctly. In
+	 *         this case this repository may contain some already loaded files
+	 *         with no warranty.
+	 */
+	public void loadAllXMLFromDirectory(File directory) throws IOException {
+		this.loadAllXMLFromDirectory(directory, new DummyProgressListener());
+	}
+
+	/**
+	 * Loads all the files that end by ".xml" from the directory as session
+	 * repositories and adds all of the records to this session repository.
+	 * <p>
+	 * Please note that this method is meant to be a legacy method for importing
+	 * multiple protocols in one repository without collision checking at all.
+	 * 
+	 * @created 04.02.2013
+	 * @param directory the directory to load the xml files from
+	 * @param progressListener the progress listener to indicate the progress
+	 * @throws IOException is any file cannot be loaded or parsed correctly. In
+	 *         this case this repository may contain some already loaded files
+	 *         with no warranty.
+	 */
+	public void loadAllXMLFromDirectory(File directory, ProgressListener progressListener) throws IOException {
+
+		File[] xmlFiles = directory.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().endsWith(".xml");
+			}
+		});
+		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+		for (int i = 0; i < xmlFiles.length; i++) {
+			progressListener.updateProgress(i / (float) xmlFiles.length,
+					"loading session records");
+			Collection<SessionRecord> records = spm.loadSessions(xmlFiles[i]);
+			for (SessionRecord record : records) {
+				this.add(record);
+			}
 		}
 	}
 
