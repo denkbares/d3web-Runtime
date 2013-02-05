@@ -44,17 +44,23 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 	private static final long serialVersionUID = 3380517180403399192L;
 	private final JLabel statusLabel = new JLabel("initializing");
 	private final JLabel tickLabel = new JLabel("-");
-	private final JProgressBar progressBar;
+	private final JProgressBar progressBar = new JProgressBar(0, 100);
 
 	private Runnable cancelAction = null;
+	private final int width;
+	private final int height;
 
 	public ProgressDialog(String string) {
-		this(string, 0, 100);
+		super(string);
+		this.width = -1;
+		this.height = -1;
+		init();
 	}
 
-	public ProgressDialog(String string, int i, int j) {
+	public ProgressDialog(String string, int width, int height) {
 		super(string);
-		progressBar = new JProgressBar(i, j);
+		this.width = width;
+		this.height = height;
 		init();
 	}
 
@@ -73,6 +79,9 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 		tickLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
 
 		JPanel contents = (JPanel) getContentPane();
+		if (width != -1 && height != -1) {
+			contents.setPreferredSize(new Dimension(width, height));
+		}
 		contents.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contents.add(statusLabel, BorderLayout.NORTH);
 		contents.add(tickLabel, BorderLayout.EAST);
