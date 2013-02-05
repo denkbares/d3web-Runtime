@@ -51,10 +51,7 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 	private final int height;
 
 	public ProgressDialog(String string) {
-		super(string);
-		this.width = -1;
-		this.height = -1;
-		init();
+		this(string, -1, -1);
 	}
 
 	public ProgressDialog(String string, int width, int height) {
