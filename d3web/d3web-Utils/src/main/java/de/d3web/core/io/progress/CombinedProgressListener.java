@@ -40,6 +40,7 @@ public class CombinedProgressListener implements ProgressListener {
 	private long currentStepStart = 0;
 	private long currentStepSize = 0;
 	private final ProgressListener decoratedListener;
+	private String prefix = "";
 
 	public CombinedProgressListener(long totalSize, ProgressListener decoratedListener) {
 		this.totalSize = totalSize;
@@ -57,7 +58,7 @@ public class CombinedProgressListener implements ProgressListener {
 		}
 		decoratedListener.updateProgress(
 				(percent * currentStepSize + currentStepStart) / totalSize,
-				message);
+				prefix + message);
 	}
 
 	/**
@@ -80,5 +81,9 @@ public class CombinedProgressListener implements ProgressListener {
 	 */
 	public void setTotalSize(long totalSize) {
 		this.totalSize = totalSize;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 }

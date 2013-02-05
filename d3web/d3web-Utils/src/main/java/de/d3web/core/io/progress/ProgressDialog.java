@@ -34,8 +34,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import de.d3web.core.io.progress.ProgressListener;
-
 /**
  * 
  * @author volker_belli
@@ -46,12 +44,17 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 	private static final long serialVersionUID = 3380517180403399192L;
 	private final JLabel statusLabel = new JLabel("initializing");
 	private final JLabel tickLabel = new JLabel("-");
-	private final JProgressBar progressBar = new JProgressBar(0, 100);
+	private final JProgressBar progressBar;
 
 	private Runnable cancelAction = null;
 
 	public ProgressDialog(String string) {
+		this(string, 0, 100);
+	}
+
+	public ProgressDialog(String string, int i, int j) {
 		super(string);
+		progressBar = new JProgressBar(i, j);
 		init();
 	}
 
