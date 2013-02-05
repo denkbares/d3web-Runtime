@@ -137,7 +137,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		int counter = 0;
 		for (SessionRecord record : records) {
 			float percent = records.size() / (float) counter++;
-			listener.updateProgress(percent, record.getName());
+			listener.updateProgress(percent, record.getId());
 			String filename = getRecordFilename(record);
 			File file = new File(folder, filename);
 			if (record instanceof FileRecord && !((FileRecord) record).modified) {
@@ -229,8 +229,9 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 					realRecord = loadedSessions.iterator().next();
 				}
 			}
-			catch (IOException e) {
-				throw new IllegalStateException("cannot parse record xml file", e);
+			catch (Exception e) {
+				throw new IllegalStateException("cannot parse record xml file: "
+						+ file.getAbsolutePath(), e);
 			}
 		}
 
