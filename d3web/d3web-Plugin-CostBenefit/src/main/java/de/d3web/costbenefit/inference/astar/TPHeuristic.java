@@ -743,7 +743,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return conditions;
 	}
 
-	private static Map<Question, Set<Value>> getCoveredValues(Condition condition, TPHeuristicSessionObject sessionObject) {
+	private static synchronized Map<Question, Set<Value>> getCoveredValues(Condition condition, TPHeuristicSessionObject sessionObject) {
 		Map<Question, Set<Value>> forbiddenValues = sessionObject.cachedCoveredValues.get(condition);
 		if (forbiddenValues == null) {
 			forbiddenValues = new HashMap<Question, Set<Value>>();
