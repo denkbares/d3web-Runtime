@@ -60,4 +60,7 @@ public class TestObjectProviderManager {
 		return pluggedProviders;
 	}
 
+	public static void clearRegisteredTestObjectProviders() {
+		registeredProviders.clear();
+	}
 }

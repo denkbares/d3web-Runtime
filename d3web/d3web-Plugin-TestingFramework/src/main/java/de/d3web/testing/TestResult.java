@@ -178,7 +178,11 @@ public class TestResult implements Comparable<TestResult> {
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		result.append(getTestName() + " (" + getConfigurationString() + "): {");
+		String configurationString = getConfigurationString();
+		configurationString = configurationString.isEmpty() ? "none" : configurationString;
+		result.append(getTestName() + " (configuration: " + configurationString
+				+ ", successes: "
+				+ getSuccessfullTestObjectRuns() + "): {");
 		boolean first = true;
 		for (Entry<String, Message> messageEntry : this.unexpectedMessages.entrySet()) {
 			if (first) first = false;
