@@ -86,8 +86,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
 
 		private Collection<Question> cachedAbnormalQuestions = new HashSet<Question>();
-
-		private Map<Condition, Map<Question, Set<Value>>> cachedCoveredValues = new HashMap<Condition, Map<Question, Set<Value>>>();
 	}
 
 	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
@@ -101,8 +99,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// KB has to be remembered before super.init
 		KnowledgeBase oldkb = sessionObject.knowledgeBase;
 		super.init(model);
-		// reset cachedCoveredValues to save heapsize
-		sessionObject.cachedCoveredValues = new HashMap<Condition, Map<Question, Set<Value>>>();
 		// initgeneral in only called when the kb or the list of cached abnormal
 		// questions changes
 		if (model.getSession().getKnowledgeBase() != oldkb) {
@@ -743,13 +739,9 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return conditions;
 	}
 
-	private static synchronized Map<Question, Set<Value>> getCoveredValues(Condition condition, TPHeuristicSessionObject sessionObject) {
-		Map<Question, Set<Value>> forbiddenValues = sessionObject.cachedCoveredValues.get(condition);
-		if (forbiddenValues == null) {
-			forbiddenValues = new HashMap<Question, Set<Value>>();
-			getCoveredValues(condition, forbiddenValues, sessionObject);
-			sessionObject.cachedCoveredValues.put(condition, forbiddenValues);
-		}
+	private static Map<Question, Set<Value>> getCoveredValues(Condition condition, TPHeuristicSessionObject sessionObject) {
+		Map<Question, Set<Value>> forbiddenValues = new HashMap<Question, Set<Value>>();
+		getCoveredValues(condition, forbiddenValues, sessionObject);
 		return forbiddenValues;
 	}
 
@@ -780,11 +772,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		}
 		else if (condition instanceof CondOr || condition instanceof CondAnd) {
 			for (Condition subcondition : ((NonTerminalCondition) condition).getTerms()) {
-				Map<Question, Set<Value>> coveredSubValues = getCoveredValues(subcondition,
-						sessionObject);
-				for (Entry<Question, Set<Value>> entry : coveredSubValues.entrySet()) {
-					getSet(forbiddenValues, entry.getKey()).addAll(entry.getValue());
-				}
+				getCoveredValues(subcondition, forbiddenValues, sessionObject);
 			}
 		}
 		else {
