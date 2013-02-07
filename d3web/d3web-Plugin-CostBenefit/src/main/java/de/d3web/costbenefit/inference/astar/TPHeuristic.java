@@ -90,7 +90,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
 
-	private static boolean targetCaching = false;
+	private static boolean targetCaching = true;
 
 	@Override
 	public void init(SearchModel model) {
