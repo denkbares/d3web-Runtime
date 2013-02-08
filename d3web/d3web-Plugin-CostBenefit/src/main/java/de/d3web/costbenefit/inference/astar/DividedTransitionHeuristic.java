@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -118,7 +119,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		sessionObject.transitionalStateTransitions = new LinkedList<StateTransition>();
 		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
 		sessionObject.answeredSession = Util.createSearchCopy(model.getSession());
-		sessionObject.valueCache = new HashMap<ValueTransition, Value>();
+		sessionObject.valueCache = new ConcurrentHashMap<ValueTransition, Value>();
 		// set normal values of all questions in transitional qcontainers
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
 			Util.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
