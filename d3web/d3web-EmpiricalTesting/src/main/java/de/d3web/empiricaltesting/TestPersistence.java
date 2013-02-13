@@ -93,7 +93,7 @@ public final class TestPersistence {
 	private static final String LASTTESTED = "LastTested";
 	private static final String EXPECTEDFINDINGS = "ExpectedFindings";
 
-	private List<SequentialTestCase> imported = null;
+	private List<SequentialTestCase> imported = new ArrayList<SequentialTestCase>();
 
 	private SequentialTestCase stc = null;
 	private RatedTestCase rtc = null;
@@ -466,7 +466,7 @@ public final class TestPersistence {
 
 		if (q == null) {
 			Logger.getLogger(getClass().getName()).warning(
-						"Question not found '" + questionText + "'.");
+					"Question not found '" + questionText + "'.");
 			return null;
 		}
 

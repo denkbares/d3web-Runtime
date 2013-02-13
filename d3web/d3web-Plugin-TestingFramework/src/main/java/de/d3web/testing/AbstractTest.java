@@ -19,6 +19,7 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public abstract class AbstractTest<T> implements Test<T> {
 								+ "arguments passed for test '" + test.getName()
 								+ "': Expected " + parameters.size() + " argument"
 								+ (parameters.size() == 1 ? "" : "s") + ", but found "
-								+ args.length + ".");
+								+ args.length + ": " + Arrays.toString(args) + ".");
 				return r;
 			}
 
