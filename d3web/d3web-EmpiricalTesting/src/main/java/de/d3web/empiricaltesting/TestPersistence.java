@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -112,25 +113,29 @@ public final class TestPersistence {
 	private boolean bWriteDerivedSolutions;
 
 	public List<SequentialTestCase> loadCases(URL casesUrl, KnowledgeBase kb) {
-		List<SequentialTestCase> ret = null;
+		List<SequentialTestCase> ret = Collections.emptyList();
 
 		try {
 			ret = loadTheCases(casesUrl, kb);
 		}
 		catch (FileNotFoundException e) {
-			System.err.println("Error in casesUrl: Path not correct!");
+			System.err.println("Invalid case URL: " + casesUrl);
 			e.printStackTrace();
 		}
 		catch (XMLStreamException e) {
-			System.err.println("Error while writing XML!");
+			System.err.println("Error while reading XML at: " + casesUrl);
 			e.printStackTrace();
 		}
 		catch (URISyntaxException e) {
-			System.err.println("Error in casesUrl: URL has wrong syntax!");
+			System.err.println("URL has wrong syntax: " + casesUrl);
 			e.printStackTrace();
 		}
 
 		return ret;
+	}
+
+	public List<SequentialTestCase> loadCasesUncatched(URL casesUrl, KnowledgeBase kb) throws FileNotFoundException, XMLStreamException, URISyntaxException {
+		return loadTheCases(casesUrl, kb);
 	}
 
 	/**
