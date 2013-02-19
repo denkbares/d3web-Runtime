@@ -89,6 +89,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 						time += date;
 					}
 					time += ")";
+					// check if session was terminated due to detected session
 					if (!check.check(session)) {
 						String messageText = "Check '" + check.getCondition().trim() +
 								"' " + time + " failed.";
