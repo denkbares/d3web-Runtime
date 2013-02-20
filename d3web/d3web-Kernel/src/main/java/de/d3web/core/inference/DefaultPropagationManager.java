@@ -98,6 +98,10 @@ public class DefaultPropagationManager implements PropagationManager {
 					interviewPropagationEntries, true);
 
 			try {
+				// inform the listeners
+				for (PropagationListener listener : listeners) {
+					listener.propagating(session, psMethod, entries);
+				}
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}
@@ -116,6 +120,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	private final Session session;
 	private List<PSMethodHandler> psHandlers = null;
+	private volatile boolean terminated = false;
 	private int recursiveCounter = 0;
 	private long propagationTime = 0;
 
@@ -209,14 +214,22 @@ public class DefaultPropagationManager implements PropagationManager {
 	 */
 	@Override
 	public void commitPropagation() {
-		if (this.recursiveCounter == 1) {
-			distribute();
-			destroyHandlers();
+		try {
+			if (this.recursiveCounter == 1) {
+				try {
+					distribute();
+				}
+				finally {
+					destroyHandlers();
+				}
+			}
 		}
-		// this is important: by reducing the value at the methods end
-		// subsequent commits (caused by distribute the value changes)
-		// will enter this method with values > 1.
-		this.recursiveCounter--;
+		finally {
+			// this is important: by reducing the value at the methods end
+			// subsequent commits (caused by distribute the value changes)
+			// will enter this method with values > 1.
+			this.recursiveCounter--;
+		}
 	}
 
 	/**
@@ -232,38 +245,46 @@ public class DefaultPropagationManager implements PropagationManager {
 			listener.propagationStarted(session, startingEntries);
 		}
 
-		while (true) {
-			PSMethodHandler firstHandler = null;
+		try {
+			while (true) {
+				PSMethodHandler firstHandler = null;
 
-			// find first handler that requires propagation
-			firstHandler = findNextHandler();
-
-			// if no such handler exists, start post propagation
-			if (firstHandler == null) {
-				// inform listener about post propagation entries
-				Collection<PropagationEntry> entries = convertMapsToEntries(
-						postPropagationEntries,
-						postInterviewPropagationEntries, true);
-				for (PropagationListener listener : listeners) {
-					listener.postPropagationStarted(session, entries);
-				}
-				for (PSMethodHandler handler : this.psHandlers) {
-					if (handler.getPSMethod() instanceof PostHookablePSMethod) {
-						((PostHookablePSMethod) handler.getPSMethod()).postPropagate(session);
-					}
-				}
+				// find first handler that requires propagation
 				firstHandler = findNextHandler();
-				if (firstHandler == null) break;
+
+				// if no such handler exists, start post propagation
+				if (firstHandler == null) {
+					// inform listener about post propagation entries
+					Collection<PropagationEntry> entries = convertMapsToEntries(
+							postPropagationEntries,
+							postInterviewPropagationEntries, true);
+					for (PropagationListener listener : listeners) {
+						listener.postPropagationStarted(session, entries);
+					}
+					for (PSMethodHandler handler : this.psHandlers) {
+						if (handler.getPSMethod() instanceof PostHookablePSMethod) {
+							checkTerminated();
+							((PostHookablePSMethod) handler.getPSMethod()).postPropagate(session);
+						}
+					}
+					firstHandler = findNextHandler();
+					if (firstHandler == null) break;
+				}
+				// otherwise continue with this handler
+				checkTerminated();
+				firstHandler.propagate();
 			}
-			// otherwise continue with this handler
-			firstHandler.propagate();
 		}
-		Collection<PropagationEntry> entries = convertMapsToEntries(
-				globalPropagationEntries,
-				globalInterviewPropagationEntries, true);
-		forcedPropagationEntries.clear();
-		for (PropagationListener listener : listeners) {
-			listener.propagationFinished(session, entries);
+		finally {
+			// inform the listeners that we are finished now,
+			// even if we have been terminated
+			Collection<PropagationEntry> entries = convertMapsToEntries(
+					globalPropagationEntries,
+					globalInterviewPropagationEntries, true);
+			forcedPropagationEntries.clear();
+			for (PropagationListener listener : listeners) {
+				listener.propagationFinished(session, entries);
+			}
 		}
 	}
 
@@ -418,4 +439,24 @@ public class DefaultPropagationManager implements PropagationManager {
 		listeners.add(listener);
 	}
 
+	@Override
+	public void removeListener(PropagationListener listener) {
+		listeners.remove(listener);
+	}
+
+	@Override
+	public void terminate() {
+		this.terminated = true;
+	}
+
+	private void checkTerminated() throws SessionTerminatedException {
+		if (Thread.interrupted()) {
+			// we terminate if we got interrupted,
+			// because session state is undefined afterwards
+			terminate();
+		}
+		if (this.terminated) {
+			throw new SessionTerminatedException();
+		}
+	}
 }

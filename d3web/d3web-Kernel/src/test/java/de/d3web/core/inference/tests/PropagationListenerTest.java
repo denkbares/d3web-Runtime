@@ -27,6 +27,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import de.d3web.abstraction.formula.FormulaNumber;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.inference.condition.CondNumEqual;
@@ -83,6 +84,10 @@ public class PropagationListenerTest {
 		@Override
 		public void propagationStarted(Session session, Collection<PropagationEntry> entries) {
 		}
+
+		@Override
+		public void propagating(Session session, PSMethod psMethod, Collection<PropagationEntry> entries) {
+		};
 
 		@Override
 		public void postPropagationStarted(Session session, Collection<PropagationEntry> entries) {

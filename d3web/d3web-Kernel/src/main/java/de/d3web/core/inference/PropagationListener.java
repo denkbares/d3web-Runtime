@@ -31,10 +31,51 @@ import de.d3web.core.session.Session;
  */
 public interface PropagationListener {
 
+	/**
+	 * Informs this listener that a new propagation has been started. This is
+	 * called right before the problem solvers getting activated sequentially.
+	 * 
+	 * @param session the session the propagation is started on
+	 * @param entries the initial changes to be propagated
+	 */
 	void propagationStarted(Session session, Collection<PropagationEntry> entries);
 
+	/**
+	 * Informs this listener that a post-propagation has been started. Please
+	 * note this might occur multiple times, if the post-propagation itself
+	 * creates new facts that might be propagated again (and therefore followed
+	 * by a newly post-propagation).
+	 * 
+	 * @param session the session the propagation is started on
+	 * @param entries the changes propagated so far, since propagation started
+	 *        or last post-propagation
+	 */
 	void postPropagationStarted(Session session, Collection<PropagationEntry> entries);
 
+	/**
+	 * Informs this listener that the propagation has been finished. This method
+	 * is called right after all propagation has been finished. Please note that
+	 * this method is called regardless if the propagation has finished
+	 * successfully or has been externally terminated.
+	 * 
+	 * @param session the session the propagation is performed on
+	 * @param entries all the changes propagated in this propagation
+	 */
 	void propagationFinished(Session session, Collection<PropagationEntry> entries);
+
+	/**
+	 * Informs this listener that some facts are going to be propagated by a
+	 * specific problem solver. This method is called very frequently during
+	 * propagation, at least once per problem solver, usually more often. After
+	 * the propagation has been finished, each change will be propagated by each
+	 * problem solver.
+	 * 
+	 * @created 14.02.2013
+	 * @param Session the session to perform the propagation on
+	 * @param psMethod the problem solver to be activated
+	 * @param entries the current entries to be propagated by the specified
+	 *        solver at once
+	 */
+	void propagating(Session session, PSMethod psMethod, Collection<PropagationEntry> entries);
 
 }

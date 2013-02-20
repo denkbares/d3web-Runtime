@@ -186,8 +186,15 @@ public class DecoratedSession implements Session {
 			}
 
 			@Override
-			public void forcePropagate(ValueObject object) {
+			public void removeListener(PropagationListener listener) {
+			}
 
+			@Override
+			public void forcePropagate(ValueObject object) {
+			}
+
+			@Override
+			public void terminate() {
 			}
 		};
 	}

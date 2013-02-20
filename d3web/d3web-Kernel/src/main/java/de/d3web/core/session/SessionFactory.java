@@ -26,11 +26,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationListener;
+import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
@@ -136,7 +139,13 @@ public final class SessionFactory {
 		for (PropagationListener propagationListener : propagationListeners) {
 			defaultSession.getPropagationManager().addListener(propagationListener);
 		}
-		defaultSession.initPSMethods();
+		try {
+			defaultSession.initPSMethods();
+		}
+		catch (SessionTerminatedException e) {
+			Logger.getLogger(SessionFactory.class.getName()).log(Level.WARNING,
+					"Endless loop in initialization detected, session terminated", e);
+		}
 		return defaultSession;
 	}
 

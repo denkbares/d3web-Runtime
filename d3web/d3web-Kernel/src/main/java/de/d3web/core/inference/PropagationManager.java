@@ -23,6 +23,7 @@ package de.d3web.core.inference;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Blackboard;
 
 /**
  * A PropagationManager is responsible for propagate all changes of a Session
@@ -62,8 +63,13 @@ public interface PropagationManager {
 	 * </pre>
 	 * 
 	 * </p>
+	 * 
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. For nested
+	 *         propagations, the exception is only thrown if this method closes
+	 *         the last opened propagation frame.
 	 */
-	void commitPropagation();
+	void commitPropagation() throws SessionTerminatedException;
 
 	/**
 	 * Starts a new propagation frame.
@@ -119,6 +125,35 @@ public interface PropagationManager {
 	long getPropagationTime();
 
 	/**
+	 * Terminates all propagation of this PropagationManager. The method returns
+	 * immediately, also it might take some time to get the propagation
+	 * terminated. After the propagation is terminated, the session is in a
+	 * uncertain state: the facts in the blackboard it does not reflect the
+	 * knowledge stored in the knowledge base, because the propagation has not
+	 * been finished correctly.
+	 * <p>
+	 * After this call, every future propagation of this session will lead to a
+	 * {@link SessionTerminatedException}. This usually occurs in one of the
+	 * following scenarios (but not limited to):
+	 * <ul>
+	 * <li>committing a propagation using
+	 * {@link PropagationManager#commitPropagation()}
+	 * <li>adding a fact to the blackboard with no propagation frame has been
+	 * opened using
+	 * {@link Blackboard#addValueFact(de.d3web.core.session.blackboard.Fact)} or
+	 * {@link Blackboard#addInterviewFact(de.d3web.core.session.blackboard.Fact)}
+	 * </ul>
+	 * <p>
+	 * If a propagation is currently running in another thread, the partially
+	 * propagated results will remain. The other thread will get a
+	 * {@link SessionTerminatedException} soon after calling this method.
+	 * 
+	 * @created 14.02.2013
+	 * @see SessionTerminatedException
+	 */
+	void terminate();
+
+	/**
 	 * This method does the same as
 	 * {@link PropagationManager#propagate(ValueObject, Value)}, but produced
 	 * {@link PropagationEntry}s will always indicate a change. This forces the
@@ -126,17 +161,21 @@ public interface PropagationManager {
 	 * a change in the value of the {@link ValueObject}.
 	 * 
 	 * @created 07.12.2012
-	 * @param object
-	 * @param oldValue
+	 * @param object the object that has been updated
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	void forcePropagate(ValueObject object);
+	void forcePropagate(ValueObject object) throws SessionTerminatedException;
 
 	/**
 	 * Propagates a change value of an {@link ValueObject} through the different
 	 * PSMethods.
 	 * <p>
 	 * This method may cause other value propagations and therefore may be
-	 * called recursevely. It is called after the value has been updated in the
+	 * called recursively. It is called after the value has been updated in the
 	 * case. Thus the case already contains the new value.
 	 * <p>
 	 * <b>Do not call this method directly! It will be called by the case to
@@ -144,8 +183,13 @@ public interface PropagationManager {
 	 * 
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	void propagate(ValueObject object, Value oldValue);
+	void propagate(ValueObject object, Value oldValue) throws SessionTerminatedException;
 
 	/**
 	 * Propagates a change value of an {@link InterviewObject} through the
@@ -161,8 +205,13 @@ public interface PropagationManager {
 	 * @created 30.09.2010
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	void propagate(InterviewObject object, Value oldValue);
+	void propagate(InterviewObject object, Value oldValue) throws SessionTerminatedException;
 
 	/**
 	 * Propagates a change value of an object through one selected PSMethod. All
@@ -179,14 +228,27 @@ public interface PropagationManager {
 	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	void propagate(ValueObject object, Value oldValue, PSMethod psMethod);
+	void propagate(ValueObject object, Value oldValue, PSMethod psMethod) throws SessionTerminatedException;
 
 	/**
-	 * Adds a {@link PropagationListener} to the PropagationManager
+	 * Adds a {@link PropagationListener} to this PropagationManager.
 	 * 
 	 * @created 27.03.2012
-	 * @param listener
+	 * @param listener the listener to be added
 	 */
 	void addListener(PropagationListener listener);
+
+	/**
+	 * Removes a {@link PropagationListener} from this PropagationManager.
+	 * 
+	 * @created 14.02.2013
+	 * @param listener the listener to be removed
+	 */
+	void removeListener(PropagationListener listener);
 }

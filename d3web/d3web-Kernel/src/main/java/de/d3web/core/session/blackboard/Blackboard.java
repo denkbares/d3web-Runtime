@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -58,16 +59,26 @@ public interface Blackboard {
 	 * fact will be replaced by the specified one.
 	 * 
 	 * @param fact the fact to be added
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void addValueFact(Fact fact);
+	public void addValueFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes a value fact from this blackboard. If the fact does not exists in
 	 * the blackboard, this method has no effect.
 	 * 
 	 * @param fact the fact to be removed
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeValueFact(Fact fact);
+	public void removeValueFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes all value facts with the specified source from this blackboard
@@ -76,8 +87,13 @@ public interface Blackboard {
 	 * 
 	 * @param termObject the terminology object to remove the value facts from
 	 * @param source the fact source to be removed
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeValueFact(TerminologyObject terminologyObject, Object source);
+	public void removeValueFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
 
 	/**
 	 * Returns the value of an {@link ValueObject}. The method never returns
@@ -135,16 +151,26 @@ public interface Blackboard {
 	 * added, that fact will be replaced by the specified one.
 	 * 
 	 * @param fact the fact to be added
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void addInterviewFact(Fact fact);
+	public void addInterviewFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes a interview fact from this blackboard. If the interview fact does
 	 * not exists in the blackboard, this method has no effect.
 	 * 
 	 * @param fact the fact to be removed
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeInterviewFact(Fact fact);
+	public void removeInterviewFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes all interview facts with the specified source from this
@@ -154,8 +180,13 @@ public interface Blackboard {
 	 * @param termObject the terminology object to remove the interview facts
 	 *        from
 	 * @param source the fact source to be removed
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeInterviewFact(TerminologyObject terminologyObject, Object source);
+	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
 
 	/**
 	 * Removes all interview facts from this blackboard for the specified
@@ -164,8 +195,13 @@ public interface Blackboard {
 	 * 
 	 * @param termObject the terminology object to remove the interview facts
 	 *        from
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeInterviewFacts(TerminologyObject terminologyObject);
+	public void removeInterviewFacts(TerminologyObject terminologyObject) throws SessionTerminatedException;
 
 	/**
 	 * Returns the merged fact for all interview facts of the specified
