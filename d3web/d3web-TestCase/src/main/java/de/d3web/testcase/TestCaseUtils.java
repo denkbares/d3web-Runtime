@@ -74,10 +74,16 @@ public class TestCaseUtils {
 				Fact fact = FactFactory.createUserEnteredFact(f.getTerminologyObject(),
 						f.getValue());
 				if (f.getValue() instanceof Indication) {
-					blackboard.addInterviewFact(fact);
+					synchronized (session) {
+						blackboard.addInterviewFact(fact);
+						session.touch(date);
+					}
 				}
 				else {
-					blackboard.addValueFact(fact);
+					synchronized (session) {
+						blackboard.addValueFact(fact);
+						session.touch(date);
+					}
 				}
 			}
 		}

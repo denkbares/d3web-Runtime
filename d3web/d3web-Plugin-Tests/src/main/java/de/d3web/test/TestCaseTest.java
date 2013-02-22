@@ -24,7 +24,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import de.d3web.core.inference.LoopTerminator;
+import de.d3web.core.inference.LoopTerminator.LoopStatus;
+import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.testcase.TestCaseUtils;
@@ -79,7 +83,8 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 			Session session = SessionFactory.createSession(kb, testCase.getStartDate());
 			boolean failed = false;
 			for (Date date : testCase.chronology()) {
-				TestCaseUtils.applyFindings(session, testCase, date);
+				Message applyMessage = applyFinding(testCase, session, date);
+				if (applyMessage != null) return applyMessage;
 				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
 					String time = "(time ";
 					if (date.getTime() < year) {
@@ -114,6 +119,34 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		return new Message(Type.SUCCESS);
 	}
 
+	private Message applyFinding(TestCase testCase, Session session, Date date) {
+		try {
+			TestCaseUtils.applyFindings(session, testCase, date);
+		}
+		catch (SessionTerminatedException e) {
+			LoopStatus loopStatus = LoopTerminator.getInstance().getLoopStatus(session);
+			if (loopStatus.hasTerminated()) {
+				Collection<TerminologyObject> loopObjects = loopStatus.getLoopObjects();
+				String kbName = session.getKnowledgeBase().getName();
+				if (kbName == null) kbName = session.getKnowledgeBase().getId();
+				String notificationText = "Endless loop detected in reasoning of knowledge base '"
+						+ kbName
+						+ "'. The following object"
+						+ (loopObjects.size() == 1 ? " is" : "s are")
+						+ " mainly involved in the loop: " +
+						concat(",  ", loopObjects.toArray());
+
+				return new Message(Type.FAILURE, notificationText);
+			}
+			else {
+				// should not happen, let TestExecutor handle this
+				// exception...
+				throw e;
+			}
+		}
+		return null;
+	}
+
 	private String renderFailureMessage(List<String> inconsistentKBs, List<String> failedKBs, List<String> passedKBs) {
 		String message = "";
 		if (inconsistentKBs.size() > 0) {
@@ -143,6 +176,17 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 			}
 		}
 		return message;
+	}
+
+	public static String concat(String separator, Object[] strings) {
+		StringBuilder result = new StringBuilder();
+		if (strings != null) {
+			for (int i = 0; i < strings.length; i++) {
+				if (i > 0) result.append(separator);
+				result.append(strings[i]);
+			}
+		}
+		return result.toString();
 	}
 
 	private Collection<KnowledgeBase> getKnowledgeBases(String[] args) {
