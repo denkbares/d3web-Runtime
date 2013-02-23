@@ -95,6 +95,7 @@ public class EmptyQuestionnaireTest extends KBTest {
 			htmlList.append(listItem);
 			htmlList.append("\n");
 		}
+		htmlList.deleteCharAt(htmlList.length() - 1);
 		return htmlList.toString();
 	}
 
