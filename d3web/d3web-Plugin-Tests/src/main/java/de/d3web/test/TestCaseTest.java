@@ -29,6 +29,7 @@ import de.d3web.core.inference.LoopTerminator.LoopStatus;
 import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.testcase.TestCaseUtils;
@@ -37,6 +38,7 @@ import de.d3web.testcase.model.TestCase;
 import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
+import de.d3web.testing.MessageObject;
 import de.d3web.testing.TestObjectContainer;
 import de.d3web.testing.TestObjectProvider;
 import de.d3web.testing.TestObjectProviderManager;
@@ -129,14 +131,24 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 				Collection<TerminologyObject> loopObjects = loopStatus.getLoopObjects();
 				String kbName = session.getKnowledgeBase().getName();
 				if (kbName == null) kbName = session.getKnowledgeBase().getId();
-				String notificationText = "Endless loop detected in reasoning of knowledge base '"
+				String notificationText = "Endless loop detected in knowledge base '"
 						+ kbName
 						+ "'. The following object"
 						+ (loopObjects.size() == 1 ? " is" : "s are")
 						+ " mainly involved in the loop: " +
-						concat(",  ", loopObjects.toArray());
+						concat(",  ", loopObjects.toArray()) + ".";
 
-				return new Message(Type.FAILURE, notificationText);
+				Message message = new Message(Type.FAILURE, notificationText);
+				Collection<MessageObject> msgObjects = new ArrayList<MessageObject>();
+				for (TerminologyObject loopObject : loopObjects) {
+					msgObjects.add(new MessageObject(loopObject.getName(),
+							NamedObject.class));
+				}
+				msgObjects.add(new MessageObject(kbName,
+						NamedObject.class));
+
+				message.setObjects(msgObjects);
+				return message;
 			}
 			else {
 				// should not happen, let TestExecutor handle this
