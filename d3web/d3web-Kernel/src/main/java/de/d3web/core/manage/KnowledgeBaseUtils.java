@@ -91,6 +91,74 @@ public final class KnowledgeBaseUtils {
 		return answer;
 	}
 
+	public static boolean isInLoop(TerminologyObject object) {
+		HashSet<TerminologyObject> visited = new HashSet<TerminologyObject>();
+		visited.add(object);
+		for (TerminologyObject parent : object.getParents()) {
+			boolean loop = isInLoop(visited, parent);
+			if (loop) return true;
+		}
+		return false;
+	}
+
+	private static boolean isInLoop(Set<TerminologyObject> visited, TerminologyObject parent) {
+		if (visited.contains(parent)) return true;
+		visited.add(parent);
+		for (TerminologyObject grandParent : parent.getParents()) {
+			boolean loop = isInLoop(visited, grandParent);
+			if (loop) return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Collects all ancestors starting from the specified object. Duplicate
+	 * objects will be contained only once at its first occurrence. The
+	 * specified terminologyObject is always the first element of this list.
+	 * 
+	 * @created 26.02.2013
+	 * @param terminologyObject the leaf of the sub-tree to be specified
+	 * @return the ancestors of the given {@link TerminologyObject}
+	 */
+	public static List<TerminologyObject> getAncestors(TerminologyObject terminologyObject) {
+		return getAncestors(terminologyObject, TerminologyObject.class);
+
+	}
+
+	/**
+	 * Collects all tree ancestors of a specified type starting from the
+	 * specified object. Duplicate objects will be contained only once at its
+	 * first occurrence. The specified terminologyObject is always the first
+	 * element of this list.
+	 * 
+	 * @created 26.02.2013
+	 * @param <T> the type of the ancestors to be found
+	 * @param terminologyObject the leaf where the search starts
+	 * @param typeOf the class of the ancestors to be found
+	 * @return the ancestors of the given {@link TerminologyObject}
+	 */
+	public static <T extends TerminologyObject> List<T> getAncestors(TerminologyObject parent, Class<T> typeOf) {
+		List<T> result = new LinkedList<T>();
+		Set<TerminologyObject> visited = new HashSet<TerminologyObject>();
+		collectAncestors(parent, visited, result, typeOf);
+		return Collections.unmodifiableList(result);
+	}
+
+	private static <T extends TerminologyObject> void collectAncestors(TerminologyObject terminologyObject, Set<TerminologyObject> visited, List<T> result, Class<T> typeOf) {
+		// if not already visited, we add the object...
+		if (visited.contains(terminologyObject)) return;
+		visited.add(terminologyObject);
+
+		// ...add the current item if matches
+		if (typeOf.isInstance(terminologyObject)) {
+			result.add(typeOf.cast(terminologyObject));
+		}
+		// ...and process its parents recursively
+		for (TerminologyObject child : terminologyObject.getParents()) {
+			collectSuccessors(child, visited, result, typeOf);
+		}
+	}
+
 	/**
 	 * Collects all tree successors starting from the specified object. The
 	 * objects are collected in a depth first order. Duplicate objects (having
@@ -368,4 +436,5 @@ public final class KnowledgeBaseUtils {
 			}
 		}
 	}
+
 }
