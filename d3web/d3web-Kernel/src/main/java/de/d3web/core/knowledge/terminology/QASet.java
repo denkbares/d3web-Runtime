@@ -24,7 +24,6 @@ import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * This is a container to store Questions or Sets of Questions. <BR>
@@ -55,19 +54,7 @@ public abstract class QASet extends AbstractTerminologyObject implements Intervi
 	 * @return true, if this QASet is a question or a non-empty QContainer.
 	 *         false, otherwise.
 	 */
-	public boolean isQuestionOrHasQuestions() {
-		if (this instanceof Question) {
-			return true;
-		}
-		else if (this instanceof QContainer) {
-			for (TerminologyObject child : this.getChildren()) {
-				if (child instanceof QASet) {
-					return ((QASet) child).isQuestionOrHasQuestions();
-				}
-			}
-		}
-		return false;
-	}
+	public abstract boolean isQuestionOrHasQuestions();
 
 	public void addChild(QASet child) {
 		super.addChild(child);

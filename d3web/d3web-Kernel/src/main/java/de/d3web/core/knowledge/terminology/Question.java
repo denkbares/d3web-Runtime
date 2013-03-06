@@ -49,6 +49,11 @@ public abstract class Question extends QASet implements ValueObject {
 	}
 
 	@Override
+	public boolean isQuestionOrHasQuestions() {
+		return true;
+	}
+
+	@Override
 	public Value getDefaultValue() {
 		return UndefinedValue.getInstance();
 	}

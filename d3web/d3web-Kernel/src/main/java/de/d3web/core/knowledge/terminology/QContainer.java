@@ -21,6 +21,7 @@
 package de.d3web.core.knowledge.terminology;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * This class stores {@link Question} instances or (recursively) other
@@ -54,5 +55,16 @@ public class QContainer extends QASet {
 	public QContainer(QASet parent, String name) {
 		this(parent.getKnowledgeBase(), name);
 		parent.addChild(this);
+	}
+
+	@Override
+	public boolean isQuestionOrHasQuestions() {
+		for (TerminologyObject child : this.getChildren()) {
+			if (child instanceof QASet) {
+				return ((QASet) child).isQuestionOrHasQuestions();
+			}
+		}
+		return false;
+
 	}
 }
