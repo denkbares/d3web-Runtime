@@ -31,12 +31,15 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 
 /**
@@ -109,6 +112,13 @@ public class EqualConditionHandler implements FragmentHandler {
 						return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceNo()));
 					}
 				}
+			}
+			else if (idObject instanceof QuestionText) {
+				return new CondEqual((Question) idObject, new TextValue(value));
+			}
+			else {
+				throw new IOException("CondEqual for question '" + idObject.getName() +
+						"' is not supported");
 			}
 		}
 		return null;

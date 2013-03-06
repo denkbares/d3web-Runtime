@@ -243,9 +243,12 @@ public final class XMLUtil {
 		else if (answer instanceof NumValue) {
 			return ((NumValue) answer).getValue().toString();
 		}
+		else if (answer instanceof TextValue) {
+			return ((TextValue) answer).getValue().toString();
+		}
 		else {
 			throw new IOException(
-					"The given value is neighter a Choice nor a Unknown Value.");
+					"The given value is neighter a Choice nor a Unknown nor a text value.");
 		}
 	}
 
