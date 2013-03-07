@@ -92,22 +92,17 @@ public final class KnowledgeBaseUtils {
 	}
 
 	public static boolean isInLoop(TerminologyObject object) {
-		HashSet<TerminologyObject> visited = new HashSet<TerminologyObject>();
+		return isInLoop(new HashSet<TerminologyObject>(), object);
+	}
+
+	private static boolean isInLoop(Set<TerminologyObject> visited, TerminologyObject object) {
+		if (visited.contains(object)) return true;
 		visited.add(object);
 		for (TerminologyObject parent : object.getParents()) {
 			boolean loop = isInLoop(visited, parent);
 			if (loop) return true;
 		}
-		return false;
-	}
-
-	private static boolean isInLoop(Set<TerminologyObject> visited, TerminologyObject parent) {
-		if (visited.contains(parent)) return true;
-		visited.add(parent);
-		for (TerminologyObject grandParent : parent.getParents()) {
-			boolean loop = isInLoop(new HashSet<TerminologyObject>(visited), grandParent);
-			if (loop) return true;
-		}
+		visited.remove(object);
 		return false;
 	}
 
