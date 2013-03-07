@@ -53,43 +53,71 @@ public class EmptyQuestionnaireTest extends KBTest {
 	public Message execute(KnowledgeBase kb, String[] args2, String[]... ignores) throws InterruptedException {
 		if (kb == null) throw new IllegalArgumentException("test called with out test object ");
 
-		Collection<Pattern> ignorePatterns = new LinkedList<Pattern>();
-		for (String[] ignore : ignores) {
-			ignorePatterns.add(Pattern.compile(ignore[0]));
-		}
+		Collection<Pattern> ignorePatterns = compileIgnores(ignores);
 
 		List<String> emptyQASets = new ArrayList<String>();
 		// iterate over QAsets and check if they are empty
 		for (QASet qaset : kb.getManager().getQASets()) {
 			if (!qaset.isQuestionOrHasQuestions()) {
-				if (isIgnored(qaset, ignorePatterns)) continue;
+				if (isIgnored(qaset.getName(), ignorePatterns)) continue;
 				emptyQASets.add(qaset.getName());
 			}
 		}
 		if (emptyQASets.size() > 0) {// empty QASets were found:
-			String failedMessage = "Knowledge base has empty questionnaires: " + "\n" +
-					createTextFromStringList(emptyQASets);
-			ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
-			for (String string : emptyQASets) {
-				messageObject.add(new MessageObject(string, NamedObject.class));
-			}
-			return new Message(Type.FAILURE, failedMessage, messageObject);
+			return createErrorMessage(emptyQASets, "Knowledge base has empty questionnaires:");
 		}
 
 		// Utils.slowDowntest(this.getClass(), 10000, true);
 		// it seems everything was fine:
-		return new Message(Type.SUCCESS, null);
+		return new Message(Type.SUCCESS);
 	}
 
-	private boolean isIgnored(QASet qaset, Collection<Pattern> ignorePatterns) {
-		String name = qaset.getName();
+	/**
+	 * 
+	 * @created 06.03.2013
+	 * @param emptyQASets
+	 * @param failedMessage
+	 * @return s an error message containing
+	 */
+	protected static Message createErrorMessage(List<String> erroneousObjects, String failedMessage) {
+		ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
+		for (String string : erroneousObjects) {
+			messageObject.add(new MessageObject(string, NamedObject.class));
+		}
+		String nameList = createTextFromStringList(erroneousObjects);
+		return new Message(Type.FAILURE, failedMessage + "\n" + nameList, messageObject);
+	}
+
+	/**
+	 * Compiles ignores to a list of {@link Pattern}s
+	 * 
+	 * @param ignores the patterns as string to compile
+	 * @return the list of patterns
+	 */
+	protected static Collection<Pattern> compileIgnores(String[]... ignores) {
+		Collection<Pattern> ignorePatterns = new LinkedList<Pattern>();
+		for (String[] ignore : ignores) {
+			ignorePatterns.add(Pattern.compile(ignore[0]));
+		}
+		return ignorePatterns;
+	}
+
+	/**
+	 * Checks if a string should be ignored base on a list of {@link Pattern}s.
+	 * 
+	 * @created 06.03.2013
+	 * @param object the name of the object to test
+	 * @param ignorePatterns the ignores
+	 * @return s if the object should be ignored
+	 */
+	protected static boolean isIgnored(String object, Collection<Pattern> ignorePatterns) {
 		for (Pattern pattern : ignorePatterns) {
-			if (pattern.matcher(name).matches()) return true;
+			if (pattern.matcher(object).matches()) return true;
 		}
 		return false;
 	}
 
-	private String createTextFromStringList(List<String> list) {
+	private static String createTextFromStringList(List<String> list) {
 		StringBuilder htmlList = new StringBuilder();
 		for (String listItem : list) {
 			htmlList.append(listItem);
