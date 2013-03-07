@@ -105,7 +105,7 @@ public final class KnowledgeBaseUtils {
 		if (visited.contains(parent)) return true;
 		visited.add(parent);
 		for (TerminologyObject grandParent : parent.getParents()) {
-			boolean loop = isInLoop(visited, grandParent);
+			boolean loop = isInLoop(new HashSet<TerminologyObject>(visited), grandParent);
 			if (loop) return true;
 		}
 		return false;
