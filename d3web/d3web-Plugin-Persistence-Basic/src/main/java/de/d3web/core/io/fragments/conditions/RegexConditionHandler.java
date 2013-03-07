@@ -61,7 +61,7 @@ public class RegexConditionHandler implements FragmentHandler {
 	public Element write(Object object, Document doc) throws IOException {
 		CondRegex cond = (CondRegex) object;
 		Element element = XMLUtil.writeCondition(doc, cond.getQuestion(), "matches");
-		element.setAttribute("value", cond.getRegex());
+		element.setAttribute("regex", cond.getRegex());
 		return element;
 	}
 
