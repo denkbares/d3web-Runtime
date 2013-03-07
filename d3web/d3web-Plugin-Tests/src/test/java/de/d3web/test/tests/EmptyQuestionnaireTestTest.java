@@ -32,7 +32,7 @@ import de.d3web.testing.Message;
  */
 
 /**
- * Test the behvavior of the class EmptyQuestionnaireTest
+ * Test the behavior of the class EmptyQuestionnaireTest
  * 
  * @author jochenreutelshofer
  * @created 30.07.2012
