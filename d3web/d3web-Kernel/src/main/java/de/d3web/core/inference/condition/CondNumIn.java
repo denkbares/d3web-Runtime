@@ -43,8 +43,7 @@ public class CondNumIn extends CondNum {
 	 * @param maxValue the specified maximum value (Double)
 	 */
 	public CondNumIn(QuestionNum question, Double minValue, Double maxValue) {
-		this(question, new NumericalInterval(minValue.doubleValue(), maxValue.doubleValue(), false,
-				false));
+		this(question, new NumericalInterval(minValue.doubleValue(), maxValue.doubleValue()));
 		numericalInterval.checkValidity();
 	}
 
