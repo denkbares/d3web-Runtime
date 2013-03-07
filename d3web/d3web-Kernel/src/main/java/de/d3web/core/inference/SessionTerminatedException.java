@@ -28,6 +28,8 @@ package de.d3web.core.inference;
  */
 public class SessionTerminatedException extends IllegalStateException {
 
+	private static final long serialVersionUID = -801614952438988658L;
+
 	public SessionTerminatedException() {
 		super();
 	}
