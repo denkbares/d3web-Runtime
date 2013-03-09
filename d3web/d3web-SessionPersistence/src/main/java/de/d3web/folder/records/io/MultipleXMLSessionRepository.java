@@ -327,7 +327,9 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	private static void copyFile(File in, File out) throws IOException {
 		out.delete();
 		out.createNewFile();
+		@SuppressWarnings("resource")
 		FileChannel inChannel = new FileInputStream(in).getChannel();
+		@SuppressWarnings("resource")
 		FileChannel outChannel = new FileOutputStream(out).getChannel();
 		try {
 			inChannel.transferTo(0, inChannel.size(), outChannel);
