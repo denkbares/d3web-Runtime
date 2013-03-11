@@ -21,7 +21,9 @@
 package de.d3web.core.inference;
 
 import java.util.Collection;
+import java.util.Set;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
@@ -97,6 +99,43 @@ public interface PSMethod {
 	 * @return the merged fact
 	 */
 	Fact mergeFacts(Fact[] facts);
+
+	/**
+	 * Returns a set of terminology objects that are potential sources this
+	 * problem solver is capable to derive the derivedObject's value from.
+	 * Unlike {@link #getActiveDerivationSources(TerminologyObject, Session)},
+	 * the method does not consider any actual state of a user session. It only
+	 * returns the source objects that potentially have any influence on the
+	 * specified objects value.
+	 * <p>
+	 * If no such objects exists, an empty set is returned. Null is never
+	 * returned.
+	 * 
+	 * @created 11.03.2013
+	 * @param derivedObject the object to get the potentially influencing
+	 *        objects for
+	 * @return the set of potentially influencing objects
+	 * @throws NullPointerException if the specified object is null
+	 */
+	Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject);
+
+	/**
+	 * Returns a set of terminology objects that have been used by the problem
+	 * solver to derive the derivedObject's value from. Unlike
+	 * {@link #getPotentialDerivationSources(TerminologyObject)}, the method
+	 * only considers any object that has is really been used to derive the
+	 * value within the specified user session.
+	 * <p>
+	 * If no such objects exists, an empty set is returned. Null is never
+	 * returned.
+	 * 
+	 * @created 11.03.2013
+	 * @param derivedObject the object to get the influencing objects for
+	 * @param session the session to check for concrete influences
+	 * @return the set of potentially influencing objects
+	 * @throws NullPointerException if the specified object or session is null
+	 */
+	Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session);
 
 	/**
 	 * Returns if the psmethod has the specified type. Note: A PSMethod can have

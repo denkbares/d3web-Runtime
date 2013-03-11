@@ -21,9 +21,12 @@
 package de.d3web.indication.inference;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
@@ -83,5 +86,15 @@ public class PSMethodUserSelected extends PSMethodAdapter {
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		// do nothing
+	}
+
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		return Collections.emptySet();
 	}
 }

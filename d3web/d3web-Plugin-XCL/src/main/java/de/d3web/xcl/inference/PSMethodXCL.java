@@ -21,15 +21,19 @@
 package de.d3web.xcl.inference;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -44,9 +48,11 @@ import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.xcl.DefaultScoreAlgorithm;
+import de.d3web.xcl.InferenceTrace;
 import de.d3web.xcl.ScoreAlgorithm;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.XCLRelation;
 
 public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		SessionObjectSource<PSMethodXCL.XCLCaseObject> {
@@ -134,7 +140,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	public Abnormality getAbnormalitySlice(Question question) {
 		Abnormality knowledge = question.getInfoStore().getValue(
-					BasicProperties.DEFAULT_ABNORMALITIY);
+				BasicProperties.DEFAULT_ABNORMALITIY);
 		if (knowledge == null) {
 			knowledge = question.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
 		}
@@ -209,4 +215,37 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return strategicSupport.getInformationGain(qasets, solutions, session);
 	}
 
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		XCLModel model = derivedObject.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+		if (model == null) return Collections.emptySet();
+		addAllObjects(result, model.getRelations());
+		addAllObjects(result, model.getNecessaryRelations());
+		addAllObjects(result, model.getSufficientRelations());
+		return result;
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		if (session == null) throw new NullPointerException();
+		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		XCLModel model = derivedObject.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+		if (model == null) return Collections.emptySet();
+		InferenceTrace trace = model.getInferenceTrace(session);
+		addAllObjects(result, trace.getPosRelations());
+		addAllObjects(result, trace.getReqPosRelations());
+		addAllObjects(result, trace.getSuffRelations());
+		return result;
+	}
+
+	private void addAllObjects(Set<TerminologyObject> result, Collection<XCLRelation> relations) {
+		for (XCLRelation relation : relations) {
+			// add precondition values
+			Condition condition = relation.getConditionedFinding();
+			if (condition != null) {
+				result.addAll(condition.getTerminalObjects());
+			}
+		}
+	}
 }

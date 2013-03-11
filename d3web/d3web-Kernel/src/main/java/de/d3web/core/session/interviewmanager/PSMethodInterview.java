@@ -20,11 +20,14 @@
 package de.d3web.core.session.interviewmanager;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
@@ -77,6 +80,16 @@ public class PSMethodInterview extends PSMethodAdapter {
 	@Override
 	public boolean hasType(Type type) {
 		return type == Type.consumer;
+	}
+
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		return Collections.emptySet();
 	}
 
 }

@@ -21,6 +21,7 @@
 package de.d3web.costbenefit.inference;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,7 @@ import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -88,9 +90,11 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		private static final PSMethodStateTransition psmInstance = new PSMethodStateTransition();
 		public static int counter = 0;
 		private final int number;
+		private ConditionalValueSetter cvs;
 
-		public StateTransitionFact(Session session, TerminologyObject terminologyObject, Value value) {
+		public StateTransitionFact(ConditionalValueSetter cvs, Session session, TerminologyObject terminologyObject, Value value) {
 			super(terminologyObject, value, new Object(), findPSM(session));
+			this.cvs = cvs;
 			number = counter++;
 		}
 
@@ -167,6 +171,47 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 	@Override
 	public StateTransitionSessionObject createSessionObject(Session session) {
 		return new StateTransitionSessionObject();
+	}
+
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		// get all objects from all conditional value setter's conditions
+		// that match on the requested object
+		// due to not caching the StateTransitions, this method tends to be
+		// slow...
+		if (!(derivedObject instanceof Question)) return Collections.emptySet();
+		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		Collection<StateTransition> transitions = derivedObject.getKnowledgeBase().getAllKnowledgeSlicesFor(
+				StateTransition.KNOWLEDGE_KIND);
+		for (StateTransition stateTransition : transitions) {
+			List<ValueTransition> postTransitions = stateTransition.getPostTransitions();
+			for (ValueTransition valueTransition : postTransitions) {
+				if (valueTransition.getQuestion().equals(derivedObject)) {
+					List<ConditionalValueSetter> setters = valueTransition.getSetters();
+					for (ConditionalValueSetter setter : setters) {
+						Condition condition = setter.getCondition();
+						if (condition != null) {
+							result.addAll(condition.getTerminalObjects());
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		// we get the value setter responsible for the fact
+		// and return the objects used in its conditon
+		Fact fact = session.getBlackboard().getValueFact(derivedObject, this);
+		if (fact instanceof StateTransitionFact) {
+			Condition condition = ((StateTransitionFact) fact).cvs.getCondition();
+			if (condition != null) {
+				return new HashSet<TerminologyObject>(condition.getTerminalObjects());
+			}
+		}
+		return Collections.emptySet();
 	}
 
 }

@@ -59,10 +59,6 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 		return map.put(flow.getName(), flow);
 	}
 
-	public Flow remove(String name) {
-		return map.remove(name);
-	}
-
 	public int size() {
 		return map.size();
 	}

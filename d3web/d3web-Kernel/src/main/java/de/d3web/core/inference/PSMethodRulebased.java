@@ -21,10 +21,14 @@
 package de.d3web.core.inference;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 
@@ -86,5 +90,38 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 				this.propagate(session, change.getObject());
 			}
 		}
+	}
+
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		return getSourceObjects(derivedObject, null);
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		if (session == null) throw new NullPointerException();
+		return getSourceObjects(derivedObject, session);
+	}
+
+	private Set<TerminologyObject> getSourceObjects(TerminologyObject derivedObject, Session session) {
+		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		RuleSet rules = derivedObject.getKnowledgeStore().getKnowledge(
+				getBackwardKind(this.getClass()));
+		if (rules == null) return Collections.emptySet();
+		for (Rule rule : rules.getRules()) {
+			// if the rule is known not to be fired, ignore the rule
+			if (session != null && !rule.hasFired(session)) continue;
+			// add precondition values
+			Condition condition = rule.getCondition();
+			if (condition != null) {
+				result.addAll(condition.getTerminalObjects());
+			}
+			// add action formula values
+			PSAction action = rule.getAction();
+			if (action != null) {
+				result.addAll(action.getForwardObjects());
+			}
+		}
+		return result;
 	}
 }

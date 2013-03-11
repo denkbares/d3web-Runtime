@@ -55,8 +55,9 @@ public class Flow extends AbstractTerminologyObject {
 	}
 
 	/**
-	 * Checks the consistency of nodes and edges and sets backreference to flow
-	 * in nodes
+	 * Checks the consistency of nodes and edges and sets back-reference to flow
+	 * in nodes. Also adds the node back-references from effected objects to
+	 * nodes.
 	 */
 	private void checkFlow() {
 		for (Node node : nodes) {

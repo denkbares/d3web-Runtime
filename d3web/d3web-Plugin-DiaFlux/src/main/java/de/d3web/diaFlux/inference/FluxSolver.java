@@ -21,16 +21,19 @@
 package de.d3web.diaFlux.inference;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -61,6 +64,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			"DEPENDANT_EDGES", EdgeMap.class);
 	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(
 			"DEPENDANT_NODES", NodeList.class);
+	/**
+	 * Nodes that derive a specific terminology object.
+	 */
+	public final static KnowledgeKind<NodeList> DERIVING_NODES = new KnowledgeKind<NodeList>(
+			"DERIVING_NODES", NodeList.class);
 
 	public static final Object SNAPSHOT_SOURCE = SnapshotNode.class;
 
@@ -264,13 +272,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return new DiaFluxCaseObject();
 	}
 
-	/**
-	 * 
-	 * @created 17.02.2011
-	 * @param node
-	 * @param flowRun
-	 * @param session
-	 */
 	public static void activateNode(Node node, FlowRun flowRun, Session session) {
 		boolean alreadyDone = flowRun.isActivated(node);
 		if (alreadyDone) {
@@ -285,12 +286,24 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
+	 * Returns whether the specified node is currently active within the
+	 * specified session. Please note that a node previously being active and
+	 * then fixed by a snapshot is not considered to be active any longer, even
+	 * if its derived facts still persists.
 	 * 
-	 * @created 17.02.2011
-	 * @param end
-	 * @param flowRun
-	 * @param session
+	 * @created 11.03.2013
+	 * @param node the node to be checked
+	 * @param session the session to check the node for
+	 * @return if the node is active in the session
 	 */
+	public static boolean isActiveNode(Node node, Session session) {
+		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
+		for (FlowRun flowRun : runs) {
+			if (flowRun.isActive(node)) return true;
+		}
+		return false;
+	}
+
 	public static void checkSuccessorsOnActivation(Node end, FlowRun flowRun, Session session) {
 		for (Edge out : end.getOutgoingEdges()) {
 			if (!evalEdge(session, out)) {
@@ -505,4 +518,42 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return 5;
 	}
 
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		return getSources(derivedObject, null);
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		if (session == null) throw new NullPointerException();
+		return getSources(derivedObject, session);
+	}
+
+	private Set<TerminologyObject> getSources(TerminologyObject derivedObject, Session session) {
+		// similar to rules.
+		// returns the incoming edges condition objects
+		// and the actions forward objects
+		// of all nodes setting the requested object
+		//
+		// PLEASE NOTE:
+		// "snapshot"ed objects are not deliver their deriving
+		// objects any longer
+		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		NodeList nodes = derivedObject.getKnowledgeStore().getKnowledge(DERIVING_NODES);
+		if (nodes == null) return Collections.emptySet();
+		for (Node node : nodes.getNodes()) {
+			// if the node is known not to be inactive, ignore it
+			if (session != null && !isActiveNode(node, session)) continue;
+			// add precondition values of all edges
+			for (Edge edge : node.getIncomingEdges()) {
+				Condition condition = edge.getCondition();
+				if (condition != null) {
+					result.addAll(condition.getTerminalObjects());
+				}
+			}
+			// add action formula values
+			result.addAll(node.getHookedObjects());
+		}
+		return result;
+	}
 }

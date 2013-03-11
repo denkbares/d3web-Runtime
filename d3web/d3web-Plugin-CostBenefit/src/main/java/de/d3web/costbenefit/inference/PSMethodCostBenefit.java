@@ -21,6 +21,7 @@ package de.d3web.costbenefit.inference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -156,7 +157,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// only check if the current one is done
 		// (or no current one has been activated yet)
 		if (caseObject.getCurrentPathIndex() == -1
-					|| Util.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
+				|| Util.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
 			// normally ok questions are made undone when starting a sequence,
 			// but one item can occur more than once in a sequence, so it's
 			// questions have to be handled earlier.
@@ -422,7 +423,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	private static void fillConditionValueCache(HashMap<Condition, Double> conditionValueCache, Target t) {
 		StateTransition stateTransition = StateTransition.getStateTransition(
-					t.getQContainers().get(0));
+				t.getQContainers().get(0));
 		if (stateTransition == null) return;
 		Condition activationCondition = stateTransition.getActivationCondition();
 		List<Condition> terms = new LinkedList<Condition>();
@@ -441,13 +442,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				if (condNot.getTerms().get(0) instanceof CondEqual) {
 					CondEqual condEqual = (CondEqual) condNot.getTerms().get(0);
 					if (condEqual.getQuestion() instanceof QuestionOC
-								&& condEqual.getValue() instanceof ChoiceValue) {
+							&& condEqual.getValue() instanceof ChoiceValue) {
 						ChoiceValue value = (ChoiceValue) condEqual.getValue();
 						List<Condition> conds = new LinkedList<Condition>();
 						for (Choice choice : ((QuestionOC) condEqual.getQuestion()).getAllAlternatives()) {
 							if (!choice.getName().equals(value.getChoiceID().getText())) {
 								conds.add(new CondEqual(condEqual.getQuestion(),
-											new ChoiceValue(choice)));
+										new ChoiceValue(choice)));
 							}
 						}
 						terms.add(new CondOr(conds));
@@ -748,5 +749,21 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	@Override
 	public double getPriority() {
 		return 6;
+	}
+
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		// we cannot provide a better implementation, because it depends on a
+		// lot of objects with indirect influences only (e.g. Solutions,
+		// Question, ...)
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		// we cannot provide a better implementation, because it depends on a
+		// lot of objects with indirect influences only (e.g. Solutions,
+		// Question, ...)
+		return Collections.emptySet();
 	}
 }

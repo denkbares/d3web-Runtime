@@ -21,12 +21,15 @@
 package de.d3web.core.inference;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -181,8 +184,8 @@ public class PSMethodInit implements PSMethod {
 			}
 			catch (NumberFormatException e) {
 				throw new IllegalArgumentException("Cannot set initial value '" + property +
-								"' for question '" + q.getName()
-								+ "', because it is not valid number.");
+						"' for question '" + q.getName()
+						+ "', because it is not valid number.");
 			}
 		}
 		else if (q instanceof QuestionDate) {
@@ -225,5 +228,15 @@ public class PSMethodInit implements PSMethod {
 	public double getPriority() {
 		// a very low priority because
 		return 10;
+	}
+
+	@Override
+	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
+		return Collections.emptySet();
+	}
+
+	@Override
+	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
+		return Collections.emptySet();
 	}
 }

@@ -23,6 +23,8 @@ package de.d3web.diaFlux.flow;
 import java.util.Arrays;
 import java.util.List;
 
+import de.d3web.core.inference.KnowledgeKind;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
@@ -105,27 +107,34 @@ public final class FlowFactory {
 
 	private static void createNodeLists(Flow flow) {
 
+		// add the node to all objects that are
+		// used to derive the nodes state or value
 		for (Node node : flow.getNodes()) {
-
-			List<? extends TerminologyObject> list = node.getHookedObjects();
-
-			// For all other edges:
-			// index them at the NamedObjects their condition contains
-			for (TerminologyObject nobject : list) {
-				NodeList slice = nobject.getKnowledgeStore().getKnowledge(
-						FluxSolver.DEPENDANT_NODES);
-
-				if (slice == null) {
-					slice = new NodeList();
-					nobject.getKnowledgeStore().addKnowledge(
-							FluxSolver.DEPENDANT_NODES,
-							slice);
-				}
-
-				slice.addNode(node);
+			// index nodes to the objects their condition contains
+			List<? extends TerminologyObject> hookedObjects = node.getHookedObjects();
+			for (TerminologyObject object : hookedObjects) {
+				linkNodeTo(FluxSolver.DEPENDANT_NODES, node, object);
 			}
-
+			// index nodes to the objects to be modified
+			if (node instanceof ActionNode) {
+				PSAction action = ((ActionNode) node).getAction();
+				if (action != null) {
+					List<? extends TerminologyObject> derivedObjects = action.getBackwardObjects();
+					for (TerminologyObject object : derivedObjects) {
+						linkNodeTo(FluxSolver.DERIVING_NODES, node, object);
+					}
+				}
+			}
 		}
+	}
+
+	private static void linkNodeTo(KnowledgeKind<NodeList> kind, Node node, TerminologyObject object) {
+		NodeList slice = object.getKnowledgeStore().getKnowledge(kind);
+		if (slice == null) {
+			slice = new NodeList();
+			object.getKnowledgeStore().addKnowledge(kind, slice);
+		}
+		slice.addNode(node);
 	}
 
 	public static Edge createEdge(String id, Node startNode, Node endNode, Condition condition) {
