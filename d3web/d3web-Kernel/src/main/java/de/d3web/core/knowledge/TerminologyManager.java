@@ -44,7 +44,8 @@ public class TerminologyManager {
 	 * Hashes the objects for names (unique name assumption required)
 	 */
 	private final Map<String, TerminologyObject> objectNameMap = new HashMap<String, TerminologyObject>();
-
+	private final TreeIndexer solutionIndexer = new TreeIndexer();
+	private final TreeIndexer questionIndexer = new TreeIndexer();
 	private final KnowledgeBase kb;
 
 	/**
@@ -77,6 +78,8 @@ public class TerminologyManager {
 			}
 			else {
 				// no need to insert the object twice
+				// but the order may have changed
+				clearIndexer(object);
 				return;
 			}
 		}
@@ -86,6 +89,8 @@ public class TerminologyManager {
 							+ object
 							+ " cannot be added, it belongs to another knowledge base.");
 		}
+		// rebuild indexes for that object type
+		clearIndexer(object);
 		objectNameMap.put(object.getName(), object);
 	}
 
@@ -106,6 +111,7 @@ public class TerminologyManager {
 							+ " has some children or parents, that should be removed/relinked before deletion.");
 		}
 		else {
+			clearIndexer(object);
 			objectNameMap.remove(object.getName());
 		}
 	}
@@ -286,4 +292,40 @@ public class TerminologyManager {
 	public Collection<TerminologyObject> getAllTerminologyObjects() {
 		return objectNameMap.values();
 	}
+
+	/**
+	 * Returns the index of the specific object in the knowledge base's object
+	 * tree. The index is counted in depth-first-search order. If an object is
+	 * connected to the tree at multiple places, the lowest index is used. The
+	 * root objects ({@link KnowledgeBase#getRootQASet()} and
+	 * {@link KnowledgeBase#getRootSolution()}) of the knowledge base starts
+	 * with index 0.
+	 * <p>
+	 * If a object or its predecessors aren't connected to the knowledge base's
+	 * root objects, the root of these dangling trees get a number higher than
+	 * all objects in these trees. Within such a tree the depth-first-search
+	 * order is still preserved (as long as the objects aren't also added to
+	 * other dangling trees or the root tree).
+	 * <p>
+	 * For performance reasons and due to building the indexes on demand and
+	 * re-index if the terminology of the knowledge base changes, you should
+	 * avoid to call this method during building the knowledge base.
+	 * 
+	 * 
+	 * @created 17.03.2013
+	 * @param object the object to get the index for
+	 * @return the index of the object in its particular tree
+	 */
+	public int getTreeIndex(TerminologyObject object) {
+		return getIndexer(object).getIndex(object);
+	}
+
+	private void clearIndexer(TerminologyObject object) {
+		getIndexer(object).clear();
+	}
+
+	private TreeIndexer getIndexer(TerminologyObject object) {
+		return (object instanceof Solution) ? solutionIndexer : questionIndexer;
+	}
+
 }

@@ -21,16 +21,12 @@ package de.d3web.core.session.interviewmanager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
@@ -48,56 +44,31 @@ import de.d3web.core.session.interviewmanager.InterviewAgenda.AgendaEntry;
  */
 public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 
-	private final Map<TerminologyObject, Integer> qasetIndex;
-	private int maxOrderingNumber;
 	private final Session session;
 
-	private class DFSTreeSortingComparator implements Comparator<AgendaEntry> {
+	private static class DFSTreeSortingComparator implements Comparator<AgendaEntry> {
 
-		private final Map<TerminologyObject, Integer> index;
-
-		public DFSTreeSortingComparator(
-				Map<TerminologyObject, Integer> qasetIndex) {
-			this.index = qasetIndex;
-		}
+		private static final DFSTreeSortingComparator INSTANCE = new DFSTreeSortingComparator();
 
 		@Override
 		public int compare(AgendaEntry entry1, AgendaEntry entry2) {
-			int order1 = this.index.get(entry1.getInterviewObject());
-			int order2 = this.index.get(entry2.getInterviewObject());
+			int order1 = getTreeIndex(entry1);
+			int order2 = getTreeIndex(entry2);
 			return order1 - order2;
+		}
+
+		private int getTreeIndex(AgendaEntry entry) {
+			InterviewObject object = entry.getInterviewObject();
+			return object.getKnowledgeBase().getManager().getTreeIndex(object);
+		}
+
+		public static DFSTreeSortingComparator getInstance() {
+			return INSTANCE;
 		}
 	}
 
 	public DFSTreeAgendaSortingStrategy(Session session) {
 		this.session = session;
-		this.qasetIndex = new HashMap<TerminologyObject, Integer>();
-		reindex();
-	}
-
-	/**
-	 * Traverses the QASet hierarchy using a depth-first search and attaches an
-	 * ordering number to each visited {@link QASet}. This ordering number is
-	 * used for the sorting of the agenda.
-	 */
-	private void reindex() {
-		this.maxOrderingNumber = 0;
-		this.qasetIndex.clear();
-		reindex(session.getKnowledgeBase().getRootQASet());
-	}
-
-	private void reindex(TerminologyObject qaset) {
-		if (qaset == null) return;
-		qasetIndex.put(qaset, maxOrderingNumber);
-		maxOrderingNumber++;
-		for (TerminologyObject child : qaset.getChildren()) {
-			if (!qasetIndex.containsKey(child)) {
-				reindex(child);
-			}
-			else {
-				continue;// terminate recursion in case of cyclic hierarchies
-			}
-		}
 	}
 
 	@Override
@@ -119,8 +90,8 @@ public class DFSTreeAgendaSortingStrategy implements AgendaSortingStrategy {
 		remainingEntries.removeAll(initEntries);
 
 		// the initEntries are already sorted by the getInitEntries method
-		Collections.sort(instantIndicatedEntries, new DFSTreeSortingComparator(this.qasetIndex));
-		Collections.sort(remainingEntries, new DFSTreeSortingComparator(this.qasetIndex));
+		Collections.sort(instantIndicatedEntries, DFSTreeSortingComparator.getInstance());
+		Collections.sort(remainingEntries, DFSTreeSortingComparator.getInstance());
 
 		// entries = instantIndicatedEntries;
 		// entries.addAll(remainingEntries);
