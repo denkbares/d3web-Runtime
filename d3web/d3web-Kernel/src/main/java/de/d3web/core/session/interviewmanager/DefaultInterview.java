@@ -229,43 +229,30 @@ public class DefaultInterview implements Interview {
 	}
 
 	private InterviewState checkChildrenState(TerminologyObject[] children) {
-		// If all children are Question instances:
-		// Consider not only the direct children, but also their follow-up
-		// questions
-		// If all questions are answered, then return State=INACTIVE
-		// If at least on question is not answered, then return State=ACTIVE
-		if (allQuestions(children)) {
-			// ACTIVE, when at least one direct children is not answered
-			for (TerminologyObject child : children) {
+		for (TerminologyObject child : children) {
+			// If at least on question is not answered, then return State=ACTIVE
+			if (child instanceof Question) {
 				Value value = session.getBlackboard()
 						.getValue((Question) child);
 				if (value instanceof UndefinedValue) {
 					return InterviewState.ACTIVE;
 				}
-			}
-			// ACTIVE, when at least one follow-up question is ACTIVE
-			for (TerminologyObject followUpQuestion : getAllFollowUpChildrenOf(children)) {
-				if (isActive((InterviewObject) followUpQuestion)) {
-					return InterviewState.ACTIVE;
+				// ACTIVE, when at least one follow-up question is ACTIVE
+				for (TerminologyObject followUpQuestion : getAllFollowUpChildrenOf(new TerminologyObject[] { child })) {
+					if (isActive((InterviewObject) followUpQuestion)) {
+						return InterviewState.ACTIVE;
+					}
 				}
 			}
-			return InterviewState.INACTIVE;
-		}
-		// If all children are QContainer instances:
-		// Compute the state of all qcontainers
-		// If at least one is ACTIVE, then return State=ACTIVE
-		// If all children are INACTIVE, then return State=INACTIVE
-		else if (allQContainers(children)) {
-			for (TerminologyObject child : children) {
+			// If at least on child qcontainer is active, then return
+			// State=ACTIVE
+			else if (child instanceof QContainer) {
 				InterviewState childState = checkChildrenState((QContainer) child);
 				if (childState.equals(InterviewState.ACTIVE)) {
 					return InterviewState.ACTIVE;
 				}
 			}
-			return InterviewState.INACTIVE;
 		}
-		// TODO: logger message: Not able to handle the given collection of
-		// TerminologyObject instances
 		return InterviewState.INACTIVE;
 	}
 
@@ -293,40 +280,6 @@ public class DefaultInterview implements Interview {
 
 	private InterviewState checkChildrenState(QContainer container) {
 		return checkChildrenState(container.getChildren());
-	}
-
-	/**
-	 * Checks, whether the specified objects are all instances of
-	 * {@link QContainer}.
-	 * 
-	 * @param objects the specified objects
-	 * @return true, when the specified objects are all instances of
-	 *         {@link QContainer}.
-	 */
-	private static boolean allQContainers(TerminologyObject[] objects) {
-		for (TerminologyObject object : objects) {
-			if (!(object instanceof QContainer)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Checks, whether the specified objects are all instances of
-	 * {@link Question}.
-	 * 
-	 * @param objects the specified objects
-	 * @return true, when the specified objects are all instances of
-	 *         {@link Question}.
-	 */
-	private static boolean allQuestions(TerminologyObject[] objects) {
-		for (TerminologyObject object : objects) {
-			if (!(object instanceof Question)) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	/**
