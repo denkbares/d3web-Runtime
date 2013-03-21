@@ -154,6 +154,36 @@ public interface PropagationManager {
 	void terminate();
 
 	/**
+	 * Returns whether the given ValueObject is currently set to be forced for
+	 * propagation (this means the propagation will happen whether or not the
+	 * value of the {@link ValueObject} has changed or not).
+	 * 
+	 * @created 21.03.2013
+	 * @param object the {@link ValueObject} for which should be checked if it
+	 *        is forced or not
+	 * @return if the given {@link ValueObject} should be forced for propagation
+	 */
+	boolean isForced(ValueObject object);
+
+	/**
+	 * This method does the same as
+	 * {@link PropagationManager#propagate(ValueObject, Value)}, but produced
+	 * {@link PropagationEntry}s will always indicate a change. This forces the
+	 * propagation in PSMethods, that might otherwise only propagate in case of
+	 * a change in the value of the {@link ValueObject}.
+	 * 
+	 * @created 07.12.2012
+	 * @param object the object that has been updated
+	 * @param oldValue the old value of the object within the case
+	 * @throws SessionTerminatedException if the session has been terminated
+	 *         manually and any further propagation is prevented. The exception
+	 *         is only thrown if this method is not called inside a opened
+	 *         propagation frame. In this case the exception is thrown when the
+	 *         propagation will be committed using {@link #commitPropagation()}
+	 */
+	void forcePropagate(ValueObject object, Value oldValue) throws SessionTerminatedException;
+
+	/**
 	 * This method does the same as
 	 * {@link PropagationManager#propagate(ValueObject, Value)}, but produced
 	 * {@link PropagationEntry}s will always indicate a change. This forces the
@@ -251,4 +281,5 @@ public interface PropagationManager {
 	 * @param listener the listener to be removed
 	 */
 	void removeListener(PropagationListener listener);
+
 }

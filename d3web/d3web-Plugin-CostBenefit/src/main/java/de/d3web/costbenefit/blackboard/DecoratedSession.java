@@ -25,6 +25,7 @@ import java.util.List;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.inference.PropagationManager;
+import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -195,6 +196,15 @@ public class DecoratedSession implements Session {
 
 			@Override
 			public void terminate() {
+			}
+
+			@Override
+			public void forcePropagate(ValueObject object, Value oldValue) throws SessionTerminatedException {
+			}
+
+			@Override
+			public boolean isForced(ValueObject object) {
+				return false;
 			}
 		};
 	}

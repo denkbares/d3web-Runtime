@@ -332,8 +332,13 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	@Override
 	public void forcePropagate(ValueObject object) {
+		forcePropagate(object, session.getBlackboard().getValue(object));
+	}
+
+	@Override
+	public void forcePropagate(ValueObject object, Value oldValue) {
 		forcedPropagationEntries.add(object);
-		propagate(object, session.getBlackboard().getValue(object), null);
+		propagate(object, oldValue, null);
 	}
 
 	/**
@@ -393,6 +398,11 @@ public class DefaultPropagationManager implements PropagationManager {
 			// and commit the propagation frame
 			commitPropagation();
 		}
+	}
+
+	@Override
+	public boolean isForced(ValueObject object) {
+		return forcedPropagationEntries.contains(object);
 	}
 
 	@Override

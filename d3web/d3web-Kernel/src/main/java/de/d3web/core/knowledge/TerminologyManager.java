@@ -213,6 +213,25 @@ public class TerminologyManager {
 	}
 
 	/**
+	 * Tries to retrieve an terminology object with the specified name and
+	 * class, that is contained in this knowledge base. If no object found with
+	 * these criteria, null is returned.
+	 * 
+	 * @param name the specified name
+	 * @param toClass the class the returned {@link TerminologyObject} needs to
+	 *        have
+	 * @return the terminology object with the specified identifier;
+	 *         <code>null</code> if none found
+	 */
+	public <T> T search(String name, Class<T> toClass) {
+		TerminologyObject terminologyObject = objectNameMap.get(name);
+		if (toClass.isInstance(terminologyObject)) {
+			return toClass.cast(terminologyObject);
+		}
+		return null;
+	}
+
+	/**
 	 * Tries to find a {@link QContainer} instance with the specified unique
 	 * name.
 	 * 

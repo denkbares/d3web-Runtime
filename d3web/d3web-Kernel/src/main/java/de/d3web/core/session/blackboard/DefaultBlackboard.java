@@ -101,7 +101,7 @@ public class DefaultBlackboard implements Blackboard {
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().add(fact);
-		propergate(terminologyObject, oldValue);
+		propergate(terminologyObject, oldValue, fact.getPSMethod().hasType(Type.source));
 		// add the arriving fact to the protocol
 		// if it was entered by a source psmethod
 		PSMethod psMethod = fact.getPSMethod();
@@ -119,10 +119,15 @@ public class DefaultBlackboard implements Blackboard {
 	 * @param oldValue
 	 */
 	private void propergate(TerminologyObject terminologyObject,
-			Value oldValue) {
+			Value oldValue, boolean force) {
 		PropagationManager propagationContoller = session.getPropagationManager();
-		propagationContoller.propagate((ValueObject) terminologyObject,
-				oldValue);
+		if (force) {
+			propagationContoller.forcePropagate((ValueObject) terminologyObject,
+					oldValue);
+		} else {			
+			propagationContoller.propagate((ValueObject) terminologyObject,
+					oldValue);
+		}
 		for (BlackboardListener listener : listeners) {
 			listener.factsChanged(terminologyObject);
 		}
@@ -142,7 +147,7 @@ public class DefaultBlackboard implements Blackboard {
 	public void removeValueFact(Fact fact) {
 		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
 		this.getValueStorage().remove(fact);
-		propergate(fact.getTerminologyObject(), oldValue);
+		propergate(fact.getTerminologyObject(), oldValue, false);
 	}
 
 	/**
@@ -157,7 +162,7 @@ public class DefaultBlackboard implements Blackboard {
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().remove(terminologyObject, source);
-		propergate(terminologyObject, oldValue);
+		propergate(terminologyObject, oldValue, false);
 	}
 
 	@Override
