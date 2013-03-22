@@ -37,7 +37,6 @@ import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
-import de.d3web.core.session.interviewmanager.PSMethodInterview;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -54,8 +53,7 @@ public final class SessionFactory {
 			PSMethodStrategic.getInstance(),
 			PSMethodAbstraction.getInstance(),
 			PSMethodHeuristic.getInstance(),
-			PSMethodInit.getInstance(),
-			PSMethodInterview.getInstance()
+			PSMethodInit.getInstance()
 			);
 
 	private static final Collection<PropagationListener> propagationListeners = new LinkedList<PropagationListener>();
