@@ -20,7 +20,7 @@
 		<parameter id="name" value="PSMethodInterview" />
 		<parameter id="description" value="Adapter for propagation and interview" />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="4" />
+		<parameter id="priority" value="3" />
 	</extension>
 	
 </plugin>

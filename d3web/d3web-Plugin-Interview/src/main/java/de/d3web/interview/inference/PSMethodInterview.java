@@ -31,6 +31,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.interviewmanager.Interview;
 
 /**
  * This PSMethod is used to notify the {@link Interview} of new facts added to
@@ -92,4 +93,11 @@ public class PSMethodInterview extends PSMethodAdapter {
 		return Collections.emptySet();
 	}
 
+	/**
+	 * returns the default priority
+	 */
+	@Override
+	public double getPriority() {
+		return 3;
+	}
 }
