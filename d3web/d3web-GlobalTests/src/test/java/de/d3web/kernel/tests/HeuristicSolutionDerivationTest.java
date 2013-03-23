@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
@@ -70,8 +70,8 @@ public class HeuristicSolutionDerivationTest {
 	private static KnowledgeBase kb;
 	private static Session session;
 
-	@BeforeClass
-	public static void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
@@ -161,6 +161,8 @@ public class HeuristicSolutionDerivationTest {
 				cloggedAirFilter);
 	}
 
+	// Exhaust fumes = black => Clogged air filter = P3
+	// Fuel = unleaded gasoline => Clogged air filter = P5
 	@Test
 	public void testSetValue() {
 
@@ -202,6 +204,8 @@ public class HeuristicSolutionDerivationTest {
 				cloggedAirFilterState.hasState(Rating.State.ESTABLISHED));
 	}
 
+	// Exhaust fumes = black => Clogged air filter = P3
+	// Fuel = unleaded gasoline => Clogged air filter = P5
 	@Test
 	public void testChangeValue() {
 
@@ -224,8 +228,8 @@ public class HeuristicSolutionDerivationTest {
 		// TEST 'Clogged air filter' == SUGGESTED
 		Rating cloggedAirFilterState = session.getBlackboard().getRating(
 				cloggedAirFilter);
-		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'SUGGESTED'",
-				cloggedAirFilterState.hasState(Rating.State.SUGGESTED));
+		assertTrue("Solution 'Clogged air filter' has wrong state. Expected 'UNCLEAR'",
+				cloggedAirFilterState.hasState(Rating.State.UNCLEAR));
 
 		// SET 'Exhaust fumes' = 'blue'
 		Value blue = KnowledgeBaseUtils.findValue(exhaustFumes, "blue");

@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
@@ -73,8 +73,8 @@ public class XCLSolutionDerivationTest {
 	private static KnowledgeBase kb;
 	private static Session session;
 
-	@BeforeClass
-	public static void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
@@ -300,6 +300,8 @@ public class XCLSolutionDerivationTest {
 
 	@Test
 	public void testChangeValue() {
+
+		testSetValue();
 
 		// Solutions
 		Solution football = kb.getManager().searchSolution("Football");
