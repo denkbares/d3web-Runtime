@@ -34,8 +34,6 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
  */
 public class Target implements Comparable<Target> {
 
-	private static final long serialVersionUID = 1927072006554824366L;
-
 	private final List<QContainer> qContainers = new LinkedList<QContainer>();
 	private final double costs;
 	private double benefit = 0.0;
