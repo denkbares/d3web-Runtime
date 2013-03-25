@@ -309,7 +309,7 @@ public class TerminologyManager {
 	 *         corresponding {@link KnowledgeBase}
 	 */
 	public Collection<TerminologyObject> getAllTerminologyObjects() {
-		return objectNameMap.values();
+		return Collections.unmodifiableCollection(objectNameMap.values());
 	}
 
 	/**
