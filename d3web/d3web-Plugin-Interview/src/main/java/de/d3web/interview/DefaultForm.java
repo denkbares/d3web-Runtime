@@ -17,9 +17,13 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
+
+import java.util.Arrays;
+import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.Question;
 
 public class DefaultForm implements Form {
 
@@ -49,5 +53,14 @@ public class DefaultForm implements Form {
 	@Override
 	public boolean isNotEmpty() {
 		return true;
+	}
+
+	@Override
+	public List<InterviewObject> getActiveObjects() {
+		if (interviewObject instanceof Question) {
+			return Arrays.asList(interviewObject);
+		}
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

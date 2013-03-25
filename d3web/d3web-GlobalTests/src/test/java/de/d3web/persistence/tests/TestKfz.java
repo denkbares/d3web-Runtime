@@ -50,7 +50,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
@@ -235,7 +234,7 @@ public class TestKfz {
 	public void testCase() {
 		Session session = SessionFactory.createSession(kb);
 
-		while (session.getInterview().nextForm() != EmptyForm.getInstance()) {
+		while (session.getInterview().nextForm().isNotEmpty()) {
 
 			QASet qaSet = (QASet) session.getInterview().nextForm().getInterviewObject();
 			assertNotNull(qaSet);

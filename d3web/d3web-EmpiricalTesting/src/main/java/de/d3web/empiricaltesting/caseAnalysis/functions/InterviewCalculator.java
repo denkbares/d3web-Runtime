@@ -27,10 +27,10 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
+import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 
 public class InterviewCalculator extends PrecisionRecallCalculator {
 

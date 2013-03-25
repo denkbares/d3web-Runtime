@@ -21,6 +21,12 @@ package de.d3web.core.session.interviewmanager;
 
 import de.d3web.core.knowledge.InterviewObject;
 
+/**
+ * 
+ * @deprecated use de.d3web.interview.Form
+ * @created 25.03.2013
+ */
+@Deprecated
 public interface Form {
 
 	String getTitle();

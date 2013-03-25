@@ -17,7 +17,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,6 +29,8 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.interviewmanager.InterviewAgenda;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This class always creates a new {@link Form} that contains the one
@@ -81,6 +83,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			Session session, Collection<TerminologyObject> traversedObjects) { // NOSONAR
 		// Termination of recursive traversal: Required for possibly cyclic
 		// question hierarchies
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		if (traversedObjects.contains(qaset)) {
 			return null;
 		}
@@ -101,7 +104,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			// questionnaire but is
 			// active on agenda (follow-up question).
 			else if (isNotDirectQContainerQuestion(question) &&
-					session.getInterview().isActive(question)) {
+					interview.isActive(question)) {
 				return question;
 			}
 			// Recursively traverse for finding follow-up questions and check

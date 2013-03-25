@@ -17,7 +17,10 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
+
+import java.util.Collections;
+import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
 
@@ -71,5 +74,10 @@ public final class EmptyForm implements Form {
 	@Override
 	public String toString() {
 		return EMPTY_FORM_STRING;
+	}
+
+	@Override
+	public List<InterviewObject> getActiveObjects() {
+		return Collections.emptyList();
 	}
 }

@@ -16,15 +16,12 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interview.tests;
+package de.d3web.interview;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import de.d3web.core.session.interviewmanager.EmptyForm;
-import de.d3web.core.session.interviewmanager.Form;
 
 /**
  * Some tests for the class {@link EmptyForm}.

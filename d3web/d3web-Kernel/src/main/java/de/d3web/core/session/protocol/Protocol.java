@@ -30,7 +30,7 @@ import de.d3web.core.session.Session;
  * Comment: Later also timestamps and further information are stored in the
  * protocol, too.
  * 
- * @author joba
+ * @author Volker Belli
  * 
  */
 public interface Protocol {

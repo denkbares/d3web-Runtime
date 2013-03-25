@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
+ * Copyright (C) 2013 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -16,16 +16,21 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
 
 import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.Session;
 
-@Deprecated
-public interface FormStrategy {
+/**
+ * 
+ * @author Markus Friedrich (denkbares GmbH)
+ * @created 25.03.2013
+ */
+@SuppressWarnings("deprecation")
+public interface FormStrategy extends de.d3web.core.session.interviewmanager.FormStrategy {
 
 	Form nextForm(List<InterviewObject> agendaEntries, Session session);
+
 }

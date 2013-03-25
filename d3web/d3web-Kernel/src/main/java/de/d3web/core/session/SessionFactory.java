@@ -36,7 +36,6 @@ import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.interviewmanager.FormStrategy;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -79,8 +78,7 @@ public final class SessionFactory {
 	 * @return new Session instance based on the specified knowledge base
 	 */
 	public static synchronized Session createSession(KnowledgeBase knowledgeBase) {
-		return createSession(null, knowledgeBase, new NextUnansweredQuestionFormStrategy(),
-				new Date());
+		return createSession(null, knowledgeBase, new Date());
 	}
 
 	/**
@@ -91,8 +89,7 @@ public final class SessionFactory {
 	 * @return new Session instance based on the specified knowledge base
 	 */
 	public static synchronized Session createSession(String name, KnowledgeBase knowledgeBase) {
-		return createSession(name, knowledgeBase, new NextUnansweredQuestionFormStrategy(),
-				new Date());
+		return createSession(name, knowledgeBase, new Date());
 	}
 
 	/**
@@ -104,7 +101,7 @@ public final class SessionFactory {
 	 * @return {@link Session}
 	 */
 	public static synchronized DefaultSession createSession(KnowledgeBase kb, Date creationDate) {
-		return createSession(null, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
+		return createSession(null, kb, creationDate);
 	}
 
 	/**
@@ -117,23 +114,7 @@ public final class SessionFactory {
 	 * @return {@link Session}
 	 */
 	public static synchronized DefaultSession createSession(String id, KnowledgeBase kb, Date creationDate) {
-		return createSession(id, kb, new NextUnansweredQuestionFormStrategy(), creationDate);
-	}
-
-	/**
-	 * Factory-method that creates instances of Session.
-	 * 
-	 * @param id the ID
-	 * @param knowledgeBase the knowledge base used in the case.
-	 * @param formStrategy the specified {@link FormStrategy}
-	 * @return new Session instance based on the specified id, knowledge base
-	 *         and form strategy
-	 */
-	public static synchronized DefaultSession createSession(String id,
-			KnowledgeBase knowledgeBase,
-			FormStrategy formStrategy, Date creationDate) {
-		DefaultSession defaultSession = new DefaultSession(id, knowledgeBase, formStrategy,
-				creationDate);
+		DefaultSession defaultSession = new DefaultSession(id, kb, creationDate);
 		for (PropagationListener propagationListener : propagationListeners) {
 			defaultSession.getPropagationManager().addListener(propagationListener);
 		}
@@ -145,6 +126,27 @@ public final class SessionFactory {
 					"Endless loop in initialization detected, session terminated", e);
 		}
 		return defaultSession;
+	}
+
+	/**
+	 * Factory-method that creates instances of Session.
+	 * 
+	 * @param id the ID
+	 * @param knowledgeBase the knowledge base used in the case.
+	 * @param formStrategy the specified {@link FormStrategy}
+	 * @return new Session instance based on the specified id, knowledge base
+	 *         and form strategy
+	 * @deprecated use Interview.setFormStrategy() to configure the FormStrategy
+	 *             in an Interview or use the PSConfig of the PSMethodInterview
+	 *             to configure the FormStrategy
+	 */
+	@Deprecated
+	public static synchronized DefaultSession createSession(String id,
+			KnowledgeBase knowledgeBase,
+			FormStrategy formStrategy, Date creationDate) {
+		DefaultSession session = createSession(id, knowledgeBase, creationDate);
+		session.getInterview().setFormStrategy(formStrategy);
+		return session;
 	}
 
 	/**

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2013 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -17,19 +16,22 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.interviewmanager.Form;
+import de.d3web.core.session.interviewmanager.FormStrategy;
+import de.d3web.core.session.interviewmanager.InterviewAgenda;
 
 /**
- * The Interview manages the interview state
  * 
- * @author Volker Belli & Joachim Baumeister (denkbares GmbH)
- * @deprecated use de.d3web.interview.inference.Interview
+ * @author Markus Friedrich (denkbares GmbH)
+ * @created 25.03.2013
  */
-@Deprecated
-public interface Interview {
+@SuppressWarnings("deprecation")
+public interface Interview extends de.d3web.core.session.interviewmanager.Interview, SessionObject {
 
 	/**
 	 * Returns the next form of the Interview
@@ -71,4 +73,5 @@ public interface Interview {
 	 *         active state on the {@link InterviewAgenda}
 	 */
 	boolean isActive(InterviewObject interviewObject);
+
 }

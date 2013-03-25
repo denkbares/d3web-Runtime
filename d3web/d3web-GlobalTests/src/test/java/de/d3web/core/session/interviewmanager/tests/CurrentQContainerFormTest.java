@@ -41,13 +41,13 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.CurrentQContainerFormStrategy;
-import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.CurrentQContainerFormStrategy;
+import de.d3web.interview.EmptyForm;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class CurrentQContainerFormTest {

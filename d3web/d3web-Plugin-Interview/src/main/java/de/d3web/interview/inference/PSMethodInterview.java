@@ -29,9 +29,12 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.interviewmanager.Interview;
+import de.d3web.interview.DefaultInterview;
+import de.d3web.interview.Interview;
+import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 
 /**
  * This PSMethod is used to notify the {@link Interview} of new facts added to
@@ -41,14 +44,15 @@ import de.d3web.core.session.interviewmanager.Interview;
  * @author joba
  * 
  */
-public class PSMethodInterview extends PSMethodAdapter {
+public class PSMethodInterview extends PSMethodAdapter implements SessionObjectSource<Interview> {
 
 	private static PSMethodInterview instance;
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
+		Interview interview = session.getSessionObject(this);
 		for (PropagationEntry change : changes) {
-			session.getInterview().notifyFactChange(change);
+			interview.notifyFactChange(change);
 		}
 		// force sorting
 		if (!changes.isEmpty()) {
@@ -59,7 +63,7 @@ public class PSMethodInterview extends PSMethodAdapter {
 			 * are also changing the objects contained (not only sorting) and
 			 * therefore have other side effects.
 			 */
-			Collection<InterviewObject> objects = session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects();
+			Collection<InterviewObject> objects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
 			Logger.getLogger(getClass().getName()).fine(
 					"Agenda (" + changes.size() + " changes): " + objects);
 		}
@@ -99,5 +103,13 @@ public class PSMethodInterview extends PSMethodAdapter {
 	@Override
 	public double getPriority() {
 		return 3;
+	}
+
+	@Override
+	public Interview createSessionObject(Session session) {
+		DefaultInterview interview = new DefaultInterview(session);
+		// TODO: read PSConfig to get strategy
+		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		return interview;
 	}
 }

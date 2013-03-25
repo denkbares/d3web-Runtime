@@ -30,7 +30,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.interviewmanager.Interview;
 
 /**
  * The Session interface represents an active problem-solving session. Here,
@@ -66,9 +65,11 @@ public interface Session extends SessionHeader {
 	 * The interview controls the dialog behavior of the session, i.e. the
 	 * indication of {@link Question} and {@link QContainer} instances.
 	 * 
+	 * @deprecated use Session.getSessionObject(PSMethodInterview)
 	 * @return Interview
 	 */
-	Interview getInterview();
+	@Deprecated
+	de.d3web.core.session.interviewmanager.Interview getInterview();
 
 	/**
 	 * The {@link Blackboard} manages all entered and all derived facts of this

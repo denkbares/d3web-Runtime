@@ -42,11 +42,11 @@ import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodStrategic;
+import de.d3web.interview.EmptyForm;
+import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**

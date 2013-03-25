@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
@@ -39,10 +41,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.interviewmanager.DefaultInterview;
-import de.d3web.core.session.interviewmanager.FormStrategy;
-import de.d3web.core.session.interviewmanager.Interview;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.plugin.Autodetect;
@@ -54,9 +52,8 @@ import de.d3web.plugin.PluginManager;
 
 /**
  * The {@link DefaultSession} is the default implementation of {@link Session}.
- * Here, the {@link Blackboard}, {@link Interview}, and
- * {@link PropagationManager} are managed, that together represent the behavior
- * of a {@link Session}.
+ * Here, the {@link Blackboard}, and {@link PropagationManager} are managed,
+ * that together represent the behavior of a {@link Session}.
  * 
  * @author joba
  * @see SessionObject
@@ -65,7 +62,6 @@ public class DefaultSession implements Session {
 
 	private final KnowledgeBase kb;
 	private final DefaultPropagationManager propagationController;
-	private final Interview interview;
 
 	private final Map<SessionObjectSource<?>, SessionObject> dynamicStore;
 
@@ -109,8 +105,6 @@ public class DefaultSession implements Session {
 		this.propagationController = new DefaultPropagationManager(this);
 
 		// Interview should be defined very late, since it uses blackboard
-		this.interview = new DefaultInterview(this);
-		this.interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		this.protocol = new DefaultProtocol();
 		if (psm) {
 			// register some common problem solving methods
@@ -172,11 +166,6 @@ public class DefaultSession implements Session {
 		}
 	}
 
-	DefaultSession(String id, KnowledgeBase knowledgebase, FormStrategy formStrategy, Date creationDate) {
-		this(id, knowledgebase, creationDate);
-		getInterview().setFormStrategy(formStrategy);
-	}
-
 	void initPSMethods() {
 		// after adding the ps methods, we init inside a propagation,
 		// because it may also
@@ -224,9 +213,22 @@ public class DefaultSession implements Session {
 		return id;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Interview getInterview() {
-		return interview;
+	@Deprecated
+	public de.d3web.core.session.interviewmanager.Interview getInterview() {
+		Class<? extends PSMethod> psMethodInterviewClass;
+		try {
+			psMethodInterviewClass = (Class<? extends PSMethod>) Class.forName("de.d3web.interview.inference.PSMethodInterview");
+		}
+		catch (ClassNotFoundException e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+					"No PSMethodInterview contained in session.");
+			return null;
+		}
+		PSMethod psMethodInstance = getPSMethodInstance(psMethodInterviewClass);
+		Object sessionObject = this.getSessionObject((SessionObjectSource<?>) psMethodInstance);
+		return (de.d3web.core.session.interviewmanager.Interview) sessionObject;
 	}
 
 	@Override

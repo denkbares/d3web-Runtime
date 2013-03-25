@@ -40,13 +40,13 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.EmptyForm;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
-import de.d3web.core.session.interviewmanager.NextUnansweredQuestionFormStrategy;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.interview.EmptyForm;
+import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class CostBenefitAgendaSortingTest {

@@ -17,7 +17,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This class always creates a new {@link Form} that contains the
@@ -112,6 +113,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 	 *         (possible follow-up) question
 	 */
 	private boolean hasActiveQuestions(QContainer container, Session session) {
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		for (TerminologyObject child : container.getChildren()) {
 			if (child instanceof Question) {
 				Question question = (Question) child;
@@ -121,7 +123,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				else {
 					List<Question> followUpQuestions = collectFollowUpQuestions(question);
 					for (Question followUp : followUpQuestions) {
-						if (session.getInterview().isActive(followUp)) {
+						if (interview.isActive(followUp)) {
 							return true;
 						}
 					}

@@ -16,7 +16,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.session.interviewmanager;
+package de.d3web.interview;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +35,9 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.interviewmanager.Form;
+import de.d3web.core.session.interviewmanager.FormStrategy;
+import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -51,6 +54,7 @@ import de.d3web.core.session.values.UndefinedValue;
  * 
  * @author joba
  */
+@SuppressWarnings("deprecation")
 public class DefaultInterview implements Interview {
 
 	private final InterviewAgenda agenda;
