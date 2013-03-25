@@ -48,6 +48,7 @@ import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class DialogAgendaTest {
@@ -95,7 +96,7 @@ public class DialogAgendaTest {
 
 		initQuestion = new QuestionOC(root, "all", "pregnacyQuestions", "height+weight");
 		session = SessionFactory.createSession(kb);
-		agenda = session.getInterview().getInterviewAgenda();
+		agenda = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda();
 	}
 
 	@Test

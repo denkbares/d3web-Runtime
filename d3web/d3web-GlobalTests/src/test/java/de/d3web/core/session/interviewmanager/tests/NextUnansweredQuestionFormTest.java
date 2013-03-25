@@ -41,12 +41,14 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.EmptyForm;
+import de.d3web.interview.Form;
+import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class NextUnansweredQuestionFormTest {
@@ -59,6 +61,7 @@ public class NextUnansweredQuestionFormTest {
 	QuestionOC sex, pregnant, ask_for_pregnancy, initQuestion;
 	QuestionNum weight, height;
 	ChoiceValue female, male, dont_ask;
+	private Interview interview;
 
 	@Before
 	public void setUp() throws Exception {
@@ -94,8 +97,9 @@ public class NextUnansweredQuestionFormTest {
 		initQuestion = new QuestionOC(root, "initQuestion", "all", "pregnacyQuestions",
 				"height+weight");
 		session = SessionFactory.createSession(kb);
-		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		agenda = session.getInterview().getInterviewAgenda();
+		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		agenda = interview.getInterviewAgenda();
 	}
 
 	@Test
@@ -109,19 +113,19 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'sex' to be the first question
-		InterviewObject formQuestions = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject formQuestions = interview.nextForm().getInterviewObject();
 		assertEquals(sex, formQuestions);
 
 		// ANSWER: sex=female
 		// EXPECT: pregnant to be the next question
 		setValue(sex, female);
-		formQuestions = session.getInterview().nextForm().getInterviewObject();
+		formQuestions = interview.nextForm().getInterviewObject();
 		assertEquals(pregnant, formQuestions);
 
 		// ANSWER: pregnant=no
 		// EXPECT: no more questions to ask
 		setValue(pregnant, new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "no")));
-		Form form = session.getInterview().nextForm();
+		Form form = interview.nextForm();
 		assertEquals(EmptyForm.getInstance(), form);
 	}
 
@@ -134,14 +138,14 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
-		InterviewObject nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject nextQuestion = interview.nextForm().getInterviewObject();
 		assertEquals(sex, nextQuestion);
 
 		// SET question sex=male
 		// EXPECT the second question 'ask_for_pregnancy' to be the next
 		// question in the form
 		setValue(sex, male);
-		nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		nextQuestion = interview.nextForm().getInterviewObject();
 		assertEquals(ask_for_pregnancy, nextQuestion);
 
 		// SET : question ask_for_pregnancy=no
@@ -149,7 +153,7 @@ public class NextUnansweredQuestionFormTest {
 		// no more
 		// questions to be asked next, i.e., the EmptyForm singleton is returned
 		setValue(ask_for_pregnancy, KnowledgeBaseUtils.findValue(ask_for_pregnancy, "no"));
-		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
+		assertEquals(EmptyForm.getInstance(), interview.nextForm());
 	}
 
 	@Test
@@ -166,14 +170,14 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
-		InterviewObject nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject nextQuestion = interview.nextForm().getInterviewObject();
 		assertEquals(sex, nextQuestion);
 
 		// SET question sex=female
 		// EXPECT the follow-up question 'pregnant' to be the next question in
 		// the form
 		setValue(sex, female);
-		nextQuestion = session.getInterview().nextForm().getInterviewObject();
+		nextQuestion = interview.nextForm().getInterviewObject();
 
 		// TODO: overwork FormStrategy to copy with follow-up questions
 		assertEquals(pregnant, nextQuestion);

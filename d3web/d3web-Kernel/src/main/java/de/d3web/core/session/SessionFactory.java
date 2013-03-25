@@ -35,7 +35,6 @@ import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
@@ -133,7 +132,7 @@ public final class SessionFactory {
 	 * 
 	 * @param id the ID
 	 * @param knowledgeBase the knowledge base used in the case.
-	 * @param formStrategy the specified {@link FormStrategy}
+	 * @param formStrategy the specified
 	 * @return new Session instance based on the specified id, knowledge base
 	 *         and form strategy
 	 * @deprecated use Interview.setFormStrategy() to configure the FormStrategy
@@ -143,7 +142,7 @@ public final class SessionFactory {
 	@Deprecated
 	public static synchronized DefaultSession createSession(String id,
 			KnowledgeBase knowledgeBase,
-			FormStrategy formStrategy, Date creationDate) {
+			de.d3web.core.session.interviewmanager.FormStrategy formStrategy, Date creationDate) {
 		DefaultSession session = createSession(id, knowledgeBase, creationDate);
 		session.getInterview().setFormStrategy(formStrategy);
 		return session;

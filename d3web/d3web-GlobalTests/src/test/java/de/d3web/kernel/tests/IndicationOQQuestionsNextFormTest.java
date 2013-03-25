@@ -42,9 +42,10 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -91,8 +92,8 @@ public class IndicationOQQuestionsNextFormTest {
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kb);
-		agenda = session.getInterview().getInterviewAgenda();
-		interview = session.getInterview();
+		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		agenda = interview.getInterviewAgenda();
 	}
 
 	// add the knowledge base objects, i.e., questions and answers
@@ -275,7 +276,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterview().nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element.", intervObj != null);
 
@@ -298,7 +299,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterview().nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element, but returned .", intervObj != null);
 
@@ -343,7 +344,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterview().nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element. ", intervObj != null);
 
@@ -367,7 +368,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = session.getInterview().nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getInterviewObject();
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element.", intervObj != null);
 

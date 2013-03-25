@@ -39,7 +39,9 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.interview.EmptyForm;
+import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -58,6 +60,7 @@ public class IndicationInACyclicHierarchy {
 	QContainer pregnancyQuestions;
 	QuestionOC pregnant, pregnancyTest;
 	ChoiceValue certain, dontKnow, yes;
+	private Interview interview;
 
 	@Before
 	public void setUp() throws Exception {
@@ -92,31 +95,32 @@ public class IndicationInACyclicHierarchy {
 		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
 
 		session = SessionFactory.createSession(kb);
-		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		agenda = session.getInterview().getInterviewAgenda();
+		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		agenda = interview.getInterviewAgenda();
 	}
 
 	@Test
 	public void testWithNoCyclicCall() {
 		// the cyclic indication is not activated for pregnant=certain
-		InterviewObject nextObjectOnAgenda = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject nextObjectOnAgenda = interview.nextForm().getInterviewObject();
 		assertEquals(pregnant, nextObjectOnAgenda);
 
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(pregnant, certain));
-		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
+		assertEquals(EmptyForm.getInstance(), interview.nextForm());
 	}
 
 	@Test
 	public void testWithCyclicCall() {
 		// the cyclic indication is not activated for pregnant=certain
-		InterviewObject nextObjectOnAgenda = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject nextObjectOnAgenda = interview.nextForm().getInterviewObject();
 		assertEquals(pregnant, nextObjectOnAgenda);
 
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(pregnant, dontKnow));
-		nextObjectOnAgenda = session.getInterview().nextForm().getInterviewObject();
+		nextObjectOnAgenda = interview.nextForm().getInterviewObject();
 		assertEquals(pregnancyTest, nextObjectOnAgenda);
 
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(pregnancyTest, yes));
-		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
+		assertEquals(EmptyForm.getInstance(), interview.nextForm());
 	}
 }

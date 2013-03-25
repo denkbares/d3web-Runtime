@@ -56,6 +56,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * Implements a SequencerStrategy that creates a simple question by question
@@ -80,7 +81,8 @@ public class DefaultBotStrategy implements BotStrategy {
 
 	@Override
 	public InterviewObject[] getNextSequenceItems(Session session) {
-		InterviewObject interviewObject = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject interviewObject = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getInterviewObject();
 		if (interviewObject == null) {
 			return new InterviewObject[] {};
 		}
@@ -167,7 +169,8 @@ public class DefaultBotStrategy implements BotStrategy {
 
 	private boolean isRelevant(Session session, InterviewObject object) {
 		// if the object is indicated, it is relevant
-		if (session.getInterview().isActive(object)) return true;
+		if (session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).isActive(
+				object)) return true;
 		// or if the question is direct child to a relevant qcontainer
 		// and a qcontainer is relevant if the qcontainer itself or any ancestor
 		// is indicated
@@ -181,7 +184,7 @@ public class DefaultBotStrategy implements BotStrategy {
 
 	@Override
 	public boolean isFinished(Session session) {
-		return !session.getInterview().nextForm().isNotEmpty();
+		return !session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).nextForm().isNotEmpty();
 	}
 
 	/**

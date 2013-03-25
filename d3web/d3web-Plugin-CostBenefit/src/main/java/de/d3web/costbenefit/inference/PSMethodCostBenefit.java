@@ -74,6 +74,7 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStrategy;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
@@ -138,7 +139,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	@Override
 	public void init(Session session) {
 		CostBenefitCaseObject caseObject = session.getSessionObject(this);
-		session.getInterview().getInterviewAgenda().setAgendaSortingStrategy(
+		session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().setAgendaSortingStrategy(
 				new CostBenefitAgendaSortingStrategy(caseObject));
 		// calculateNewPath(caseObject);
 		// activateNextQContainer(caseObject);

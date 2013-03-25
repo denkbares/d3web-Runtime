@@ -44,7 +44,6 @@ import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
@@ -54,6 +53,9 @@ import de.d3web.costbenefit.inference.ExpertMode;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.interview.Form;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -102,7 +104,7 @@ public class TestRuleCBCompatibilityQContainer {
 		RuleFactory.createIndicationRule(followUpQuestions, new CondEqual(q1, valueAbnormal));
 		ValueTransition vt1 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
 				valueStateA, new CondEqual(q1, valueNormal)), new ConditionalValueSetter(
-						valueStateA, new CondEqual(q1b, valueAnswer1b))));
+				valueStateA, new CondEqual(q1b, valueAnswer1b))));
 		RuleFactory.createIndicationRule(followUpQuestions, new CondEqual(q1, valueAbnormal));
 		RuleFactory.createSetValueRule(q1b, Unknown.getInstance(), new CondEqual(q1,
 				valueNormal));
@@ -137,7 +139,8 @@ public class TestRuleCBCompatibilityQContainer {
 		Session session = SessionFactory.createSession(kb);
 		ExpertMode em = ExpertMode.getExpertMode(session);
 		em.selectTarget(target);
-		Form nextForm = session.getInterview().nextForm();
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Form nextForm = interview.nextForm();
 		CostBenefitCaseObject cbObject = session.getSessionObject(session.getPSMethodInstance(PSMethodCostBenefit.class));
 		Assert.assertEquals(0, cbObject.getCurrentPathIndex());
 		int i = 0;
@@ -145,7 +148,7 @@ public class TestRuleCBCompatibilityQContainer {
 			InterviewObject next = nextForm.getInterviewObject();
 			Assert.assertEquals(questions[i++], next);
 			answer(session, next, abnorm);
-			nextForm = session.getInterview().nextForm();
+			nextForm = interview.nextForm();
 		}
 		// Check that the path has been done completely
 		Assert.assertEquals(-1, cbObject.getCurrentPathIndex());

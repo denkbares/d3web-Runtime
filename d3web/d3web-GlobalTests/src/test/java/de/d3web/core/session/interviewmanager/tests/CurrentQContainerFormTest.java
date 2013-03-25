@@ -41,13 +41,15 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.Form;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.CurrentQContainerFormStrategy;
 import de.d3web.interview.EmptyForm;
+import de.d3web.interview.Form;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class CurrentQContainerFormTest {
@@ -60,6 +62,7 @@ public class CurrentQContainerFormTest {
 	QuestionOC sex, pregnant, ask_for_pregnancy, initQuestion;
 	QuestionNum weight, height;
 	ChoiceValue female, male, dont_ask;
+	private Interview interview;
 
 	@Before
 	public void setUp() throws Exception {
@@ -88,7 +91,7 @@ public class CurrentQContainerFormTest {
 		pregnant = new QuestionOC(sex, "pregnant", new String[] {
 				"yes", "no" });
 		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", new String[] {
-						"yes", "no" });
+				"yes", "no" });
 
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = new QContainer(root, "heightWeightQuestions");
@@ -96,10 +99,11 @@ public class CurrentQContainerFormTest {
 		height = new QuestionNum(heightWeightQuestions, "height");
 
 		initQuestion = new QuestionOC(root, "initQuestion", new String[] {
-						"all", "pregnacyQuestions", "height+weight" });
+				"all", "pregnacyQuestions", "height+weight" });
 		session = SessionFactory.createSession(kb);
-		session.getInterview().setFormStrategy(new CurrentQContainerFormStrategy());
-		agenda = session.getInterview().getInterviewAgenda();
+		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview.setFormStrategy(new CurrentQContainerFormStrategy());
+		agenda = interview.getInterviewAgenda();
 	}
 
 	@Test
@@ -114,34 +118,34 @@ public class CurrentQContainerFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject formObject = interview.nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET : first question of pregnancyQuestions (no follow-up question
 		// indicated)
 		// EXPECT: pregnancyQuestions should be still active
 		setValue(sex, male);
-		formObject = session.getInterview().nextForm().getInterviewObject();
+		formObject = interview.nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET : second question of pregnancyQuestions
 		// EXPECT: now 'heightWeightQuestions' should be active
 		setValue(ask_for_pregnancy,
 				new ChoiceValue(KnowledgeBaseUtils.findChoice(ask_for_pregnancy, "no")));
-		formObject = session.getInterview().nextForm().getInterviewObject();
+		formObject = interview.nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
 
 		// SET : first question of 'heightWeightQuestions'
 		// EXPECT: now 'heightWeightQuestions' should be still active
 		setValue(height, new NumValue(100));
-		formObject = session.getInterview().nextForm().getInterviewObject();
+		formObject = interview.nextForm().getInterviewObject();
 		assertEquals(heightWeightQuestions, formObject);
 
 		// SET : second question of 'heightWeightQuestions'
 		// EXPECT: now we expect an EMPTY_FORM since the agenda should be empty
 		// now
 		setValue(weight, new NumValue(100));
-		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
+		assertEquals(EmptyForm.getInstance(), interview.nextForm());
 	}
 
 	@Test
@@ -160,7 +164,7 @@ public class CurrentQContainerFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = session.getInterview().nextForm().getInterviewObject();
+		InterviewObject formObject = interview.nextForm().getInterviewObject();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET : ask_for_pregnancy = no
@@ -170,7 +174,7 @@ public class CurrentQContainerFormTest {
 		setValue(ask_for_pregnancy,
 				new ChoiceValue(KnowledgeBaseUtils.findChoice(ask_for_pregnancy, "no")));
 		setValue(sex, female);
-		Form form = session.getInterview().nextForm();
+		Form form = interview.nextForm();
 		assertEquals(pregnancyQuestions, form.getInterviewObject());
 
 		// SET : answer follow-up question 'pregnant=no'
@@ -178,14 +182,14 @@ public class CurrentQContainerFormTest {
 		// active,
 		// since all questions (including follow-ups) have been answered
 		setValue(pregnant, new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "no")));
-		assertEquals(heightWeightQuestions, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(heightWeightQuestions, interview.nextForm().getInterviewObject());
 
 		// SET : answer the questions 'height' and 'weight'
 		// EXPECT: all questions on the agenda are answered, so next form should
 		// be empty
 		setValue(height, new NumValue(100));
 		setValue(weight, new NumValue(100));
-		assertEquals(EmptyForm.getInstance(), session.getInterview().nextForm());
+		assertEquals(EmptyForm.getInstance(), interview.nextForm());
 	}
 
 	private void setValue(Question question, Value value) {

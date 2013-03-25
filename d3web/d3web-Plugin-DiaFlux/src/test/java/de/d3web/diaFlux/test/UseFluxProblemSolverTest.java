@@ -57,6 +57,8 @@ import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.indication.ActionInstantIndication;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
@@ -158,10 +160,11 @@ public class UseFluxProblemSolverTest {
 		Rating solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));// this is true
-		List<InterviewObject> currentlyActiveObjects = session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects();
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		List<InterviewObject> currentlyActiveObjects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
 		assertTrue("YesNoQuestion should be on Agenda", currentlyActiveObjects.contains(questionYN));
 		assertTrue("YesNoQuestion should be the next form",
-				session.getInterview().nextForm().getInterviewObject() == questionYN);
+				interview.nextForm().getInterviewObject() == questionYN);
 		// Answer question with "Yes", this should execute the flow
 		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(

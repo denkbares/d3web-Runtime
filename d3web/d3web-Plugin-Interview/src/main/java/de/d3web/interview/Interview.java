@@ -21,8 +21,6 @@ package de.d3web.interview;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.interviewmanager.Form;
-import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 
 /**
@@ -39,6 +37,12 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	 * @return next Form
 	 */
 	Form nextForm();
+
+	/**
+	 * @deprecated use setFormStrategy(de.d3web.interview.FormStrategy strategy)
+	 */
+	@Deprecated
+	void setFormStrategy(de.d3web.core.session.interviewmanager.FormStrategy strategy);
 
 	/**
 	 * Optional configuration: Explicitly set a strategy that defines how the

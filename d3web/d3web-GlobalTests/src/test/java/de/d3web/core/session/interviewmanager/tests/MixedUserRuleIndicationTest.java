@@ -36,8 +36,9 @@ import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -55,9 +56,9 @@ public class MixedUserRuleIndicationTest {
 
 	KnowledgeBase kb;
 	Session session;
-	InterviewAgenda agenda;
 	QuestionNum weight, abnormalWeight, height, importantQuestion;
 	QContainer init, qc;
+	private Interview interview;
 
 	@Before
 	public void setUp() throws Exception {
@@ -85,40 +86,41 @@ public class MixedUserRuleIndicationTest {
 		// Define rule for follow-up question
 		// r1: weight > 120 => indicate abnormalWeight
 		RuleFactory.createIndicationRule(abnormalWeight, new CondNumGreater(weight, 120.0));
+		session = SessionFactory.createSession(kb);
+		interview = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodInterview.class));
 	}
 
 	@Test
 	public void testStandardIndicationWithoutFollowQuestion() {
 		// Summary: First question is answered, but follow-up indication rule
 		// does not fire, so the second question is presented next
-		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
-		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 100.0));
 
 		// expect the second question "height" and not the follow-up question,
 		// since the rule did not fire
-		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getInterviewObject());
 	}
 
 	@Test
 	public void testStandardIndicationWithFollowQuestion() {
 		// Summary: first question of the questionnaire is answered, then its
 		// follow-up question should be indicated
-		Session session = SessionFactory.createSession(kb);
 
 		// expect the first question of the init container
-		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// expect the follow-up question, since the rule should have fired
-		assertEquals(abnormalWeight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(abnormalWeight, interview.nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "abnormalWeight", 100.0));
 
 		// expect the second question "height" as the last question
-		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getInterviewObject());
 	}
 
 	@Test
@@ -126,10 +128,8 @@ public class MixedUserRuleIndicationTest {
 		// Summary: A question is selected by the user, which is located in the
 		// same container
 
-		Session session = SessionFactory.createSession(kb);
-
 		// expect the first question of the init container
-		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// now the follow-up question is indicated, but we also indicate the
@@ -139,7 +139,7 @@ public class MixedUserRuleIndicationTest {
 						new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getInterviewObject());
 	}
 
 	@Test
@@ -147,10 +147,8 @@ public class MixedUserRuleIndicationTest {
 		// Summary: A question is selected by the user, which is located in
 		// another container
 
-		Session session = SessionFactory.createSession(kb);
-
 		// expect the first question of the init container
-		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// now the follow-up question is indicated, but we also indicate the
@@ -160,7 +158,7 @@ public class MixedUserRuleIndicationTest {
 						new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(importantQuestion, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(importantQuestion, interview.nextForm().getInterviewObject());
 	}
 
 	@Test
@@ -168,10 +166,8 @@ public class MixedUserRuleIndicationTest {
 		// Summary: A questionnaire is selected by the user, we expect the first
 		// question of this container "qc" to be the next question to be asked
 
-		Session session = SessionFactory.createSession(kb);
-
 		// expect the first question of the init container
-		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// now the follow-up question is indicated, but we also indicate the
@@ -182,7 +178,7 @@ public class MixedUserRuleIndicationTest {
 						new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(importantQuestion, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(importantQuestion, interview.nextForm().getInterviewObject());
 	}
 
 }

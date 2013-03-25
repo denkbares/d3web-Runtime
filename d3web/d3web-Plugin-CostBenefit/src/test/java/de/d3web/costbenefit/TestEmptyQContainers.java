@@ -50,6 +50,8 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -116,14 +118,15 @@ public class TestEmptyQContainers {
 				new ChoiceValue(lighting)));
 		Assert.assertEquals(b.toString(), blackboard.getValue(state).getValue().toString());
 		// check that follower will be the next QContainer:
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		Assert.assertEquals(followerQuestion,
-				session.getInterview().nextForm().getInterviewObject());
-		Assert.assertTrue(session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects().contains(
+				interview.nextForm().getInterviewObject());
+		Assert.assertTrue(interview.getInterviewAgenda().getCurrentlyActiveObjects().contains(
 				follower));
 		// set testStep2 as target
 		ExpertMode.getExpertMode(session).selectTarget(testStep2);
 		// check that follower is not indicated any more:
-		Assert.assertFalse(session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects().contains(
+		Assert.assertFalse(interview.getInterviewAgenda().getCurrentlyActiveObjects().contains(
 				follower));
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(okQuestionOC, new ChoiceValue(ok)));
 		Assert.assertEquals(b.toString(), blackboard.getValue(state).getValue().toString());
@@ -135,8 +138,8 @@ public class TestEmptyQContainers {
 		// now the teststep should be executed
 		Assert.assertEquals(b.toString(), blackboard.getValue(state).getValue().toString());
 		Assert.assertEquals(followerQuestion,
-				session.getInterview().nextForm().getInterviewObject());
-		Assert.assertTrue(session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects().contains(
+				interview.nextForm().getInterviewObject());
+		Assert.assertTrue(interview.getInterviewAgenda().getCurrentlyActiveObjects().contains(
 				follower));
 		ExpertMode.getExpertMode(session).selectTarget(testStep2);
 		// teststep2 should not be executed...

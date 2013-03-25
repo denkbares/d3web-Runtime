@@ -57,6 +57,7 @@ import de.d3web.costbenefit.inference.astar.State;
 import de.d3web.costbenefit.inference.astar.TPHeuristic;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -157,7 +158,9 @@ public class TargetOnlyTest {
 		sequence = session.getSessionObject(cb).getCurrentSequence();
 		Assert.assertEquals(1, sequence.length);
 		Assert.assertEquals(targetOnly, sequence[0]);
-		Assert.assertEquals(q3, session.getInterview().nextForm().getInterviewObject());
+		Assert.assertEquals(
+				q3,
+				session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getInterviewObject());
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q3, valueAnswer3));
 		// after answering q3, target should be applicable
 		em.selectTarget(target);

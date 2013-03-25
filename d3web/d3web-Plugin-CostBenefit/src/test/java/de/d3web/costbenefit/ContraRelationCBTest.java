@@ -31,10 +31,11 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.Form;
-import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.interview.EmptyForm;
+import de.d3web.interview.Form;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -53,7 +54,7 @@ public class ContraRelationCBTest {
 		KnowledgeBase kb = PersistenceManager.getInstance().load(
 				new File("src/test/resources/xcl JUnit.d3web"));
 		Session session = SessionFactory.createSession(kb);
-		Interview interview = session.getInterview();
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		Form nextForm = interview.nextForm();
 		Assert.assertEquals("Start..", nextForm.getInterviewObject().getName());
 		session.getBlackboard().addValueFact(

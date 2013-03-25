@@ -56,6 +56,8 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -234,9 +236,10 @@ public class TestKfz {
 	public void testCase() {
 		Session session = SessionFactory.createSession(kb);
 
-		while (session.getInterview().nextForm().isNotEmpty()) {
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		while (interview.nextForm().isNotEmpty()) {
 
-			QASet qaSet = (QASet) session.getInterview().nextForm().getInterviewObject();
+			QASet qaSet = (QASet) interview.nextForm().getInterviewObject();
 			assertNotNull(qaSet);
 			assertTrue(
 					"Keine Frage, sondern ein " + qaSet.getClass() + "-Objekt",

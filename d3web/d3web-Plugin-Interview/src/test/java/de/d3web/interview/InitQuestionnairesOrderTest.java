@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
@@ -64,7 +65,8 @@ public class InitQuestionnairesOrderTest {
 
 		// check if init-question on agenda has same order than knowledge base
 		Session session = SessionFactory.createSession(kb);
-		List<InterviewObject> agenda = session.getInterview().getInterviewAgenda().getCurrentlyActiveObjects();
+		List<InterviewObject> agenda = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().getCurrentlyActiveObjects();
 		List<QASet> initQuestions = kb.getInitQuestions();
 		Assert.assertEquals(
 				"order of init questions must be stable",

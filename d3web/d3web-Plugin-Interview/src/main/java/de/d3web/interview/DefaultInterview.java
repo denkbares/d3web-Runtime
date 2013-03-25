@@ -35,8 +35,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.interviewmanager.Form;
-import de.d3web.core.session.interviewmanager.FormStrategy;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
@@ -54,7 +52,6 @@ import de.d3web.core.session.values.UndefinedValue;
  * 
  * @author joba
  */
-@SuppressWarnings("deprecation")
 public class DefaultInterview implements Interview {
 
 	private final InterviewAgenda agenda;
@@ -326,12 +323,17 @@ public class DefaultInterview implements Interview {
 	}
 
 	@Override
-	public void setFormStrategy(FormStrategy strategy) {
-		this.formStrategy = strategy;
+	public void setFormStrategy(de.d3web.core.session.interviewmanager.FormStrategy strategy) {
+		this.formStrategy = (FormStrategy) strategy;
 	}
 
 	@Override
 	public boolean isActive(InterviewObject interviewObject) {
 		return getInterviewAgenda().hasState(interviewObject, InterviewState.ACTIVE);
+	}
+
+	@Override
+	public void setFormStrategy(FormStrategy strategy) {
+		this.formStrategy = strategy;
 	}
 }

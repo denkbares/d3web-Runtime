@@ -66,7 +66,7 @@ public interface Session extends SessionHeader {
 	 * indication of {@link Question} and {@link QContainer} instances.
 	 * 
 	 * @deprecated use Session.getSessionObject(PSMethodInterview)
-	 * @return Interview
+	 * @return the acutal Interview or null if no interview is present
 	 */
 	@Deprecated
 	de.d3web.core.session.interviewmanager.Interview getInterview();

@@ -46,7 +46,9 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.interview.EmptyForm;
+import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 public class CostBenefitAgendaSortingTest {
@@ -61,6 +63,7 @@ public class CostBenefitAgendaSortingTest {
 	QuestionNum weight, height;
 	ChoiceValue female, male, dont_ask;
 	PSMethodCostBenefit costBenefit;
+	private Interview interview;
 
 	@Before
 	public void setUp() throws Exception {
@@ -94,8 +97,9 @@ public class CostBenefitAgendaSortingTest {
 		costBenefit = new PSMethodCostBenefit();
 		costBenefit.init(session);
 
-		session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
-		agenda = session.getInterview().getInterviewAgenda();
+		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		agenda = interview.getInterviewAgenda();
 	}
 
 	@Test
@@ -115,40 +119,40 @@ public class CostBenefitAgendaSortingTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: weight is the next question
-		assertEquals(weight, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getInterviewObject());
 		// SET: weight = 80
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(weight, new NumValue(80)));
 
 		// EXPECT: height is the next question
-		assertEquals(height, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getInterviewObject());
 		// SET: height = 180
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(height, new NumValue(180)));
 
 		// EXPECT: all question have been answered, so the QContainer
 		// heightWeightQuestion should be removed
-		assertFalse(session.getInterview().isActive(heightWeightQuestions));
+		assertFalse(interview.isActive(heightWeightQuestions));
 		// EXPECT: QContainer pregnancyQuestions is still on agenda
-		assertTrue(session.getInterview().isActive(pregnancyQuestions));
+		assertTrue(interview.isActive(pregnancyQuestions));
 
 		// EXPECT: sex is the next question
-		assertEquals(sex, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getInterviewObject());
 		// SET: sex = male
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(sex, male));
 
 		// EXPECT: name is the next question
-		assertEquals(name, session.getInterview().nextForm().getInterviewObject());
+		assertEquals(name, interview.nextForm().getInterviewObject());
 		// SET: name = "joba"
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(name, new TextValue("joba")));
 
 		// EXPECT: all question have been answered, so the QContainer
 		// pregnancyQuestions should be removed
-		assertFalse(session.getInterview().isActive(pregnancyQuestions));
+		assertFalse(interview.isActive(pregnancyQuestions));
 
 		// EXPECT: the agenda is empty now
-		assertEquals(session.getInterview().nextForm(), EmptyForm.getInstance());
+		assertEquals(interview.nextForm(), EmptyForm.getInstance());
 	}
 
 }

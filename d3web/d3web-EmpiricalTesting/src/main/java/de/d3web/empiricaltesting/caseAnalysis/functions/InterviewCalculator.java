@@ -31,6 +31,7 @@ import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
+import de.d3web.interview.inference.PSMethodInterview;
 
 public class InterviewCalculator extends PrecisionRecallCalculator {
 
@@ -38,7 +39,8 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 
 	public InterviewCalculator(KnowledgeBase kb) {
 		this.session = SessionFactory.createSession(kb);
-		this.session.getInterview().setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).setFormStrategy(
+				new NextUnansweredQuestionFormStrategy());
 	}
 
 	// -------Rated Precision--------
@@ -118,7 +120,8 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Question which will be asked next.
 	 */
 	private Question getNextQuestion() {
-		return (Question) session.getInterview().nextForm().getInterviewObject();
+		return (Question) session.getSessionObject(
+				session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getInterviewObject();
 	}
 
 }
