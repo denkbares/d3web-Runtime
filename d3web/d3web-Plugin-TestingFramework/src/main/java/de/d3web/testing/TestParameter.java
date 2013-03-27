@@ -47,10 +47,20 @@ public class TestParameter {
 		this(name, type, mode, description, new String[0]);
 	}
 
-	public TestParameter(String name, Type type, Mode mode, String description, String... options) {
-		if (options.length > 0 && type != Type.Enum) {
-			throw new IllegalArgumentException("Options may only be specified for enumerations.");
+	/**
+	 * Creates a parameter of Type Enum with given options.
+	 * 
+	 * @param options the enum options
+	 */
+	public TestParameter(String name, Mode mode, String description, String... options) {
+		this(name, Type.Enum, mode, description, options);
+	}
+
+	private TestParameter(String name, Type type, Mode mode, String description, String... options) {
+		if (options.length == 0 && type == Type.Enum) {
+			throw new IllegalArgumentException("Options must be specified for enumerations.");
 		}
+
 		this.type = type;
 		this.name = name;
 		this.mode = mode;

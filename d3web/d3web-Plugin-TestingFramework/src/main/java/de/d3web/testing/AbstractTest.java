@@ -45,8 +45,8 @@ public abstract class AbstractTest<T> implements Test<T> {
 		return Collections.unmodifiableList(ignoreParameters);
 	}
 
-	protected void addParameter(String name, TestParameter.Type type, TestParameter.Mode mode, String description, String... options) {
-		argParameters.add(new TestParameter(name, type, mode, description, options));
+	protected void addParameter(String name, TestParameter.Mode mode, String description, String... options) {
+		argParameters.add(new TestParameter(name, mode, description, options));
 	}
 
 	protected void addParameter(String name, TestParameter.Type type, TestParameter.Mode mode, String description) {

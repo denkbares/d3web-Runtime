@@ -50,9 +50,9 @@ public class MissingPropertyTest extends KBObjectsTest {
 
 	public MissingPropertyTest() {
 		super("The knowledge base contains {0} {1}s without property {2}: ");
-		this.addParameter("ObjectType", TestParameter.Type.Enum, TestParameter.Mode.Mandatory,
+		this.addParameter("ObjectType", TestParameter.Mode.Mandatory,
 				"The type of object to test.", getAllObjectTypes());
-		this.addParameter("PropertyName", TestParameter.Type.Enum, TestParameter.Mode.Mandatory,
+		this.addParameter("PropertyName", TestParameter.Mode.Mandatory,
 				"The name of the property to test for existence.", getAllPropertyNames());
 
 	}
