@@ -14,6 +14,56 @@
 
 
 	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="UnusedQuestionTest">
+		<parameter id="class"
+			value="de.d3web.test.UnusedQuestionTest" />
+		<parameter id="name" value="UnusedQuestion" />
+		<parameter id="description" value="CITest UnusedQuestion" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="UnusedSolutionTest">
+		<parameter id="class"
+			value="de.d3web.test.UnusedSolutionTest" />
+		<parameter id="name" value="UnusedSolution" />
+		<parameter id="description" value="CITest UnusedSolution" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="UnderivedQuestionTest">
+		<parameter id="class"
+			value="de.d3web.test.UnderivedQuestionTest" />
+		<parameter id="name" value="UnderivedQuestion" />
+		<parameter id="description" value="CITest UnderivedQuestionTest" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="UnderivedSolutionTest">
+		<parameter id="class"
+			value="de.d3web.test.UnderivedSolutionTest" />
+		<parameter id="name" value="UnderivedSolution" />
+		<parameter id="description" value="CITest UnderivedSolutionTest" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="MissingPropertyTest">
+		<parameter id="class"
+			value="de.d3web.test.MissingPropertyTest" />
+		<parameter id="name" value="MissingProperty" />
+		<parameter id="description" value="CITest MissingPropertyTest" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
 		id="EmptyQuestionnaireTest">
 		<parameter id="class"
 			value="de.d3web.test.EmptyQuestionnaireTest" />
