@@ -21,8 +21,11 @@
 package de.d3web.diaFlux.inference;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -235,6 +238,51 @@ public final class DiaFluxUtils {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Returns a DFS mapping of Flow -> contained ComposedNodes. If a flow is called
+	 * from multiple flows, the only first one according to a DF search is
+	 * contained.
+	 * 
+	 * @created 14.03.2013
+	 * @param kb
+	 * @return
+	 */
+	public static Map<Flow, Collection<ComposedNode>> createFlowStructure(KnowledgeBase kb) {
+		List<StartNode> nodes = DiaFluxUtils.getAutostartNodes(kb);
+		assert nodes.size() == 1; // TODO for now works only with 1
+
+		Flow callingFlow = nodes.get(0).getFlow();
+		return createFlowStructure(kb, new HashMap<Flow, Collection<ComposedNode>>(), callingFlow);
+
+	}
+
+	private static Map<Flow, Collection<ComposedNode>> createFlowStructure(KnowledgeBase base, Map<Flow, Collection<ComposedNode>> result, Flow callingFlow) {
+		Collection<ComposedNode> composed = callingFlow.getNodesOfClass(ComposedNode.class);
+		for (ComposedNode composedNode : composed) {
+			Flow calledFlow = DiaFluxUtils.getCalledFlow(base, composedNode);
+			addFlow(result, callingFlow);
+			addFlow(result, calledFlow);
+			addCall(result, callingFlow, composedNode);
+			createFlowStructure(base, result, calledFlow);
+		}
+
+		return result;
+
+	}
+
+	private static void addFlow(Map<Flow, Collection<ComposedNode>> result, Flow calledFlow) {
+		Collection<ComposedNode> flows = result.get(calledFlow);
+		if (flows == null) {
+			flows = new HashSet<ComposedNode>();
+			result.put(calledFlow, flows);
+		}
+	}
+
+	private static void addCall(Map<Flow, Collection<ComposedNode>> result, Flow callingFlow, ComposedNode calledNode) {
+		Collection<ComposedNode> flows = result.get(callingFlow);
+		flows.add(calledNode);
 	}
 
 }
