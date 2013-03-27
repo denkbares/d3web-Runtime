@@ -18,10 +18,15 @@
  */
 package de.d3web.testing;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import de.d3web.testing.Message.Type;
 
 /**
  * General utility class of the Testing Framework.
@@ -71,5 +76,56 @@ public class Utils {
 		Logger.getLogger(testClass.getName()).info(
 				testClass.getSimpleName() + ": " + milliseconds + "/" + milliseconds
 						+ " iterations.");
+	}
+
+	public static Message createErrorMessage(Collection<String> erroneousObjects, String failedMessage, Class<?> messageClass) {
+		ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
+		for (String object : erroneousObjects) {
+			messageObject.add(new MessageObject(object, messageClass));
+		}
+		String nameList = createTextFromList(erroneousObjects);
+		return new Message(Type.FAILURE, failedMessage + "\n" + nameList, messageObject);
+	}
+
+	public static String createTextFromList(Collection<String> list) {
+		if (list.isEmpty()) return "";
+
+		StringBuilder htmlList = new StringBuilder();
+		for (String listItem : list) {
+			htmlList.append(listItem);
+			htmlList.append("\n");
+		}
+		htmlList.deleteCharAt(htmlList.length() - 1);
+		return htmlList.toString();
+	}
+
+	/**
+	 * Compiles ignores to a list of {@link Pattern}. Patterns are applied
+	 * case-insensitive.
+	 * 
+	 * @param ignores the patterns as string to compile
+	 * @return the list of patterns
+	 */
+	public static Collection<Pattern> compileIgnores(String[]... ignores) {
+		Collection<Pattern> ignorePatterns = new LinkedList<Pattern>();
+		for (String[] ignore : ignores) {
+			ignorePatterns.add(Pattern.compile(ignore[0], Pattern.CASE_INSENSITIVE));
+		}
+		return ignorePatterns;
+	}
+
+	/**
+	 * Checks if a string should be ignored based on a list of {@link Pattern}s.
+	 * 
+	 * @created 06.03.2013
+	 * @param object the name of the object to test
+	 * @param ignorePatterns the ignores
+	 * @return s if the object should be ignored
+	 */
+	public static boolean isIgnored(String object, Collection<Pattern> ignorePatterns) {
+		for (Pattern pattern : ignorePatterns) {
+			if (pattern.matcher(object).matches()) return true;
+		}
+		return false;
 	}
 }

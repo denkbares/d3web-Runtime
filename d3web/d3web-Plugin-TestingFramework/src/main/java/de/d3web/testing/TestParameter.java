@@ -30,7 +30,7 @@ import java.util.regex.PatternSyntaxException;
 public class TestParameter {
 
 	public enum Type {
-		String, Regex, Number
+		String, Regex, Number, Enum
 	};
 
 	public enum Mode {
@@ -41,12 +41,21 @@ public class TestParameter {
 	private final String name;
 	private final Mode mode;
 	private final String description;
+	private final String[] options;
 
 	public TestParameter(String name, Type type, Mode mode, String description) {
+		this(name, type, mode, description, new String[0]);
+	}
+
+	public TestParameter(String name, Type type, Mode mode, String description, String... options) {
+		if (options.length > 0 && type != Type.Enum) {
+			throw new IllegalArgumentException("Options may only be specified for enumerations.");
+		}
 		this.type = type;
 		this.name = name;
 		this.mode = mode;
 		this.description = description;
+		this.options = options;
 	}
 
 	public String getDescription() {
@@ -83,15 +92,22 @@ public class TestParameter {
 				return false;
 			}
 		}
-
 		// check whether it is a valid number
-		if (type.equals(Type.Number)) {
+		else if (type.equals(Type.Number)) {
 			try {
 				Double.parseDouble(value);
 			}
 			catch (NumberFormatException e) {
 				return false;
 			}
+		}
+		// check, if a valid option has been supplied for
+		else if (type.equals(Type.Enum)) {
+			for (String string : options) {
+				if (value.equalsIgnoreCase(string))
+					return true;
+			}
+			return false;
 		}
 
 		// hence ok
@@ -108,6 +124,10 @@ public class TestParameter {
 
 	public Mode getMode() {
 		return mode;
+	}
+
+	public String[] getOptions() {
+		return options;
 	}
 
 }
