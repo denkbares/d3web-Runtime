@@ -21,6 +21,7 @@
 package de.d3web.core.knowledge.terminology;
 
 import java.util.Arrays;
+import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 
@@ -37,8 +38,8 @@ public class QuestionYN extends QuestionOC {
 	protected final static String YES_STRING = "Yes";
 	protected final static String NO_STRING = "No";
 
-	private final Choice answerChoiceYes;
-	private final Choice answerChoiceNo;
+	private Choice answerChoiceYes;
+	private Choice answerChoiceNo;
 
 	/**
 	 * Creates a new Yes-No Question, which is a simple QuestionChoice with only
@@ -93,6 +94,34 @@ public class QuestionYN extends QuestionOC {
 	@Override
 	public void addAlternative(Choice answer, int pos) {
 		throw new UnsupportedOperationException("Adding choices to a QuestionYN is not allowed");
+	}
+
+	@Override
+	public void setAlternatives(List<Choice> newChoices) {
+		Choice yes = null;
+		Choice no = null;
+		for (Choice choice : newChoices) {
+			if (choice instanceof AnswerYes) {
+				yes = choice;
+			}
+			else if (choice instanceof AnswerNo) {
+				no = choice;
+			}
+			else {
+				throw new IllegalArgumentException(
+						"Can only add choices of type yes/no to question " + this.getName()
+								+ ", instead of choice " + choice.getName());
+			}
+		}
+		if (yes == null) {
+			throw new IllegalArgumentException("missing answer yes for question " + getName());
+		}
+		if (no == null) {
+			throw new IllegalArgumentException("missing answer no for question " + getName());
+		}
+		this.answerChoiceYes = yes;
+		this.answerChoiceNo = no;
+		super.setAlternatives(newChoices);
 	}
 
 }
