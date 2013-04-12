@@ -33,6 +33,7 @@ import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.interview.DefaultInterview;
+import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 
@@ -46,7 +47,7 @@ import de.d3web.interview.NextUnansweredQuestionFormStrategy;
  */
 public class PSMethodInterview extends PSMethodAdapter implements SessionObjectSource<Interview> {
 
-	private static PSMethodInterview instance;
+	private FormStrategy defaultFormStrategy;
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
@@ -75,13 +76,6 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 		return facts[0];
 	}
 
-	public static PSMethodInterview getInstance() {
-		if (instance == null) {
-			instance = new PSMethodInterview();
-		}
-		return instance;
-	}
-
 	@Override
 	public boolean hasType(Type type) {
 		return type == Type.consumer;
@@ -108,8 +102,20 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 	@Override
 	public Interview createSessionObject(Session session) {
 		DefaultInterview interview = new DefaultInterview(session);
-		// TODO: read PSConfig to get strategy
-		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		if (defaultFormStrategy == null) {
+			interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
+		}
+		else {
+			interview.setFormStrategy(defaultFormStrategy);
+		}
 		return interview;
+	}
+
+	public FormStrategy getDefaultFormStrategy() {
+		return defaultFormStrategy;
+	}
+
+	public void setDefaultFormStrategy(FormStrategy defaultFormStrategy) {
+		this.defaultFormStrategy = defaultFormStrategy;
 	}
 }

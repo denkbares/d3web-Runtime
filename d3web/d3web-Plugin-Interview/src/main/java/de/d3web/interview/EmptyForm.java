@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * Null object to represent an empty form, where no questions are presented in
@@ -77,7 +79,12 @@ public final class EmptyForm implements Form {
 	}
 
 	@Override
-	public List<InterviewObject> getActiveObjects() {
+	public List<Question> getActiveQuestions() {
 		return Collections.emptyList();
+	}
+
+	@Override
+	public QContainer getRoot() {
+		return null;
 	}
 }

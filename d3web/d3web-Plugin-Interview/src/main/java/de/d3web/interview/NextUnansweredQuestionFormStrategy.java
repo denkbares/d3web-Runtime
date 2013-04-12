@@ -52,7 +52,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 		else {
 			InterviewObject object = agendaEnties.get(0);
 			if (object instanceof Question) {
-				return new DefaultForm(((Question) object).getName(), object);
+				return new DefaultForm(((Question) object).getName(), object, session);
 			}
 			else if (object instanceof QASet) {
 				Collection<TerminologyObject> traversedQuestions = new HashSet<TerminologyObject>();
@@ -61,7 +61,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 				if (nextQuestion == null) {
 					return EmptyForm.getInstance();
 				}
-				return new DefaultForm(nextQuestion.getName(), nextQuestion);
+				return new DefaultForm(nextQuestion.getName(), nextQuestion, session);
 			}
 			return null;
 		}

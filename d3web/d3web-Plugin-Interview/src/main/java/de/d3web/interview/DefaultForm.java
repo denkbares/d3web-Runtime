@@ -19,20 +19,25 @@
  */
 package de.d3web.interview;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.Session;
 
 public class DefaultForm implements Form {
 
 	private InterviewObject interviewObject;
 	private String title = "noname";
+	private Session session;
 
-	public DefaultForm(String title, InterviewObject interviewObject) {
+	public DefaultForm(String title, InterviewObject interviewObject, Session session) {
 		this.title = title;
 		this.interviewObject = interviewObject;
+		this.session = session;
 	}
 
 	@Override
@@ -56,11 +61,34 @@ public class DefaultForm implements Form {
 	}
 
 	@Override
-	public List<InterviewObject> getActiveObjects() {
-		if (interviewObject instanceof Question) {
-			return Arrays.asList(interviewObject);
+	public List<Question> getActiveQuestions() {
+		List<Question> result = new LinkedList<Question>();
+		collectActiveQuestions(interviewObject, result);
+		return result;
+	}
+
+	private void collectActiveQuestions(InterviewObject interviewObject, List<Question> activeQuestions) {
+		if (session.getBlackboard().getIndication(interviewObject).isContraIndicated()) {
+			return;
 		}
-		// TODO Auto-generated method stub
+		if (interviewObject instanceof Question) {
+			activeQuestions.add((Question) interviewObject);
+		}
+		else if (interviewObject instanceof QContainer) {
+			QContainer qcon = (QContainer) interviewObject;
+			for (TerminologyObject to : qcon.getChildren()) {
+				if (to instanceof InterviewObject) {
+					collectActiveQuestions((InterviewObject) to, activeQuestions);
+				}
+			}
+		}
+	}
+
+	@Override
+	public QContainer getRoot() {
+		if (interviewObject instanceof QContainer) {
+			return (QContainer) interviewObject;
+		}
 		return null;
 	}
 }

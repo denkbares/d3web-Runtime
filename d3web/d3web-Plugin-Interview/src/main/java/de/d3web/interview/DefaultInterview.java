@@ -323,7 +323,7 @@ public class DefaultInterview implements Interview {
 	}
 
 	@Override
-	public void setFormStrategy(de.d3web.core.session.interviewmanager.FormStrategy strategy) {
+	public void setFormStrategy(@SuppressWarnings("deprecation") de.d3web.core.session.interviewmanager.FormStrategy strategy) {
 		this.formStrategy = (FormStrategy) strategy;
 	}
 

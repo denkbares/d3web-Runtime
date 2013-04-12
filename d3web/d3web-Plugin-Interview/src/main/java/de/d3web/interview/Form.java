@@ -20,9 +20,15 @@ package de.d3web.interview;
 
 import java.util.List;
 
-import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
+ * A Form groups interview items, which should be presented at the same time to
+ * the user.
+ * 
+ * Note: The reference to de.d3web.core.session.interviewmanager.Form will be
+ * removed, when the class is removed from d3web-Kernel
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
@@ -30,12 +36,31 @@ import de.d3web.core.knowledge.InterviewObject;
 @SuppressWarnings("deprecation")
 public interface Form extends de.d3web.core.session.interviewmanager.Form {
 
+	/**
+	 * Returns the title of the Form
+	 */
 	String getTitle();
 
-	InterviewObject getInterviewObject();
-
+	/**
+	 * Returns true if the form is empty
+	 */
 	boolean isNotEmpty();
 
-	List<InterviewObject> getActiveObjects();
+	/**
+	 * Returns all active questions of this form
+	 * 
+	 * @created 25.03.2013
+	 * @return a List of active objects
+	 */
+	List<Question> getActiveQuestions();
+
+	/**
+	 * Can be used to access the root QASet of the Form. If the form contains
+	 * only a question, null is returned
+	 * 
+	 * @created 25.03.2013
+	 * @return root QASet or null if this form contains only a Question
+	 */
+	QContainer getRoot();
 
 }

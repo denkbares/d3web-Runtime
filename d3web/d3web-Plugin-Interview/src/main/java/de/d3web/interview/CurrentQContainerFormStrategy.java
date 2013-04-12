@@ -54,7 +54,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 		else {
 			InterviewObject object = agendaEnties.get(0);
 			if (object instanceof Question) {
-				return new DefaultForm(((Question) object).getName(), object);
+				return new DefaultForm(((Question) object).getName(), object, session);
 			}
 			else if (object instanceof QContainer) {
 				QContainer nextQContainer = retrieveNextUnfinishedQContainer(
@@ -62,7 +62,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				if (nextQContainer == null) {
 					return EmptyForm.getInstance();
 				}
-				return new DefaultForm(nextQContainer.getName(), nextQContainer);
+				return new DefaultForm(nextQContainer.getName(), nextQContainer, session);
 			}
 			return null;
 		}
