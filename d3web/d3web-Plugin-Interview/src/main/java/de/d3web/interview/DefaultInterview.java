@@ -231,26 +231,34 @@ public class DefaultInterview implements Interview {
 
 	private InterviewState checkChildrenState(TerminologyObject[] children) {
 		for (TerminologyObject child : children) {
-			// If at least on question is not answered, then return State=ACTIVE
-			if (child instanceof Question) {
-				Value value = session.getBlackboard()
-						.getValue((Question) child);
-				if (value instanceof UndefinedValue) {
-					return InterviewState.ACTIVE;
+			if (child instanceof InterviewObject) {
+				// ignore contraindicated children
+				if (session.getBlackboard().getIndication((InterviewObject) child).isContraIndicated()) {
+					continue;
 				}
-				// ACTIVE, when at least one follow-up question is ACTIVE
-				for (TerminologyObject followUpQuestion : getAllFollowUpChildrenOf(new TerminologyObject[] { child })) {
-					if (isActive((InterviewObject) followUpQuestion)) {
+				// If at least on question is not answered, then return
+				// State=ACTIVE
+				if (child instanceof Question) {
+					Value value = session.getBlackboard()
+							.getValue((Question) child);
+
+					if (value instanceof UndefinedValue) {
 						return InterviewState.ACTIVE;
 					}
+					// ACTIVE, when at least one follow-up question is ACTIVE
+					for (TerminologyObject followUpQuestion : getAllFollowUpChildrenOf(new TerminologyObject[] { child })) {
+						if (isActive((InterviewObject) followUpQuestion)) {
+							return InterviewState.ACTIVE;
+						}
+					}
 				}
-			}
-			// If at least on child qcontainer is active, then return
-			// State=ACTIVE
-			else if (child instanceof QContainer) {
-				InterviewState childState = checkChildrenState((QContainer) child);
-				if (childState.equals(InterviewState.ACTIVE)) {
-					return InterviewState.ACTIVE;
+				// If at least on child qcontainer is active, then return
+				// State=ACTIVE
+				else if (child instanceof QContainer) {
+					InterviewState childState = checkChildrenState((QContainer) child);
+					if (childState.equals(InterviewState.ACTIVE)) {
+						return InterviewState.ACTIVE;
+					}
 				}
 			}
 		}
