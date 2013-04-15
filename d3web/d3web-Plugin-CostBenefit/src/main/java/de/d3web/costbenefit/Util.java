@@ -55,6 +55,9 @@ import de.d3web.costbenefit.inference.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.Form;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * Provides basic static functions for the CostBenefit package.
@@ -280,25 +283,12 @@ public final class Util {
 	 * @return if the qaset is fully answered
 	 */
 	public static boolean isDone(InterviewObject qaset, Session session) {
-		if (qaset instanceof Question) {
-			Value value = session.getBlackboard().getValue((Question) qaset);
-			if (UndefinedValue.isNotUndefinedValue(value)) {
-				boolean done = true;
-				for (TerminologyObject object : qaset.getChildren()) {
-					done = done && isDone((QASet) object, session);
-				}
-				return done;
-			}
-			else {
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Form form = interview.getFormStrategy().getForm(qaset, session);
+		for (Question q : form.getActiveQuestions()) {
+			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))) {
 				return false;
 			}
-		}
-		else if (qaset instanceof QContainer) {
-			boolean done = true;
-			for (TerminologyObject object : qaset.getChildren()) {
-				done = done && isDone((QASet) object, session);
-			}
-			return done;
 		}
 		return true;
 	}

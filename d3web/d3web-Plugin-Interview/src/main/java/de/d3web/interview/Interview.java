@@ -36,11 +36,13 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	 * 
 	 * @return next Form
 	 */
+	@Override
 	Form nextForm();
 
 	/**
 	 * @deprecated use setFormStrategy(de.d3web.interview.FormStrategy strategy)
 	 */
+	@Override
 	@Deprecated
 	void setFormStrategy(de.d3web.core.session.interviewmanager.FormStrategy strategy);
 
@@ -54,10 +56,19 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	void setFormStrategy(FormStrategy strategy);
 
 	/**
+	 * Returns the {@link FormStrategy}
+	 * 
+	 * @created 15.04.2013
+	 * @return FormStrategy
+	 */
+	FormStrategy getFormStrategy();
+
+	/**
 	 * Interface to notify the Interview, that the value of a fact has changed.
 	 * 
 	 * @param changedFact the changed fact with the new and the old value
 	 */
+	@Override
 	void notifyFactChange(PropagationEntry changedFact);
 
 	/**
@@ -66,6 +77,7 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	 * @return the {@link InterviewAgenda} instance of the currently running
 	 *         {@link Interview}.
 	 */
+	@Override
 	InterviewAgenda getInterviewAgenda();
 
 	/**
@@ -76,6 +88,7 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	 * @return true, if the specified {@link InterviewObject} instance has an
 	 *         active state on the {@link InterviewAgenda}
 	 */
+	@Override
 	boolean isActive(InterviewObject interviewObject);
 
 }

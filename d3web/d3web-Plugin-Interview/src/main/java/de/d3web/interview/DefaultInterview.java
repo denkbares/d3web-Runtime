@@ -344,4 +344,9 @@ public class DefaultInterview implements Interview {
 	public void setFormStrategy(FormStrategy strategy) {
 		this.formStrategy = strategy;
 	}
+
+	@Override
+	public FormStrategy getFormStrategy() {
+		return this.formStrategy;
+	}
 }

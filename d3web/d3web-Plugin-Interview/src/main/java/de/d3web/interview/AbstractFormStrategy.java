@@ -19,6 +19,7 @@
  */
 package de.d3web.interview;
 
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -46,6 +47,11 @@ public abstract class AbstractFormStrategy implements FormStrategy {
 	protected boolean hasValueUndefined(Question question, Session session) {
 		Value value = session.getBlackboard().getValue(question);
 		return (value instanceof UndefinedValue);
+	}
+
+	@Override
+	public Form getForm(InterviewObject object, Session session) {
+		return new DefaultForm(object.getName(), object, session);
 	}
 
 }

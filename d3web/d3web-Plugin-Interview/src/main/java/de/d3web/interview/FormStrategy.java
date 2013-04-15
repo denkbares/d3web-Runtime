@@ -22,8 +22,10 @@ import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.interviewmanager.InterviewAgenda;
 
 /**
+ * Combines Interview Objects to Forms
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
@@ -31,6 +33,21 @@ import de.d3web.core.session.Session;
 @SuppressWarnings("deprecation")
 public interface FormStrategy extends de.d3web.core.session.interviewmanager.FormStrategy {
 
+	/**
+	 * Returns the next form that should be presented to the user according to
+	 * the {@link InterviewAgenda}
+	 */
+	@Override
 	Form nextForm(List<InterviewObject> agendaEntries, Session session);
+
+	/**
+	 * Returns a form of an {@link InterviewObject}, even if it is actually not
+	 * contained on the {@link InterviewAgenda}
+	 * 
+	 * @created 15.04.2013
+	 * @param object
+	 * @return
+	 */
+	Form getForm(InterviewObject object, Session session);
 
 }
