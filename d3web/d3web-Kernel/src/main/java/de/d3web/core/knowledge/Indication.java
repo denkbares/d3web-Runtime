@@ -24,7 +24,7 @@ import de.d3web.core.session.Value;
 public class Indication implements Value {
 
 	public enum State {
-		CONTRA_INDICATED, NEUTRAL, INDICATED, INSTANT_INDICATED, REPEATED_INDICATED;
+		CONTRA_INDICATED, NEUTRAL, RELEVANT, INDICATED, INSTANT_INDICATED, REPEATED_INDICATED;
 	}
 
 	private final State state;
@@ -97,6 +97,7 @@ public class Indication implements Value {
 	public boolean isRelevant() {
 		return this.state.equals(State.INDICATED)
 				|| this.state.equals(State.INSTANT_INDICATED)
+				|| this.state.equals(State.RELEVANT)
 				|| this.state.equals(State.REPEATED_INDICATED);
 	}
 

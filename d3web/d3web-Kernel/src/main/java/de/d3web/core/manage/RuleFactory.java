@@ -41,6 +41,7 @@ import de.d3web.indication.ActionContraIndication;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
+import de.d3web.indication.ActionRelevantIndication;
 import de.d3web.indication.ActionRepeatedIndication;
 import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.indication.inference.PSMethodStrategic;
@@ -181,6 +182,24 @@ public final class RuleFactory {
 		ruleAction.setQASets(theAction);
 
 		setRuleParams(rule, ruleAction, theCondition, theRuleException);
+		return rule;
+	}
+
+	/**
+	 * Creates a relevant indication rule with the specified parameters
+	 * 
+	 * @created 15.04.2013
+	 * @param theAction the QASet being relevant indicated by the created rule
+	 * @param theCondition the condition the rule evals
+	 * @return the created Rule
+	 */
+	public static Rule createRelevantIndicationRule(QASet theAction, Condition theCondition) {
+		Rule rule = new Rule(PSMethodStrategic.class);
+
+		ActionNextQASet ruleAction = new ActionRelevantIndication();
+		ruleAction.setQASets(theAction);
+
+		setRuleParams(rule, ruleAction, theCondition, null);
 		return rule;
 	}
 

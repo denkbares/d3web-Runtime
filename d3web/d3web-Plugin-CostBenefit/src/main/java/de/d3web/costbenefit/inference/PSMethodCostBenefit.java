@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
+import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.CondAnd;
@@ -47,7 +48,6 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
-import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -74,6 +74,8 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStrategy;
+import de.d3web.interview.Form;
+import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
 
 /**
@@ -83,7 +85,7 @@ import de.d3web.interview.inference.PSMethodInterview;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject> {
+public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject>, PostHookablePSMethod {
 
 	private static final Logger log = Logger.getLogger(PSMethodCostBenefit.class.getName());
 
@@ -167,14 +169,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 			caseObject.incCurrentPathIndex();
 			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
-				calculateNewPath(caseObject);
-				activateNextQContainer(caseObject);
+				caseObject.resetPath();
 				return;
 			}
 			QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
 			if (!new Node(qc, null).isApplicable(session)) {
-				calculateNewPath(caseObject);
-				activateNextQContainer(caseObject);
+				caseObject.resetPath();
+				return;
 			}
 			// when activating the next qcontainer, which is applicable, check
 			// if it is already done and fire state transition and move to next
@@ -257,9 +258,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	void calculateNewPath(CostBenefitCaseObject caseObject) {
-		// first reset the search path
-		caseObject.resetPath();
-
 		// if there are any other interview objects left (e.g. from other
 		// problem solvers), we first are going to answer these before creating
 		// a new path
@@ -281,19 +279,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			activatePath(caseObject, minPath);
 		}
+		activateNextQContainer(caseObject);
 	}
 
 	private boolean hasUnansweredQuestions(Session session) {
-		// return ! session.getInterview().getInterviewAgenda().isEmpty();
-		Blackboard blackboard = session.getBlackboard();
-		for (InterviewObject interviewObject : blackboard.getInterviewObjects()) {
-			if (blackboard.getIndication(interviewObject).isRelevant()) {
-				if (!Util.isDone(interviewObject, session)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Form nextForm = interview.nextForm();
+		return nextForm.isNotEmpty();
 	}
 
 	/**
@@ -630,8 +622,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			if (entry.isStrategic() && entry.hasChanged() && object instanceof QContainer) {
 				Indication indication = (Indication) entry.getNewValue();
 				if (indication.isContraIndicated() && sequence.contains(object)) {
-					calculateNewPath(caseObject);
-					activateNextQContainer(caseObject);
+					caseObject.resetPath();
 					return;
 				}
 			}
@@ -659,8 +650,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// 1. we do not have any sequence yet
 		// and no other indication is unanswered
 		if (!caseObject.hasCurrentSequence() && !hasUnansweredQuestions(session)) {
-			calculateNewPath(caseObject);
-			activateNextQContainer(caseObject);
+			// nothing to to, hasUnansweredQuestions will be called in
+			// postPropergate again
 			return;
 		}
 
@@ -670,8 +661,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		// 2. check if there are any changed to our remembered solutions
 		if (hasChangedUndiscriminatedSolutions(caseObject)) {
-			calculateNewPath(caseObject);
-			activateNextQContainer(caseObject);
+			caseObject.resetPath();
 			return;
 		}
 
@@ -766,5 +756,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// lot of objects with indirect influences only (e.g. Solutions,
 		// Question, ...)
 		return Collections.emptySet();
+	}
+
+	@Override
+	public void postPropagate(Session session) {
+		calculateNewPath(session.getSessionObject(this));
 	}
 }

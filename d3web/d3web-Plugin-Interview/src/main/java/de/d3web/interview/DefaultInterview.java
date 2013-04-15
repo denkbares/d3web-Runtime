@@ -139,8 +139,8 @@ public class DefaultInterview implements Interview {
 		Indication oldIndication = (Indication) oldValue;
 		Indication newIndication = (Indication) newValue;
 
-		// NEUTRAL => INDICATED : 1) append to agenda 2) activate
-		if (oldIndication.hasState(State.NEUTRAL)
+		// NEUTRAL/RELEVANT => INDICATED : 1) append to agenda 2) activate
+		if ((oldIndication.hasState(State.NEUTRAL) || oldIndication.hasState(State.RELEVANT))
 				&& newIndication.hasState(State.INDICATED)) {
 			this.agenda.append(indicatedObject);
 			checkParentalQContainer(indicatedObject);
@@ -153,9 +153,9 @@ public class DefaultInterview implements Interview {
 			this.agenda.append(indicatedObject);
 			checkParentalQContainer(indicatedObject);
 		}
-		// INDICATED => NEUTRAL : deactivate
+		// INDICATED => NEUTRAL/RELEVANT : deactivate
 		else if (oldIndication.hasState(State.INDICATED)
-				&& newIndication.hasState(State.NEUTRAL)) {
+				&& (newIndication.hasState(State.NEUTRAL) || newIndication.hasState(State.RELEVANT))) {
 			this.agenda.deactivate(indicatedObject);
 			checkParentalQContainer(indicatedObject);
 		}
@@ -182,12 +182,12 @@ public class DefaultInterview implements Interview {
 			checkParentalQContainer(indicatedObject);
 		}
 		else if (oldIndication.hasState(State.REPEATED_INDICATED)
-				&& newIndication.hasState(State.NEUTRAL)) {
+				&& (newIndication.hasState(State.NEUTRAL) || newIndication.hasState(State.RELEVANT))) {
 			// old=(REPEATED_INDICATED) => new=(NEUTRAL): deactivate
 			this.agenda.deactivate(indicatedObject);
 			checkParentalQContainer(indicatedObject);
 		}
-		else if (oldIndication.hasState(State.NEUTRAL)
+		else if ((oldIndication.hasState(State.NEUTRAL) || oldIndication.hasState(State.RELEVANT))
 				&& newIndication.hasState(State.CONTRA_INDICATED)) { // NOSONAR
 			// NEUTRAL => CONTRA_INDICATED : noop
 			checkParentalQContainer(indicatedObject);

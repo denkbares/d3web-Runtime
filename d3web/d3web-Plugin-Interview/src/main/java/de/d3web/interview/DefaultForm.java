@@ -22,6 +22,7 @@ package de.d3web.interview;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -30,9 +31,9 @@ import de.d3web.core.session.Session;
 
 public class DefaultForm implements Form {
 
-	private InterviewObject interviewObject;
+	private final InterviewObject interviewObject;
 	private String title = "noname";
-	private Session session;
+	private final Session session;
 
 	public DefaultForm(String title, InterviewObject interviewObject, Session session) {
 		this.title = title;
@@ -73,6 +74,13 @@ public class DefaultForm implements Form {
 		}
 		if (interviewObject instanceof Question) {
 			activeQuestions.add((Question) interviewObject);
+			for (TerminologyObject to : interviewObject.getChildren()) {
+				if (to instanceof InterviewObject
+						|| session.getBlackboard().getIndication((InterviewObject) to).hasState(
+								State.RELEVANT)) {
+					collectActiveQuestions((InterviewObject) to, activeQuestions);
+				}
+			}
 		}
 		else if (interviewObject instanceof QContainer) {
 			QContainer qcon = (QContainer) interviewObject;

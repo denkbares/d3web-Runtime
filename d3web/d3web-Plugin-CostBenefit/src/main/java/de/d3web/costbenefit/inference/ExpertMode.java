@@ -255,12 +255,11 @@ public class ExpertMode implements SessionObject {
 	public void selectBestSequence() {
 		PSMethodCostBenefit psm = getPSMethodCostBenefit();
 		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
-
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
+			pso.resetPath();
 			psm.calculateNewPath(pso);
-			psm.activateNextQContainer(pso);
 		}
 		finally {
 			propagationManager.commitPropagation();
