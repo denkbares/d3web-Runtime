@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import de.d3web.core.io.progress.ParallelProgress;
-import de.d3web.core.io.progress.ProgressListener;
 
 /**
  * 
@@ -31,17 +30,6 @@ import de.d3web.core.io.progress.ProgressListener;
  * @created 15.09.2012
  */
 public class ParallelProgressTest {
-
-	private static class ProgressCounter implements ProgressListener {
-
-		private int percent = 0;
-
-		@Override
-		public void updateProgress(float percent, String message) {
-			this.percent = Math.round(percent * 100);
-		}
-
-	}
 
 	@Test
 	public void simultaneousProgress() {

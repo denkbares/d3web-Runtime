@@ -47,13 +47,9 @@ public class CombinedProgressListener implements ProgressListener {
 		this.decoratedListener = decoratedListener;
 	}
 
-	public CombinedProgressListener(ProgressListener decoratedListener) {
-		this(-1, decoratedListener);
-	}
-
 	@Override
 	public void updateProgress(float percent, String message) {
-		if (totalSize == -1) {
+		if (totalSize < 0) {
 			throw new IllegalArgumentException("totalSize has not been set before update");
 		}
 		decoratedListener.updateProgress(

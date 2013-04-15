@@ -18,8 +18,10 @@
  */
 package de.d3web.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -119,7 +121,15 @@ public class CountingSet<E> implements Set<E> {
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		return counters.keySet().retainAll(c);
+		boolean changed = false;
+		Collection<E> copy = new ArrayList<E>(this);
+		if (!(c instanceof Set)) c = new HashSet<Object>(c);
+		for (Object o : copy) {
+			if (!c.contains(o)) {
+				changed |= remove(o);
+			}
+		}
+		return changed;
 	}
 
 	@Override

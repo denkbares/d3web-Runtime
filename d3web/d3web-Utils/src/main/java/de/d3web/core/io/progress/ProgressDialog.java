@@ -144,4 +144,8 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 			cancelAction.run();
 		}
 	}
+
+	public float getProgress() {
+		return (float) progressBar.getPercentComplete();
+	}
 }
