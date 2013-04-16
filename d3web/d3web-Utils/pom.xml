@@ -41,7 +41,7 @@
 				<version>2.9</version>
 				<configuration>
 					<excludes>
-						<exclude>**/DiaFluxPersistenceTest.java</exclude>
+						<exclude>**/ProgressDialogTest.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
