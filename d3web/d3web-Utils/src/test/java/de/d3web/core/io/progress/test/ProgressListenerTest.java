@@ -18,18 +18,9 @@
  */
 package de.d3web.core.io.progress.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.SwingUtilities;
-
 import org.junit.Test;
 
 import de.d3web.core.io.progress.CombinedProgressListener;
-import de.d3web.core.io.progress.ProgressDialog;
 
 ;
 
@@ -41,37 +32,4 @@ public class ProgressListenerTest {
 		listener.updateProgress(100, "Done");
 	}
 
-	private static class TestCancelAction extends Thread {
-
-		boolean cancled = false;
-
-		@Override
-		public void run() {
-			cancled = true;
-		}
-
-		public boolean isCancled() {
-			return cancled;
-		}
-	}
-
-	@Test
-	public void progressDialog() throws InterruptedException, InvocationTargetException {
-		TestCancelAction cancelAction = new TestCancelAction();
-		final ProgressDialog progressDialog = new ProgressDialog("Test");
-		progressDialog.setCancelAction(cancelAction);
-		progressDialog.setVisible(true);
-		progressDialog.updateProgress(0.1f, "Start");
-		SwingUtilities.invokeAndWait(new Runnable() {
-
-			@Override
-			public void run() {
-				assertEquals(0.1f, progressDialog.getProgress(), 0.00001);
-			}
-		});
-		progressDialog.updateProgress(1f, "Done");
-		progressDialog.dispatchEvent(new WindowEvent(progressDialog,
-				WindowEvent.WINDOW_CLOSING));
-		assertTrue(cancelAction.isCancled());
-	}
 }
