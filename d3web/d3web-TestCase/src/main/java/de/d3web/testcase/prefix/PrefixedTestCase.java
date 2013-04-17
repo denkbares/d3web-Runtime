@@ -25,6 +25,7 @@ import de.d3web.testcase.model.TestCase;
  */
 public class PrefixedTestCase implements TestCase {
 
+	private boolean initialized = false;
 	private final TestCase prefix;
 	private final TestCase testCase;
 	private long dateDiff = 0;
@@ -34,7 +35,15 @@ public class PrefixedTestCase implements TestCase {
 	public PrefixedTestCase(TestCase prefix, TestCase testCase) {
 		this.prefix = prefix;
 		this.testCase = testCase;
+	}
 
+	private void lazyInit() {
+		if (!initialized) {
+			init();
+		}
+	}
+
+	private void init() {
 		List<Date> prefixChronology = new ArrayList<Date>(prefix.chronology());
 		Collection<Date> testCaseChronology = testCase.chronology();
 		if (testCaseChronology.isEmpty()) return;
@@ -42,6 +51,7 @@ public class PrefixedTestCase implements TestCase {
 		Date firstTestCaseDate = testCaseChronology.iterator().next();
 		dateDiff = firstTestCaseDate.getTime() - lastPrefixDate.getTime();
 		mergedDate = lastPrefixDate;
+		initialized = true;
 	}
 
 	private Date toPrefixDate(Date testCaseDate) {
@@ -61,6 +71,7 @@ public class PrefixedTestCase implements TestCase {
 
 	@Override
 	public Collection<Date> chronology() {
+		lazyInit();
 		if (this.mergedChronology != null) {
 			return this.mergedChronology;
 		}
@@ -77,6 +88,7 @@ public class PrefixedTestCase implements TestCase {
 
 	@Override
 	public Collection<Finding> getFindings(Date date, KnowledgeBase kb) {
+		lazyInit();
 		if (!chronology().contains(date)) return Collections.emptyList();
 		if (date.before(mergedDate)) {
 			return prefix.getFindings(date, kb);
@@ -107,6 +119,7 @@ public class PrefixedTestCase implements TestCase {
 
 	@Override
 	public Finding getFinding(Date date, TerminologyObject object) {
+		lazyInit();
 		if (!chronology().contains(date)) return null;
 		if (date.before(mergedDate)) {
 			return prefix.getFinding(date, object);
@@ -119,6 +132,7 @@ public class PrefixedTestCase implements TestCase {
 
 	@Override
 	public Collection<Check> getChecks(Date date, KnowledgeBase kb) {
+		lazyInit();
 		if (!chronology().contains(date)) return Collections.emptyList();
 		if (date.before(mergedDate)) {
 			return prefix.getChecks(date, kb);
@@ -139,11 +153,13 @@ public class PrefixedTestCase implements TestCase {
 
 	@Override
 	public Date getStartDate() {
+		lazyInit();
 		return prefix.getStartDate();
 	}
 
 	@Override
 	public Collection<String> check(KnowledgeBase kb) {
+		lazyInit();
 		Collection<String> prefixMessages = prefix.check(kb);
 		Collection<String> testCaseMessages = testCase.check(kb);
 		ArrayList<String> mergedMessages = new ArrayList<String>(prefixMessages.size()
