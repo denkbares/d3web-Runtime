@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg denkbares GmbH
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -33,11 +33,12 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
+import de.d3web.indication.ActionRelevantIndication;
 import de.d3web.indication.ActionRepeatedIndication;
 
 /**
  * Handles ActionNextQASet and its default successors
- *
+ * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class NextQASetActionHandler implements FragmentHandler {
@@ -88,6 +89,11 @@ public class NextQASetActionHandler implements FragmentHandler {
 			ari.setQASets(qaSets);
 			action = ari;
 		}
+		else if (type.equals("ActionRelevantIndication")) {
+			ActionRelevantIndication ari = new ActionRelevantIndication();
+			ari.setQASets(qaSets);
+			action = ari;
+		}
 		return action;
 	}
 
@@ -104,6 +110,9 @@ public class NextQASetActionHandler implements FragmentHandler {
 		}
 		else if (object instanceof ActionRepeatedIndication) {
 			type = "RepeatedIndication";
+		}
+		else if (object instanceof ActionRelevantIndication) {
+			type = "ActionRelevantIndication";
 		}
 		element.setAttribute("type", type);
 		List<QASet> qaSets = action.getQASets();
