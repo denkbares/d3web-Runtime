@@ -86,7 +86,7 @@ public final class ValueFactory {
 		}
 
 		else if (question instanceof QuestionChoice) {
-			value = createQuestionsChoiceValue((QuestionChoice) question, valueString,
+			value = createQuestionChoiceValue((QuestionChoice) question, valueString,
 					existingValue);
 		}
 
@@ -131,7 +131,7 @@ public final class ValueFactory {
 	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
 	 *          representation for a Value for the given Question
 	 */
-	public static Value createQuestionsChoiceValue(QuestionChoice question, String valueString, Value existingValue) {
+	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString, Value existingValue) {
 		Value value = null;
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
 		if (question instanceof QuestionMC) {
@@ -155,7 +155,7 @@ public final class ValueFactory {
 	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
 	 *          representation for a Value for the given Question
 	 */
-	public static Value createQuestionsChoiceValue(QuestionChoice question, String valueString) {
+	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
 		Value value = null;
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
 		if (question instanceof QuestionMC) {
