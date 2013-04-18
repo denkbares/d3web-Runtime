@@ -5,18 +5,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -25,6 +30,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
@@ -36,6 +42,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * Tests the correct behavior of the KnowledgeBaseUtils class and contained
@@ -44,17 +51,25 @@ import de.d3web.core.session.values.Unknown;
  * @author Martina Freiberg
  * @created 02.09.2010
  */
-public class KnowledgeBaseManagementTest {
+public class KnowledgeBaseUtilsTest {
 
 	private Choice choice1;
 	private Choice choice2;
-	private KnowledgeBase knowledge;
+	private KnowledgeBase kb;
+	private QuestionChoice qmc;
+	private QuestionChoice qc;
 
 	@Before
 	public void setUp() {
-		knowledge = KnowledgeBaseUtils.createKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		choice1 = new Choice("choice1");
 		choice2 = new Choice("choice2");
+		qmc = new QuestionMC(kb.getRootQASet(), "qmc");
+		qmc.addAlternative(choice1);
+		qmc.addAlternative(choice2);
+		qc = new QuestionOC(kb.getRootQASet(), "qc");
+		qc.addAlternative(choice1);
+		qc.addAlternative(choice2);
 
 	}
 
@@ -64,13 +79,10 @@ public class KnowledgeBaseManagementTest {
 	 * @created 09.09.2010
 	 */
 	@Test
-	public void testFindValue_MCValSingleVal() {
+	public void findValueMCValSingleVal() {
 		List<Choice> choiceList = new LinkedList<Choice>();
 		choiceList.add(choice1);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
-		QuestionChoice qmc = new QuestionMC(knowledge, "Please enter: ");
-		qmc.addAlternative(choice1);
-		qmc.addAlternative(choice2);
 
 		assertThat(KnowledgeBaseUtils.findValue(qmc, "choice1"),
 				is(mcValToFind));
@@ -84,14 +96,11 @@ public class KnowledgeBaseManagementTest {
 	 * @created 09.09.2010
 	 */
 	@Test
-	public void testFindValue_MCValRealMC() {
+	public void findValueMCValRealMC() {
 		List<Choice> choiceList = new LinkedList<Choice>();
 		choiceList.add(choice1);
 		choiceList.add(choice2);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
-		QuestionChoice qmc = new QuestionMC(knowledge, "Please enter: ");
-		qmc.addAlternative(choice1);
-		qmc.addAlternative(choice2);
 
 		assertThat(KnowledgeBaseUtils.findValue(qmc, "choice1#####choice2"),
 				is(mcValToFind));
@@ -107,16 +116,12 @@ public class KnowledgeBaseManagementTest {
 	 * @created 09.09.2010
 	 */
 	@Test
-	public void testFindValue_ChoiceVal() {
+	public void findValueChoiceVal() {
 
 		// test oc question
-		Choice choice1 = new Choice("choice1");
-		Choice choice2 = new Choice("choice2");
 		Value choiceValToFind1 = new ChoiceValue(choice1);
 		Value choiceValToFind2 = new ChoiceValue(choice2);
-		QuestionChoice qc = new QuestionOC(knowledge, "Please enter: ");
-		qc.addAlternative(choice1);
-		qc.addAlternative(choice2);
+
 		assertThat(KnowledgeBaseUtils.findValue(qc, "choice1"),
 				is(choiceValToFind1));
 		assertThat(KnowledgeBaseUtils.findValue(qc, "choice2"),
@@ -128,7 +133,7 @@ public class KnowledgeBaseManagementTest {
 		Choice NO = new Choice("No");
 		Value yes = new ChoiceValue(YES);
 		Value no = new ChoiceValue(NO);
-		QuestionYN qyn = new QuestionYN(knowledge, "");
+		QuestionYN qyn = new QuestionYN(kb, "");
 
 		assertThat(KnowledgeBaseUtils.findValue(qyn, "Yes"),
 				is(yes));
@@ -143,10 +148,10 @@ public class KnowledgeBaseManagementTest {
 	 * @created 02.09.2010
 	 */
 	@Test
-	public void testFindValue_NumVal() {
+	public void findValueNumVal() {
 		Value numToGet = new NumValue(1.0);
 		String numValInput = "1.0";
-		QuestionNum qn = new QuestionNum(knowledge, "Please enter: ");
+		QuestionNum qn = new QuestionNum(kb, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qn, numValInput),
 				is(numToGet));
 	}
@@ -157,10 +162,10 @@ public class KnowledgeBaseManagementTest {
 	 * @created 02.09.2010
 	 */
 	@Test
-	public void testFindValue_TextVal() {
+	public void findValueTextVal() {
 		Value textToGet = new TextValue("My Text");
 		String textValInput = "My Text";
-		QuestionText qt = new QuestionText(knowledge, "Please enter: ");
+		QuestionText qt = new QuestionText(kb, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qt, textValInput),
 				is(textToGet));
 	}
@@ -171,7 +176,7 @@ public class KnowledgeBaseManagementTest {
 	 * @created 02.09.2010
 	 */
 	@Test
-	public void testFindValue_DateVal() {
+	public void findValueDateVal() {
 
 		Value dateToGet = null;
 		final DateFormat format = new
@@ -186,7 +191,7 @@ public class KnowledgeBaseManagementTest {
 		}
 		String dateValInput = "2010-09-02-12-13-30";
 		QuestionDate qd = new
-				QuestionDate(knowledge, "Please enter: ");
+				QuestionDate(kb, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qd,
 				dateValInput), is(dateToGet));
 		dateValInput = "wrong date format";
@@ -201,7 +206,7 @@ public class KnowledgeBaseManagementTest {
 	 * @created 09.09.2010
 	 */
 	@Test
-	public void testFindValue_complete() {
+	public void findValueComplete() {
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		Question q = new QuestionText(kb, "#");
 
@@ -220,11 +225,54 @@ public class KnowledgeBaseManagementTest {
 	}
 
 	@Test
-	public void testBadCreationOfFacts() {
-		QuestionChoice qc = new QuestionOC(knowledge, "Please enter: ");
+	public void badCreationOfFacts() {
+		QuestionChoice qc = new QuestionOC(kb, "Please enter: ");
 		assertThat(qc != null, is(true));
 
-		Fact badFact = FactFactory.createUserEnteredFact(knowledge, "Please enter: ", (String) null);
+		Fact badFact = FactFactory.createUserEnteredFact(kb, "Please enter: ", (String) null);
 		assertThat(badFact == null, is(true));
+	}
+
+	@Test
+	public void getAncestors() {
+		QuestionOC qc2 = new QuestionOC(qc, "qc2");
+		QuestionOC qc3 = new QuestionOC(qc2, "qc3");
+		qmc.addChild(qc3);
+		assertEquals(Arrays.asList(qc3, qc2, qc, kb.getRootQASet(), qmc),
+				KnowledgeBaseUtils.getAncestors(qc3));
+	}
+
+	@Test
+	public void getSuccessors() {
+		QuestionOC qc2 = new QuestionOC(qc, "qc2");
+		QuestionOC qc3 = new QuestionOC(qc2, "qc3");
+		qmc.addChild(qc3);
+		assertEquals(Arrays.asList(kb.getRootQASet(), qmc, qc3, qc, qc2),
+				KnowledgeBaseUtils.getSuccessors(kb.getRootQASet()));
+	}
+
+	@Test
+	public void sortQContainers() {
+		QContainer qc1 = new QContainer(kb.getRootQASet(), "qc1");
+		QContainer qc2 = new QContainer(kb.getRootQASet(), "qc2");
+		QContainer qc3 = new QContainer(kb.getRootQASet(), "qc3");
+		QContainer qc4 = new QContainer(qc2, "qc4");
+		QContainer qc5 = new QContainer(qc4, "qc5");
+		QContainer qc6 = new QContainer(qc3, "qc6");
+		List<QContainer> qcs = Arrays.asList(qc6, qc5, qc4, qc3,
+				qc2, qc1);
+		KnowledgeBaseUtils.sortQContainers(qcs);
+		assertEquals(Arrays.asList(qc1, qc2, qc4, qc5, qc3, qc6), qcs);
+	}
+
+	@Test
+	public void getAvailableLocales() throws IOException {
+		InitPluginManager.init();
+		qc.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.GERMAN, "wf");
+		qmc.getInfoStore().addValue(MMInfo.PROMPT, Locale.FRENCH, "qcf");
+		choice1.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.CHINESE, "chinese?");
+		assertEquals(
+				new HashSet<Locale>(Arrays.asList(Locale.FRENCH, Locale.CHINESE, Locale.GERMAN)),
+				KnowledgeBaseUtils.getAvailableLocales(kb));
 	}
 }

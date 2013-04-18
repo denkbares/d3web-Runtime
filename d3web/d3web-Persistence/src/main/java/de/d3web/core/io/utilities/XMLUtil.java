@@ -75,12 +75,6 @@ public final class XMLUtil {
 	public static final String INFO_STORE = "infoStore";
 
 	/**
-	 * Avoids creating this class.
-	 */
-	private XMLUtil() {
-	}
-
-	/**
 	 * Appends a question element to a parent element. Appends no element, if
 	 * the question is null.
 	 * 

@@ -150,7 +150,7 @@ public final class KnowledgeBaseUtils {
 		}
 		// ...and process its parents recursively
 		for (TerminologyObject child : terminologyObject.getParents()) {
-			collectSuccessors(child, visited, result, typeOf);
+			collectAncestors(child, visited, result, typeOf);
 		}
 	}
 
@@ -346,7 +346,7 @@ public final class KnowledgeBaseUtils {
 		}
 		KnowledgeBase knowledgeBase = unsorted.get(0).getKnowledgeBase();
 		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
-		reindex(knowledgeBase.getRootQASet(), qcontainerIndex, Integer.valueOf(0));
+		reindex(knowledgeBase.getRootQASet(), qcontainerIndex);
 		Collections.sort(unsorted, new DFSTreeSortingComparator(qcontainerIndex));
 	}
 
@@ -354,14 +354,12 @@ public final class KnowledgeBaseUtils {
 	 * Traverses the QASet hierarchy using a depth-first search and attaches an
 	 * ordering number to each visited {@link QASet}.
 	 */
-	private static void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> qcontainerIndex, Integer maxOrderingNumber) {
-		qcontainerIndex.put(qaset, maxOrderingNumber);
-		Integer maxOrdNum = maxOrderingNumber;
+	private static void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> qcontainerIndex) {
+		qcontainerIndex.put(qaset, qcontainerIndex.size());
 
 		for (TerminologyObject child : qaset.getChildren()) {
-			maxOrdNum++;
 			if (!qcontainerIndex.containsKey(child)) {
-				reindex(child, qcontainerIndex, maxOrdNum);
+				reindex(child, qcontainerIndex);
 			}
 			else {
 				continue;// terminate recursion in case of cyclic hierarchies
