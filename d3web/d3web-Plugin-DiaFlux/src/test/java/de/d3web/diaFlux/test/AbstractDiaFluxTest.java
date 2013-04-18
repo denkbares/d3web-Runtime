@@ -132,7 +132,7 @@ public abstract class AbstractDiaFluxTest {
 	protected final String nodeQ10_2 = nodeQ10 + "_2";
 	private long time;
 
-	protected AbstractDiaFluxTest(String fileName) {
+	public AbstractDiaFluxTest(String fileName) {
 		this.fileName = fileName;
 	}
 
@@ -275,7 +275,6 @@ public abstract class AbstractDiaFluxTest {
 				expected, actual, 0.005);
 
 	}
-
 
 	protected void setNumValue(QuestionNum question, double value) {
 

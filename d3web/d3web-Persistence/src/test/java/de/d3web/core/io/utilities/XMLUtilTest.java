@@ -19,8 +19,6 @@
 package de.d3web.core.io.utilities;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,7 +46,6 @@ import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.Triple;
 import de.d3web.plugin.test.InitPluginManager;
-import de.d3web.strings.Strings;
 
 /**
  * 
@@ -133,31 +130,6 @@ public class XMLUtilTest {
 				triple3, triple4, triple5, triple6);
 		List<Triple<Property<?>, Locale, Object>> sortedTriples = XMLUtil.sortEntries(triples);
 		assertEquals(expected, sortedTriples);
-	}
-
-	// // DELETE BLOW
-
-	@Test
-	public void isQuotedIndex() {
-		String text = "012\"456\"890123\"5678\\\"1234567\"9";
-		assertFalse(Strings.isQuoted(text, 0));
-		assertFalse(Strings.isQuoted(text, 1));
-		assertFalse(Strings.isQuoted(text, 2));
-		assertTrue(Strings.isQuoted(text, 3));
-		assertTrue(Strings.isQuoted(text, 4));
-		assertTrue(Strings.isQuoted(text, 6));
-		assertTrue(Strings.isQuoted(text, 7));
-		assertFalse(Strings.isQuoted(text, 8));
-		assertFalse(Strings.isQuoted(text, 13));
-		assertTrue(Strings.isQuoted(text, 14));
-		assertTrue(Strings.isQuoted(text, 15));
-		assertTrue(Strings.isQuoted(text, 18));
-		assertTrue(Strings.isQuoted(text, 19));
-		assertTrue(Strings.isQuoted(text, 20));
-		assertTrue(Strings.isQuoted(text, 21));
-		assertTrue(Strings.isQuoted(text, 27));
-		assertTrue(Strings.isQuoted(text, 28));
-		assertFalse(Strings.isQuoted(text, 29));
 	}
 
 }
