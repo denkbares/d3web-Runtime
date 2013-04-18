@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -45,23 +44,16 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
-import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.Triple;
 
@@ -221,7 +213,7 @@ public final class XMLUtil {
 		return element;
 	}
 
-	private static String getValue(TerminologyObject nob, Object answer) throws IOException {
+	public static String getValue(TerminologyObject nob, Object answer) throws IOException {
 		if (answer instanceof ChoiceValue) {
 			ChoiceValue v = (ChoiceValue) answer;
 			Choice choice = v.getChoice((QuestionChoice) nob);
@@ -431,39 +423,6 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * Determines the value with the specified id or value for a Question
-	 * 
-	 * @param session the actual case
-	 * @param q Question
-	 * @param id or value of the Answer
-	 * @return value instance
-	 */
-	public static Value getAnswer(Question q, String idOrValue) {
-
-		if (idOrValue.equals("MaU")) {
-			return Unknown.getInstance();
-		}
-
-		if (q instanceof QuestionChoice) {
-			Choice choice = KnowledgeBaseUtils.findChoice(
-					(QuestionChoice) q, idOrValue);
-			return new ChoiceValue(choice);
-		}
-		else if (q instanceof QuestionText) {
-			return new TextValue(idOrValue);
-		}
-		else if (q instanceof QuestionNum) {
-			return new NumValue(new Double(idOrValue));
-		}
-		else if (q instanceof QuestionDate) {
-			return new DateValue(new Date(Long.parseLong(idOrValue)));
-		}
-		else {
-			return UndefinedValue.getInstance();
-		}
-	}
-
-	/**
 	 * Appends all entries with the given autosave of the {@link InfoStore} to
 	 * the specified father. If autosave is null, all entries will be appended
 	 * 
@@ -506,7 +465,7 @@ public final class XMLUtil {
 	 * @param entries
 	 * @return
 	 */
-	private static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
+	public static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
 		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<Triple<Property<?>, Locale, Object>>(
 				entries);
 		Collections.sort(ret, new Comparator<Triple<Property<?>, Locale, Object>>() {
