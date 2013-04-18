@@ -76,6 +76,9 @@ public class ValueFactoryTest {
 		assertEquals(new ChoiceValue(choice1), ValueFactory.createValue(qoc, "choice1"));
 		assertEquals(new MultipleChoiceValue(new ChoiceID(choice1), new ChoiceID(choice2)),
 				ValueFactory.createValue(qmc, "choice1", new ChoiceValue(choice2)));
+		assertEquals(new MultipleChoiceValue(new ChoiceID(choice2)),
+				ValueFactory.createValue(qmc, "choice1", new MultipleChoiceValue(new ChoiceID(
+						choice1), new ChoiceID(choice2))));
 		assertEquals(Unknown.getInstance(),
 				ValueFactory.createValue(qoc, Unknown.getInstance().getValue().toString()));
 		assertEquals(new NumValue(4), ValueFactory.createValue(qnum, "4"));
