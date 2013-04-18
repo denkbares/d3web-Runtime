@@ -16,7 +16,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package d3.d3web.strings;
+package de.d3web.strings.test;
 
 import java.util.Arrays;
 

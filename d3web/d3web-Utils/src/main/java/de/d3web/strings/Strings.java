@@ -21,12 +21,13 @@
 package de.d3web.strings;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -39,6 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class Strings {
 
@@ -281,23 +283,37 @@ public class Strings {
 	}
 
 	/**
-	 * Return whether some position in a string is in quotes or not
+	 * Return whether some index in a string is in quotes or not. The indices of
+	 * the quote characters are considered to also be in quotes.
 	 * 
-	 * @param text
-	 * @param symbol
+	 * If a index is given which does not fit inside the given text, an
+	 * {@link IllegalArgumentException} is thrown.
+	 * 
+	 * @param text the text which may contain quotes
+	 * @param index the index or position in the text which will be check if it
+	 *        is in quotes or not
 	 */
 	public static boolean isQuoted(String text, int index) {
+		if (index < 0 || index > text.length() - 1) {
+			throw new IllegalArgumentException(index + " is not an index in the string '" + text
+					+ "'");
+		}
 		boolean quoted = false;
 		// scanning the text
 		for (int i = 0; i < text.length(); i++) {
 
+			// we consider the indexes of the opening and
+			// closing quotes as also in quotes
+			boolean isClosingQuote = false;
+
 			// toggle quote state
 			if (isUnEscapedQuote(text, i)) {
+				if (quoted) isClosingQuote = true;
 				quoted = !quoted;
 			}
 			// when symbol discovered return quoted
 			if ((i == index)) {
-				return quoted;
+				return quoted || isClosingQuote;
 			}
 
 		}
@@ -560,11 +576,7 @@ public class Strings {
 	 * @return the stack trace
 	 */
 	public static String stackTrace(Throwable e) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(out);
-		e.printStackTrace(printStream);
-		printStream.flush();
-		return out.toString();
+		return ExceptionUtils.getStackTrace(e);
 	}
 
 	/**
@@ -827,59 +839,36 @@ public class Strings {
 	 * @throws NullPointerException if the argument is null.
 	 */
 	public static String readFile(File file) throws IOException {
-		StringBuilder result = new StringBuilder((int) file.length());
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		try {
-			char[] buf = new char[1024];
-			int readCount = 0;
-			while ((readCount = reader.read(buf)) != -1) {
-				result.append(buf, 0, readCount);
-			}
-		}
-		finally {
-			reader.close();
-		}
-		return result.toString();
+		return readStream(new FileInputStream(file));
 	}
 
 	/**
 	 * Reads the contents of a stream into a String and return the string.
 	 * 
 	 * @created 16.09.2012
-	 * @param inStream the stream to load from
+	 * @param inputStream the stream to load from
 	 * @return the contents of the file
 	 * @throws IOException if there was any problem reading the file
-	 * @throws NullPointerException if the argument is null.
 	 */
-	public static String readStream(InputStream inStream) throws IOException {
+	public static String readStream(InputStream inputStream) throws IOException {
 		StringBuilder result = new StringBuilder();
 
-		byte[] buf = new byte[1024];
+		BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(inputStream, "UTF-8"));
+		char[] buf = new char[1024];
 		int readCount = 0;
-		while ((readCount = inStream.read(buf)) != -1) {
+		while ((readCount = bufferedReader.read(buf)) != -1) {
 			result.append(new String(buf, 0, readCount));
 		}
 
 		return result.toString();
 	}
 
-	/**
-	 * Reads the contents of a stream into a String and return the string. After
-	 * the stream has been read, the stream will be closed by this method.
-	 * 
-	 * @created 16.09.2012
-	 * @param inStream the stream to load from
-	 * @return the contents of the file
-	 * @throws IOException if there was any problem reading the file
-	 * @throws NullPointerException if the argument is null.
-	 */
-	public static String readStreamAndClose(InputStream inStream) throws IOException {
-		try {
-			return readStream(inStream);
-		}
-		finally {
-			inStream.close();
-		}
+	public static void writeFile(String path, String content) throws IOException {
+		FileWriter fstream = new FileWriter(path);
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(content);
+		out.close();
 	}
 
 }
