@@ -491,7 +491,7 @@ public final class XMLUtil {
 				}
 				// finally compare the content using its toString()
 				else {
-					if (arg0.getC() == arg0.getC()) {
+					if (arg0.getC() == arg1.getC()) {
 						return 0;
 					}
 					if (arg0.getC() == null) {

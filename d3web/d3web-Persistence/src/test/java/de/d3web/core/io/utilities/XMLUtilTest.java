@@ -36,9 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
-import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
@@ -64,8 +62,6 @@ public class XMLUtilTest {
 	private KnowledgeBase kb;
 	private QuestionChoice qmc;
 	private QuestionChoice qoc;
-	private QuestionText qt;
-	private QuestionNum qnum;
 
 	@Before
 	public void setUp() {
@@ -78,8 +74,6 @@ public class XMLUtilTest {
 		qoc = new QuestionOC(kb.getRootQASet(), "qoc");
 		qoc.addAlternative(choice1);
 		qoc.addAlternative(choice2);
-		qt = new QuestionText(kb.getRootQASet(), "qt");
-		qnum = new QuestionNum(kb.getRootQASet(), "qnum");
 
 	}
 
