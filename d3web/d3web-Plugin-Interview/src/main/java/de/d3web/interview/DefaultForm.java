@@ -73,6 +73,10 @@ public class DefaultForm implements Form {
 			return;
 		}
 		if (interviewObject instanceof Question) {
+			// prevent cycles
+			if (activeQuestions.contains(interviewObject)) {
+				return;
+			}
 			activeQuestions.add((Question) interviewObject);
 			for (TerminologyObject to : interviewObject.getChildren()) {
 				if (to instanceof InterviewObject

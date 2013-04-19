@@ -103,7 +103,7 @@ public class IndicationInACyclicHierarchy {
 	@Test
 	public void testWithNoCyclicCall() {
 		// the cyclic indication is not activated for pregnant=certain
-		InterviewObject nextObjectOnAgenda = interview.nextForm().getInterviewObject();
+		InterviewObject nextObjectOnAgenda = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(pregnant, nextObjectOnAgenda);
 
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(pregnant, certain));
@@ -113,11 +113,11 @@ public class IndicationInACyclicHierarchy {
 	@Test
 	public void testWithCyclicCall() {
 		// the cyclic indication is not activated for pregnant=certain
-		InterviewObject nextObjectOnAgenda = interview.nextForm().getInterviewObject();
+		InterviewObject nextObjectOnAgenda = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(pregnant, nextObjectOnAgenda);
 
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(pregnant, dontKnow));
-		nextObjectOnAgenda = interview.nextForm().getInterviewObject();
+		nextObjectOnAgenda = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(pregnancyTest, nextObjectOnAgenda);
 
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(pregnancyTest, yes));

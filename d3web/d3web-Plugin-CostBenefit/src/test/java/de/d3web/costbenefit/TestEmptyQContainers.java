@@ -120,7 +120,7 @@ public class TestEmptyQContainers {
 		// check that follower will be the next QContainer:
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		Assert.assertEquals(followerQuestion,
-				interview.nextForm().getInterviewObject());
+				interview.nextForm().getActiveQuestions().get(0));
 		Assert.assertTrue(interview.getInterviewAgenda().getCurrentlyActiveObjects().contains(
 				follower));
 		// set testStep2 as target
@@ -138,7 +138,7 @@ public class TestEmptyQContainers {
 		// now the teststep should be executed
 		Assert.assertEquals(b.toString(), blackboard.getValue(state).getValue().toString());
 		Assert.assertEquals(followerQuestion,
-				interview.nextForm().getInterviewObject());
+				interview.nextForm().getActiveQuestions().get(0));
 		Assert.assertTrue(interview.getInterviewAgenda().getCurrentlyActiveObjects().contains(
 				follower));
 		ExpertMode.getExpertMode(session).selectTarget(testStep2);

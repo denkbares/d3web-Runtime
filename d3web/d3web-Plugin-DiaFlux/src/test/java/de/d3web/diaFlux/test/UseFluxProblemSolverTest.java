@@ -164,7 +164,7 @@ public class UseFluxProblemSolverTest {
 		List<InterviewObject> currentlyActiveObjects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
 		assertTrue("YesNoQuestion should be on Agenda", currentlyActiveObjects.contains(questionYN));
 		assertTrue("YesNoQuestion should be the next form",
-				interview.nextForm().getInterviewObject() == questionYN);
+				interview.nextForm().getActiveQuestions().get(0) == questionYN);
 		// Answer question with "Yes", this should execute the flow
 		Value yes = KnowledgeBaseUtils.findValue(questionYN, "Yes");
 		session.getBlackboard().addValueFact(

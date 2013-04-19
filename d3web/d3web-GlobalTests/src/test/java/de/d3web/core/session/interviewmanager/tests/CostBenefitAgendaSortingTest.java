@@ -119,13 +119,13 @@ public class CostBenefitAgendaSortingTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: weight is the next question
-		assertEquals(weight, interview.nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getActiveQuestions().get(0));
 		// SET: weight = 80
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(weight, new NumValue(80)));
 
 		// EXPECT: height is the next question
-		assertEquals(height, interview.nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getActiveQuestions().get(0));
 		// SET: height = 180
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(height, new NumValue(180)));
@@ -137,12 +137,12 @@ public class CostBenefitAgendaSortingTest {
 		assertTrue(interview.isActive(pregnancyQuestions));
 
 		// EXPECT: sex is the next question
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		// SET: sex = male
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(sex, male));
 
 		// EXPECT: name is the next question
-		assertEquals(name, interview.nextForm().getInterviewObject());
+		assertEquals(name, interview.nextForm().getActiveQuestions().get(0));
 		// SET: name = "joba"
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(name, new TextValue("joba")));

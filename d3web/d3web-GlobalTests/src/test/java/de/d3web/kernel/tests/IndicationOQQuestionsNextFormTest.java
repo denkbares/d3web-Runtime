@@ -44,6 +44,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.DefaultForm;
+import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
@@ -250,7 +252,7 @@ public class IndicationOQQuestionsNextFormTest {
 		Value sexValue = session.getBlackboard().getValue(sex);
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 		// OQ Strategy should return exactly one element here.
-		intervObj = interview.nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getActiveQuestions().get(0);
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element, but returned.", intervObj != null);
 
@@ -276,7 +278,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", female, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = interview.nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getActiveQuestions().get(0);
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element.", intervObj != null);
 
@@ -299,7 +301,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Sex has wrong value ", male, sexValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = interview.nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getActiveQuestions().get(0);
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element, but returned .", intervObj != null);
 
@@ -344,7 +346,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = interview.nextForm().getInterviewObject();
+		intervObj = interview.nextForm().getActiveQuestions().get(0);
 		assertTrue("InterviewManager.nextForm() should have provided one " +
 				"next element. ", intervObj != null);
 
@@ -368,9 +370,11 @@ public class IndicationOQQuestionsNextFormTest {
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);
 
 		// OQ Strategy should return exactly one element here.
-		intervObj = interview.nextForm().getInterviewObject();
-		assertTrue("InterviewManager.nextForm() should have provided one " +
-				"next element.", intervObj != null);
+		Form nextForm = interview.nextForm();
+		assertTrue("Interview.nextFrom() should provide a DefaultForm.",
+				nextForm instanceof DefaultForm);
+		assertTrue("The Default Form should contain no active quesitons.",
+				nextForm.getActiveQuestions().size() == 0);
 
 		// EXPECTED: Headache == CONTRA_INDICATED
 		assertEquals("Question Headache has wrong indication state ",

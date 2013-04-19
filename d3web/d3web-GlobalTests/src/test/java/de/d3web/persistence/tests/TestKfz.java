@@ -238,8 +238,8 @@ public class TestKfz {
 
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		while (interview.nextForm().isNotEmpty()) {
-
-			QASet qaSet = (QASet) interview.nextForm().getInterviewObject();
+			assertTrue(interview.nextForm().getActiveQuestions().size() > 0);
+			QASet qaSet = interview.nextForm().getActiveQuestions().get(0);
 			assertNotNull(qaSet);
 			assertTrue(
 					"Keine Frage, sondern ein " + qaSet.getClass() + "-Objekt",

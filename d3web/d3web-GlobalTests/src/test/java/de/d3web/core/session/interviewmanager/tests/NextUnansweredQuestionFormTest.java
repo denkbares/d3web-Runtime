@@ -113,13 +113,13 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'sex' to be the first question
-		InterviewObject formQuestions = interview.nextForm().getInterviewObject();
+		InterviewObject formQuestions = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(sex, formQuestions);
 
 		// ANSWER: sex=female
 		// EXPECT: pregnant to be the next question
 		setValue(sex, female);
-		formQuestions = interview.nextForm().getInterviewObject();
+		formQuestions = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(pregnant, formQuestions);
 
 		// ANSWER: pregnant=no
@@ -138,14 +138,14 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
-		InterviewObject nextQuestion = interview.nextForm().getInterviewObject();
+		InterviewObject nextQuestion = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(sex, nextQuestion);
 
 		// SET question sex=male
 		// EXPECT the second question 'ask_for_pregnancy' to be the next
 		// question in the form
 		setValue(sex, male);
-		nextQuestion = interview.nextForm().getInterviewObject();
+		nextQuestion = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(ask_for_pregnancy, nextQuestion);
 
 		// SET : question ask_for_pregnancy=no
@@ -170,14 +170,14 @@ public class NextUnansweredQuestionFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
-		InterviewObject nextQuestion = interview.nextForm().getInterviewObject();
+		InterviewObject nextQuestion = interview.nextForm().getActiveQuestions().get(0);
 		assertEquals(sex, nextQuestion);
 
 		// SET question sex=female
 		// EXPECT the follow-up question 'pregnant' to be the next question in
 		// the form
 		setValue(sex, female);
-		nextQuestion = interview.nextForm().getInterviewObject();
+		nextQuestion = interview.nextForm().getActiveQuestions().get(0);
 
 		// TODO: overwork FormStrategy to copy with follow-up questions
 		assertEquals(pregnant, nextQuestion);

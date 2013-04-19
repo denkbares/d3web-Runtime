@@ -20,6 +20,8 @@
 
 package de.d3web.empiricaltesting.caseAnalysis.functions;
 
+import java.util.List;
+
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
@@ -30,6 +32,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
+import de.d3web.interview.Form;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.inference.PSMethodInterview;
 
@@ -120,8 +123,13 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 	 * @return Question which will be asked next.
 	 */
 	private Question getNextQuestion() {
-		return (Question) session.getSessionObject(
-				session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getInterviewObject();
+		Form nextForm = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodInterview.class)).nextForm();
+		List<Question> activeQuestions = nextForm.getActiveQuestions();
+		if (activeQuestions.size() > 0) {
+			return activeQuestions.get(0);
+		}
+		return null;
 	}
 
 }

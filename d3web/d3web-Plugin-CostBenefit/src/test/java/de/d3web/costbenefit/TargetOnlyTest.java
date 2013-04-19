@@ -160,7 +160,8 @@ public class TargetOnlyTest {
 		Assert.assertEquals(targetOnly, sequence[0]);
 		Assert.assertEquals(
 				q3,
-				session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getInterviewObject());
+				session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getActiveQuestions().get(
+						0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q3, valueAnswer3));
 		// after answering q3, target should be applicable
 		em.selectTarget(target);

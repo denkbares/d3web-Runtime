@@ -97,12 +97,12 @@ public class MixedUserRuleIndicationTest {
 		// does not fire, so the second question is presented next
 
 		// expect the first question of the init container
-		assertEquals(weight, interview.nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 100.0));
 
 		// expect the second question "height" and not the follow-up question,
 		// since the rule did not fire
-		assertEquals(height, interview.nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getActiveQuestions().get(0));
 	}
 
 	@Test
@@ -111,16 +111,16 @@ public class MixedUserRuleIndicationTest {
 		// follow-up question should be indicated
 
 		// expect the first question of the init container
-		assertEquals(weight, interview.nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// expect the follow-up question, since the rule should have fired
-		assertEquals(abnormalWeight, interview.nextForm().getInterviewObject());
+		assertEquals(abnormalWeight, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "abnormalWeight", 100.0));
 
 		// expect the second question "height" as the last question
-		assertEquals(height, interview.nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getActiveQuestions().get(0));
 	}
 
 	@Test
@@ -129,7 +129,7 @@ public class MixedUserRuleIndicationTest {
 		// same container
 
 		// expect the first question of the init container
-		assertEquals(weight, interview.nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// now the follow-up question is indicated, but we also indicate the
@@ -139,7 +139,7 @@ public class MixedUserRuleIndicationTest {
 						new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(height, interview.nextForm().getInterviewObject());
+		assertEquals(height, interview.nextForm().getActiveQuestions().get(0));
 	}
 
 	@Test
@@ -148,7 +148,7 @@ public class MixedUserRuleIndicationTest {
 		// another container
 
 		// expect the first question of the init container
-		assertEquals(weight, interview.nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// now the follow-up question is indicated, but we also indicate the
@@ -158,7 +158,7 @@ public class MixedUserRuleIndicationTest {
 						new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(importantQuestion, interview.nextForm().getInterviewObject());
+		assertEquals(importantQuestion, interview.nextForm().getActiveQuestions().get(0));
 	}
 
 	@Test
@@ -167,7 +167,7 @@ public class MixedUserRuleIndicationTest {
 		// question of this container "qc" to be the next question to be asked
 
 		// expect the first question of the init container
-		assertEquals(weight, interview.nextForm().getInterviewObject());
+		assertEquals(weight, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(kb, "weight", 140.0));
 
 		// now the follow-up question is indicated, but we also indicate the
@@ -178,7 +178,7 @@ public class MixedUserRuleIndicationTest {
 						new Indication(State.INSTANT_INDICATED),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
-		assertEquals(importantQuestion, interview.nextForm().getInterviewObject());
+		assertEquals(importantQuestion, interview.nextForm().getActiveQuestions().get(0));
 	}
 
 }

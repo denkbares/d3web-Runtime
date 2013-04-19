@@ -112,13 +112,13 @@ public class RepeatedIndicationTest {
 		// performed
 
 		// expect the first question of the init container
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "female"));
-		assertEquals(pregnant, interview.nextForm().getInterviewObject());
+		assertEquals(pregnant, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
-		assertEquals(happy, interview.nextForm().getInterviewObject());
+		assertEquals(happy, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 		assertEquals(EmptyForm.getInstance(), interview.nextForm());
@@ -129,18 +129,18 @@ public class RepeatedIndicationTest {
 		// for sex=male we expect that a repeated indication is performed
 
 		// expect the first question of the init container
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "male"));
-		assertEquals(pregnant, interview.nextForm().getInterviewObject());
+		assertEquals(pregnant, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
-		assertEquals(happy, interview.nextForm().getInterviewObject());
+		assertEquals(happy, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// ask sex for the second time!
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "female"));
 		assertEquals(EmptyForm.getInstance(), interview.nextForm());
@@ -153,18 +153,18 @@ public class RepeatedIndicationTest {
 		// rule by answering the question again with the critical value
 
 		// expect the first question of the init container
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "male"));
-		assertEquals(pregnant, interview.nextForm().getInterviewObject());
+		assertEquals(pregnant, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
-		assertEquals(happy, interview.nextForm().getInterviewObject());
+		assertEquals(happy, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// ask sex for the second time!
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "female"));
 		// some new facts to active the rule for the second time
@@ -174,7 +174,7 @@ public class RepeatedIndicationTest {
 		// reanswer the question in order to ask for the third time
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "male"));
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "female"));
@@ -187,18 +187,18 @@ public class RepeatedIndicationTest {
 		// for sex=male we expect that a repeated indication is performed
 
 		// expect the first question of the init container
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "sex", "male"));
-		assertEquals(pregnant, interview.nextForm().getInterviewObject());
+		assertEquals(pregnant, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "pregnant", "yes"));
-		assertEquals(happy, interview.nextForm().getInterviewObject());
+		assertEquals(happy, interview.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(kb, "happy", "yes"));
 
 		// ask sex for the second time!
-		assertEquals(sex, interview.nextForm().getInterviewObject());
+		assertEquals(sex, interview.nextForm().getActiveQuestions().get(0));
 
 		// answer a question in order to retract the repeated indication rule
 		session.getBlackboard().addValueFact(

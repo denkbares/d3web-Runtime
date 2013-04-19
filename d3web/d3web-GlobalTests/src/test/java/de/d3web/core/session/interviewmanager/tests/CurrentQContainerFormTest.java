@@ -118,27 +118,27 @@ public class CurrentQContainerFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = interview.nextForm().getInterviewObject();
+		InterviewObject formObject = interview.nextForm().getRoot();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET : first question of pregnancyQuestions (no follow-up question
 		// indicated)
 		// EXPECT: pregnancyQuestions should be still active
 		setValue(sex, male);
-		formObject = interview.nextForm().getInterviewObject();
+		formObject = interview.nextForm().getRoot();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET : second question of pregnancyQuestions
 		// EXPECT: now 'heightWeightQuestions' should be active
 		setValue(ask_for_pregnancy,
 				new ChoiceValue(KnowledgeBaseUtils.findChoice(ask_for_pregnancy, "no")));
-		formObject = interview.nextForm().getInterviewObject();
+		formObject = interview.nextForm().getRoot();
 		assertEquals(heightWeightQuestions, formObject);
 
 		// SET : first question of 'heightWeightQuestions'
 		// EXPECT: now 'heightWeightQuestions' should be still active
 		setValue(height, new NumValue(100));
-		formObject = interview.nextForm().getInterviewObject();
+		formObject = interview.nextForm().getRoot();
 		assertEquals(heightWeightQuestions, formObject);
 
 		// SET : second question of 'heightWeightQuestions'
@@ -164,7 +164,7 @@ public class CurrentQContainerFormTest {
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'pregnancyQuestions' to be the first interview object
-		InterviewObject formObject = interview.nextForm().getInterviewObject();
+		InterviewObject formObject = interview.nextForm().getRoot();
 		assertEquals(pregnancyQuestions, formObject);
 
 		// SET : ask_for_pregnancy = no
@@ -175,14 +175,14 @@ public class CurrentQContainerFormTest {
 				new ChoiceValue(KnowledgeBaseUtils.findChoice(ask_for_pregnancy, "no")));
 		setValue(sex, female);
 		Form form = interview.nextForm();
-		assertEquals(pregnancyQuestions, form.getInterviewObject());
+		assertEquals(pregnancyQuestions, form.getRoot());
 
 		// SET : answer follow-up question 'pregnant=no'
 		// EXPECT: no the next qcontainer 'heightWeightQuestions' should be
 		// active,
 		// since all questions (including follow-ups) have been answered
 		setValue(pregnant, new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "no")));
-		assertEquals(heightWeightQuestions, interview.nextForm().getInterviewObject());
+		assertEquals(heightWeightQuestions, interview.nextForm().getRoot());
 
 		// SET : answer the questions 'height' and 'weight'
 		// EXPECT: all questions on the agenda are answered, so next form should

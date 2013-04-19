@@ -56,6 +56,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.interview.Form;
 import de.d3web.interview.inference.PSMethodInterview;
 
 /**
@@ -81,13 +82,14 @@ public class DefaultBotStrategy implements BotStrategy {
 
 	@Override
 	public InterviewObject[] getNextSequenceItems(Session session) {
-		InterviewObject interviewObject = session.getSessionObject(
-				session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getInterviewObject();
-		if (interviewObject == null) {
-			return new InterviewObject[] {};
+		Form nextForm = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodInterview.class)).nextForm();
+		if (nextForm != null) {
+			List<Question> activeQuestions = nextForm.getActiveQuestions();
+			return activeQuestions.toArray(new InterviewObject[activeQuestions.size()]);
 		}
 		else {
-			return new InterviewObject[] { interviewObject };
+			return new InterviewObject[] {};
 		}
 	}
 

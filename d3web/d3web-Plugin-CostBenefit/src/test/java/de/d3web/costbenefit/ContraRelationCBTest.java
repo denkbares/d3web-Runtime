@@ -56,20 +56,23 @@ public class ContraRelationCBTest {
 		Session session = SessionFactory.createSession(kb);
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		Form nextForm = interview.nextForm();
-		Assert.assertEquals("Start..", nextForm.getInterviewObject().getName());
+		Assert.assertEquals("Start..", nextForm.getActiveQuestions().get(0).getName());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(nextForm.getInterviewObject(), new ChoiceValue(
-						new Choice("los"))));
+				FactFactory.createUserEnteredFact(nextForm.getActiveQuestions().get(0),
+						new ChoiceValue(
+								new Choice("los"))));
 		nextForm = interview.nextForm();
-		Assert.assertEquals("Frage1", nextForm.getInterviewObject().getName());
+		Assert.assertEquals("Frage1", nextForm.getActiveQuestions().get(0).getName());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(nextForm.getInterviewObject(), new ChoiceValue(
-						new Choice("a1"))));
+				FactFactory.createUserEnteredFact(nextForm.getActiveQuestions().get(0),
+						new ChoiceValue(
+								new Choice("a1"))));
 		nextForm = interview.nextForm();
-		Assert.assertEquals("Frage2", nextForm.getInterviewObject().getName());
+		Assert.assertEquals("Frage2", nextForm.getActiveQuestions().get(0).getName());
 		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(nextForm.getInterviewObject(), new ChoiceValue(
-						new Choice("a1"))));
+				FactFactory.createUserEnteredFact(nextForm.getActiveQuestions().get(0),
+						new ChoiceValue(
+								new Choice("a1"))));
 		nextForm = interview.nextForm();
 		Assert.assertEquals(EmptyForm.getInstance(), nextForm);
 	}

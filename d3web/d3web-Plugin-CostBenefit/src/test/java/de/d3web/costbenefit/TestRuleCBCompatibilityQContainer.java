@@ -145,7 +145,7 @@ public class TestRuleCBCompatibilityQContainer {
 		Assert.assertEquals(0, cbObject.getCurrentPathIndex());
 		int i = 0;
 		while (nextForm.isNotEmpty()) {
-			InterviewObject next = nextForm.getInterviewObject();
+			InterviewObject next = nextForm.getActiveQuestions().get(0);
 			Assert.assertEquals(questions[i++], next);
 			answer(session, next, abnorm);
 			nextForm = interview.nextForm();
