@@ -90,7 +90,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		private static final PSMethodStateTransition psmInstance = new PSMethodStateTransition();
 		public static int counter = 0;
 		private final int number;
-		private ConditionalValueSetter cvs;
+		private final ConditionalValueSetter cvs;
 
 		public StateTransitionFact(ConditionalValueSetter cvs, Session session, TerminologyObject terminologyObject, Value value) {
 			super(terminologyObject, value, new Object(), findPSM(session));
@@ -158,7 +158,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 	@Override
 	public double getPriority() {
-		return 1;
+		return 5.5;
 	}
 
 	public static class StateTransitionSessionObject implements SessionObject {

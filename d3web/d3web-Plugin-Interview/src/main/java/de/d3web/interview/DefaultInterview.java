@@ -197,6 +197,9 @@ public class DefaultInterview implements Interview {
 			this.agenda.activate(indicatedObject);
 			checkParentalQContainer(indicatedObject);
 		}
+		else if ((oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.RELEVANT) || (oldIndication.hasState(State.RELEVANT) && newIndication.hasState(State.NEUTRAL)))) {
+			// nothing to do because RELEVANT is treated as NEUTRAL
+		}
 		else if (!oldIndication.getState().equals(newIndication.getState())) {
 			Logger.getLogger(this.getClass().getName()).warning(
 					"unknown indication state: old=(" + oldIndication + ") new=("

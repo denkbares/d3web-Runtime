@@ -31,7 +31,7 @@
 		<parameter id="name" value="PSMethodStateTransition" />
 		<parameter id="description" value="Source-PSMethod for transitions made by the CostBenefit" />
 		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="2" />
+		<parameter id="priority" value="5.5" />
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints"

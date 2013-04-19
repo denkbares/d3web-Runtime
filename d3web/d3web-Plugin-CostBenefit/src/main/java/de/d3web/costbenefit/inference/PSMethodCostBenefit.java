@@ -192,6 +192,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				activateNextQContainer(caseObject);
 			}
 		}
+		// if the counter can't be increased, check if the actual qcontainer is
+		// still applicable, perhaps the states of the previous QContainer
+		// changed
+		else {
+			QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
+			if (!new Node(qc, null).isApplicable(session)) {
+				caseObject.resetPath();
+				return;
+			}
+		}
 	}
 
 	/**

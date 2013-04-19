@@ -151,10 +151,7 @@ public class SearchModel {
 
 	public void removeTarget(Target target) {
 		targets.remove(target);
-		if (bestCostBenefitTarget != null) {
-			throw new IllegalStateException("cannot remove targets during search");
-		}
-		if (target == bestBenefitTarget) {
+		if (bestBenefitTarget != null && bestBenefitTarget.equals(target)) {
 			bestBenefitTarget = null;
 			if (!targets.isEmpty()) bestBenefitTarget = targets.first();
 		}

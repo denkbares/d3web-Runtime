@@ -267,9 +267,7 @@ public final class Util {
 			if (qaset instanceof QContainer) {
 				targets.add((QContainer) qaset);
 			}
-			else {
-				addParentContainers(targets, qaset);
-			}
+			addParentContainers(targets, qaset);
 		}
 
 	}
