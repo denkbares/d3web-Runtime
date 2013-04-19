@@ -50,6 +50,7 @@ public class NextQASetActionHandler implements FragmentHandler {
 				|| XMLUtil.checkNameAndType(element, "Action", "ActionIndication")
 				|| XMLUtil.checkNameAndType(element, "Action", "ActionInstantIndication")
 				|| XMLUtil.checkNameAndType(element, "Action", "ActionRefine")
+				|| XMLUtil.checkNameAndType(element, "Action", "ActionRelevantIndication")
 				|| XMLUtil.checkNameAndType(element, "Action", "RepeatedIndication");
 	}
 
