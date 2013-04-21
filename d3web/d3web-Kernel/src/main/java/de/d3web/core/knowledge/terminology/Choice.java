@@ -39,7 +39,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	private Question question;
 
 	private final String text;
-	private InfoStore infoStore = new DefaultInfoStore();
+	private final InfoStore infoStore = new DefaultInfoStore();
 
 	/**
 	 * Creates a new choice with the given name
@@ -98,8 +98,8 @@ public class Choice implements NamedObject, Comparable<Choice> {
 			return true;
 		}
 		else if (other instanceof Choice) {
-			return ((Choice) other).getId().equals(
-					this.getId());
+			return ((Choice) other).getSignatureString().equals(
+					this.getSignatureString());
 		}
 		else {
 			return false;
@@ -110,8 +110,18 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((text == null) ? 0 : text.hashCode());
+		String signatureString = getSignatureString();
+		result = prime * result + ((signatureString == null) ? 0 : signatureString.hashCode());
 		return result;
+	}
+
+	private String getSignatureString() {
+		if (question == null) {
+			return getName();
+		}
+		else {
+			return getName() + question.getName();
+		}
 	}
 
 	/*
@@ -129,7 +139,14 @@ public class Choice implements NamedObject, Comparable<Choice> {
 		List<Choice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
 		int i1 = range.indexOf(this);
 		int i2 = range.indexOf(other);
-		return i1 - i2;
+		int result = i1 - i2;
+		if (result == 0) {
+			return getSignatureString().compareTo(other.getSignatureString());
+		}
+		else {
+			return result;
+		}
+
 	}
 
 	@Override

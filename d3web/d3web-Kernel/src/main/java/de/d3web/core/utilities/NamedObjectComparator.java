@@ -20,7 +20,9 @@ package de.d3web.core.utilities;
 
 import java.util.Comparator;
 
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * Compares NamendObjects by their names
@@ -32,11 +34,20 @@ public class NamedObjectComparator implements Comparator<NamedObject> {
 
 	@Override
 	public int compare(NamedObject r1, NamedObject r2) {
-		String name1 = r1.getName();
-		if (name1 == null) name1 = "";
-		String name2 = r2.getName();
-		if (name2 == null) name2 = "";
+		String name1 = r1 == null || r1.getName() == null ? "" : getName(r1);
+		String name2 = r2 == null || r2.getName() == null ? "" : getName(r2);
 		return (name1.compareTo(name2));
+	}
+
+	private String getName(NamedObject no) {
+		if (no instanceof Choice) {
+			Question question = ((Choice) no).getQuestion();
+			return no.getName()
+					+ (question == null || question.getName() == null ? "" : question.getName());
+		}
+		else {
+			return no.getName();
+		}
 	}
 
 }
