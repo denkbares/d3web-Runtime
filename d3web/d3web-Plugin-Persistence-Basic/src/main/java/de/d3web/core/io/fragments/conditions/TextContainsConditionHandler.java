@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.inference.condition.CondRegex;
 import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -36,7 +37,10 @@ import de.d3web.core.knowledge.terminology.QuestionText;
  * FragmentHandler for CondTextContains
  * 
  * @author Markus Friedrich (denkbares GmbH)
+ * @deprecated {@link CondTextContains} is deprecated, use {@link CondRegex}
+ *             instead
  */
+@Deprecated
 public class TextContainsConditionHandler implements FragmentHandler {
 
 	@Override

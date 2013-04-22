@@ -50,6 +50,7 @@ import de.d3web.plugin.test.InitPluginManager;
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 18.08.2010
  */
+@SuppressWarnings("deprecation")
 public class ConditionTextTest {
 
 	KnowledgeBase kb;

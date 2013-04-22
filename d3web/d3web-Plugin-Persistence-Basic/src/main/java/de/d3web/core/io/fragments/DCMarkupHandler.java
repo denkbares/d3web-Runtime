@@ -41,6 +41,7 @@ import de.d3web.core.utilities.Triple;
  * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
+@Deprecated
 public class DCMarkupHandler {
 
 	public static final String MARKUPTAG = "head";

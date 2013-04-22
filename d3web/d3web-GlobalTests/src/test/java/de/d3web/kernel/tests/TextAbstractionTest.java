@@ -61,6 +61,7 @@ import de.d3web.plugin.test.InitPluginManager;
  * @author Sebastian Furth
  * 
  */
+@SuppressWarnings("deprecation")
 public class TextAbstractionTest {
 
 	private static KnowledgeBase kb;
@@ -91,11 +92,13 @@ public class TextAbstractionTest {
 		Question feeling = kb.getManager().searchQuestion("Feeling");
 
 		// Emoticon = ":-)" => Feeling = Happiness
+		@SuppressWarnings("deprecation")
 		Condition happinessCondition = new CondTextEqual(emoticon, ":-)");
 		Value happiness = KnowledgeBaseUtils.findValue(feeling, "Happiness");
 		RuleFactory.createSetValueRule(feeling, happiness, happinessCondition);
 
 		// Emoticon = ":-(" => Feeling = Sadness
+		@SuppressWarnings("deprecation")
 		Condition sadnessCondition = new CondTextEqual(emoticon, ":-(");
 		Value sadness = KnowledgeBaseUtils.findValue(feeling, "Sadness");
 		RuleFactory.createSetValueRule(feeling, sadness, sadnessCondition);

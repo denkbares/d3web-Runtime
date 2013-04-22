@@ -28,7 +28,9 @@ import de.d3web.core.knowledge.terminology.QuestionText;
  * "leaf".
  * 
  * @author joba
+ * @deprecated use {@link CondRegex} instead
  */
+@Deprecated
 public class CondTextEqual extends CondTextQuestion {
 
 	/**

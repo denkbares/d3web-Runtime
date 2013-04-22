@@ -28,7 +28,9 @@ import de.d3web.core.knowledge.terminology.QuestionText;
  * class is a "leaf".
  * 
  * @author joba
+ * @deprecated uses {@link CondRegex} instead
  */
+@Deprecated
 public class CondTextContains extends CondTextQuestion {
 
 	/**

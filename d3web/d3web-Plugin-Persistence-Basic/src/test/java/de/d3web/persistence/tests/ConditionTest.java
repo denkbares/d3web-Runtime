@@ -66,6 +66,7 @@ import de.d3web.plugin.test.InitPluginManager;
 /**
  * @author merz
  */
+@SuppressWarnings("deprecation")
 public class ConditionTest {
 
 	private Condition ac1, ac21, ac22, ac3;
