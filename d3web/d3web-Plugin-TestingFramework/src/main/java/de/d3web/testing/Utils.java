@@ -92,7 +92,7 @@ public class Utils {
 
 		StringBuilder htmlList = new StringBuilder();
 		for (String listItem : list) {
-			htmlList.append(listItem);
+			htmlList.append("* " + listItem);
 			htmlList.append("\n");
 		}
 		htmlList.deleteCharAt(htmlList.length() - 1);
