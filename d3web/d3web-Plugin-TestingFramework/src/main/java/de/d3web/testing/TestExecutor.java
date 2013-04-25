@@ -239,7 +239,7 @@ public class TestExecutor {
 	private void shutdown(long buildStartTime) {
 		try {
 			executor.shutdown();
-			while (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
+			while (!executor.awaitTermination(1, TimeUnit.SECONDS)) { // NOSONAR
 				// wait
 			}
 		}
