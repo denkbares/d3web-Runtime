@@ -43,6 +43,7 @@
 					<excludes>
 						<exclude>**/ProgressDialogTest.java</exclude>
 					</excludes>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
