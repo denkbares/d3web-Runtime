@@ -51,6 +51,10 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.interview.Form;
+import de.d3web.interview.FormStrategy;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -133,28 +137,25 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 	}
 
-	private static Collection<Question> getRelevantQuestions(Collection<? extends TerminologyObject> qasets) {
-		TerminologyObject[] array = qasets.toArray(new TerminologyObject[qasets.size()]);
+	private static Collection<Question> getRelevantQuestions(Collection<? extends QASet> qasets, Session session) {
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		FormStrategy formStrategy = interview.getFormStrategy();
 		Set<Question> result = new HashSet<Question>();
-		collectRelevantQuestions(array, result);
-		return result;
-	}
-
-	private static void collectRelevantQuestions(TerminologyObject[] qasets, Collection<Question> result) {
-		for (TerminologyObject qaset : qasets) {
-			if (qaset instanceof Question) {
+		for (QASet qaSet : qasets) {
+			Form form = formStrategy.getForm(qaSet, session);
+			for (Question q : form.getActiveQuestions()) {
 				boolean ignore = // false;
-				(qaset instanceof QuestionChoice)
-						&& ((QuestionChoice) qaset).getAllAlternatives().size() <= 1;
+				(q instanceof QuestionChoice)
+						&& ((QuestionChoice) q).getAllAlternatives().size() <= 1;
 				// unfortunately, in rare cases, ignoring irrelevant questions
 				// will result in slightly different information gain
 				if (!ignore) {
-					result.add((Question) qaset);
+					result.add(q);
 				}
 			}
-			TerminologyObject[] children = qaset.getChildren();
-			collectRelevantQuestions(children, result);
+			result.addAll(form.getActiveQuestions());
 		}
+		return result;
 	}
 
 	@Override
@@ -187,7 +188,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 								Set<XCLRelation> conditions = excludingQuestions.get(q);
 								if (conditions == null) {
 									conditions = new HashSet<XCLRelation>();
-									excludingQuestions.put((Question) q, conditions);
+									excludingQuestions.put(q, conditions);
 								}
 								conditions.add(relation);
 							}
@@ -203,7 +204,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	@Override
 	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
-		Collection<Question> questions = getRelevantQuestions(qasets);
+		Collection<Question> questions = getRelevantQuestions(qasets, session);
 		if (questions.size() == 0) return 0;
 
 		InformationPots<Condition> pots = new InformationPots<Condition>();

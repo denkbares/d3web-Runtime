@@ -18,7 +18,6 @@
  */
 package de.d3web.xcl.inference;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,6 +48,10 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.interview.Form;
+import de.d3web.interview.FormStrategy;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -66,9 +69,12 @@ public class StrategicSupportXCL implements StrategicSupport {
 			Collection<Solution> solutions, Session session) {
 		Map<List<Condition>, Float> map = new HashMap<List<Condition>, Float>();
 		Collection<Question> questions = new HashSet<Question>();
-		Collection<TerminologyObject> tos = new HashSet<TerminologyObject>();
-		tos.addAll(qasets);
-		flattenQASets(tos, questions);
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		FormStrategy formStrategy = interview.getFormStrategy();
+		for (QASet qaSet : qasets) {
+			Form form = formStrategy.getForm(qaSet, session);
+			questions.addAll(form.getActiveQuestions());
+		}
 
 		Map<Question, Set<Condition>> excludingQuestions =
 				getExcludingQuestion(solutions, questions);
@@ -148,7 +154,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 								Set<Condition> conditions = excludingQuestions.get(q);
 								if (conditions == null) {
 									conditions = new HashSet<Condition>();
-									excludingQuestions.put((Question) q, conditions);
+									excludingQuestions.put(q, conditions);
 								}
 								conditions.add(relation.getConditionedFinding());
 							}
@@ -178,16 +184,6 @@ public class StrategicSupportXCL implements StrategicSupport {
 			}
 		}
 		return result;
-	}
-
-	private static void flattenQASets(Collection<? extends TerminologyObject> qasets, Collection<Question> questions) {
-		for (TerminologyObject qaset : qasets) {
-			if (qaset instanceof Question) {
-				questions.add((Question) qaset);
-			}
-			TerminologyObject[] children = qaset.getChildren();
-			flattenQASets(Arrays.asList(children), questions);
-		}
 	}
 
 	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding) {

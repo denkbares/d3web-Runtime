@@ -503,7 +503,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 */
 	public static Set<QContainer> getBlockedQContainers(Session session) {
 		Set<QContainer> result = new HashSet<QContainer>();
-		Session emptySession = new CopiedSession(session.getKnowledgeBase());
+		Session emptySession = new CopiedSession(session);
 		Map<Question, Value> finalValues = getFinalValues(session);
 		// now all unmutable facts are added to the emptySession
 		for (Entry<Question, Value> e : finalValues.entrySet()) {

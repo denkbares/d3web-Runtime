@@ -73,8 +73,15 @@ public class DefaultTargetFunction implements TargetFunction {
 			// we are not allowed to use it
 			if (isContraIndicated(session, (InterviewObject) parent)) continue;
 			if (parent instanceof QContainer) {
-				// if questionnaire, use it as target
-				targets.add(new Target((QContainer) parent));
+				// if toplevel questionnaire, use it as target
+				if (parent.getParents().length == 0
+						|| (parent.getParents().length == 1 && parent.getParents()[0] == object.getKnowledgeBase().getRootQASet())) {
+					targets.add(new Target((QContainer) parent));
+				}
+				// otherwise check parents
+				else {
+					addParentContainers(targets, session, parent);
+				}
 			}
 			else {
 				// if not, check its parents

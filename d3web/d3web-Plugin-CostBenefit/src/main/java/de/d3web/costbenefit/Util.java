@@ -56,6 +56,7 @@ import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.Form;
+import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
 
@@ -87,7 +88,7 @@ public final class Util {
 	 * @return the created copy with value facts only
 	 */
 	public static Session createSearchCopy(Session session) {
-		Session testCase = new CopiedSession(session.getKnowledgeBase());
+		Session testCase = new CopiedSession(session);
 		testCase.getBlackboard().setSourceRecording(false);
 		Blackboard blackboard = session.getBlackboard();
 		List<? extends Question> answeredQuestions = blackboard.getAnsweredQuestions();
@@ -140,7 +141,12 @@ public final class Util {
 
 	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
 		List<QuestionOC> questions = new LinkedList<QuestionOC>();
-		collectQuestions(qContainer, questions);
+		FormStrategy formStrategy = getFormStrategy(session);
+		for (Question q : formStrategy.getForm(qContainer, session).getActiveQuestions()) {
+			if (q instanceof QuestionOC) {
+				questions.add((QuestionOC) q);
+			}
+		}
 		Blackboard blackboard = session.getBlackboard();
 		Map<Question, Value> valuesToSet = new HashMap<Question, Value>();
 		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
@@ -239,6 +245,19 @@ public final class Util {
 			session.getPropagationManager().commitPropagation();
 		}
 		return facts;
+	}
+
+	private static FormStrategy getFormStrategy(Session session) {
+		if (session instanceof DecoratedSession) {
+			DecoratedSession ds = (DecoratedSession) session;
+			return getFormStrategy(ds.getRootSession());
+		}
+		else if (session instanceof CopiedSession) {
+			CopiedSession cs = (CopiedSession) session;
+			return getFormStrategy(cs.getOriginalSession());
+		}
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		return interview.getFormStrategy();
 	}
 
 	/*
