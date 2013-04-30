@@ -48,6 +48,7 @@ import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.interview.EmptyForm;
 import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
+import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -96,7 +97,9 @@ public class RepeatedIndicationTest {
 		conditions.add(new CondEqual(sex, male));
 		conditions.add(new CondEqual(pregnant, yes));
 		Condition cond = new CondAnd(conditions);
-		RuleFactory.createRepeatedIndicationRule(sex, cond);
+		ActionRepeatedIndication action = new ActionRepeatedIndication();
+		action.setQASets(sex);
+		RuleFactory.createRule(action, cond);
 
 		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
 

@@ -16,12 +16,16 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.core.inference.condition;
+package de.d3web.interview.inference.condition;
 
+import de.d3web.core.inference.condition.CondQuestion;
+import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
@@ -44,9 +48,10 @@ public class CondRepeatedAnswered extends CondQuestion {
 
 	@Override
 	public boolean eval(Session session) throws NoAnswerException {
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		return session.getBlackboard().getIndication(getQuestion()).hasState(
 				Indication.State.REPEATED_INDICATED)
-				&& session.getInterview().getInterviewAgenda().hasState(
+				&& interview.getInterviewAgenda().hasState(
 						getQuestion(), InterviewState.INACTIVE);
 	}
 

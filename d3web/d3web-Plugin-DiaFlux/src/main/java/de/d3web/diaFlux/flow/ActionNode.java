@@ -24,14 +24,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.condition.CondRepeatedAnswered;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.FluxSolver;
-import de.d3web.indication.ActionRepeatedIndication;
+import de.d3web.interview.indication.ActionRepeatedIndication;
+import de.d3web.interview.inference.condition.CondRepeatedAnswered;
 
 public class ActionNode extends AbstractNode {
 

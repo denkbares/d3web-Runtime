@@ -18,7 +18,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.indication;
+package de.d3web.interview.indication;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
@@ -29,6 +29,9 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.indication.ActionNextQASet;
+import de.d3web.interview.Interview;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This action type indicates a list of {@link QASet} instances no matter,
@@ -58,7 +61,8 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 			session.getBlackboard().addInterviewFact(fact);
 			// notify immediately to enable usage in condition
 			PropagationEntry entry = new PropagationEntry(qaset, oldIndication, INDICATION);
-			session.getInterview().notifyFactChange(entry);
+			Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+			interview.notifyFactChange(entry);
 		}
 	}
 

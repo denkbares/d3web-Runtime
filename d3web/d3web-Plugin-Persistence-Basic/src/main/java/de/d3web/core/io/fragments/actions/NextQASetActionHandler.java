@@ -34,7 +34,6 @@ import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRelevantIndication;
-import de.d3web.indication.ActionRepeatedIndication;
 
 /**
  * Handles ActionNextQASet and its default successors
@@ -85,11 +84,6 @@ public class NextQASetActionHandler implements FragmentHandler {
 			action = actionInstantIndication;
 
 		}
-		else if (type.equals("RepeatedIndication")) {
-			ActionRepeatedIndication ari = new ActionRepeatedIndication();
-			ari.setQASets(qaSets);
-			action = ari;
-		}
 		else if (type.equals("ActionRelevantIndication")) {
 			ActionRelevantIndication ari = new ActionRelevantIndication();
 			ari.setQASets(qaSets);
@@ -108,9 +102,6 @@ public class NextQASetActionHandler implements FragmentHandler {
 		}
 		else if (object instanceof ActionIndication) {
 			type = "ActionIndication";
-		}
-		else if (object instanceof ActionRepeatedIndication) {
-			type = "RepeatedIndication";
 		}
 		else if (object instanceof ActionRelevantIndication) {
 			type = "ActionRelevantIndication";

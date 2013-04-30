@@ -42,7 +42,6 @@ import de.d3web.indication.ActionIndication;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.ActionRelevantIndication;
-import de.d3web.indication.ActionRepeatedIndication;
 import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.scoring.ActionHeuristicPS;
@@ -204,53 +203,28 @@ public final class RuleFactory {
 	}
 
 	/**
-	 * Creates a repeated indication rule with the specified parameters.
+	 * Creates a rule with the specified action and condition
 	 * 
 	 */
-	public static Rule createRepeatedIndicationRule(
-			List<QASet> theAction,
+	public static Rule createRule(
+			PSAction theAction,
+			Condition theCondition) {
+		return createRule(theAction, theCondition, null);
+	}
+
+	/**
+	 * Creates a rule with the specified action, condition and exception
+	 * 
+	 */
+	public static Rule createRule(
+			PSAction theAction,
 			Condition theCondition,
 			Condition theRuleException) {
 
 		Rule rule = new Rule(PSMethodStrategic.class);
 
-		ActionRepeatedIndication ruleAction = new ActionRepeatedIndication();
-		ruleAction.setQASets(theAction);
-
-		setRuleParams(rule, ruleAction, theCondition, theRuleException);
+		setRuleParams(rule, theAction, theCondition, theRuleException);
 		return rule;
-	}
-
-	/**
-	 * Creates a repeated indication rule with the specified parameters.
-	 * 
-	 * @created 18.11.2010
-	 * @param id the id of the rule
-	 * @param theAction the questions to be repeatedly indicated
-	 * @param theCondition condition of the rule
-	 * @return an indication rule
-	 */
-	public static Rule createRepeatedIndicationRule(
-			List<QASet> theAction,
-			Condition theCondition) {
-
-		return createRepeatedIndicationRule(theAction, theCondition, null);
-	}
-
-	/**
-	 * Creates a repeated indication rule with the specified parameters.
-	 * 
-	 * @param String theId the id of the rule
-	 * @param singleIndication the question to be repeatedly indicated
-	 * @param theCondition condition of the rule
-	 * @return an indication rule
-	 */
-	public static Rule createRepeatedIndicationRule(
-			QASet singleIndication,
-			Condition theCondition) {
-		List<QASet> ind = new LinkedList<QASet>();
-		ind.add(singleIndication);
-		return createRepeatedIndicationRule(ind, theCondition, null);
 	}
 
 	/**

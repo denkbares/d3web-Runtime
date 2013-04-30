@@ -36,7 +36,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultBlackboard;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.interviewmanager.Interview;
 import de.d3web.core.session.protocol.Protocol;
 
 /**
@@ -134,8 +133,9 @@ public class DecoratedSession implements Session {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public Interview getInterview() {
+	public de.d3web.core.session.interviewmanager.Interview getInterview() {
 		throw new UnsupportedOperationException();
 	}
 
