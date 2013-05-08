@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2013 University Wuerzburg, Computer Science VI
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.costbenefit;
 
@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -47,8 +48,8 @@ import de.d3web.plugin.test.InitPluginManager;
 
 /**
  * 
- * @author SCHEU01
- * @created 08.05.2013 
+ * @author Katja Scheuermann & Markus Friedrich
+ * @created 08.05.2013
  */
 public class TestExtendedConflictsTPHeuristic {
 
@@ -66,12 +67,9 @@ public class TestExtendedConflictsTPHeuristic {
 	private QContainer stateContainer;
 	private ValueTransition vRearFog;
 	private QContainer qCSwitchRearFog;
+	private QContainer qCSwitchDriving;
+	private ValueTransition vDriving;
 
-	/**
-	 * 
-	 * @created 08.05.2013
-	 * @throws java.lang.Exception 
-	 */
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
@@ -126,14 +124,14 @@ public class TestExtendedConflictsTPHeuristic {
 		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchOff)),
 				Arrays.asList(vDaytime), qCSwitchDaytime);
 
-		QContainer qCSwitchDriving = new QContainer(kb, "Switch on driving light");
+		qCSwitchDriving = new QContainer(kb, "Switch on driving light");
 		QuestionOC qDrivingOn = new QuestionOC(qCSwitchDriving,
 				"Please switch the light switch to the driving light!");
 		qDrivingOn.addAlternative(new Choice("OK"));
 
 		ConditionalValueSetter cvsDrivingLights = new ConditionalValueSetter(new ChoiceValue(
 				cDrivingLight), null);
-		ValueTransition vDriving = new ValueTransition(stateLightSwitch,
+		vDriving = new ValueTransition(stateLightSwitch,
 				Arrays.asList(cvsDrivingLights));
 		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchDay)),
 				Arrays.asList(vDriving), qCSwitchDriving);
@@ -190,7 +188,6 @@ public class TestExtendedConflictsTPHeuristic {
 	 */
 	@Test
 	public void testfulfilledOriginalCondition() {
-
 		Session session = SessionFactory.createSession(kb);
 		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
 		Assert.assertTrue(condition instanceof CondAnd);
@@ -198,7 +195,6 @@ public class TestExtendedConflictsTPHeuristic {
 		Assert.assertTrue(terms.contains(condLightSwitchFront));
 		Assert.assertTrue(terms.contains(condLightSwitchDriving));
 		Assert.assertTrue(terms.contains(condLightSwitchDay));
-
 	}
 
 	/**
@@ -209,10 +205,7 @@ public class TestExtendedConflictsTPHeuristic {
 	 */
 	@Test
 	public void testfulfilledPreparingCondition() {
-
-		// expand the preparing conditions of a candidate which
-		// is already fulfilled and conflicted
-
+		// change start state to front fog light
 		stateLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFrontFogLight.getName());
 		Session session = SessionFactory.createSession(kb);
 		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
@@ -232,19 +225,19 @@ public class TestExtendedConflictsTPHeuristic {
 	 */
 	@Test
 	public void testfulfilledPreparingConditionBadCase() {
+		// adding another state question
 		QuestionOC stateFogLightSwitch = new QuestionOC(stateContainer, "fog light switch");
 		Choice cFogOn = new Choice("On");
 		Choice cFogOff = new Choice("Off");
 		stateFogLightSwitch.addAlternative(cFogOn);
 		stateFogLightSwitch.addAlternative(cFogOff);
-
 		stateFogLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFogOn.getName());
 		Condition condFogOn = new CondEqual(stateFogLightSwitch, new ChoiceValue(cFogOn));
 		Condition condFogOff = new CondEqual(stateFogLightSwitch, new ChoiceValue(cFogOff));
-
+		// switching to rear fog light requires the new state
 		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchFront, condFogOn)),
 				Arrays.asList(vRearFog), qCSwitchRearFog);
-
+		// add qcontainers switching the new state on and off
 		QContainer qCSwitchFog = new QContainer(kb, "Switch on the fog light switch");
 		QuestionOC qSwitchFog = new QuestionOC(qCSwitchFog,
 				"Please switch on the fog light switch!");
@@ -278,10 +271,56 @@ public class TestExtendedConflictsTPHeuristic {
 		Assert.assertTrue(terms.contains(condLightSwitchFront));
 		Assert.assertTrue(terms.contains(condLightSwitchDriving));
 		Assert.assertTrue(terms.contains(condLightSwitchDay));
+		// new state must not be used -> state question differs from original
+		// fulfilled condition
 		Assert.assertFalse(terms.contains(condFogOn));
 		Assert.assertFalse(terms.contains(condFogOff));
-
 	}
 
+	/**
+	 * The test checks the case, that a candidate preparing a conflicting
+	 * condition is fulfilled. In this special scenario the recursion stops
+	 * because of a value conflict in a recursively added condition.
+	 * 
+	 * @created 08.05.2013
+	 */
+	@Test
+	public void testfulfilledPreparingConditionWithRecursiveValueConflict() {
+		// change start state to front fog light
+		stateLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFrontFogLight.getName());
+		// switching to driving light is also possible with lights off
+		new StateTransition(new CondOr(Arrays.asList(condLightSwitchDay, condLightSwitchOff)),
+				Arrays.asList(vDriving), qCSwitchDriving);
+		Session session = SessionFactory.createSession(kb);
+		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
+		Assert.assertTrue(condition instanceof CondAnd);
+		List<Condition> terms = ((CondAnd) condition).getTerms();
+		Assert.assertTrue(terms.contains(condLightSwitchFront));
+		Assert.assertTrue(terms.contains(condLightSwitchDriving));
+		Assert.assertFalse(terms.contains(condLightSwitchDay));
+	}
+
+	/**
+	 * The test checks the case, that a candidate preparing a conflicting
+	 * condition is fulfilled. In this special scenario the candidate cannot be
+	 * added because it has a value conflict
+	 * 
+	 * @created 08.05.2013
+	 */
+	@Test
+	public void testfulfilledPreparingConditionWithValueConflict() {
+		// change start state to front fog light
+		stateLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFrontFogLight.getName());
+		// switching to rear fog light is also possible with lights off
+		new StateTransition(new CondOr(Arrays.asList(condLightSwitchFront, condLightSwitchOff)),
+				Arrays.asList(vRearFog), qCSwitchRearFog);
+		Session session = SessionFactory.createSession(kb);
+		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
+		Assert.assertTrue(condition instanceof CondAnd);
+		List<Condition> terms = ((CondAnd) condition).getTerms();
+		Assert.assertFalse(terms.contains(condLightSwitchFront));
+		Assert.assertFalse(terms.contains(condLightSwitchDriving));
+		Assert.assertFalse(terms.contains(condLightSwitchDay));
+	}
 
 }
