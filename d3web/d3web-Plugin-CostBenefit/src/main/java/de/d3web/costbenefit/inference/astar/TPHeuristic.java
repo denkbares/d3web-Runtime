@@ -77,13 +77,13 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		 * condequal if there are no conflicts (e.g. same termobjects in an
 		 * CondOr and CondEqual)
 		 */
-		private Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<Condition, Pair<List<Condition>, Set<QContainer>>>();
+		private final Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<Condition, Pair<List<Condition>, Set<QContainer>>>();
 
 		/**
 		 * Stores a List of Pairs of Conditions and QContainers establishing a
 		 * state where the conditions of the targetQContainer is applicable
 		 */
-		private Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
+		private final Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
 
 		private Collection<Question> cachedAbnormalQuestions = new HashSet<Question>();
 	}
@@ -590,43 +590,40 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 								// even try adding recursively more conditions
 								// not covering already covered values
 								// TODO: reactivate
-								// LinkedList<Condition> found = new
-								// LinkedList<Condition>();
-								// found.add(candidate);
-								// while (!found.isEmpty()) {
-								// Pair<List<Condition>, Set<QContainer>>
-								// recursivePair =
-								// sessionObject.preconditionCache.get(found.pop());
-								// for (Condition recursiveCandidate :
-								// recursivePair.getA()) {
-								// if
-								// (recursiveCandidate.getTerminalObjects().size()
-								// == 1
-								// &&
-								// recursiveCandidate.getTerminalObjects().iterator().next()
-								// == question) {
-								// Set<Value> coveredRecursiveValues =
-								// getCoveredValues(
-								// recursiveCandidate).get(question);
-								// if (Collections.disjoint(coveredValues,
-								// coveredRecursiveValues)) {
-								// conditionsToUse.add(recursiveCandidate);
-								// // this is very, very rare in
-								// // one call, so we can
-								// // directly update the condition
-								// // and the covered
-								// // values
-								// condition = new CondAnd(conditionsToUse);
-								// coveredValueMap =
-								// getCoveredValues(condition);
-								// coveredValues =
-								// coveredValueMap.get(question);
-								// found.add(recursiveCandidate);
-								// }
-								// }
-								// }
-								//
-								// }
+								LinkedList<Condition> found = new
+										LinkedList<Condition>();
+								found.add(candidate);
+								while (!found.isEmpty()) {
+									Pair<List<Condition>, Set<QContainer>> recursivePair =
+											sessionObject.preconditionCache.get(found.pop());
+									for (Condition recursiveCandidate : recursivePair.getA()) {
+										if (recursiveCandidate.getTerminalObjects().size()
+													== 1
+												&&
+												recursiveCandidate.getTerminalObjects().iterator().next()
+													== question) {
+											Set<Value> coveredRecursiveValues =
+													getCoveredValues(
+															recursiveCandidate).get(question);
+											if (Collections.disjoint(coveredValues,
+													coveredRecursiveValues)) {
+												conditionsToUse.add(recursiveCandidate);
+												// this is very, very rare in
+												// one call, so we can
+												// directly update the condition
+												// and the covered
+												// values
+												condition = new CondAnd(conditionsToUse);
+												coveredValueMap =
+														getCoveredValues(condition);
+												coveredValues =
+														coveredValueMap.get(question);
+												found.add(recursiveCandidate);
+											}
+										}
+									}
+
+								}
 							}
 						}
 					}

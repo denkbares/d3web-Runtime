@@ -222,12 +222,8 @@ public class TestConflictsTPHeuristic {
 		hMeasurement = calculateHeuristic(kb, qCMeasure);
 
 		Assert.assertEquals(5.0, hMeasurement);
-
-		// TODO test improve distance with conflicting questions by the divided
-		// transition heuristic
-		// TODO
 	}
-
+	
 	private double calculateHeuristic(KnowledgeBase kb, QContainer qCMeasure) {
 		Session session = SessionFactory.createSession(kb);
 		PSMethodCostBenefit costBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
