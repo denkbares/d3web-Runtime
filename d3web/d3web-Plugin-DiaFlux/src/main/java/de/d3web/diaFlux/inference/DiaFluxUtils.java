@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
@@ -49,6 +50,9 @@ public final class DiaFluxUtils {
 
 	private DiaFluxUtils() {
 	}
+
+	public static final Property<Boolean> FORCE_PROPAGATION = Property.getProperty(
+			"forcePropagation", Boolean.class);
 
 	// TODO cleanup, new FlowSet is created on each call
 	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {

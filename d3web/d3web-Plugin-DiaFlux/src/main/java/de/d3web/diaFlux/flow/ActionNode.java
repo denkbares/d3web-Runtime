@@ -23,6 +23,7 @@ package de.d3web.diaFlux.flow;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
@@ -30,6 +31,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.diaFlux.inference.ForcingSetQuestionAction;
 import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.interview.inference.condition.CondRepeatedAnswered;
 
@@ -41,25 +43,35 @@ public class ActionNode extends AbstractNode {
 	public ActionNode(String id, PSAction action) {
 		super(id, action.toString());
 
-		this.action = action;
 
-		if (this.action instanceof ActionRepeatedIndication) {
+		Condition preCondition = ConditionTrue.INSTANCE;
+		if (action instanceof ActionRepeatedIndication) {
 			Question question = (Question) ((ActionRepeatedIndication) action).getQASets().get(0);
-			this.edgePrecondition = new CondRepeatedAnswered(question);
+			preCondition = new CondRepeatedAnswered(question);
 		}
-		else {
-			edgePrecondition = ConditionTrue.INSTANCE;
+		else if (action instanceof ActionSetQuestion) {
+			action = new ForcingSetQuestionAction((ActionSetQuestion) action);
 		}
+
+		this.action = action;
+		this.edgePrecondition = preCondition;
 
 	}
 
+	// do not call this method internally, as it unwraps a
+	// ForcingSetQuestionAction
 	public PSAction getAction() {
-		return action;
+		if (this.action instanceof ForcingSetQuestionAction) {
+			return ((ForcingSetQuestionAction) this.action).getDelegate();
+		}
+		else {
+			return this.action;
+		}
 	}
 
 	@Override
 	public void execute(Session session, FlowRun run) {
-		getAction().doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
+		this.action.doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
 
 	}
 
@@ -71,20 +83,20 @@ public class ActionNode extends AbstractNode {
 	@Override
 	public List<? extends TerminologyObject> getHookedObjects() {
 		List<? extends TerminologyObject> objects = new LinkedList<TerminologyObject>(
-				action.getForwardObjects());
-		objects.removeAll(action.getBackwardObjects());
+				this.action.getForwardObjects());
+		objects.removeAll(this.action.getBackwardObjects());
 
 		return objects;
 	}
 
 	@Override
 	public void retract(Session session, FlowRun run) {
-		getAction().undo(session, this, session.getPSMethodInstance(FluxSolver.class));
+		this.action.undo(session, this, session.getPSMethodInstance(FluxSolver.class));
 	}
 
 	@Override
 	public boolean isReevaluate(Session session) {
-		return action.hasChangedValue(session);
+		return this.action.hasChangedValue(session);
 	}
 
 	@Override
@@ -94,8 +106,8 @@ public class ActionNode extends AbstractNode {
 
 		// redo action with SSN as source
 		retract(session, null);
-		if (!(getAction() instanceof ActionRepeatedIndication)) {
-			getAction().doIt(session, FluxSolver.SNAPSHOT_SOURCE,
+		if (!(this.action instanceof ActionRepeatedIndication)) {
+			this.action.doIt(session, FluxSolver.SNAPSHOT_SOURCE,
 					session.getPSMethodInstance(FluxSolver.class));
 		}
 
