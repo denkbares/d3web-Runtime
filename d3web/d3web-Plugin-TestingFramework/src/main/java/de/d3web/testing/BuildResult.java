@@ -34,6 +34,10 @@ import java.util.Set;
  */
 public final class BuildResult {
 
+	public void setVerbosePersistence(boolean verbosePersistence) {
+		this.verbosePersistence = verbosePersistence;
+	}
+
 	/**
 	 * List of test results of executed tests with unexpected outcome
 	 */
@@ -54,6 +58,8 @@ public final class BuildResult {
 	 */
 	private int buildNumber = 0;
 
+	private boolean verbosePersistence = false;
+
 	public BuildResult() {
 		this(new Date());
 	}
@@ -62,14 +68,19 @@ public final class BuildResult {
 		this.buildDate = buildDate;
 	}
 
-	private BuildResult(long buildDuration, Date buildDate, List<TestResult> testResults) {
+	private BuildResult(long buildDuration, Date buildDate, List<TestResult> testResults, boolean verbosePersistence) {
 		this.buildDuration = buildDuration;
 		this.buildDate = buildDate;
+		this.verbosePersistence = verbosePersistence;
 		this.testResults.addAll(testResults);
 	}
 
-	public static BuildResult createBuildResult(long buildDuration, Date buildDate, List<TestResult> testResults, int successfulTests) {
-		return new BuildResult(buildDuration, buildDate, testResults);
+	public static BuildResult createBuildResult(long buildDuration, Date buildDate, List<TestResult> testResults, int successfulTests, boolean verbosePersistence) {
+		return new BuildResult(buildDuration, buildDate, testResults, verbosePersistence);
+	}
+
+	public boolean isVerbosePersistence() {
+		return verbosePersistence;
 	}
 
 	/**

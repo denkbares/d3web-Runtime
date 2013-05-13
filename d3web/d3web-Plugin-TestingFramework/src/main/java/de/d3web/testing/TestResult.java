@@ -39,8 +39,9 @@ public class TestResult implements Comparable<TestResult> {
 	private final String testName;
 
 	private final Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
+	private final Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
 
-	private int successfullTestObjectRuns = 0;
+	// private int successfullTestObjectRuns = 0;
 
 	/**
 	 * Creates a new TestResult for the specified test with the specified
@@ -55,14 +56,32 @@ public class TestResult implements Comparable<TestResult> {
 		this.testName = testName;
 	}
 
-	private TestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, int successfulRuns) {
+	// private TestResult(String testName, String[] configuration, Map<String,
+	// Message> unexpectedMessages, int successfulRuns) {
+	// this(testName, configuration);
+	// this.unexpectedMessages.putAll(unexpectedMessages);
+	// for (int i = 0; i < successfulRuns; i++) {
+	// expectedMessages.put(generateUnknownTestObjectString(i),
+	// Message.SUCCESS);
+	// }
+	// }
+
+	private TestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages) {
 		this(testName, configuration);
 		this.unexpectedMessages.putAll(unexpectedMessages);
-		this.successfullTestObjectRuns = successfulRuns;
+		this.expectedMessages.putAll(expectedMessages);
 	}
 
 	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, int successfulRuns) {
-		return new TestResult(testName, configuration, unexpectedMessages, successfulRuns);
+		Map<String, Message> expectedMessages = new TreeMap<String, Message>();
+		for (int i = 0; i < successfulRuns; i++) {
+			expectedMessages.put(generateUnknownTestObjectString(i), Message.SUCCESS);
+		}
+		return new TestResult(testName, configuration, unexpectedMessages, expectedMessages);
+	}
+
+	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages) {
+		return new TestResult(testName, configuration, unexpectedMessages, expectedMessages);
 	}
 
 	public String getTestName() {
@@ -121,7 +140,7 @@ public class TestResult implements Comparable<TestResult> {
 		result = prime * result
 				+ ((unexpectedMessages == null) ? 0 : unexpectedMessages.hashCode());
 		result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
-		result = prime * result + successfullTestObjectRuns;
+		result = prime * result + getSuccessfullTestObjectRuns();
 		return result;
 	}
 
@@ -138,7 +157,7 @@ public class TestResult implements Comparable<TestResult> {
 		Collection<String> otherTestObjectNames = other.getTestObjectsWithUnexpectedOutcome();
 		if (getTestObjectsWithUnexpectedOutcome().size() != otherTestObjectNames.size()) return false;
 		if (getType() != other.getType()) return false;
-		if (successfullTestObjectRuns != other.getSuccessfullTestObjectRuns()) return false;
+		if (getSuccessfullTestObjectRuns() != other.getSuccessfullTestObjectRuns()) return false;
 		if (!unexpectedMessages.equals(other.unexpectedMessages)) return false;
 		return true;
 	}
@@ -152,7 +171,7 @@ public class TestResult implements Comparable<TestResult> {
 	 * @return
 	 */
 	public int getSuccessfullTestObjectRuns() {
-		return successfullTestObjectRuns;
+		return this.expectedMessages.size();
 	}
 
 	/**
@@ -211,12 +230,44 @@ public class TestResult implements Comparable<TestResult> {
 		this.unexpectedMessages.put(testObjectName, message);
 	}
 
+	/**
+	 * Adds a test object/message pair to this TestResult. Note: If the type of
+	 * the message is "SUCCESS" then the message text will be ignored.
+	 * 
+	 * @created 14.08.2012
+	 * @param testObjectName
+	 * @param message
+	 */
+	public void addExpectedMessage(String testObjectName, Message message) {
+		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
+		if (message == null) throw new NullPointerException("Message cannot be null");
+		if (!message.getType().equals(Message.Type.SUCCESS)) {
+			throw new InputMismatchException("not-success message logged as success message: "
+					+ message.toString());
+		}
+		this.expectedMessages.put(testObjectName, message);
+	}
+
 	public Collection<String> getTestObjectsWithUnexpectedOutcome() {
 		return unexpectedMessages.keySet();
 	}
 
-	public Message getUnexpectedMessageForTestObject(String testObjectName) {
-		return unexpectedMessages.get(testObjectName);
+	public Collection<String> getTestObjectsWithExpectedOutcome() {
+		return expectedMessages.keySet();
+	}
+
+	public Message getMessageForTestObject(String testObjectName) {
+		if (unexpectedMessages.containsKey(testObjectName)) {
+			return unexpectedMessages.get(testObjectName);
+
+		}
+		else {
+			return expectedMessages.get(testObjectName);
+		}
+	}
+
+	public Message getExpectedMessageForTestObject(String testObjectName) {
+		return expectedMessages.get(testObjectName);
 	}
 
 	/**
@@ -224,7 +275,12 @@ public class TestResult implements Comparable<TestResult> {
 	 * 
 	 * @created 26.11.2012
 	 */
-	public void incSuccessfulTestObjectRuns() {
-		successfullTestObjectRuns++;
+	// public void incSuccessfulTestObjectRuns() {
+	// this.expectedMessages.put(generateUnknownTestObjectString(expectedMessages.size()),
+	// Message.SUCCESS);
+	// }
+
+	private static String generateUnknownTestObjectString(int i) {
+		return "unknown-TestObject-" + new Integer(i).toString();
 	}
 }

@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -109,14 +109,16 @@ public class BuildResultPersistenceHandler {
 			// add required test attributes
 			test.setAttribute(NAME, result.getTestName());
 
-			// add required test attributes
-			String numberOfSuccessfulTestsString = "" + result.getSuccessfullTestObjectRuns();
-			test.setAttribute(SUCCESSES, numberOfSuccessfulTestsString);
-
-			// add total number of test objects for this test
-			// int numberOfTestObjects = result.getTestObjectNames().size();
-			// test.setAttribute(TESTOBJECT_COUNT,
-			// String.valueOf(numberOfTestObjects));
+			if (build.isVerbosePersistence()) {
+				// write success messages verbose
+				writeMessages(document, result, test, result.getTestObjectsWithExpectedOutcome());
+			}
+			else {
+				// add required test attribute for aggregated persistence of
+				// successful tests
+				String numberOfSuccessfulTestsString = "" + result.getSuccessfullTestObjectRuns();
+				test.setAttribute(SUCCESSES, numberOfSuccessfulTestsString);
+			}
 
 			// add optional test attributes
 			if (result.getConfiguration() != null) {
@@ -124,29 +126,37 @@ public class BuildResultPersistenceHandler {
 						TestParser.concatParameters(result.getConfiguration()));
 			}
 
-			for (String testObjectName : result.getTestObjectsWithUnexpectedOutcome()) {
-				Message message = result.getUnexpectedMessageForTestObject(testObjectName);
-				if (message == null) {
-					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
-							"No message found for test object '" + testObjectName + "' in test '"
-									+ result.getTestName() + "'.");
-					continue;
-				}
-				if (message.getType().equals(Message.Type.SUCCESS)) {
-					throw new InputMismatchException("success logged as full message: "
-							+ message.toString());
-				}
-
-				Element messageElement = document.createElement(MESSAGE);
-				messageElement.setAttribute(TYPE, message.getType().toString());
-				messageElement.setAttribute(TEXT, message.getText());
-				messageElement.setAttribute(TEST_OBJECT, testObjectName);
-				test.appendChild(messageElement);
-			}
+			// write unexpected messages
+			writeMessages(document, result, test, result.getTestObjectsWithUnexpectedOutcome());
 
 		}
 
 		return document;
+	}
+
+	/**
+	 * 
+	 * @created 13.05.2013
+	 * @param document
+	 * @param result
+	 * @param test
+	 */
+	private static void writeMessages(Document document, TestResult result, Element parent, Collection<String> testObjects) {
+		for (String testObjectName : testObjects) {
+			Message message = result.getMessageForTestObject(testObjectName);
+			if (message == null) {
+				Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
+						"No message found for test object '" + testObjectName + "' in test '"
+								+ result.getTestName() + "'.");
+				continue;
+			}
+
+			Element messageElement = document.createElement(MESSAGE);
+			messageElement.setAttribute(TYPE, message.getType().toString());
+			messageElement.setAttribute(TEXT, message.getText());
+			messageElement.setAttribute(TEST_OBJECT, testObjectName);
+			parent.appendChild(messageElement);
+		}
 	}
 
 	public static BuildResult fromXML(Document document) throws ParseException {
@@ -165,6 +175,7 @@ public class BuildResultPersistenceHandler {
 
 		// parse single child tests
 		NodeList testElements = document.getElementsByTagName(TEST);
+		boolean verbosePersistence = false;
 		for (int i = 0; i < testElements.getLength(); i++) {
 			// parse every single test
 			Element test = (Element) testElements.item(i);
@@ -193,7 +204,7 @@ public class BuildResultPersistenceHandler {
 			NodeList messageElements = test.getElementsByTagName(MESSAGE);
 			List<String> configParameters = TestParser.splitParameters(configuration);
 			Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
-
+			Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
 			for (int j = 0; j < messageElements.getLength(); j++) {
 				Element messageElement = (Element) messageElements.item(j);
 				if (messageElement != null) {
@@ -207,8 +218,9 @@ public class BuildResultPersistenceHandler {
 						text = null;
 					}
 					if (typeString.equals(Message.Type.SUCCESS.toString())) {
-						// this cannot happen with current persistence, but
-						// enables to read old report files
+						String testObjectName = messageElement.getAttribute(TEST_OBJECT);
+						Message m = new Message(type, text);
+						expectedMessages.put(testObjectName, m);
 						successfulTests++;
 					}
 					else {
@@ -218,13 +230,24 @@ public class BuildResultPersistenceHandler {
 					}
 				}
 			}
-			resultList.add(TestResult.createTestResult(testName,
-					configParameters.toArray(new String[configParameters.size()]),
-					unexpectedMessages,
-					successfulTests));
+			if (successfulTests > 0) {
+				// was stored non-verbose persistence
+				resultList.add(TestResult.createTestResult(testName,
+						configParameters.toArray(new String[configParameters.size()]),
+						unexpectedMessages,
+						successfulTests));
+			}
+			else {
+				// was stored verbose persistence
+				verbosePersistence = true;
+				resultList.add(TestResult.createTestResult(testName,
+						configParameters.toArray(new String[configParameters.size()]),
+						unexpectedMessages,
+						expectedMessages));
+			}
 		}
 
 		return BuildResult.createBuildResult(duration, date, resultList,
-				successfulTests);
+				successfulTests, verbosePersistence);
 	}
 }

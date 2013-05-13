@@ -390,8 +390,7 @@ public class TestExecutor {
 				Message message = test.execute(cast(testObject, test.getTestObjectClass()), args,
 						ignores);
 				if (message.getType().equals(Message.Type.SUCCESS)) {
-					// successful runs are only counted, not logged verbosely
-					testResult.incSuccessfulTestObjectRuns();
+					testResult.addExpectedMessage(testObjectName, message);
 				}
 				else {
 					testResult.addUnexpectedMessage(testObjectName, message);
