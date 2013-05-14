@@ -225,6 +225,8 @@ public class TestExtendedConflictsTPHeuristic {
 	 */
 	@Test
 	public void testfulfilledPreparingConditionBadCase() {
+		// change start state to front fog light
+		stateLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFrontFogLight.getName());
 		// adding another state question
 		QuestionOC stateFogLightSwitch = new QuestionOC(stateContainer, "fog light switch");
 		Choice cFogOn = new Choice("On");
@@ -271,9 +273,10 @@ public class TestExtendedConflictsTPHeuristic {
 		Assert.assertTrue(terms.contains(condLightSwitchFront));
 		Assert.assertTrue(terms.contains(condLightSwitchDriving));
 		Assert.assertTrue(terms.contains(condLightSwitchDay));
-		// new state must not be used -> state question differs from original
-		// fulfilled condition
-		Assert.assertFalse(terms.contains(condFogOn));
+		// cond fog on can be used, but is fullfilled anyway
+		Assert.assertTrue(terms.contains(condFogOn));
+		// condFogOff must not be used -> state question differs from original
+		// fulfilled condition, recursive adding is blocked
 		Assert.assertFalse(terms.contains(condFogOff));
 	}
 

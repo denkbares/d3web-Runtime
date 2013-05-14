@@ -562,67 +562,73 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				condition = new CondAnd(conditionsToUse);
 			}
 			// add fullfilled conditions preparing conflicting original
-			// conditions, if they have the same question as termobject (Reason:
-			// if F1=C is part of the original condition, we expand F1=A and
-			// F1=B is needed to prepare F1=C, then F1=B can also be added).
-			// TODO: create a JUnit Test testing this functionality, especially
-			// recursive adding of conditions
+			// conditions (Reason: if F1=C is part of the original condition, we
+			// expand F1=A and F1=B is needed to prepare F1=C, then F1=B can
+			// also be added).
 			if (!targetCaching && conflictingUnfullfilledOriginalConds.size() > 0) {
 				Map<Question, Set<Value>> coveredValueMap = getCoveredValues(condition);
 				for (Condition conflicting : conflictingUnfullfilledOriginalConds) {
 					Pair<List<Condition>, Set<QContainer>> pair = sessionObject.preconditionCache.get(conflicting);
 					Question question = (Question) conflicting.getTerminalObjects().iterator().next();
-					Set<Value> coveredValues = coveredValueMap.get(question);
 					for (Condition candidate : pair.getA()) {
 						if (candidate.getTerminalObjects().size() == 1
-								&& candidate.getTerminalObjects().iterator().next() == question
 								&& Conditions.isTrue(candidate, sessionRepresentingTheActualState)) {
+							TerminologyObject candidateQuestion = candidate.getTerminalObjects().iterator().next();
+							Set<Value> coveredValues = coveredValueMap.get(candidateQuestion);
 							Set<Value> coveredCandidateValues = getCoveredValues(candidate).get(
-									question);
-							if (Collections.disjoint(coveredValues, coveredCandidateValues)) {
+									candidateQuestion);
+							if (coveredValues == null
+									|| Collections.disjoint(coveredValues, coveredCandidateValues)) {
 								conditionsToUse.add(candidate);
 								// this is very rare in one call, so we can
 								// directly update the condition and the covered
 								// values
 								condition = new CondAnd(conditionsToUse);
 								coveredValueMap = getCoveredValues(condition);
-								coveredValues = coveredValueMap.get(question);
 								// even try adding recursively more conditions
-								// not covering already covered values
-								// TODO: reactivate
-								LinkedList<Condition> found = new
-										LinkedList<Condition>();
-								found.add(candidate);
-								while (!found.isEmpty()) {
-									Pair<List<Condition>, Set<QContainer>> recursivePair =
-											sessionObject.preconditionCache.get(found.pop());
-									for (Condition recursiveCandidate : recursivePair.getA()) {
-										if (recursiveCandidate.getTerminalObjects().size()
-													== 1
-												&&
-												recursiveCandidate.getTerminalObjects().iterator().next()
-													== question) {
-											Set<Value> coveredRecursiveValues =
-													getCoveredValues(
-															recursiveCandidate).get(question);
-											if (Collections.disjoint(coveredValues,
-													coveredRecursiveValues)) {
-												conditionsToUse.add(recursiveCandidate);
-												// this is very, very rare in
-												// one call, so we can
-												// directly update the condition
-												// and the covered
-												// values
-												condition = new CondAnd(conditionsToUse);
-												coveredValueMap =
-														getCoveredValues(condition);
-												coveredValues =
-														coveredValueMap.get(question);
-												found.add(recursiveCandidate);
+								// not covering already covered values, in this
+								// case, the candidate must refer to the same
+								// question (otherwise the fullfilled condition
+								// could be fullfilled during the complete path,
+								// so it does not have to be established again)
+								if (question == candidateQuestion) {
+									coveredValues = coveredValueMap.get(question);
+									LinkedList<Condition> found = new
+											LinkedList<Condition>();
+									found.add(candidate);
+									while (!found.isEmpty()) {
+										Pair<List<Condition>, Set<QContainer>> recursivePair =
+												sessionObject.preconditionCache.get(found.pop());
+										for (Condition recursiveCandidate : recursivePair.getA()) {
+											if (recursiveCandidate.getTerminalObjects().size()
+														== 1
+													&&
+													recursiveCandidate.getTerminalObjects().iterator().next()
+														== question) {
+												Set<Value> coveredRecursiveValues =
+														getCoveredValues(
+																recursiveCandidate).get(question);
+												if (Collections.disjoint(coveredValues,
+														coveredRecursiveValues)) {
+													conditionsToUse.add(recursiveCandidate);
+													// this is very, very rare
+													// in
+													// one call, so we can
+													// directly update the
+													// condition
+													// and the covered
+													// values
+													condition = new CondAnd(conditionsToUse);
+													coveredValueMap =
+															getCoveredValues(condition);
+													coveredValues =
+															coveredValueMap.get(question);
+													found.add(recursiveCandidate);
+												}
 											}
 										}
-									}
 
+									}
 								}
 							}
 						}
