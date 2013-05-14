@@ -11,13 +11,13 @@
                 <xs:complexType>
                   <xs:attribute name="testObject" type="xs:string" use="required" />
                   <xs:attribute name="text" type="xs:string" />
-                  <xs:attribute name="type" type="xs:string" use="required" />
+                  <xs:attribute name="type" type="resultCategory" use="required" />
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
             <xs:attribute name="configuration" type="xs:string" />
             <xs:attribute name="name" type="xs:string" use="required" />
-             <xs:attribute name="numberOfSuccessfullyTestedObjects" type="xs:integer" use="optional" />
+            <xs:attribute name="numberOfSuccessfullyTestedObjects" type="xs:integer" use="optional" />
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -25,5 +25,13 @@
       <xs:attribute name="duration" type="xs:integer" use="required" />
     </xs:complexType>
   </xs:element>
+  
+  <xs:simpleType name="resultCategory">
+    <xs:restriction base="xs:string">
+    <xs:enumeration value="SUCCESS"/>
+    <xs:enumeration value="FAILURE"/>
+    <xs:enumeration value="ERROR"/>
+    </xs:restriction>
+</xs:simpleType>
 </xs:schema>
 
