@@ -27,20 +27,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.AbstractTerminologyObject;
+import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 
 /**
  * @author Reinhard Hatko
  * 
  */
-public class Flow extends AbstractTerminologyObject {
+public class Flow extends AbstractNamedObject {
 
 	private final List<Edge> edges;
 	private final List<Node> nodes;
 	private boolean autostart;
+	private final KnowledgeBase kb;
 
-	public Flow(KnowledgeBase kb, String name, List<Node> nodes, List<Edge> edges) {
-		super(kb, name);
+	Flow(KnowledgeBase kb, String name, List<Node> nodes, List<Edge> edges) {
+		super(name);
 		if (nodes == null) throw new IllegalArgumentException("nodes is null");
 
 		if (edges == null) throw new IllegalArgumentException("edges is null");
@@ -50,7 +51,7 @@ public class Flow extends AbstractTerminologyObject {
 		this.nodes = Collections.unmodifiableList(nodes);
 		this.edges = Collections.unmodifiableList(edges);
 		this.autostart = false;
-
+		this.kb = kb;
 		checkFlow();
 	}
 
@@ -135,6 +136,10 @@ public class Flow extends AbstractTerminologyObject {
 	public String toString() {
 		return "Flow [" + getName() + "]"
 				+ "@" + Integer.toHexString(hashCode());
+	}
+
+	public KnowledgeBase getKnowledgeBase() {
+		return this.kb;
 	}
 
 }

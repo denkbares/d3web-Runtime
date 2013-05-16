@@ -31,7 +31,7 @@ public class DiaFluxAutoDetect implements Autodetect {
 
 	@Override
 	public boolean check(KnowledgeBase kb) {
-		return DiaFluxUtils.getFlowSet(kb).size() > 0;
+		return DiaFluxUtils.hasFlows(kb);
 	}
 
 }

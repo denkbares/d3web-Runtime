@@ -26,9 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.DefaultKnowledgeStore;
-import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.KnowledgeStore;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -49,12 +47,7 @@ import de.d3web.core.knowledge.TerminologyObject;
  * @see de.d3web.core.knowledge.terminology.NamedObject
  * @see de.d3web.kernel.misc.PropertiesAdapter
  */
-public abstract class AbstractTerminologyObject implements TerminologyObject {
-
-	/**
-	 * Representing a short name of the object.
-	 */
-	private final String name;
+public abstract class AbstractTerminologyObject extends AbstractNamedObject implements TerminologyObject {
 
 	/**
 	 * The knowledge base this object belongs to.
@@ -77,8 +70,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	 */
 	private Set<AbstractTerminologyObject> childrenSet = null;
 
-	private final InfoStore infoStore = new DefaultInfoStore();
-
 	private final KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
 
 	private static final int BOUNDARY = 10;
@@ -91,6 +82,7 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	 * @throws NullPointerException if kb or name is null
 	 */
 	public AbstractTerminologyObject(KnowledgeBase kb, String name) {
+		super(name);
 		if (kb == null) {
 			throw new NullPointerException("KnowledgeBase of an id object must not be null");
 		}
@@ -98,7 +90,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 			throw new NullPointerException("Name of an id object must not be null");
 		}
 		this.knowledgeBase = kb;
-		this.name = name;
 		kb.getManager().putTerminologyObject(this);
 	}
 
@@ -166,19 +157,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 		return knowledgeBase;
 	}
 
-	/**
-	 * The text of a {@link AbstractTerminologyObject} is the name or a short
-	 * description of the object. Please keep it brief and use other fields for
-	 * longer content (e.g., prompt for {@link Question}, and comments for
-	 * {@link Solution}).
-	 * 
-	 * @return the name of this object
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
 	private static boolean removeParentChildLink(AbstractTerminologyObject parent,
 			AbstractTerminologyObject child) {
 		child.parents.remove(parent);
@@ -232,11 +210,6 @@ public abstract class AbstractTerminologyObject implements TerminologyObject {
 	@Override
 	public TerminologyObject[] getChildren() {
 		return children.toArray(new TerminologyObject[children.size()]);
-	}
-
-	@Override
-	public InfoStore getInfoStore() {
-		return infoStore;
 	}
 
 	@Override

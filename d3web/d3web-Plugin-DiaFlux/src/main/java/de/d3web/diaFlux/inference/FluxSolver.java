@@ -47,6 +47,7 @@ import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
+import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.NodeList;
 import de.d3web.diaFlux.flow.SnapshotNode;
@@ -69,6 +70,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 */
 	public final static KnowledgeKind<NodeList> DERIVING_NODES = new KnowledgeKind<NodeList>(
 			"DERIVING_NODES", NodeList.class);
+
+	public final static KnowledgeKind<FlowSet> FLOW_SET = new KnowledgeKind<FlowSet>(
+			"FLOW_SET", FlowSet.class);
 
 	public static final Object SNAPSHOT_SOURCE = SnapshotNode.class;
 

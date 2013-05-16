@@ -68,12 +68,26 @@ public final class FlowFactory {
 		}
 
 		Flow flow = new Flow(knowledgeBase, name, nodes, edges);
-
+		insertIntoKB(flow);
 		createEdgeMaps(flow);
 		createNodeLists(flow);
 
 		return flow;
+	}
 
+	/**
+	 * Adds the Flow to the FlowSet KnowledgeSlice
+	 * @param flow
+	 * @created 16.05.2013
+	 */
+	private static void insertIntoKB(Flow flow) {
+		KnowledgeBase kb = flow.getKnowledgeBase();
+		FlowSet flowSet = kb.getKnowledgeStore().getKnowledge(FluxSolver.FLOW_SET);
+		if (flowSet == null) {
+			flowSet = new FlowSet();
+			kb.getKnowledgeStore().addKnowledge(FluxSolver.FLOW_SET, flowSet);
+		}
+		flowSet.put(flow);
 	}
 
 	private static void createEdgeMaps(Flow flow) {

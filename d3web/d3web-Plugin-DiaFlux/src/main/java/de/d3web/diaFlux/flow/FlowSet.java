@@ -67,6 +67,10 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 		return map.values();
 	}
 
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+
 	@Override
 	public Iterator<Flow> iterator() {
 		return getFlows().iterator();

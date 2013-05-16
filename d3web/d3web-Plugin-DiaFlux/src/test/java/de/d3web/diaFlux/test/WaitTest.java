@@ -143,7 +143,8 @@ public class WaitTest {
 		Edge e13 = FlowFactory.createEdge("e13", start, setTime, ConditionTrue.INSTANCE);
 		Edge e17 = FlowFactory.createEdge("e17", setTime, primary, ConditionTrue.INSTANCE);
 		Edge e14 = FlowFactory.createEdge("e14", start2, loop, ConditionTrue.INSTANCE);
-		Flow global = new Flow(kb, "Main",
+
+		Flow global = FlowFactory.createFlow(kb, "Main",
 				Arrays.asList(start, primary, loop, setTime, start2),
 				Arrays.asList(e13, e14, e17));
 		global.setAutostart(true);

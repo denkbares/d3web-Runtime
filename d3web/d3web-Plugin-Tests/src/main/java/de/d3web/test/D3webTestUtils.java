@@ -49,15 +49,42 @@ public class D3webTestUtils {
 	 * @param failedMessage
 	 * @return s an error message containing
 	 */
-	public static Message createErrorMessage(Collection<TerminologyObject> erroneousObjects, String failedMessage) {
+	public static Message createErrorMessage(Collection<? extends NamedObject> erroneousObjects, String failedMessage) {
 		Collection<String> objectNames = new ArrayList<String>(erroneousObjects.size());
-		for (TerminologyObject object : erroneousObjects) {
+		for (NamedObject object : erroneousObjects) {
 			objectNames.add(object.getName());
 		}
 		return Utils.createErrorMessage(objectNames, failedMessage, NamedObject.class);
 	}
 
 
+	/**
+	 * Filters a list of {@link NamedObjects}s.
+	 * 
+	 * @created 16.05.2013
+	 * @param objects
+	 * @param ignores derived from ignore parameters of a test
+	 * @param additionalIgnores additional ignores as given by specific test
+	 *        (e.g. name of the rootQASet)
+	 * @return s the filtered List
+	 */
+	public static Collection<NamedObject> filterNamed(Collection<NamedObject> objects, String[][] ignores, String... additionalIgnores) {
+		Collection<Pattern> ignorePatterns = Utils.compileIgnores(ignores);
+
+		for (String ignore : additionalIgnores) {
+			ignorePatterns.add(Pattern.compile(ignore, Pattern.CASE_INSENSITIVE));
+		}
+
+		Collection<NamedObject> result = new LinkedList<NamedObject>();
+
+		for (NamedObject object : objects) {
+			if (Utils.isIgnored(object.getName(), ignorePatterns)) continue;
+
+			result.add(object);
+		}
+
+		return result;
+	}
 
 	/**
 	 * Filters a list of {@link TerminologyObject}s.

@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -70,7 +71,7 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 		ComposedNode composedNode = DiaFluxUtils.findFlow(kb, "Flow1").getNodesOfClass(
 				ComposedNode.class).iterator().next();
 		StartNode startNode = DiaFluxUtils.findStartNode(kb, "Flow3", "start1");
-		assertEquals(startNode, DiaFluxUtils.getCalledStartNode(kb, composedNode));
+		assertEquals(startNode, DiaFluxUtils.getCalledStartNode(composedNode));
 	}
 
 	@Test
@@ -102,6 +103,13 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 	}
 
 	@Test
+	public void getAutoStartNodes() {
+		List<StartNode> autostartNodes = DiaFluxUtils.getAutostartNodes(kb);
+		assertEquals(1, autostartNodes.size());
+		assertEquals(DiaFluxUtils.findStartNode(kb, "Flow1", "Start"), autostartNodes.get(0));
+	}
+
+	@Test
 	public void createFlowStructure() {
 		Map<Flow, Collection<ComposedNode>> flowStructure = DiaFluxUtils.createFlowStructure(kb);
 		Collection<ComposedNode> composedNodes = flowStructure.get(DiaFluxUtils.findFlow(kb,
@@ -109,4 +117,5 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 		assertTrue(composedNodes.containsAll(DiaFluxUtils.findFlow(kb, "Flow1").getNodesOfClass(
 				ComposedNode.class)));
 	}
+
 }

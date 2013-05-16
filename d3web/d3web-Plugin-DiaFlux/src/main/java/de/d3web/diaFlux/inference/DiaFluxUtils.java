@@ -54,19 +54,8 @@ public final class DiaFluxUtils {
 	public static final Property<Boolean> FORCE_PROPAGATION = Property.getProperty(
 			"forcePropagation", Boolean.class);
 
-	// TODO cleanup, new FlowSet is created on each call
 	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {
-
-		List<Flow> objects = knowledgeBase.getManager().getObjects(Flow.class);
-
-		FlowSet set = new FlowSet();
-
-		for (Flow flow : objects) {
-			set.put(flow);
-		}
-
-		return set;
-
+		return knowledgeBase.getKnowledgeStore().getKnowledge(FluxSolver.FLOW_SET);
 	}
 
 	public static FlowSet getFlowSet(Session session) {
@@ -79,8 +68,13 @@ public final class DiaFluxUtils {
 			return false;
 		}
 
-		FlowSet flowSet = getFlowSet(session);
-
+		return hasFlows(session.getKnowledgeBase());
+	}
+	
+	public static boolean hasFlows(KnowledgeBase base) {
+		
+		FlowSet flowSet = getFlowSet(base);
+		
 		return flowSet != null && !flowSet.getFlows().isEmpty();
 	}
 
@@ -181,8 +175,9 @@ public final class DiaFluxUtils {
 		return findNode(exitNodes, endNodeName);
 	}
 
-	public static StartNode getCalledStartNode(KnowledgeBase kb, ComposedNode composedNode) {
-		return findStartNode(kb, composedNode.getCalledFlowName(),
+	public static StartNode getCalledStartNode(ComposedNode composedNode) {
+		return findStartNode(composedNode.getFlow().getKnowledgeBase(),
+				composedNode.getCalledFlowName(),
 				composedNode.getCalledStartNodeName());
 	}
 
@@ -192,7 +187,7 @@ public final class DiaFluxUtils {
 	 * @created 08.02.2012
 	 */
 	public static Flow getCalledFlow(KnowledgeBase kb, ComposedNode composedNode) {
-		return getCalledStartNode(kb, composedNode).getFlow();
+		return getCalledStartNode(composedNode).getFlow();
 	}
 
 	/**
@@ -235,7 +230,7 @@ public final class DiaFluxUtils {
 			Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
 
 			for (ComposedNode composedNode : composedNodes) {
-				if (getCalledStartNode(kb, composedNode) == startNode) {
+				if (getCalledStartNode(composedNode) == startNode) {
 					result.add(composedNode);
 				}
 			}
