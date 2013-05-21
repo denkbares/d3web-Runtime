@@ -68,16 +68,16 @@ public class D3webTestUtils {
 	 *        (e.g. name of the rootQASet)
 	 * @return s the filtered List
 	 */
-	public static Collection<NamedObject> filterNamed(Collection<NamedObject> objects, String[][] ignores, String... additionalIgnores) {
+	public static <T extends NamedObject> Collection<T> filterNamed(Collection<T> objects, String[][] ignores, String... additionalIgnores) {
 		Collection<Pattern> ignorePatterns = Utils.compileIgnores(ignores);
 
 		for (String ignore : additionalIgnores) {
 			ignorePatterns.add(Pattern.compile(ignore, Pattern.CASE_INSENSITIVE));
 		}
 
-		Collection<NamedObject> result = new LinkedList<NamedObject>();
+		Collection<T> result = new LinkedList<T>();
 
-		for (NamedObject object : objects) {
+		for (T object : objects) {
 			if (Utils.isIgnored(object.getName(), ignorePatterns)) continue;
 
 			result.add(object);
