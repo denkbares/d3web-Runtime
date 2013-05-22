@@ -29,6 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
@@ -45,7 +46,6 @@ import de.d3web.plugin.PluginManager;
  */
 public final class Property<T> {
 
-	private static final String EXTENSIONPOINT_ID = "Property";
 	private static final Map<String, Property<?>> properties = new HashMap<String, Property<?>>();
 	private static final Map<String, Property<?>> synonyms = new HashMap<String, Property<?>>();
 	static {
@@ -347,7 +347,7 @@ public final class Property<T> {
 
 	private static void parseProperties() {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(
-					"d3web-Kernel-ExtensionPoints", EXTENSIONPOINT_ID);
+				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PROPERTY);
 		for (Extension extension : extensions) {
 			String pname = extension.getName();
 			Autosave pautosave = Autosave.valueOf(extension.getParameter("autosave"));

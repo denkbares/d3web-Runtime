@@ -18,6 +18,8 @@
  */
 package de.d3web.plugin;
 
+import de.d3web.core.extensions.KernelExtensionPoints;
+
 /**
  * An Entry for PluginConfig. Each entry contains
  * 
@@ -37,7 +39,7 @@ public class PluginEntry {
 
 		// search for autodetect instance
 		for (Extension e : PluginManager.getInstance().getExtensions(
-				"d3web-Kernel-ExtensionPoints", Autodetect.EXTENSIONPOINT_ID)) {
+				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_AUTODETECT)) {
 			if (e.getPluginID().equals(plugin.getPluginID())) {
 				autodetectInstance = (Autodetect) e.getSingleton();
 				break;

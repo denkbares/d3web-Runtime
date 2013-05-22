@@ -18,11 +18,16 @@
  */
 package de.d3web.plugin;
 
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 public interface Autodetect {
 
-	public final static String EXTENSIONPOINT_ID = "Autodetect";
+	/**
+	 * see {@link KernelExtensionPoints}
+	 */
+	@Deprecated
+	public final static String EXTENSIONPOINT_ID = KernelExtensionPoints.EXTENSIONPOINT_AUTODETECT;
 
 	/**
 	 * @return true, if the Plugin is needed, false otherwise

@@ -32,6 +32,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
@@ -130,7 +131,7 @@ public class DefaultSession implements Session {
 		// plugin was configured in the kb
 		// psMethods with state deactivated are not inserted
 		for (Extension e : PluginManager.getInstance().getExtensions(
-				"d3web-Kernel-ExtensionPoints", PSMethod.EXTENSIONPOINT_ID)) {
+				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD)) {
 			PSMethod psMethod = (PSMethod) e.getNewInstance();
 			boolean found = false;
 			for (PSConfig psConfig : knowledgebase.getPsConfigs()) {

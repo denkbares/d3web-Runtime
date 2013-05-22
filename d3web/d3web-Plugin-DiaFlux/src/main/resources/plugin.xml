@@ -24,6 +24,16 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="NamedObjectFinder"
+		id="DiaFluxFinder">
+		<parameter id="class"
+			value="de.d3web.diaFlux.flow.DiaFluxFinder"/>
+		<parameter id="name" value="DiaFluxFinder" />
+		<parameter id="description" value="NamedObjectFinder for DiaFlux" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="DiaFluxReader">

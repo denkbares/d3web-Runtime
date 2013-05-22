@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSConfig.PSState;
 import de.d3web.core.inference.PSMethod;
@@ -61,8 +62,8 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 		PSState psState = PSConfig.PSState.valueOf(element.getAttribute("state"));
 		Extension extension = null;
 		try {
-			extension = pluginManager.getExtension("d3web-Kernel-ExtensionPoints",
-					PSMethod.EXTENSIONPOINT_ID, pluginID, extensionID);
+			extension = pluginManager.getExtension(KernelExtensionPoints.PLUGIN_ID,
+					KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD, pluginID, extensionID);
 		}
 		catch (IllegalArgumentException e) {
 			if (psState.equals(PSConfig.PSState.active)) {
@@ -79,8 +80,8 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 			return new DummyPSConfig(psState, extensionID, pluginID, element);
 		}
 		Autodetect auto = null;
-		for (Extension e : pluginManager.getExtensions("d3web-Kernel-ExtensionPoints",
-				Autodetect.EXTENSIONPOINT_ID)) {
+		for (Extension e : pluginManager.getExtensions(KernelExtensionPoints.PLUGIN_ID,
+				KernelExtensionPoints.EXTENSIONPOINT_AUTODETECT)) {
 			if (e.getPluginID().equals(pluginID)) {
 				auto = (Autodetect) e.getSingleton();
 				break;

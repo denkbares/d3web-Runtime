@@ -23,6 +23,7 @@ package de.d3web.core.inference;
 import java.util.Collection;
 import java.util.Set;
 
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -68,7 +69,11 @@ public interface PSMethod {
 		consumer
 	}
 
-	public final static String EXTENSIONPOINT_ID = "PSMethod";
+	/**
+	 * see {@link KernelExtensionPoints}
+	 */
+	@Deprecated
+	public final static String EXTENSIONPOINT_ID = KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD;
 
 	/**
 	 * Initialization method for this PSMethod; will be called when a new
