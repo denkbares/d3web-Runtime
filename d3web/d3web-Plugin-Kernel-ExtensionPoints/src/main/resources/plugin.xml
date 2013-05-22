@@ -43,4 +43,14 @@
 		<parameter-def id="priority" type="number" />
 	</extension-point>
 	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="NamedObjectFinder"
+		id="KnowledgeBaseFinder">
+		<parameter id="class"
+			value="de.d3web.core.manage.KnowledgeBaseFinder"/>
+		<parameter id="name" value="KnowledgeBaseFinder" />
+		<parameter id="description" value="NamedObjectFinder for the KB" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
 </plugin>
