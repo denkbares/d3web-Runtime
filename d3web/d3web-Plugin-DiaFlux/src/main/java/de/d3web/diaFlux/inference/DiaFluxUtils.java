@@ -87,6 +87,8 @@ public final class DiaFluxUtils {
 	 * the {@link Node} toNode. This method does NOT do a "deep" search, it only
 	 * works for Nodes in the same flow.
 	 * 
+	 * if fromNode and toNode are equal, this method checks for a cycle.
+	 * 
 	 * @created 04.04.2012
 	 * @param fromNode
 	 * @param toNode
@@ -98,7 +100,8 @@ public final class DiaFluxUtils {
 	}
 
 	private static boolean areConnectedNodes(Node fromNode, Node toNode, Collection<Edge> activeEdges) {
-		if (fromNode == toNode) return true;
+		// if from and to are the same node, we try to find a cycle
+		if (!activeEdges.isEmpty() && fromNode == toNode) return true;
 		for (Edge edge : fromNode.getOutgoingEdges()) {
 			if (activeEdges.contains(edge)) continue;
 			activeEdges.add(edge);
@@ -106,6 +109,23 @@ public final class DiaFluxUtils {
 			activeEdges.remove(edge);
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns a set of connected nodes.
+	 */
+	public static Collection<Node> getReachableNodes(Node node) {
+		Collection<Node> result = new HashSet<Node>();
+		getReachableNodes(node, result);
+		return result;
+	}
+
+	private static void getReachableNodes(Node node, Collection<Node> traversed) {
+		if (traversed.contains(node)) return;
+		traversed.add(node);
+		for (Edge edge : node.getOutgoingEdges()) {
+			getReachableNodes(edge.getEndNode(), traversed);
+		}
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
