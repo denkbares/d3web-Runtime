@@ -128,4 +128,25 @@ public class Utils {
 		}
 		return false;
 	}
+
+	/**
+	 * Returns a new list without the strings to be ignored according to the
+	 * ignorePatterns.
+	 * 
+	 * @created 27.05.2013
+	 * @param objects
+	 * @param ignorePatterns
+	 * @return a new list, containing only the strings not to be ignored
+	 */
+	public static Collection<String> filterIgnored(Collection<String> objects, Collection<Pattern> ignorePatterns) {
+		Collection<String> result = new ArrayList<String>(objects);
+
+		for (String string : objects) {
+			for (Pattern pattern : ignorePatterns) {
+				if (pattern.matcher(string).matches()) result.remove(string);
+			}
+
+		}
+		return result;
+	}
 }
