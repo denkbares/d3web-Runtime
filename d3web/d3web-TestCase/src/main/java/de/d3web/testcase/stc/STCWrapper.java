@@ -42,6 +42,8 @@ import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.empiricaltesting.CaseUtils;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
