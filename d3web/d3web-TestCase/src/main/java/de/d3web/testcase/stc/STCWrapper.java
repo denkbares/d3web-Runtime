@@ -68,6 +68,10 @@ public class STCWrapper implements TestCase {
 		this.stc = stc;
 	}
 
+	public SequentialTestCase getSequentialTestCase() {
+		return this.stc;
+	}
+
 	public void addCheck(Date date, Check check) {
 		List<Check> checks = additionalChecks.get(date);
 		if (checks == null) {
@@ -161,6 +165,8 @@ public class STCWrapper implements TestCase {
 
 	private QuestionValue repairValue(de.d3web.empiricaltesting.Finding f, Question question) {
 		QuestionValue value = f.getValue();
+		if (Unknown.getInstance().equals(value)) return value;
+		if (UndefinedValue.getInstance().equals(value)) return value;
 		if ((question instanceof QuestionNum && !(value instanceof NumValue))
 				|| (question instanceof QuestionText && !(value instanceof TextValue))
 				|| (question instanceof QuestionOC && !(value instanceof ChoiceValue))
