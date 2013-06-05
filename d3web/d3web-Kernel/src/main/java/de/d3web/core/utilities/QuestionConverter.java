@@ -65,13 +65,13 @@ public class QuestionConverter {
 		kb.getManager().remove(originalQuestion);
 		QuestionMC copie = new QuestionMC(kb, originalQuestion.getName());
 		addParentsAndChildren(copie, parents, children);
-		copieChoices(originalQuestion, copie);
-		copieInfoStore(originalQuestion, copie);
+		copyChoices(originalQuestion, copie);
+		copyInfoStore(originalQuestion, copie);
 		return copie;
 	}
 
 	/**
-	 * Copies the choices of the originalQuestion to the copie. The choices are
+	 * Copies the choices of the originalQuestion to the copy. The choices are
 	 * duplicated and not removed from the originalQuestion, but their InfoStore
 	 * entries are reused (using references to the old ones).
 	 * 
@@ -79,15 +79,15 @@ public class QuestionConverter {
 	 * @param originalQuestion as source of the Choices
 	 * @param copie target question where the choices are added
 	 */
-	public static void copieChoices(QuestionChoice originalQuestion, QuestionChoice copie) {
+	public static void copyChoices(QuestionChoice originalQuestion, QuestionChoice copy) {
 		for (Choice choice : originalQuestion.getAllAlternatives()) {
 			Choice copiedChoice = new Choice(choice.getName());
-			copieInfoStore(choice, copiedChoice);
-			copie.addAlternative(copiedChoice);
+			copyInfoStore(choice, copiedChoice);
+			copy.addAlternative(copiedChoice);
 		}
 	}
 
-	private static void copieInfoStore(NamedObject original, NamedObject copie) {
+	private static void copyInfoStore(NamedObject original, NamedObject copie) {
 		for (Triple<Property<?>, Locale, Object> e : original.getInfoStore().entries()) {
 			copie.getInfoStore().addValue(e.getA(), e.getB(), e.getC());
 		}
