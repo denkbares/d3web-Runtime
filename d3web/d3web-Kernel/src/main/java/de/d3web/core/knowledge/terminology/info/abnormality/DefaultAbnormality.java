@@ -51,7 +51,18 @@ public class DefaultAbnormality implements Abnormality {
 	 * @param value double
 	 */
 	public void addValue(Value ans, double value) {
-		values.put(ans, new Double(value));
+		// TODO other Values than ChoiceValues are not supported by the
+		// persistence (no reference to the question available), throw an
+		// exception?
+		if (ans instanceof MultipleChoiceValue) {
+			MultipleChoiceValue mcv = (MultipleChoiceValue) ans;
+			for (ChoiceID cid : mcv.getChoiceIDs()) {
+				values.put(new ChoiceValue(cid), new Double(value));
+			}
+		}
+		else {
+			values.put(ans, new Double(value));
+		}
 	}
 
 	/**
