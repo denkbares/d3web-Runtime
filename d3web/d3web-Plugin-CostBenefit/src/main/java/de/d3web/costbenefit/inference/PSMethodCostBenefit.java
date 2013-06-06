@@ -644,7 +644,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		boolean isAnyQuesionnaireDone = false;
 		for (QContainer qcon : answeredQuestionnaires) {
-			if (Util.isDone(qcon, session)) {
+			if (Util.isDone(qcon, session) && sequence.contains(qcon)) {
 				// mark is the questionnaire is either indicated or in our
 				// current sequence
 				isAnyQuesionnaireDone = true;
