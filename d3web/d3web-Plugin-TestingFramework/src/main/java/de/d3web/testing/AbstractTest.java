@@ -57,6 +57,10 @@ public abstract class AbstractTest<T> implements Test<T> {
 		ignoreParameters.add(new TestParameter(name, type, mode, description));
 	}
 
+	protected void addIgnoreParameter(String name, TestParameter.Mode mode, String description, String... options) {
+		ignoreParameters.add(new TestParameter(name, mode, description, options));
+	}
+
 	@Override
 	public ArgsCheckResult checkArgs(String[] args) {
 		return checkParameter(this, args, argParameters, false);
