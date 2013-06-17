@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.utilities.Pair;
 import de.d3web.testing.Message;
 import de.d3web.testing.Utils;
 
@@ -97,16 +98,17 @@ public class D3webTestUtils {
 	 * @return s the filtered List
 	 */
 	public static Collection<TerminologyObject> filter(Collection<TerminologyObject> objects, String[][] ignores, String... additionalIgnores) {
-		Collection<Pattern> ignorePatterns = Utils.compileIgnores(ignores);
+		Collection<Pair<Pattern, Boolean>> ignorePatterns = compileHierarchicalIgnores(ignores);
 	
 		for (String ignore : additionalIgnores) {
-			ignorePatterns.add(Pattern.compile(ignore, Pattern.CASE_INSENSITIVE));
+			ignorePatterns.add(new Pair<Pattern, Boolean>(Pattern.compile(ignore,
+					Pattern.CASE_INSENSITIVE), Boolean.FALSE));
 		}
 	
 		Collection<TerminologyObject> result = new LinkedList<TerminologyObject>();
 	
 		for (TerminologyObject object : objects) {
-			if (D3webTestUtils.isIgnoredInHierarchy(object, ignorePatterns)) continue;
+			if (D3webTestUtils.isIgnored(object, ignorePatterns)) continue;
 	
 			result.add(object);
 		}
@@ -114,17 +116,45 @@ public class D3webTestUtils {
 		return result;
 	}
 
+	public static Collection<Pair<Pattern, Boolean>> compileHierarchicalIgnores(String[][] ignores) {
+		Collection<Pair<Pattern, Boolean>> ignorePatterns = new LinkedList<Pair<Pattern, Boolean>>();
+		for (String[] ignore : ignores) {
+			Pattern pattern = Pattern.compile(ignore[0], Pattern.CASE_INSENSITIVE);
+			boolean hierarchical = ignore.length == 2
+					&& ignore[1].trim().equalsIgnoreCase("true");
+			ignorePatterns.add(new Pair<Pattern, Boolean>(pattern, hierarchical));
+		}
+		return ignorePatterns;
+	}
+
+	public static boolean isIgnored(TerminologyObject object, Collection<Pair<Pattern, Boolean>> ignorePatterns) {
+		for (Pair<Pattern, Boolean> pair : ignorePatterns) {
+			if (isMatching(object, pair)) return true;
+		}
+
+		TerminologyObject[] parents = object.getParents();
+
+		for (int i = 0; i < parents.length; i++) {
+			if (isIgnoredInHierarchy(parents[i], ignorePatterns)) return true;
+
+		}
+
+		return false;
+	}
+
 	/**
-	 * Checks, if a {@link TerminologyObject} or one of its parents is ignored,
-	 * based on a list of Patterns.
+	 * Checks, if one of the parents of object is ignored, based on a list of
+	 * Patterns. Does not check for the object itself!
 	 * 
 	 * @created 25.03.2013
 	 * @param object the TerminologyObject to check
 	 * @param ignorePatterns list of {@link Pattern}s to ignores
 	 * @return true, if the object should be ignored, false otherwise
 	 */
-	public static boolean isIgnoredInHierarchy(TerminologyObject object, Collection<Pattern> ignorePatterns) {
-		if (Utils.isIgnored(object.getName(), ignorePatterns)) return true;
+	private static boolean isIgnoredInHierarchy(TerminologyObject object, Collection<Pair<Pattern, Boolean>> ignorePatterns) {
+		for (Pair<Pattern, Boolean> pair : ignorePatterns) {
+			if (isMatching(object, pair)) return pair.getB();
+		}
 	
 		TerminologyObject[] parents = object.getParents();
 	
@@ -134,6 +164,10 @@ public class D3webTestUtils {
 		}
 	
 		return false;
+	}
+
+	private static boolean isMatching(TerminologyObject object, Pair<Pattern, Boolean> pair) {
+		return pair.getA().matcher(object.getName()).matches();
 	}
 
 }
