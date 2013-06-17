@@ -89,6 +89,22 @@ public class NumericalIntervalTest {
 		assertThat(parse("[4, 7]").contains(9), is(false));
 	}
 
+	@Test
+	public void testValueOf() {
+		assertThat(NumericalInterval.valueOf("[1 2]"),
+				is(new NumericalInterval(1, 2, false, false)));
+
+		assertThat(NumericalInterval.valueOf("[1.2 2.3]"),
+				is(new NumericalInterval(1.2, 2.3, false, false)));
+
+		assertThat(NumericalInterval.valueOf("]2 3]"),
+				is(new NumericalInterval(2, 3, true, false)));
+
+		assertThat(NumericalInterval.valueOf("]4 5["),
+				is(new NumericalInterval(4, 5, true, true)));
+
+	}
+
 	/**
 	 * Test method for {@link NumericalInterval#setLeft(double)} and
 	 * {@link NumericalInterval#getLeft()}.
@@ -159,8 +175,8 @@ public class NumericalIntervalTest {
 	 */
 	@Test
 	public void testToString() {
-		assertThat(parse("[4, 7]").toString(), is("[4.0, 7.0]"));
-		assertThat(new NumericalInterval(6.1, 8.3, true, true).toString(), is("(6.1, 8.3)"));
+		assertThat(parse("[4, 7]").toString(), is("[4.0 7.0]"));
+		assertThat(new NumericalInterval(6.1, 8.3, true, true).toString(), is("]6.1 8.3["));
 	}
 
 	/**

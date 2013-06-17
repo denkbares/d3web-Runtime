@@ -266,20 +266,41 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		return (right < left) || (left == right && (leftOpen || rightOpen));
 	}
 
+	public static NumericalInterval valueOf(String s) {
+		String[] split = s.split(" ");
+		String leftSide = split[0].trim();
+		String rightSide = split[1].trim();
+		double left = Double.parseDouble(leftSide.substring(1));
+		double right = Double.parseDouble(rightSide.substring(0, rightSide.length() - 1));
+
+		boolean leftOpen;
+		if (leftSide.startsWith("]")) leftOpen = true;
+		else if (leftSide.startsWith("[")) leftOpen = false;
+		else throw new IllegalArgumentException(s);
+
+		boolean rightOpen;
+		if (rightSide.endsWith("[")) rightOpen = true;
+		else if (rightSide.endsWith("]")) rightOpen = false;
+		else throw new IllegalArgumentException(s);
+
+		return new NumericalInterval(left, right, leftOpen, rightOpen);
+
+	}
+
 	@Override
 	public String toString() {
 		String str;
 		if (leftOpen) {
-			str = "(";
+			str = "]";
 		}
 		else {
 			str = "[";
 		}
 
-		str += left + ", " + right;
+		str += left + " " + right;
 
 		if (rightOpen) {
-			str += ")";
+			str += "[";
 		}
 		else {
 			str += "]";
