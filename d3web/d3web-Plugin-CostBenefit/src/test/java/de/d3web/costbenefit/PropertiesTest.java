@@ -192,8 +192,8 @@ public class PropertiesTest {
 		ExpertMode expertMode = ExpertMode.getExpertMode(session);
 		Assert.assertTrue(expertMode.getApplicablePermanentlyRelevantQContainers().isEmpty());
 		expertMode.selectTarget(first);
-		Collection<QContainer> applicablePermanentlyRelevantQContainers = expertMode.getApplicablePermanentlyRelevantQContainers();
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q1, valueAnswer1));
+		Collection<QContainer> applicablePermanentlyRelevantQContainers = expertMode.getApplicablePermanentlyRelevantQContainers();
 		Assert.assertTrue(applicablePermanentlyRelevantQContainers.size() == 1);
 		Assert.assertEquals(second, applicablePermanentlyRelevantQContainers.iterator().next());
 	}
@@ -212,7 +212,8 @@ public class PropertiesTest {
 		QContainer reloadedTargetOnly = reloadedKB.getManager().searchQContainer(TARGET_ONLY_NAME);
 		Assert.assertFalse(reloadedTargetOnly.getInfoStore().getValue(
 				ExpertMode.PERMANENTLY_RELEVANT));
-		Assert.assertTrue(reloadedSecond.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY));
+		Assert.assertTrue(reloadedTargetOnly.getInfoStore().getValue(
+				PSMethodCostBenefit.TARGET_ONLY));
 	}
 
 }
