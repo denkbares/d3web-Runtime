@@ -19,12 +19,16 @@
 package de.d3web.costbenefit.inference;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.inference.PropagationManager;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.SessionObject;
@@ -46,6 +50,14 @@ import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
 public class ExpertMode implements SessionObject {
 
 	private final Session session;
+
+	/**
+	 * Can be used to mark QContainers, that are permanently relevant.
+	 * 
+	 * @see getApplicablePermanentlyRelevantQContainers()
+	 */
+	public static final Property<Boolean> PERMANENTLY_RELEVANT = Property.getProperty(
+			"permanentlyRelevant", Boolean.class);
 
 	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = new SessionObjectSource<ExpertMode>() {
 
@@ -266,4 +278,24 @@ public class ExpertMode implements SessionObject {
 		}
 	}
 
+	/**
+	 * Returns a collection of all permanently relevant qcontainers with
+	 * actually fullfilled preconditions
+	 * 
+	 * @created 19.06.2013
+	 * @return list of applicable permenantly relevant QContainers
+	 */
+	public Collection<QContainer> getApplicablePermanentlyRelevantQContainers() {
+		Collection<QContainer> result = new LinkedList<QContainer>();
+		for (QContainer qcontainer : session.getKnowledgeBase().getManager().getQContainers()) {
+			if (qcontainer.getInfoStore().getValue(PERMANENTLY_RELEVANT)) {
+				StateTransition stateTransition = StateTransition.getStateTransition(qcontainer);
+				if (stateTransition == null || stateTransition.getActivationCondition() == null
+						|| Conditions.isTrue(stateTransition.getActivationCondition(), session)) {
+					result.add(qcontainer);
+				}
+			}
+		}
+		return result;
+	}
 }

@@ -18,18 +18,22 @@
  */
 package de.d3web.costbenefit;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -61,17 +65,30 @@ import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
- * Tests the usage of the Property targetOnly
+ * Tests the usage of different properties
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 27.06.2012
  */
-public class TargetOnlyTest {
+public class PropertiesTest {
 
-	@Test
-	public void test() throws IOException, AbortException {
+	private static final String TARGET_ONLY_NAME = "TargetOnly";
+	private static final String FIRST_NAME = "First";
+	private static final String SECOND_NAME = "Second";
+	private KnowledgeBase kb;
+	private QContainer targetOnly;
+	private QContainer target;
+	private QContainer first;
+	private QContainer second;
+	private QuestionOC q3;
+	private ChoiceValue valueAnswer3;
+	private ChoiceValue valueAnswer1;
+	private QuestionOC q1;
+
+	@Before
+	public void setUp() throws IOException {
 		InitPluginManager.init();
-		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		QuestionOC state = new QuestionOC(kb, "State");
 		Choice stateA = new Choice("A");
 		Choice stateB = new Choice("B");
@@ -80,13 +97,11 @@ public class TargetOnlyTest {
 		ChoiceValue valueStateA = new ChoiceValue(stateA);
 		ChoiceValue valueStateB = new ChoiceValue(stateB);
 
-		// the first QContainer is applicable on start and enables the usage of
-		// the second
-		QContainer first = new QContainer(kb, "First");
-		QuestionOC q1 = new QuestionOC(first, "Q1");
+		first = new QContainer(kb, FIRST_NAME);
+		q1 = new QuestionOC(first, "Q1");
 		Choice answer1 = new Choice("answer1");
 		q1.addAlternative(answer1);
-		ChoiceValue valueAnswer1 = new ChoiceValue(answer1);
+		valueAnswer1 = new ChoiceValue(answer1);
 		DefaultAbnormality.setAbnormality(q1, valueAnswer1, Abnormality.A0);
 		ValueTransition vt1 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
 				valueStateA, new CondEqual(q1, valueAnswer1))));
@@ -94,8 +109,7 @@ public class TargetOnlyTest {
 				first);
 		first.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
-		// the second QContainer enables the usage of the target
-		QContainer second = new QContainer(kb, "Second");
+		second = new QContainer(kb, SECOND_NAME);
 		QuestionOC q2 = new QuestionOC(second, "Q2");
 		Choice answer2 = new Choice("answer2");
 		q2.addAlternative(answer2);
@@ -105,19 +119,17 @@ public class TargetOnlyTest {
 				valueStateB, new CondEqual(q2, valueAnswer2))));
 		new StateTransition(new CondEqual(state, valueStateA), Arrays.asList(vt2), second);
 		second.getInfoStore().addValue(BasicProperties.COST, 1.0);
+		second.getInfoStore().addValue(ExpertMode.PERMANENTLY_RELEVANT, true);
 
-		QContainer target = new QContainer(kb, "Target");
+		target = new QContainer(kb, "Target");
 		new QuestionNum(target, "Finish");
 		new StateTransition(new CondEqual(state, valueStateB),
 				Collections.<ValueTransition> emptyList(), target);
-
-		// this QContainer can also be used to prepare StateB to enable the
-		// usage of the target, but it can only be used as a target itself
-		QContainer targetOnly = new QContainer(kb, "TargetOnly");
-		QuestionOC q3 = new QuestionOC(targetOnly, "Q3");
+		targetOnly = new QContainer(kb, TARGET_ONLY_NAME);
+		q3 = new QuestionOC(targetOnly, "Q3");
 		Choice answer3 = new Choice("answer3");
 		q3.addAlternative(answer3);
-		ChoiceValue valueAnswer3 = new ChoiceValue(answer3);
+		valueAnswer3 = new ChoiceValue(answer3);
 		DefaultAbnormality.setAbnormality(q3, valueAnswer3, Abnormality.A0);
 		ValueTransition vt3 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
 				valueStateB, new CondEqual(q3, valueAnswer3))));
@@ -125,7 +137,10 @@ public class TargetOnlyTest {
 				targetOnly);
 		targetOnly.getInfoStore().addValue(BasicProperties.COST, 1.0);
 		targetOnly.getInfoStore().addValue(PSMethodCostBenefit.TARGET_ONLY, true);
+	}
 
+	@Test
+	public void testTargetOnly() throws IOException, AbortException {
 		TPHeuristic tpHeuristic = new TPHeuristic();
 		AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
 		aStarAlgorithm.setHeuristic(tpHeuristic);
@@ -169,6 +184,35 @@ public class TargetOnlyTest {
 		Assert.assertEquals(1, sequence.length);
 		Assert.assertEquals(target, sequence[0]);
 
+	}
+
+	@Test
+	public void testPermanentlyRelevant() throws AbortException {
+		Session session = SessionFactory.createSession(kb);
+		ExpertMode expertMode = ExpertMode.getExpertMode(session);
+		Assert.assertTrue(expertMode.getApplicablePermanentlyRelevantQContainers().isEmpty());
+		expertMode.selectTarget(first);
+		Collection<QContainer> applicablePermanentlyRelevantQContainers = expertMode.getApplicablePermanentlyRelevantQContainers();
+		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q1, valueAnswer1));
+		Assert.assertTrue(applicablePermanentlyRelevantQContainers.size() == 1);
+		Assert.assertEquals(second, applicablePermanentlyRelevantQContainers.iterator().next());
+	}
+
+	@Test
+	public void testPersistence() throws IOException {
+		File file = new File("target/kb/TestProperties");
+		file.getParentFile().mkdirs();
+		PersistenceManager.getInstance().save(kb, file);
+		KnowledgeBase reloadedKB = PersistenceManager.getInstance().load(file);
+		QContainer reloadedFirst = reloadedKB.getManager().searchQContainer(FIRST_NAME);
+		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(ExpertMode.PERMANENTLY_RELEVANT));
+		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY));
+		QContainer reloadedSecond = reloadedKB.getManager().searchQContainer(SECOND_NAME);
+		Assert.assertTrue(reloadedSecond.getInfoStore().getValue(ExpertMode.PERMANENTLY_RELEVANT));
+		QContainer reloadedTargetOnly = reloadedKB.getManager().searchQContainer(TARGET_ONLY_NAME);
+		Assert.assertFalse(reloadedTargetOnly.getInfoStore().getValue(
+				ExpertMode.PERMANENTLY_RELEVANT));
+		Assert.assertTrue(reloadedSecond.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY));
 	}
 
 }

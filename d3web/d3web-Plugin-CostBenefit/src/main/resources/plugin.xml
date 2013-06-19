@@ -251,4 +251,14 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="permanentlyRelevant">
+		<parameter id="name" value="permanentlyRelevant" />
+		<parameter id="description" value="If a qcontainer is marked as a permanently relevant, the user gets the possibility to indicate this qcontainer directly if its preconditions are fullfilled." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
 </plugin>
