@@ -18,12 +18,18 @@
  */
 package de.d3web.testcase.stc;
 
+import de.d3web.core.inference.condition.CondNum;
+import de.d3web.core.inference.condition.CondNumEqual;
+import de.d3web.core.inference.condition.NoAnswerException;
+import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.testcase.model.Check;
 
 /**
@@ -45,13 +51,32 @@ public class DerivedQuestionCheck implements Check {
 
 	@Override
 	public boolean check(Session session) {
+		// handle QuestionNums
+		if (value instanceof NumValue && question instanceof QuestionNum) {
+			return checkQuestionNum(session, (QuestionNum) question, (NumValue) value);
+		}
 		Value blackBoardValue = session.getBlackboard().getValue(
 				question);
+		// handler QuestionMCs
 		if (blackBoardValue instanceof MultipleChoiceValue && question instanceof QuestionMC) {
 			MultipleChoiceValue currentValue = (MultipleChoiceValue) blackBoardValue;
 			return currentValue.contains(value);
 		}
 		return blackBoardValue.equals(value);
+	}
+
+	private boolean checkQuestionNum(Session session, QuestionNum question, NumValue value) {
+		// we use eval of CondNum, because it uses CondNum.EPSILON
+		CondNum condNum = new CondNumEqual(question, value.getDouble());
+		try {
+			return condNum.eval(session);
+		}
+		catch (NoAnswerException e) {
+			return false;
+		}
+		catch (UnknownAnswerException e) {
+			return false;
+		}
 	}
 
 	@Override
