@@ -49,8 +49,7 @@ public class SingleQuestionFormStrategyWrapper implements FormStrategy {
 
 	@Override
 	public Form getForm(InterviewObject object, Session session) {
-		Form nextForm = wrappedStrategy.getForm(object, session);
-		return getNextUnansweredQuestionAsForm(nextForm, session);
+		return wrappedStrategy.getForm(object, session);
 	}
 
 	private Form getNextUnansweredQuestionAsForm(Form form, Session session) {
