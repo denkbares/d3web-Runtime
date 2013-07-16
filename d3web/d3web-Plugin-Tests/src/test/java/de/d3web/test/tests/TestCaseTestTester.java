@@ -19,6 +19,7 @@
 package de.d3web.test.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestPersistence;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.test.TestCaseTest;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testcase.stc.STCWrapper;
 import de.d3web.testing.Message;
@@ -92,6 +94,56 @@ public class TestCaseTestTester {
 		TestCase case1 = testcases.get(0);
 		Message result1 = test.execute(case1, new String[] { "Car faults diagnosis" });
 		assertEquals(result1.getText(), Message.Type.FAILURE, result1.getType());
+	}
+
+	@Test
+	public void testTestCaseTestInconsistent() throws InterruptedException {
+		try {
+			InitPluginManager.init();
+			TestObjectProviderManager.registerTestObjectProvider(new JUnitTestKnowledgeBaseProvider());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+
+		List<TestCase> testcases = readTestCases(new File(
+				"./src/test/resources/Demo_-_Test_Cases_testcase2-inconsistent.xml"));
+
+		TestCase case1 = testcases.get(0);
+		Message result1 = test.execute(case1, new String[] { "Car faults diagnosis" });
+		assertEquals(result1.getText(), Message.Type.FAILURE, result1.getType());
+	}
+
+	@Test
+	public void testTestCaseTestIncorrectKBName() throws InterruptedException {
+		try {
+			InitPluginManager.init();
+			TestObjectProviderManager.registerTestObjectProvider(new JUnitTestKnowledgeBaseProvider());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+
+		List<TestCase> testcases = readTestCases(new File(
+				"./src/test/resources/Demo_-_Test_Cases_testcase2.xml"));
+
+		TestCase case1 = testcases.get(0);
+		Message result1 = test.execute(case1, new String[] { "Car faults diagnosisXXX" });
+		assertEquals(result1.getText(), Message.Type.FAILURE, result1.getType());
+	}
+
+	@Test
+	public void testTestCaseTestDescription() throws InterruptedException {
+		assertTrue(new TestCaseTest().getDescription() != null);
+	}
+
+	@Test
+	public void testTestCaseTestClass() throws InterruptedException {
+		assertTrue(new TestCaseTest().getTestObjectClass() != null);
 	}
 
 	private List<TestCase> readTestCases(File file) {

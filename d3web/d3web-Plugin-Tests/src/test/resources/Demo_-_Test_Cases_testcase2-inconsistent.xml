@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SeqTestCaseRepository NumberOfCases="2" UsedSolutions="2" UsedFindings="10">
+	<STestCase Name="Leaking air intake system (Demo)">
+		<RatedTestCase Name="">
+			<Findings>
+				<Finding Question="Drivingxxx" Answer="insufficient power on partial load"/>
+			</Findings>
+			<ExpectedFindings>
+			</ExpectedFindings>
+			<Solutions>
+				<Solution Name="Leaking air intake systemxx" Rating="UNCLEAR"/>
+			</Solutions>
+		</RatedTestCase>
+	</STestCase>
+</SeqTestCaseRepository>

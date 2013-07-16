@@ -70,6 +70,11 @@ public class EmptyQuestionnaireTestTest {
 
 	}
 
+	@Test
+	public void testTestCaseTestDescription() throws InterruptedException {
+		assertTrue(new EmptyQuestionnaireTest().getDescription() != null);
+	}
+
 	private KnowledgeBase createKB() {
 		KnowledgeBase kb = new KnowledgeBase();
 		QContainer root = new QContainer(kb, "q000");

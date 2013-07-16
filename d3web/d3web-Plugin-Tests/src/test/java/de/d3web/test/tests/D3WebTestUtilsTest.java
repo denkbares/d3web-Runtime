@@ -1,38 +1,46 @@
 /*
  * Copyright (C) 2013 University Wuerzburg, Computer Science VI
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
  */
 package de.d3web.test.tests;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.utilities.Pair;
+import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.test.D3webTestUtils;
-
+import de.d3web.testing.Message;
+import de.d3web.testing.MessageObject;
 
 /**
  * 
@@ -96,7 +104,60 @@ public class D3WebTestUtilsTest {
 		// something different
 		executeIgnoreTest(q, "agent", false, false);
 		executeIgnoreTest(q, "agent", true, false);
-		
+
+	}
+
+	@Test
+	public void testMessageWithObjects() {
+		try {
+			InitPluginManager.init();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		KnowledgeBase kb = new KnowledgeBase();
+		QContainer root = new QContainer(kb, "q000");
+		kb.setRootQASet(root);
+
+		QContainer in = new QContainer(root, "Input");
+		QContainer mess = new QContainer(in, "Mess");
+		QContainer user = new QContainer(mess, "User");
+		new QContainer(mess, "Dev");
+		Question q = new QuestionNum(user, "age");
+
+		List<TerminologyObject> objects = new ArrayList<TerminologyObject>();
+		objects.add(root);
+		objects.add(in);
+		objects.add(mess);
+		objects.add(user);
+		objects.add(q);
+		String notificationText = "dumbasstext";
+
+		Message message = D3webTestUtils.createFailureMessageWithObjects(objects, kb.getName(),
+				notificationText);
+
+		// compare message text
+		assertEquals(notificationText, message.getText());
+
+		Collection<MessageObject> messageObjects = message.getObjects();
+
+		// check sizes of the objects lists
+		// message object list also contains KB! (--> +1)
+		assertEquals(objects.size() + 1, messageObjects.size());
+
+		// check whether each terminology object is contained in the message
+		// object list
+		for (TerminologyObject terminologyObject : objects) {
+			boolean found = false;
+			for (MessageObject messageObject : messageObjects) {
+				String objectName = messageObject.getObjectName();
+				if (terminologyObject.getName().equals(objectName)) {
+					found = true;
+				}
+			}
+			assertTrue(found);
+		}
+
 	}
 
 	private void executeIgnoreTest(Question q, String ignoreName, boolean inHierarchy, boolean result) {

@@ -29,16 +29,15 @@ import de.d3web.core.inference.LoopTerminator.LoopStatus;
 import de.d3web.core.inference.SessionTerminatedException;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
+import de.d3web.strings.Strings;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
-import de.d3web.testing.MessageObject;
 import de.d3web.testing.TestObjectContainer;
 import de.d3web.testing.TestObjectProvider;
 import de.d3web.testing.TestObjectProviderManager;
@@ -136,19 +135,10 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 						+ "'. The following object"
 						+ (loopObjects.size() == 1 ? " is" : "s are")
 						+ " mainly involved in the loop: " +
-						concat(",  ", loopObjects.toArray()) + ".";
+						Strings.concat(",  ", loopObjects.toArray()) + ".";
 
-				Message message = new Message(Type.FAILURE, notificationText);
-				Collection<MessageObject> msgObjects = new ArrayList<MessageObject>();
-				for (TerminologyObject loopObject : loopObjects) {
-					msgObjects.add(new MessageObject(loopObject.getName(),
-							NamedObject.class));
-				}
-				msgObjects.add(new MessageObject(kbName,
-						NamedObject.class));
-
-				message.setObjects(msgObjects);
-				return message;
+				return D3webTestUtils.createFailureMessageWithObjects(loopObjects, kbName,
+						notificationText);
 			}
 			else {
 				// should not happen, let TestExecutor handle this
@@ -178,27 +168,10 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		}
 		if (passedKBs.size() > 0) {
 			message += "Knowledge base(s) passed test: ";
-			for (String passedKB : passedKBs) {
-				// enumerate inconsistent KBs in one line
-				message += " " + passedKB + ";";
-			}
-			// add line break afterwards
-			if (message.endsWith(";")) {
-				message = message.substring(0, message.length() - 1) + "\n";
-			}
+			message += Strings.concat(" ;", passedKBs);
+			message += "\n";
 		}
 		return message;
-	}
-
-	public static String concat(String separator, Object[] strings) {
-		StringBuilder result = new StringBuilder();
-		if (strings != null) {
-			for (int i = 0; i < strings.length; i++) {
-				if (i > 0) result.append(separator);
-				result.append(strings[i]);
-			}
-		}
-		return result.toString();
 	}
 
 	private Collection<KnowledgeBase> getKnowledgeBases(String[] args) {
