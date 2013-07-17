@@ -21,9 +21,10 @@ package de.d3web.testing.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
-import clover.retrotranslator.edu.emory.mathcs.backport.java.util.Arrays;
 import de.d3web.testing.TestParameter;
 import de.d3web.testing.TestParameter.Mode;
 import de.d3web.testing.TestParameter.Type;
