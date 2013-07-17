@@ -19,6 +19,14 @@
 		<parameter-def id="priority" type="number" />
 	</extension-point>
 	
-
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="TestTest">
+		<parameter id="class"
+			value="de.d3web.testing.test.TestTest" />
+		<parameter id="name" value="TestTest" />
+		<parameter id="description" value="This is a dummy test for testing of the testing framework" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 	
 </plugin>

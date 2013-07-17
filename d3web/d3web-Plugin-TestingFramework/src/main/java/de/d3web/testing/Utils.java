@@ -20,10 +20,7 @@ package de.d3web.testing;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import de.d3web.testing.Message.Type;
@@ -60,23 +57,25 @@ public class Utils {
 	 * @param interruptible to make the test interruptible or not
 	 * @throws InterruptedException
 	 */
-	public static void slowDowntest(Class<?> testClass, int milliseconds, boolean interruptible) throws InterruptedException {
-		for (int i = 0; i < milliseconds; i++) {
-			if (interruptible) {
-				checkInterrupt();
-			}
-			List<Double> sortMe = new LinkedList<Double>();
-			for (int j = 0; j < 3500; j++) {
-				sortMe.add(Math.random());
-			}
-			Collections.sort(sortMe);
-			if (i % 1000 == 0) Logger.getLogger(testClass.getName()).info(
-					testClass.getSimpleName() + ": " + i + "/" + milliseconds + " iterations.");
-		}
-		Logger.getLogger(testClass.getName()).info(
-				testClass.getSimpleName() + ": " + milliseconds + "/" + milliseconds
-						+ " iterations.");
-	}
+	// public static void slowDowntest(Class<?> testClass, int milliseconds,
+	// boolean interruptible) throws InterruptedException {
+	// for (int i = 0; i < milliseconds; i++) {
+	// if (interruptible) {
+	// checkInterrupt();
+	// }
+	// List<Double> sortMe = new LinkedList<Double>();
+	// for (int j = 0; j < 3500; j++) {
+	// sortMe.add(Math.random());
+	// }
+	// Collections.sort(sortMe);
+	// if (i % 1000 == 0) Logger.getLogger(testClass.getName()).info(
+	// testClass.getSimpleName() + ": " + i + "/" + milliseconds +
+	// " iterations.");
+	// }
+	// Logger.getLogger(testClass.getName()).info(
+	// testClass.getSimpleName() + ": " + milliseconds + "/" + milliseconds
+	// + " iterations.");
+	// }
 
 	public static Message createErrorMessage(Collection<String> erroneousObjects, String failedMessage, Class<?> messageClass) {
 		ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
@@ -142,8 +141,9 @@ public class Utils {
 		Collection<String> result = new ArrayList<String>(objects);
 
 		for (String string : objects) {
-			for (Pattern pattern : ignorePatterns) {
-				if (pattern.matcher(string).matches()) result.remove(string);
+
+			if (isIgnored(string, ignorePatterns)) {
+				result.remove(string);
 			}
 
 		}

@@ -33,6 +33,7 @@ import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -153,9 +154,11 @@ public class D3WebTestUtilsTest {
 				String objectName = messageObject.getObjectName();
 				if (terminologyObject.getName().equals(objectName)) {
 					found = true;
+					assertEquals(NamedObject.class, messageObject.geObjectClass());
 				}
 			}
 			assertTrue(found);
+
 		}
 
 	}

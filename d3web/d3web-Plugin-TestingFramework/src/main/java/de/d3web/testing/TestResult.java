@@ -52,6 +52,7 @@ public class TestResult implements Comparable<TestResult> {
 	 *        empty array otherwise
 	 */
 	public TestResult(String testName, String[] configuration) {
+		if (configuration == null) throw new NullPointerException();
 		this.configuration = Arrays.copyOf(configuration, configuration.length);
 		this.testName = testName;
 	}
@@ -264,10 +265,6 @@ public class TestResult implements Comparable<TestResult> {
 		else {
 			return expectedMessages.get(testObjectName);
 		}
-	}
-
-	public Message getExpectedMessageForTestObject(String testObjectName) {
-		return expectedMessages.get(testObjectName);
 	}
 
 	/**
