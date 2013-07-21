@@ -206,7 +206,15 @@ public class MultipleChoiceValue implements QuestionValue {
 	public List<Choice> asChoiceList(QuestionChoice question) {
 		List<Choice> choices = new ArrayList<Choice>(choiceIDs.size());
 		for (ChoiceID choiceID : choiceIDs) {
-			choices.add(choiceID.getChoice(question));
+			Choice choice = choiceID.getChoice(question);
+			if (choice == null) {
+				throw new IllegalArgumentException("The question '"
+						+ question.getName()
+						+ "' does not contain the choiceID '"
+						+ choiceID.getText()
+						+ "'.");
+			}
+			choices.add(choice);
 		}
 		return choices;
 	}

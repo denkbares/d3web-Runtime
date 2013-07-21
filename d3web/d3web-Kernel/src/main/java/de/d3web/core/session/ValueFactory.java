@@ -22,6 +22,7 @@ package de.d3web.core.session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -176,9 +177,14 @@ public final class ValueFactory {
 			choices.add(existingChoice);
 		}
 		else if (existingValue instanceof MultipleChoiceValue) {
-			List<Choice> temp = ((MultipleChoiceValue) existingValue)
-					.asChoiceList(question);
-			choices.addAll(temp);
+			try {
+				List<Choice> temp = ((MultipleChoiceValue) existingValue)
+						.asChoiceList(question);
+				choices.addAll(temp);
+			}
+			catch (IllegalArgumentException e) {
+				Logger.getLogger(ValueFactory.class.getName()).warning(e.getMessage());
+			}
 		}
 		if (choice != null && !choices.remove(choice)) {
 			choices.add(choice);
