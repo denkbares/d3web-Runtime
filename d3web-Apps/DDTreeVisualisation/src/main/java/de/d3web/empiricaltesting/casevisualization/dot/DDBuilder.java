@@ -56,6 +56,7 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
 import de.d3web.empiricaltesting.casevisualization.Label;
+import de.d3web.empiricaltesting.casevisualization.util.Util;
 
 public final class DDBuilder implements CaseVisualizer {
 
@@ -72,7 +73,7 @@ public final class DDBuilder implements CaseVisualizer {
 	private Label label = null;
 
 	private Set<String> createdEdges;
-	private List<DDNode> nodes = new LinkedList<DDNode>();
+	private final List<DDNode> nodes = new LinkedList<DDNode>();
 
 	public DDBuilder() {
 	}
@@ -144,7 +145,7 @@ public final class DDBuilder implements CaseVisualizer {
 			List<Choice> firstAnswers = firstQuestion.getAllAlternatives();
 			for (Choice answerOfFirstQuestion : firstAnswers) {
 				TestCase partitioned =
-						CaseUtils.getInstance().getPartiallyAnsweredSuite(answerOfFirstQuestion,
+						Util.getPartiallyAnsweredSuite(answerOfFirstQuestion,
 								testSuite.getRepository());
 				if (partitioned.getRepository().size() > 0) {
 					String printFilePath =

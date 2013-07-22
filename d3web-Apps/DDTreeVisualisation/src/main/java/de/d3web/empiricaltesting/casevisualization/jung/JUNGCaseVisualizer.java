@@ -47,6 +47,7 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
 import de.d3web.empiricaltesting.casevisualization.Label;
+import de.d3web.empiricaltesting.casevisualization.util.Util;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
@@ -153,7 +154,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 			for (Choice answerOfFirstQuestion : firstAnswers) {
 				TestCase partitioned =
-						CaseUtils.getInstance().getPartiallyAnsweredSuite(answerOfFirstQuestion,
+						Util.getPartiallyAnsweredSuite(answerOfFirstQuestion,
 								testSuite.getRepository());
 				if (partitioned.getRepository().size() > 0) {
 					writeToFile(partitioned.getRepository(),

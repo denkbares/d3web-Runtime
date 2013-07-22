@@ -21,6 +21,7 @@
 package de.d3web.empiricaltesting.casevisualization.jung;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -85,9 +86,9 @@ public final class CaseTreeFactory {
 				// This have to be here, because otherwise we
 				// will get problems with hashcodes.
 				Collections.sort(rtc.getDerivedSolutions(),
-						new RatedSolution.RatingComparatorByName());
+						new RatingComparatorByName());
 				Collections.sort(rtc.getExpectedSolutions(),
-						new RatedSolution.RatingComparatorByName());
+						new RatingComparatorByName());
 
 				RatedTestCase existingRTC = graph.getVertexEqualTo(rtc);
 
@@ -103,6 +104,14 @@ public final class CaseTreeFactory {
 		}
 
 		return graph;
+	}
+
+	public static class RatingComparatorByName implements Comparator<RatedSolution> {
+
+		@Override
+		public int compare(RatedSolution o1, RatedSolution o2) {
+			return o1.getSolution().getName().compareTo(o2.getSolution().getName());
+		}
 	}
 
 	/**
