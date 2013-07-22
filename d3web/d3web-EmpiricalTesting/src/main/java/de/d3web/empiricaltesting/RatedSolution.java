@@ -26,22 +26,14 @@ import de.d3web.core.knowledge.terminology.Solution;
 
 public class RatedSolution implements Comparable<RatedSolution> {
 
-	private Solution solution;
-	private Rating rating;
+	private final Solution solution;
+	private final Rating rating;
 
 	static class InverseRatingComparator implements Comparator<RatedSolution> {
 
 		@Override
 		public int compare(RatedSolution o1, RatedSolution o2) {
 			return (o1.compareTo(o2)) * (-1);
-		}
-	}
-
-	public static class RatingComparatorByName implements Comparator<RatedSolution> {
-
-		@Override
-		public int compare(RatedSolution o1, RatedSolution o2) {
-			return o1.getSolution().getName().compareTo(o2.getSolution().getName());
 		}
 	}
 
@@ -102,15 +94,6 @@ public class RatedSolution implements Comparable<RatedSolution> {
 		int comp = rating.compareTo(o.rating);
 		if (comp != 0) return comp;
 		else return solution.getName().compareTo(o.solution.getName());
-	}
-
-	/**
-	 * Sets Rating of this RatedSolution to rating
-	 * 
-	 * @param rating new Rating
-	 */
-	public void update(Rating rating) {
-		this.rating = rating;
 	}
 
 	/**

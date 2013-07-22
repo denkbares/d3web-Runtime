@@ -21,7 +21,6 @@
 package de.d3web.empiricaltesting;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 import de.d3web.core.knowledge.TerminologyObject;
@@ -87,17 +86,6 @@ public final class CaseUtils {
 			return result.toString().substring(2);
 		}
 		return value.toString();
-	}
-
-	// TODO: Nicht nur eine Antwort (auf eine Frage) sondern mehrere
-	// Antworten auf mehrere (erste) Fragen möglich
-	public TestCase getPartiallyAnsweredSuite(Choice answer, List<SequentialTestCase> repository) {
-		TestCase ret = new TestCase();
-		for (SequentialTestCase stc : repository) {
-			if (stc.getCases().get(0).getFindings().get(0).getValue().equals(answer)) ret.getRepository().add(
-					stc);
-		}
-		return ret;
 	}
 
 	/**

@@ -50,6 +50,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
@@ -499,7 +500,7 @@ public final class TestPersistence {
 		else if (q instanceof QuestionText) {
 			f = new Finding(q, new TextValue(answerText));
 		}
-		else if (q instanceof QuestionNum) {
+		else if (q instanceof QuestionDate) {
 			f = new Finding(q, DateValue.createDateValue(answerText));
 		}
 

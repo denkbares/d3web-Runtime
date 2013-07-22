@@ -139,15 +139,6 @@ public class Finding implements Comparable<Finding> {
 		return CaseUtils.getPrompt(question);
 	}
 
-	/**
-	 * Sets question of this finding to q
-	 * 
-	 * @param q question
-	 */
-	public void setQuestion(Question q) {
-		this.question = q;
-	}
-
 	@Override
 	public int compareTo(Finding o) {
 		int comp = question.getName().compareTo(o.getQuestion().getName());

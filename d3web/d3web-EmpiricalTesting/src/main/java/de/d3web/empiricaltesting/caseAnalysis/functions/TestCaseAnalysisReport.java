@@ -56,16 +56,6 @@ public interface TestCaseAnalysisReport {
 	Diff getDiffFor(SequentialTestCase stc);
 
 	/**
-	 * Checks whether the specified {@link SequentialTestCase} has reported some
-	 * differences computed during the test case analysis.
-	 * 
-	 * @created 25.03.2011
-	 * @param testCase the specified {@link SequentialTestCase}
-	 * @return true, when there are differences; false otherwise.
-	 */
-	boolean hasDiff(SequentialTestCase testCase);
-
-	/**
 	 * Checks whether the entire result contains any differences, that were
 	 * reported during the test case analysis.
 	 * 

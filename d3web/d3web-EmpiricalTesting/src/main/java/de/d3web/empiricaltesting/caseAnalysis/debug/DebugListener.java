@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.d3web.empiricaltesting.caseAnalysis.functions;
+package de.d3web.empiricaltesting.caseAnalysis.debug;
 
 import de.d3web.core.session.Session;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -24,6 +24,8 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.TestListener;
 import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
+import de.d3web.empiricaltesting.caseAnalysis.functions.Diff;
+import de.d3web.empiricaltesting.caseAnalysis.functions.TestCaseAnalysisReport;
 
 
 /**

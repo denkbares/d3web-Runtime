@@ -34,7 +34,7 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 public class AnalysisReport implements TestCaseAnalysisReport {
 
 	private static EmpiricalTestingFunctions functions = EmpiricalTestingFunctions.getInstance();
-	private Map<SequentialTestCase, Diff> diffs = new HashMap<SequentialTestCase, Diff>();
+	private final Map<SequentialTestCase, Diff> diffs = new HashMap<SequentialTestCase, Diff>();
 
 	@Override
 	public void add(Diff diff) {
@@ -44,11 +44,6 @@ public class AnalysisReport implements TestCaseAnalysisReport {
 	@Override
 	public Diff getDiffFor(SequentialTestCase stc) {
 		return diffs.get(stc);
-	}
-
-	@Override
-	public boolean hasDiff(SequentialTestCase stc) {
-		return getDiffFor(stc) != null;
 	}
 
 	@Override

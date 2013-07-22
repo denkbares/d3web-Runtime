@@ -24,7 +24,7 @@ public interface Rating extends Comparable<Rating> {
 
 	public Object getRating();
 
-	public void setRating(Object theRating);
+	// public void setRating(Object theRating);
 
 	@Override
 	public int hashCode();

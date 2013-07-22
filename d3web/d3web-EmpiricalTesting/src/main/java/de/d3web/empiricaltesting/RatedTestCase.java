@@ -53,7 +53,7 @@ public class RatedTestCase {
 	/**
 	 * List of expected findings (derived by a psmethod)
 	 */
-	private final List<Finding> expectedFindings;
+	private List<Finding> expectedFindings;
 
 	/**
 	 * This Rated Testcase's List of derived Solutions (derived from the
@@ -185,36 +185,6 @@ public class RatedTestCase {
 	}
 
 	/**
-	 * Appends a whole list of RatedSolutions to this RatedTestCase's List of
-	 * derived Solutions.
-	 * 
-	 * @param solutions The List of RatedSolutions to be added
-	 * @return True if the RatedSolutions were successfully appended
-	 */
-	public boolean addDerived(List<RatedSolution> solutions) {
-		boolean result = true;
-		for (RatedSolution ratedSolution : solutions) {
-			result = addDerived(ratedSolution) && result;
-		}
-		return result;
-	}
-
-	/**
-	 * @return the derivedSolutionsAreUpToDate
-	 */
-	public boolean getDerivedSolutionsAreUpToDate() {
-		return derivedSolutionsAreUpToDate;
-	}
-
-	/**
-	 * @param derivedSolutionsAreUpToDate the derivedSolutionsAreUpToDate to set
-	 */
-	public void setDerivedSolutionsAreUpToDate(
-			boolean derivedSolutionsAreUpToDate) {
-		this.derivedSolutionsAreUpToDate = derivedSolutionsAreUpToDate;
-	}
-
-	/**
 	 * Returns the Date on which this RatedTestCase was last tested.
 	 * 
 	 * @return the lastTested
@@ -310,8 +280,10 @@ public class RatedTestCase {
 		RatedTestCase newRTC = new RatedTestCase();
 		newRTC.name = name;
 		newRTC.findings = findings;
+		newRTC.expectedFindings = expectedFindings;
 		newRTC.expectedSolutions = expectedSolutions;
 		newRTC.derivedSolutions = derivedSolutions;
+		newRTC.timeStamp = timeStamp;
 		return newRTC;
 	}
 

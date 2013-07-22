@@ -22,7 +22,7 @@ package de.d3web.empiricaltesting;
 
 public class StateRating implements Rating {
 
-	private de.d3web.core.knowledge.terminology.Rating s;
+	private final de.d3web.core.knowledge.terminology.Rating s;
 
 	/**
 	 * Creates a new DiagnosisState with committed String and creates a new
@@ -48,15 +48,9 @@ public class StateRating implements Rating {
 	 * 
 	 * @return State of this StateRating.
 	 */
+	@Override
 	public de.d3web.core.knowledge.terminology.Rating getRating() {
 		return s;
-	}
-
-	/**
-	 * Sets DiagnosisState of this Rating to o
-	 */
-	public void setRating(Object o) {
-		if (o instanceof Rating) s = (de.d3web.core.knowledge.terminology.Rating) o;
 	}
 
 	@Override

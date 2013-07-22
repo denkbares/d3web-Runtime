@@ -22,6 +22,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +68,7 @@ public class EmpiricalTestingFunctionsTest {
 
 	private static final Rating ESTABLISHED = new Rating(State.ESTABLISHED);
 	private static final Rating SUGGESTED = new Rating(State.SUGGESTED);
+	private Date date;
 
 	@Before
 	public void setUp() {
@@ -92,6 +96,8 @@ public class EmpiricalTestingFunctionsTest {
 		stc1 = new SequentialTestCase();
 		stc1.setName("STC1");
 		rtc11 = new RatedTestCase();
+		date = new Date();
+		rtc11.setTimeStamp(date);
 		rtc11.setName("rtc11");
 		rtc11.add(new Finding(q1, new NumValue(0.0)));
 		rtc11.addDerived(rs1_e);
@@ -100,7 +106,11 @@ public class EmpiricalTestingFunctionsTest {
 
 		rtc12 = new RatedTestCase();
 		rtc12.setName("rtc12");
-		rtc12.add(new Finding(q2, new NumValue(1.0)));
+		// also use addFindings() method for coverage
+		Finding finding = new Finding(q2, new NumValue(1.0));
+		List<Finding> findings = new ArrayList<Finding>();
+		findings.add(finding);
+		rtc12.addFindings(findings);
 		rtc12.addDerived(rs1_e, rs2_e);
 		rtc12.addExpected(rs1_e, rs2_e);
 		stc1.add(rtc12);
@@ -134,6 +144,7 @@ public class EmpiricalTestingFunctionsTest {
 		assertEquals(2, stc1.getCases().size());
 		assertNotNull(stc2);
 		assertEquals(2, stc2.getCases().size());
+		assertEquals(rtc11.getTimeStamp(), date);
 	}
 
 	@Test
