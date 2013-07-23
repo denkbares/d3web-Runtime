@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
- * Computer Science VI, University of Wuerzburg
+ * Copyright (C) 2013 denkbares GmbH
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -17,28 +16,28 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
+package de.d3web.test.empiricalTesting;
 
-package de.d3web.empiricaltesting.caseAnalysis.functions;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import de.d3web.empiricaltesting.caseAnalysis.RTCDiff;
+import org.junit.Test;
 
-public abstract class PrecisionRecallCalculator {
+import de.d3web.empiricaltesting.RatedSolution;
 
-	/**
-	 * Returns the recall of a RatedTestCase
-	 * 
-	 * @param rtcDiff The RatedTestCase necessary for the calculation.
-	 * @return recall of the RatedTestCase.
-	 */
-	public double recall(RTCDiff rtcDiff) {
-		if (rtcDiff.hasDifferences()) {
-			return rec(rtcDiff);
-		}
-		else {
-			return 1;
-		}
+/**
+ * 
+ * @author jochenreutelshofer
+ * @created 22.07.2013
+ */
+public class RatedSolutionTest {
+
+	@Test
+	public void testEquals() {
+		RatedSolution sol1 = new RatedSolution(null, null);
+		assertFalse(sol1.equals(null));
+		assertFalse(sol1.equals(Boolean.FALSE));
+		assertTrue(sol1.equals(sol1));
 	}
-
-	public abstract double rec(RTCDiff rtcDiff);
 
 }

@@ -80,6 +80,7 @@ public class FindingTest {
 		f2.setValue(new MultipleChoiceValue(choices));
 		assertEquals(f2.getValuePrompt(), choiceName2);
 
+		assertTrue(f.equals(f));
 		assertFalse(f.equals(f2));
 		assertFalse(f.equals(null));
 		assertFalse(f.equals(Boolean.FALSE));

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
@@ -107,33 +106,6 @@ public class TestCaseAnalysis {
 		for (TestListener listener : listeners) {
 			listener.testcaseStarting(suite);
 		}
-	}
-
-	/**
-	 * Performs a test case analysis on {@link SequentialTestCase} instances
-	 * having the specified names and that are included in the specified
-	 * collection of {@link SequentialTestCase} instances. Each
-	 * {@link SequentialTestCase} instance is run by a single {@link Session}
-	 * and the expected and derived facts are compared. As the result of the
-	 * comparison, a {@link TestCaseAnalysisReport} is returned.
-	 * 
-	 * @created 30.03.2011
-	 * @param suite the specified collection of {@link SequentialTestCase}
-	 *        instances
-	 * @param stcNames the specified names of {@link SequentialTestCase}
-	 *        instances you want to analyze
-	 * @return a generated report of the differences between expected and
-	 *         derived results for the cases with the specified names
-	 * @throws IllegalArgumentException
-	 */
-	public TestCaseAnalysisReport runAndAnalyze(TestCase suite, String... stcNames) throws IllegalArgumentException {
-		TestCaseAnalysisReport result = new AnalysisReport();
-		for (String stcName : stcNames) {
-			SequentialTestCase stc = findByName(stcName, suite);
-			Diff diff = runAndAnalyze(stc, suite.getKb());
-			result.add(diff);
-		}
-		return result;
 	}
 
 	/**
@@ -348,13 +320,7 @@ public class TestCaseAnalysis {
 		}
 
 		// derived/not expected
-		for (Solution solution : session.getKnowledgeBase().getManager().getSolutions()) {
-			Rating derived = session.getBlackboard().getRating(solution);
-			if (derived.hasState(State.UNCLEAR)) continue;
-			if (!expectedRatings.containsKey(solution)) {
-				diffs.addDerivedButNotExpected(solution, derived);
-			}
-		}
+		// was removed! (Jochen/Volker)
 
 		return diffs;
 	}

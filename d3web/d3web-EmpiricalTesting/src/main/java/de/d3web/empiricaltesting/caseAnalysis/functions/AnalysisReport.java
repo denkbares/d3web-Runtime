@@ -55,16 +55,6 @@ public class AnalysisReport implements TestCaseAnalysisReport {
 	}
 
 	@Override
-	public double precision() {
-		double prec = 0;
-		for (Diff diff : getDiffs()) {
-			prec += functions.precision(diff, DerivationsCalculator.getInstance());
-		}
-		prec /= getDiffs().size();
-		return prec;
-	}
-
-	@Override
 	public double recall() {
 		double rec = 0;
 		for (Diff diff : getDiffs()) {
@@ -72,16 +62,6 @@ public class AnalysisReport implements TestCaseAnalysisReport {
 		}
 		rec /= getDiffs().size();
 		return rec;
-	}
-
-	@Override
-	public double interviewPrecision(KnowledgeBase kb) {
-		double prec = 0;
-		for (Diff diff : getDiffs()) {
-			prec += functions.precision(diff, new InterviewCalculator(kb));
-		}
-		prec /= getDiffs().size();
-		return prec;
 	}
 
 	@Override

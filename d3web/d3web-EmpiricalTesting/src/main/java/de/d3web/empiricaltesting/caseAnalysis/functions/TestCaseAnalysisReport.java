@@ -30,14 +30,6 @@ import de.d3web.empiricaltesting.SequentialTestCase;
 public interface TestCaseAnalysisReport {
 
 	/**
-	 * Gives the precision of the analysis result.
-	 * 
-	 * @created 25.03.2011
-	 * @return the precision of the analysis run.
-	 */
-	double precision();
-
-	/**
 	 * Gives the recall of the analysis result.
 	 * 
 	 * @created 25.03.2011
@@ -74,17 +66,6 @@ public interface TestCaseAnalysisReport {
 	 * @return the recall of the expected and derived interview agends
 	 */
 	double interviewRecall(KnowledgeBase kb);
-
-	/**
-	 * Gives the precision of the interview agenda expected by the test suite
-	 * and derived by the test case analysis run. A specified knowledge base is
-	 * used.
-	 * 
-	 * @created 28.03.2011
-	 * @param kb the specified {@link KnowledgeBase}
-	 * @return the precision of the expected and derived interview agends
-	 */
-	double interviewPrecision(KnowledgeBase kb);
 
 	/**
 	 * Appends a new difference report to the result instance. Pleas be aware,

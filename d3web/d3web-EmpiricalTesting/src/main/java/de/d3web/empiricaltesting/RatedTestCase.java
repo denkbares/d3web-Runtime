@@ -62,13 +62,6 @@ public class RatedTestCase {
 	private List<RatedSolution> derivedSolutions;
 
 	/**
-	 * After deriving the actual solutions from the knowledge base, this must be
-	 * set to true. Every change on this testCase (i.e. adding a finding) will
-	 * reset this flag to false.
-	 */
-	private boolean derivedSolutionsAreUpToDate;
-
-	/**
 	 * Indication of when this ratedTestCase was tested
 	 */
 	private String lastTested;
@@ -93,7 +86,6 @@ public class RatedTestCase {
 		expectedSolutions = new ArrayList<RatedSolution>();
 		expectedFindings = new ArrayList<Finding>();
 		derivedSolutions = new ArrayList<RatedSolution>();
-		derivedSolutionsAreUpToDate = false;
 		lastTested = "";
 		wasTestedBefore = false;
 	}
@@ -106,7 +98,6 @@ public class RatedTestCase {
 	 */
 	public boolean add(Finding finding) {
 		boolean result = findings.add(finding);
-		if (result) derivedSolutionsAreUpToDate = false;
 		return result;
 	}
 
@@ -137,7 +128,6 @@ public class RatedTestCase {
 		for (RatedSolution solution : solutions) {
 			result = result && expectedSolutions.add(solution);
 		}
-		if (result) derivedSolutionsAreUpToDate = false;
 		return result;
 	}
 
@@ -180,7 +170,6 @@ public class RatedTestCase {
 		for (RatedSolution solution : solutions) {
 			result = result && derivedSolutions.add(solution);
 		}
-		if (result) derivedSolutionsAreUpToDate = false;
 		return result;
 	}
 

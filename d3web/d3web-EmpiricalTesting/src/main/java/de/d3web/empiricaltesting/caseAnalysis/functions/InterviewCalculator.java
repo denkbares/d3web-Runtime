@@ -46,21 +46,6 @@ public class InterviewCalculator extends PrecisionRecallCalculator {
 				new NextUnansweredQuestionFormStrategy());
 	}
 
-	// -------Rated Precision--------
-
-	/**
-	 * Calculates the Interview-Precision of a RatedTestCase.
-	 * 
-	 * @param rtc The RatedTestCase necessary for the calculation
-	 * @return Interview-Precision of RatedTestCase
-	 */
-	@Override
-	public double prec(RTCDiff rtcDiff) {
-		double numerator = similarity(rtcDiff.getCase());
-		numerator /= rtcDiff.getCase().getFindings().size();
-		return numerator;
-	}
-
 	// -------Rated Recall--------
 
 	/**

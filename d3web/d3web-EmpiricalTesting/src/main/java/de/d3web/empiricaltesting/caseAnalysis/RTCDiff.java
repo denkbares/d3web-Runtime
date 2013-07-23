@@ -27,7 +27,6 @@ import java.util.Set;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
 import de.d3web.empiricaltesting.Finding;
@@ -44,7 +43,6 @@ public class RTCDiff {
 
 	private final RatedTestCase rtc;
 	private final Map<TerminologyObject, ValueDiff> differencesExpectedButNotDerived;
-	private final Map<TerminologyObject, ValueDiff> differencesDerivedButNotExpected;
 
 	/**
 	 * Creates a new comparison storage for the specified rated test case.
@@ -54,7 +52,6 @@ public class RTCDiff {
 	public RTCDiff(RatedTestCase rtc) {
 		this.rtc = rtc;
 		this.differencesExpectedButNotDerived = new HashMap<TerminologyObject, ValueDiff>();
-		this.differencesDerivedButNotExpected = new HashMap<TerminologyObject, ValueDiff>();
 	}
 
 	/**
@@ -77,18 +74,6 @@ public class RTCDiff {
 	 */
 	public void addExpectedButNotDerived(Solution solution, Rating expected, Rating derived) {
 		this.differencesExpectedButNotDerived.put(solution, new ValueDiff(expected, derived));
-	}
-
-	/**
-	 * Adds a deviation to the RTCDiff instance, which says that there exists a
-	 * derived solution that was not expected.
-	 * 
-	 * @created Nov 3, 2011
-	 * @param solution
-	 * @param derived
-	 */
-	public void addDerivedButNotExpected(Solution solution, Rating derived) {
-		this.differencesDerivedButNotExpected.put(solution, new ValueDiff(new Rating(State.UNCLEAR), derived));
 	}
 
 	/**
@@ -122,47 +107,31 @@ public class RTCDiff {
 	public boolean hasExpectedButNotDerivedDiff(TerminologyObject terminologyObject) {
 		return (getExpectedButNotDerivedDiffFor(terminologyObject) != null);
 	}
-	
-	public boolean hasDifferencesDerivedButNotExpected() {
-		return !differencesDerivedButNotExpected.keySet().isEmpty();
-	}
-
-	public Collection<TerminologyObject> getDerivedButNotExpectedDiffObjects() {
-		return differencesDerivedButNotExpected.keySet();
-	}
-
-	public ValueDiff getDerivedButNotExpectedDiffFor(TerminologyObject terminologyObject) {
-		return differencesDerivedButNotExpected.get(terminologyObject);
-	}
 
 	public boolean hasDerivedButNotExpectedDiff(TerminologyObject terminologyObject) {
 		return (getExpectedButNotDerivedDiffFor(terminologyObject) != null);
 	}
 
-	
-	
 	public boolean hasDifferences() {
-		return !differencesDerivedButNotExpected.keySet().isEmpty() || !differencesExpectedButNotDerived.keySet().isEmpty();
+		return !differencesExpectedButNotDerived.keySet().isEmpty();
 	}
 
 	public Collection<TerminologyObject> getDiffObjects() {
 		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
-		result.addAll(differencesDerivedButNotExpected.keySet());
 		result.addAll(differencesExpectedButNotDerived.keySet());
 		return result;
 	}
 
 	public ValueDiff getDiffFor(TerminologyObject terminologyObject) {
-		ValueDiff diff = differencesDerivedButNotExpected.get(terminologyObject);
-		if(diff != null) return diff;
-		diff = differencesExpectedButNotDerived.get(terminologyObject);
+		ValueDiff diff = differencesExpectedButNotDerived.get(terminologyObject);
 		return diff;
 	}
 
 	public boolean hasDiff(TerminologyObject terminologyObject) {
-		return (hasExpectedButNotDerivedDiff(terminologyObject)) || (hasDerivedButNotExpectedDiff(terminologyObject));
+		return (hasExpectedButNotDerivedDiff(terminologyObject))
+				|| (hasDerivedButNotExpectedDiff(terminologyObject));
 	}
-	
+
 	/**
 	 * Returns all questions and solutions, that were derived with the result as
 	 * expected.

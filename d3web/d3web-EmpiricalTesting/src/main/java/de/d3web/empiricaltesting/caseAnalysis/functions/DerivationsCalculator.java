@@ -43,28 +43,6 @@ public final class DerivationsCalculator extends PrecisionRecallCalculator {
 	}
 
 	/**
-	 * Calculates the precision of the specified differences.
-	 * 
-	 * @param rtcDiff the specified differences of a {@link RatedTestCase}.
-	 * @return precision of the differences.
-	 */
-	@Override
-	public double prec(RTCDiff rtcDiff) {
-		Collection<TerminologyObject> derived = rtcDiff.getDerived();
-		if (!derived.isEmpty()) {
-			Collection<TerminologyObject> expected_intersect_derived = rtcDiff.correctlyDerived();
-			return (1.0 * expected_intersect_derived.size()) / derived.size();
-		}
-		else if (derived.isEmpty() && rtcDiff.getExpected().isEmpty()) {
-			return 1;
-		}
-		else {
-			return 0;
-
-		}
-	}
-
-	/**
 	 * Calculates the recall of the specified differences.
 	 * 
 	 * @param rtcDiff the specified differences of a {@link RatedTestCase}.

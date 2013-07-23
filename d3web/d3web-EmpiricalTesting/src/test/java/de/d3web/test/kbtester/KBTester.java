@@ -80,9 +80,6 @@ public class KBTester {
 		StringBuilder precisionFailureMsg = new StringBuilder();
 		precisionFailureMsg.append("\nInterview-Precision differ in test suite ");
 		precisionFailureMsg.append(t.getName() + " should be 1.0 but is ");
-		precisionFailureMsg.append(result.interviewPrecision(t.getKb()) + "\n");
-		assertEquals(precisionFailureMsg.toString(), 1.0,
-				result.interviewPrecision(t.getKb()), 0.0);
 
 		StringBuilder recallFailureMsg = new StringBuilder();
 		recallFailureMsg.append("\nInterview-Recall differ in test suite ");
@@ -100,11 +97,6 @@ public class KBTester {
 	private void testPrecisionAndRecall(TestCase t) {
 		TestCaseAnalysis analysis = new TestCaseAnalysis();
 		TestCaseAnalysisReport result = analysis.runAndAnalyze(t);
-		StringBuilder precisionFailureMsg = new StringBuilder();
-		precisionFailureMsg.append("\nPrecision differ in test suite ");
-		precisionFailureMsg.append(t.getName() + " should be 1.0 but is ");
-		precisionFailureMsg.append(result.precision() + "\n");
-		assertEquals(precisionFailureMsg.toString(), 1.0, result.precision(), 0.0);
 
 		StringBuilder recallFailureMsg = new StringBuilder();
 		recallFailureMsg.append("\nRecall differ in test suite ");

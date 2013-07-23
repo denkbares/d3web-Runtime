@@ -154,11 +154,7 @@ public class EmpiricalTestingFunctionsTest {
 		Session session = SessionFactory.createSession(knowledge);
 
 		STCDiff stc1_diff = new STCDiff(stc1, session);
-		assertEquals(1, EmpiricalTestingFunctions.getInstance().precision(stc1_diff,
-						DerivationsCalculator.getInstance()), EPS);
 		assertEquals(1, EmpiricalTestingFunctions.getInstance().recall(stc1_diff,
-				DerivationsCalculator.getInstance()), EPS);
-		assertEquals(1, EmpiricalTestingFunctions.getInstance().fMeasure(1.0, stc1_diff,
 				DerivationsCalculator.getInstance()), EPS);
 
 		// The differing case "stc2": having prec=0,25
@@ -171,14 +167,9 @@ public class EmpiricalTestingFunctionsTest {
 		rtc_diff22.addExpectedButNotDerived(s1, ESTABLISHED, SUGGESTED);
 		stc2_diff.add(rtc_diff22);
 
-		assertEquals(
-				0.25,
-				EmpiricalTestingFunctions.getInstance().precision(stc2_diff,
-						DerivationsCalculator.getInstance()), EPS);
 		assertEquals(0.25, EmpiricalTestingFunctions.getInstance().recall(stc2_diff,
 				DerivationsCalculator.getInstance()), EPS);
-		assertEquals(0.25, EmpiricalTestingFunctions.getInstance().fMeasure(1, stc2_diff,
-				DerivationsCalculator.getInstance()), EPS);
+
 	}
 
 }

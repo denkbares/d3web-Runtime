@@ -23,8 +23,6 @@ package de.d3web.empiricaltesting.caseAnalysis.functions;
 import java.util.List;
 
 import de.d3web.empiricaltesting.RatedTestCase;
-import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.caseAnalysis.STCDiff;
 
 public final class EmpiricalTestingFunctions {
 
@@ -42,40 +40,6 @@ public final class EmpiricalTestingFunctions {
 
 	private int wp() {
 		return 1;
-	}
-
-	/**
-	 * Computes the precision for a specified strategy, e.g. derived
-	 * solutions/findings, interview agenda etc.
-	 * 
-	 * @param stcDiff the differences computed during the test case analysis
-	 * @param strategy the strategy for precision calculation
-	 * @return precision of the SequentialTestCase and the specified strategy
-	 */
-	public double precision(Diff stcDiff, PrecisionRecallCalculator strategy) {
-		if (stcDiff.getCase().getCases().size() == 0) {
-			return 0;
-		}
-		else if (!stcDiff.hasDifferences()) {
-			return 1;
-		}
-		else {
-			double numerator = 0;
-			double denominator = 0;
-			List<RatedTestCase> cases = stcDiff.getCase().getCases();
-
-			for (int i = 0; i < cases.size(); i++) {
-				RatedTestCase rtc = cases.get(i);
-				if (stcDiff.hasDiff(rtc)) {
-					numerator += wp() * strategy.precision(stcDiff.getDiff(rtc));
-				}
-				else {
-					numerator += wp();
-				}
-				denominator += wp();
-			}
-			return numerator / denominator;
-		}
 	}
 
 	// -------Chained Recall--------
@@ -121,25 +85,4 @@ public final class EmpiricalTestingFunctions {
 		}
 	}
 
-	// -------F Measure for SequentialTestCases --------
-
-	/**
-	 * Returns the fMeasure of a {@link SequentialTestCase} depending on the
-	 * specified strategy.
-	 * 
-	 * @param beta beta value for the calculation
-	 * @param stcDiff the differences computed during the test case analysis
-	 * @param strategy the algorithm strategy on which the calculation will be
-	 *        based
-	 * @return fMeasure of the {@link SequentialTestCase} computed using the
-	 *         specified strategy
-	 */
-	public double fMeasure(double beta, STCDiff stcDiff, PrecisionRecallCalculator strategy) {
-		double numerator = 0;
-		for (RatedTestCase rtc : stcDiff.getCase().getCases()) {
-			numerator += strategy.fMeasure(beta, stcDiff.getDiff(rtc));
-		}
-		double denominator = stcDiff.getCase().getCases().size();
-		return numerator / denominator;
-	}
 }
