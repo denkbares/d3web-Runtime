@@ -32,11 +32,15 @@ public class ConsoleProgressBarListener implements ProgressListener {
 	public void updateProgress(float percent, String message) {
 		int progress = (int) (percent * SIZE);
 		if (lastProgress == -1) {
-			System.out.print("|");
-			for (int i = 0; i < SIZE; i++) {
+			System.out.print("| 0 % ");
+			for (int i = 0; i < (SIZE - 18) / 2; i++) {
 				System.out.print("\u00AF");
 			}
-			System.out.println("|");
+			System.out.print(" 50 % ");
+			for (int i = 0; i < (SIZE - 18) / 2; i++) {
+				System.out.print("\u00AF");
+			}
+			System.out.println(" 100 % |");
 			System.out.print("|");
 			lastProgress = 0;
 		}
