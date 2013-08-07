@@ -184,7 +184,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 				name = textValue.getText();
 				valueNode.setAttribute("type", "text");
 			}
-			if (action.getValue() instanceof MultipleChoiceValue) {
+			else if (action.getValue() instanceof MultipleChoiceValue) {
 				MultipleChoiceValue mcv = (MultipleChoiceValue) (action.getValue());
 				for (ChoiceID cid : mcv.getChoiceIDs()) {
 					Element choiceElement = doc.createElement("choice");
