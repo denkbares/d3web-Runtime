@@ -20,6 +20,7 @@
 package de.d3web.core.io.fragments.actions;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +39,12 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 
@@ -82,21 +88,42 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 					Node valNode = values.item(k);
 					if (valNode.getNodeName().equalsIgnoreCase("value")) {
 						String type = valNode.getAttributes().getNamedItem("type").getNodeValue();
-						if (type.equalsIgnoreCase("answer")
-								|| type.equalsIgnoreCase("answerChoice")) {
-							String name = valNode.getAttributes().getNamedItem("name").getNodeValue();
-							if (name.equals(Unknown.getInstance().getValue().toString())) {
-								parsedValues.add(Unknown.getInstance());
-							}
-							else {
-								parsedValues.add(new ChoiceValue(name));
-							}
-						}
-						else if (type.equalsIgnoreCase("evaluatable")) {
+						if (type.equalsIgnoreCase("evaluatable")) {
 							List<Element> childNodes = XMLUtil.getElementList(valNode.getChildNodes());
 							for (Element e : childNodes) {
 								parsedValues.add(PersistenceManager.getInstance().readFragment(
 										e, kb));
+							}
+						}
+						else {
+							String name = valNode.getAttributes().getNamedItem("name").getNodeValue();
+							if (type.equalsIgnoreCase("answer")
+									|| type.equalsIgnoreCase("answerChoice")) {
+								if (name.equals(Unknown.getInstance().getValue().toString())) {
+									parsedValues.add(Unknown.getInstance());
+								}
+								else {
+									parsedValues.add(new ChoiceValue(name));
+								}
+							}
+							else if (type.equalsIgnoreCase("num")) {
+								parsedValues.add(new NumValue(Double.parseDouble(name)));
+							}
+							else if (type.equalsIgnoreCase("text")) {
+								parsedValues.add(new TextValue(name));
+							}
+							else if (type.equalsIgnoreCase("date")) {
+								parsedValues.add(new DateValue(new Date(Long.parseLong(name))));
+							}
+							else if (type.equalsIgnoreCase("mcanswer")) {
+								List<ChoiceID> ids = new LinkedList<ChoiceID>();
+								for (Element grandchild : XMLUtil.getElementList(valNode.getChildNodes())) {
+									if (grandchild.getNodeName().equals("choice")) {
+										ids.add(new ChoiceID(grandchild.getAttribute("name")));
+									}
+								}
+								parsedValues.add(new MultipleChoiceValue(
+										ids.toArray(new ChoiceID[ids.size()])));
 							}
 						}
 					}
@@ -135,16 +162,43 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 		FragmentManager pm = PersistenceManager.getInstance();
 		if (action != null && action.getValue() instanceof Value) {
 			String name = "";
+			Element valueNode = doc.createElement("Value");
 			if (action.getValue() instanceof ChoiceValue) {
 				ChoiceValue cv = (ChoiceValue) (action.getValue());
 				Choice choice = cv.getChoice((QuestionChoice) question);
+				valueNode.setAttribute("type", "answer");
 				name = choice.getName();
+			}
+			else if (action.getValue() instanceof NumValue) {
+				NumValue numValue = (NumValue) action.getValue();
+				name = Double.toString(numValue.getDouble());
+				valueNode.setAttribute("type", "num");
+			}
+			else if (action.getValue() instanceof DateValue) {
+				DateValue dateValue = (DateValue) action.getValue();
+				name = Long.toString(dateValue.getDate().getTime());
+				valueNode.setAttribute("type", "date");
+			}
+			else if (action.getValue() instanceof TextValue) {
+				TextValue textValue = (TextValue) action.getValue();
+				name = textValue.getText();
+				valueNode.setAttribute("type", "text");
+			}
+			if (action.getValue() instanceof MultipleChoiceValue) {
+				MultipleChoiceValue mcv = (MultipleChoiceValue) (action.getValue());
+				for (ChoiceID cid : mcv.getChoiceIDs()) {
+					Element choiceElement = doc.createElement("choice");
+					choiceElement.setAttribute("name", cid.getText());
+					valueNode.appendChild(choiceElement);
+				}
+				valueNode.setAttribute("type", "mcanswer");
 			}
 			else {
 				name = ((Value) (action.getValue())).getValue().toString();
+				valueNode.setAttribute("type", "answer");// backward
+															// compatibility ->
+															// unknown
 			}
-			Element valueNode = doc.createElement("Value");
-			valueNode.setAttribute("type", "answer");
 			valueNode.setAttribute("name", name);
 			valuesNode.appendChild(valueNode);
 		}
