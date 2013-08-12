@@ -22,18 +22,18 @@ package de.d3web.empiricaltesting;
 
 public interface Rating extends Comparable<Rating> {
 
-	public Object getRating();
+	Object getRating();
 
 	// public void setRating(Object theRating);
 
 	@Override
-	public int hashCode();
+	int hashCode();
 
 	@Override
-	public boolean equals(Object o);
+	boolean equals(Object o);
 
 	@Override
-	public String toString();
+	String toString();
 
 	/**
 	 * Checks whether the given rating has a diagnostic relecance for the
@@ -42,5 +42,5 @@ public interface Rating extends Comparable<Rating> {
 	 * @return true, when rating is something like established or suggested (or
 	 *         corresponding numerical notions)
 	 */
-	public boolean isProblemSolvingRelevant();
+	boolean isProblemSolvingRelevant();
 }

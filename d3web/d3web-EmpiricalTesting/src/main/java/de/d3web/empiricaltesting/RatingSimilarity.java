@@ -22,6 +22,6 @@ package de.d3web.empiricaltesting;
 
 public interface RatingSimilarity {
 
-	public double rsim(Rating r1, Rating r2);
+	double rsim(Rating r1, Rating r2);
 
 }

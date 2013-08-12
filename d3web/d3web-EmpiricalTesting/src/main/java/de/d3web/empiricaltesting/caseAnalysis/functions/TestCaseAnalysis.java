@@ -124,7 +124,7 @@ public class TestCaseAnalysis {
 		Session session = SessionFactory.createSession(stc.getName() + now().toString(), knowledge,
 				creationDate);
 		notifySTCStart(stc, session);
-		Diff diff = new STCDiff(stc, session);
+		Diff diff = new STCDiff(stc);
 
 		for (RatedTestCase rtc : stc.getCases()) {
 
@@ -197,30 +197,6 @@ public class TestCaseAnalysis {
 		for (TestListener listener : this.listeners) {
 			listener.sequentialTestcaseStarting(stc, session);
 		}
-	}
-
-	/**
-	 * Finds a {@link SequentialTestCase} instance in the specified suite by the
-	 * specified case name.
-	 * 
-	 * @created 30.03.2011
-	 * @param stcName the specified case name
-	 * @param suite the specified suite
-	 * @return the found {@link SequentialTestCase}
-	 * @throws IllegalArgumentException when no {@link SequentialTestCase} with
-	 *         the specified name could be found
-	 */
-	private SequentialTestCase findByName(String stcName, TestCase suite) throws IllegalArgumentException {
-		if (stcName == null) {
-			throw new IllegalArgumentException("Name of SequentialTestCase not specified.");
-		}
-		for (SequentialTestCase stc : suite.getRepository()) {
-			if (stcName.equals(stc.getName())) {
-				return stc;
-			}
-		}
-		throw new IllegalArgumentException("No SequentialTestCase with name " + stcName
-				+ " found in suite");
 	}
 
 	/**

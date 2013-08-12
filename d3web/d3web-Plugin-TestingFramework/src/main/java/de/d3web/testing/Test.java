@@ -30,10 +30,10 @@ import java.util.List;
  */
 public interface Test<T> {
 
-	public static final String PLUGIN_ID =
+	String PLUGIN_ID =
 			"d3web-Plugin-TestingFramework";
 
-	public static final String EXTENSION_POINT_ID = "Test";
+	String EXTENSION_POINT_ID = "Test";
 
 	/**
 	 * Returns the name of the test. The implementor may ensure that the name is

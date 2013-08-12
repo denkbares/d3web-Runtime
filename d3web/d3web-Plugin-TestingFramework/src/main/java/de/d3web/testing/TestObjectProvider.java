@@ -39,8 +39,8 @@ public interface TestObjectProvider {
 	 * @param name regex for the desired test-object instance.
 	 * @return
 	 */
-	public <T> List<TestObjectContainer<T>> getTestObjects(Class<T> clazz, String name);
+	<T> List<TestObjectContainer<T>> getTestObjects(Class<T> clazz, String name);
 
-	public static final String EXTENSION_POINT_ID = "TestObjectProvider";
+	String EXTENSION_POINT_ID = "TestObjectProvider";
 
 }

@@ -36,11 +36,11 @@ public final class EmpiricalTestingFunctions {
 		return instance;
 	}
 
-	// -------Chained Precision--------
-
-	private int wp() {
-		return 1;
-	}
+	// // -------Chained Precision--------
+	//
+	// private int wp() {
+	// return 1;
+	// }
 
 	// -------Chained Recall--------
 

@@ -427,7 +427,7 @@ public final class TestPersistence {
 				}
 			}
 			String lastTestedDate = sr.getAttributeValue(null, LASTTESTED);
-			if (lastTestedDate != null) if (!lastTestedDate.equals("")) {
+			if (lastTestedDate != null && (!lastTestedDate.equals(""))) {
 				rtc.setTestingDate(lastTestedDate);
 				rtc.setWasTestedBefore(true);
 			}

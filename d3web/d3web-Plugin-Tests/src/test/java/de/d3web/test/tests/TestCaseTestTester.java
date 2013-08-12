@@ -61,7 +61,7 @@ public class TestCaseTestTester {
 			e.printStackTrace();
 		}
 
-		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+		TestCaseTest test = new TestCaseTest();
 
 		List<TestCase> testcases = readTestCases(new File(
 				"./src/test/resources/Demo_-_Test_Cases_testcase.xml"));
@@ -86,7 +86,7 @@ public class TestCaseTestTester {
 			e.printStackTrace();
 		}
 
-		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+		TestCaseTest test = new TestCaseTest();
 
 		List<TestCase> testcases = readTestCases(new File(
 				"./src/test/resources/Demo_-_Test_Cases_testcase2.xml"));
@@ -106,7 +106,7 @@ public class TestCaseTestTester {
 			e.printStackTrace();
 		}
 
-		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+		TestCaseTest test = new TestCaseTest();
 
 		List<TestCase> testcases = readTestCases(new File(
 				"./src/test/resources/Demo_-_Test_Cases_testcase2-inconsistent.xml"));
@@ -126,7 +126,7 @@ public class TestCaseTestTester {
 			e.printStackTrace();
 		}
 
-		de.d3web.test.TestCaseTest test = new de.d3web.test.TestCaseTest();
+		TestCaseTest test = new TestCaseTest();
 
 		List<TestCase> testcases = readTestCases(new File(
 				"./src/test/resources/Demo_-_Test_Cases_testcase2.xml"));

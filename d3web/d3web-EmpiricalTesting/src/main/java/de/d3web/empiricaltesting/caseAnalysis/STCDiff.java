@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.d3web.core.session.Session;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.caseAnalysis.functions.Diff;
@@ -49,7 +48,7 @@ public class STCDiff implements Diff {
 	 * @param stc the specified {@link SequentialTestCase} instance
 	 * @param session
 	 */
-	public STCDiff(SequentialTestCase stc, Session session) {
+	public STCDiff(SequentialTestCase stc) {
 		this(stc, new Date());
 	}
 
