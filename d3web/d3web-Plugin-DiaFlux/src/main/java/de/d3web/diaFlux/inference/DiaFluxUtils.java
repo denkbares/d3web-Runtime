@@ -174,6 +174,14 @@ public final class DiaFluxUtils {
 
 	}
 
+	/**
+	 * Searches a startnode by its name and the name of the containing flow.
+	 * 
+	 * @param kb
+	 * @param flowName
+	 * @param startNodeName
+	 * @return s the start node, or null, if the flow or startnode do not exist
+	 */
 	public static StartNode findStartNode(KnowledgeBase kb, String flowName, String startNodeName) {
 
 		Flow flow = findFlow(kb, flowName);
@@ -183,6 +191,14 @@ public final class DiaFluxUtils {
 
 	}
 
+	/**
+	 * Searches an exit node by its name and the name of the containing flow.
+	 * 
+	 * @param kb
+	 * @param flowName
+	 * @param startNodeName
+	 * @return s the exit node, or null, if the flow or exit node do not exist
+	 */
 	public static EndNode findExitNode(KnowledgeBase kb, NodeActiveCondition condition) {
 		return findExitNode(kb, condition.getFlowName(), condition.getNodeName());
 	}
@@ -195,6 +211,15 @@ public final class DiaFluxUtils {
 		return findNode(exitNodes, endNodeName);
 	}
 
+	/**
+	 * Returns the startnode that is called by the composed node. May return
+	 * null, if no such flow exists.
+	 * 
+	 * @param kb
+	 * @param flowName
+	 * @param startNodeName
+	 * @return s the start node, or null, if the called startnode does not exist
+	 */
 	public static StartNode getCalledStartNode(ComposedNode composedNode) {
 		return findStartNode(composedNode.getFlow().getKnowledgeBase(),
 				composedNode.getCalledFlowName(),
@@ -205,9 +230,17 @@ public final class DiaFluxUtils {
 	 * Returns the {@link Flow} that is called by composedNode
 	 * 
 	 * @created 08.02.2012
+	 * @return s the flow containing the called start node, or null, if the
+	 *         start node does not exist
 	 */
 	public static Flow getCalledFlow(KnowledgeBase kb, ComposedNode composedNode) {
-		return getCalledStartNode(composedNode).getFlow();
+		StartNode calledStartNode = getCalledStartNode(composedNode);
+		if (calledStartNode != null) {
+			return calledStartNode.getFlow();
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
