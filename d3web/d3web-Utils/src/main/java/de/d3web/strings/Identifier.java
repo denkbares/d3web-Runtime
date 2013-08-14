@@ -71,6 +71,16 @@ public class Identifier implements Comparable<Identifier> {
 
 	@Override
 	public int compareTo(Identifier o) {
+		int len1 = this.pathElements.length;
+		int len2 = o.pathElements.length;
+		int len = Math.min(len1, len2);
+		for (int i = 0; i < len; i++) {
+			int comp = this.pathElements[i].compareToIgnoreCase(o.pathElements[i]);
+			if (comp != 0) return comp;
+		}
+		if (len1 < len2) return -1;
+		if (len1 > len2) return 1;
+		// both are case sensitive equal, so use compare of external form
 		return externalFormLowerCase.compareTo(o.externalFormLowerCase);
 	}
 
@@ -110,9 +120,9 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Returns a new {@link Identifier} consisting of the identifier
-	 * elements of the given {@link Identifier} appended to the identifier
-	 * elements of this {@link Identifier}.
+	 * Returns a new {@link Identifier} consisting of the identifier elements of
+	 * the given {@link Identifier} appended to the identifier elements of this
+	 * {@link Identifier}.
 	 * 
 	 * @created 23.04.2012
 	 * @param termIdentifier the {@link Identifier} to append
@@ -128,8 +138,8 @@ public class Identifier implements Comparable<Identifier> {
 
 	/**
 	 * Generates and returns the external representation or form of this
-	 * {@link Identifier}. It is a String that can be transformed back into
-	 * an identical {@link Identifier} as the originating one by using
+	 * {@link Identifier}. It is a String that can be transformed back into an
+	 * identical {@link Identifier} as the originating one by using
 	 * {@link Identifier#fromExternalForm(String)}.<br/>
 	 * Basically the external form is the path elements connected with a
 	 * separator and proper quoting if the separator icon is contained in one of
@@ -185,10 +195,10 @@ public class Identifier implements Comparable<Identifier> {
 	 * 
 	 * @created 15.05.2012
 	 * @param startIdentifier
-	 * @return the {@link Identifier} appended to the specified
-	 *         startIdentifier that will together make this identifier, or null
-	 *         if not possible (because this identifier does not start with
-	 *         parameter startIdentifier)
+	 * @return the {@link Identifier} appended to the specified startIdentifier
+	 *         that will together make this identifier, or null if not possible
+	 *         (because this identifier does not start with parameter
+	 *         startIdentifier)
 	 */
 	public Identifier rest(Identifier startIdentifier) {
 		if (!startsWith(startIdentifier)) return null;
@@ -214,12 +224,12 @@ public class Identifier implements Comparable<Identifier> {
 	 * Strings.<br/>
 	 * Per definition, if you have a {@link Identifier} and generate the
 	 * external form for that {@link Identifier} and then generate another
-	 * {@link Identifier} from that external form, both TermIdentifiers will
-	 * be equal.
+	 * {@link Identifier} from that external form, both TermIdentifiers will be
+	 * equal.
 	 * 
 	 * @created 07.05.2012
-	 * @param externalForm the external form of a {@link Identifier} created
-	 *        by using {@link Identifier#toExternalForm()}
+	 * @param externalForm the external form of a {@link Identifier} created by
+	 *        using {@link Identifier#toExternalForm()}
 	 * @return a {@link Identifier} representing the given external form
 	 */
 	public static Identifier fromExternalForm(String externalForm) {
