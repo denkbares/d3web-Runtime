@@ -549,6 +549,20 @@ public class Strings {
 		return trimLeft(trimRight(text));
 	}
 
+	/**
+	 * Removes all blank lines before or after the specified string. All lines
+	 * containing non-whitespace characters remain unchanged.
+	 * 
+	 * @created 15.08.2013
+	 * @param text the text to trim the empty lines from
+	 * @return the trimmed text
+	 */
+	public static String trimBlankLines(String text) {
+		if (text == null) return null;
+		return text.replaceFirst("\\A([ \t\u00A0]*\\r?\\n)+", "")
+				.replaceFirst("(\\r?\\n[ \t\u00A0]*)+\\z", "");
+	}
+
 	public static String trimQuotes(String text) {
 		return unquote(trim(text));
 	}
