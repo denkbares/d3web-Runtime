@@ -33,7 +33,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -707,6 +709,71 @@ public class Strings {
 				replace("[", "&#91;").
 				replace("]", "&#93;").
 				replace("\\", "&#92;");
+	}
+
+	private static Pattern ENTITY_PATTERN = null;
+	private static Map<String, String> NAMED_ENTITIES = null;
+
+	/**
+	 * Decodes the html entities of a given String. Currently the method only
+	 * supports a little number of named entities but all ascii-coded entities.
+	 * More entities are easy to be added.
+	 * 
+	 * @created 21.08.2013
+	 * @param text the text to be decoded
+	 * @return the decoded result
+	 */
+	public static String decodeHtml(String text) {
+		if (text == null) return null;
+
+		if (ENTITY_PATTERN == null) {
+			ENTITY_PATTERN = Pattern.compile("&(\\w{1,4});");
+			NAMED_ENTITIES = new HashMap<String, String>();
+			// TODO: add much more named entities here
+			NAMED_ENTITIES.put("amp", "&");
+			NAMED_ENTITIES.put("quot", "\"");
+			NAMED_ENTITIES.put("apos", "'");
+			NAMED_ENTITIES.put("lt", "<");
+			NAMED_ENTITIES.put("gt", ">");
+		}
+
+		StringBuilder result = new StringBuilder(text.length());
+		int pos = 0;
+
+		Matcher matcher = ENTITY_PATTERN.matcher(text);
+		while (matcher.find()) {
+			int start = matcher.start();
+			int end = matcher.end();
+
+			// first append chars to next match
+			result.append(text.substring(pos, start));
+
+			// then try to decode
+			String content = matcher.group(1);
+			try {
+				// try coded entity
+				int code = Integer.parseInt(content);
+				result.append((char) code);
+			}
+			catch (NumberFormatException e) {
+				// try named entity
+				String decoded = NAMED_ENTITIES.get(content);
+				if (decoded != null) {
+					result.append(decoded);
+				}
+				else {
+					// otherwise add the match unchanged
+					result.append(matcher.group());
+				}
+			}
+
+			// move to position after match
+			pos = end;
+		}
+
+		// append rest of string
+		result.append(text.substring(pos));
+		return result.toString();
 	}
 
 	/**
