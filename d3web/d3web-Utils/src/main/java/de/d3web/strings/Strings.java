@@ -700,12 +700,12 @@ public class Strings {
 		if (text == null) return null;
 		return text.replace("&", "&amp;").
 				replace("\"", "&quot;").
-				// this encoding are not decoded by the browser,
-				// we can not use it
-				// replaceAll("'", "&#39;")
+				replace("'", "&apos;").
 				replace("<", "&lt;").
 				replace(">", "&gt;").
 				replace("#", "&#35;").
+				replace("[", "&#91;").
+				replace("]", "&#93;").
 				replace("\\", "&#92;");
 	}
 
