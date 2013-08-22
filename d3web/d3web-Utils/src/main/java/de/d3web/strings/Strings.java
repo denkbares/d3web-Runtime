@@ -779,7 +779,7 @@ public class Strings {
 	}
 
 	public static enum Encoding {
-		UTF8("UTF-8"), ISO8859_1("ISO-8859-1");
+		UTF8("UTF-8"), ISO_8859_1("ISO-8859-1");
 
 		private final String encoding;
 
