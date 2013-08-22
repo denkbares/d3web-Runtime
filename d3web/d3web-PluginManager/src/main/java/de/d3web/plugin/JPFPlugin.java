@@ -45,7 +45,7 @@ public class JPFPlugin implements Plugin {
 
 		private boolean isPublic;
 		private final Set<String> entries;
-		private String path;
+		private final String path;
 
 		public ResourceFilter(Library lib) {
 			entries = new HashSet<String>();
@@ -124,6 +124,11 @@ public class JPFPlugin implements Plugin {
 	@Override
 	public String getPluginID() {
 		return this.descriptor.getId();
+	}
+
+	@Override
+	public String toString() {
+		return getPluginID();
 	}
 
 	@Override
