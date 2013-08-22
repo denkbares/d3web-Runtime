@@ -778,18 +778,35 @@ public class Strings {
 		return result.toString();
 	}
 
+	public static enum Encoding {
+		UTF8("UTF-8"), ISO8859_1("ISO-8859-1");
+
+		private final String encoding;
+
+		private Encoding(String encoding) {
+			this.encoding = encoding;
+		}
+
+		public String getEncoding() {
+			return encoding;
+		}
+	}
+
 	/**
 	 * Safe way to url-decode strings without dealing with
 	 * {@link UnsupportedEncodingException} of
-	 * {@link URLEncoder#encode(String, String)}.
+	 * {@link URLEncoder#encode(String, String)}. The encoding can be specified
+	 * by this function. In most cases UTF-8 encoding works best, see method
+	 * {@link #decodeURL(String)} for this.
 	 * 
 	 * @created 03.05.2012
 	 * @param text the text to be encoded
+	 * @param encoding the encoding to be used for decode
 	 * @return the encoded string
 	 */
-	public static String decodeURL(String text) {
+	public static String decodeURL(String text, Encoding encoding) {
 		try {
-			return URLDecoder.decode(text, "UTF-8");
+			return URLDecoder.decode(text, encoding.getEncoding());
 		}
 		catch (UnsupportedEncodingException e) {
 			Logger.getLogger(Strings.class.getName()).log(
@@ -801,6 +818,22 @@ public class Strings {
 					Level.WARNING, e.getMessage());
 			return text;
 		}
+	}
+
+	/**
+	 * Safe way to url-decode strings without dealing with
+	 * {@link UnsupportedEncodingException} of
+	 * {@link URLEncoder#encode(String, String)}. It used UTF-8 encoding for
+	 * decode. If this does not work well, try
+	 * {@link #decodeURL(String, Encoding)} where you can specify a particular
+	 * encoding.
+	 * 
+	 * @created 03.05.2012
+	 * @param text the text to be encoded
+	 * @return the encoded string
+	 */
+	public static String decodeURL(String text) {
+		return decodeURL(text, Encoding.UTF8);
 	}
 
 	/**
