@@ -706,6 +706,8 @@ public class Strings {
 				replace("<", "&lt;").
 				replace(">", "&gt;").
 				replace("#", "&#35;").
+				replace("%", "&#37;").
+				replace("|", "&#124;").
 				replace("[", "&#91;").
 				replace("]", "&#93;").
 				replace("\\", "&#92;");
