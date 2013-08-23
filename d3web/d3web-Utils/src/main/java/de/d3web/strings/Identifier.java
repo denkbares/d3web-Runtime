@@ -111,6 +111,16 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
+	 * Returns an nth path element of this identifiers path.
+	 * 
+	 * @param index the index of the path element to access
+	 * @created 23.04.2012
+	 */
+	public String getPathElementAt(int index) {
+		return pathElements[index];
+	}
+
+	/**
 	 * Returns a copy of the path elements of this {@link Identifier}.
 	 * 
 	 * @created 25.04.2012
@@ -240,6 +250,16 @@ public class Identifier implements Comparable<Identifier> {
 			pathElements.add(Strings.unquote(pathElementFragment.getContent()));
 		}
 		return new Identifier(pathElements.toArray(new String[pathElements.size()]));
+	}
+
+	/**
+	 * Returns the number of path elements of this Identifier.
+	 * 
+	 * @created 23.08.2013
+	 * @return the number of path elements
+	 */
+	public int countPathElements() {
+		return this.pathElements.length;
 	}
 
 }
