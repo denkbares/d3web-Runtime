@@ -45,6 +45,20 @@ public class Identifier implements Comparable<Identifier> {
 		this.pathElements = pathElements;
 	}
 
+	/**
+	 * Creates a new Identifier based on an existing identifier by appending
+	 * additional path elements.
+	 * 
+	 * @param parent the existing parent identifier
+	 * @param additionalPathElements the additional path elements
+	 */
+	public Identifier(Identifier parent, String... additionalPathElements) {
+		int parentLen = parent.pathElements.length;
+		int additionalLen = additionalPathElements.length;
+		this.pathElements = Arrays.copyOf(parent.pathElements, parentLen + additionalLen);
+		System.arraycopy(additionalPathElements, 0, pathElements, parentLen, additionalLen);
+	}
+
 	@Override
 	public int hashCode() {
 		return toExternalFormLowerCase().hashCode();
