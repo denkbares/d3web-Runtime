@@ -54,7 +54,7 @@ public class TestParameterTest extends AbstractTest<Object> {
 	}
 
 	@Override
-	public Class getTestObjectClass() {
+	public Class<Object> getTestObjectClass() {
 		return Object.class;
 	}
 
