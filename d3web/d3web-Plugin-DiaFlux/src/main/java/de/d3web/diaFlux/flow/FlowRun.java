@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.d3web.collections.CountingSet;
+
 /**
  * 
  * @author Reinhard Hatko
@@ -34,7 +36,7 @@ public class FlowRun {
 	private final Set<Node> startNodes;
 
 	public FlowRun() {
-		this.nodes = new HashSet<Node>();
+		this.nodes = new CountingSet<Node>();
 		this.startNodes = new HashSet<Node>();
 	}
 

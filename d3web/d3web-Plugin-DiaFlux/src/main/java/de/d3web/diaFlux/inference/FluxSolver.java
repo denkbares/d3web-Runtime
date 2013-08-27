@@ -278,10 +278,10 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	public static void activateNode(Node node, FlowRun flowRun, Session session) {
 		boolean alreadyDone = flowRun.isActivated(node);
+		flowRun.add(node);
 		if (alreadyDone) {
 			return;
 		}
-		flowRun.add(node);
 		activate(session, node, flowRun);
 		// propagating after snapshot nodes startes in postpropagation
 		if (!(node instanceof SnapshotNode)) {
