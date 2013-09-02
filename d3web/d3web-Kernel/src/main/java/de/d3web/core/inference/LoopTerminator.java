@@ -21,6 +21,7 @@ package de.d3web.core.inference;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.d3web.collections.CountingSet;
 import de.d3web.core.inference.LoopTerminator.LoopStatus;
@@ -149,6 +150,11 @@ public class LoopTerminator implements SessionObjectSource<LoopStatus> {
 					// set flag to prevent status of loop detection
 					terminated = true;
 					session.getPropagationManager().terminate();
+					Logger.getLogger(this.getClass().getName()).severe(
+							"Propagation loop detected for knowledge base '"
+									+ session.getKnowledgeBase().getName()
+									+ "'. The following objects are mainly involved: "
+									+ getLoopObjects());
 				}
 			}
 		}
