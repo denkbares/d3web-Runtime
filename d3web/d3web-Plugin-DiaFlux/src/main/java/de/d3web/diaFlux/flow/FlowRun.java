@@ -20,10 +20,10 @@ package de.d3web.diaFlux.flow;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-
-import de.d3web.collections.CountingSet;
 
 /**
  * 
@@ -32,11 +32,11 @@ import de.d3web.collections.CountingSet;
  */
 public class FlowRun {
 
-	private final Set<Node> nodes;
+	private final Map<Node, Set<DiaFluxElement>> nodeSupports;
 	private final Set<Node> startNodes;
 
 	public FlowRun() {
-		this.nodes = new CountingSet<Node>();
+		this.nodeSupports = new HashMap<Node, Set<DiaFluxElement>>();
 		this.startNodes = new HashSet<Node>();
 	}
 
@@ -49,7 +49,7 @@ public class FlowRun {
 	 * @return if the node is active
 	 */
 	public boolean isActive(Node node) {
-		return nodes.contains(node) || startNodes.contains(node);
+		return nodeSupports.containsKey(node) || startNodes.contains(node);
 	}
 
 	/**
@@ -64,15 +64,75 @@ public class FlowRun {
 	 * @return if the node is activated
 	 */
 	public boolean isActivated(Node node) {
-		return nodes.contains(node);
+		return nodeSupports.containsKey(node);
 	}
 
-	public boolean add(Node node) {
-		return nodes.add(node);
+	/**
+	 * Returns if the node has been activated by propagation within this flow
+	 * run. this means that the node has got an incoming edge in this flow run.
+	 * Please note that {@link #isActive(Node)} also returns true for start
+	 * nodes, regardless whether they have incoming active edges, while this
+	 * method does not.
+	 * 
+	 * @created 28.02.2011
+	 * @param node the node to be checked to be activated
+	 * @return if the node is activated
+	 */
+	public boolean isActivated(Edge edge) {
+		Set<DiaFluxElement> supports = nodeSupports.get(edge.getEndNode());
+		if (supports == null) {
+			return false;
+		}
+		else {
+			return supports.contains(edge);
+		}
+
+		// return nodeSupports.containsKey(node);
 	}
 
-	public boolean remove(Node node) {
-		return nodes.remove(node);
+	/**
+	 * Adds support for the specified node.
+	 * 
+	 * @created 02.09.2013
+	 * @param node the node to add support to
+	 * @param support the support to be added. may only be null for the
+	 *        autostart nodes
+	 * @return s true, if the node was not supported before, ie should be
+	 *         activated now
+	 */
+	public boolean addSupport(Node node, DiaFluxElement support) {
+		boolean contained = nodeSupports.containsKey(node);
+		Set<DiaFluxElement> supports;
+		if (!contained) {
+			supports = new HashSet<DiaFluxElement>(5);
+			nodeSupports.put(node, supports);
+		}
+		else {
+			supports = nodeSupports.get(node);
+		}
+		supports.add(support);
+
+		return !contained;
+	}
+
+	/**
+	 * Removes the support from the node.
+	 * 
+	 * @created 02.09.2013
+	 * @return s if the node is still supported
+	 */
+	public boolean removeSupport(Node node, DiaFluxElement support) {
+		Set<DiaFluxElement> supports = nodeSupports.get(node);
+
+		if (supports == null) return false;
+		supports.remove(support);
+
+		if (supports.isEmpty()) {
+			nodeSupports.remove(node);
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean addStartNode(Node node) {
@@ -82,7 +142,7 @@ public class FlowRun {
 	public Collection<Node> getActiveNodes() {
 		Collection<Node> activeNodes = new HashSet<Node>();
 		activeNodes.addAll(startNodes);
-		activeNodes.addAll(nodes);
+		activeNodes.addAll(nodeSupports.keySet());
 		return Collections.unmodifiableCollection(activeNodes);
 	}
 
@@ -102,7 +162,7 @@ public class FlowRun {
 				activeNodes.add(clazz.cast(node));
 			}
 		}
-		for (Node node : nodes) {
+		for (Node node : nodeSupports.keySet()) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));
 			}
@@ -123,7 +183,7 @@ public class FlowRun {
 	 */
 	public <T> Collection<T> getActivatedNodesOfClass(Class<T> clazz) {
 		Collection<T> activeNodes = new HashSet<T>();
-		for (Node node : nodes) {
+		for (Node node : nodeSupports.keySet()) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));
 			}

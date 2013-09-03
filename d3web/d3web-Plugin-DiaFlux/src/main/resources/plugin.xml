@@ -66,16 +66,6 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="CallFlowActionHandler">
-		<parameter id="class"
-			value="de.d3web.diaFlux.io.CallFlowActionFragmentHandler" />
-		<parameter id="name" value="CallFlowActionHandler" />
-		<parameter id="description" value="Handles the indication of DiaFlux models" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NodeActiveConditionHandler">
 		<parameter id="class"
 			value="de.d3web.diaFlux.io.NodeActiveConditionHandler" />

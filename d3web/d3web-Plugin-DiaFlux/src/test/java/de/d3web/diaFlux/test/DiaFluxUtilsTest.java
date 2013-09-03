@@ -79,7 +79,7 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 		ComposedNode composedNode = DiaFluxUtils.findFlow(kb, "Flow1").getNodesOfClass(
 				ComposedNode.class).iterator().next();
 		Flow calledFlow = DiaFluxUtils.findFlow(kb, "Flow3");
-		assertEquals(calledFlow, DiaFluxUtils.getCalledFlow(kb, composedNode));
+		assertEquals(calledFlow, DiaFluxUtils.getCalledFlow(composedNode));
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 		ComposedNode composedNode4 = DiaFluxUtils.findFlow(kb, "Flow4").getNodesOfClass(
 				ComposedNode.class).iterator().next();
 		assertEquals(Arrays.asList(composedNode3, composedNode4),
-				DiaFluxUtils.getCallingNodes(kb, DiaFluxUtils.findFlow(kb, "Flow2")));
+				DiaFluxUtils.getCallingNodes(DiaFluxUtils.findFlow(kb, "Flow2")));
 	}
 
 	@Test

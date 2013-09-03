@@ -43,15 +43,10 @@ public class ComposedNode extends AbstractNode {
 	private final Condition precondition = new ComposedNodePrecondition();
 	private final CallFlowAction action;
 
-	public ComposedNode(String id, String name, CallFlowAction action) {
-		super(id, name);
-		this.action = action;
-	}
 
 	public ComposedNode(String id, String flowName, String startNodeName) {
 		super(id, "CALL[" + flowName + "(" + startNodeName + ")]");
-		CallFlowAction callFlowAction = new CallFlowAction(flowName, startNodeName);
-		this.action = callFlowAction;
+		this.action = new CallFlowAction(flowName, startNodeName, this);
 	}
 
 	@Override

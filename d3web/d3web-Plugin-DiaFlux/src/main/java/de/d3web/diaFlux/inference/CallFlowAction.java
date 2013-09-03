@@ -27,6 +27,7 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.StartNode;
 
@@ -39,10 +40,12 @@ public class CallFlowAction extends PSAction {
 
 	private final String flowName;
 	private final String startNodeName;
+	private final ComposedNode sourceNode;
 
-	public CallFlowAction(String flow, String node) {
+	public CallFlowAction(String flow, String node, ComposedNode sourceNode) {
 		this.flowName = flow;
 		this.startNodeName = node;
+		this.sourceNode = sourceNode;
 	}
 
 	@Override
@@ -58,7 +61,7 @@ public class CallFlowAction extends PSAction {
 			return;
 		}
 
-		FluxSolver.activateNode(startNode, (FlowRun) source, session);
+		FluxSolver.addSupport(startNode, sourceNode, (FlowRun) source, session);
 
 	}
 
@@ -75,7 +78,7 @@ public class CallFlowAction extends PSAction {
 			return;
 		}
 
-		FluxSolver.deactivateNode(startNode, (FlowRun) source, session);
+		FluxSolver.removeSupport(startNode, sourceNode, (FlowRun) source, session);
 
 	}
 

@@ -21,6 +21,7 @@
 package de.d3web.diaFlux.flow;
 
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
@@ -41,19 +42,15 @@ public class EndNode extends AbstractNode {
 
 	@Override
 	public void execute(Session session, FlowRun run) {
-		// TODO: vb: only check nodes calling this sheet by
-		// Flow.getCallingNodes()
-		for (ComposedNode node : run.getActiveNodesOfClass(ComposedNode.class)) {
-			FluxSolver.checkSuccessorsOnActivation(node, run, session);
+		for (ComposedNode node : DiaFluxUtils.getCallingNodes(getFlow())) {
+			FluxSolver.checkSuccessors(node, run, session);
 		}
 	}
 
 	@Override
 	public void retract(Session session, FlowRun run) {
-		// TODO: vb: only check nodes calling this sheet by
-		// Flow.getCallingNodes()
-		for (ComposedNode node : run.getActiveNodesOfClass(ComposedNode.class)) {
-			FluxSolver.checkSuccessorsOnDeactivation(node, run, session);
+		for (ComposedNode node : DiaFluxUtils.getCallingNodes(getFlow())) {
+			FluxSolver.checkSuccessors(node, run, session);
 		}
 	}
 

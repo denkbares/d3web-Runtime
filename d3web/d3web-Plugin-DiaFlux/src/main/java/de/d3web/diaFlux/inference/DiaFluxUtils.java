@@ -233,7 +233,7 @@ public final class DiaFluxUtils {
 	 * @return s the flow containing the called start node, or null, if the
 	 *         start node does not exist
 	 */
-	public static Flow getCalledFlow(KnowledgeBase kb, ComposedNode composedNode) {
+	public static Flow getCalledFlow(ComposedNode composedNode) {
 		StartNode calledStartNode = getCalledStartNode(composedNode);
 		if (calledStartNode != null) {
 			return calledStartNode.getFlow();
@@ -247,18 +247,17 @@ public final class DiaFluxUtils {
 	 * Returns all {@link ComposedNode}s, that call the supplied {@link Flow}.
 	 * 
 	 * @created 15.03.2012
-	 * @param kb
 	 * @param flow
 	 * @return a List containing all the ComposedNodes
 	 */
-	public static List<ComposedNode> getCallingNodes(KnowledgeBase kb, Flow calledFlow) {
+	public static List<ComposedNode> getCallingNodes(Flow calledFlow) {
 		List<ComposedNode> result = new LinkedList<ComposedNode>();
 
-		for (Flow flow : getFlowSet(kb)) {
+		for (Flow flow : getFlowSet(calledFlow.getKnowledgeBase())) {
 			Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
 
 			for (ComposedNode composedNode : composedNodes) {
-				if (getCalledFlow(kb, composedNode) == calledFlow) {
+				if (getCalledFlow(composedNode) == calledFlow) {
 					result.add(composedNode);
 				}
 			}
@@ -313,7 +312,7 @@ public final class DiaFluxUtils {
 	private static Map<Flow, Collection<ComposedNode>> createFlowStructure(KnowledgeBase base, Map<Flow, Collection<ComposedNode>> result, Flow callingFlow) {
 		Collection<ComposedNode> composed = callingFlow.getNodesOfClass(ComposedNode.class);
 		for (ComposedNode composedNode : composed) {
-			Flow calledFlow = DiaFluxUtils.getCalledFlow(base, composedNode);
+			Flow calledFlow = DiaFluxUtils.getCalledFlow(composedNode);
 			addFlow(result, callingFlow);
 			addFlow(result, calledFlow);
 			addCall(result, callingFlow, composedNode);

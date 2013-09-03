@@ -41,7 +41,7 @@ public class NodeActiveConditionHandler implements FragmentHandler {
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		String flowName = element.getElementsByTagName(CallFlowActionFragmentHandler.FLOW_NAME).item(
+		String flowName = element.getElementsByTagName(ComposedNodeFragmentHandler.FLOW_NAME).item(
 				0).getTextContent();
 		String nodeName = element.getElementsByTagName(NODE_NAME).item(0).getTextContent();
 
@@ -55,7 +55,7 @@ public class NodeActiveConditionHandler implements FragmentHandler {
 		Element actionElem = doc.createElement("Condition");
 		actionElem.setAttribute("type", NODE_ACTIVE);
 
-		Element flowElem = doc.createElement(CallFlowActionFragmentHandler.FLOW_NAME);
+		Element flowElem = doc.createElement(ComposedNodeFragmentHandler.FLOW_NAME);
 		actionElem.appendChild(flowElem);
 
 		Text flowNameNode = doc.createTextNode(condition.getFlowName());

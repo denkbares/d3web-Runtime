@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +42,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.diaFlux.flow.DiaFluxElement;
 import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.EdgeMap;
 import de.d3web.diaFlux.flow.Flow;
@@ -114,7 +114,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		FlowRun run = new FlowRun();
 		run.addStartNode(startNode);
 		DiaFluxUtils.getDiaFluxCaseObject(session).addRun(run);
-		activateNode(startNode, run, session);
+		addSupport(startNode, null, run, session);
 	}
 
 	@Override
@@ -143,62 +143,15 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 				continue;
 			}
 
-			// These lists contain the edges that have to be de-/activated
-			// the edges are processed afterwards in the right order,
-			// at first the deactivations, then the activations
-			List<Edge> activate = new LinkedList<Edge>();
-			List<Edge> deactivate = new LinkedList<Edge>();
-
 			// iterate over all edges that contain the changed TO
 			for (Edge edge : slice.getEdges()) {
 
 				Node start = edge.getStartNode();
-				Node end = edge.getEndNode();
 
 				for (FlowRun flowRun : runs) {
-					boolean active = evalEdge(session, edge);
-					if (active) {
-						// begin node is not active, do nothing
-						if (flowRun.isActive(start)) {
-							// Edge was not active before
-							if (!flowRun.isActivated(end)) {
-								activate.add(edge);
-							}
-						}
-					}
-					else {
-						// start node is not active (maybe was before)
-						if (flowRun.isActivated(end)) {
-							// if the end node is active
-							boolean support = checkSupport(session, end, flowRun);
-							// ...but is no longer supported by any other edge
-							// (then the start node of the edge was active)
-							if (!support) {
-								// we also have to deactivate the end node
-								deactivate.add(edge);
-							}
-						}
-					}
+					checkSuccessors(start, flowRun, session);
 				}
 			}
-
-			// now process the edges accordingly
-			for (FlowRun flowRun : runs) {
-
-				for (Edge edge : deactivate) {
-					deactivateNode(edge.getEndNode(), flowRun, session);
-				}
-
-				for (Edge edge : activate) {
-					// we need to check the activation state of the start
-					// node again, as it may no longer be active due to the
-					// deactivations just made
-					if (flowRun.isActive(edge.getStartNode())) {
-						activateNode(edge.getEndNode(), flowRun, session);
-					}
-				}
-			}
-
 		}
 
 		// check backward knowledge: nodes that uses other objects to calculate
@@ -213,7 +166,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			for (Node node : knowledge) {
 				for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
 					if (run.isActive(node) && node.isReevaluate(session)) {
-						activate(session, node, run);
+						node.execute(session, run);
 					}
 				}
 			}
@@ -223,51 +176,73 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
+	 * Adds support to a node. If the node is triggered, ie, was not active
+	 * before, it gets activated.
 	 * 
-	 * @created 17.02.2011
-	 * @param session
-	 * @param end
-	 * @param flowRun
+	 * @created 03.09.2013
+	 * @param node the node to add support to
+	 * @param support a node or edge supporting the node
 	 */
-	public static boolean checkSupport(Session session, Node end, FlowRun flowRun) {
-		List<Edge> inc = end.getIncomingEdges();
-		for (Edge edge : inc) {
-			if (evalEdge(session, edge)) {
-				if (flowRun.isActive(edge.getStartNode())) {
-					return true;
-				}
-			}
+	public static void addSupport(Node node, DiaFluxElement support, FlowRun flowRun, Session session) {
+		boolean triggered = flowRun.addSupport(node, support);
+		if (!triggered) {
+			return;
 		}
-		return false;
+		// if the node was triggered (ie became activated by adding this
+		// support), we execute it
+		node.execute(session, flowRun);
+		// propagating after snapshot nodes starts in postpropagation
+		if (!(node instanceof SnapshotNode)) {
+			// checkSuccessorsOnActivation(node, flowRun, session);
+			checkSuccessors(node, flowRun, session);
+		}
 	}
 
-	/**
-	 * 
-	 * @created 17.02.2011
-	 * @param node
-	 * @param flowRun
-	 * @param session
-	 */
-	public static void deactivateNode(Node node, FlowRun flowRun, Session session) {
-		flowRun.remove(node);
-		deactivate(session, node, flowRun);
-		checkSuccessorsOnDeactivation(node, flowRun, session);
-	}
 
 	/**
+	 * Removes support from a node.
 	 * 
-	 * @created 17.02.2011
-	 * @param end
-	 * @param flowRun
-	 * @param session
+	 * @created 03.09.2013
+	 * @param node the node to remove the support from
+	 * @param support a node or edge supporting the node
 	 */
-	public static void checkSuccessorsOnDeactivation(Node end, FlowRun flowRun, Session session) {
-		for (Edge out : end.getOutgoingEdges()) {
-			if (flowRun.isActive(out.getEndNode())) {
-				if (!checkSupport(session, out.getEndNode(), flowRun)) {
-					deactivateNode(out.getEndNode(), flowRun, session);
+	public static void removeSupport(Node node, DiaFluxElement support, FlowRun flowRun, Session session) {
+		boolean stillActive = flowRun.removeSupport(node, support);
+		if (stillActive) {
+			return;
+		}
+		node.retract(session, flowRun);
+		if (!(node instanceof SnapshotNode)) {
+			// checkSuccessorsOnDeactivation(node, flowRun, session);
+			checkSuccessors(node, flowRun, session);
+		}
+	}
+
+
+	/**
+	 * Checks, if the states of outgoing edges are correct.
+	 */
+	public static void checkSuccessors(Node node, FlowRun run, Session session) {
+		if (run.isActive(node)) { // node is active...
+			for (Edge edge : node.getOutgoingEdges()) {
+				// ...now check inactive edges, that eval to true
+				if (!run.isActivated(edge) && evalEdge(session, edge)) {
+					activateEdge(edge, run, session);
+				}
+				else if (run.isActivated(edge) && !evalEdge(session, edge)) {
+					deactivateEdge(edge, run, session);
 				}
 			}
+
+		}
+		else {// node is inactive...
+			for (Edge edge : node.getOutgoingEdges()) {
+				// ...deactivate all edges
+				if (run.isActivated(edge)) {
+					deactivateEdge(edge, run, session);
+				}
+			}
+
 		}
 	}
 
@@ -276,18 +251,15 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return new DiaFluxCaseObject();
 	}
 
-	public static void activateNode(Node node, FlowRun flowRun, Session session) {
-		boolean alreadyDone = flowRun.isActivated(node);
-		flowRun.add(node);
-		if (alreadyDone) {
-			return;
-		}
-		activate(session, node, flowRun);
-		// propagating after snapshot nodes startes in postpropagation
-		if (!(node instanceof SnapshotNode)) {
-			checkSuccessorsOnActivation(node, flowRun, session);
-		}
+	private static void activateEdge(Edge edge, FlowRun flowRun, Session session) {
+		addSupport(edge.getEndNode(), edge, flowRun, session);
 	}
+
+	private static void deactivateEdge(Edge edge, FlowRun flowRun, Session session) {
+		removeSupport(edge.getEndNode(), edge, flowRun, session);
+	}
+
+
 
 	/**
 	 * Returns whether the specified node is currently active within the
@@ -308,14 +280,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return false;
 	}
 
-	public static void checkSuccessorsOnActivation(Node end, FlowRun flowRun, Session session) {
-		for (Edge out : end.getOutgoingEdges()) {
-			if (!evalEdge(session, out)) {
-				continue;
-			}
-			activateNode(out.getEndNode(), flowRun, session);
-		}
-	}
+
 
 	/**
 	 * 
@@ -389,7 +354,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		for (FlowRun run : newRuns) {
 			caseObject.addRun(run);
 			for (Node node : run.getActiveNodesOfClass(SnapshotNode.class)) {
-				checkSuccessorsOnActivation(node, run, session);
+				checkSuccessors(node, run, session);
 			}
 		}
 
@@ -483,18 +448,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return snappyRuns;
 	}
 
-	public static void deactivate(Session session, Node node, FlowRun flowRun) {
-		Logger.getLogger(FluxSolver.class.getName()).fine("Deactivating node: " + node);
-
-		node.retract(session, flowRun);
-	}
-
-	public static void activate(Session session, Node node, FlowRun flowRun) {
-		Logger.getLogger(FluxSolver.class.getName()).fine("Activating node: " + node);
-
-		node.execute(session, flowRun);
-	}
-
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		if (facts[0].getValue() instanceof Indication) {
@@ -533,7 +486,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return getSources(derivedObject, session);
 	}
 
-	private Set<TerminologyObject> getSources(TerminologyObject derivedObject, Session session) {
+	private static Set<TerminologyObject> getSources(TerminologyObject derivedObject, Session session) {
 		// similar to rules.
 		// returns the incoming edges condition objects
 		// and the actions forward objects
