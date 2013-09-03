@@ -42,6 +42,11 @@ public class CountingSet<E> implements Set<E> {
 	private static class Count {
 
 		int count = 0;
+
+		@Override
+		public String toString() {
+			return String.valueOf(count);
+		}
 	}
 
 	private final HashMap<E, Count> counters = new HashMap<E, Count>();
