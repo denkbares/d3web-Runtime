@@ -93,6 +93,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
 	private double strategicBenefitFactor = 0.0;
+	private boolean manualMode = false;
 
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
@@ -734,6 +735,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		this.costFunction = costFunction;
 	}
 
+	public boolean isManualMode() {
+		return manualMode;
+	}
+
+	public void setManualMode(boolean manualMode) {
+		this.manualMode = manualMode;
+	}
+
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		return Facts.mergeIndicationFacts(facts);
@@ -772,6 +781,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void postPropagate(Session session) {
-		calculateNewPath(session.getSessionObject(this));
+		if (!isManualMode()) {
+			calculateNewPath(session.getSessionObject(this));
+		}
 	}
 }

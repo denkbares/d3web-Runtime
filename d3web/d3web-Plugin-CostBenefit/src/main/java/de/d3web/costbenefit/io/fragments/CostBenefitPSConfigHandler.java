@@ -38,6 +38,7 @@ import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
 public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 
 	private static final String STRATEGIC_BENEFIT_FACTOR_ATTRIBUTE = "strategicBenefitFactor";
+	private static final String MANUAL_ATTRIBUTE = "manual";
 
 	@Override
 	public boolean canRead(Element element) {
@@ -64,6 +65,10 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 		if (!sbfAttribute.isEmpty()) {
 			psm.setStrategicBenefitFactor(Double.parseDouble(sbfAttribute));
 		}
+		String manualAttribute = element.getAttribute(MANUAL_ATTRIBUTE);
+		if (!manualAttribute.isEmpty()) {
+			psm.setManualMode(Boolean.parseBoolean(manualAttribute));
+		}
 		List<Object> fragments = new ArrayList<Object>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			fragments.add(PersistenceManager.getInstance().readFragment(e, kb));
@@ -89,6 +94,8 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 		PSMethodCostBenefit psm = (PSMethodCostBenefit) config.getPsMethod();
 		e.setAttribute(STRATEGIC_BENEFIT_FACTOR_ATTRIBUTE,
 				String.valueOf(psm.getStrategicBenefitFactor()));
+		e.setAttribute(MANUAL_ATTRIBUTE,
+				String.valueOf(psm.isManualMode()));
 		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getTargetFunction(), doc));
 		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getSearchAlgorithm(), doc));
 		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getCostFunction(), doc));

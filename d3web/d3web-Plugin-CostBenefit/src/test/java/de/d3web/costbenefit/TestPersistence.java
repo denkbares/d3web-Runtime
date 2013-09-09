@@ -33,14 +33,15 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
+ * Tests persistence of CostBenefit Configurations
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 08.05.2012
  */
-public class TestStrategicBenefitPersistence {
+public class TestPersistence {
 
 	@Test
-	public void test() throws IOException {
+	public void testStrategicBenefit() throws IOException {
 		InitPluginManager.init();
 		PSMethodCostBenefit cb = new PSMethodCostBenefit();
 		Assert.assertEquals(0.0, cb.getStrategicBenefitFactor());
@@ -59,6 +60,29 @@ public class TestStrategicBenefitPersistence {
 		KnowledgeBase kb3 = PersistenceManager.getInstance().load(file);
 		PSMethodCostBenefit cb3 = getPSM(kb3);
 		Assert.assertEquals(5.4, cb3.getStrategicBenefitFactor());
+	}
+
+	@Test
+	public void testManualMode() throws IOException {
+		InitPluginManager.init();
+		PSMethodCostBenefit cb = new PSMethodCostBenefit();
+		Assert.assertFalse(cb.isManualMode());
+		Assert.assertEquals(0.0, cb.getStrategicBenefitFactor());
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+		kb.addPSConfig(new PSConfig(PSConfig.PSState.active, cb, "PSMethodCostBenefit",
+				"d3web-CostBenefit", 6));
+		File folder = new File("target/kb");
+		folder.mkdirs();
+		File file = new File(folder, "TestManualMode.d3web");
+		PersistenceManager.getInstance().save(kb, file);
+		KnowledgeBase kb2 = PersistenceManager.getInstance().load(file);
+		PSMethodCostBenefit cb2 = getPSM(kb2);
+		Assert.assertFalse(cb2.isManualMode());
+		cb.setManualMode(true);
+		PersistenceManager.getInstance().save(kb, file);
+		KnowledgeBase kb3 = PersistenceManager.getInstance().load(file);
+		PSMethodCostBenefit cb3 = getPSM(kb3);
+		Assert.assertTrue(cb3.isManualMode());
 	}
 
 	private static PSMethodCostBenefit getPSM(KnowledgeBase kb) {
