@@ -204,7 +204,7 @@ public class DefaultInterview implements Interview {
 			// nothing to do because RELEVANT is treated as NEUTRAL
 		}
 		else if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
-			agenda.deactivate(indicatedObject);
+			agenda.delete(indicatedObject, oldIndication);
 			Collection<Fact> interviewFacts = session.getBlackboard().getInterviewFacts(
 					indicatedObject);
 			for (Fact fact : interviewFacts) {
@@ -215,7 +215,7 @@ public class DefaultInterview implements Interview {
 			}
 		}
 		else if (oldIndication.hasState(State.MULTIPLE_INDICATED)) {
-			agenda.deactivate(indicatedObject);
+			agenda.delete(indicatedObject, oldIndication);
 			// after removing act like a new indication
 			if (!newIndication.hasState(State.NEUTRAL)) {
 				notifyIndicationChange(changedFact, new Indication(State.NEUTRAL, 0), newValue);

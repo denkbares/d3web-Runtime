@@ -21,6 +21,7 @@ package de.d3web.interview;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.Indication;
@@ -204,6 +205,17 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 		}
 	}
 
+	public void delete(InterviewObject interviewObject, Indication indication) {
+		List<AgendaEntry> toDelete = new LinkedList<InterviewAgenda.AgendaEntry>();
+		for (AgendaEntry entry : this.agenda) {
+			if (entry.equalsInterviewObject(interviewObject)
+					&& entry.getIndication().equals(indication)) {
+				toDelete.add(entry);
+			}
+		}
+		agenda.removeAll(toDelete);
+	}
+
 	/**
 	 * Activates the first occurency of an {@link InterviewObject} on the agenda
 	 * 
@@ -314,11 +326,6 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 			}
 		}
 		return Collections.unmodifiableList(objects);
-	}
-
-	// TODO remove!
-	public List<AgendaEntry> getAgenda() {
-		return agenda;
 	}
 
 }
