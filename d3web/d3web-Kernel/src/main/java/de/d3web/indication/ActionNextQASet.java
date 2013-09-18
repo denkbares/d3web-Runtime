@@ -56,19 +56,14 @@ public abstract class ActionNextQASet extends PSAction {
 			// find the reason for these null entries!
 			if (qaset == null) continue;
 
-			Fact fact = FactFactory.createFact(session, qaset, getIndication(),
+			Fact fact = FactFactory.createFact(session, qaset, new Indication(getState(),
+					qaset.getKnowledgeBase().getManager().getTreeIndex(qaset)),
 					source, psmethod);
 			session.getBlackboard().addInterviewFact(fact);
 		}
 	}
 
-	/**
-	 * Return the indication state of the corresponding action.
-	 * 
-	 * @created 18.11.2010
-	 * @return the indication state of the action
-	 */
-	public abstract Indication getIndication();
+	public abstract Indication.State getState();
 
 	/**
 	 * @return List of QASets this action can indicate
@@ -136,7 +131,7 @@ public abstract class ActionNextQASet extends PSAction {
 
 		int result = HashCodeUtils.SEED;
 		result = HashCodeUtils.hash(result, getQASets());
-		result = HashCodeUtils.hash(result, getIndication());
+		result = HashCodeUtils.hash(result, getState());
 
 		return result;
 	}
@@ -157,7 +152,7 @@ public abstract class ActionNextQASet extends PSAction {
 
 		ActionNextQASet a = (ActionNextQASet) o;
 		return EqualsUtils.isSame(a.getQASets(), getQASets())
-				&& EqualsUtils.isSame(a.getIndication(), getIndication());
+				&& EqualsUtils.isSame(a.getState(), getState());
 	}
 
 }

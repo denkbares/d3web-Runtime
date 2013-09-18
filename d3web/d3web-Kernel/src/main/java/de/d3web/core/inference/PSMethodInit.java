@@ -86,10 +86,12 @@ public class PSMethodInit implements PSMethod {
 
 			// init default indications
 			List<? extends QASet> initQuestions = session.getKnowledgeBase().getInitQuestions();
+			double index = -1.0;
 			for (QASet object : initQuestions) {
 				Fact fact = FactFactory.createIndicationFact(
-						object, new Indication(Indication.State.INDICATED), this, this);
+						object, new Indication(Indication.State.INDICATED, index), this, this);
 				session.getBlackboard().addInterviewFact(fact);
+				index += Double.MIN_VALUE;
 			}
 
 			// initialise all questions

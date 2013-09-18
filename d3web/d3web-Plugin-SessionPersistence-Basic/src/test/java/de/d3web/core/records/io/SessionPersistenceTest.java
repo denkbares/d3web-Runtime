@@ -175,7 +175,7 @@ public class SessionPersistenceTest {
 		blackboard2.addValueFact(
 				FactFactory.createUserEnteredFact(questionOC, Unknown.getInstance()));
 		blackboard2.addInterviewFact(FactFactory.createUserEnteredFact(questionMC, new Indication(
-				Indication.State.INDICATED)));
+				Indication.State.INDICATED, kb.getManager().getTreeIndex(questionMC))));
 		blackboard2.addValueFact(FactFactory.createUserEnteredFact(questionNum, NUMVALUE));
 		session2.getPropagationManager().commitPropagation();
 		sessionRecord2 = SessionConversionFactory.copyToSessionRecord(session2);
@@ -320,7 +320,8 @@ public class SessionPersistenceTest {
 		SessionRecord rereloadedSessionRecord2 = rereloadedRepository.getSessionRecordById(session2ID);
 		int factCountBeforeAdding = rereloadedSessionRecord.getValueFacts().size();
 		FactRecord dummyFact = new FactRecord(questionNum, "psm", NUMVALUE);
-		FactRecord dummyFact2 = new FactRecord(questionNum, "psm", new Indication(State.INDICATED));
+		FactRecord dummyFact2 = new FactRecord(questionNum, "psm", new Indication(State.INDICATED,
+				35));
 		rereloadedSessionRecord.addValueFact(dummyFact);
 		rereloadedSessionRecord2.addValueFact(dummyFact);
 		rereloadedSessionRecord2.addInterviewFact(dummyFact2);
@@ -672,8 +673,10 @@ public class SessionPersistenceTest {
 		Assert.assertEquals(2,
 				sessionRecord2extended.getValueFacts().size()
 						- sessionRecord2.getValueFacts().size());
-		blackboard.addInterviewFact(FactFactory.createFact(session, questionMC, new Indication(
-						State.CONTRA_INDICATED), this,
+		blackboard.addInterviewFact(FactFactory.createFact(session, questionMC,
+				new Indication(
+						State.CONTRA_INDICATED,
+						questionMC.getKnowledgeBase().getManager().getTreeIndex(questionMC)), this,
 				session.getPSMethodInstance(PSMethodStrategic.class)));
 		sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
 		Assert.assertEquals(2,

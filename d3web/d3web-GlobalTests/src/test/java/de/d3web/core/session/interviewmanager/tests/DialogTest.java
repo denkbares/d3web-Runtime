@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
-import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -128,15 +127,15 @@ public class DialogTest {
 		// EXPECT: question "pregnant" is INDICATED
 		setValue(sex, female);
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnant));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnant).getState());
 
 		// SET: sex = undefined
 		// EXPCECT: question "pregnant" is NEURTRAL
 		setValue(sex, UndefinedValue.getInstance());
 		assertEquals(
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(pregnant));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(pregnant).getState());
 	}
 
 	@Test
@@ -145,22 +144,22 @@ public class DialogTest {
 		// EXPECT: question "pregnant" is INDICATED
 		setValue(sex, female);
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnant));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnant).getState());
 
 		// SET: ask_for_pregnancy = no
 		// EXPCECT: question "pregnant" is CONTRA_INDICATED
 		setValue(ask_for_pregnancy, dont_ask);
 		assertEquals(
-				new Indication(State.CONTRA_INDICATED),
-				session.getBlackboard().getIndication(pregnant));
+				State.CONTRA_INDICATED,
+				session.getBlackboard().getIndication(pregnant).getState());
 
 		// SET: ask_for_pregnancy = UNDEFINED
 		// EXPCECT: question "pregnant" is INDICATED again
 		setValue(ask_for_pregnancy, UndefinedValue.getInstance());
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnant));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnant).getState());
 	}
 
 	@Test
@@ -171,22 +170,22 @@ public class DialogTest {
 		setValue(initQuestion,
 				new ChoiceValue(KnowledgeBaseUtils.findChoice(initQuestion, "all")));
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnancyQuestions));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnancyQuestions).getState());
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(heightWeightQuestions));
+				State.INDICATED,
+				session.getBlackboard().getIndication(heightWeightQuestions).getState());
 
 		// SET: initQuestion = Undefined (i.e., retract the previous action)
 		// EXPECT: NEUTRAL CONTAINER ( pregnancyQuestions, heightWeightQuestions
 		// )
 		setValue(initQuestion, UndefinedValue.getInstance());
 		assertEquals(
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(pregnancyQuestions));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(pregnancyQuestions).getState());
 		assertEquals(
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(heightWeightQuestions));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(heightWeightQuestions).getState());
 	}
 
 	@Test
@@ -197,11 +196,11 @@ public class DialogTest {
 		setValue(initQuestion,
 				new ChoiceValue(KnowledgeBaseUtils.findChoice(initQuestion, "all")));
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnancyQuestions));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnancyQuestions).getState());
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(heightWeightQuestions));
+				State.INDICATED,
+				session.getBlackboard().getIndication(heightWeightQuestions).getState());
 
 		// SET: pregnancyContainerIndication = yes
 		// EXPECT: INDICATE CONTAINER ( pregnancyQuestions ) // i.e. doubled
@@ -209,8 +208,8 @@ public class DialogTest {
 		setValue(pregnancyContainerIndication, new ChoiceValue(KnowledgeBaseUtils.findChoice(
 				pregnancyContainerIndication, "yes")));
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnancyQuestions));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnancyQuestions).getState());
 
 		// SET: initQuestion = Undefined (i.e., retract the previous action)
 		// EXPECT: NEUTRAL CONTAINER ( heightWeightQuestions )
@@ -218,11 +217,11 @@ public class DialogTest {
 		// indication
 		setValue(initQuestion, UndefinedValue.getInstance());
 		assertEquals(
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnancyQuestions));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnancyQuestions).getState());
 		assertEquals(
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(heightWeightQuestions));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(heightWeightQuestions).getState());
 	}
 
 	private void setValue(Question question, Value value) {

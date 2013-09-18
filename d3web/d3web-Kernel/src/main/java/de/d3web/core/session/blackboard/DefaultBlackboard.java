@@ -124,7 +124,8 @@ public class DefaultBlackboard implements Blackboard {
 		if (force) {
 			propagationContoller.forcePropagate((ValueObject) terminologyObject,
 					oldValue);
-		} else {			
+		}
+		else {
 			propagationContoller.propagate((ValueObject) terminologyObject,
 					oldValue);
 		}
@@ -415,6 +416,12 @@ public class DefaultBlackboard implements Blackboard {
 
 	protected void setInterviewStorage(FactStorage interviewStorage) {
 		this.interviewStorage = interviewStorage;
+	}
+
+	@Override
+	public Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject) {
+		return this.getInterviewStorage().getAllFacts(terminologyObject);
+
 	}
 
 }

@@ -20,7 +20,6 @@
 
 package de.d3web.indication;
 
-import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 
 /**
@@ -31,10 +30,8 @@ import de.d3web.core.knowledge.Indication.State;
  */
 public class ActionIndication extends ActionNextQASet {
 
-	private static final Indication INDICATION = new Indication(State.INDICATED);
-
 	@Override
-	public Indication getIndication() {
-		return INDICATION;
+	public State getState() {
+		return State.INDICATED;
 	}
 }

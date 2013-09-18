@@ -42,11 +42,11 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.DefaultForm;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
+import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -240,8 +240,9 @@ public class IndicationOQQuestionsNextFormTest {
 		Question askHead = kb.getManager().searchQuestion("Ask_Headache");
 
 		// only put normal question flow on agenda, no follow-up questions
-		agenda.append(sex);
-		agenda.append(askHead);
+		agenda.append(sex, new Indication(State.INDICATED, kb.getManager().getTreeIndex(sex)));
+		agenda.append(askHead, new Indication(State.INDICATED,
+				kb.getManager().getTreeIndex(askHead)));
 
 		// SET Sex == Male and test whether that worked correctly
 		Value male = KnowledgeBaseUtils.findValue(sex, "Male");
@@ -262,11 +263,11 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// EXPECTED: Ask_Headache == NEUTRAL, Pregnant == NEUTRAL
 		assertEquals("Question Ask_Headache has wrong indication state ",
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(askHead));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(askHead).getState());
 		assertEquals("Question Pregnant has wrong indication state ",
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(pregnant));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(pregnant).getState());
 
 		// SET Sex == Female and test whether that worked correctly
 		Value female = KnowledgeBaseUtils.findValue(sex, "Female");
@@ -288,8 +289,8 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// EXPECTED: Pregnant == INDICATED
 		assertEquals("Question Pregnant has wrong indication state ",
-				new Indication(State.INDICATED),
-				session.getBlackboard().getIndication(pregnant));
+				State.INDICATED,
+				session.getBlackboard().getIndication(pregnant).getState());
 
 		// RESET Sex = Male and test whether setting worked
 		male = KnowledgeBaseUtils.findValue(sex, "Male");
@@ -311,11 +312,11 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// EXPECTED: Pregnant == NEUTRAL, Ask_Headache == NEUTRAL
 		assertEquals("Question Pregnant has wrong indication state ",
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(pregnant));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(pregnant).getState());
 		assertEquals("Question Ask_Headache has wrong indication state ",
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(askHead));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(askHead).getState());
 	}
 
 	/**
@@ -334,8 +335,8 @@ public class IndicationOQQuestionsNextFormTest {
 		Question headache = kb.getManager().searchQuestion("Headache");
 		Question nausea = kb.getManager().searchQuestion("Nausea");
 
-		agenda.append(headache);
-		agenda.append(nausea);
+		agenda.append(headache, new Indication(State.INDICATED, 0));
+		agenda.append(nausea, new Indication(State.INDICATED, 0));
 
 		// SET Ask_Headache == Yes and test setting
 		Value yes = KnowledgeBaseUtils.findValue(askHead, "Yes");
@@ -352,8 +353,8 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// EXPECTED: Headache == NEUTRAL
 		assertEquals("Question Headache has wrong indication state ",
-				new Indication(State.NEUTRAL),
-				session.getBlackboard().getIndication(headache));
+				State.NEUTRAL,
+				session.getBlackboard().getIndication(headache).getState());
 
 		// EXPECTED next question: Headache
 		assertEquals("Answering question Ask_Headache with value Yes should bring "
@@ -378,8 +379,8 @@ public class IndicationOQQuestionsNextFormTest {
 
 		// EXPECTED: Headache == CONTRA_INDICATED
 		assertEquals("Question Headache has wrong indication state ",
-				new Indication(State.CONTRA_INDICATED),
-				session.getBlackboard().getIndication(headache));
+				State.CONTRA_INDICATED,
+				session.getBlackboard().getIndication(headache).getState());
 
 		// EXPECTED next question: Nausea
 		// assertEquals("Answering question Ask_Headache with value No should bring "

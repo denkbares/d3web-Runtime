@@ -28,6 +28,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -41,12 +43,12 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.EmptyForm;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
+import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
@@ -108,8 +110,8 @@ public class NextUnansweredQuestionFormTest {
 		assertTrue(agenda.isEmpty());
 
 		// PUT the questions 'sex' and 'pregnant' onto the agenda
-		agenda.append(sex);
-		agenda.append(pregnant);
+		agenda.append(sex, new Indication(State.INDICATED, 0));
+		agenda.append(pregnant, new Indication(State.INDICATED, 1));
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT: 'sex' to be the first question
@@ -134,7 +136,7 @@ public class NextUnansweredQuestionFormTest {
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 		// Put the QContainer pregnancyQuestions on the agenda
-		agenda.append(pregnancyQuestions);
+		agenda.append(pregnancyQuestions, new Indication(State.INDICATED, 0));
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form
@@ -166,7 +168,7 @@ public class NextUnansweredQuestionFormTest {
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 		// Put the QContainer pregnancyQuestions on the agenda
-		agenda.append(pregnancyQuestions);
+		agenda.append(pregnancyQuestions, new Indication(State.INDICATED, 0));
 		assertFalse(agenda.isEmpty());
 
 		// EXPECT the first question 'sex' to be the next question in the form

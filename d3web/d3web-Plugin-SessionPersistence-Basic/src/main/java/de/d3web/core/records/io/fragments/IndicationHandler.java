@@ -35,11 +35,17 @@ import de.d3web.core.knowledge.KnowledgeBase;
  */
 public class IndicationHandler implements FragmentHandler {
 
+	private static final String SORTING = "sorting";
 	private static final String elementName = "indication";
 
 	@Override
 	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		return new Indication(element.getTextContent());
+		String sortingText = element.getAttribute(SORTING);
+		double sorting = 1;
+		if (sortingText != null && !sortingText.isEmpty()) {
+			sorting = Double.parseDouble(sortingText);
+		}
+		return new Indication(element.getTextContent(), sorting);
 	}
 
 	@Override
@@ -47,6 +53,7 @@ public class IndicationHandler implements FragmentHandler {
 		Indication indication = (Indication) object;
 		Element element = doc.createElement(elementName);
 		element.setTextContent(indication.getName());
+		element.setAttribute(SORTING, String.valueOf(indication.getSorting()));
 		return element;
 	}
 

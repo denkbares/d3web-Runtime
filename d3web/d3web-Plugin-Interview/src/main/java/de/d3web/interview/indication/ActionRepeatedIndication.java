@@ -42,11 +42,9 @@ import de.d3web.interview.inference.PSMethodInterview;
  */
 public class ActionRepeatedIndication extends ActionNextQASet {
 
-	private static final Indication INDICATION = new Indication(State.REPEATED_INDICATED);
-
 	@Override
-	public Indication getIndication() {
-		return INDICATION;
+	public State getState() {
+		return State.REPEATED_INDICATED;
 	}
 
 	@Override
@@ -56,11 +54,14 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 			if (qaset == null) continue;
 
 			Indication oldIndication = session.getBlackboard().getIndication(qaset);
+			Indication indication = new Indication(getState(),
+					qaset.getKnowledgeBase().getManager().getTreeIndex(qaset));
 			Fact fact = FactFactory.createFact(
-					session, qaset, getIndication(), source, psmethod);
+					session, qaset, indication, source,
+					psmethod);
 			session.getBlackboard().addInterviewFact(fact);
 			// notify immediately to enable usage in condition
-			PropagationEntry entry = new PropagationEntry(qaset, oldIndication, INDICATION);
+			PropagationEntry entry = new PropagationEntry(qaset, oldIndication, indication);
 			Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 			interview.notifyFactChange(entry);
 		}

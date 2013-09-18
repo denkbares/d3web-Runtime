@@ -31,6 +31,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -43,11 +45,11 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
@@ -105,7 +107,7 @@ public class DialogAgendaTest {
 		assertTrue(agenda.isEmpty());
 
 		// put the questionnaire 'pregnancyQuestions' onto the agenda
-		agenda.append(pregnancyQuestions);
+		agenda.append(pregnancyQuestions, new Indication(State.INDICATED, 0));
 		assertFalse(agenda.isEmpty());
 
 		// deactivate the questionnaire 'pregnancyQuestions', so agenda should
@@ -115,7 +117,7 @@ public class DialogAgendaTest {
 
 		// put the questionnaire 'heightWeightQuestions' onto the agenda: thus,
 		// agenda is not empty
-		agenda.append(heightWeightQuestions);
+		agenda.append(heightWeightQuestions, new Indication(State.INDICATED, 0));
 		assertFalse(agenda.isEmpty());
 	}
 
@@ -125,8 +127,10 @@ public class DialogAgendaTest {
 		assertTrue(agenda.isEmpty());
 
 		// ADD: qcontainers in 'wrong' order
-		agenda.append(heightWeightQuestions);
-		agenda.append(pregnancyQuestions);
+		agenda.append(heightWeightQuestions, new Indication(State.INDICATED,
+				kb.getManager().getTreeIndex(heightWeightQuestions)));
+		agenda.append(pregnancyQuestions, new Indication(State.INDICATED,
+				kb.getManager().getTreeIndex(pregnancyQuestions)));
 		// EXPECT 1: both are on the agenda
 		assertTrue(agenda.onAgenda(heightWeightQuestions));
 		assertTrue(agenda.onAgenda(pregnancyQuestions));
@@ -143,11 +147,13 @@ public class DialogAgendaTest {
 		assertTrue(agenda.isEmpty());
 
 		// ADD: questions in arbitrary order
-		agenda.append(height);
-		agenda.append(sex);
-		agenda.append(weight);
-		agenda.append(pregnant);
-		agenda.append(ask_for_pregnancy);
+		agenda.append(height, new Indication(State.INDICATED, kb.getManager().getTreeIndex(height)));
+		agenda.append(sex, new Indication(State.INDICATED, kb.getManager().getTreeIndex(sex)));
+		agenda.append(weight, new Indication(State.INDICATED, kb.getManager().getTreeIndex(weight)));
+		agenda.append(pregnant,
+				new Indication(State.INDICATED, kb.getManager().getTreeIndex(pregnant)));
+		agenda.append(ask_for_pregnancy, new Indication(State.INDICATED,
+				kb.getManager().getTreeIndex(ask_for_pregnancy)));
 
 		// EXPECT 1: all are on the agenda
 		assertTrue(agenda.onAgenda(height));
@@ -167,8 +173,8 @@ public class DialogAgendaTest {
 		// initially the agenda is empty
 		assertTrue(agenda.isEmpty());
 		// put two questions onto the agenda, both should be ACTIVE
-		agenda.append(sex);
-		agenda.append(height);
+		agenda.append(sex, new Indication(State.INDICATED, 0));
+		agenda.append(height, new Indication(State.INDICATED, 0));
 		assertFalse(agenda.isEmpty());
 		assertTrue(agenda.hasState(sex, InterviewState.ACTIVE));
 		assertTrue(agenda.hasState(height, InterviewState.ACTIVE));
@@ -195,7 +201,7 @@ public class DialogAgendaTest {
 		assertTrue(agenda.isEmpty());
 
 		// put one qcontainer on the agenda, it should be active
-		agenda.append(pregnancyQuestions);
+		agenda.append(pregnancyQuestions, new Indication(State.INDICATED, 0));
 		assertFalse(agenda.isEmpty());
 		assertTrue(agenda.hasState(pregnancyQuestions, InterviewState.ACTIVE));
 

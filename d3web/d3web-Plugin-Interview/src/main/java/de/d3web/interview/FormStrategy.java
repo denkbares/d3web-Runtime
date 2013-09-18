@@ -22,7 +22,6 @@ import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 
 /**
  * Combines Interview Objects to Forms

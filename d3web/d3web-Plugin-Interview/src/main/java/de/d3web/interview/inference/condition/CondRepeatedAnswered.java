@@ -23,7 +23,6 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
 
@@ -51,8 +50,9 @@ public class CondRepeatedAnswered extends CondQuestion {
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		return session.getBlackboard().getIndication(getQuestion()).hasState(
 				Indication.State.REPEATED_INDICATED)
-				&& interview.getInterviewAgenda().hasState(
-						getQuestion(), InterviewState.INACTIVE);
+				&& !interview.getInterviewAgenda().hasState(
+						getQuestion(),
+						de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState.ACTIVE);
 	}
 
 	@Override

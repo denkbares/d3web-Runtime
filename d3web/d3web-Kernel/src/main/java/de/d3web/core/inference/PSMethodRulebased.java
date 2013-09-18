@@ -124,4 +124,10 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 		}
 		return result;
 	}
+
+	@Override
+	public double getPriority() {
+		return 2.5;
+	}
+
 }

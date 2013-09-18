@@ -136,7 +136,8 @@ public class MixedUserRuleIndicationTest {
 		// question "height" manually (which should be stronger)
 		session.getBlackboard().addInterviewFact(
 				FactFactory.createFact(session, height,
-						new Indication(State.INSTANT_INDICATED),
+						new Indication(State.INSTANT_INDICATED,
+								kb.getManager().getTreeIndex(height)),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(height, interview.nextForm().getActiveQuestions().get(0));
@@ -154,8 +155,11 @@ public class MixedUserRuleIndicationTest {
 		// now the follow-up question is indicated, but we also indicate the
 		// question "height" manually (which should be stronger)
 		session.getBlackboard().addInterviewFact(
-				FactFactory.createFact(session, importantQuestion,
-						new Indication(State.INSTANT_INDICATED),
+				FactFactory.createFact(
+						session,
+						importantQuestion,
+						new Indication(State.INSTANT_INDICATED, kb.getManager().getTreeIndex(
+								importantQuestion)),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(importantQuestion, interview.nextForm().getActiveQuestions().get(0));
@@ -175,7 +179,7 @@ public class MixedUserRuleIndicationTest {
 		// question there "importantQuestion" should be indicated)
 		session.getBlackboard().addInterviewFact(
 				FactFactory.createFact(session, qc,
-						new Indication(State.INSTANT_INDICATED),
+						new Indication(State.INSTANT_INDICATED, kb.getManager().getTreeIndex(qc)),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		assertEquals(importantQuestion, interview.nextForm().getActiveQuestions().get(0));

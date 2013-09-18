@@ -189,6 +189,18 @@ public interface Blackboard {
 	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
 
 	/**
+	 * Returns all interview facts from this blackboard for the specified
+	 * terminology object. If no such fact exists in the blackboard, an empty
+	 * collection is returned
+	 * 
+	 * @created 14.05.2013
+	 * @param terminologyObject the terminology object to access the interview
+	 *        facts from
+	 * @return collection of interview facts
+	 */
+	public Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject);
+
+	/**
 	 * Removes all interview facts from this blackboard for the specified
 	 * terminology object. If no such fact exists in the blackboard, this method
 	 * has no effect.

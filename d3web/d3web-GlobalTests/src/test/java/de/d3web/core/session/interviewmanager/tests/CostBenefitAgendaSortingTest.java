@@ -40,13 +40,13 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.interview.EmptyForm;
 import de.d3web.interview.Interview;
+import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
@@ -111,10 +111,10 @@ public class CostBenefitAgendaSortingTest {
 		// change
 		Fact factHeig = FactFactory.createFact(session, heightWeightQuestions,
 				new Indication(
-						State.INDICATED), costBenefit, costBenefit);
+						State.INDICATED, 0), costBenefit, costBenefit);
 		session.getBlackboard().addInterviewFact(factHeig);
 		Fact factPreg = FactFactory.createFact(session, pregnancyQuestions,
-				new Indication(State.INDICATED), costBenefit, costBenefit);
+				new Indication(State.INDICATED, 1), costBenefit, costBenefit);
 		session.getBlackboard().addInterviewFact(factPreg);
 		assertFalse(agenda.isEmpty());
 

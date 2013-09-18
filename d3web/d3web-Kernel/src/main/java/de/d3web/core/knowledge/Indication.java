@@ -24,10 +24,45 @@ import de.d3web.core.session.Value;
 public class Indication implements Value {
 
 	public enum State {
-		CONTRA_INDICATED, NEUTRAL, RELEVANT, INDICATED, INSTANT_INDICATED, REPEATED_INDICATED;
+		/**
+		 * An InterviewObject with this state must not be shown to the user
+		 */
+		CONTRA_INDICATED,
+		/**
+		 * An InterviewObject with this state is not indicated, it should not be
+		 * presented to the user
+		 */
+		NEUTRAL,
+		/**
+		 * An InterviewObject with this state should be presented to the user,
+		 * if it's parent is presented to the user
+		 */
+		RELEVANT,
+		/**
+		 * An InterviewObject with this state should be presented to the user,
+		 * even if it is already on the agenda
+		 */
+		MULTIPLE_INDICATED,
+		/**
+		 * An InterviewObject with this state should be presented to the user
+		 */
+		INDICATED,
+		/**
+		 * An InterviewObject with this state should be presented to the user,
+		 * it should be shown before elements only having the state INDICATED
+		 */
+		INSTANT_INDICATED,
+		/**
+		 * An InterviewObject with this state should be presented to the user,
+		 * even if the user has already processed that element
+		 */
+		REPEATED_INDICATED;
+
 	}
 
 	private final State state;
+
+	private final double sorting;
 
 	/**
 	 * Creates a new indication value based on the string representation. The
@@ -35,16 +70,19 @@ public class Indication implements Value {
 	 * 
 	 * @param name the name of the indication state
 	 */
-	public Indication(String name) {
-		this(State.valueOf(name.toUpperCase()));
+	public Indication(String name, double sorting) {
+		this(State.valueOf(name.toUpperCase()), sorting);
 	}
 
 	/**
-	 * Creates a new indication value based on the indication state.
+	 * Creates a new indication value based on the indication state and sorting
+	 * rating
 	 * 
 	 * @param state the state of the new indication value
+	 * @param sorting the rating of the sorting of the new indication
 	 */
-	public Indication(State state) {
+	public Indication(State state, double sorting) {
+		this.sorting = sorting;
 		if (state == null) {
 			throw new NullPointerException();
 		}
@@ -98,6 +136,7 @@ public class Indication implements Value {
 		return this.state.equals(State.INDICATED)
 				|| this.state.equals(State.INSTANT_INDICATED)
 				|| this.state.equals(State.RELEVANT)
+				|| this.state.equals(State.MULTIPLE_INDICATED)
 				|| this.state.equals(State.REPEATED_INDICATED);
 	}
 
@@ -133,7 +172,15 @@ public class Indication implements Value {
 			throw new NullPointerException();
 		}
 		if (other instanceof Indication) {
-			return this.state.ordinal() - ((Indication) other).state.ordinal();
+			State otherState = ((Indication) other).state;
+			int otherOrdinal = otherState.ordinal();
+			int ordinal = state.ordinal();
+			if (otherOrdinal != ordinal) {
+				return ordinal - otherOrdinal;
+			}
+			else {
+				return Double.compare(this.sorting, ((Indication) other).sorting);
+			}
 		}
 		else {
 			return -1;
@@ -143,5 +190,9 @@ public class Indication implements Value {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	public double getSorting() {
+		return sorting;
 	}
 }

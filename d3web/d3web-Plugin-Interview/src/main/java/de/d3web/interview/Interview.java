@@ -21,7 +21,6 @@ package de.d3web.interview;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
 
 /**
  * 

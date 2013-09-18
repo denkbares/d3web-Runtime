@@ -42,7 +42,8 @@ public abstract class QASet extends AbstractTerminologyObject implements Intervi
 
 	@Override
 	public Indication getDefaultInterviewValue() {
-		return new Indication(State.NEUTRAL);
+		return new Indication(State.NEUTRAL, super.getKnowledgeBase().getManager().getTreeIndex(
+				this));
 	}
 
 	/**

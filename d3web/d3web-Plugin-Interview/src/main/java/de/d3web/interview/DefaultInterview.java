@@ -29,13 +29,14 @@ import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -70,7 +71,7 @@ public class DefaultInterview implements Interview {
 	 */
 	public DefaultInterview(Session session) {
 		this.session = session;
-		this.agenda = new InterviewAgenda(this.session);
+		this.agenda = new InterviewAgenda();
 		this.formStrategy = new NextUnansweredQuestionFormStrategy();
 	}
 
@@ -110,14 +111,14 @@ public class DefaultInterview implements Interview {
 			// de-activate
 			else if (!(newValue instanceof UndefinedValue)
 					&& oldValue instanceof UndefinedValue) {
-				this.agenda.deactivate(indicatedObject);
+				this.agenda.deactivateFirst(indicatedObject);
 				checkParentalQContainer(indicatedObject);
 			}
 			// Check: VALUE changed from DEFINED to DEFINED =>
 			// de-activate
 			else if (!(newValue instanceof UndefinedValue)
 					&& !(oldValue instanceof UndefinedValue)) {
-				this.agenda.deactivate(indicatedObject);
+				this.agenda.deactivateFirst(indicatedObject);
 				checkParentalQContainer(indicatedObject);
 			}
 			else {
@@ -142,7 +143,7 @@ public class DefaultInterview implements Interview {
 		// NEUTRAL/RELEVANT => INDICATED : 1) append to agenda 2) activate
 		if ((oldIndication.hasState(State.NEUTRAL) || oldIndication.hasState(State.RELEVANT))
 				&& newIndication.hasState(State.INDICATED)) {
-			this.agenda.append(indicatedObject);
+			this.agenda.append(indicatedObject, newIndication);
 			checkParentalQContainer(indicatedObject);
 		}
 		// ANY => INSTANT_INDICATED : 1) append to agenda 2) activate
@@ -150,7 +151,7 @@ public class DefaultInterview implements Interview {
 		// INSTANCE_INDICATION is handled like
 		// standard indication
 		else if (newIndication.hasState(State.INSTANT_INDICATED)) {
-			this.agenda.append(indicatedObject);
+			this.agenda.append(indicatedObject, newIndication);
 			checkParentalQContainer(indicatedObject);
 		}
 		// INDICATED => NEUTRAL/RELEVANT : deactivate
@@ -169,7 +170,7 @@ public class DefaultInterview implements Interview {
 		// included 2) activate
 		else if (oldIndication.hasState(State.CONTRA_INDICATED)
 				&& newIndication.hasState(State.INDICATED)) {
-			this.agenda.activate(indicatedObject);
+			this.agenda.activate(indicatedObject, newIndication);
 			checkParentalQContainer(indicatedObject);
 		}
 		else if (oldIndication.hasState(State.INDICATED)
@@ -193,12 +194,32 @@ public class DefaultInterview implements Interview {
 			checkParentalQContainer(indicatedObject);
 		}
 		else if (newIndication.hasState(State.REPEATED_INDICATED)) {
+			// remove old entries
+			this.agenda.deactivate(indicatedObject);
 			// ANY => REPEATED_INDICATION : put it as active on the agenda
-			this.agenda.activate(indicatedObject);
+			this.agenda.activate(indicatedObject, newIndication);
 			checkParentalQContainer(indicatedObject);
 		}
 		else if ((oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.RELEVANT) || (oldIndication.hasState(State.RELEVANT) && newIndication.hasState(State.NEUTRAL)))) { // NOSONAR
 			// nothing to do because RELEVANT is treated as NEUTRAL
+		}
+		else if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
+			agenda.deactivate(indicatedObject);
+			Collection<Fact> interviewFacts = session.getBlackboard().getInterviewFacts(
+					indicatedObject);
+			for (Fact fact : interviewFacts) {
+				Indication factIndication = (Indication) fact.getValue();
+				if (factIndication.hasState(State.MULTIPLE_INDICATED)) {
+					agenda.append(indicatedObject, factIndication);
+				}
+			}
+		}
+		else if (oldIndication.hasState(State.MULTIPLE_INDICATED)) {
+			agenda.deactivate(indicatedObject);
+			// after removing act like a new indication
+			if (!newIndication.hasState(State.NEUTRAL)) {
+				notifyIndicationChange(changedFact, new Indication(State.NEUTRAL, 0), newValue);
+			}
 		}
 		else if (!oldIndication.getState().equals(newIndication.getState())) {
 			Logger.getLogger(this.getClass().getName()).warning(
@@ -225,7 +246,7 @@ public class DefaultInterview implements Interview {
 				getInterviewAgenda().activate(qContainer);
 				break;
 			case INACTIVE:
-				getInterviewAgenda().deactivate(qContainer);
+				getInterviewAgenda().deactivateFirst(qContainer);
 			default:
 				break;
 			}
@@ -251,6 +272,12 @@ public class DefaultInterview implements Interview {
 					// ACTIVE, when at least one follow-up question is ACTIVE
 					for (TerminologyObject followUpQuestion : getAllFollowUpChildrenOf(new TerminologyObject[] { child })) {
 						if (isActive((InterviewObject) followUpQuestion)) {
+							return InterviewState.ACTIVE;
+						}
+						else if (session.getBlackboard().getIndication(
+								(InterviewObject) followUpQuestion).isRelevant()
+								&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
+										(ValueObject) followUpQuestion))) {
 							return InterviewState.ACTIVE;
 						}
 					}

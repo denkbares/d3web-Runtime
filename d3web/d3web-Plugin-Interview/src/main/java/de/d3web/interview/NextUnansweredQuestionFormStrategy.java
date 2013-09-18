@@ -23,14 +23,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.interviewmanager.InterviewAgenda;
-import de.d3web.interview.inference.PSMethodInterview;
+import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * This class always creates a new {@link Form} that contains the one
@@ -50,18 +51,38 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			return EmptyForm.getInstance();
 		}
 		else {
-			InterviewObject object = agendaEnties.get(0);
-			if (object instanceof Question) {
-				return new DefaultForm(((Question) object).getName(), object, session);
-			}
-			else if (object instanceof QASet) {
-				Collection<TerminologyObject> traversedQuestions = new HashSet<TerminologyObject>();
-				Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object, session,
-						traversedQuestions);
-				if (nextQuestion == null) {
-					return EmptyForm.getInstance();
+			for (InterviewObject object : agendaEnties) {
+				if (object instanceof Question) {
+					if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
+							(ValueObject) object))
+							|| session.getBlackboard().getIndication(object).hasState(
+									State.REPEATED_INDICATED)) {
+						return new DefaultForm(((Question) object).getName(), object, session);
+					}
+					else {
+						for (TerminologyObject child : object.getChildren()) {
+							if (child instanceof Question
+									&& session.getBlackboard().getIndication(
+											(InterviewObject) child).isRelevant()
+									&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
+											(ValueObject) child))) {
+								return new DefaultForm(((Question) child).getName(),
+										(InterviewObject) child,
+										session);
+							}
+						}
+					}
 				}
-				return new DefaultForm(nextQuestion.getName(), nextQuestion, session);
+				else if (object instanceof QASet) {
+					Collection<TerminologyObject> traversedQuestions = new HashSet<TerminologyObject>();
+					Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object,
+							session,
+							traversedQuestions);
+					if (nextQuestion == null) {
+						return EmptyForm.getInstance();
+					}
+					return new DefaultForm(nextQuestion.getName(), nextQuestion, session);
+				}
 			}
 			return null;
 		}
@@ -83,7 +104,6 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			Session session, Collection<TerminologyObject> traversedObjects) { // NOSONAR
 		// Termination of recursive traversal: Required for possibly cyclic
 		// question hierarchies
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		if (traversedObjects.contains(qaset)) {
 			return null;
 		}
@@ -104,7 +124,8 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			// questionnaire but is
 			// active on agenda (follow-up question).
 			else if (isNotDirectQContainerQuestion(question) &&
-					interview.isActive(question)) {
+					hasValueUndefined(question, session)
+					&& session.getBlackboard().getIndication(question).isRelevant()) {
 				return question;
 			}
 			// Recursively traverse for finding follow-up questions and check

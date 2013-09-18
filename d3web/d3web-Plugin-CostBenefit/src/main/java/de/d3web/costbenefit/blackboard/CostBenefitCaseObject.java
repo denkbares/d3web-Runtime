@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
@@ -33,6 +34,10 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.interview.Interview;
+import de.d3web.interview.InterviewAgenda;
+import de.d3web.interview.InterviewAgenda.AgendaEntry;
+import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * CaseObject for CostBenefit
@@ -105,6 +110,15 @@ public class CostBenefitCaseObject implements SessionObject {
 			session.getBlackboard().removeInterviewFact(fact);
 		}
 		indicatedFacts = new LinkedList<Fact>();
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		InterviewAgenda interviewAgenda = interview.getInterviewAgenda();
+		List<AgendaEntry> toDelete = new LinkedList<InterviewAgenda.AgendaEntry>();
+		for (AgendaEntry entry : interviewAgenda.getAgenda()) {
+			if (entry.getIndication().hasState(State.MULTIPLE_INDICATED)) {
+				toDelete.add(entry);
+			}
+		}
+		interviewAgenda.getAgenda().removeAll(toDelete);
 		this.currentPathIndex = -1;
 	}
 

@@ -73,7 +73,6 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
-import de.d3web.costbenefit.session.interviewmanager.CostBenefitAgendaSortingStrategy;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
@@ -141,9 +140,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void init(Session session) {
-		CostBenefitCaseObject caseObject = session.getSessionObject(this);
-		session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().setAgendaSortingStrategy(
-				new CostBenefitAgendaSortingStrategy(caseObject));
+		// CostBenefitCaseObject caseObject = session.getSessionObject(this);
+		// session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().setAgendaSortingStrategy(
+		// new CostBenefitAgendaSortingStrategy(caseObject));
 		// calculateNewPath(caseObject);
 		// activateNextQContainer(caseObject);
 	}
@@ -298,6 +297,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private boolean hasUnansweredQuestions(Session session) {
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		Form nextForm = interview.nextForm();
+		if (nextForm == null) {
+			return false;
+		}
 		return nextForm.isNotEmpty();
 	}
 
@@ -577,11 +579,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (QContainer qContainer : qContainers) {
 			currentSequence[i] = qContainer;
 			makeOKQuestionsUndone(currentSequence[i], session);
-			i++;
 			Fact fact = FactFactory.createFact(session, qContainer,
-					new Indication(State.INDICATED), this, this);
+					new Indication(State.MULTIPLE_INDICATED, i), new Object(), this);
 			facts.add(fact);
 			session.getBlackboard().addInterviewFact(fact);
+			i++;
 		}
 		caseObject.setCurrentSequence(currentSequence);
 		caseObject.setCurrentPathIndex(-1);

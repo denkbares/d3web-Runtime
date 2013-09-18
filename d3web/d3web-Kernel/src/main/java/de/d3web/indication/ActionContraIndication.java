@@ -40,8 +40,6 @@ import de.d3web.core.session.blackboard.FactFactory;
  */
 public class ActionContraIndication extends PSAction {
 
-	private static final Indication INDICATION = new Indication(
-						State.CONTRA_INDICATED);
 	// the indication fact will be initialized with the first activation of this
 	// action in "doIt()"
 	private List<QASet> qasets;
@@ -56,16 +54,13 @@ public class ActionContraIndication extends PSAction {
 		// New handling of indications: Notify blackboard of indication and let
 		// the blackboard do all the work
 		for (QASet qaset : getQASets()) {
-
-			Fact fact = FactFactory.createFact(session, qaset, getIndication(), source,
+			Indication indication = new Indication(State.CONTRA_INDICATED,
+					qaset.getKnowledgeBase().getManager().getTreeIndex(qaset));
+			Fact fact = FactFactory.createFact(session, qaset, indication, source,
 					psmethod);
 
 			session.getBlackboard().addInterviewFact(fact);
 		}
-	}
-
-	protected Indication getIndication() {
-		return INDICATION;
 	}
 
 	public List<QASet> getQASets() {
