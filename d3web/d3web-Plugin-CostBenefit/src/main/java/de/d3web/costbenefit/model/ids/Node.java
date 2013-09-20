@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.SearchModel;
 
@@ -87,7 +87,7 @@ public class Node {
 	 * @return all Facts that are used to set the values
 	 */
 	public List<Fact> setNormalValues(Session session) {
-		return Util.setNormalValues(session, qContainer, this);
+		return CostBenefitUtil.setNormalValues(session, qContainer, this);
 	}
 
 	@Override

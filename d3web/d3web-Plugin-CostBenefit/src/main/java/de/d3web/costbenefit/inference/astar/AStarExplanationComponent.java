@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
@@ -340,12 +340,12 @@ public class AStarExplanationComponent {
 		Set<Condition> result = new HashSet<Condition>(
 				TPHeuristic.getPrimitiveConditions(transitiveCondition));
 		Set<Condition> fullfilledConditions = new HashSet<Condition>();
-		Session copiedSession = Util.createSearchCopy(session);
+		Session copiedSession = CostBenefitUtil.createSearchCopy(session);
 		addFullfilledConditions(result, copiedSession, fullfilledConditions);
 		for (QContainer qcon : path.getPath()) {
 			StateTransition stateTransition = StateTransition.getStateTransition(qcon);
 			if (stateTransition != null) {
-				Util.setNormalValues(copiedSession, qcon, PSMethodUserSelected.getInstance());
+				CostBenefitUtil.setNormalValues(copiedSession, qcon, PSMethodUserSelected.getInstance());
 				stateTransition.fire(copiedSession);
 				addFullfilledConditions(result, copiedSession, fullfilledConditions);
 			}

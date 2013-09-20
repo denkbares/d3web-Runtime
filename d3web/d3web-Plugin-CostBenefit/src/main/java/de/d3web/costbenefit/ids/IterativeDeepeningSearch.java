@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.DefaultAbortStrategy;
@@ -165,7 +165,7 @@ class IterativeDeepeningSearch {
 		if (!model.hasTargets()) return;
 		long time1 = System.currentTimeMillis();
 		abortStrategy.init(model);
-		Session testcase = Util.createSearchCopy(session);
+		Session testcase = CostBenefitUtil.createSearchCopy(session);
 		try {
 			search(testcase, 1);
 		}
@@ -267,7 +267,7 @@ class IterativeDeepeningSearch {
 				}
 				findCheapestPath(actual, depth - 1, session);
 				actual.pop();
-				Util.undo(session, undo);
+				CostBenefitUtil.undo(session, undo);
 			}
 		}
 	}

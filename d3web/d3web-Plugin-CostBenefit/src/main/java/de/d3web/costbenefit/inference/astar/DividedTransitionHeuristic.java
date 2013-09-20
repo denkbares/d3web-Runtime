@@ -51,7 +51,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -118,11 +118,11 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		sessionObject.knowledgeBase = kb;
 		sessionObject.transitionalStateTransitions = new LinkedList<StateTransition>();
 		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
-		sessionObject.answeredSession = Util.createSearchCopy(model.getSession());
+		sessionObject.answeredSession = CostBenefitUtil.createSearchCopy(model.getSession());
 		sessionObject.valueCache = new ConcurrentHashMap<ValueTransition, Value>();
 		// set normal values of all questions in transitional qcontainers
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
-			Util.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
+			CostBenefitUtil.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
 		}
 
 		sessionObject.costCache = Collections.synchronizedMap(new HashMap<Condition, ActivationCacheEntry>());

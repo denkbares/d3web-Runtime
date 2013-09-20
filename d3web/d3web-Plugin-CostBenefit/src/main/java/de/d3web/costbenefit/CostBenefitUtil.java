@@ -65,12 +65,12 @@ import de.d3web.interview.inference.PSMethodInterview;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public final class Util {
+public final class CostBenefitUtil {
 
 	/**
 	 * Avoids the creation of an instance for this class.
 	 */
-	private Util() {
+	private CostBenefitUtil() {
 	}
 
 	public static Session createDecoratedSession(Session session) {
@@ -161,7 +161,7 @@ public final class Util {
 						BasicProperties.DEFAULT_ABNORMALITIY);
 				if (abnormality == null) {
 					if (set) {
-						Logger.getLogger(Util.class.getName()).info(
+						Logger.getLogger(CostBenefitUtil.class.getName()).info(
 								"no normal value for question " + q);
 					}
 					continue;

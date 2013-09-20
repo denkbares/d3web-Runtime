@@ -65,7 +65,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
@@ -160,7 +160,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// only check if the current one is done
 		// (or no current one has been activated yet)
 		if (caseObject.getCurrentPathIndex() == -1
-				|| Util.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
+				|| CostBenefitUtil.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
 			caseObject.incCurrentPathIndex();
 			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
 				caseObject.resetPath();
@@ -182,7 +182,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			// when activating the next qcontainer, which is applicable, check
 			// if it is already done and fire state transition and move to next
 			// QContainer if necessary
-			if (Util.isDone(qc, session)) {
+			if (CostBenefitUtil.isDone(qc, session)) {
 				StateTransition st = StateTransition.getStateTransition(qc);
 				if (st != null) st.fire(session);
 				// remove indication
@@ -631,7 +631,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
-				Util.addParentContainers(answeredQuestionnaires, object);
+				CostBenefitUtil.addParentContainers(answeredQuestionnaires, object);
 			}
 			if (entry.isStrategic() && entry.hasChanged() && object instanceof QContainer) {
 				Indication indication = (Indication) entry.getNewValue();
@@ -646,7 +646,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		boolean isAnyQuesionnaireDone = false;
 		for (QContainer qcon : answeredQuestionnaires) {
-			if (Util.isDone(qcon, session) && sequence.contains(qcon)) {
+			if (CostBenefitUtil.isDone(qcon, session) && sequence.contains(qcon)) {
 				// mark is the questionnaire is either indicated or in our
 				// current sequence
 				isAnyQuesionnaireDone = true;

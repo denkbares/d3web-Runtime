@@ -44,7 +44,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.utilities.Pair;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
@@ -376,9 +376,9 @@ public class AStar {
 	private Node applyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
 		QContainer qcontainer = stateTransition.getQcontainer();
-		Session copiedSession = Util.createDecoratedSession(actualSession);
+		Session copiedSession = CostBenefitUtil.createDecoratedSession(actualSession);
 		double costs = costFunction.getCosts(qcontainer, copiedSession);
-		Util.setNormalValues(copiedSession, qcontainer, this);
+		CostBenefitUtil.setNormalValues(copiedSession, qcontainer, this);
 
 		List<Fact> facts = stateTransition.fire(copiedSession);
 		State newState;

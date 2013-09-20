@@ -41,7 +41,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.PSMethodStateTransition.StateTransitionSessionObject;
 
 public final class PSMethodStateTransition extends PSMethodAdapter implements SessionObjectSource<StateTransitionSessionObject> {
@@ -114,14 +114,14 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
-				Util.addParentContainers(answeredQuestionnaires, object);
+				CostBenefitUtil.addParentContainers(answeredQuestionnaires, object);
 			}
 		}
 		QContainer qcontainer = session.getSessionObject(
 				session.getPSMethodInstance(PSMethodCostBenefit.class)).getCurrentQContainer();
 		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
 		for (QContainer qcon : answeredQuestionnaires) {
-			if (Util.isDone(qcon, session)) {
+			if (CostBenefitUtil.isDone(qcon, session)) {
 				// if the qcontainer is the actual qcontainer of the sequence,
 				// fire its transitions
 				boolean fire = false;

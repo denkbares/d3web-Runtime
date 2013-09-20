@@ -53,7 +53,7 @@ import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.utilities.Pair;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
@@ -122,7 +122,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		Set<Question> result = new HashSet<Question>();
 		Blackboard blackboard = model.getSession().getBlackboard();
 		for (StateTransition st : model.getTransitionalStateTransitions()) {
-			for (Question q : Util.getQuestionOCs(st.getQcontainer())) {
+			for (Question q : CostBenefitUtil.getQuestionOCs(st.getQcontainer())) {
 				DefaultAbnormality abnormality = q.getInfoStore().getValue(
 						BasicProperties.DEFAULT_ABNORMALITIY);
 				Value value = blackboard.getValue(q);

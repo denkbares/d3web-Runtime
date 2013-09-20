@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
-import de.d3web.costbenefit.Util;
+import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -89,7 +89,7 @@ public class PathExtender implements SearchAlgorithm {
 				double staticCosts = qconToInclude.getInfoStore().getValue(BasicProperties.COST);
 				// if it is already in the path, do nothing
 				if (!path.contains(qconToInclude)) {
-					Session copiedSession = Util.createSearchCopy(session);
+					Session copiedSession = CostBenefitUtil.createSearchCopy(session);
 					for (int i = 0; i < path.getPath().size(); i++) {
 						// check if the qcontainer is applicable
 						if (isApplicable(qconToInclude, copiedSession)) {
@@ -97,7 +97,7 @@ public class PathExtender implements SearchAlgorithm {
 							// the static costs
 							if (costFunction.getCosts(qconToInclude, copiedSession) <= staticCosts) {
 								// apply new QContainer
-								Session extendedSession = Util.createSearchCopy(copiedSession);
+								Session extendedSession = CostBenefitUtil.createSearchCopy(copiedSession);
 								applyQContainer(qconToInclude, extendedSession);
 								if (checkPath(path, extendedSession, i)) {
 									path = getNewPath(i, qconToInclude, path, session);
@@ -118,7 +118,7 @@ public class PathExtender implements SearchAlgorithm {
 
 	private void applyQContainer(QContainer qcontainer, Session extendedSession) {
 		StateTransition stateTransition = StateTransition.getStateTransition(qcontainer);
-		Util.setNormalValues(extendedSession, qcontainer, this);
+		CostBenefitUtil.setNormalValues(extendedSession, qcontainer, this);
 		stateTransition.fire(extendedSession);
 	}
 
@@ -162,7 +162,7 @@ public class PathExtender implements SearchAlgorithm {
 			if (!isApplicable(qContainer, session)) {
 				return false;
 			}
-			Util.setNormalValues(session, qContainer, this);
+			CostBenefitUtil.setNormalValues(session, qContainer, this);
 			StateTransition stateTransition = StateTransition.getStateTransition(qContainer);
 			if (stateTransition != null) stateTransition.fire(session);
 		}
