@@ -20,7 +20,7 @@ public class TreeIndexer {
 	 * 
 	 * @created 17.03.2013
 	 */
-	public void clear() {
+	public synchronized void clear() {
 		this.maxIndex = 0;
 		this.indexCache = null;
 	}
@@ -44,7 +44,7 @@ public class TreeIndexer {
 	 * @param object the object to get the index for
 	 * @return the index of the object in its particular tree
 	 */
-	public int getIndex(TerminologyObject object) {
+	public synchronized int getIndex(TerminologyObject object) {
 
 		// first index the root tree if the cache is not build yet
 		if (indexCache == null) {
@@ -63,6 +63,10 @@ public class TreeIndexer {
 			for (TerminologyObject root : getDanglingRoots(object)) {
 				reindex(root);
 			}
+			index = indexCache.get(object);
+		}
+		if (index == null) {
+			reindex(object);
 			index = indexCache.get(object);
 		}
 		return index;
