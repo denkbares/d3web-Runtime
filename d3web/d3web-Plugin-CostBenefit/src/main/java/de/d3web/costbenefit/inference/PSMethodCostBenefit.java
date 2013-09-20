@@ -610,11 +610,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 						&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
 					Blackboard blackboard = session.getBlackboard();
 					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
-
-						Fact fact = FactFactory.createUserEnteredFact(qoc,
-								UndefinedValue.getInstance());
-
-						blackboard.addValueFact(fact);
+						Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(qoc);
+						for (PSMethod contributing : contributingPSMethods) {
+							blackboard.removeValueFact(blackboard.getValueFact(qoc, contributing));
+						}
 					}
 				}
 			}
