@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.io.fragments.QuestionHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.persistence.tests.utils.XMLTag;
@@ -60,7 +60,7 @@ public class QuestionDateTest {
 
 	@Test
 	public void testQuestionDate() throws Exception {
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 		assertEquals("(0)", shouldTag, isTag);
 	}
 

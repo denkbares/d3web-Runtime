@@ -34,7 +34,6 @@ import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.Edge;
@@ -80,7 +79,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	@Override
 	public void write(KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException {
 
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("system", "d3web");
 		doc.appendChild(root);
@@ -103,7 +102,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		}
 
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 
 	}
 
@@ -221,7 +220,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	@Override
 	public void read(KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException {
 
-		Document doc = Util.streamToDocument(stream);
+		Document doc = XMLUtil.streamToDocument(stream);
 
 		NodeList flows = doc.getElementsByTagName(FLOW_ELEM);
 

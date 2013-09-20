@@ -51,7 +51,7 @@ import de.d3web.core.io.fragments.conditions.AndConditionHandler;
 import de.d3web.core.io.fragments.conditions.ConditionSolutionConfirmedHandler;
 import de.d3web.core.io.fragments.conditions.ConditionSolutionRejectedHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -156,7 +156,7 @@ public class ConditionTest {
 		shouldTag.addChild(condNumG);
 		shouldTag.addChild(condNumL);
 
-		isTag = new XMLTag(new AndConditionHandler().write(ac1, Util
+		isTag = new XMLTag(new AndConditionHandler().write(ac1, XMLUtil
 				.createEmptyDocument()));
 
 		assertEquals("(0)", shouldTag, isTag);
@@ -230,7 +230,7 @@ public class ConditionTest {
 
 		shouldTag.addChild(mofnTag1);
 
-		isTag = new XMLTag(new OrConditionHandler().write(ac1, Util.createEmptyDocument()));
+		isTag = new XMLTag(new OrConditionHandler().write(ac1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(1)", shouldTag, isTag);
 	}
@@ -268,7 +268,7 @@ public class ConditionTest {
 
 		shouldTag.addChild(tEqualTag1);
 
-		isTag = new XMLTag(new OrConditionHandler().write(ac1, Util.createEmptyDocument()));
+		isTag = new XMLTag(new OrConditionHandler().write(ac1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(2)", shouldTag, isTag);
 	}
@@ -294,7 +294,7 @@ public class ConditionTest {
 		cUnKnownTag1.addAttribute("name", "qoc1-id");
 		shouldTag.addChild(cUnKnownTag1);
 
-		isTag = new XMLTag(new OrConditionHandler().write(ac1, Util.createEmptyDocument()));
+		isTag = new XMLTag(new OrConditionHandler().write(ac1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}
@@ -314,7 +314,7 @@ public class ConditionTest {
 		shouldTag.addAttribute("name", "d1-id");
 
 		isTag = new XMLTag(new ConditionSolutionConfirmedHandler().write(cond,
-				Util.createEmptyDocument()));
+				XMLUtil.createEmptyDocument()));
 
 		Assert.assertEquals(isTag, shouldTag);
 
@@ -335,7 +335,7 @@ public class ConditionTest {
 		shouldTag.addAttribute("name", "d1-id");
 
 		isTag = new XMLTag(new ConditionSolutionRejectedHandler().write(cond,
-				Util.createEmptyDocument()));
+				XMLUtil.createEmptyDocument()));
 
 		Assert.assertEquals(isTag, shouldTag);
 

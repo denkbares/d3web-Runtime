@@ -35,7 +35,6 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Plugin;
@@ -61,7 +60,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.streamToDocument(stream);
+		Document doc = XMLUtil.streamToDocument(stream);
 		PluginConfig pc = new PluginConfig(kb);
 		Element root = doc.getDocumentElement();
 		if (root.getNodeName().equals(ELEMENT_SETTINGS)) {
@@ -98,7 +97,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element root = doc.createElement(ELEMENT_SETTINGS);
 		Element plugins = doc.createElement(ELEMENT_PLUGINS);
 		doc.appendChild(root);
@@ -133,7 +132,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		for (PSConfig ps : psconfigs) {
 			psmethods.appendChild(PersistenceManager.getInstance().writeFragment(ps, doc));
 		}
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
 	@Override

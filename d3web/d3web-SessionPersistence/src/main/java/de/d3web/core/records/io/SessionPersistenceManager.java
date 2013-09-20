@@ -37,7 +37,6 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.DefaultSessionRecord;
 import de.d3web.core.records.SessionRecord;
@@ -145,7 +144,7 @@ public final class SessionPersistenceManager extends FragmentManager {
 	 */
 	public void saveSessions(OutputStream stream, Collection<SessionRecord> sessionRecords, ProgressListener listener) throws IOException {
 		updateHandler();
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element repElement = doc.createElement(REPOSITORY_TAG);
 		doc.appendChild(repElement);
 		int counter = 0;
@@ -168,7 +167,7 @@ public final class SessionPersistenceManager extends FragmentManager {
 		}
 
 		listener.updateProgress(0.7f, "writing records to disc");
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 		listener.updateProgress(1f, "writing records done");
 	}
 
@@ -236,7 +235,7 @@ public final class SessionPersistenceManager extends FragmentManager {
 		updateHandler();
 		Collection<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
 		listener.updateProgress(0.0f, "reading file from disc");
-		Document doc = Util.streamToDocument(inputStream);
+		Document doc = XMLUtil.streamToDocument(inputStream);
 		List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
 		if (childNodes.size() == 1
 				&& childNodes.get(0).getNodeName().equalsIgnoreCase(REPOSITORY_TAG)) {

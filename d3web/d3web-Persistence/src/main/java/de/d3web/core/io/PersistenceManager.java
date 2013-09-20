@@ -42,7 +42,6 @@ import java.util.zip.ZipFile;
 import de.d3web.core.io.progress.CombinedProgressListener;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -53,6 +52,7 @@ import de.d3web.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
+import de.d3web.utils.Streams;
 
 /**
  * This class provides the management features to load and save
@@ -459,7 +459,7 @@ public final class PersistenceManager extends FragmentManager {
 				jarOutputStream.putNextEntry(entry);
 				InputStream inputStream = ressource.getInputStream();
 				try {
-					Util.stream(inputStream, jarOutputStream);
+					Streams.stream(inputStream, jarOutputStream);
 				}
 				finally {
 					inputStream.close();

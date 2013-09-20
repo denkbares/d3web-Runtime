@@ -28,7 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.io.fragments.SolutionsHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -65,7 +65,7 @@ public class SolutionTest {
 
 	@Test
 	public void testSolutionSimpleState() throws Exception {
-		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
+		isTag = new XMLTag(dh.write(diag, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -76,7 +76,7 @@ public class SolutionTest {
 
 		shouldTag.addAttribute("aPriProb", "N2");
 
-		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
+		isTag = new XMLTag(dh.write(diag, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(1)", shouldTag, isTag);
 	}
@@ -99,7 +99,7 @@ public class SolutionTest {
 
 		shouldTag.addChild(propertiesTag);
 
-		isTag = new XMLTag(dh.write(diag, Util.createEmptyDocument()));
+		isTag = new XMLTag(dh.write(diag, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}

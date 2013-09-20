@@ -32,7 +32,7 @@ import org.junit.Test;
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.fragments.SolutionsHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -62,7 +62,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -77,7 +77,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -93,7 +93,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -113,7 +113,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -139,7 +139,7 @@ public class KnowledgeBaseExportTest {
 
 		QContainerHandler qcw = new QContainerHandler();
 
-		XMLTag isTag = new XMLTag(qcw.write(c1, Util.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qcw.write(c1, XMLUtil.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("QContainer");
 		shouldTag.addAttribute("name", "c1");
@@ -158,7 +158,7 @@ public class KnowledgeBaseExportTest {
 
 		SolutionsHandler dw = new SolutionsHandler();
 
-		XMLTag isTag = new XMLTag(dw.write(diag, Util.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(dw.write(diag, XMLUtil.createEmptyDocument()));
 
 		XMLTag shouldTag = new XMLTag("Diagnosis");
 		shouldTag.addAttribute("name", "d1");

@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.io.fragments.QuestionHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -67,7 +67,7 @@ public class QuestionChoiceTest {
 	public void testQuestionOCSimple() throws Exception {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
@@ -96,7 +96,7 @@ public class QuestionChoiceTest {
 		answerTag2.addAttribute("type", "AnswerChoice");
 		answersTag.addChild(answerTag2);
 
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(1)", shouldTag, isTag);
 
@@ -127,7 +127,7 @@ public class QuestionChoiceTest {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
 
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}

@@ -44,7 +44,7 @@ import org.w3c.dom.Node;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.condition.CondNumLess;
 import de.d3web.core.io.progress.DummyProgressListener;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -398,11 +398,11 @@ public class SessionPersistenceTest {
 	private void markXMLFile(File f) throws IOException, FileNotFoundException {
 		FileInputStream istream = new FileInputStream(f);
 		try {
-			Document doc = Util.streamToDocument(istream);
+			Document doc = XMLUtil.streamToDocument(istream);
 			doc.appendChild(doc.createComment("original"));
 			FileOutputStream ostream = new FileOutputStream(f);
 			try {
-				Util.writeDocumentToOutputStream(doc, ostream);
+				XMLUtil.writeDocumentToOutputStream(doc, ostream);
 			}
 			finally {
 				ostream.close();
@@ -425,7 +425,7 @@ public class SessionPersistenceTest {
 		FileInputStream istream = new FileInputStream(f);
 		boolean marked = false;
 		try {
-			Document doc = Util.streamToDocument(istream);
+			Document doc = XMLUtil.streamToDocument(istream);
 			for (int i = 0; i < doc.getChildNodes().getLength(); i++) {
 				Node child = doc.getChildNodes().item(i);
 				if (child instanceof Comment && child.getTextContent().equals("original")) {
@@ -532,7 +532,7 @@ public class SessionPersistenceTest {
 	public void errorHandlingTests() throws IOException {
 		// Testing the behavior when someone edited the xml file and the Date
 		// hasn't the correct format any more
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element element = doc.createElement("element");
 		element.setTextContent("no Date");
 		doc.appendChild(element);
@@ -567,7 +567,7 @@ public class SessionPersistenceTest {
 	 */
 	@Test
 	public void undefinedHandlerTest() throws IOException {
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element element = doc.createElement(UndefinedHandler.elementName);
 		doc.appendChild(element);
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();

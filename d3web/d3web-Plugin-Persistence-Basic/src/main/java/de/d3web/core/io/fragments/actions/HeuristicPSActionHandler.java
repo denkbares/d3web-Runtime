@@ -27,7 +27,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.io.fragments.FragmentHandler;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -60,7 +59,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 			Node child = children.item(i);
 			if (child.getNodeName().equalsIgnoreCase("Score")) {
 				String value = child.getAttributes().getNamedItem("value").getNodeValue();
-				score = Util.getScore(value);
+				score = XMLUtil.getScore(value);
 			}
 			else if (child.getNodeName().equalsIgnoreCase("Diagnosis")) {
 				String id = child.getAttributes().getNamedItem("name").getNodeValue();

@@ -38,7 +38,6 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -63,7 +62,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.streamToDocument(stream);
+		Document doc = XMLUtil.streamToDocument(stream);
 		String message = "Loading cost benefit knowledge";
 		listener.updateProgress(0, message);
 		NodeList stmodels = doc.getElementsByTagName("StateTransition");
@@ -85,7 +84,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	@Override
 	public void write(de.d3web.core.knowledge.KnowledgeBase kb, OutputStream stream, de.d3web.core.io.progress.ProgressListener listener) throws IOException {
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("type", ID);
 		root.setAttribute("system", "d3web");
@@ -103,7 +102,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			ksNode.appendChild(getElement(model, doc));
 		}
 
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
 	private Element getElement(StateTransition st, Document doc) throws IOException {

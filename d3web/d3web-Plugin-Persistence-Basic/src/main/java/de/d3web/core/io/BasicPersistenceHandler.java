@@ -43,7 +43,6 @@ import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.PropertiesHandler;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -97,7 +96,7 @@ public class BasicPersistenceHandler implements
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		listener.updateProgress(0, "Loading knowledge base");
-		Document doc = Util.streamToDocument(stream);
+		Document doc = XMLUtil.streamToDocument(stream);
 		List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
 		if (childNodes.size() != 1) {
 			throw new IOException("Document has more than one child.");
@@ -243,7 +242,7 @@ public class BasicPersistenceHandler implements
 
 	@Override
 	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		float time = 0;
 		int abstime = getEstimatedSize(kb);
 
@@ -317,7 +316,7 @@ public class BasicPersistenceHandler implements
 		Element knowledgeSlicesElement = doc.createElement("KnowledgeSlices");
 		father.appendChild(knowledgeSlicesElement);
 
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
 	@Override

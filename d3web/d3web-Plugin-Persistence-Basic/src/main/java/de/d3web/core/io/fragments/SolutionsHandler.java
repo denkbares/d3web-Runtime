@@ -23,7 +23,6 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -55,7 +54,7 @@ public class SolutionsHandler implements FragmentHandler {
 		String apriori = element.getAttribute("aPriProb");
 		Solution diag = new Solution(kb, id);
 		if (apriori != null) {
-			diag.setAprioriProbability(Util.getScore(apriori));
+			diag.setAprioriProbability(XMLUtil.getScore(apriori));
 		}
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {

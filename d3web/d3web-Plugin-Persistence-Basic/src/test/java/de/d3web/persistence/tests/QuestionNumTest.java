@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.fragments.NumericalIntervalHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -81,14 +81,14 @@ public class QuestionNumTest {
 
 		shouldTag.addChild(propertiesTag);
 
-		isTag = new XMLTag(new QuestionHandler().write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(new QuestionHandler().write(q1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
 	@Test
 	public void testQuestionNumTestSimple() throws Exception {
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -125,7 +125,7 @@ public class QuestionNumTest {
 
 		shouldTag.addChild(intervalsTag);
 
-		isTag = new XMLTag(qw.write(q1, Util.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
 		assertEquals("(intervals)", shouldTag, isTag);
 	}
 }

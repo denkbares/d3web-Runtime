@@ -39,7 +39,7 @@ import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.xcl.XCLModel;
@@ -75,7 +75,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.streamToDocument(stream);
+		Document doc = XMLUtil.streamToDocument(stream);
 		parseModels(kb, doc, listener);
 	}
 
@@ -167,7 +167,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	@Override
 	public void write(KnowledgeBase kb, OutputStream stream,
 			ProgressListener listener) throws IOException {
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("type", ID);
 		root.setAttribute("system", "d3web");
@@ -188,7 +188,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 			ksNode.appendChild(writeModel(model, doc, pool));
 			listener.updateProgress(++cur / max, "Saving knowledge base: XCL Models");
 		}
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
 	private String getAttribute(String name, Node node) {

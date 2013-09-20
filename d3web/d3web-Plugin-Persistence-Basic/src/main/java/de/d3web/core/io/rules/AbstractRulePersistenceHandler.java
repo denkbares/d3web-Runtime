@@ -41,7 +41,6 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
-import de.d3web.core.io.utilities.Util;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 
@@ -56,7 +55,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 
 	@Override
 	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.createEmptyDocument();
+		Document doc = XMLUtil.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("system", "d3web");
 		root.setAttribute("type", ruletype);
@@ -71,7 +70,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 			root.appendChild(element);
 			listener.updateProgress(count++ / rules.size(), "Writing " + ruletype);
 		}
-		Util.writeDocumentToOutputStream(doc, stream);
+		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
 	private Set<Rule> getRules(KnowledgeBase kb) {
@@ -91,7 +90,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 
 	@Override
 	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = Util.streamToDocument(stream);
+		Document doc = XMLUtil.streamToDocument(stream);
 		NodeList kbnodes = doc.getElementsByTagName("KnowledgeBase");
 		if (kbnodes.getLength() != 1) {
 			throw new IOException();

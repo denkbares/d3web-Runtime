@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -66,7 +66,7 @@ public class QuestionSetterActionTest {
 		questionSetterActionHandler = new QuestionSetterActionHandler();
 		actionSetQuestion = new ActionSetQuestion();
 		actionSetQuestion.setQuestion(questionNum);
-		doc = Util.createEmptyDocument();
+		doc = XMLUtil.createEmptyDocument();
 	}
 
 	@Test

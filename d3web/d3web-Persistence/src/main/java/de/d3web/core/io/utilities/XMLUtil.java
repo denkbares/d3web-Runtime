@@ -18,7 +18,11 @@
  */
 package de.d3web.core.io.utilities;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,10 +35,26 @@ import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
@@ -56,6 +76,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.Triple;
+import de.d3web.scoring.Score;
 
 /**
  * Provides useful static functions for xml persistence handlers
@@ -580,5 +601,175 @@ public final class XMLUtil {
 				infoStore.addValue(property, value);
 			}
 		}
+	}
+
+	/**
+	 * Creates an XML {@link Document} from the given {@link InputStream}.
+	 * 
+	 * @param stream the XML input stream
+	 * @return Document the document created from the stream
+	 * @throws IOException if the stream cannot be read or does not contains
+	 *         valid XML content or the XML parser cannot be configured
+	 */
+	public static Document streamToDocument(InputStream stream) throws IOException {
+		return streamToDocument(stream, null);
+	}
+
+	/**
+	 * Creates an XML {@link Document} from the given {@link InputStream}.
+	 * 
+	 * @param stream the XML input stream
+	 * @param resolver is a {@link EntityResolver} to specify how entities given
+	 *        in the {@link Document} should be resolved
+	 * @return Document the document created from the stream
+	 * @throws IOException if the stream cannot be read or does not contains
+	 *         valid XML content or the XML parser cannot be configured
+	 */
+	public static Document streamToDocument(InputStream stream, EntityResolver resolver) throws IOException {
+		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+		DocumentBuilder parser = null;
+		try {
+			parser = fac.newDocumentBuilder();
+			if (resolver != null) parser.setEntityResolver(resolver);
+			return parser.parse(new InputSource(stream));
+		}
+		catch (ParserConfigurationException e) {
+			throw new IOException(e);
+		}
+		catch (SAXException e) {
+			throw new IOException(e);
+		}
+	}
+
+	/**
+	 * Creates an XML {@link Document} from the {@link File}.
+	 * 
+	 * @param stream the xml input stream
+	 * @return Document the document created from the stream
+	 * @throws IOException when an error occurs
+	 */
+	public static Document fileToDocument(File file) throws IOException {
+		InputStream in = new FileInputStream(file);
+		try {
+			return streamToDocument(in);
+		}
+		finally {
+			in.close();
+		}
+	}
+
+	/**
+	 * Creates an empty Document
+	 * 
+	 * @return newly created document
+	 * @throws IOException when an error occurs
+	 */
+	public static Document createEmptyDocument() throws IOException {
+		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+		try {
+			builder = fac.newDocumentBuilder();
+		}
+		catch (ParserConfigurationException e) {
+			throw new IOException(e.getMessage());
+		}
+		return builder.newDocument();
+	}
+
+	/**
+	 * Writes the Document to the given OutputStream
+	 * 
+	 * @param doc input document
+	 * @param stream outout stream
+	 * @throws IOException when an error occurs
+	 */
+	public static void writeDocumentToOutputStream(Document doc, OutputStream stream) throws IOException {
+		Source source = new DOMSource(doc);
+		Result result = new StreamResult(stream);
+		Transformer xformer;
+		try {
+			xformer = TransformerFactory.newInstance().newTransformer();
+			xformer.setOutputProperty("method", "xml");
+			if (doc.getXmlEncoding() == null) {
+				xformer.setOutputProperty("encoding", "UTF-8");
+			}
+			else {
+				xformer.setOutputProperty("encoding", doc.getXmlEncoding());
+			}
+			xformer.setOutputProperty("omit-xml-declaration", "no");
+			xformer.setOutputProperty("indent", "yes");
+			xformer.transform(source, result);
+		}
+		catch (TransformerConfigurationException e) {
+			new IOException(e.getMessage());
+		}
+		catch (TransformerFactoryConfigurationError e) {
+			new IOException(e.getMessage());
+		}
+		catch (TransformerException e) {
+			new IOException(e.getMessage());
+		}
+	
+	}
+
+	/**
+	 * @return the Score matching the given String (e.g. "n7" to Score.N7)
+	 * @throws IOException when an error occurs
+	 */
+	public static Score getScore(String value) throws IOException {
+		Score score = null;
+		if (value.equalsIgnoreCase("n7")) {
+			score = Score.N7;
+		}
+		else if (value.equalsIgnoreCase("n6")) {
+			score = Score.N6;
+		}
+		else if (value.equalsIgnoreCase("n5")) {
+			score = Score.N5;
+		}
+		else if (value.equalsIgnoreCase("n5x")) {
+			score = Score.N5x;
+		}
+		else if (value.equalsIgnoreCase("n4")) {
+			score = Score.N4;
+		}
+		else if (value.equalsIgnoreCase("n3")) {
+			score = Score.N3;
+		}
+		else if (value.equalsIgnoreCase("n2")) {
+			score = Score.N2;
+		}
+		else if (value.equalsIgnoreCase("n1")) {
+			score = Score.N1;
+		}
+		else if (value.equalsIgnoreCase("p1")) {
+			score = Score.P1;
+		}
+		else if (value.equalsIgnoreCase("p2")) {
+			score = Score.P2;
+		}
+		else if (value.equalsIgnoreCase("p3")) {
+			score = Score.P3;
+		}
+		else if (value.equalsIgnoreCase("p4")) {
+			score = Score.P4;
+		}
+		else if (value.equalsIgnoreCase("p5")) {
+			score = Score.P5;
+		}
+		else if (value.equalsIgnoreCase("p5x")) {
+			score = Score.P5x;
+		}
+		else if (value.equalsIgnoreCase("p6")) {
+			score = Score.P6;
+		}
+		else if (value.equalsIgnoreCase("p7")) {
+			score = Score.P7;
+		}
+		else if (value.equalsIgnoreCase("pp")) {
+			throw new IOException(
+					"knowledgebase uses pp-rules! - this will cause NullPointerException in rule firing");
+		}
+		return score;
 	}
 }

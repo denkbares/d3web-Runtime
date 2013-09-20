@@ -99,7 +99,7 @@ public class TreeIndexer {
 
 	/**
 	 * Traverses the hierarchy using a depth-first search and attaches an
-	 * ordering number to each visited object..
+	 * ordering number to each visited object.
 	 */
 	private void reindex(TerminologyObject root) {
 		if (root == null) return;

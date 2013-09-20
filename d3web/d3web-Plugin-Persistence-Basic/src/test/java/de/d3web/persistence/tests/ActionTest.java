@@ -40,7 +40,7 @@ import de.d3web.core.io.fragments.actions.HeuristicPSActionHandler;
 import de.d3web.core.io.fragments.actions.NextQASetActionHandler;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
 import de.d3web.core.io.fragments.actions.SuppressAnswerActionHandler;
-import de.d3web.core.io.utilities.Util;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
@@ -90,7 +90,7 @@ public class ActionTest {
 
 		InitPluginManager.init();
 		KnowledgeBase kb = new KnowledgeBase();
-		doc = Util.createEmptyDocument();
+		doc = XMLUtil.createEmptyDocument();
 
 		answerNo = new AnswerNo("ac1-name");
 
