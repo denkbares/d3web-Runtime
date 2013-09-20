@@ -139,6 +139,11 @@ public final class Util {
 		session.getPropagationManager().commitPropagation();
 	}
 
+	/**
+	 * @param set if true, the default values of all unanswered questions are
+	 *        returned, if false additionally the values of the answered
+	 *        questions from the blackboard are returned
+	 */
 	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
 		List<QuestionOC> questions = new LinkedList<QuestionOC>();
 		FormStrategy formStrategy = getFormStrategy(session);
@@ -148,7 +153,6 @@ public final class Util {
 			}
 		}
 		Blackboard blackboard = session.getBlackboard();
-		Map<Question, Value> valuesToSet = new HashMap<Question, Value>();
 		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
 		for (QuestionOC q : questions) {
 			Value value = blackboard.getValue(q);
@@ -166,26 +170,18 @@ public final class Util {
 				for (Choice a : alternatives) {
 					ChoiceValue avalue = new ChoiceValue(a);
 					if (abnormality.getValue(avalue) == Abnormality.A0) {
-						if (set) {
-							valuesToSet.put(q, avalue);
-						}
-						else {
-							expectedmap.put(q, avalue);
-						}
+						expectedmap.put(q, avalue);
 						break;
 					}
 				}
 			}
 			else {
-				expectedmap.put(q, value);
+				if (!set) {
+					expectedmap.put(q, value);
+				}
 			}
 		}
-		if (set) {
-			return valuesToSet;
-		}
-		else {
-			return expectedmap;
-		}
+		return expectedmap;
 	}
 
 	/**
