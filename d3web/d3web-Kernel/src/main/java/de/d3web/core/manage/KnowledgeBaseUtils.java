@@ -255,29 +255,60 @@ public final class KnowledgeBaseUtils {
 		return MultipleChoiceValue.fromChoices(choices);
 	}
 
+	/**
+	 * Creates a question value from a case sensitive string representation of
+	 * the value. If the specified string does not represent a valid value of
+	 * that question, null is returned. This may happen e.g. if the denoted
+	 * choice is not available or for a numeric question if the string is not a
+	 * valid double representation.
+	 * <p>
+	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED"
+	 * (if there is no such choice). The method created the unknown for "MaU",
+	 * "-?-" or "UNKNOWN" (if there is no such choice).
+	 * 
+	 * @created 23.09.2013
+	 * @param question the question to create the value for
+	 * @param valueString the string representation of the value
+	 * @return the created value
+	 */
 	public static QuestionValue findValue(Question question, String valueString) {
+		return findValue(question, valueString, true);
+	}
+
+	/**
+	 * Creates a question value from a string representation of the value. You
+	 * may specify if the values are matched case sensitive or not. If the
+	 * specified string does not represent a valid value of that question, null
+	 * is returned. This may happen e.g. if the denoted choice is not available
+	 * or for a numeric question if the string is not a valid double
+	 * representation.
+	 * <p>
+	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED"
+	 * (if there is no such choice). The method created the unknown for "MaU",
+	 * "-?-" or "UNKNOWN" (if there is no such choice).
+	 * 
+	 * @created 23.09.2013
+	 * @param question the question to create the value for
+	 * @param valueString the string representation of the value
+	 * @return the created value
+	 */
+	public static QuestionValue findValue(Question question, String valueString, boolean caseSensitive) {
 		if (question == null || valueString == null) {
 			throw new NullPointerException("Question and value String must not be null.");
-		}
-		if (valueString.equals(UndefinedValue.UNDEFINED_ID)) {
-			return UndefinedValue.getInstance();
-		}
-		if (valueString.equals(Unknown.UNKNOWN_ID)) {
-			return Unknown.getInstance();
 		}
 
 		// multiple choice question given
 		if (question instanceof QuestionMC) {
-
 			List<Choice> values = new LinkedList<Choice>();
 
 			// if mc val is a "real" mc val, i.e. more than one answervals
 			if (ChoiceID.isEncodedChoiceIDs(valueString)) {
 				ChoiceID[] mcvals = ChoiceID.decodeChoiceIDs(valueString);
 				for (ChoiceID val : mcvals) {
-					Choice choice = val.getChoice((QuestionChoice) question);
+					Choice choice = findChoice((QuestionChoice) question, val.getText(),
+							caseSensitive);
 					if (choice == null) {
-						return null;
+						return findSpecialValue(valueString, caseSensitive);
 					}
 					else {
 						values.add(choice);
@@ -288,9 +319,9 @@ public final class KnowledgeBaseUtils {
 
 			// else, if a single answer val should be set for a mc question
 			else {
-				Choice choice = findChoice((QuestionChoice) question, valueString);
+				Choice choice = findChoice((QuestionChoice) question, valueString, caseSensitive);
 				if (choice == null) {
-					return null;
+					return findSpecialValue(valueString, caseSensitive);
 				}
 				else {
 					values.add(choice);
@@ -301,9 +332,9 @@ public final class KnowledgeBaseUtils {
 
 		// choice question given (e.g., question yn, questionoc)
 		else if (question instanceof QuestionChoice) {
-			Choice choice = findChoice((QuestionChoice) question, valueString);
+			Choice choice = findChoice((QuestionChoice) question, valueString, caseSensitive);
 			if (choice == null) {
-				return null;
+				return findSpecialValue(valueString, caseSensitive);
 			}
 			else {
 				return new ChoiceValue(choice);
@@ -312,11 +343,18 @@ public final class KnowledgeBaseUtils {
 
 		// num questions
 		else if (question instanceof QuestionNum) {
-			return new NumValue(Double.parseDouble(valueString));
+			try {
+				return new NumValue(Double.parseDouble(valueString));
+			}
+			catch (NumberFormatException e) {
+				return findSpecialValue(valueString, caseSensitive);
+			}
 		}
 
 		// text questions
 		else if (question instanceof QuestionText) {
+			QuestionValue specialValue = findSpecialValue(valueString, caseSensitive);
+			if (specialValue != null) return specialValue;
 			return new TextValue(valueString);
 		}
 
@@ -326,12 +364,35 @@ public final class KnowledgeBaseUtils {
 				return DateValue.createDateValue(valueString);
 			}
 			catch (IllegalArgumentException e) {
-				return null;
+				return findSpecialValue(valueString, caseSensitive);
 			}
 		}
 		else {
 			return UndefinedValue.getInstance();
 		}
+	}
+
+	private static QuestionValue findSpecialValue(String valueString, boolean caseSensitive) {
+		if (caseSensitive) {
+			if (valueString.equals(UndefinedValue.UNDEFINED_ID) || valueString.equals("UNDEFINED")) {
+				return UndefinedValue.getInstance();
+			}
+			if (valueString.equals(Unknown.UNKNOWN_ID) || valueString.equals("-?-")
+					|| valueString.equals("UNKNOWN")) {
+				return Unknown.getInstance();
+			}
+		}
+		else {
+			if (valueString.equalsIgnoreCase(UndefinedValue.UNDEFINED_ID)
+					|| valueString.equalsIgnoreCase("UNDEFINED")) {
+				return UndefinedValue.getInstance();
+			}
+			if (valueString.equalsIgnoreCase(Unknown.UNKNOWN_ID) || valueString.equals("-?-")
+					|| valueString.equalsIgnoreCase("UNKNOWN")) {
+				return Unknown.getInstance();
+			}
+		}
+		return null;
 	}
 
 	/**

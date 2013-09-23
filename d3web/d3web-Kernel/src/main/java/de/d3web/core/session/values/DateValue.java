@@ -88,6 +88,15 @@ public class DateValue implements QuestionValue {
 		throw new IllegalArgumentException("'" + valueString + "' can not be recognized as a date");
 	}
 
+	public static String[] getAllowedFormatStrings() {
+		String[] result = new String[dateFormats.size()];
+		int index = 0;
+		for (SimpleDateFormat format : dateFormats) {
+			result[index++] = format.toPattern();
+		}
+		return result;
+	}
+
 	/**
 	 * @return the {@link Date} of this date value
 	 */
