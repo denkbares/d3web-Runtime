@@ -87,6 +87,12 @@ public class STCWrapper implements TestCase {
 		addCheck(getDate(rtc), check);
 	}
 
+	public void addChecks(RatedTestCase rtc, Collection<Check> checks) {
+		for (Check check : checks) {
+			addCheck(rtc, check);
+		}
+	}
+
 	@Override
 	public Collection<Date> chronology() {
 		List<Date> dates = new LinkedList<Date>();
