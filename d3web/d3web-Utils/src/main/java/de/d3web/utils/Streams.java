@@ -1,5 +1,6 @@
 package de.d3web.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -75,4 +76,74 @@ public class Streams {
 		thread.setDaemon(true);
 		thread.start();
 	}
+
+	/**
+	 * Returns the contents of the specified input stream as a byte[].
+	 * 
+	 * @created 01.10.2013
+	 * @param input the input stream to read from
+	 * @return the content of the stream
+	 * @throws IOException if the specified streams cannot be read completely
+	 */
+	public static byte[] getBytes(InputStream input) throws IOException {
+		ByteArrayOutputStream result = getContent(input);
+		return result.toByteArray();
+	}
+
+	/**
+	 * Returns the contents of the specified input stream as a byte[]. The
+	 * method closes the specified stream before it returns the contents.
+	 * 
+	 * @created 01.10.2013
+	 * @param input the input stream to read from
+	 * @return the content of the stream
+	 * @throws IOException if the specified streams cannot be read completely
+	 */
+	public static byte[] getBytesAndClose(InputStream input) throws IOException {
+		try {
+			return getBytes(input);
+		}
+		finally {
+			input.close();
+		}
+	}
+
+	/**
+	 * Returns the contents of the specified input stream as a String.
+	 * 
+	 * @created 01.10.2013
+	 * @param input the input stream to read from
+	 * @return the content of the stream
+	 * @throws IOException if the specified streams cannot be read completely
+	 */
+	public static String getText(InputStream input) throws IOException {
+		ByteArrayOutputStream result = getContent(input);
+		return result.toString();
+	}
+
+	/**
+	 * Returns the contents of the specified input stream as a String. The
+	 * method closes the specified stream before it returns the contents.
+	 * 
+	 * @created 01.10.2013
+	 * @param input the input stream to read from
+	 * @return the content of the stream
+	 * @throws IOException if the specified streams cannot be read completely
+	 */
+	public static String getTextAndClose(InputStream input) throws IOException {
+		try {
+			return getText(input);
+		}
+		finally {
+			input.close();
+		}
+	}
+
+	private static ByteArrayOutputStream getContent(InputStream input) throws IOException {
+		ByteArrayOutputStream result = new ByteArrayOutputStream(input.available());
+		stream(input, result);
+		result.close();
+		return result;
+	}
+
 }
