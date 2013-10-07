@@ -3,9 +3,10 @@ package de.d3web.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 public class Files {
+
+	private static final int TEMP_DIR_ATTEMPTS = 1000;
 
 	/**
 	 * Create a new temporary directory. Use {@link #recursiveDelete(File)} to
@@ -15,30 +16,22 @@ public class Files {
 	 * @throws IOException if there is an error creating the temporary directory
 	 */
 	public static File createTempDir() throws IOException {
-		final File sysTempDir = new File(System.getProperty("java.io.tmpdir"));
-		File newTempDir;
-		final int maxAttempts = 100;
-		int attemptCount = 0;
-		do {
-			attemptCount++;
-			if (attemptCount > maxAttempts) {
-				throw new IOException(
-						"The highly improbable has occurred! Failed to " +
-								"create a unique temporary directory after " +
-								maxAttempts + " attempts.");
-			}
-			String dirName = UUID.randomUUID().toString();
-			newTempDir = new File(sysTempDir, dirName);
-		} while (newTempDir.exists());
+		Files.createTempDir();
+		File baseDir = new File(System.getProperty("java.io.tmpdir"));
+		baseDir.mkdirs();
+		if (!baseDir.isDirectory()) {
+			throw new IOException("Failed to access temp directory");
+		}
+		String baseName = System.currentTimeMillis() + "-";
 
-		if (newTempDir.mkdirs()) {
-			return newTempDir;
+		for (int counter = 0; counter < TEMP_DIR_ATTEMPTS; counter++) {
+			File tempDir = new File(baseDir, baseName + counter);
+			if (tempDir.mkdir()) {
+				return tempDir;
+			}
 		}
-		else {
-			throw new IOException(
-					"Failed to create temp dir named " +
-							newTempDir.getAbsolutePath());
-		}
+		throw new IOException("Failed to create temp directory");
+
 	}
 
 	/**
