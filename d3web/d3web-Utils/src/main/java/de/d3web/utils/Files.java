@@ -16,7 +16,6 @@ public class Files {
 	 * @throws IOException if there is an error creating the temporary directory
 	 */
 	public static File createTempDir() throws IOException {
-		Files.createTempDir();
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
 		baseDir.mkdirs();
 		if (!baseDir.isDirectory()) {
