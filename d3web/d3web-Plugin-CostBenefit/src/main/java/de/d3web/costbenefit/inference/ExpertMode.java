@@ -191,6 +191,36 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
+	 * Calculates a path to the target, having the cheapest path from the actual
+	 * state.
+	 * 
+	 * @created 07.10.2013
+	 * @param qContainers a List of QContainers that should be used as targets
+	 * @return the Target being selected by the cost benefit, because it can be
+	 *         reached with the cheapest path
+	 * @throws AbortException if no path to a target could be calculated
+	 */
+	public Target selectCheapestTarget(List<QContainer> qContainers) throws AbortException {
+		Target[] targets = new Target[qContainers.size()];
+		int i = 0;
+		for (QContainer qContainer : qContainers) {
+			targets[i++] = new Target(qContainer);
+		}
+		PSMethodCostBenefit psm = getPSMethodCostBenefit();
+		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
+		PropagationManager propagationManager = session.getPropagationManager();
+		try {
+			propagationManager.openPropagation();
+			psm.calculateNewPathTo(pso, targets);
+			psm.activateNextQContainer(pso);
+		}
+		finally {
+			propagationManager.commitPropagation();
+		}
+		return getCurrentTarget();
+	}
+
+	/**
 	 * Selects a new target for the interview strategy. This makes the cost
 	 * benefit problem solver to arrange a new questionnaire sequence (path) to
 	 * cover the selected target questionnaire. Because it might be complex to

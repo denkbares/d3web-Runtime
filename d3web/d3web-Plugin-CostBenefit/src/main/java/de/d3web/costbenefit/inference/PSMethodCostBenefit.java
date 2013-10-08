@@ -160,7 +160,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// only check if the current one is done
 		// (or no current one has been activated yet)
 		if (caseObject.getCurrentPathIndex() == -1
-				|| CostBenefitUtil.isDone(currentSequence[caseObject.getCurrentPathIndex()], session)) {
+				|| CostBenefitUtil.isDone(currentSequence[caseObject.getCurrentPathIndex()],
+						session)) {
 			caseObject.incCurrentPathIndex();
 			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
 				caseObject.resetPath();
@@ -220,7 +221,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @throws AbortException if no path could been established towards the
 	 *         specified target
 	 */
-	void calculateNewPathTo(CostBenefitCaseObject caseObject, Target target) throws AbortException {
+	void calculateNewPathTo(CostBenefitCaseObject caseObject, Target... targets) throws AbortException {
 		// first reset the search path
 		caseObject.resetPath();
 
@@ -229,7 +230,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		// searching for the best cost/benefit result
 		// (only if there is any benefitual target
-		initializeSearchModelTo(caseObject, target);
+		initializeSearchModelTo(caseObject, targets);
 		SearchModel searchModel = caseObject.getSearchModel();
 		// when using this method, you want to get that target, beta mode (later
 		// there must be a abortion critera to prevent an endless loop if target
@@ -252,15 +253,15 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 	}
 
-	private void initializeSearchModelTo(CostBenefitCaseObject caseObject, Target target) {
+	private void initializeSearchModelTo(CostBenefitCaseObject caseObject, Target... targets) {
 		Session session = caseObject.getSession();
 		SearchModel searchModel = new SearchModel(session);
-
-		searchModel.addTarget(target);
-		// initialize benefit in search model to a positive value
-		// (use 1 if there is no benefit inside the target)
-		searchModel.maximizeBenefit(target, 10000000000.0);
-
+		for (Target target : targets) {
+			searchModel.addTarget(target);
+			// initialize benefit in search model to a positive value
+			// (use 1 if there is no benefit inside the target)
+			searchModel.maximizeBenefit(target, 10000000000.0);
+		}
 		// set the undiscriminated solution to "null" to indicate that we will
 		// not consider them for checking to execute a new search
 		// we also leave the "discriminating targets" of the case object
