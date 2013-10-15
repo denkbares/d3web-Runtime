@@ -45,17 +45,8 @@ public class ActionHeuristicPS extends ActionAddValueFact {
 
 	@Override
 	public String toString() {
-		String diagnosisId = null;
-		if (getSolution() != null) {
-			diagnosisId = getSolution().getName();
-		}
-		return "<RuleAction type=\"Heuristic\">\n"
-				+ "  ["
-				+ diagnosisId
-				+ ": "
-				+ getScore()
-				+ "]"
-				+ "\n</RuleAction>";
+		return "set: " + (getSolution() == null ? "-?-" : getSolution()) + " = "
+				+ getScore();
 	}
 
 	/**
