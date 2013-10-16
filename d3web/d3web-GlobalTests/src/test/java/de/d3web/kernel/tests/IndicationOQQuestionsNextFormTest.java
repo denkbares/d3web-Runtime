@@ -24,6 +24,9 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -88,8 +91,12 @@ public class IndicationOQQuestionsNextFormTest {
 	private static Interview interview;
 
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void initTest() throws IOException {
 		InitPluginManager.init();
+	}
+
+	@Before
+	public void setUp() {
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
