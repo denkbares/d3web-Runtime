@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.utilities.Pair;
-import de.d3web.core.utilities.Triple;
+import de.d3web.utils.Pair;
+import de.d3web.utils.Triple;
 
 public class DefaultInfoStore implements InfoStore {
 

@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.utilities.IdentitySet;
+import de.d3web.collections.IdentitySet;
 
 /**
  * Encapsulates rules of one PSMethod and one KnowledgeKind to one KnowlegeSlice

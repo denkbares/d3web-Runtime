@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.utilities.HashCodeUtils;
+import de.d3web.utils.HashCodeUtils;
 
 /**
  * Abstract condition for all non-terminal conditions. A non-terminal condition

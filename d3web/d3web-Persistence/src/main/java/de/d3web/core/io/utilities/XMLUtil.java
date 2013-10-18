@@ -75,8 +75,8 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.core.utilities.Triple;
 import de.d3web.scoring.Score;
+import de.d3web.utils.Triple;
 
 /**
  * Provides useful static functions for xml persistence handlers

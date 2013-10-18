@@ -52,13 +52,13 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.core.utilities.Pair;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.utils.Pair;
 
 /**
  * Uses a "slice model" to calculate a more precise distance

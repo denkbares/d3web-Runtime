@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.utilities.Triple;
+import de.d3web.utils.Triple;
 
 /**
  * Unit test for {@link Triple}
@@ -53,7 +53,7 @@ public class TripleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Triple#getA()}.
+	 * Test method for {@link de.d3web.utils.Triple#getA()}.
 	 */
 	@Test
 	public void testGetA() {
@@ -62,7 +62,7 @@ public class TripleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Triple#getB()}.
+	 * Test method for {@link de.d3web.utils.Triple#getB()}.
 	 */
 	@Test
 	public void testGetB() {
@@ -71,7 +71,7 @@ public class TripleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Triple#getC()}.
+	 * Test method for {@link de.d3web.utils.Triple#getC()}.
 	 */
 	@Test
 	public void testGetC() {
@@ -80,7 +80,7 @@ public class TripleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Triple#toString()}.
+	 * Test method for {@link de.d3web.utils.Triple#toString()}.
 	 */
 	@Test
 	public void testToString() {

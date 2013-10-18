@@ -22,8 +22,8 @@ package de.d3web.core.session.protocol;
 import java.text.DateFormat;
 import java.util.Date;
 
-import de.d3web.core.utilities.EqualsUtils;
-import de.d3web.core.utilities.HashCodeUtils;
+import de.d3web.utils.EqualsUtils;
+import de.d3web.utils.HashCodeUtils;
 
 /**
  * Implementation of {@link ProtocolEntry} to store pain text messages into the

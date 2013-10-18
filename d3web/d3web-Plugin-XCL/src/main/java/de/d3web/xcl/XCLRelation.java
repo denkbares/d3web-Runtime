@@ -28,7 +28,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.utilities.HashCodeUtils;
+import de.d3web.utils.HashCodeUtils;
 
 public class XCLRelation {
 

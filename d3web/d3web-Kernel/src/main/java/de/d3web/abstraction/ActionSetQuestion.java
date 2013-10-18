@@ -35,7 +35,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.utilities.EqualsUtils;
+import de.d3web.utils.EqualsUtils;
 
 /**
  * Sets a specified value for a specified question. The value can be a

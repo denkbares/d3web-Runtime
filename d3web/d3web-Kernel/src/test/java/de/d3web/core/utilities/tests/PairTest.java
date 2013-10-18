@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.utilities.Pair;
+import de.d3web.utils.Pair;
 
 /**
  * Unit test for {@link Pair}
@@ -50,7 +50,7 @@ public class PairTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Pair#getA()}.
+	 * Test method for {@link de.d3web.utils.Pair#getA()}.
 	 */
 	@Test
 	public void testGetA() {
@@ -59,7 +59,7 @@ public class PairTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Pair#getB()}.
+	 * Test method for {@link de.d3web.utils.Pair#getB()}.
 	 */
 	@Test
 	public void testGetB() {
@@ -68,7 +68,7 @@ public class PairTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Pair#toString()}.
+	 * Test method for {@link de.d3web.utils.Pair#toString()}.
 	 */
 	@Test
 	public void testToString() {

@@ -22,7 +22,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.d3web.core.utilities.IdentitySet;
+import de.d3web.collections.IdentitySet;
 
 /**
  * Tests the special features of the IdentityTest

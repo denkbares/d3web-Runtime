@@ -17,40 +17,42 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.core.utilities;
+package de.d3web.utils;
+
+import java.util.Arrays;
 
 /**
- * This class implements a typed, null-save triple of three other objects.
+ * This class implements a typed, null-save tuple of a number of other objects.
  * 
  * @author volker_belli
  * 
  */
-public class Triple<T1, T2, T3> extends Tuple {
+public class Tuple {
 
-	public Triple(T1 a, T2 b, T3 c) {
-		super(a, b, c);
+	private final Object[] items;
+
+	public Tuple(Object... items) {
+		this.items = items;
 	}
 
-	@SuppressWarnings("unchecked")
-	public T1 getA() {
-		return (T1) get(0);
-	}
-
-	@SuppressWarnings("unchecked")
-	public T2 getB() {
-		return (T2) get(1);
-	}
-
-	@SuppressWarnings("unchecked")
-	public T3 getC() {
-		return (T3) get(2);
+	public Object get(int index) {
+		return items[index];
 	}
 
 	@Override
-	public String toString() {
-		return "#Triple["
-				+ String.valueOf(getA()) + "; "
-				+ String.valueOf(getB()) + "; "
-				+ String.valueOf(getC()) + "]";
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof Tuple)) {
+			return false;
+		}
+		Tuple o = (Tuple) other;
+		return Arrays.equals(this.items, o.items);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(this.items);
 	}
 }

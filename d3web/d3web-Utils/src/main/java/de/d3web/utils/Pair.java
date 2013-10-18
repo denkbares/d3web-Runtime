@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.core.utilities;
+package de.d3web.utils;
 
 /**
  * This class implements a typed, null-save pair of two other objects.

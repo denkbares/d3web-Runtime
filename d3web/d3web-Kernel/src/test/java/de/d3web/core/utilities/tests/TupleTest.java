@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.utilities.Tuple;
+import de.d3web.utils.Tuple;
 
 /**
  * Unit test for {@link Tuple}
@@ -52,7 +52,7 @@ public class TupleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Tuple#hashCode()}.
+	 * Test method for {@link de.d3web.utils.Tuple#hashCode()}.
 	 */
 	@Test
 	public void testHashCode() {
@@ -60,7 +60,7 @@ public class TupleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Tuple#get(int)}.
+	 * Test method for {@link de.d3web.utils.Tuple#get(int)}.
 	 */
 	@Test
 	public void testGet() {
@@ -78,7 +78,7 @@ public class TupleTest {
 	}
 
 	/**
-	 * Test method for {@link de.d3web.core.utilities.Tuple#equals(java.lang.Object)}.
+	 * Test method for {@link de.d3web.utils.Tuple#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject() {

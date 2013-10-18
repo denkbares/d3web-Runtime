@@ -31,9 +31,9 @@ import org.junit.Test;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.utilities.EqualsUtils;
-import de.d3web.core.utilities.Triple;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.utils.EqualsUtils;
+import de.d3web.utils.Triple;
 
 /**
  * Tests static methods from all core packages

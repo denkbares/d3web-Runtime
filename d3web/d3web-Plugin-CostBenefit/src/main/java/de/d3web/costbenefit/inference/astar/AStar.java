@@ -43,7 +43,6 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.utilities.Pair;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.CostFunction;
@@ -52,6 +51,7 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.utils.Pair;
 
 /**
  * Algorithm which uses A* to find pathes to the targets

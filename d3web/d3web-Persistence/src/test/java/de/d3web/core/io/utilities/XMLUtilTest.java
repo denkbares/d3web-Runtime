@@ -44,8 +44,8 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.core.utilities.Triple;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.utils.Triple;
 
 /**
  * 

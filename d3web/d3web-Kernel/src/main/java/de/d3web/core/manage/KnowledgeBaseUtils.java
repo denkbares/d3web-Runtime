@@ -55,7 +55,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.core.utilities.Triple;
+import de.d3web.utils.Triple;
 
 /**
  * Provides utilitymethods for {@link KnowledgeBase}

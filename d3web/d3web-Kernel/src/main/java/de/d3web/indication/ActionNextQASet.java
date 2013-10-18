@@ -30,8 +30,8 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.utilities.EqualsUtils;
-import de.d3web.core.utilities.HashCodeUtils;
+import de.d3web.utils.EqualsUtils;
+import de.d3web.utils.HashCodeUtils;
 
 /**
  * This abstract class is representing the Action of an indication. Specialize

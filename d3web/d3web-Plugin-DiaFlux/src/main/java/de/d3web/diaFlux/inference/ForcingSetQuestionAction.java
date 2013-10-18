@@ -26,7 +26,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.utilities.EqualsUtils;
+import de.d3web.utils.EqualsUtils;
 
 
 /**

@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.core.utilities.Triple;
+import de.d3web.utils.Triple;
 
 public interface InfoStore {
 

@@ -25,11 +25,11 @@ import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.core.utilities.Pair;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 import de.d3web.testing.MessageObject;
 import de.d3web.testing.Utils;
+import de.d3web.utils.Pair;
 
 /**
  * Some utility methods.
