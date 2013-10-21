@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,18 @@ public class CountingSetTest {
 	@Before
 	public void setUp() {
 		set = new CountingSet<String>();
+	}
+
+	@Test
+	public void toStringTest() {
+		Set<String> s = new HashSet<String>();
+		s.add("foo");
+		set.add("foo");
+		assertEquals("{foo=1}", set.toString());
+		set.add("foo");
+		assertEquals("{foo=2}", set.toString());
+		set.clear();
+		assertEquals("{}", set.toString());
 	}
 
 	@Test

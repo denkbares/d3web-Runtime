@@ -194,4 +194,8 @@ public class CountingSet<E> implements Set<E> {
 		return 0;
 	}
 
+	@Override
+	public String toString() {
+		return counters.toString();
+	}
 }
