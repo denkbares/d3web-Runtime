@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -83,8 +82,7 @@ public final class TestPersistence {
 	private static final String STARTDATE = "StartDate";
 	private static final String NOTE = "Note";
 	private static final String TIMESTAMP = "time";
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss.SS");
+
 	private static final String QUESTION = "Question";
 	private static final String ANSWER = "Answer";
 	private static final String RATING = "Rating";
@@ -269,7 +267,7 @@ public final class TestPersistence {
 		xmlsw.writeAttribute(NAME, stc.getName());
 		Date startDate = stc.getStartDate();
 		if (startDate != null) {
-			xmlsw.writeAttribute(STARTDATE, DATE_FORMAT.format(startDate));
+			xmlsw.writeAttribute(STARTDATE, DateValue.DATE_FORMAT.format(startDate));
 		}
 		for (RatedTestCase rtcases : stc.getCases()) {
 			write(rtcases, xmlsw);
@@ -290,7 +288,7 @@ public final class TestPersistence {
 		}
 
 		if (rtc.getTimeStamp() != null) {
-			xmlsw.writeAttribute(TIMESTAMP, DATE_FORMAT.format(rtc.getTimeStamp()));
+			xmlsw.writeAttribute(TIMESTAMP, DateValue.DATE_FORMAT.format(rtc.getTimeStamp()));
 		}
 
 		String lastTested = rtc.getLastTested();
@@ -406,7 +404,7 @@ public final class TestPersistence {
 			String dateString = sr.getAttributeValue(null, STARTDATE);
 			if (dateString != null) {
 				try {
-					stc.setStartDate(DATE_FORMAT.parse(dateString));
+					stc.setStartDate(DateValue.DATE_FORMAT.parse(dateString));
 				}
 				catch (ParseException e) {
 					e.printStackTrace();
@@ -420,7 +418,7 @@ public final class TestPersistence {
 			String time = sr.getAttributeValue(null, TIMESTAMP);
 			if (time != null) {
 				try {
-					rtc.setTimeStamp(DATE_FORMAT.parse(time));
+					rtc.setTimeStamp(DateValue.DATE_FORMAT.parse(time));
 				}
 				catch (ParseException e) {
 					e.printStackTrace();

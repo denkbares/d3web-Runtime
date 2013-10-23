@@ -19,6 +19,7 @@
  */
 package de.d3web.core.session.values;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,10 +39,12 @@ import de.d3web.core.session.Value;
  */
 public class DateValue implements QuestionValue {
 
-	// this format should be used when saving DateValues to be able to parse the
-	// date with the static method createDateValue(String)
+	/**
+	 * This format should be used when saving DateValues to be able to parse the
+	 * date with the static method {@link DateValue#createDateValue(String)}
+	 */
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss.SS");
+			"yyyy-MM-dd HH:mm:ss.SSS");
 
 	/**
 	 * The accepted formats for dates. The first format is the one used for
@@ -49,14 +52,19 @@ public class DateValue implements QuestionValue {
 	 */
 	private static final List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
 	static {
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm"));
 		dateFormats.add(DATE_FORMAT);
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd"));
-		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS"));
+		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
+		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
 		// can parse Date.toString()
 		dateFormats.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
@@ -76,6 +84,16 @@ public class DateValue implements QuestionValue {
 		this.value = value;
 	}
 
+	/**
+	 * Creates a {@link DateValue} from a given String. To be parseable, the
+	 * String has to come in one of the available {@link DateFormat} from
+	 * {@link DateValue#getAllowedFormatStrings()}
+	 * 
+	 * @created 23.10.2013
+	 * @param valueString the value to parse
+	 * @return the parsed DateValue
+	 * @throws IllegalArgumentException if the given string cannot be parsed
+	 */
 	public static DateValue createDateValue(String valueString) throws IllegalArgumentException {
 		for (SimpleDateFormat dateFormat : dateFormats) {
 			try {
@@ -110,16 +128,23 @@ public class DateValue implements QuestionValue {
 	}
 
 	/**
-	 * Returns the date as String in the format in which it can be parsed at
-	 * setDate(String)
+	 * Returns the date as String in a format which can be parsed with
+	 * {@link DateValue#createDateValue(String)} and is also properly readable
+	 * for humans.
 	 */
 	public String getDateString() {
-		return dateFormats.get(0).format(value);
+		String dateString = DATE_FORMAT.format(value);
+		// we remove trailing zero milliseconds, seconds, minutes and hours,
+		// because it does not add any information to the date string and can
+		// still be parsed by the available formats
+		dateString = dateString.replaceAll(".000$", "").replaceAll(":00$", "")
+				.replaceAll(":00$", "").replaceAll(" 00$", "");
+		return dateString;
 	}
 
 	@Override
 	public String toString() {
-		return value.toString();
+		return DATE_FORMAT.format(value);
 	}
 
 	@Override

@@ -79,7 +79,7 @@ public class CondRegex extends CondQuestion {
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		Value value = checkAnswer(session);
-		String valueString = value.getValue().toString();
+		String valueString = value.toString();
 		return getPattern().matcher(valueString).matches();
 	}
 

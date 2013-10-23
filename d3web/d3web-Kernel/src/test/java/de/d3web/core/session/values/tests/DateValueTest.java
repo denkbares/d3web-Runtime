@@ -88,8 +88,25 @@ public class DateValueTest {
 	 * {@link de.d3web.core.session.values.DateValue#getDateString()}.
 	 */
 	@Test
-	public void testGetDateString() {
-		assertThat(dateValue.getDateString(), is("2010-08-25-00-00-00"));
+	public void testGetAndParseDateString() {
+		assertThat(dateValue.getDateString(), is("2010-08-25"));
+
+		Date otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 0).getTime();
+		String dateString = new DateValue(otherDate).getDateString();
+		assertThat(dateString, is("2000-08-25 14:21"));
+		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+
+		otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
+		dateString = new DateValue(otherDate).getDateString();
+		assertThat(dateString, is("2000-08-25 14:21:50"));
+		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+
+		otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
+		otherDate = new Date(otherDate.getTime() + 420);
+		dateString = new DateValue(otherDate).getDateString();
+		assertThat(dateString, is("2000-08-25 14:21:50.420"));
+		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+
 	}
 
 	/**
