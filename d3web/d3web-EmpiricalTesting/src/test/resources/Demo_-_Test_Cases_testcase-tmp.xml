@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SeqTestCaseRepository NumberOfCases="2" UsedSolutions="2" UsedFindings="11">
-	<STestCase Name="Leaking air intake system (Demo)" StartDate="2013-07-15 11:11:11.11">
-		<RatedTestCase Name="" time="2013-07-15 11:11:11.11">
+	<STestCase Name="Leaking air intake system (Demo)" StartDate="2013-07-15 11:11:11.011">
+		<RatedTestCase Name="" time="2013-07-15 11:11:11.011">
 			<Findings>
 				<Finding Question="Driving" Answer="insufficient power on partial load"/>
 			</Findings>
