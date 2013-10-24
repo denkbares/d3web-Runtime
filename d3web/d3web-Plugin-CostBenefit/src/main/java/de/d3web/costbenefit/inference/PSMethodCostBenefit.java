@@ -63,6 +63,7 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
+import de.d3web.core.session.protocol.TextProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
@@ -257,10 +258,20 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Session session = caseObject.getSession();
 		SearchModel searchModel = new SearchModel(session);
 		for (Target target : targets) {
-			searchModel.addTarget(target);
-			// initialize benefit in search model to a positive value
-			// (use 1 if there is no benefit inside the target)
-			searchModel.maximizeBenefit(target, 10000000000.0);
+			boolean hasContraindicatedQContainer = false;
+			for (QContainer qContainer : target.getQContainers()) {
+				if (session.getBlackboard().getIndication(qContainer).hasState(
+						State.CONTRA_INDICATED)) {
+					hasContraindicatedQContainer = true;
+					break;
+				}
+			}
+			if (!hasContraindicatedQContainer) {
+				searchModel.addTarget(target);
+				// initialize benefit in search model to a positive value
+				// (use 1 if there is no benefit inside the target)
+				searchModel.maximizeBenefit(target, 10000000000.0);
+			}
 		}
 		// set the undiscriminated solution to "null" to indicate that we will
 		// not consider them for checking to execute a new search
@@ -500,6 +511,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	/**
 	 * Calculates a set of all QContainers, which are blocked by final questions
+	 * or contra indicated
 	 * 
 	 * @created 24.10.2012
 	 * @param session actual session
@@ -516,6 +528,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 		for (StateTransition stateTransition : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
+			if (session.getBlackboard().getIndication(stateTransition.getQcontainer()).hasState(
+					State.CONTRA_INDICATED)) {
+				result.add(stateTransition.getQcontainer());
+				continue;
+			}
 			Condition activationCondition = stateTransition.getActivationCondition();
 			if (activationCondition == null) {
 				continue;
@@ -710,6 +727,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			currentSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
 		}
 		final Set<Solution> previousSolutions = caseObject.getUndiscriminatedSolutions();
+		if (currentSolutions.size() > previousSolutions.size()) {
+			caseObject.getSession().getProtocol().addEntry(
+					new TextProtocolEntry(
+							caseObject.getSession().getPropagationManager().getPropagationTime(),
+							"The sprint group has increased.\nPrevious group: " + previousSolutions
+									+ "\nActual group: " + currentSolutions));
+		}
 		return !previousSolutions.equals(currentSolutions);
 	}
 
