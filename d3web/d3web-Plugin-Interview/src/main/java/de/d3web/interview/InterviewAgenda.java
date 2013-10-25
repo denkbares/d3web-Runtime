@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -199,7 +200,17 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.equalsInterviewObject(interviewObject)
 					&& entry.hasState(InterviewState.ACTIVE)) {
-				entry.setInterviewState(InterviewState.INACTIVE);
+				// multiple indicated states have to be removed, otherwise old
+				// entries can "pop" in the again while answering the next
+				// occurency
+				if (entry.getIndication().hasState(State.MULTIPLE_INDICATED)) {
+					// modifying the agenda is ok, because we return the method
+					// -> no exception
+					this.agenda.remove(entry);
+				}
+				else {
+					entry.setInterviewState(InterviewState.INACTIVE);
+				}
 				return;
 			}
 		}
