@@ -1,6 +1,7 @@
 package de.d3web.mminfo.io;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -39,14 +40,15 @@ public class MMInfoContentHandler extends DefaultHandler {
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
+		char[] copy = Arrays.copyOf(ch, ch.length);
 		// build DOM for entity if required
 		if (entityBuilder != null) {
-			entityBuilder.characters(ch, start, length);
+			entityBuilder.characters(copy, start, length);
 			return;
 		}
 
 		// otherwise use the data for own purposes
-		currentData = new String(ch, start, length);
+		currentData = new String(copy, start, length);
 	}
 
 	@Override
