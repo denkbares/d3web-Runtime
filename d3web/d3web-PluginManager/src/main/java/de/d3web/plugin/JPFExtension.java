@@ -125,7 +125,7 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 	}
 
 	@Override
-	public Double getPriority() {
+	public double getPriority() {
 		return extension.getParameter("priority").valueAsNumber().doubleValue();
 	}
 

@@ -87,7 +87,7 @@ public interface Extension {
 	 * 
 	 * @return the priority of the Extension
 	 */
-	Double getPriority();
+	double getPriority();
 
 	/**
 	 * Each Extension has an ID, which can be accessed by this method
