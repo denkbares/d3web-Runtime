@@ -77,6 +77,14 @@ public class RatedTestCase {
 	private Date timeStamp;
 
 	/**
+	 * After deriving the actual solutions from the knowledge base, this must be
+	 * set to true. Every change on this testCase (i.e. adding a finding) will
+	 * reset this flag to false.
+	 */
+	@Deprecated
+	private boolean derivedSolutionsAreUpToDate;
+
+	/**
 	 * Default Constructor.
 	 */
 	public RatedTestCase() {
@@ -174,12 +182,50 @@ public class RatedTestCase {
 	}
 
 	/**
+	 * Appends a whole list of RatedSolutions to this RatedTestCase's List of
+	 * derived Solutions.
+	 * 
+	 * @param solutions The List of RatedSolutions to be added
+	 * @deprecated no longer use this method, it will be removed with the next
+	 *             release
+	 * @return True if the RatedSolutions were successfully appended
+	 */
+	@Deprecated
+	public boolean addDerived(List<RatedSolution> solutions) {
+		boolean result = true;
+		for (RatedSolution ratedSolution : solutions) {
+			result = addDerived(ratedSolution) && result;
+		}
+		return result;
+	}
+
+	/**
 	 * Returns the Date on which this RatedTestCase was last tested.
 	 * 
 	 * @return the lastTested
 	 */
 	public String getLastTested() {
 		return lastTested;
+	}
+
+	/**
+	 * @deprecated no longer use this method, it will be removed with the next
+	 *             release
+	 * @return the derivedSolutionsAreUpToDate
+	 */
+	@Deprecated
+	public boolean getDerivedSolutionsAreUpToDate() {
+		return derivedSolutionsAreUpToDate;
+	}
+
+	/**
+	 * @deprecated no longer use this method, it will be removed with the next
+	 *             release
+	 * @param derivedSolutionsAreUpToDate the derivedSolutionsAreUpToDate to set
+	 */
+	public void setDerivedSolutionsAreUpToDate(
+			boolean derivedSolutionsAreUpToDate) {
+		this.derivedSolutionsAreUpToDate = derivedSolutionsAreUpToDate;
 	}
 
 	/**

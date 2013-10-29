@@ -127,6 +127,18 @@ public class Finding implements Comparable<Finding> {
 	}
 
 	/**
+	 * Sets question of this finding to q
+	 * 
+	 * @param q question
+	 * @deprecated no longer use this method, it will be removed with the next
+	 *             release
+	 */
+	@Deprecated
+	public void setQuestion(Question q) {
+		this.question = q;
+	}
+
+	/**
 	 * Returns question of this finding
 	 * 
 	 * @return question

@@ -27,7 +27,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 public class RatedSolution implements Comparable<RatedSolution> {
 
 	private final Solution solution;
-	private final Rating rating;
+	private Rating rating;
 
 	static class InverseRatingComparator implements Comparator<RatedSolution> {
 
@@ -103,6 +103,18 @@ public class RatedSolution implements Comparable<RatedSolution> {
 	 */
 	public synchronized Solution getSolution() {
 		return solution;
+	}
+
+	/**
+	 * Sets Rating of this RatedSolution to rating
+	 * 
+	 * @param rating new Rating
+	 * @deprecated no longer use this method, it will be removed with the next
+	 *             release
+	 */
+	@Deprecated
+	public void update(Rating rating) {
+		this.rating = rating;
 	}
 
 	/**
