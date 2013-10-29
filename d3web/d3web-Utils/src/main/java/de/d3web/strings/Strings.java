@@ -28,6 +28,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -40,9 +42,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class Strings {
 
@@ -270,10 +269,10 @@ public class Strings {
 	 * <p>
 	 * The method returns as follows:
 	 * <ul>
-	 * <li>StringUtils.isBlank(null): true
-	 * <li>StringUtils.isBlank(""): true
-	 * <li>StringUtils.isBlank(" "): true
-	 * <li>StringUtils.isBlank(" d3web "): false
+	 * <li>Strings.isBlank(null): true
+	 * <li>Strings.isBlank(""): true
+	 * <li>Strings.isBlank(" "): true
+	 * <li>Strings.isBlank(" d3web "): false
 	 * </ul>
 	 * 
 	 * @param text the string to be checked
@@ -483,7 +482,10 @@ public class Strings {
 	 * @return the stack trace
 	 */
 	public static String stackTrace(Throwable e) {
-		return ExceptionUtils.getStackTrace(e);
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw, true);
+		e.printStackTrace(pw);
+		return sw.getBuffer().toString();
 	}
 
 	/**
@@ -623,16 +625,21 @@ public class Strings {
 	 * the quote char, it will be escaped with the escape char \. Don't use \ as
 	 * the quote char for this reason.
 	 * 
-	 * @param element the string to be quoted
+	 * @param text the string to be quoted
 	 * @param quoteChar the char used to quote
 	 */
-	public static String quote(String element, char quoteChar) {
-		String[] QUOTE_UNESCAPED = new String[] {
-				"\\", Character.toString(quoteChar) };
-		String[] QUOTE_ESCAPED = new String[] {
-				"\\\\", "\\" + quoteChar };
-		return quoteChar + StringUtils.replaceEach(element, QUOTE_UNESCAPED, QUOTE_ESCAPED)
-				+ quoteChar;
+	public static String quote(String text, char quoteChar) {
+		StringBuilder builder = new StringBuilder((text.length()) + 5);
+		builder.append(quoteChar);
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			if (c == quoteChar || c == '\\') {
+				builder.append('\\');
+			}
+			builder.append(c);
+		}
+		builder.append(quoteChar);
+		return builder.toString();
 	}
 
 	/**
@@ -658,17 +665,26 @@ public class Strings {
 
 		if (text.length() == 1 && text.charAt(0) == quoteChar) return "";
 
+		int end = text.length() - 1;
 		if (isUnEscapedQuote(text, 0, quoteChar)
-				&& isUnEscapedQuote(text, text.length() - 1, quoteChar)) {
-			text = text.substring(1, text.length() - 1);
-			// unmask " and \
-			String[] UNQOUTE_ESCAPED = new String[] {
-					"\\" + quoteChar, "\\\\" };
-			String[] UNQOUTE_UNESCAPED = new String[] {
-					Character.toString(quoteChar), "\\" };
-			return StringUtils.replaceEach(text, UNQOUTE_ESCAPED, UNQOUTE_UNESCAPED);
-		}
+				&& isUnEscapedQuote(text, end, quoteChar)) {
 
+			StringBuilder builder = new StringBuilder(text.length() - 2);
+			boolean escape = false;
+			for (int i = 1; i < end; i++) {
+				char c = text.charAt(i);
+				if (c == '\\' && !escape && i < end - 1) {
+					char next = text.charAt(i + 1);
+					if (next == '\\' || next == quoteChar) {
+						escape = true;
+						continue;
+					}
+				}
+				builder.append(c);
+				escape = false;
+			}
+			text = builder.toString();
+		}
 		return text;
 	}
 

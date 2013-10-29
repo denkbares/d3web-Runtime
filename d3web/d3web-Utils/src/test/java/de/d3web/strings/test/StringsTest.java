@@ -135,7 +135,9 @@ public class StringsTest {
 
 	@Test
 	public void unqoute() {
+		assertEquals("ab\\as", Strings.unquote("\"ab\\as\""));
 		assertEquals("ab\"c", Strings.unquote("\"ab\\\"c\""));
+		assertEquals("ab\\c", Strings.unquote("\"ab\\\\c\""));
 		assertEquals(null, Strings.unquote(null));
 		assertEquals("", Strings.unquote("\""));
 	}

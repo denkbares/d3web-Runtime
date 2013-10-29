@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -48,7 +49,13 @@ public class MMInfoContentHandler extends DefaultHandler {
 		}
 
 		// otherwise use the data for own purposes
-		currentData = new String(copy, start, length);
+		currentData += new String(copy, start, length);
+	}
+
+	@Override
+	public void unparsedEntityDecl(String name, String publicId, String systemId, String notationName) throws SAXException {
+		// TODO Auto-generated method stub
+		super.unparsedEntityDecl(name, publicId, systemId, notationName);
 	}
 
 	@Override
@@ -168,5 +175,11 @@ public class MMInfoContentHandler extends DefaultHandler {
 					"The choice attribute is only allowed for QuestionChoices.");
 		}
 		return namedObject.getInfoStore();
+	}
+
+	@Override
+	public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
+		// TODO Auto-generated method stub
+		return super.resolveEntity(publicId, systemId);
 	}
 }
