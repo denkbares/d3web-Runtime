@@ -169,7 +169,18 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @param record the record to get the filename for
 	 * @return the filename of this record
 	 */
-	public static String getRecordFilename(SessionRecord record) {
+	public String getRecordFilename(SessionRecord record) {
+		return getDefaultFilename(record);
+	}
+
+	/**
+	 * Returns the default filename containing the date and the id.
+	 * 
+	 * @created 30.10.2013
+	 * @param record Sessionrecord
+	 * @return Filename
+	 */
+	public static String getDefaultFilename(SessionRecord record) {
 		String date = FILE_DATE_FORMAT.format(record.getCreationDate());
 		return date + "_" + record.getId() + ".xml";
 	}
