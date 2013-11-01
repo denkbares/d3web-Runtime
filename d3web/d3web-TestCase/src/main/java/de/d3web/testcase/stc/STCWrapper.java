@@ -18,10 +18,12 @@
  */
 package de.d3web.testcase.stc;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -57,14 +59,13 @@ import de.d3web.testcase.model.TestCase;
 /**
  * Wraps an {@link SequentialTestCase} to a {@link TestCase}
  * 
- * @author Markus Friedrich (denkbares GmbH)
+ * @author Markus Friedrich, Albrecht Striffler (denkbares GmbH)
  * @created 24.01.2012
  */
 public class STCWrapper implements TestCase {
 
 	private final SequentialTestCase stc;
-	private Date startDate;
-	private final Map<Date, List<Check>> additionalChecks = new HashMap<Date, List<Check>>();
+	private final Map<RatedTestCase, List<Check>> additionalChecks = new IdentityHashMap<RatedTestCase, List<Check>>();
 
 	public STCWrapper(SequentialTestCase stc) {
 		this.stc = stc;
@@ -74,101 +75,51 @@ public class STCWrapper implements TestCase {
 		return this.stc;
 	}
 
-	public void addCheck(Date date, Check check) {
-		List<Check> checks = additionalChecks.get(date);
-		if (checks == null) {
-			checks = new LinkedList<Check>();
-			additionalChecks.put(date, checks);
+	/**
+	 * With this method it is possible to add additional checks to a
+	 * {@link RatedTestCase}, that can not be attached to the
+	 * {@link RatedTestCase} itself, because it uses a different interface for
+	 * {@link Check}s.<br/>
+	 * <b>Attention</b> Be aware, that the given reference to the
+	 * {@link RatedTestCase} has to be the same (equal is not enough) as the one
+	 * present in the {@link SequentialTestCase}.
+	 * 
+	 * 
+	 * @created 01.11.2013
+	 * @param rtc the {@link RatedTestCase} to add the {@link Check}s to
+	 * @param checks the {@link Check}s to add
+	 */
+	public void addChecks(RatedTestCase rtc, Check... checks) {
+		if (checks.length == 0) return;
+		List<Check> checksOfRTC = additionalChecks.get(rtc);
+		if (checksOfRTC == null) {
+			checksOfRTC = new ArrayList<Check>();
+			additionalChecks.put(rtc, checksOfRTC);
 		}
-		checks.add(check);
-	}
-
-	public void addCheck(RatedTestCase rtc, Check check) {
-		addCheck(getDate(rtc), check);
-	}
-
-	public void addChecks(RatedTestCase rtc, Collection<Check> checks) {
 		for (Check check : checks) {
-			addCheck(rtc, check);
+			checksOfRTC.add(check);
 		}
 	}
 
 	@Override
 	public Collection<Date> chronology() {
-		List<Date> dates = new LinkedList<Date>();
-		if (stc.getCases().size() > 0 && stc.getCases().get(0).getTimeStamp() != null) {
-			for (RatedTestCase rtc : stc.getCases()) {
-				if (rtc.getTimeStamp() == null) {
-					throw new IllegalArgumentException(
-							"All rtcs must contain a date or none of the rtcs must contain a date, mixing is not allowed.");
-				}
-				Date date = rtc.getTimeStamp();
-				if (dates.size() == 0 || date != dates.get(dates.size() - 1)) {
-					dates.add(date);
-				}
-			}
-		}
-		else {
-			long time = getStartDate().getTime();
-			for (RatedTestCase rtc : stc.getCases()) {
-				// increment time
-				dates.add(new Date(++time));
-				if (rtc.getTimeStamp() != null) {
-					throw new IllegalArgumentException(
-							"All rtcs must contain a date or none of the rtcs must contain a date, mixing is not allowed.");
-				}
-			}
-		}
-		return dates;
+		return stc.chronology();
 	}
 
 	@Override
 	public Collection<Finding> getFindings(Date date, KnowledgeBase kb) {
+		RatedTestCase rtc = stc.getCase(date);
+		if (rtc == null) return Collections.emptyList();
 		List<Finding> findings = new LinkedList<Finding>();
-		for (RatedTestCase rtc : stc.getCases()) {
-			Date timeStamp = getDate(rtc);
-			if (date.equals(timeStamp)) {
-				for (de.d3web.empiricaltesting.Finding f : rtc.getFindings()) {
-					Question question = f.getQuestion();
-					if (question.getKnowledgeBase() != kb) {
-						question = kb.getManager().searchQuestion(question.getName());
-						if (question == null) continue;
-					}
-					findings.add(new DefaultFinding(question, repairValue(f, question), date));
-				}
+		for (de.d3web.empiricaltesting.Finding f : rtc.getFindings()) {
+			Question question = f.getQuestion();
+			if (question.getKnowledgeBase() != kb) {
+				question = kb.getManager().searchQuestion(question.getName());
+				if (question == null) continue;
 			}
-			if (timeStamp.after(date)) {
-				break;
-			}
+			findings.add(new DefaultFinding(question, repairValue(f, question), date));
 		}
 		return findings;
-	}
-
-	/**
-	 * Gets the date of the rated test case to be evaluated at. If the rated
-	 * test case has no specified date itself, it will be calculated
-	 * appropriately.
-	 * 
-	 * @created 22.04.2012
-	 * @param rtc the rated test case to get the date for
-	 * @return the date of the rtc
-	 */
-	public Date getDate(RatedTestCase rtc) {
-		Date timeStamp = rtc.getTimeStamp();
-		if (timeStamp == null) {
-			// create the timestamp based on the position in the list
-			timeStamp = new Date(getStartDate().getTime() + indexOf(rtc) + 1);
-		}
-		return timeStamp;
-	}
-
-	private int indexOf(RatedTestCase rtc) {
-		int index = 0;
-		for (RatedTestCase ratedTestCase : stc.getCases()) {
-			if (rtc == ratedTestCase) return index;
-			index++;
-		}
-		return -1;
 	}
 
 	private QuestionValue repairValue(de.d3web.empiricaltesting.Finding f, Question question) {
@@ -214,36 +165,29 @@ public class STCWrapper implements TestCase {
 
 	@Override
 	public Collection<Check> getChecks(Date date, KnowledgeBase kb) {
+		RatedTestCase rtc = stc.getCase(date);
 		List<Check> checks = new LinkedList<Check>();
 		// create checks based on stc standard behavior
-		for (RatedTestCase rtc : stc.getCases()) {
-			Date timeStamp = getDate(rtc);
-			if (date.equals(timeStamp)) {
-				for (RatedSolution f : rtc.getExpectedSolutions()) {
-					Solution solution = f.getSolution();
-					if (solution.getKnowledgeBase() != kb) {
-						solution = kb.getManager().searchSolution(solution.getName());
-						if (solution == null) continue;
-					}
-					checks.add(new DerivedSolutionCheck(solution,
-							CaseUtils.getState(f.getRating())));
-				}
-				for (de.d3web.empiricaltesting.Finding f : rtc.getExpectedFindings()) {
-					Question question = f.getQuestion();
-					if (question.getKnowledgeBase() != kb) {
-						question = kb.getManager().searchQuestion(question.getName());
-						if (question == null) continue;
-					}
-					checks.add(new DerivedQuestionCheck(question, repairValue(f, question)));
-				}
+		for (RatedSolution f : rtc.getExpectedSolutions()) {
+			Solution solution = f.getSolution();
+			if (solution.getKnowledgeBase() != kb) {
+				solution = kb.getManager().searchSolution(solution.getName());
+				if (solution == null) continue;
 			}
-			if (timeStamp.after(date)) {
-				break;
+			checks.add(new DerivedSolutionCheck(solution,
+					CaseUtils.getState(f.getRating())));
+		}
+		for (de.d3web.empiricaltesting.Finding f : rtc.getExpectedFindings()) {
+			Question question = f.getQuestion();
+			if (question.getKnowledgeBase() != kb) {
+				question = kb.getManager().searchQuestion(question.getName());
+				if (question == null) continue;
 			}
+			checks.add(new DerivedQuestionCheck(question, repairValue(f, question)));
 		}
 
 		// also add additional checks if available
-		List<Check> addedChecks = additionalChecks.get(date);
+		List<Check> addedChecks = additionalChecks.get(rtc);
 		if (addedChecks != null) checks.addAll(addedChecks);
 
 		// retrun the common list of checks
@@ -252,24 +196,8 @@ public class STCWrapper implements TestCase {
 
 	@Override
 	public Date getStartDate() {
-		if (startDate == null) {
-			if (stc.getStartDate() != null) {
-				startDate = stc.getStartDate();
-			}
-			else if (stc.getCases().size() > 0) {
-				RatedTestCase firstRTC = stc.getCases().get(0);
-				if (firstRTC.getTimeStamp() != null) {
-					startDate = firstRTC.getTimeStamp();
-				}
-				else {
-					startDate = new Date(0);
-				}
-			}
-			else {
-				startDate = new Date(0);
-			}
-		}
-		return startDate;
+		Date startDate = stc.getStartDate();
+		return startDate == null ? new Date() : startDate;
 	}
 
 	@Override

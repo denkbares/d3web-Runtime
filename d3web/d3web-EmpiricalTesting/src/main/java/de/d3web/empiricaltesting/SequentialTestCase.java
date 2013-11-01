@@ -24,14 +24,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SequentialTestCase {
 
 	private String name = "";
-	private final List<RatedTestCase> ratedTestCases;
+	private final LinkedHashMap<Date, RatedTestCase> ratedTestCases = new LinkedHashMap<Date, RatedTestCase>();
 
-	private Date startDate;
+	private Date startDate = null;
+	private Date lastAddedDate = null;
 
 	/**
 	 * Default Constructor
@@ -41,10 +43,14 @@ public class SequentialTestCase {
 	}
 
 	public SequentialTestCase(Collection<RatedTestCase> rtcs) {
-		ratedTestCases = new ArrayList<RatedTestCase>(rtcs);
+		for (RatedTestCase ratedTestCase : rtcs) {
+			add(ratedTestCase);
+		}
 	}
 
 	public void setStartDate(Date startDate) {
+		if (this.startDate != null) throw new UnsupportedOperationException(
+				"Start date can only be set once");
 		this.startDate = startDate;
 	}
 
@@ -59,7 +65,28 @@ public class SequentialTestCase {
 	 * @return true if the RatedTestCase was added to this SequntialTestCase
 	 */
 	public boolean add(RatedTestCase ratedTestCase) {
-		return ratedTestCases.add(ratedTestCase);
+		Date timeStamp = ratedTestCase.getTimeStamp();
+		if (startDate == null) {
+			startDate = timeStamp == null ? new Date() : timeStamp;
+		}
+		if (timeStamp == null) {
+			timeStamp = lastAddedDate == null ? startDate : new Date(lastAddedDate.getTime() + 1);
+		}
+		if (lastAddedDate == null || lastAddedDate.before(timeStamp)) {
+			lastAddedDate = timeStamp;
+		}
+		else {
+			String msg = "RatedTestCases have to be added in a sequential order.\nLast added: "
+					+ lastAddedDate + " (" + lastAddedDate.getTime() + "), current: " + timeStamp
+					+ " (" + timeStamp.getTime() + ")";
+			throw new IllegalArgumentException(msg);
+		}
+		ratedTestCases.put(timeStamp, ratedTestCase);
+		return true; // we just return true to accommodate the history interface
+	}
+
+	public Collection<Date> chronology() {
+		return ratedTestCases.keySet();
 	}
 
 	/**
@@ -67,7 +94,7 @@ public class SequentialTestCase {
 	 * RatedTestCases of this SequentialTestCase.
 	 */
 	public void inverseSortSolutions() {
-		for (RatedTestCase ratedTestCase : ratedTestCases) {
+		for (RatedTestCase ratedTestCase : ratedTestCases.values()) {
 			ratedTestCase.inverseSortSolutions();
 		}
 	}
@@ -82,7 +109,7 @@ public class SequentialTestCase {
 	public SequentialTestCase flatClone() {
 		SequentialTestCase newSTC = new SequentialTestCase();
 		newSTC.setName(this.getName());
-		for (RatedTestCase rtc : ratedTestCases) {
+		for (RatedTestCase rtc : ratedTestCases.values()) {
 			newSTC.add(rtc.flatClone());
 		}
 		return newSTC;
@@ -96,7 +123,7 @@ public class SequentialTestCase {
 	@Override
 	public String toString() {
 		StringBuffer buffy = new StringBuffer(getName() + ": ");
-		for (RatedTestCase rtc : ratedTestCases) {
+		for (RatedTestCase rtc : ratedTestCases.values()) {
 			buffy.append(rtc.toString() + ", ");
 		}
 		buffy.replace(buffy.length() - 2, buffy.length(), ""); // remove last
@@ -155,7 +182,19 @@ public class SequentialTestCase {
 	 * @return List of RatedTestCases
 	 */
 	public List<RatedTestCase> getCases() {
-		return ratedTestCases;
+		return new ArrayList<RatedTestCase>(ratedTestCases.values());
+	}
+
+	/**
+	 * Returns the {@link RatedTestCase} for a given timeStamp. If there is no
+	 * case, null is returned.
+	 * 
+	 * @created 31.10.2013
+	 * @param timeStamp the Date of the case to return
+	 * @return the case of the given timeStamp
+	 */
+	public RatedTestCase getCase(Date timeStamp) {
+		return ratedTestCases.get(timeStamp);
 	}
 
 	/**
@@ -174,7 +213,7 @@ public class SequentialTestCase {
 		if (ratedTestCases == null) {
 			if (other.ratedTestCases != null) return false;
 		}
-		else if (!ratedTestCases.containsAll(other.ratedTestCases)) return false;
+		else if (!ratedTestCases.values().containsAll(other.ratedTestCases.values())) return false;
 		return true;
 	}
 
