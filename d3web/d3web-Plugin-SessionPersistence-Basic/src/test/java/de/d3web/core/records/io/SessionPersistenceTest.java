@@ -341,11 +341,16 @@ public class SessionPersistenceTest {
 
 		// Test getting Records by Session id, getting them with iterator has a
 		// random order (depending on the alphabetical order of the Session ids)
+		SessionRecord reloadedRecord = reloadedRepository.getSessionRecordById(sessionID);
 		Session session = SessionConversionFactory.copyToSession(kb,
-				reloadedRepository.getSessionRecordById(sessionID));
+				reloadedRecord);
 		Session session2 = SessionConversionFactory.copyToSession(kb,
 				reloadedRepository.getSessionRecordById(session2ID));
 		checkValuesAfterReload(session, session2);
+		int folderSize = directory.listFiles().length;
+		Assert.assertTrue(reloadedRepository.remove(reloadedRecord));
+		// one record should be removed
+		Assert.assertEquals(folderSize - 1, directory.listFiles().length);
 
 		// Test error behaviour
 		MultipleXMLSessionRepository errorTestingRepository = new MultipleXMLSessionRepository();

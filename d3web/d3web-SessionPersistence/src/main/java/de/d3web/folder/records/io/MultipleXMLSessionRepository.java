@@ -351,4 +351,22 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 		}
 	}
 
+	@Override
+	public boolean remove(SessionRecord sessionRecord) {
+		if (super.remove(sessionRecord)) {
+			if (sessionRecord instanceof FileRecord) {
+				FileRecord fileRecord = (FileRecord) sessionRecord;
+				boolean deleted = fileRecord.file.delete();
+				if (!deleted) super.add(sessionRecord);
+				return deleted;
+			}
+			else {
+				return true;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
 }
