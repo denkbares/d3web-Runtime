@@ -28,7 +28,7 @@ import de.d3web.utils.EqualsUtils;
  * @author Volker Belli (denkbares GmbH)
  * @created 31.10.2013
  */
-public class PriorityList<P extends Comparable<P>, E> extends AbstractList<E> implements List<E> {
+public class PriorityList<P extends Comparable<P>, E> extends AbstractList<E> {
 
 	public final P defaultPriority;
 
