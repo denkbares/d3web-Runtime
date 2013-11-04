@@ -45,6 +45,9 @@ import java.util.regex.Pattern;
 
 public class Strings {
 
+	public static final char QUOTE_DOUBLE = '"';
+	public static final char QUOTE_SINGLE = '\'';
+
 	/**
 	 * This method appends the strings or objects and separates them with the
 	 * specified separation string in between (but not at the end). You can
@@ -353,12 +356,21 @@ public class Strings {
 	}
 
 	public static boolean isUnEscapedQuote(String text, int i, char quoteChar) {
-		return text.length() > i && text.charAt(i) == quoteChar
-				&& getNumberOfDirectlyPrecedingBackSlashes(text, i) % 2 == 0;
+		return isUnEscapedQuote(text, i, new char[] { quoteChar });
+	}
+
+	public static boolean isUnEscapedQuote(String text, int i, char[] quoteChars) {
+		for (char quoteChar : quoteChars) {
+			if (text.length() > i && text.charAt(i) == quoteChar
+					&& getNumberOfDirectlyPrecedingBackSlashes(text, i) % 2 == 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static boolean isUnEscapedQuote(String text, int i) {
-		return isUnEscapedQuote(text, i, '"');
+		return isUnEscapedQuote(text, i, new char[] { QUOTE_DOUBLE });
 	}
 
 	private static int getNumberOfDirectlyPrecedingBackSlashes(String text, int i) {
@@ -420,8 +432,20 @@ public class Strings {
 		return result;
 	}
 
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char quote) {
+		return splitUnquoted(text, splitSymbol, true, new char[] { quote });
+	}
+
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol) {
-		return splitUnquoted(text, splitSymbol, true);
+		return splitUnquoted(text, splitSymbol, true, new char[] { QUOTE_DOUBLE });
+	}
+
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments) {
+		return splitUnquoted(text, splitSymbol, includeBlancFragments, new char[] { QUOTE_DOUBLE });
+	}
+
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char[] quoteChars) {
+		return splitUnquoted(text, splitSymbol, true, quoteChars);
 	}
 
 	/**
@@ -432,7 +456,7 @@ public class Strings {
 	 * @param splitSymbol
 	 * @return the fragments of the text
 	 */
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments, char[] quoteSigns) {
 		List<StringFragment> parts = new ArrayList<StringFragment>();
 		if (text == null) return parts;
 		boolean quoted = false;
@@ -441,7 +465,7 @@ public class Strings {
 		int startOfNewPart = 0;
 		for (int i = 0; i < text.length(); i++) {
 			// toggle quote state
-			if (isUnEscapedQuote(text, i)) {
+			if (isUnEscapedQuote(text, i, quoteSigns)) {
 				quoted = !quoted;
 			}
 			if (quoted) {
