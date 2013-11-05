@@ -137,8 +137,8 @@ public class DateValue implements QuestionValue {
 		// we remove trailing zero milliseconds, seconds, minutes and hours,
 		// because it does not add any information to the date string and can
 		// still be parsed by the available formats
-		dateString = dateString.replaceAll(".000$", "").replaceAll(":00$", "")
-				.replaceAll(":00$", "").replaceAll(" 00$", "");
+		dateString = dateString.replaceAll(".000$", "")
+				.replaceAll(":00$", "").replaceAll(" 00:00$", "");
 		return dateString;
 	}
 

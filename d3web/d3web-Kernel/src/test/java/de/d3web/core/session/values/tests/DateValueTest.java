@@ -91,8 +91,13 @@ public class DateValueTest {
 	public void testGetAndParseDateString() {
 		assertThat(dateValue.getDateString(), is("2010-08-25"));
 
-		Date otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 0).getTime();
+		Date otherDate = new GregorianCalendar(2000, 07, 25, 14, 0, 0).getTime();
 		String dateString = new DateValue(otherDate).getDateString();
+		assertThat(dateString, is("2000-08-25 14:00"));
+		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+
+		otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 0).getTime();
+		dateString = new DateValue(otherDate).getDateString();
 		assertThat(dateString, is("2000-08-25 14:21"));
 		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
 
