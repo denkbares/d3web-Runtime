@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -78,6 +79,10 @@ public class FormulaExpressionAbstractionTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		InitPluginManager.init();
+	}
+
+	@Before
+	public void before() {
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		addTerminologyObjects();
 		addRules();
@@ -230,6 +235,7 @@ public class FormulaExpressionAbstractionTest {
 
 	@Test
 	public void testChangeValues() {
+		testSetValues();
 
 		Question height = kb.getManager().searchQuestion("Height");
 		Question weight = kb.getManager().searchQuestion("Weight");
