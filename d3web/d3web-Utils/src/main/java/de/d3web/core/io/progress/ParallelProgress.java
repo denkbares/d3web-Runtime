@@ -99,6 +99,7 @@ public class ParallelProgress implements ProgressListener {
 
 	private void incrementProgress(double increment, String message) {
 		this.current += increment;
+		if (current > 0.9999f) current = 1f;
 		updateProgress(this.current, message);
 	}
 

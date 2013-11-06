@@ -58,6 +58,8 @@ import org.xml.sax.SAXException;
 
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.progress.ProgressInputStream;
+import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -644,12 +646,33 @@ public final class XMLUtil {
 	/**
 	 * Creates an XML {@link Document} from the {@link File}.
 	 * 
-	 * @param stream the xml input stream
+	 * @param file the file to be read
 	 * @return Document the document created from the stream
 	 * @throws IOException when an error occurs
 	 */
 	public static Document fileToDocument(File file) throws IOException {
 		InputStream in = new FileInputStream(file);
+		try {
+			return streamToDocument(in);
+		}
+		finally {
+			in.close();
+		}
+	}
+
+	/**
+	 * Creates an XML {@link Document} from the {@link File}, indicating the
+	 * parse progress.
+	 * 
+	 * @param file the file to be read
+	 * @param progress the progress listener used to notify the progress
+	 * @param message the progress message to be used when notifying the
+	 *        progress
+	 * @return Document the document created from the stream
+	 * @throws IOException when an error occurs
+	 */
+	public static Document fileToDocument(File file, ProgressListener progress, String message) throws IOException {
+		InputStream in = new ProgressInputStream(new FileInputStream(file), progress, message);
 		try {
 			return streamToDocument(in);
 		}
@@ -709,7 +732,7 @@ public final class XMLUtil {
 		catch (TransformerException e) {
 			new IOException(e.getMessage());
 		}
-	
+
 	}
 
 	/**

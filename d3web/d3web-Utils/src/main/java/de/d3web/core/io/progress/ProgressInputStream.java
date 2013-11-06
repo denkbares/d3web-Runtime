@@ -43,4 +43,10 @@ public class ProgressInputStream extends FilterInputStream {
 		updateProgess(count);
 		return count;
 	}
+
+	@Override
+	public void close() throws IOException {
+		super.close();
+		listener.updateProgress(1f, message);
+	}
 }
