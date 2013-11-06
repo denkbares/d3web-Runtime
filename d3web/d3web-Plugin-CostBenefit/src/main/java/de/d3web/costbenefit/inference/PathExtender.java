@@ -118,6 +118,7 @@ public class PathExtender implements SearchAlgorithm {
 
 	private void applyQContainer(QContainer qcontainer, Session extendedSession) {
 		StateTransition stateTransition = StateTransition.getStateTransition(qcontainer);
+		if (stateTransition == null) return;
 		CostBenefitUtil.setNormalValues(extendedSession, qcontainer, this);
 		stateTransition.fire(extendedSession);
 	}

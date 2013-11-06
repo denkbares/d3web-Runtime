@@ -86,6 +86,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		private final Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<QContainer, List<Pair<List<Condition>, Set<QContainer>>>>();
 
 		private Collection<Question> cachedAbnormalQuestions = new HashSet<Question>();
+
+		private Collection<QContainer> blockedQContainer = new HashSet<QContainer>();
 	}
 
 	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
@@ -99,18 +101,22 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		// KB has to be remembered before super.init
 		KnowledgeBase oldkb = sessionObject.knowledgeBase;
 		super.init(model);
-		// initgeneral in only called when the kb or the list of cached abnormal
+		// initgeneral is only called when the kb, the blocked QContainers or
+		// the list of cached abnormal
 		// questions changes
-		if (model.getSession().getKnowledgeBase() != oldkb) {
+		if (model.getSession().getKnowledgeBase() != oldkb
+				|| !model.getBlockedQContainers().equals(sessionObject.blockedQContainer)) {
 			initGeneralCache(sessionObject, model);
 			// knowledbase gets updated in super.init(model)
 			sessionObject.cachedAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
+			sessionObject.blockedQContainer = model.getBlockedQContainers();
 		}
 		else {
 			Set<Question> answeredAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
 			if (!answeredAbnormalQuestions.equals(sessionObject.cachedAbnormalQuestions)) {
 				sessionObject.cachedAbnormalQuestions = answeredAbnormalQuestions;
 				initGeneralCache(sessionObject, model);
+				sessionObject.blockedQContainer = model.getBlockedQContainers();
 			}
 		}
 		if (targetCaching) {

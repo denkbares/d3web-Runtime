@@ -21,7 +21,6 @@
 package de.d3web.indication;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
@@ -84,14 +83,9 @@ public class ActionContraIndication extends PSAction {
 	 */
 	@Override
 	public void undo(Session session, Object source, PSMethod psmethod) {
-		// New handling of indications: Notify blackboard of indication and let
-		// the blackboard do all the work
-		if (getQASets().size() > 1) {
-			// TODO: how to create facts with more than one QASet?!
-			Logger.getLogger(this.getClass().getName()).warning(
-					"QASets().size() > 1: Not implemented yet.");
+		for (QASet qaset : getQASets()) {
+			session.getBlackboard().removeInterviewFact(qaset, source);
 		}
-		session.getBlackboard().removeInterviewFact(getQASets().get(0), source);
 	}
 
 	@Override
