@@ -64,6 +64,13 @@ public class StringsTest {
 	}
 
 	@Test
+	public void splitUnquoted() {
+		assertEquals(
+				Arrays.asList("", "", "  ", " word1", "\"word.2\"", "word3", "").toString(),
+				Strings.splitUnquoted("..  . word1.\"word.2\".word3.", ".").toString());
+	}
+
+	@Test
 	public void isBlank() {
 		assertTrue(Strings.isBlank(null));
 		assertTrue(Strings.isBlank(""));
