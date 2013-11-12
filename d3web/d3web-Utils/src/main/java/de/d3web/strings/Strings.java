@@ -267,6 +267,26 @@ public class Strings {
 	}
 
 	/**
+	 * Scans the 'text' for the (first) occurrence of any of the 'symbols' that
+	 * is not embedded in quotes ('"')
+	 * 
+	 * @see Strings.indexOfUnquoted(String text, String symbol)
+	 * 
+	 * @created 12.11.2013
+	 * @param text
+	 * @param symbol
+	 * @return
+	 */
+	public static int indexOfUnquoted(String text, String... symbols) {
+		int min = Integer.MAX_VALUE;
+		for (String string : symbols) {
+			int index = indexOfUnquoted(text, string);
+			if (index != -1 && index < min) min = index;
+		}
+		return min;
+	}
+
+	/**
 	 * Returns whether the specified {@link String} is null or only consists of
 	 * whitespaces.
 	 * <p>
