@@ -287,6 +287,16 @@ public class Strings {
 	}
 
 	/**
+	 * Returns whether the specified {@link Character} is a whitespace.
+	 * 
+	 * @param text the string to be checked
+	 * @return <code>true</code> iff the string has no non-whitespace character
+	 */
+	public static boolean isBlank(char c) {
+		return Character.isWhitespace(c) || c == '\u00A0';
+	}
+
+	/**
 	 * Return whether some index in a string is in quotes or not. The indices of
 	 * the quote characters are considered to also be in quotes.
 	 * 
