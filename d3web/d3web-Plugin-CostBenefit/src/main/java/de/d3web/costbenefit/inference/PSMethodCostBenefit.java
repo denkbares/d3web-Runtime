@@ -108,6 +108,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public static final Property<Boolean> TARGET_ONLY = Property.getProperty(
 			"targetOnly", Boolean.class);
 
+	/**
+	 * Can be used to mark QContainers, that are permanently relevant.
+	 * 
+	 * @see ExpetMode.getApplicablePermanentlyRelevantQContainers()
+	 */
+	public static final Property<Boolean> PERMANENTLY_RELEVANT = Property.getProperty(
+			"permanentlyRelevant", Boolean.class);
+
 	public double getStrategicBenefitFactor() {
 		return strategicBenefitFactor;
 	}

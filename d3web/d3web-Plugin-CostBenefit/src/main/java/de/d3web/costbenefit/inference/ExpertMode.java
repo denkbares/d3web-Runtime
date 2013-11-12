@@ -52,12 +52,10 @@ public class ExpertMode implements SessionObject {
 	private final Session session;
 
 	/**
-	 * Can be used to mark QContainers, that are permanently relevant.
-	 * 
-	 * @see getApplicablePermanentlyRelevantQContainers()
+	 * @use PSMethodCostBenefit.PERMANENTLY_RELEVANT
 	 */
-	public static final Property<Boolean> PERMANENTLY_RELEVANT = Property.getProperty(
-			"permanentlyRelevant", Boolean.class);
+	@Deprecated
+	public static final Property<Boolean> PERMANENTLY_RELEVANT = PSMethodCostBenefit.PERMANENTLY_RELEVANT;
 
 	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = new SessionObjectSource<ExpertMode>() {
 
@@ -318,7 +316,7 @@ public class ExpertMode implements SessionObject {
 	public Collection<QContainer> getApplicablePermanentlyRelevantQContainers() {
 		Collection<QContainer> result = new LinkedList<QContainer>();
 		for (QContainer qcontainer : session.getKnowledgeBase().getManager().getQContainers()) {
-			if (qcontainer.getInfoStore().getValue(PERMANENTLY_RELEVANT)) {
+			if (qcontainer.getInfoStore().getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
 				StateTransition stateTransition = StateTransition.getStateTransition(qcontainer);
 				if (stateTransition == null || stateTransition.getActivationCondition() == null
 						|| Conditions.isTrue(stateTransition.getActivationCondition(), session)) {

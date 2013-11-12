@@ -119,7 +119,7 @@ public class PropertiesTest {
 				valueStateB, new CondEqual(q2, valueAnswer2))));
 		new StateTransition(new CondEqual(state, valueStateA), Arrays.asList(vt2), second);
 		second.getInfoStore().addValue(BasicProperties.COST, 1.0);
-		second.getInfoStore().addValue(ExpertMode.PERMANENTLY_RELEVANT, true);
+		second.getInfoStore().addValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT, true);
 
 		target = new QContainer(kb, "Target");
 		new QuestionNum(target, "Finish");
@@ -205,13 +205,15 @@ public class PropertiesTest {
 		PersistenceManager.getInstance().save(kb, file);
 		KnowledgeBase reloadedKB = PersistenceManager.getInstance().load(file);
 		QContainer reloadedFirst = reloadedKB.getManager().searchQContainer(FIRST_NAME);
-		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(ExpertMode.PERMANENTLY_RELEVANT));
+		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(
+				PSMethodCostBenefit.PERMANENTLY_RELEVANT));
 		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY));
 		QContainer reloadedSecond = reloadedKB.getManager().searchQContainer(SECOND_NAME);
-		Assert.assertTrue(reloadedSecond.getInfoStore().getValue(ExpertMode.PERMANENTLY_RELEVANT));
+		Assert.assertTrue(reloadedSecond.getInfoStore().getValue(
+				PSMethodCostBenefit.PERMANENTLY_RELEVANT));
 		QContainer reloadedTargetOnly = reloadedKB.getManager().searchQContainer(TARGET_ONLY_NAME);
 		Assert.assertFalse(reloadedTargetOnly.getInfoStore().getValue(
-				ExpertMode.PERMANENTLY_RELEVANT));
+				PSMethodCostBenefit.PERMANENTLY_RELEVANT));
 		Assert.assertTrue(reloadedTargetOnly.getInfoStore().getValue(
 				PSMethodCostBenefit.TARGET_ONLY));
 	}
