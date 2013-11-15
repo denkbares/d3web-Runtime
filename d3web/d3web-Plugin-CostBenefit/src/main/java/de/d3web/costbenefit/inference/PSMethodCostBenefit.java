@@ -271,7 +271,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				if (session.getBlackboard().getIndication(qContainer).hasState(
 						State.CONTRA_INDICATED)) {
 					hasContraindicatedQContainer = true;
-					break;
+				}
+				else {
+					// remove permanently relevant QContainer from blocked
+					// qcontainers if it is selected as target manually
+					if (qContainer.getInfoStore().getValue(PERMANENTLY_RELEVANT)) {
+						searchModel.getBlockedQContainers().remove(qContainer);
+					}
 				}
 			}
 			if (!hasContraindicatedQContainer) {
@@ -350,8 +356,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			for (Target target : targets) {
 				boolean skipTarget = false;
 				for (QContainer qcontainer : target.getQContainers()) {
-					if (session.getBlackboard().getIndication(qcontainer).isContraIndicated()
-							|| blockedQContainers.contains(qcontainer)) {
+					if (blockedQContainers.contains(qcontainer)) {
 						skipTarget = true;
 						continue;
 					}
@@ -519,7 +524,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	/**
 	 * Calculates a set of all QContainers, which are blocked by final questions
-	 * or contra indicated
+	 * or contra indicated or permanently relevant
 	 * 
 	 * @created 24.10.2012
 	 * @param session actual session
@@ -538,6 +543,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				StateTransition.KNOWLEDGE_KIND)) {
 			if (session.getBlackboard().getIndication(stateTransition.getQcontainer()).hasState(
 					State.CONTRA_INDICATED)) {
+				result.add(stateTransition.getQcontainer());
+				continue;
+			}
+			if (stateTransition.getQcontainer().getInfoStore().getValue(
+					PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}

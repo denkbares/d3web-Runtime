@@ -330,4 +330,20 @@ public final class CostBenefitUtil {
 		}
 		return aStar;
 	}
+
+	/**
+	 * Evaluates if the terminology object has a permanently relevant parent
+	 * 
+	 * @created 13.11.2013
+	 * @param termObject Terminology Object
+	 * @return true if a permanently relevant parent exists, false otherwise
+	 */
+	public static boolean hasPermanentlyRelevantParent(TerminologyObject termObject) {
+		for (TerminologyObject parent : KnowledgeBaseUtils.getAncestors(termObject)) {
+			if (parent.getInfoStore().getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

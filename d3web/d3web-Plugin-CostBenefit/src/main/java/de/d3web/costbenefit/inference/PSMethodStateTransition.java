@@ -49,6 +49,15 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 	public PSMethodStateTransition() {
 	}
 
+	private boolean isPartOfPermanentlyRelevantQContainer(Condition condition) {
+		for (TerminologyObject termObject : condition.getTerminalObjects()) {
+			if (CostBenefitUtil.hasPermanentlyRelevantParent(termObject)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
 		// remember: if a session is loaded from a record,
@@ -56,18 +65,34 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		Fact maxFact = null;
 		int maxNumber = Integer.MIN_VALUE;
 		for (Fact fact : facts) {
-			// use the first one (also works for DefaultFacts)
-			if (maxFact == null) {
-				maxFact = fact;
-			}
-			// and overwrite existing max if it is
-			// a normal fact or if the current one on newer
-			else if (fact instanceof StateTransitionFact) {
+
+			if (fact instanceof StateTransitionFact) {
 				StateTransitionFact stf = (StateTransitionFact) fact;
-				if (maxNumber < stf.number) {
-					maxFact = stf;
-					maxNumber = stf.number;
+				// facts which set final questions have highest priority, if
+				// they are set by permanently relevant test steps
+				if (stf.getTerminologyObject().getInfoStore().getValue(
+						PSMethodCostBenefit.FINAL_QUESTION)
+						&& isPartOfPermanentlyRelevantQContainer(stf.cvs.getCondition())) {
+					return stf;
 				}
+				// use the first one
+				if (maxFact == null) {
+					maxFact = fact;
+				}
+				// and overwrite existing max if if the current one is newer
+				else {
+					if (maxNumber < stf.number) {
+						maxFact = stf;
+						maxNumber = stf.number;
+					}
+				}
+			}
+			// for reloaded facts of final questions the maxvalue is set, so
+			// they can only be overwritten by permanently relevant QContainers
+			else if (fact.getTerminologyObject().getInfoStore().getValue(
+					PSMethodCostBenefit.FINAL_QUESTION)) {
+				maxFact = fact;
+				maxNumber = Integer.MAX_VALUE;
 			}
 		}
 		return maxFact;
