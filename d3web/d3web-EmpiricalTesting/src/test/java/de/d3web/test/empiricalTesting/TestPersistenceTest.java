@@ -64,7 +64,7 @@ public class TestPersistenceTest {
 							"./src/test/resources/Demo_-_Test_Cases_testcase-2.xml")), kb);
 
 			File tmpFile = new File(
-					"./src/test/resources/Demo_-_Test_Cases_testcase-tmp.xml");
+					"./target/Demo_-_Test_Cases_testcase-tmp.xml");
 
 			FileOutputStream outputStream = new FileOutputStream(tmpFile);
 			TestPersistence.getInstance().writeCases(outputStream, loadedCases,
