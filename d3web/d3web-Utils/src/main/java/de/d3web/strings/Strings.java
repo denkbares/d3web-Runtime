@@ -608,6 +608,34 @@ public class Strings {
 	}
 
 	/**
+	 * Returns a collection containing all the strings from the passed
+	 * collection being trimmed using Strings.trim()
+	 * 
+	 * @created 20.11.2013
+	 * @param strings
+	 * @return
+	 */
+	public static Collection<String> trim(Collection<String> strings) {
+		return trim(strings);
+	}
+
+	/**
+	 * Returns a collection containing all the strings from the passed
+	 * collection being trimmed using Strings.trim()
+	 * 
+	 * @created 20.11.2013
+	 * @param strings
+	 * @return
+	 */
+	public static List<String> trim(List<String> strings) {
+		List<String> result = new ArrayList<String>();
+		for (String string : strings) {
+			result.add(trim(string));
+		}
+		return result;
+	}
+
+	/**
 	 * Removes all blank lines before or after the specified string. All lines
 	 * containing non-whitespace characters remain unchanged.
 	 * 
