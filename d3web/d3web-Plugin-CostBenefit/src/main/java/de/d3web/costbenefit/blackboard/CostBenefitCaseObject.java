@@ -48,6 +48,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private Set<Solution> undiscriminatedSolutions = new HashSet<Solution>();
 	private Set<Target> discriminatingTargets = new HashSet<Target>();
 	private final Session session;
+	private boolean abortedManuallySetTarget = false;
 
 	public CostBenefitCaseObject(Session session) {
 		this.session = session;
@@ -106,6 +107,7 @@ public class CostBenefitCaseObject implements SessionObject {
 		}
 		indicatedFacts = new LinkedList<Fact>();
 		this.currentPathIndex = -1;
+		abortedManuallySetTarget = false;
 	}
 
 	public void setIndicatedFacts(List<Fact> indicatedFacts) {
@@ -139,6 +141,14 @@ public class CostBenefitCaseObject implements SessionObject {
 	public QContainer getCurrentQContainer() {
 		if (currentSequence == null) return null;
 		return currentSequence[currentPathIndex];
+	}
+
+	public boolean isAbortedManuallySetTarget() {
+		return abortedManuallySetTarget;
+	}
+
+	public void setAbortedManuallySetTarget(boolean abortedManuallySetTarget) {
+		this.abortedManuallySetTarget = abortedManuallySetTarget;
 	}
 
 }

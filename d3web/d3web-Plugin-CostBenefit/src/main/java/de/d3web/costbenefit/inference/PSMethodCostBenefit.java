@@ -241,12 +241,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// (only if there is any benefitual target
 		initializeSearchModelTo(caseObject, targets);
 		SearchModel searchModel = caseObject.getSearchModel();
-		// when using this method, you want to get that target, beta mode (later
-		// there must be a abortion critera to prevent an endless loop if target
-		// is unreachable
-		// IterativeDeepeningSearchAlgorithm noAbortSearchAlgorithm = new
-		// IterativeDeepeningSearchAlgorithm();
-		// noAbortSearchAlgorithm.setAbortStrategy(new NoAbortStrategy());
+
 		searchAlgorithm.search(caseObject.getSession(), searchModel);
 
 		// sets the new path based on the result stored in the search model
@@ -258,6 +253,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			activatePath(caseObject, minPath);
 		}
 		else {
+			caseObject.setAbortedManuallySetTarget(true);
 			throw new AbortException();
 		}
 	}
@@ -825,8 +821,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void postPropagate(Session session) {
-		if (!isManualMode()) {
-			calculateNewPath(session.getSessionObject(this));
+		CostBenefitCaseObject sessionObject = session.getSessionObject(this);
+		if (!isManualMode() && !sessionObject.isAbortedManuallySetTarget()) {
+			calculateNewPath(sessionObject);
 		}
 	}
 }
