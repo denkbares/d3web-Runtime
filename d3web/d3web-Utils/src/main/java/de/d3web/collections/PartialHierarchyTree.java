@@ -83,6 +83,21 @@ public class PartialHierarchyTree<T> {
 		return root.getChildren();
 	}
 
+	/**
+	 * Returns all top level nodes of this tree, sorted according to the given
+	 * comparator. If this returns an empty list, the overall tree is empty.
+	 * 
+	 * @created 26.11.2013
+	 * @return
+	 */
+	public List<Node<T>> getRootLevelNodesSorted(Comparator<T> comp) {
+		List<Node<T>> children = root.getChildren();
+		List<Node<T>> copy = new ArrayList<Node<T>>();
+		copy.addAll(children);
+		Collections.sort(copy, new PartialHierarchyNodeComparator<T>(comp));
+		return Collections.unmodifiableList(copy);
+	}
+
 
 	/**
 	 * Removes the element from the tree. It considers correct hierarchical
@@ -329,7 +344,7 @@ public class PartialHierarchyTree<T> {
 
 	public static class Node<T> {
 
-		private final T data;
+		final T data;
 		private transient Node<T> parent;
 		private List<Node<T>> children = new ArrayList<Node<T>>();;
 
@@ -413,7 +428,7 @@ public class PartialHierarchyTree<T> {
 		public List<Node<T>> getChildrenSorted(Comparator<T> c) {
 			List<Node<T>> copy = new ArrayList<Node<T>>();
 			copy.addAll(children);
-			Collections.sort(copy, new NodeComparator(c));
+			Collections.sort(copy, new PartialHierarchyNodeComparator<T>(c));
 			return Collections.unmodifiableList(copy);
 		}
 
@@ -430,20 +445,7 @@ public class PartialHierarchyTree<T> {
 			}
 		}
 
-		class NodeComparator implements Comparator<Node<T>> {
 
-			private final Comparator<T> comp;
-
-			public NodeComparator(Comparator<T> c) {
-				this.comp = c;
-			}
-
-			@Override
-			public int compare(Node<T> arg0, Node<T> arg1) {
-				return comp.compare(arg0.data, arg1.data);
-			}
-
-		}
 
 	}
 }
