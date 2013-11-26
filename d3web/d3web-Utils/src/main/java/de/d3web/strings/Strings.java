@@ -309,8 +309,8 @@ public class Strings {
 	/**
 	 * Returns whether the specified {@link Character} is a whitespace.
 	 * 
-	 * @param text the string to be checked
-	 * @return <code>true</code> iff the string has no non-whitespace character
+	 * @param c the character to be checked
+	 * @return <code>true</code> iff the character is a whitespace character
 	 */
 	public static boolean isBlank(char c) {
 		return Character.isWhitespace(c) || c == '\u00A0';
