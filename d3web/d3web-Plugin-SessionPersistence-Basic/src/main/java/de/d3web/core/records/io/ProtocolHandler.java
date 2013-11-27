@@ -24,6 +24,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
@@ -41,15 +42,14 @@ public class ProtocolHandler implements SessionPersistenceHandler {
 	private static final String HANDLER_ELEMENT_NAME = "protocol";
 
 	@Override
-	public void read(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
+	public void read(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException {
 		List<Element> handlerNodes = XMLUtil.getElementList(sessionElement.getChildNodes());
-		Protocol protocol = sessionRecord.getProtocol();
-		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+		Protocol protocol = persistence.getArtifact().getProtocol();
 		for (Element handlerNode : handlerNodes) {
 			if (handlerNode.getNodeName().equalsIgnoreCase(HANDLER_ELEMENT_NAME)) {
 				List<Element> entryNodes = XMLUtil.getElementList(handlerNode.getChildNodes());
 				for (Element entryNode : entryNodes) {
-					ProtocolEntry entry = (ProtocolEntry) spm.readFragment(entryNode, null);
+					ProtocolEntry entry = (ProtocolEntry) persistence.readFragment(entryNode);
 					protocol.addEntry(entry);
 				}
 			}
@@ -57,14 +57,14 @@ public class ProtocolHandler implements SessionPersistenceHandler {
 	}
 
 	@Override
-	public void write(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
+	public void write(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException {
 		Document doc = sessionElement.getOwnerDocument();
 		Element handlerNode = doc.createElement(HANDLER_ELEMENT_NAME);
 		sessionElement.appendChild(handlerNode);
 
-		Protocol protocol = sessionRecord.getProtocol();
+		Protocol protocol = persistence.getArtifact().getProtocol();
 		for (ProtocolEntry entry : protocol.getProtocolHistory()) {
-			Element entryNode = SessionPersistenceManager.getInstance().writeFragment(entry, doc);
+			Element entryNode = persistence.writeFragment(entry);
 			handlerNode.appendChild(entryNode);
 		}
 	}

@@ -19,9 +19,6 @@ package de.d3web.mminfo.io;
 
 import java.util.Stack;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,23 +30,12 @@ import de.d3web.strings.Strings;
 
 public class DOMBuilder {
 
-	// use one document for all builders, because
-	// creating a document is very (!!!) time consuming
-	private static Document document;
+	private final Document document;
+	private final Stack<Node> nodes = new Stack<Node>();
+	private final Element element;
 
-	private Stack<Node> nodes = new Stack<Node>();
-	private Element element;
-
-	public DOMBuilder() throws SAXException {
-		try {
-			if (document == null) {
-				document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-			}
-		}
-		catch (ParserConfigurationException e) {
-			throw new SAXException("unexpected SAX error", e);
-		}
-
+	public DOMBuilder(Document document) throws SAXException {
+		this.document = document;
 		this.element = document.createElementNS(null, "localRoot");
 		this.nodes.push(element);
 	}

@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -48,7 +48,7 @@ import de.d3web.core.session.values.Unknown;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class EqualConditionHandler implements FragmentHandler {
+public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -63,12 +63,12 @@ public class EqualConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String type = element.getAttribute("type");
 		String questionID = element.getAttribute("name");
 		String value = element.getAttribute("value");
 		if (questionID != null && value != null) {
-			NamedObject idObject = kb.getManager().search(questionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(questionID);
 			if (idObject instanceof QuestionChoice) {
 				QuestionChoice q = (QuestionChoice) idObject;
 				Value a = null;
@@ -125,9 +125,10 @@ public class EqualConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondEqual cond = (CondEqual) object;
-		return XMLUtil.writeCondition(doc, cond.getQuestion(), "equal", cond.getValue());
+		return XMLUtil.writeCondition(persistence.getDocument(),
+				cond.getQuestion(), "equal", cond.getValue());
 	}
 
 }

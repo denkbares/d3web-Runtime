@@ -22,11 +22,15 @@ package de.d3web.persistence.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.QuestionHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionText;
@@ -42,9 +46,14 @@ public class QuestionTextTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
-	public void setUp() {
-		q1 = new QuestionText(new KnowledgeBase(), "q1");
+	public void setUp() throws IOException {
+		KnowledgeBase kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
+
+		q1 = new QuestionText(kb, "q1");
 
 		qw = new QuestionHandler();
 
@@ -55,7 +64,7 @@ public class QuestionTextTest {
 
 	@Test
 	public void testQuestionNumTestSimple() throws Exception {
-		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, persistence));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}

@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.ConditionTrue;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,16 +36,16 @@ import de.d3web.core.knowledge.TerminologyObject;
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
-public class ConditionTrueFragmentHandler implements FragmentHandler {
+public class ConditionTrueFragmentHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Element> kbchildren = XMLUtil.getElementList(element.getChildNodes(), "object");
 		if (kbchildren.isEmpty()) return ConditionTrue.INSTANCE;
 		List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
 		for (Element child : kbchildren) {
 			String name = child.getTextContent();
-			TerminologyObject object = kb.getManager().search(name);
+			TerminologyObject object = persistence.getArtifact().getManager().search(name);
 			if (object == null) throw new IOException("Object '" + name + "' not found");
 			objects.add(object);
 		}
@@ -53,11 +53,11 @@ public class ConditionTrueFragmentHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object condition, Document doc) throws IOException {
+	public Element write(Object condition, Persistence<KnowledgeBase> persistence) throws IOException {
 		ConditionTrue cond = (ConditionTrue) condition;
-		Element element = XMLUtil.writeCondition(doc, "True");
+		Element element = XMLUtil.writeCondition(persistence.getDocument(), "True");
 		for (TerminologyObject object : cond.getTerminalObjects()) {
-			Element objectElement = doc.createElement("object");
+			Element objectElement = persistence.getDocument().createElement("object");
 			objectElement.setTextContent(object.getName());
 			element.appendChild(objectElement);
 		}

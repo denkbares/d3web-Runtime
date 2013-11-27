@@ -29,9 +29,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -51,34 +53,36 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 	public final static String ID = "comfortBenefit";
 
 	@Override
-	public void write(KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.createEmptyDocument();
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
+
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("type", ID);
 		root.setAttribute("system", "d3web");
 		doc.appendChild(root);
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
-		Collection<ComfortBenefit> comfortBenefits = knowledgeBase.getAllKnowledgeSlicesFor(ComfortBenefit.KNOWLEDGE_KIND);
+		Collection<ComfortBenefit> comfortBenefits = kb.getAllKnowledgeSlicesFor(ComfortBenefit.KNOWLEDGE_KIND);
 		float count = 0;
 		String message = "Writing ComfortBenefits.";
 		listener.updateProgress(0, message);
 		for (ComfortBenefit cb : comfortBenefits) {
 			if (cb != null) {
-				ksNode.appendChild(getElement(cb, doc));
+				ksNode.appendChild(getElement(persistence, cb));
 			}
 			listener.updateProgress(++count / comfortBenefits.size(), message);
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
-	private Element getElement(ComfortBenefit cb, Document doc) throws IOException {
+	private Element getElement(Persistence<KnowledgeBase> persistence, ComfortBenefit cb) throws IOException {
+		Document doc = persistence.getDocument();
 		Element element = doc.createElement(NODE_NAME);
 		element.setAttribute("QID", cb.getQContainer().getName());
 		Condition activationCondition = cb.getCondition();
 		Element conditionElement = doc.createElement("condition");
-		conditionElement.appendChild(PersistenceManager.getInstance().writeFragment(
-					activationCondition, doc));
+		conditionElement.appendChild(persistence.writeFragment(activationCondition));
 		element.appendChild(conditionElement);
 		return element;
 	}
@@ -89,31 +93,34 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 	}
 
 	@Override
-	public void read(KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.streamToDocument(stream);
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		String message = "Loading comfort benefit knowledge";
 		listener.updateProgress(0, message);
+
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		Document doc = persistence.getDocument();
+
 		NodeList comfortBenefitNodes = doc.getElementsByTagName(NODE_NAME);
 		int max = comfortBenefitNodes.getLength();
 		float count = 0;
 		for (int i = 0; i < comfortBenefitNodes.getLength(); i++) {
 			Node current = comfortBenefitNodes.item(i);
-			addComfortBenefitKnowledge(knowledgeBase, current);
+			addComfortBenefitKnowledge(persistence, current);
 			listener.updateProgress(++count / max, message);
 		}
 	}
 
-	private void addComfortBenefitKnowledge(KnowledgeBase knowledgeBase, Node current) throws NoSuchFragmentHandlerException, IOException {
+	private void addComfortBenefitKnowledge(Persistence<KnowledgeBase> persistence, Node current) throws NoSuchFragmentHandlerException, IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
-		QContainer qcontainer = knowledgeBase.getManager().searchQContainer(qcontainerID);
+		QContainer qcontainer =
+				persistence.getArtifact().getManager().searchQContainer(qcontainerID);
 		NodeList children = current.getChildNodes();
 		Condition condition = null;
 		for (int i = 0; i < children.getLength(); i++) {
 			Node n = children.item(i);
 			if (n.getNodeName().equals("condition")) {
 				for (Element child : XMLUtil.getElementList(n.getChildNodes())) {
-					condition = (Condition) PersistenceManager.getInstance().readFragment(
-							child, knowledgeBase);
+					condition = (Condition) persistence.readFragment(child);
 				}
 			}
 		}

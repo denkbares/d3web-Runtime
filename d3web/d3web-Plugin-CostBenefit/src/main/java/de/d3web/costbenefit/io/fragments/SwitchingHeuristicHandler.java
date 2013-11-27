@@ -20,9 +20,9 @@ package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.astar.SwitchingHeuristic;
@@ -32,7 +32,7 @@ import de.d3web.costbenefit.inference.astar.SwitchingHeuristic;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class SwitchingHeuristicHandler implements FragmentHandler {
+public class SwitchingHeuristicHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String NODE_NAME = "SwitchingHeuristic";
 
@@ -51,14 +51,14 @@ public class SwitchingHeuristicHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		return new SwitchingHeuristic(Integer.parseInt(element.getAttribute("switchingLevel")));
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		SwitchingHeuristic heuristic = (SwitchingHeuristic) object;
-		Element element = doc.createElement("heuristic");
+		Element element = persistence.getDocument().createElement("heuristic");
 		element.setAttribute("name", NODE_NAME);
 		element.setAttribute("switchingLevel", String.valueOf(heuristic.getSwitchingLevel()));
 		return element;

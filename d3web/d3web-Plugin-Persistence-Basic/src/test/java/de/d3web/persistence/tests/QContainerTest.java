@@ -27,8 +27,10 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.QContainerHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -49,11 +51,13 @@ public class QContainerTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 	private KnowledgeBase kb;
+	private Persistence<KnowledgeBase> persistence;
 
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 		kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
 		qc1 = new QContainer(kb, "c1");
 
 		shouldTag = new XMLTag("QContainer");
@@ -64,7 +68,7 @@ public class QContainerTest {
 
 	@Test
 	public void testQContainerSimple() throws Exception {
-		isTag = new XMLTag(qcw.write(qc1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qcw.write(qc1, persistence));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -77,7 +81,7 @@ public class QContainerTest {
 		Question q2 = new QuestionText(kb, "q2");
 		qc1.addChild(q2);
 
-		isTag = new XMLTag(qcw.write(qc1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qcw.write(qc1, persistence));
 
 		assertEquals("(2)", shouldTag, isTag);
 	}
@@ -100,7 +104,7 @@ public class QContainerTest {
 
 		shouldTag.addChild(propertiesTag);
 
-		isTag = new XMLTag(qcw.write(qc1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qcw.write(qc1, persistence));
 
 		assertEquals("(4)", shouldTag, isTag);
 	}

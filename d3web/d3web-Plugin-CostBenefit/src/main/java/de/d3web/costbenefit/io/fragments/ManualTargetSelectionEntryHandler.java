@@ -24,9 +24,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -39,7 +39,7 @@ import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 28.06.2012
  */
-public class ManualTargetSelectionEntryHandler implements FragmentHandler {
+public class ManualTargetSelectionEntryHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String ELEMENT_NAME = "entry";
 	private static final String ELEMENT_TYPE = "manuallySelectedTarget";
@@ -48,7 +48,7 @@ public class ManualTargetSelectionEntryHandler implements FragmentHandler {
 	private static final String TARGET = "target";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		try {
 			String dateString = element.getAttribute(ATTR_DATE);
 			Date date = SessionPersistenceManager.DATE_FORMAT.parse(dateString);
@@ -68,16 +68,16 @@ public class ManualTargetSelectionEntryHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ManualTargetSelectionEntry entry = (ManualTargetSelectionEntry) object;
 		String dateString = SessionPersistenceManager.DATE_FORMAT.format(entry.getDate());
-		Element e = doc.createElement(ELEMENT_NAME);
+		Element e = persistence.getDocument().createElement(ELEMENT_NAME);
 		e.setAttribute("type", ELEMENT_TYPE);
 		e.setAttribute(ATTR_DATE, dateString);
-		Element targets = doc.createElement(TARGETS);
+		Element targets = persistence.getDocument().createElement(TARGETS);
 		e.appendChild(targets);
 		for (String s : entry.getTargetNames()) {
-			Element target = doc.createElement(TARGET);
+			Element target = persistence.getDocument().createElement(TARGET);
 			target.setTextContent(s);
 			targets.appendChild(target);
 		}

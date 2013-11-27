@@ -22,11 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.PSConfig;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
@@ -57,12 +56,12 @@ public class XCLPSConfigHandler extends DefaultPSConfigHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		PSConfig psconfig = (PSConfig) super.read(kb, element);
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
+		PSConfig psconfig = (PSConfig) super.read(element, persistence);
 		PSMethodXCL psm = (PSMethodXCL) psconfig.getPsMethod();
 		List<Object> fragments = new ArrayList<Object>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			fragments.add(PersistenceManager.getInstance().readFragment(e, kb));
+			fragments.add(persistence.readFragment(e));
 		}
 		for (Object o : fragments) {
 			if (o instanceof ScoreAlgorithm) {
@@ -73,11 +72,11 @@ public class XCLPSConfigHandler extends DefaultPSConfigHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element e = super.write(object, doc);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element e = super.write(object, persistence);
 		PSConfig config = (PSConfig) object;
 		PSMethodXCL psm = (PSMethodXCL) config.getPsMethod();
-		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getScoreAlgorithm(), doc));
+		e.appendChild(persistence.writeFragment(psm.getScoreAlgorithm()));
 		return e;
 	}
 

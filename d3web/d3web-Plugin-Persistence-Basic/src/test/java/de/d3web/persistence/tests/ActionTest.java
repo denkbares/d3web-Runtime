@@ -28,19 +28,20 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
 
 import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.abstraction.formula.FormulaNumber;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.Rule;
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.actions.ContraIndicationActionHandler;
 import de.d3web.core.io.fragments.actions.HeuristicPSActionHandler;
 import de.d3web.core.io.fragments.actions.NextQASetActionHandler;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
 import de.d3web.core.io.fragments.actions.SuppressAnswerActionHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AnswerNo;
 import de.d3web.core.knowledge.terminology.AnswerYes;
@@ -83,14 +84,14 @@ public class ActionTest {
 	private XMLTag shouldTagAdd;
 	private XMLTag shouldTagSet;
 
-	Document doc;
+	private Persistence<KnowledgeBase> persistence;
 
 	@Before
 	public void setUp() throws Exception {
 
 		InitPluginManager.init();
 		KnowledgeBase kb = new KnowledgeBase();
-		doc = XMLUtil.createEmptyDocument();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
 
 		answerNo = new AnswerNo("ac1-name");
 
@@ -134,7 +135,7 @@ public class ActionTest {
 		shouldTag.addChild(suppress);
 
 		SuppressAnswerActionHandler handler = new SuppressAnswerActionHandler();
-		isTag = new XMLTag(handler.write(actionSuppressAnswer, doc));
+		isTag = new XMLTag(handler.write(actionSuppressAnswer, persistence));
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
@@ -163,7 +164,7 @@ public class ActionTest {
 		shouldTag.addChild(targets);
 
 		NextQASetActionHandler aiw = new NextQASetActionHandler();
-		isTag = new XMLTag(aiw.write(ai, doc));
+		isTag = new XMLTag(aiw.write(ai, persistence));
 		assertEquals("(3)", shouldTag, isTag);
 	}
 
@@ -190,7 +191,7 @@ public class ActionTest {
 		shouldTag.addChild(targets);
 
 		ContraIndicationActionHandler aciw = new ContraIndicationActionHandler();
-		isTag = new XMLTag(aciw.write(aci, doc));
+		isTag = new XMLTag(aciw.write(aci, persistence));
 		assertEquals("(4)", shouldTag, isTag);
 	}
 
@@ -215,7 +216,7 @@ public class ActionTest {
 		shouldTag.addChild(diagnosis);
 
 		HeuristicPSActionHandler ahw = new HeuristicPSActionHandler();
-		isTag = new XMLTag(ahw.write(ah, doc));
+		isTag = new XMLTag(ahw.write(ah, persistence));
 		assertEquals("(5)", shouldTag, isTag);
 	}
 
@@ -283,7 +284,7 @@ public class ActionTest {
 		shouldTagSet.addChild(valuesTag);
 
 		QuestionSetterActionHandler aavw = new QuestionSetterActionHandler();
-		isTag = new XMLTag(aavw.write(aav, doc));
+		isTag = new XMLTag(aavw.write(aav, persistence));
 
 		// it is absolute nonsense that xml code must have the same spaces
 		// newlines tabs etc.
@@ -293,7 +294,7 @@ public class ActionTest {
 		// removeAllSpaces(isTag));
 		assertEquals("(6)", shouldTagAdd, isTag);
 
-		isTag = new XMLTag(aavw.write(asv, doc));
+		isTag = new XMLTag(aavw.write(asv, persistence));
 		assertEquals("(7)", shouldTagSet, isTag);
 	}
 
@@ -344,7 +345,7 @@ public class ActionTest {
 		shouldTagSet.addChild(valuesTag);
 
 		QuestionSetterActionHandler aavw = new QuestionSetterActionHandler();
-		isTag = new XMLTag(aavw.write(aav, doc));
+		isTag = new XMLTag(aavw.write(aav, persistence));
 
 		// it is absolute nonsense that xml code must have the same spaces
 		// newlines tabs etc.
@@ -354,7 +355,7 @@ public class ActionTest {
 		// removeAllSpaces(isTag));
 		assertEquals("(date1)", shouldTagAdd, isTag);
 
-		isTag = new XMLTag(aavw.write(asv, doc));
+		isTag = new XMLTag(aavw.write(asv, persistence));
 		assertEquals("(date2)", shouldTagSet, isTag);
 	}
 }

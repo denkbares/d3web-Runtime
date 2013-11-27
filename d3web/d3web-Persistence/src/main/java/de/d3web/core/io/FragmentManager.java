@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Extension;
+import de.d3web.plugin.PluginManager;
 
 /**
  * This is a utility class to write and read fragments to/from xml documents
@@ -34,9 +35,9 @@ import de.d3web.plugin.Extension;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 20.09.2010
  */
-public class FragmentManager {
+public class FragmentManager<Artifact> {
 
-	protected Extension[] fragmentPlugins;
+	private Extension[] fragmentPlugins;
 
 	/**
 	 * This method is used to create an XML element ({@link Document})for the
@@ -51,11 +52,12 @@ public class FragmentManager {
 	 *         {@link FragmentHandler} is available for the specified object
 	 * @throws IOException if an error occurs during saving the specified object
 	 */
-	public Element writeFragment(Object object, Document doc) throws NoSuchFragmentHandlerException, IOException {
+	public Element writeFragment(Object object, Persistence<Artifact> persistence) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin : fragmentPlugins) {
-			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
+			@SuppressWarnings("unchecked")
+			FragmentHandler<Artifact> handler = (FragmentHandler<Artifact>) plugin.getSingleton();
 			if (handler.canWrite(object)) {
-				return handler.write(object, doc);
+				return handler.write(object, persistence);
 			}
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + object);
@@ -75,13 +77,29 @@ public class FragmentManager {
 	 *         {@link FragmentHandler} is available
 	 * @throws IOException if an IO error occurs during the read operation
 	 */
-	public Object readFragment(Element child, KnowledgeBase kb) throws NoSuchFragmentHandlerException, IOException {
+	public Object readFragment(Element child, Persistence<Artifact> persistence) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin : fragmentPlugins) {
-			FragmentHandler handler = (FragmentHandler) plugin.getSingleton();
+			@SuppressWarnings("unchecked")
+			FragmentHandler<Artifact> handler = (FragmentHandler<Artifact>) plugin.getSingleton();
 			if (handler.canRead(child)) {
-				return handler.read(kb, child);
+				return handler.read(child, persistence);
 			}
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + child);
+	}
+
+	/**
+	 * Initializes this manager with all extensions of a specific plugin / point
+	 * id.
+	 * 
+	 * @created 26.11.2013
+	 * @param extendedPluginID the plugin id of the extensions point to get the
+	 *        {@link FragmentHandler}s for
+	 * @param extendedPointID the point id of the extensions point to get the
+	 *        {@link FragmentHandler}s for
+	 */
+	public void init(String extendedPluginID, String extendedPointID) {
+		PluginManager manager = PluginManager.getInstance();
+		this.fragmentPlugins = manager.getExtensions(extendedPluginID, extendedPointID);
 	}
 }

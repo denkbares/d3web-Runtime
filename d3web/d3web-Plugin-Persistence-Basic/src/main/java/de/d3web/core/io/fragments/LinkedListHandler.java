@@ -22,11 +22,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 
@@ -36,7 +34,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class LinkedListHandler implements FragmentHandler {
+public class LinkedListHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -49,7 +47,7 @@ public class LinkedListHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Object> list = new LinkedList<Object>();
 		List<Element> children = XMLUtil.getElementList(element.getChildNodes());
 		for (Element entry : children) {
@@ -62,8 +60,7 @@ public class LinkedListHandler implements FragmentHandler {
 				else {
 					List<Element> childNodes = XMLUtil.getElementList(entry.getChildNodes());
 					if (childNodes.size() == 1) {
-						list.add(PersistenceManager.getInstance().readFragment(childNodes.get(0),
-								kb));
+						list.add(persistence.readFragment(childNodes.get(0)));
 					}
 					else {
 						throw new IOException("Entry must have exactly one child.");
@@ -75,13 +72,13 @@ public class LinkedListHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("List");
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement("List");
 		LinkedList<?> list = (LinkedList<?>) object;
 		for (Object o : list) {
-			Element entry = doc.createElement("Entry");
+			Element entry = persistence.getDocument().createElement("Entry");
 			entry.setAttribute("class", o.getClass().getName());
-			entry.appendChild(PersistenceManager.getInstance().writeFragment(o, doc));
+			entry.appendChild(persistence.writeFragment(o));
 			element.appendChild(entry);
 		}
 		return element;

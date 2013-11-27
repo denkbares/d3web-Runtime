@@ -20,9 +20,9 @@ package de.d3web.core.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +36,7 @@ import de.d3web.scoring.Score;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class SolutionsHandler implements FragmentHandler {
+public class SolutionsHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -49,35 +49,35 @@ public class SolutionsHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String id = element.getAttribute("name");
 		String apriori = element.getAttribute("aPriProb");
-		Solution diag = new Solution(kb, id);
+		Solution diag = new Solution(persistence.getArtifact(), id);
 		if (apriori != null) {
 			diag.setAprioriProbability(XMLUtil.getScore(apriori));
 		}
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {
 			if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
-				XMLUtil.fillInfoStore(diag.getInfoStore(), child, kb);
+				XMLUtil.fillInfoStore(persistence, diag.getInfoStore(), child);
 			}
 			else if (ph.canRead(child)) {
-				InfoStoreUtil.copyEntries(ph.read(kb, child), diag.getInfoStore());
+				InfoStoreUtil.copyEntries(ph.read(persistence, child), diag.getInfoStore());
 			}
 		}
 		return diag;
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Solution diag = (Solution) object;
-		Element element = doc.createElement("Diagnosis");
+		Element element = persistence.getDocument().createElement("Diagnosis");
 		element.setAttribute("name", diag.getName());
 		Score apriori = diag.getAprioriProbability();
 		if (apriori != null) {
 			element.setAttribute("aPriProb", apriori.getSymbol());
 		}
-		XMLUtil.appendInfoStore(element, diag, Autosave.basic);
+		XMLUtil.appendInfoStore(persistence, element, diag, Autosave.basic);
 		return element;
 	}
 }

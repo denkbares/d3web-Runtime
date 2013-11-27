@@ -20,9 +20,9 @@ package de.d3web.interview.io;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.interview.CurrentQContainerFormStrategy;
@@ -33,18 +33,18 @@ import de.d3web.interview.CurrentQContainerFormStrategy;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
  */
-public class CurrentQContainerFormStrategyHandler implements FragmentHandler {
+public class CurrentQContainerFormStrategyHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String ELEMENT_NAME = "CurrentQContainerFormStrategy";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		return new CurrentQContainerFormStrategy();
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement(ELEMENT_NAME);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
 		return element;
 	}
 

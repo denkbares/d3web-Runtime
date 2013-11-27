@@ -20,11 +20,11 @@ package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.CondNum;
 import de.d3web.core.inference.condition.CondNumEqual;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class NumEqualConditionHandler implements FragmentHandler {
+public class NumEqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -49,11 +49,11 @@ public class NumEqualConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String questionID = element.getAttribute("name");
 		String value = element.getAttribute("value");
 		if (questionID != null && value != null) {
-			NamedObject idObject = kb.getManager().search(questionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(questionID);
 			if (idObject instanceof QuestionNum) {
 				QuestionNum q = (QuestionNum) idObject;
 				return new CondNumEqual(q, Double.parseDouble(value));
@@ -63,9 +63,9 @@ public class NumEqualConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondNum cond = (CondNum) object;
-		return XMLUtil.writeCondition(doc, cond.getQuestion(), "numEqual",
+		return XMLUtil.writeCondition(persistence, cond.getQuestion(), "numEqual",
 				cond.getConditionValue().toString());
 	}
 }

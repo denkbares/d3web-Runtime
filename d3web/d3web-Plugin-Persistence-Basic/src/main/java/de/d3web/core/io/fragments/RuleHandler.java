@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -31,8 +30,7 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.io.FragmentManager;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.manage.RuleFactory;
@@ -42,7 +40,7 @@ import de.d3web.core.manage.RuleFactory;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class RuleHandler implements FragmentHandler {
+public class RuleHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element node) {
@@ -66,16 +64,15 @@ public class RuleHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element node) throws IOException {
+	public Object read(Element node, Persistence<KnowledgeBase> persistence) throws IOException {
 		PSAction action = null;
 		Condition condition = null;
 		Condition exception = null;
 		Condition context = null;
 		List<Element> children = XMLUtil.getElementList(node.getChildNodes());
-		FragmentManager pm = PersistenceManager.getInstance();
 		for (Element child : children) {
 			if (child.getNodeName().equals("Exception")) {
-				Object object = getGrandChildObject(kb, pm, child);
+				Object object = getGrandChildObject(persistence, child);
 				if (object != null && exception == null) {
 					exception = (Condition) object;
 				}
@@ -84,7 +81,7 @@ public class RuleHandler implements FragmentHandler {
 				}
 			}
 			else if (child.getNodeName().equals("Context")) {
-				Object object = getGrandChildObject(kb, pm, child);
+				Object object = getGrandChildObject(persistence, child);
 				if (object != null && context == null) {
 					context = (Condition) object;
 				}
@@ -93,7 +90,7 @@ public class RuleHandler implements FragmentHandler {
 				}
 			}
 			else {
-				Object object = pm.readFragment(child, kb);
+				Object object = persistence.readFragment(child);
 				if (object != null) {
 					if (object instanceof PSAction && action == null) {
 						action = (PSAction) object;
@@ -121,42 +118,40 @@ public class RuleHandler implements FragmentHandler {
 		return rule;
 	}
 
-	private Object getGrandChildObject(KnowledgeBase kb, FragmentManager pm,
-			Element child) throws IOException {
+	private Object getGrandChildObject(Persistence<KnowledgeBase> persistence, Element child) throws IOException {
 		List<Element> grandchildren = XMLUtil.getElementList(child.getChildNodes());
 		if (grandchildren.size() == 1) {
 			Element grandchild = grandchildren.get(0);
-			return pm.readFragment(grandchild, kb);
+			return persistence.readFragment(grandchild);
 		}
 		return null;
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		if (!(object instanceof Rule)) {
 			throw new IOException();
 		}
 		Rule rule = (Rule) object;
-		Element node = doc.createElement("KnowledgeSlice");
+		Element node = persistence.getDocument().createElement("KnowledgeSlice");
 		node.setAttribute("type", "RuleComplex");
-		FragmentManager pm = PersistenceManager.getInstance();
 		// creating action node
 		PSAction action = rule.getAction();
 		if (action != null) {
-			Element actionNode = pm.writeFragment(action, doc);
+			Element actionNode = persistence.writeFragment(action);
 			node.appendChild(actionNode);
 		}
 		// creating condition and exception node
 		Condition condition = rule.getCondition();
 		if (condition != null) {
-			Element conditionNode = pm.writeFragment(condition, doc);
+			Element conditionNode = persistence.writeFragment(condition);
 			node.appendChild(conditionNode);
 		}
 		Condition exception = rule.getException();
 		if (exception != null) {
-			Element exceptionRoot = doc.createElement("Exception");
+			Element exceptionRoot = persistence.getDocument().createElement("Exception");
 			node.appendChild(exceptionRoot);
-			Element exceptionNode = pm.writeFragment(exception, doc);
+			Element exceptionNode = persistence.writeFragment(exception);
 			exceptionRoot.appendChild(exceptionNode);
 		}
 		return node;

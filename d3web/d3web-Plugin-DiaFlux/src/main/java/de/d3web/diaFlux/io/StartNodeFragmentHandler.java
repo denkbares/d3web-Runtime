@@ -20,9 +20,9 @@ package de.d3web.diaFlux.io;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
@@ -32,13 +32,12 @@ import de.d3web.diaFlux.flow.StartNode;
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
-public class StartNodeFragmentHandler extends
-		AbstractNodeFragmentHandler {
+public class StartNodeFragmentHandler extends AbstractNodeFragmentHandler {
 
 	private static final String START = "Start";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
 		String name = element.getAttribute(DiaFluxPersistenceHandler.NAME);
 
@@ -46,15 +45,14 @@ public class StartNodeFragmentHandler extends
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Node node = (Node) object;
-		Element nodeElement = createNodeElement(node, doc);
+		Element nodeElement = createNodeElement(node, persistence.getDocument());
 
-		Element startElement = doc.createElement(START);
+		Element startElement = persistence.getDocument().createElement(START);
 		nodeElement.appendChild(startElement);
 
-		startElement.appendChild(doc.createTextNode(node.getName()));
-
+		startElement.appendChild(persistence.getDocument().createTextNode(node.getName()));
 		return nodeElement;
 	}
 

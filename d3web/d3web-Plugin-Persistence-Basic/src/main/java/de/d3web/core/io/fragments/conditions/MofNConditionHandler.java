@@ -22,13 +22,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondMofN;
-import de.d3web.core.io.FragmentManager;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -38,7 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class MofNConditionHandler implements FragmentHandler {
+public class MofNConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -51,28 +49,26 @@ public class MofNConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		int min = Integer.parseInt(element.getAttribute("min"));
 		int max = Integer.parseInt(element.getAttribute("max"));
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		FragmentManager pm = PersistenceManager.getInstance();
 		List<Condition> conds = new ArrayList<Condition>();
 		for (Element child : childNodes) {
-			conds.add((Condition) pm.readFragment(child, kb));
+			conds.add((Condition) persistence.readFragment(child));
 		}
 		return new CondMofN(conds, min, max);
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondMofN cond = (CondMofN) object;
-		Element element = XMLUtil.writeCondition(doc, "MofN");
+		Element element = XMLUtil.writeCondition(persistence.getDocument(), "MofN");
 		element.setAttribute("min", "" + cond.getMin());
 		element.setAttribute("max", "" + cond.getMax());
 		element.setAttribute("size", "" + cond.getTerms().size());
-		FragmentManager pm = PersistenceManager.getInstance();
 		for (Condition ac : cond.getTerms()) {
-			element.appendChild(pm.writeFragment(ac, doc));
+			element.appendChild(persistence.writeFragment(ac));
 		}
 		return element;
 	}

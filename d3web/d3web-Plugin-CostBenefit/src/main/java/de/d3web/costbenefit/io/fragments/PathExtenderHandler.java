@@ -20,10 +20,9 @@ package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -35,7 +34,7 @@ import de.d3web.costbenefit.inference.SearchAlgorithm;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class PathExtenderHandler implements FragmentHandler {
+public class PathExtenderHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -52,10 +51,10 @@ public class PathExtenderHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		SearchAlgorithm subAlgorithm = null;
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			Object fragment = PersistenceManager.getInstance().readFragment(e, kb);
+			Object fragment = persistence.readFragment(e);
 			if (fragment instanceof SearchAlgorithm) {
 				subAlgorithm = (SearchAlgorithm) fragment;
 				break;
@@ -66,12 +65,11 @@ public class PathExtenderHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		PathExtender algorithm = (PathExtender) object;
-		Element element = doc.createElement("searchAlgorithm");
+		Element element = persistence.getDocument().createElement("searchAlgorithm");
 		element.setAttribute("name", "PathExtender");
-		Element fragment = PersistenceManager.getInstance().writeFragment(
-				algorithm.getSubalgorithm(), doc);
+		Element fragment = persistence.writeFragment(algorithm.getSubalgorithm());
 		element.appendChild(fragment);
 		return element;
 	}

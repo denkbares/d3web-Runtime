@@ -20,14 +20,14 @@ package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 
-public class DefaultCostFunctionHandler implements FragmentHandler {
+public class DefaultCostFunctionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -44,13 +44,13 @@ public class DefaultCostFunctionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		return new DefaultCostFunction();
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("costFunction");
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement("costFunction");
 		element.setAttribute("name", "DefaultCostFunction");
 		return element;
 	}

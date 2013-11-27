@@ -24,9 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -34,13 +34,13 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 21.01.2011
  */
-public class DateHandler implements FragmentHandler {
+public class DateHandler implements FragmentHandler<KnowledgeBase> {
 
 	private final static String ELEMENT_NAME = "Date";
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		try {
 			return format.parse(element.getTextContent());
 		}
@@ -53,8 +53,8 @@ public class DateHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement(ELEMENT_NAME);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
 		element.setTextContent(format.format(object));
 		return element;
 	}

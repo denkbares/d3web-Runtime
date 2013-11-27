@@ -22,11 +22,10 @@ package de.d3web.core.io.fragments;
 import java.io.IOException;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityInterval;
@@ -37,7 +36,7 @@ import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
  * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
-public class AbnormalityNumHandler implements FragmentHandler {
+public class AbnormalityNumHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String NODENAME = "numAbnormalities";
 
@@ -52,11 +51,11 @@ public class AbnormalityNumHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element n) throws IOException {
+	public Object read(Element n, Persistence<KnowledgeBase> persistence) throws IOException {
 		AbnormalityNum abnorm = new AbnormalityNum();
 		NodeList abChildren = n.getChildNodes();
 		for (Element child : XMLUtil.getElementList(abChildren)) {
-			Object readFragment = PersistenceManager.getInstance().readFragment(child, kb);
+			Object readFragment = persistence.readFragment(child);
 			if (readFragment instanceof AbnormalityInterval) {
 				abnorm.addValue((AbnormalityInterval) readFragment);
 			}
@@ -72,20 +71,19 @@ public class AbnormalityNumHandler implements FragmentHandler {
 			}
 			else {
 				throw new IOException(
-							"Object "
-									+ readFragment
-									+ " is neighter an AbnormalityInterval nor a list of AbnormalityIntervals");
+						"Object "
+								+ readFragment
+								+ " is neighter an AbnormalityInterval nor a list of AbnormalityIntervals");
 			}
 		}
 		return abnorm;
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement(NODENAME);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement(NODENAME);
 		AbnormalityNum abnormalityNum = (AbnormalityNum) object;
-		element.appendChild(PersistenceManager.getInstance().writeFragment(
-					abnormalityNum.getIntervals(), doc));
+		element.appendChild(persistence.writeFragment(abnormalityNum.getIntervals()));
 		return element;
 	}
 

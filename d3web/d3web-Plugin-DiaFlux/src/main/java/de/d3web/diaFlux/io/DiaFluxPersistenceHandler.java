@@ -29,9 +29,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -73,13 +75,13 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		HANDLERS.add(new CommentNodeFragmentHandler());
 		HANDLERS.add(new SnapshotNodeFragmentHandler());
 		HANDLERS.add(new ComposedNodeFragmentHandler());
-
 	}
 
 	@Override
-	public void write(KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException {
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
 
-		Document doc = XMLUtil.createEmptyDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("system", "d3web");
 		doc.appendChild(root);
@@ -87,34 +89,22 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		Element ksNode = doc.createElement(FLOWS_ELEM);
 		root.appendChild(ksNode);
 
-		FlowSet flowSet = DiaFluxUtils.getFlowSet(knowledgeBase);
-
+		FlowSet flowSet = DiaFluxUtils.getFlowSet(kb);
 		if (flowSet != null) {
-
 			float cur = 0;
-
-			int max = getEstimatedSize(knowledgeBase);
-
+			int max = getEstimatedSize(kb);
 			for (Flow flow : flowSet.getFlows()) {
-				ksNode.appendChild(writeFlow(flow, doc));
+				ksNode.appendChild(writeFlow(flow, persistence));
 				listener.updateProgress(++cur / max, "Saving knowledge base: DiaFlux");
 			}
-
 		}
 
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
-
 	}
 
-	/**
-	 * 
-	 * @param flow
-	 * @param doc
-	 * @param ksNode
-	 * @return
-	 * @throws IOException
-	 */
-	private Element writeFlow(Flow flow, Document doc) throws IOException {
+	private Element writeFlow(Flow flow, Persistence<KnowledgeBase> persistence) throws IOException {
+		Document doc = persistence.getDocument();
+
 		Element flowElem = doc.createElement(FLOW_ELEM);
 		flowElem.setAttribute(AUTOSTART, Boolean.toString(flow.isAutostart()));
 		flowElem.setAttribute(NAME, flow.getName());
@@ -126,54 +116,34 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		flowElem.appendChild(edgesElem);
 
 		for (Node node : flow.getNodes()) {
-			nodesElem.appendChild(createNodeElement(node, doc));
+			nodesElem.appendChild(createNodeElement(node, persistence));
 		}
 
 		for (Edge edge : flow.getEdges()) {
-			nodesElem.appendChild(createEdgeElement(edge, doc));
+			nodesElem.appendChild(createEdgeElement(edge, persistence));
 
 		}
 
-		XMLUtil.appendInfoStore(flowElem, flow, null);
-
+		XMLUtil.appendInfoStore(persistence, flowElem, flow, null);
 		return flowElem;
-
 	}
 
-	/**
-	 * 
-	 * @param edge
-	 * @param doc
-	 * @return
-	 * @throws IOException
-	 */
-	private Element createEdgeElement(Edge edge, Document doc) throws IOException {
-		Element edgeElem = doc.createElement(EDGE_ELEM);
+	private Element createEdgeElement(Edge edge, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element edgeElem = persistence.getDocument().createElement(EDGE_ELEM);
 
 		edgeElem.setAttribute(FROM_ID, edge.getStartNode().getID());
 		edgeElem.setAttribute(TO_ID, edge.getEndNode().getID());
 		edgeElem.setAttribute(ID, edge.getID());
 
-		Element condElem = PersistenceManager.getInstance().writeFragment(edge.getCondition(), doc);
+		Element condElem = persistence.writeFragment(edge.getCondition());
 		edgeElem.appendChild(condElem);
 
 		return edgeElem;
-
 	}
 
-	/**
-	 * 
-	 * @param node
-	 * @param parent
-	 * @param doc
-	 * @return
-	 * @throws IOException
-	 */
-	private Element createNodeElement(Node node, Document doc) throws IOException {
-
+	private Element createNodeElement(Node node, Persistence<KnowledgeBase> persistence) throws IOException {
 		NodeFragmentHandler handler = getFragmentHandler(node);
-
-		Element nodeElem = handler.write(node, doc);
+		Element nodeElem = handler.write(node, persistence);
 
 		nodeElem.setAttribute(ID, node.getID());
 		nodeElem.setAttribute(NAME, node.getName());
@@ -181,118 +151,71 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		return nodeElem;
 	}
 
-	/**
-	 * 
-	 * @param node
-	 * @throws NoSuchFragmentHandlerException
-	 */
 	private NodeFragmentHandler getFragmentHandler(Node node) throws NoSuchFragmentHandlerException {
-
 		for (NodeFragmentHandler handler : HANDLERS) {
 			if (handler.canWrite(node)) return handler;
 		}
-
 		throw new NoSuchFragmentHandlerException("No FragmentHandler found for node '" + node + "'");
 	}
 
-	/**
-	 * 
-	 * @param node
-	 * @throws NoSuchFragmentHandlerException
-	 */
 	private NodeFragmentHandler getFragmentHandler(Element node) throws NoSuchFragmentHandlerException {
-
 		for (NodeFragmentHandler handler : HANDLERS) {
 			if (handler.canRead(node)) return handler;
 		}
-
 		throw new NoSuchFragmentHandlerException("No FragmentHandler found for node '" + node + "'");
 	}
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase knowledgeBase) {
-
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(knowledgeBase);
-
 		return flowSet == null ? 0 : flowSet.size();
 	}
 
 	@Override
-	public void read(KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException {
-
-		Document doc = XMLUtil.streamToDocument(stream);
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		Document doc = persistence.getDocument();
 
 		NodeList flows = doc.getElementsByTagName(FLOW_ELEM);
-
 		for (int i = 0; i < flows.getLength(); i++) {
 			Element flowElem = (Element) flows.item(i);
 
-			Flow flow = readFlow(knowledgeBase, flowElem);
-
-			fillInfoStore(flow, flowElem, knowledgeBase);
-
+			Flow flow = readFlow(persistence, flowElem);
+			fillInfoStore(persistence, flow, flowElem);
 		}
-
 	}
 
-	/**
-	 * 
-	 * @created 24.02.2011
-	 * @param flow
-	 * @param flowElem
-	 * @param knowledgeBase
-	 * @throws IOException
-	 */
-	private void fillInfoStore(Flow flow, Element flowElem, KnowledgeBase knowledgeBase) throws IOException {
-
+	private void fillInfoStore(Persistence<?> persistence, Flow flow, Element flowElem) throws IOException {
 		NodeList list = flowElem.getElementsByTagName(XMLUtil.INFO_STORE);
-
 		if (list.getLength() != 0) {
-			XMLUtil.fillInfoStore(flow.getInfoStore(), (Element) list.item(0), knowledgeBase);
+			XMLUtil.fillInfoStore(persistence, flow.getInfoStore(), (Element) list.item(0));
 		}
-
 	}
 
-	/**
-	 * 
-	 * @created 11.11.2010
-	 * @param knowledgeBase
-	 * @param flowElem
-	 * @throws IOException
-	 */
-	private Flow readFlow(KnowledgeBase knowledgeBase, Element flowElem) throws IOException {
+	private Flow readFlow(Persistence<KnowledgeBase> persistence, Element flowElem) throws IOException {
 		NodeList nodeList = flowElem.getElementsByTagName(NODE_ELEM);
 		List<Node> nodes = new ArrayList<Node>();
 
 		for (int i = 0; i < nodeList.getLength(); i++) {
-			nodes.add(readNode(knowledgeBase, (Element) nodeList.item(i)));
+			nodes.add(readNode(persistence, (Element) nodeList.item(i)));
 		}
 
 		NodeList edgeList = flowElem.getElementsByTagName(EDGE_ELEM);
 		List<Edge> edges = new ArrayList<Edge>();
 
 		for (int i = 0; i < edgeList.getLength(); i++) {
-			edges.add(readEdge(knowledgeBase, (Element) edgeList.item(i), nodes));
+			edges.add(readEdge(persistence, (Element) edgeList.item(i), nodes));
 		}
 
 		String name = flowElem.getAttribute(NAME);
 		boolean autostart = Boolean.parseBoolean(flowElem.getAttribute(AUTOSTART));
-		Flow flow = FlowFactory.createFlow(knowledgeBase, name, nodes, edges);
+		Flow flow = FlowFactory.createFlow(persistence.getArtifact(), name, nodes, edges);
 		flow.setAutostart(autostart);
 		return flow;
 
 	}
 
-	/**
-	 * 
-	 * @param knowledgeBase
-	 * @param nodes
-	 * @param item
-	 * @return
-	 * @throws IOException
-	 */
-	private Edge readEdge(KnowledgeBase knowledgeBase, Element edgeElem, List<Node> nodes) throws IOException {
-
+	private Edge readEdge(Persistence<KnowledgeBase> persistence, Element edgeElem, List<Node> nodes) throws IOException {
 		String fromID = edgeElem.getAttribute(FROM_ID);
 		String toID = edgeElem.getAttribute(TO_ID);
 		String id = edgeElem.getAttribute(ID);
@@ -300,21 +223,19 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		Node startNode = getNodeByID(fromID, nodes);
 		Node endNode = getNodeByID(toID, nodes);
 
-		Condition condition = (Condition) PersistenceManager.getInstance().readFragment(
-				(Element) edgeElem.getElementsByTagName("Condition").item(0), knowledgeBase);
+		Condition condition = (Condition) persistence.readFragment(
+				(Element) edgeElem.getElementsByTagName("Condition").item(0));
 		return FlowFactory.createEdge(id, startNode, endNode, condition);
 	}
 
-	private Node readNode(KnowledgeBase knowledgeBase, Element node) throws IOException {
-
-		return (Node) getFragmentHandler(node).read(knowledgeBase, node);
+	private Node readNode(Persistence<KnowledgeBase> persistence, Element node) throws IOException {
+		return (Node) getFragmentHandler(node).read(node, persistence);
 	}
 
 	public static Node getNodeByID(String nodeID, List<Node> nodes) {
 		for (Node node : nodes) {
 			if (node.getID().equals(nodeID)) return node;
 		}
-
 		return null;
 	}
 

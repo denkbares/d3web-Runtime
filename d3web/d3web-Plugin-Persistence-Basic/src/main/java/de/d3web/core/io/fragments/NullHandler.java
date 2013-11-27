@@ -21,10 +21,9 @@ package de.d3web.core.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.fragments.FragmentHandler;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -33,7 +32,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class NullHandler implements FragmentHandler {
+public class NullHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -46,13 +45,13 @@ public class NullHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		return null;
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		return doc.createElement("null");
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		return persistence.getDocument().createElement("null");
 	}
 
 }

@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.MultipleChoiceValue;
 
@@ -37,13 +37,13 @@ import de.d3web.core.session.values.MultipleChoiceValue;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class MultipleChoiceValueHandler implements FragmentHandler {
+public class MultipleChoiceValueHandler implements FragmentHandler<SessionRecord> {
 
 	private static final String elementName = "multipleChoiceValue";
 	private static final String choiceElementName = "choice";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		List<ChoiceID> choiceIDs = new LinkedList<ChoiceID>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			ChoiceID answer = new ChoiceID(e.getTextContent());
@@ -53,11 +53,11 @@ public class MultipleChoiceValueHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		MultipleChoiceValue mcv = (MultipleChoiceValue) object;
-		Element element = doc.createElement(elementName);
+		Element element = persistence.getDocument().createElement(elementName);
 		for (ChoiceID choice : mcv.getChoiceIDs()) {
-			Element choiceElement = doc.createElement(choiceElementName);
+			Element choiceElement = persistence.getDocument().createElement(choiceElementName);
 			choiceElement.setTextContent(choice.getText());
 			element.appendChild(choiceElement);
 		}

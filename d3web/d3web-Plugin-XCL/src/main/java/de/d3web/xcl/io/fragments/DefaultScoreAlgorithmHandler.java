@@ -20,15 +20,15 @@ package de.d3web.xcl.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.xcl.DefaultScoreAlgorithm;
 
-public class DefaultScoreAlgorithmHandler implements FragmentHandler {
+public class DefaultScoreAlgorithmHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String DEFAULT_SCORE_ALGORITHM = "DefaultScoreAlgorithm";
 	public static final String SCORE_ALGORITHM = "scoreAlgorithm";
@@ -45,7 +45,7 @@ public class DefaultScoreAlgorithmHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		DefaultScoreAlgorithm algorithm = new DefaultScoreAlgorithm();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			if (e.getNodeName().equals("defaultEstablishedThreshold")) {
@@ -62,15 +62,15 @@ public class DefaultScoreAlgorithmHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element e = doc.createElement(SCORE_ALGORITHM);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element e = persistence.getDocument().createElement(SCORE_ALGORITHM);
 		e.setAttribute("name", DEFAULT_SCORE_ALGORITHM);
 		DefaultScoreAlgorithm algorithm = (DefaultScoreAlgorithm) object;
-		Element established = doc.createElement("defaultEstablishedThreshold");
+		Element established = persistence.getDocument().createElement("defaultEstablishedThreshold");
 		established.setAttribute("value", "" + algorithm.getDefaultEstablishedThreshold());
-		Element suggested = doc.createElement("defaultSuggestedThreshold");
+		Element suggested = persistence.getDocument().createElement("defaultSuggestedThreshold");
 		suggested.setAttribute("value", "" + algorithm.getDefaultSuggestedThreshold());
-		Element minSupport = doc.createElement("minSupport");
+		Element minSupport = persistence.getDocument().createElement("minSupport");
 		minSupport.setAttribute("value", "" + algorithm.getDefaultMinSupport());
 		e.appendChild(established);
 		e.appendChild(suggested);

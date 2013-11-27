@@ -64,7 +64,7 @@ import de.d3web.utils.Streams;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public final class PersistenceManager extends FragmentManager {
+public final class PersistenceManager {
 
 	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
 	public static final String EXTENDS_PATH_PREFIX = "exports/";
@@ -78,6 +78,7 @@ public final class PersistenceManager extends FragmentManager {
 
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
+	private final FragmentManager<KnowledgeBase> fragmentManager = new FragmentManager<KnowledgeBase>();
 
 	public final static class KnowledgeBaseInfo {
 
@@ -206,11 +207,15 @@ public final class PersistenceManager extends FragmentManager {
 		updatePlugins();
 	}
 
+	public FragmentManager<KnowledgeBase> getFragmentManager() {
+		return fragmentManager;
+	}
+
 	private void updatePlugins() {
 		PluginManager manager = PluginManager.getInstance();
 		readerPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_READER);
 		writerPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_WRITER);
-		fragmentPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_FRAGMENT);
+		getFragmentManager().init(EXTENDED_PLUGIN_ID, EXTENDED_POINT_FRAGMENT);
 	}
 
 	/**
@@ -285,7 +290,7 @@ public final class PersistenceManager extends FragmentManager {
 						cpl.updateProgress(0, "reading entry " + name);
 						// initialize the reader
 						KnowledgeReader reader = (KnowledgeReader) plugin.getSingleton();
-						reader.read(kb, zipfile.getInputStream(entry), cpl);
+						reader.read(this, kb, zipfile.getInputStream(entry), cpl);
 						// and mark this as done
 						files.remove(entry);
 						parsedAnyFile = true;
@@ -450,7 +455,7 @@ public final class PersistenceManager extends FragmentManager {
 				jarOutputStream.putNextEntry(entry);
 				KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
 				cpl.next(writer.getEstimatedSize(knowledgeBase));
-				writer.write(knowledgeBase, jarOutputStream, cpl);
+				writer.write(this, knowledgeBase, jarOutputStream, cpl);
 			}
 			cpl.next(knowledgeBase.getResources().size());
 			int i = 0;

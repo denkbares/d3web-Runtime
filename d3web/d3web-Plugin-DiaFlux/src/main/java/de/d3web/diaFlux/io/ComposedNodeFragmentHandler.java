@@ -20,10 +20,10 @@ package de.d3web.diaFlux.io;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.ComposedNode;
 
@@ -33,8 +33,7 @@ import de.d3web.diaFlux.flow.ComposedNode;
  * @author Reinhard Hatko
  * @created 28.11.2010
  */
-public class ComposedNodeFragmentHandler extends
-		AbstractNodeFragmentHandler {
+public class ComposedNodeFragmentHandler extends AbstractNodeFragmentHandler {
 
 	private static final String COMPOSED = "Composed";
 	public static final String START_NODE_NAME = "StartNodeName";
@@ -42,7 +41,7 @@ public class ComposedNodeFragmentHandler extends
 	public static final String CALL_FLOW = "CallFlow";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
 		String flowName = element.getElementsByTagName(ComposedNodeFragmentHandler.FLOW_NAME).item(
 				0).getTextContent();
@@ -53,23 +52,23 @@ public class ComposedNodeFragmentHandler extends
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ComposedNode node = (ComposedNode) object;
-		Element nodeElement = createNodeElement(node, doc);
+		Element nodeElement = createNodeElement(node, persistence.getDocument());
 
-		Element composedElem = doc.createElement(COMPOSED);
+		Element composedElem = persistence.getDocument().createElement(COMPOSED);
 		nodeElement.appendChild(composedElem);
 
-		Element flowElem = doc.createElement(ComposedNodeFragmentHandler.FLOW_NAME);
+		Element flowElem = persistence.getDocument().createElement(ComposedNodeFragmentHandler.FLOW_NAME);
 		composedElem.appendChild(flowElem);
 
-		Text flowNameNode = doc.createTextNode(node.getCalledFlowName());
+		Text flowNameNode = persistence.getDocument().createTextNode(node.getCalledFlowName());
 		flowElem.appendChild(flowNameNode);
 
-		Element startNodeElem = doc.createElement(ComposedNodeFragmentHandler.START_NODE_NAME);
+		Element startNodeElem = persistence.getDocument().createElement(ComposedNodeFragmentHandler.START_NODE_NAME);
 		composedElem.appendChild(startNodeElem);
 
-		Text startNameNode = doc.createTextNode(node.getCalledStartNodeName());
+		Text startNameNode = persistence.getDocument().createTextNode(node.getCalledStartNodeName());
 		startNodeElem.appendChild(startNameNode);
 
 		return nodeElement;

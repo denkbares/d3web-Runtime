@@ -20,11 +20,11 @@ package de.d3web.core.records.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
-import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.values.TextValue;
 
 /**
@@ -33,19 +33,19 @@ import de.d3web.core.session.values.TextValue;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class TextValueHandler implements FragmentHandler {
+public class TextValueHandler implements FragmentHandler<SessionRecord> {
 
 	private static final String elementName = "textValue";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		return new TextValue(element.getTextContent());
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		TextValue tv = (TextValue) object;
-		Element element = doc.createElement(elementName);
+		Element element = persistence.getDocument().createElement(elementName);
 		element.setTextContent((String) tv.getValue());
 		return element;
 	}

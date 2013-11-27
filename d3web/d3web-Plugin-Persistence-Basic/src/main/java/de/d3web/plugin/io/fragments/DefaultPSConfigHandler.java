@@ -20,13 +20,13 @@ package de.d3web.plugin.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSConfig.PSState;
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Autodetect;
@@ -39,7 +39,7 @@ import de.d3web.plugin.PluginManager;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DefaultPSConfigHandler implements FragmentHandler {
+public class DefaultPSConfigHandler implements FragmentHandler<KnowledgeBase> {
 
 	protected static final String EXTENSION_ID = "extensionID";
 	protected static final String PS_ENTRY = "psEntry";
@@ -55,7 +55,7 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String extensionID = element.getAttribute(EXTENSION_ID);
 		String pluginID = element.getAttribute("pluginID");
 		PluginManager pluginManager = PluginManager.getInstance();
@@ -100,13 +100,13 @@ public class DefaultPSConfigHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		if (object instanceof DummyPSConfig) {
 			DummyPSConfig dummy = (DummyPSConfig) object;
-			return (Element) doc.importNode(dummy.getElement(), true);
+			return (Element) persistence.getDocument().importNode(dummy.getElement(), true);
 		}
 		PSConfig psConfig = (PSConfig) object;
-		Element element = doc.createElement(PS_ENTRY);
+		Element element = persistence.getDocument().createElement(PS_ENTRY);
 		element.setAttribute(EXTENSION_ID, psConfig.getExtensionID());
 		element.setAttribute("pluginID", psConfig.getPluginID());
 		element.setAttribute("state", psConfig.getPsState().name());

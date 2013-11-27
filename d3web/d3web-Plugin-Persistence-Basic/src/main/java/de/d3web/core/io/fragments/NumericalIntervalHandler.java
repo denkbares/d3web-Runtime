@@ -26,6 +26,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
@@ -38,7 +39,7 @@ import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
  * 
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
-public class NumericalIntervalHandler implements FragmentHandler {
+public class NumericalIntervalHandler implements FragmentHandler<KnowledgeBase> {
 
 	/**
 	 * the tag-name for single intervals
@@ -182,7 +183,7 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		if (element.getNodeName().equals(TAG)) {
 			return getIntervall(element);
 		}
@@ -190,7 +191,7 @@ public class NumericalIntervalHandler implements FragmentHandler {
 			List<NumericalInterval> list = new ArrayList<NumericalInterval>();
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 			for (Element child : childNodes) {
-				list.add((NumericalInterval) read(kb, child));
+				list.add((NumericalInterval) read(child, persistence));
 			}
 			return list;
 		}
@@ -200,15 +201,15 @@ public class NumericalIntervalHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		if (object instanceof NumericalInterval) {
-			return getIntervalElemenent(doc, (NumericalInterval) object);
+			return getIntervalElemenent(persistence.getDocument(), (NumericalInterval) object);
 		}
 		else if (object instanceof List<?>) {
 			List<?> list = (List<?>) object;
-			Element root = doc.createElement(GROUPTAG);
+			Element root = persistence.getDocument().createElement(GROUPTAG);
 			for (Object o : list) {
-				root.appendChild(write(o, doc));
+				root.appendChild(write(o, persistence));
 			}
 			return root;
 		}

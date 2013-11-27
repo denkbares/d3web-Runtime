@@ -35,8 +35,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressInputStream;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -57,9 +60,15 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	public final static String MMINFO_PERSISTENCE_HANDLER = "mminfo";
 
 	@Override
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		listener.updateProgress(0, "Starting to load multimedia");
-		MMInfoContentHandler handler = new MMInfoContentHandler(kb);
+
+		// we create a persistence with an empty xml document
+		// because we do not read from it, but require it for
+		// creating elements our of sax parser if a fragment handler
+		// shall be used for a specific mminfo property
+		Persistence<KnowledgeBase> dummyPersistence = new KnowledgeBasePersistence(manager, kb);
+		MMInfoContentHandler handler = new MMInfoContentHandler(dummyPersistence);
 		try {
 			InputStream in = new ProgressInputStream(stream, listener, "Loading multimedia");
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -81,7 +90,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 	}
 
 	@Override
-	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
 		listener.updateProgress(0, "Starting to save multimedia");
 		int maxvalue = getEstimatedSize(kb);
 		float aktvalue = 0;
@@ -89,20 +98,22 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 				kb.getManager().getAllTerminologyObjects());
 		Collections.sort(objects, new NamedObjectComparator());
 
-		Document doc = XMLUtil.createEmptyDocument();
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
+
 		Element mminfosElement = doc.createElement("MMInfos");
 		doc.appendChild(mminfosElement);
 		Element kbElement = doc.createElement("KnowledgeBase");
 		mminfosElement.appendChild(kbElement);
-		XMLUtil.appendInfoStoreEntries(kbElement, kb.getInfoStore(), Autosave.mminfo);
+		XMLUtil.appendInfoStoreEntries(persistence, kbElement, kb.getInfoStore(), Autosave.mminfo);
 		listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
 				+ Math.round(aktvalue) + " of " + maxvalue);
 		for (TerminologyObject object : objects) {
-			appendIDObject(doc, mminfosElement, object, null);
+			appendIDObject(persistence, mminfosElement, object, null);
 			// also append choices
 			if (object instanceof QuestionChoice) {
 				for (Choice c : ((QuestionChoice) object).getAllAlternatives()) {
-					appendIDObject(doc, mminfosElement, object, c);
+					appendIDObject(persistence, mminfosElement, object, c);
 				}
 			}
 			listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
@@ -112,15 +123,17 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
-	private void appendIDObject(Document doc, Element mminfosElement, TerminologyObject object, Choice choice) throws IOException {
-		Element idObjectElement = doc.createElement("idObject");
+	private void appendIDObject(Persistence<KnowledgeBase> persistence, Element mminfosElement, TerminologyObject object, Choice choice) throws IOException {
+		Element idObjectElement = persistence.getDocument().createElement("idObject");
 		idObjectElement.setAttribute("name", object.getName());
 		if (choice != null) {
 			idObjectElement.setAttribute("choice", choice.getName());
-			XMLUtil.appendInfoStoreEntries(idObjectElement, choice.getInfoStore(), Autosave.mminfo);
+			XMLUtil.appendInfoStoreEntries(
+					persistence, idObjectElement, choice.getInfoStore(), Autosave.mminfo);
 		}
 		else {
-			XMLUtil.appendInfoStoreEntries(idObjectElement, object.getInfoStore(), Autosave.mminfo);
+			XMLUtil.appendInfoStoreEntries(
+					persistence, idObjectElement, object.getInfoStore(), Autosave.mminfo);
 		}
 		if (XMLUtil.getElementList(idObjectElement.getChildNodes()).size() > 0) {
 			mminfosElement.appendChild(idObjectElement);

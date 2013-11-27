@@ -22,13 +22,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.CondNot;
-import de.d3web.core.io.FragmentManager;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -38,7 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class NotConditionHandler implements FragmentHandler {
+public class NotConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -51,12 +49,11 @@ public class NotConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		FragmentManager pm = PersistenceManager.getInstance();
 		List<Condition> conds = new ArrayList<Condition>();
 		for (Element child : childNodes) {
-			conds.add((Condition) pm.readFragment(child, kb));
+			conds.add((Condition) persistence.readFragment(child));
 		}
 		if (conds.size() == 1) {
 			return new CondNot(conds.get(0));
@@ -67,12 +64,11 @@ public class NotConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondNot cond = (CondNot) object;
-		Element element = XMLUtil.writeCondition(doc, "not");
-		FragmentManager pm = PersistenceManager.getInstance();
+		Element element = XMLUtil.writeCondition(persistence.getDocument(), "not");
 		for (Condition ac : cond.getTerms()) {
-			element.appendChild(pm.writeFragment(ac, doc));
+			element.appendChild(persistence.writeFragment(ac));
 		}
 		return element;
 	}

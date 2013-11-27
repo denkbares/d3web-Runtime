@@ -22,11 +22,11 @@ package de.d3web.core.io.fragments;
 import java.io.IOException;
 import java.util.Set;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
@@ -43,7 +43,7 @@ import de.d3web.core.session.values.ChoiceValue;
  * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
-public class DefaultAbnormalityHandler implements FragmentHandler {
+public class DefaultAbnormalityHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String NODENAME = "anormalities";
 
@@ -60,14 +60,14 @@ public class DefaultAbnormalityHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element n) throws IOException {
+	public Object read(Element n, Persistence<KnowledgeBase> persistence) throws IOException {
 		Question question = null;
 		NodeList abChildren = n.getChildNodes();
 		for (int k = 0; k < abChildren.getLength(); ++k) {
 			Node abChild = abChildren.item(k);
 			if (abChild.getNodeName().equalsIgnoreCase("question")) {
-				question = (Question) kb.getManager().search(abChild.getAttributes()
-						.getNamedItem("ID").getNodeValue());
+				question = (Question) persistence.getArtifact().getManager().search(
+						abChild.getAttributes().getNamedItem("ID").getNodeValue());
 				break;
 			}
 		}
@@ -80,14 +80,14 @@ public class DefaultAbnormalityHandler implements FragmentHandler {
 				for (int l = 0; l < vals.getLength(); ++l) {
 					Node valChild = vals.item(l);
 					if (valChild.getNodeName().equalsIgnoreCase(
-								"abnormality")) {
+							"abnormality")) {
 						String ansID = valChild.getAttributes()
-									.getNamedItem("ID").getNodeValue();
+								.getNamedItem("ID").getNodeValue();
 						Value ans = new ChoiceValue(new ChoiceID(ansID));
 						String value = valChild.getAttributes()
-									.getNamedItem("value").getNodeValue();
+								.getNamedItem("value").getNodeValue();
 						abnorm.addValue(ans, AbnormalityUtils
-									.convertConstantStringToValue(value));
+								.convertConstantStringToValue(value));
 					}
 				}
 			}
@@ -99,19 +99,19 @@ public class DefaultAbnormalityHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement(NODENAME);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement(NODENAME);
 		DefaultAbnormality abnormality = (DefaultAbnormality) object;
-		Element valuesNode = doc.createElement("values");
+		Element valuesNode = persistence.getDocument().createElement("values");
 		Set<Value> answers = abnormality.getAnswerSet();
 		// while (answers.hasMoreElements()) {
 		for (Value answer : answers) {
 			// Value answer = answers.nextElement();
-			Element abnormalityElement = doc.createElement("abnormality");
+			Element abnormalityElement = persistence.getDocument().createElement("abnormality");
 			abnormalityElement.setAttribute("ID", ValueFactory.getID_or_Value(answer));
 			abnormalityElement.setAttribute(
-						"value",
-						AbnormalityUtils.convertValueToConstantString(abnormality.getValue(answer)));
+					"value",
+					AbnormalityUtils.convertValueToConstantString(abnormality.getValue(answer)));
 			valuesNode.appendChild(abnormalityElement);
 		}
 		element.appendChild(valuesNode);

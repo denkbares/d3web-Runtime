@@ -541,10 +541,13 @@ public class SessionPersistenceTest {
 		Element element = doc.createElement("element");
 		element.setTextContent("no Date");
 		doc.appendChild(element);
+		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
+		SessionPersistence persistence =
+				new SessionPersistence(spm, new DefaultSessionRecord(), element);
 		DateValueHandler handler = new DateValueHandler();
 		Throwable expected = null;
 		try {
-			handler.read(null, element);
+			handler.read(element, persistence);
 		}
 		catch (IOException e) {
 			expected = e.getCause();
@@ -553,7 +556,7 @@ public class SessionPersistenceTest {
 		File file = new File("src/test/resources/parseException.xml");
 		expected = null;
 		try {
-			SessionPersistenceManager.getInstance().loadSessions(file, new DummyProgressListener());
+			spm.loadSessions(file, new DummyProgressListener());
 		}
 		catch (IOException e) {
 			expected = e.getCause();
@@ -576,9 +579,11 @@ public class SessionPersistenceTest {
 		Element element = doc.createElement(UndefinedHandler.elementName);
 		doc.appendChild(element);
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-		Object readFragment = spm.readFragment(element, null);
+		SessionPersistence persistence =
+				new SessionPersistence(spm, new DefaultSessionRecord(), element);
+		Object readFragment = persistence.readFragment(element);
 		Assert.assertTrue(readFragment instanceof UndefinedValue);
-		Element writeFragment = spm.writeFragment(UndefinedValue.getInstance(), doc);
+		Element writeFragment = persistence.writeFragment(UndefinedValue.getInstance());
 		Assert.assertTrue(element.isEqualNode(writeFragment));
 	}
 

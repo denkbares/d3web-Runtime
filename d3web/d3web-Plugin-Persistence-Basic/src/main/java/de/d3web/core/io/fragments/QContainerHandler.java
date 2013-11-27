@@ -21,9 +21,9 @@ package de.d3web.core.io.fragments;
 import java.io.IOException;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.info.Property.Autosave;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class QContainerHandler implements FragmentHandler {
+public class QContainerHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -49,29 +49,29 @@ public class QContainerHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String id = element.getAttribute("name");
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		QContainer qcon = new QContainer(kb, id);
+		QContainer qcon = new QContainer(persistence.getArtifact(), id);
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : childNodes) {
 			if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
-				XMLUtil.fillInfoStore(qcon.getInfoStore(), child, kb);
+				XMLUtil.fillInfoStore(persistence, qcon.getInfoStore(), child);
 			}
 			// Read old Properties Format
 			else if (ph.canRead(child)) {
-				InfoStoreUtil.copyEntries(ph.read(kb, child), qcon.getInfoStore());
+				InfoStoreUtil.copyEntries(ph.read(persistence, child), qcon.getInfoStore());
 			}
 		}
 		return qcon;
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("QContainer");
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement("QContainer");
 		QContainer qContainer = (QContainer) object;
 		element.setAttribute("name", qContainer.getName());
-		XMLUtil.appendInfoStore(element, qContainer, Autosave.basic);
+		XMLUtil.appendInfoStore(persistence, element, qContainer, Autosave.basic);
 		return element;
 	}
 }

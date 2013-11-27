@@ -20,10 +20,9 @@ package de.d3web.core.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.io.Persistence;
 
 /**
  * Interface for handlers of fragments. They are used to read/write similar
@@ -31,27 +30,28 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public interface FragmentHandler {
+public interface FragmentHandler<Artifact> {
 
 	/**
 	 * Reads an xml element and creates the object in represents.
 	 * 
-	 * @param kb Knowledgebase in which the object should be created
 	 * @param element xml element containing the representation of the object
+	 * @param persistence TODO
+	 * 
 	 * @return object represented by the xml element
 	 * @throws IOException if an error occurs
 	 */
-	public Object read(KnowledgeBase kb, Element element) throws IOException;
+	public Object read(Element element, Persistence<Artifact> persistence) throws IOException;
 
 	/**
 	 * Creates an xml element as a representation of the given object
 	 * 
 	 * @param object object which should be represented
-	 * @param doc Document in which the element should be created
+	 * @param persistence TODO
 	 * @return an xml element representing the object
 	 * @throws IOException if an error occurs
 	 */
-	public Element write(Object object, Document doc) throws IOException;
+	public Element write(Object object, Persistence<Artifact> persistence) throws IOException;
 
 	/**
 	 * Checks if this handler can read the element

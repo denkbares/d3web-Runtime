@@ -21,10 +21,9 @@ package de.d3web.costbenefit.io.fragments;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -37,7 +36,7 @@ import de.d3web.costbenefit.inference.SearchAlgorithm;
  * 
  * @author Volker Belli (denkbares GmbH)
  */
-public class MultiSearchAlgorithmHandler implements FragmentHandler {
+public class MultiSearchAlgorithmHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -54,7 +53,7 @@ public class MultiSearchAlgorithmHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		MultiSearchAlgorithm algorithm = new MultiSearchAlgorithm();
 		String modeString = element.getAttribute("mode");
 		if (!modeString.isEmpty()) {
@@ -69,7 +68,7 @@ public class MultiSearchAlgorithmHandler implements FragmentHandler {
 			}
 		}
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			Object fragment = PersistenceManager.getInstance().readFragment(e, kb);
+			Object fragment = persistence.readFragment(e);
 			if (fragment instanceof SearchAlgorithm) {
 				algorithm.addSearchAlgorithms((SearchAlgorithm) fragment);
 			}
@@ -78,13 +77,13 @@ public class MultiSearchAlgorithmHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		MultiSearchAlgorithm algorithm = (MultiSearchAlgorithm) object;
-		Element element = doc.createElement("searchAlgorithm");
+		Element element = persistence.getDocument().createElement("searchAlgorithm");
 		element.setAttribute("name", "MultiSearchAlgorithm");
 		element.setAttribute("mode", algorithm.getMode().toString());
 		for (SearchAlgorithm childAlgorithm : algorithm.getSearchAlgorithms()) {
-			Element fragment = PersistenceManager.getInstance().writeFragment(childAlgorithm, doc);
+			Element fragment = persistence.writeFragment(childAlgorithm);
 			element.appendChild(fragment);
 		}
 		return element;

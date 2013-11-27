@@ -20,9 +20,9 @@ package de.d3web.diaFlux.io;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -33,18 +33,18 @@ import de.d3web.diaFlux.flow.NOOPAction;
  * @author Reinhard Hatko
  * @created 11.01.2011
  */
-public class NOOPActionHandler implements FragmentHandler {
+public class NOOPActionHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String NOOP = "NOOP";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		return new NOOPAction();
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element actionElem = doc.createElement(ActionNodeFragmentHandler.ACTION);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element actionElem = persistence.getDocument().createElement(ActionNodeFragmentHandler.ACTION);
 		actionElem.setAttribute("type", NOOP);
 
 		return actionElem;

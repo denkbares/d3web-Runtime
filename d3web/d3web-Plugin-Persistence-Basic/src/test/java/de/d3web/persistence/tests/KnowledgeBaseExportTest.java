@@ -29,10 +29,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.QContainerHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.io.fragments.SolutionsHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -50,9 +52,13 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class KnowledgeBaseExportTest {
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(),
+				new KnowledgeBase());
 	}
 
 	@Test
@@ -62,7 +68,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, persistence));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -77,7 +83,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, persistence));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -93,7 +99,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, persistence));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -105,7 +111,7 @@ public class KnowledgeBaseExportTest {
 	@Test
 	public void testQuestionOCOutput() throws Exception {
 
-		QuestionOC q1 = new QuestionOC(new KnowledgeBase(), "q1");
+		QuestionOC q1 = new QuestionOC(persistence.getArtifact(), "q1");
 		List<Choice> alternatives = new LinkedList<Choice>();
 		Choice a1 = new Choice("q1a1");
 		alternatives.add(a1);
@@ -113,7 +119,7 @@ public class KnowledgeBaseExportTest {
 
 		QuestionHandler qw = new QuestionHandler();
 
-		XMLTag isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qw.write(q1, persistence));
 
 		XMLTag shouldTag = new XMLTag("Question");
 		shouldTag.addAttribute("name", "q1");
@@ -131,7 +137,7 @@ public class KnowledgeBaseExportTest {
 
 	@Test
 	public void testQContainerOutput() throws Exception {
-		KnowledgeBase kb = new KnowledgeBase();
+		KnowledgeBase kb = persistence.getArtifact();
 		QContainer c1 = new QContainer(kb, "c1");
 
 		Question q1 = new QuestionText(kb, "q1");
@@ -139,7 +145,7 @@ public class KnowledgeBaseExportTest {
 
 		QContainerHandler qcw = new QContainerHandler();
 
-		XMLTag isTag = new XMLTag(qcw.write(c1, XMLUtil.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(qcw.write(c1, persistence));
 
 		XMLTag shouldTag = new XMLTag("QContainer");
 		shouldTag.addAttribute("name", "c1");
@@ -158,7 +164,7 @@ public class KnowledgeBaseExportTest {
 
 		SolutionsHandler dw = new SolutionsHandler();
 
-		XMLTag isTag = new XMLTag(dw.write(diag, XMLUtil.createEmptyDocument()));
+		XMLTag isTag = new XMLTag(dw.write(diag, persistence));
 
 		XMLTag shouldTag = new XMLTag("Diagnosis");
 		shouldTag.addAttribute("name", "d1");

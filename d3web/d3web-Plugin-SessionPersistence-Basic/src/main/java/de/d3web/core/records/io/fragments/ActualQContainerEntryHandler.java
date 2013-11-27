@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
 
@@ -37,7 +37,7 @@ import de.d3web.core.session.protocol.ActualQContainerEntry;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 18.12.2012
  */
-public class ActualQContainerEntryHandler implements FragmentHandler {
+public class ActualQContainerEntryHandler implements FragmentHandler<SessionRecord> {
 
 	private static final String ELEMENT_NAME = "entry";
 	private static final String ELEMENT_TYPE = "actualQContainer";
@@ -45,7 +45,7 @@ public class ActualQContainerEntryHandler implements FragmentHandler {
 	private static final String ATTR_OBJECT_NAME = "qContainer";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		String dateString = element.getAttribute(ATTR_DATE);
 		String name = element.getAttribute(ATTR_OBJECT_NAME);
 		try {
@@ -58,9 +58,9 @@ public class ActualQContainerEntryHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		ActualQContainerEntry entry = (ActualQContainerEntry) object;
-		Element element = doc.createElement(ELEMENT_NAME);
+		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
 		String dateString = SessionPersistenceManager.DATE_FORMAT.format(entry.getDate());
 		element.setAttribute(ATTR_DATE, dateString);
 		element.setAttribute("type", ELEMENT_TYPE);

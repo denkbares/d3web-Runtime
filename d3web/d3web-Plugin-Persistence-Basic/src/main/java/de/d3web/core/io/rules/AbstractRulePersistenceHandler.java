@@ -36,9 +36,10 @@ import org.w3c.dom.NodeList;
 import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
-import de.d3web.core.io.FragmentManager;
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -54,8 +55,9 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 	protected String ruletype;
 
 	@Override
-	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.createEmptyDocument();
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("system", "d3web");
 		root.setAttribute("type", ruletype);
@@ -63,10 +65,9 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		List<Rule> rules = new ArrayList<Rule>(getRules(kb));
 		// sort the rules
 		Collections.sort(rules, new RuleComparator());
-		FragmentManager pm = PersistenceManager.getInstance();
 		float count = 0;
 		for (Rule r : rules) {
-			Element element = pm.writeFragment(r, doc);
+			Element element = persistence.writeFragment(r);
 			root.appendChild(element);
 			listener.updateProgress(count++ / rules.size(), "Writing " + ruletype);
 		}
@@ -89,8 +90,10 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 	protected abstract Class<? extends PSMethodRulebased> getProblemSolverContent();
 
 	@Override
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.streamToDocument(stream);
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		Document doc = persistence.getDocument();
+
 		NodeList kbnodes = doc.getElementsByTagName("KnowledgeBase");
 		if (kbnodes.getLength() != 1) {
 			throw new IOException();
@@ -103,11 +106,10 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 			throw new IOException();
 		}
 		List<Element> children = XMLUtil.getElementList(root.getChildNodes());
-		FragmentManager pm = PersistenceManager.getInstance();
 		float count = 0;
 		List<Rule> rules = new ArrayList<Rule>();
 		for (Element child : children) {
-			rules.add((Rule) pm.readFragment(child, kb));
+			rules.add((Rule) persistence.readFragment(child));
 			listener.updateProgress(count++ / children.size(), "Reading " + ruletype);
 		}
 		for (Rule r : rules) {

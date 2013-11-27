@@ -27,8 +27,10 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.SolutionsHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -48,12 +50,16 @@ public class SolutionTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
+		KnowledgeBase kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
 
 		// create the diagnosis
-		diag = new Solution(new KnowledgeBase(), "d1");
+		diag = new Solution(kb, "d1");
 
 		dh = new SolutionsHandler();
 
@@ -65,7 +71,7 @@ public class SolutionTest {
 
 	@Test
 	public void testSolutionSimpleState() throws Exception {
-		isTag = new XMLTag(dh.write(diag, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(dh.write(diag, persistence));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -76,7 +82,7 @@ public class SolutionTest {
 
 		shouldTag.addAttribute("aPriProb", "N2");
 
-		isTag = new XMLTag(dh.write(diag, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(dh.write(diag, persistence));
 
 		assertEquals("(1)", shouldTag, isTag);
 	}
@@ -99,7 +105,7 @@ public class SolutionTest {
 
 		shouldTag.addChild(propertiesTag);
 
-		isTag = new XMLTag(dh.write(diag, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(dh.write(diag, persistence));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}

@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.io.BasicPersistenceHandler;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -109,7 +110,8 @@ public class BasicPersistenceHandlerTest {
 				return sb.toString();
 			}
 		};
-		basicPersistenceHandler.write(kb, stream, new DummyProgressListener());
+		basicPersistenceHandler.write(PersistenceManager.getInstance(), kb, stream,
+				new DummyProgressListener());
 		xmlcode = stream.toString();
 		isTag = new XMLTag(XMLTagUtils.generateNodeFromXMLCode(xmlcode, "KnowledgeBase", 0));
 

@@ -34,9 +34,8 @@ import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QNumWrapper;
-import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -49,7 +48,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
  * 
  * @author Markus Friedrich (denkbares GmbH), Norman Brümmer
  */
-public class FormulaElementHandler implements FragmentHandler {
+public class FormulaElementHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -66,13 +65,14 @@ public class FormulaElementHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		FormulaElement expr = null;
+		KnowledgeBase kb = persistence.getArtifact();
 		if (element.getNodeName().equalsIgnoreCase("FormulaPrimitive")) {
-			expr = createFormulaPrimitive(element, kb);
+			expr = createFormulaPrimitive(element, persistence);
 		}
 		else if (element.getNodeName().equalsIgnoreCase("FormulaTerm")) {
-			expr = createFormulaTerm(element, kb);
+			expr = createFormulaTerm(element, persistence);
 		}
 		else if (element.getNodeName().equalsIgnoreCase("QuestionNum")) {
 			// [MISC) tobi: QuestionNums are never saved directly.
@@ -86,11 +86,12 @@ public class FormulaElementHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Element element = null;
+		Document doc = persistence.getDocument();
 		if (object instanceof Operator) {
 			Operator fa = (Operator) object;
-			element = createFormulaTerm(doc, fa.getSymbol(), fa.getArg1(), fa.getArg2());
+			element = createFormulaTerm(persistence, fa.getSymbol(), fa.getArg1(), fa.getArg2());
 		}
 		else if (object instanceof FormulaNumber) {
 			FormulaNumber fa = (FormulaNumber) object;
@@ -108,14 +109,13 @@ public class FormulaElementHandler implements FragmentHandler {
 		return element;
 	}
 
-	private Element createFormulaTerm(Document doc, String symbol, Object argument1, Object argument2) throws DOMException, NoSuchFragmentHandlerException, IOException {
-		FragmentManager pm = PersistenceManager.getInstance();
-		Element element = doc.createElement("FormulaTerm");
+	private Element createFormulaTerm(Persistence<KnowledgeBase> persistence, String symbol, Object argument1, Object argument2) throws DOMException, NoSuchFragmentHandlerException, IOException {
+		Element element = persistence.getDocument().createElement("FormulaTerm");
 		element.setAttribute("type", symbol);
-		Element arg1 = doc.createElement("arg1");
-		arg1.appendChild(pm.writeFragment(argument1, doc));
-		Element arg2 = doc.createElement("arg2");
-		arg2.appendChild(pm.writeFragment(argument2, doc));
+		Element arg1 = persistence.getDocument().createElement("arg1");
+		arg1.appendChild(persistence.writeFragment(argument1));
+		Element arg2 = persistence.getDocument().createElement("arg2");
+		arg2.appendChild(persistence.writeFragment(argument2));
 		element.appendChild(arg1);
 		element.appendChild(arg2);
 		return element;
@@ -130,7 +130,7 @@ public class FormulaElementHandler implements FragmentHandler {
 		return element;
 	}
 
-	private static FormulaNumberElement createFormulaPrimitive(Node termNode, KnowledgeBase kb) {
+	private static FormulaNumberElement createFormulaPrimitive(Node termNode, Persistence<KnowledgeBase> persistence) {
 		FormulaNumberElement ret = null;
 		String type = termNode.getAttributes().getNamedItem("type").getNodeValue();
 		NodeList nl = termNode.getChildNodes();
@@ -146,7 +146,8 @@ public class FormulaElementHandler implements FragmentHandler {
 						ret = new FormulaNumber(new Double(val));
 					}
 					else if (type.equalsIgnoreCase("QNumWrapper")) {
-						QuestionNum qnum = (QuestionNum) kb.getManager().searchQuestion(val);
+						QuestionNum qnum = (QuestionNum)
+								persistence.getArtifact().getManager().searchQuestion(val);
 						ret = new QNumWrapper(qnum);
 					}
 				}
@@ -155,8 +156,7 @@ public class FormulaElementHandler implements FragmentHandler {
 		return ret;
 	}
 
-	private static FormulaElement createFormulaTerm(Node termNode,
-			KnowledgeBase kb) throws IOException {
+	private static FormulaElement createFormulaTerm(Node termNode, Persistence<KnowledgeBase> persistence) throws IOException {
 		FormulaElement ret = null;
 		FormulaElement arg1 = null;
 		FormulaElement arg2 = null;
@@ -170,8 +170,7 @@ public class FormulaElementHandler implements FragmentHandler {
 				boolean wasArg1 = arg.getNodeName().equalsIgnoreCase("arg1");
 				List<Element> nl = XMLUtil.getElementList(arg.getChildNodes());
 				for (Element argElem : nl) {
-					FormulaElement elem = (FormulaElement) PersistenceManager
-							.getInstance().readFragment(argElem, kb);
+					FormulaElement elem = (FormulaElement) persistence.readFragment(argElem);
 					if (elem != null) {
 						if (wasArg1) {
 							arg1 = elem;

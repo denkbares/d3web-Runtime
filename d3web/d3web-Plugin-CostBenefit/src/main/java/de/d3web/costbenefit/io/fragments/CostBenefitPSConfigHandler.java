@@ -22,11 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.PSConfig;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.CostFunction;
@@ -58,8 +57,8 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
-		PSConfig psconfig = (PSConfig) super.read(kb, element);
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
+		PSConfig psconfig = (PSConfig) super.read(element, persistence);
 		PSMethodCostBenefit psm = (PSMethodCostBenefit) psconfig.getPsMethod();
 		String sbfAttribute = element.getAttribute(STRATEGIC_BENEFIT_FACTOR_ATTRIBUTE);
 		if (!sbfAttribute.isEmpty()) {
@@ -71,7 +70,7 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 		}
 		List<Object> fragments = new ArrayList<Object>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			fragments.add(PersistenceManager.getInstance().readFragment(e, kb));
+			fragments.add(persistence.readFragment(e));
 		}
 		for (Object o : fragments) {
 			if (o instanceof CostFunction) {
@@ -88,17 +87,17 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element e = super.write(object, doc);
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element e = super.write(object, persistence);
 		PSConfig config = (PSConfig) object;
 		PSMethodCostBenefit psm = (PSMethodCostBenefit) config.getPsMethod();
 		e.setAttribute(STRATEGIC_BENEFIT_FACTOR_ATTRIBUTE,
 				String.valueOf(psm.getStrategicBenefitFactor()));
 		e.setAttribute(MANUAL_ATTRIBUTE,
 				String.valueOf(psm.isManualMode()));
-		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getTargetFunction(), doc));
-		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getSearchAlgorithm(), doc));
-		e.appendChild(PersistenceManager.getInstance().writeFragment(psm.getCostFunction(), doc));
+		e.appendChild(persistence.writeFragment(psm.getTargetFunction()));
+		e.appendChild(persistence.writeFragment(psm.getSearchAlgorithm()));
+		e.appendChild(persistence.writeFragment(psm.getCostFunction()));
 		return e;
 	}
 

@@ -34,9 +34,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -52,8 +54,7 @@ import de.d3web.xcl.XCLRelationType;
  * @author kazamatzuri, Markus Friedrich (denkbares GmbH)
  * 
  */
-public class XCLModelPersistenceHandler implements KnowledgeReader,
-		KnowledgeWriter {
+public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
 	public final static String ID = "xclpattern";
 
@@ -74,9 +75,9 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	public static final String ATTRIBUTE_SUGGESTED_THRESHOLD = "suggestedThreshold";
 
 	@Override
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.streamToDocument(stream);
-		parseModels(kb, doc, listener);
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		parseModels(persistence, listener);
 	}
 
 	@Override
@@ -84,8 +85,8 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		return kb.getAllKnowledgeSlicesFor(XCLModel.KNOWLEDGE_KIND).size();
 	}
 
-	private Element writeModel(XCLModel xclmodel, Document doc, RelationPool pool) throws IOException {
-		Element modelelement = doc.createElement(ELEMENT_XCL_MODEL);
+	private Element writeModel(Persistence<KnowledgeBase> persistence, XCLModel xclmodel, RelationPool pool) throws IOException {
+		Element modelelement = persistence.getDocument().createElement(ELEMENT_XCL_MODEL);
 		if (xclmodel.getMinSupport() != null) modelelement.setAttribute(ATTRIBUTE_MIN_SUPPORT,
 				String.valueOf(xclmodel.getMinSupport()));
 		if (xclmodel.getSuggestedThreshold() != null) modelelement.setAttribute(
@@ -96,23 +97,23 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 				xclmodel.getSolution().getName());
 		modelelement.setAttribute(ATTRIBUTE_CONSIDER_ONLY_RELEVANT_RELATIONS,
 				String.valueOf(xclmodel.isConsiderOnlyRelevantRelations()));
-		modelelement.appendChild(writeRelations(xclmodel.getNecessaryRelations(),
-				ELEMENT_NECESSARY_RELATIONS, doc, pool));
-		modelelement.appendChild(writeRelations(xclmodel.getSufficientRelations(),
-				ELEMENT_SUFFICIENT_RELATIONS, doc, pool));
-		modelelement.appendChild(writeRelations(xclmodel.getContradictingRelations(),
-				ELEMENT_CONTRADICTING_RELATIONS, doc, pool));
-		modelelement.appendChild(writeRelations(xclmodel.getRelations(),
-				ELEMENT_RELATIONS, doc, pool));
+		modelelement.appendChild(writeRelations(persistence, xclmodel.getNecessaryRelations(),
+				ELEMENT_NECESSARY_RELATIONS, pool));
+		modelelement.appendChild(writeRelations(persistence, xclmodel.getSufficientRelations(),
+				ELEMENT_SUFFICIENT_RELATIONS, pool));
+		modelelement.appendChild(writeRelations(persistence, xclmodel.getContradictingRelations(),
+				ELEMENT_CONTRADICTING_RELATIONS, pool));
+		modelelement.appendChild(writeRelations(persistence, xclmodel.getRelations(),
+				ELEMENT_RELATIONS, pool));
 		return modelelement;
 	}
 
-	private Element writeRelations(Collection<XCLRelation> relations, String elementName, Document doc, RelationPool pool) throws IOException {
-		Element relationsElement = doc.createElement(elementName);
+	private Element writeRelations(Persistence<KnowledgeBase> persistence, Collection<XCLRelation> relations, String elementName, RelationPool pool) throws IOException {
+		Element relationsElement = persistence.getDocument().createElement(elementName);
 		List<XCLRelation> relList = new ArrayList<XCLRelation>(relations);
 		Collections.sort(relList, XCLRelationComparator.getInstance());
 		for (XCLRelation current : relList) {
-			relationsElement.appendChild(writeRelation(current, doc, pool));
+			relationsElement.appendChild(writeRelation(persistence, current, pool));
 		}
 		return relationsElement;
 	}
@@ -129,35 +130,35 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	 * @return the xml element
 	 * @throws IOException if something went wrong
 	 */
-	private Element writeRelation(XCLRelation relation, Document doc, RelationPool pool) throws IOException {
+	private Element writeRelation(Persistence<KnowledgeBase> persistence, XCLRelation relation, RelationPool pool) throws IOException {
 		boolean isAdded = pool.add(relation);
 		String id = pool.getID(relation);
 		if (isAdded) {
 			// check if an equal relation is new and added to the pool,
 			// then add relation contents to xml
-			return writeRelation(id, relation, doc);
+			return writeRelation(persistence, id, relation);
 		}
 		else {
 			// check if an equal relation is already used,
 			// then add reference instead of relation contents
-			Element element = doc.createElement(ELEMENT_RELATION);
+			Element element = persistence.getDocument().createElement(ELEMENT_RELATION);
 			element.setAttribute(ATTRIBUTE_REFERENCED_ID, id);
 			return element;
 		}
 	}
 
-	private Element writeRelation(String id, XCLRelation relation, Document doc) throws NoSuchFragmentHandlerException, IOException {
-		Element relationElement = doc.createElement(ELEMENT_RELATION);
+	private Element writeRelation(Persistence<KnowledgeBase> persistence, String id, XCLRelation relation) throws NoSuchFragmentHandlerException, IOException {
+		Element relationElement = persistence.getDocument().createElement(ELEMENT_RELATION);
 		if (id != null) relationElement.setAttribute(ATTRIBUTE_ID, id);
 		Condition cond = relation.getConditionedFinding();
 		if (cond != null) {
-			relationElement.appendChild(PersistenceManager.getInstance().writeFragment(cond, doc));
+			relationElement.appendChild(persistence.writeFragment(cond));
 		}
 		else {
 			throw new IOException("Missing condition.");
 		}
 		if (relation.getWeight() != XCLRelation.DEFAULT_WEIGHT) {
-			Element weight = doc.createElement(ELEMENT_WEIGHT);
+			Element weight = persistence.getDocument().createElement(ELEMENT_WEIGHT);
 			weight.setTextContent(String.valueOf(relation.getWeight()));
 			relationElement.appendChild(weight);
 		}
@@ -165,9 +166,10 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 	}
 
 	@Override
-	public void write(KnowledgeBase kb, OutputStream stream,
-			ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.createEmptyDocument();
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
+
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("type", ID);
 		root.setAttribute("system", "d3web");
@@ -185,7 +187,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		// prepare relation pool
 		RelationPool pool = new RelationPool();
 		for (XCLModel model : slices) {
-			ksNode.appendChild(writeModel(model, doc, pool));
+			ksNode.appendChild(writeModel(persistence, model, pool));
 			listener.updateProgress(++cur / max, "Saving knowledge base: XCL Models");
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
@@ -199,32 +201,32 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		return null;
 	}
 
-	private void parseModels(KnowledgeBase kb, Document doc, ProgressListener listener) throws IOException {
+	private void parseModels(Persistence<KnowledgeBase> persistence, ProgressListener listener) throws IOException {
 		listener.updateProgress(0, "Preparing xcl models");
-		NodeList xclmodels = doc.getElementsByTagName(ELEMENT_XCL_MODEL);
+		NodeList xclmodels = persistence.getDocument().getElementsByTagName(ELEMENT_XCL_MODEL);
 		RelationPool pool = new RelationPool();
 		float cur = 0;
 		int max = xclmodels.getLength();
 		for (int i = 0; i < max; i++) {
 			listener.updateProgress(cur++ / max, "Loading xcl models");
 			Node current = xclmodels.item(i);
-			parseModel(kb, current, pool);
+			parseModel(persistence, current, pool);
 		}
 		listener.updateProgress(1, "Loading xcl models completed");
 	}
 
-	private void parseModel(KnowledgeBase kb, Node current, RelationPool pool) throws IOException {
+	private void parseModel(Persistence<KnowledgeBase> persistence, Node current, RelationPool pool) throws IOException {
 		String solutionName = getAttribute(ATTRIBUTE_SOLUTION_ID, current);
 		String minSupport = getAttribute(ATTRIBUTE_MIN_SUPPORT, current);
 		String suggestedThreshold = getAttribute(ATTRIBUTE_SUGGESTED_THRESHOLD, current);
 		String establishedThreshold = getAttribute(ATTRIBUTE_ESTABLISHED_THRESHOLD, current);
 		String considerOnlyRelevantRelations = getAttribute(
 				ATTRIBUTE_CONSIDER_ONLY_RELEVANT_RELATIONS, current);
-		Solution diag = kb.getManager().searchSolution(solutionName);
+		Solution diag = persistence.getArtifact().getManager().searchSolution(solutionName);
 		XCLModel model = new XCLModel(diag);
 		NodeList relations = current.getChildNodes();
 		for (int i = 0; i < relations.getLength(); i++) {
-			parseRelations(kb, model, relations.item(i).getChildNodes(), pool);
+			parseRelations(persistence, model, relations.item(i).getChildNodes(), pool);
 		}
 
 		if (minSupport != null) {
@@ -242,7 +244,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 		diag.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, model);
 	}
 
-	private void parseRelations(KnowledgeBase kb, XCLModel model, NodeList relationsOfAType, RelationPool pool) throws IOException {
+	private void parseRelations(Persistence<KnowledgeBase> persistence, XCLModel model, NodeList relationsOfAType, RelationPool pool) throws IOException {
 		for (int i = 0; i < relationsOfAType.getLength(); i++) {
 			Node aRelation = relationsOfAType.item(i);
 			if (!aRelation.getNodeName().equals(ELEMENT_RELATION)) continue;
@@ -256,14 +258,14 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 			}
 			else {
 				String id = getAttribute(ATTRIBUTE_ID, aRelation);
-				XCLRelation relation = parseRelation(kb, aRelation);
+				XCLRelation relation = parseRelation(persistence, aRelation);
 				pool.add(id, relation);
 				model.addRelation(relation);
 			}
 		}
 	}
 
-	static XCLRelation parseRelation(KnowledgeBase kb, Node relationNode) throws IOException {
+	static XCLRelation parseRelation(Persistence<KnowledgeBase> persistence, Node relationNode) throws IOException {
 		String typeName = relationNode.getParentNode().getNodeName();
 		NodeList children = relationNode.getChildNodes();
 		Condition ac = null;
@@ -273,8 +275,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader,
 
 			if (child.getNodeName().equals("Condition")) {
 				child.getTextContent();
-				ac = (Condition) PersistenceManager.getInstance().readFragment(
-						(Element) child, kb);
+				ac = (Condition) persistence.readFragment((Element) child);
 			}
 			else if (child.getNodeName().equals(ELEMENT_WEIGHT)) {
 				weight = Double.parseDouble(child.getTextContent());

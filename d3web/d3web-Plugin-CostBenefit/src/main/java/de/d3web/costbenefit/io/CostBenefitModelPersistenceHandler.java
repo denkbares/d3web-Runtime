@@ -34,8 +34,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -61,16 +63,19 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 	public final static String ID = "costbenefit";
 
 	@Override
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.streamToDocument(stream);
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		String message = "Loading cost benefit knowledge";
 		listener.updateProgress(0, message);
+
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		Document doc = persistence.getDocument();
+
 		NodeList stmodels = doc.getElementsByTagName("StateTransition");
 		int max = stmodels.getLength();
 		float count = 0;
 		for (int i = 0; i < stmodels.getLength(); i++) {
 			Node current = stmodels.item(i);
-			addSTKnowledge(kb, current);
+			addSTKnowledge(persistence, current);
 			listener.updateProgress(++count / max, message);
 		}
 	}
@@ -83,8 +88,10 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 	}
 
 	@Override
-	public void write(de.d3web.core.knowledge.KnowledgeBase kb, OutputStream stream, de.d3web.core.io.progress.ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.createEmptyDocument();
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
+
 		Element root = doc.createElement("KnowledgeBase");
 		root.setAttribute("type", ID);
 		root.setAttribute("system", "d3web");
@@ -99,57 +106,56 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			}
 		}
 		for (StateTransition model : knowledgeSlices) {
-			ksNode.appendChild(getElement(model, doc));
+			ksNode.appendChild(getElement(persistence, model));
 		}
 
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 
-	private Element getElement(StateTransition st, Document doc) throws IOException {
-		Element element = doc.createElement("StateTransition");
+	private Element getElement(Persistence<KnowledgeBase> persistence, StateTransition st) throws IOException {
+		Element element = persistence.getDocument().createElement("StateTransition");
 		element.setAttribute("QID", st.getQcontainer().getName());
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition != null) {
-			Element aCElement = doc.createElement("activationCondition");
-			aCElement.appendChild(PersistenceManager.getInstance().writeFragment(
-					activationCondition, doc));
+			Element aCElement = persistence.getDocument().createElement("activationCondition");
+			aCElement.appendChild(persistence.writeFragment(activationCondition));
 			element.appendChild(aCElement);
 		}
 		List<ValueTransition> postTransitions = st.getPostTransitions();
 		for (ValueTransition vt : postTransitions) {
-			element.appendChild(getElement(vt, doc));
-
+			element.appendChild(getElement(persistence, vt));
 		}
 		return element;
 	}
 
-	private Element getElement(ValueTransition vt, Document doc) throws IOException {
-		Element element = doc.createElement("ValueTransition");
+	private Element getElement(Persistence<KnowledgeBase> persistence, ValueTransition vt) throws IOException {
+		Element element = persistence.getDocument().createElement("ValueTransition");
 		if (vt.getQuestion() == null) {
 			throw new IOException("ValueTransition has no question");
 		}
 		element.setAttribute("QID", vt.getQuestion().getName());
 		List<ConditionalValueSetter> setters = vt.getSetters();
 		for (ConditionalValueSetter cvs : setters) {
-			element.appendChild(getElement(cvs, doc));
+			element.appendChild(getElement(persistence, cvs));
 		}
 		return element;
 	}
 
-	private Element getElement(ConditionalValueSetter cvs, Document doc) throws IOException {
-		Element element = doc.createElement("ConditionalValueSetter");
+	private Element getElement(Persistence<KnowledgeBase> persistence, ConditionalValueSetter cvs) throws IOException {
+		Element element = persistence.getDocument().createElement("ConditionalValueSetter");
 		String id_or_value = ValueFactory.getID_or_Value(cvs.getAnswer());
 		element.setAttribute("AID", id_or_value);
 		Condition condition = cvs.getCondition();
 		if (condition != null) {
-			element.appendChild(PersistenceManager.getInstance().writeFragment(condition, doc));
+			element.appendChild(persistence.writeFragment(condition));
 		}
 		return element;
 	}
 
-	private void addSTKnowledge(KnowledgeBase kb, Node current) throws IOException {
+	private void addSTKnowledge(Persistence<KnowledgeBase> persistence, Node current) throws IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
-		QContainer qcontainer = kb.getManager().searchQContainer(qcontainerID);
+		QContainer qcontainer = persistence.getArtifact().getManager().searchQContainer(
+				qcontainerID);
 		NodeList children = current.getChildNodes();
 		Condition activationCondition = null;
 		List<ValueTransition> postTransitions = new ArrayList<ValueTransition>();
@@ -157,13 +163,12 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			Node n = children.item(i);
 			if (n.getNodeName().equals("activationCondition")) {
 				for (Element child : XMLUtil.getElementList(n.getChildNodes())) {
-					activationCondition = (Condition) PersistenceManager.getInstance().readFragment(
-							child, kb);
+					activationCondition = (Condition) persistence.readFragment(child);
 				}
 			}
 			else if (n.getNodeName().equals("ValueTransition")) {
 				String question = n.getAttributes().getNamedItem("QID").getTextContent();
-				Question q = kb.getManager().searchQuestion(question);
+				Question q = persistence.getArtifact().getManager().searchQuestion(question);
 				List<ConditionalValueSetter> cvss = new ArrayList<ConditionalValueSetter>();
 				NodeList childNodes = n.getChildNodes();
 				for (int j = 0; j < childNodes.getLength(); j++) {
@@ -174,8 +179,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 								child.getAttributes().getNamedItem("AID").getTextContent());
 						Condition condition = null;
 						for (Element grandchild : XMLUtil.getElementList(child.getChildNodes())) {
-							condition = (Condition) PersistenceManager.getInstance().readFragment(
-									grandchild, kb);
+							condition = (Condition) persistence.readFragment(grandchild);
 						}
 						ConditionalValueSetter cvs = new ConditionalValueSetter(
 								answer, condition);

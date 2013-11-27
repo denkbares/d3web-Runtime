@@ -31,8 +31,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.PSConfig;
+import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -59,8 +61,10 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	private static final String ATTRIBUTE_REQUIRED = "required";
 
 	@Override
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.streamToDocument(stream);
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		Document doc = persistence.getDocument();
+
 		PluginConfig pc = new PluginConfig(kb);
 		Element root = doc.getDocumentElement();
 		if (root.getNodeName().equals(ELEMENT_SETTINGS)) {
@@ -87,8 +91,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 				else if (father.getNodeName().equals(ELEMENT_PSMETHODS)) {
 					List<Element> children = XMLUtil.getElementList(father.getChildNodes());
 					for (Element e : children) {
-						kb.addPSConfig((PSConfig) PersistenceManager.getInstance().readFragment(
-								e, kb));
+						kb.addPSConfig((PSConfig) persistence.readFragment(e));
 					}
 				}
 			}
@@ -96,8 +99,10 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	}
 
 	@Override
-	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.createEmptyDocument();
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
+
 		Element root = doc.createElement(ELEMENT_SETTINGS);
 		Element plugins = doc.createElement(ELEMENT_PLUGINS);
 		doc.appendChild(root);
@@ -130,7 +135,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		LinkedList<PSConfig> psconfigs = new LinkedList<PSConfig>(kb.getPsConfigs());
 		Collections.sort(psconfigs);
 		for (PSConfig ps : psconfigs) {
-			psmethods.appendChild(PersistenceManager.getInstance().writeFragment(ps, doc));
+			psmethods.appendChild(persistence.writeFragment(ps));
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}

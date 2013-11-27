@@ -73,12 +73,11 @@ public class XCLModelTest extends TestCase {
 	 */
 	public void testXMLWriter() throws IOException {
 		XCLModelPersistenceHandler xmph = new XCLModelPersistenceHandler();
-		xmph.write(k, new OutputStream() {
+		xmph.write(PersistenceManager.getInstance(), k, new OutputStream() {
 
 			@Override
 			public void write(int b) throws IOException {
-				// TODO Auto-generated method stub
-
+				// do nothing here
 			}
 		}, new DummyProgressListener());
 

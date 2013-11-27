@@ -29,9 +29,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.NumericalIntervalHandler;
 import de.d3web.core.io.fragments.QuestionHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
@@ -50,11 +52,15 @@ public class QuestionNumTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
+		KnowledgeBase kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
 
-		q1 = new QuestionNum(new KnowledgeBase(), "q1");
+		q1 = new QuestionNum(kb, "q1");
 
 		qw = new QuestionHandler();
 
@@ -81,14 +87,14 @@ public class QuestionNumTest {
 
 		shouldTag.addChild(propertiesTag);
 
-		isTag = new XMLTag(new QuestionHandler().write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(new QuestionHandler().write(q1, persistence));
 
 		assertEquals("(2)", shouldTag, isTag);
 	}
 
 	@Test
 	public void testQuestionNumTestSimple() throws Exception {
-		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, persistence));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -125,7 +131,7 @@ public class QuestionNumTest {
 
 		shouldTag.addChild(intervalsTag);
 
-		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, persistence));
 		assertEquals("(intervals)", shouldTag, isTag);
 	}
 }

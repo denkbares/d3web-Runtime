@@ -24,14 +24,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.abstraction.ActionSetQuestion;
-import de.d3web.core.io.FragmentManager;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -55,7 +53,7 @@ import de.d3web.core.session.values.Unknown;
  * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
-public class QuestionSetterActionHandler implements FragmentHandler {
+public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -69,7 +67,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		Question question = null;
 		// value will be later determined, now set to undefined for safety
 		Object value = UndefinedValue.getInstance();
@@ -78,7 +76,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			Node child = nl.item(i);
 			if (child.getNodeName().equalsIgnoreCase("question")) {
 				String id = child.getAttributes().getNamedItem("name").getNodeValue();
-				question = kb.getManager().searchQuestion(id);
+				question = persistence.getArtifact().getManager().searchQuestion(id);
 			}
 			else if (child.getNodeName().equalsIgnoreCase("values")) {
 				NodeList values = child.getChildNodes();
@@ -91,8 +89,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 						if (type.equalsIgnoreCase("evaluatable")) {
 							List<Element> childNodes = XMLUtil.getElementList(valNode.getChildNodes());
 							for (Element e : childNodes) {
-								parsedValues.add(PersistenceManager.getInstance().readFragment(
-										e, kb));
+								parsedValues.add(persistence.readFragment(e));
 							}
 						}
 						else {
@@ -144,25 +141,24 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ActionSetQuestion action = (ActionSetQuestion) object;
 		Question question = action.getQuestion();
-		Element element = doc.createElement("Action");
+		Element element = persistence.getDocument().createElement("Action");
 		if (action instanceof ActionSetQuestion) {
 			element.setAttribute("type", "ActionSetValue");
 		}
-		Element questionNode = doc.createElement("Question");
+		Element questionNode = persistence.getDocument().createElement("Question");
 		String questionId = "";
 		if (question != null) {
 			questionId = question.getName();
 		}
 		questionNode.setAttribute("name", questionId);
 		element.appendChild(questionNode);
-		Element valuesNode = doc.createElement("Values");
-		FragmentManager pm = PersistenceManager.getInstance();
+		Element valuesNode = persistence.getDocument().createElement("Values");
 		if (action != null && action.getValue() instanceof Value) {
 			String name = "";
-			Element valueNode = doc.createElement("Value");
+			Element valueNode = persistence.getDocument().createElement("Value");
 			if (action.getValue() instanceof ChoiceValue) {
 				ChoiceValue cv = (ChoiceValue) (action.getValue());
 				Choice choice = cv.getChoice((QuestionChoice) question);
@@ -187,7 +183,7 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 			else if (action.getValue() instanceof MultipleChoiceValue) {
 				MultipleChoiceValue mcv = (MultipleChoiceValue) (action.getValue());
 				for (ChoiceID cid : mcv.getChoiceIDs()) {
-					Element choiceElement = doc.createElement("choice");
+					Element choiceElement = persistence.getDocument().createElement("choice");
 					choiceElement.setAttribute("name", cid.getText());
 					valueNode.appendChild(choiceElement);
 				}
@@ -211,22 +207,22 @@ public class QuestionSetterActionHandler implements FragmentHandler {
 						if (a.getName() == null) {
 							throw new IOException("Answer " + a.getName() + " has no ID");
 						}
-						Element valueNode = doc.createElement("Value");
+						Element valueNode = persistence.getDocument().createElement("Value");
 						valueNode.setAttribute("type", "answer");
 						valueNode.setAttribute("name", a.getName());
 						valuesNode.appendChild(valueNode);
 					}
 					else if (o != null) {
-						Element valueNode = doc.createElement("Value");
-						valueNode.appendChild(pm.writeFragment(o, doc));
+						Element valueNode = persistence.getDocument().createElement("Value");
+						valueNode.appendChild(persistence.writeFragment(o));
 						valueNode.setAttribute("type", "evaluatable");
 						valuesNode.appendChild(valueNode);
 					}
 				}
 			}
 			else {
-				Element valueNode = doc.createElement("Value");
-				valueNode.appendChild(pm.writeFragment(action.getValue(), doc));
+				Element valueNode = persistence.getDocument().createElement("Value");
+				valueNode.appendChild(persistence.writeFragment(action.getValue()));
 				valueNode.setAttribute("type", "evaluatable");
 				valuesNode.appendChild(valueNode);
 			}

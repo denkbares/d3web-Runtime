@@ -21,11 +21,10 @@ package de.d3web.core.io.fragments.actions.formula;
 import java.io.IOException;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.abstraction.formula.FormulaElement;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +35,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class ExpressionHandler implements FragmentHandler {
+public class ExpressionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -45,7 +44,7 @@ public class ExpressionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		FormulaElement fe = null;
 		for (Element child : childNodes) {
@@ -55,7 +54,7 @@ public class ExpressionHandler implements FragmentHandler {
 				// Nothing todo, link to question not needed
 			}
 			else {
-				Object object = PersistenceManager.getInstance().readFragment(child, kb);
+				Object object = persistence.readFragment(child);
 				if (object instanceof FormulaElement && fe == null) {
 					fe = (FormulaElement) object;
 				}
@@ -74,7 +73,7 @@ public class ExpressionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		throw new IOException("This Fragment handler only exists to read old kbs.");
 	}
 }

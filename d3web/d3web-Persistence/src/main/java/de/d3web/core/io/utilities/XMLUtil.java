@@ -57,7 +57,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import de.d3web.core.io.NoSuchFragmentHandlerException;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.progress.ProgressInputStream;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
@@ -146,6 +146,20 @@ public final class XMLUtil {
 	 * Creates a condition element with the id of the named object and the given
 	 * type
 	 * 
+	 * @param persistence the persistence to access the Document, where the
+	 *        Element should be created
+	 * @param nob TerminologyObject, whose ID should be used
+	 * @param type type of the condition
+	 * @return condition element
+	 */
+	public static Element writeCondition(Persistence<?> persistence, TerminologyObject nob, String type) {
+		return writeCondition(persistence.getDocument(), nob, type);
+	}
+
+	/**
+	 * Creates a condition element with the id of the named object and the given
+	 * type
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
@@ -161,6 +175,21 @@ public final class XMLUtil {
 			element.setAttribute("name", "");
 		}
 		return element;
+	}
+
+	/**
+	 * Creates a condition element with the id of the named object, the given
+	 * type and value
+	 * 
+	 * @param persistence Persistence to access Document, where the Element
+	 *        should be created
+	 * @param nob TerminologyObject, whose ID should be used
+	 * @param type type of the condition
+	 * @param value value of the condition
+	 * @return condition element
+	 */
+	public static Element writeCondition(Persistence<?> persistence, TerminologyObject nob, String type, String value) {
+		return writeCondition(persistence.getDocument(), nob, type, value);
 	}
 
 	/**
@@ -185,6 +214,21 @@ public final class XMLUtil {
 	 * Creates a condition element with the id of the named object, the given
 	 * type and value. The value is stored in a child element.
 	 * 
+	 * @param persistence the persistence to access the Document, where the
+	 *        Element should be created
+	 * @param nob TerminologyObject, whose ID should be used
+	 * @param type type of the condition
+	 * @param value value of the condition
+	 * @return condition element
+	 */
+	public static Element writeConditionWithValueNode(Persistence<?> persistence, TerminologyObject nob, String type, String value) throws IOException {
+		return writeConditionWithValueNode(persistence.getDocument(), nob, type, value);
+	}
+
+	/**
+	 * Creates a condition element with the id of the named object, the given
+	 * type and value. The value is stored in a child element.
+	 * 
 	 * @param doc Document, where the Element should be created
 	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
@@ -195,6 +239,22 @@ public final class XMLUtil {
 		Element valueElement = doc.createElement("Value");
 		valueElement.setTextContent(value);
 		return writeConditionWithValueNode(doc, nob, type, valueElement);
+	}
+
+	/**
+	 * Creates a condition element with the id of the named object, the given
+	 * type and value. The value node is inserted as a child element in the
+	 * newly created node.
+	 * 
+	 * @param persistence the persistence to access the Document, where the
+	 *        Element should be created
+	 * @param nob TerminologyObject, whose ID should be used
+	 * @param type type of the condition
+	 * @param value value of the condition
+	 * @return condition element
+	 */
+	public static Element writeConditionWithValueNode(Persistence<?> persistence, TerminologyObject nob, String type, Element value) {
+		return writeConditionWithValueNode(persistence.getDocument(), nob, type, value);
 	}
 
 	/**
@@ -259,6 +319,18 @@ public final class XMLUtil {
 			throw new IOException(
 					"The given value is neighter a Choice nor a Unknown nor a text value.");
 		}
+	}
+
+	/**
+	 * Creates a condition element with the specified type
+	 * 
+	 * @param persistence the persistence to access the Document, where the
+	 *        Element should be created
+	 * @param type type of the condition
+	 * @return condition element
+	 */
+	public static Element writeCondition(Persistence<?> persistence, String type) {
+		return writeCondition(persistence.getDocument(), type);
 	}
 
 	/**
@@ -455,7 +527,7 @@ public final class XMLUtil {
 	 * @param autosave {@link Autosave}
 	 * @throws IOException
 	 */
-	public static void appendInfoStoreEntries(Element father, InfoStore infoStore, Autosave autosave) throws IOException {
+	public static void appendInfoStoreEntries(Persistence<?> persistance, Element father, InfoStore infoStore, Autosave autosave) throws IOException {
 		Document doc = father.getOwnerDocument();
 		for (Triple<Property<?>, Locale, Object> entry : sortEntries(infoStore.entries())) {
 			if (autosave == null || (autosave != null && entry.getA().hasState(autosave))) {
@@ -467,8 +539,7 @@ public final class XMLUtil {
 					entryElement.setAttribute("lang", language.toString());
 				}
 				try {
-					entryElement.appendChild(PersistenceManager.getInstance().writeFragment(
-							entry.getC(), doc));
+					entryElement.appendChild(persistance.writeFragment(entry.getC()));
 				}
 				catch (NoSuchFragmentHandlerException e) {
 					if (entry.getA().canParseValue()) {
@@ -532,11 +603,11 @@ public final class XMLUtil {
 		return ret;
 	}
 
-	public static void appendInfoStore(Element idObjectElement, NamedObject idObject, Autosave autosave) throws IOException {
+	public static void appendInfoStore(Persistence<?> persistance, Element idObjectElement, NamedObject idObject, Autosave autosave) throws IOException {
 		InfoStore infoStore = idObject.getInfoStore();
 		if (infoStore != null && !infoStore.isEmpty()) {
 			Element infoStoreElement = idObjectElement.getOwnerDocument().createElement(INFO_STORE);
-			appendInfoStoreEntries(infoStoreElement, infoStore, autosave);
+			appendInfoStoreEntries(persistance, infoStoreElement, infoStore, autosave);
 			if (infoStoreElement.getChildNodes().getLength() > 0) {
 				idObjectElement.appendChild(infoStoreElement);
 			}
@@ -553,7 +624,7 @@ public final class XMLUtil {
 	 * @param kb {@link KnowledgeBase}
 	 * @throws IOException
 	 */
-	public static void fillInfoStore(InfoStore infoStore, Element father, KnowledgeBase kb) throws IOException {
+	public static void fillInfoStore(Persistence<?> persistance, InfoStore infoStore, Element father) throws IOException {
 		for (Element child : getElementList(father.getChildNodes())) {
 			Property<Object> property;
 			try {
@@ -571,8 +642,7 @@ public final class XMLUtil {
 			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
 			Object value = "";
 			if (childNodes.size() > 0) {
-				value = PersistenceManager.getInstance().readFragment(
-						childNodes.get(0), kb);
+				value = persistance.readFragment(childNodes.get(0));
 			}
 			else {
 				String s = child.getTextContent();

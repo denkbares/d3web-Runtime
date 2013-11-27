@@ -47,11 +47,13 @@ import de.d3web.core.inference.condition.CondTextContains;
 import de.d3web.core.inference.condition.CondTextEqual;
 import de.d3web.core.inference.condition.CondUnknown;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.conditions.AndConditionHandler;
 import de.d3web.core.io.fragments.conditions.ConditionSolutionConfirmedHandler;
 import de.d3web.core.io.fragments.conditions.ConditionSolutionRejectedHandler;
 import de.d3web.core.io.fragments.conditions.OrConditionHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -83,10 +85,14 @@ public class ConditionTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 		KnowledgeBase kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
+
 		d1 = new Solution(kb, "d1-id");
 
 		Question qoc1 = new QuestionOC(kb, "qoc1-id");
@@ -156,8 +162,7 @@ public class ConditionTest {
 		shouldTag.addChild(condNumG);
 		shouldTag.addChild(condNumL);
 
-		isTag = new XMLTag(new AndConditionHandler().write(ac1, XMLUtil
-				.createEmptyDocument()));
+		isTag = new XMLTag(new AndConditionHandler().write(ac1, persistence));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -230,7 +235,7 @@ public class ConditionTest {
 
 		shouldTag.addChild(mofnTag1);
 
-		isTag = new XMLTag(new OrConditionHandler().write(ac1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(new OrConditionHandler().write(ac1, persistence));
 
 		assertEquals("(1)", shouldTag, isTag);
 	}
@@ -268,7 +273,7 @@ public class ConditionTest {
 
 		shouldTag.addChild(tEqualTag1);
 
-		isTag = new XMLTag(new OrConditionHandler().write(ac1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(new OrConditionHandler().write(ac1, persistence));
 
 		assertEquals("(2)", shouldTag, isTag);
 	}
@@ -294,7 +299,7 @@ public class ConditionTest {
 		cUnKnownTag1.addAttribute("name", "qoc1-id");
 		shouldTag.addChild(cUnKnownTag1);
 
-		isTag = new XMLTag(new OrConditionHandler().write(ac1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(new OrConditionHandler().write(ac1, persistence));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}
@@ -314,7 +319,7 @@ public class ConditionTest {
 		shouldTag.addAttribute("name", "d1-id");
 
 		isTag = new XMLTag(new ConditionSolutionConfirmedHandler().write(cond,
-				XMLUtil.createEmptyDocument()));
+				persistence));
 
 		Assert.assertEquals(isTag, shouldTag);
 
@@ -335,7 +340,7 @@ public class ConditionTest {
 		shouldTag.addAttribute("name", "d1-id");
 
 		isTag = new XMLTag(new ConditionSolutionRejectedHandler().write(cond,
-				XMLUtil.createEmptyDocument()));
+				persistence));
 
 		Assert.assertEquals(isTag, shouldTag);
 

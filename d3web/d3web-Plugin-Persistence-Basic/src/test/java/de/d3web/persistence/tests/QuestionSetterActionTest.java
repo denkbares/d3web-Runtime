@@ -25,12 +25,13 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.abstraction.ActionSetQuestion;
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.actions.QuestionSetterActionHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -55,18 +56,18 @@ public class QuestionSetterActionTest {
 	private KnowledgeBase kb;
 	private QuestionSetterActionHandler questionSetterActionHandler;
 	private ActionSetQuestion actionSetQuestion;
-	private Document doc;
 	private QuestionNum questionNum;
+	private Persistence<KnowledgeBase> persistence;
 
 	@Before
 	public void setup() throws IOException {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
 		questionNum = new QuestionNum(kb, "dummy");
 		questionSetterActionHandler = new QuestionSetterActionHandler();
 		actionSetQuestion = new ActionSetQuestion();
 		actionSetQuestion.setQuestion(questionNum);
-		doc = XMLUtil.createEmptyDocument();
 	}
 
 	@Test
@@ -124,9 +125,9 @@ public class QuestionSetterActionTest {
 
 	private ActionSetQuestion reload() throws IOException {
 		Assert.assertTrue(questionSetterActionHandler.canWrite(actionSetQuestion));
-		Element element = questionSetterActionHandler.write(actionSetQuestion, doc);
+		Element element = questionSetterActionHandler.write(actionSetQuestion, persistence);
 		Assert.assertTrue(questionSetterActionHandler.canRead(element));
-		Object reloadedValue = questionSetterActionHandler.read(kb, element);
+		Object reloadedValue = questionSetterActionHandler.read(element, persistence);
 		Assert.assertTrue(reloadedValue instanceof ActionSetQuestion);
 		ActionSetQuestion asq = (ActionSetQuestion) reloadedValue;
 		return asq;

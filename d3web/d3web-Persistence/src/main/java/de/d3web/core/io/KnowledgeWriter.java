@@ -35,15 +35,17 @@ public interface KnowledgeWriter {
 	 * Writes the parts of the specified {@link KnowledgeBase} instance, that
 	 * this KnowledgeWriter can handle, into the {@link OutputStream}.
 	 * 
+	 * @param persistenceManager the persistence manager responsible for writing
 	 * @param knowledgeBase the specified knowledge base in which the handled
 	 *        knowledge is included
 	 * @param stream the specified {@link OutputStream} to which the handled
 	 *        knowledge is written
 	 * @param listener the specified listener which will be notified during this
 	 *        operation, null is not accepted
+	 * 
 	 * @throws IOException when an IO expection ocurrs during the write action
 	 */
-	public void write(KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException;
+	public void write(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException;
 
 	/**
 	 * The size of the knowledge--written by this {@link KnowledgeWriter}--is

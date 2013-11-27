@@ -22,10 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -48,7 +47,7 @@ import de.d3web.core.knowledge.terminology.info.Property.Autosave;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class QuestionHandler implements FragmentHandler {
+public class QuestionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -61,13 +60,14 @@ public class QuestionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String type = element.getAttribute("type");
 		String name = element.getAttribute("name");
 		Question q = null;
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		ArrayList<NumericalInterval> intervalls = null;
 		Element answersElement = null;
+		KnowledgeBase kb = persistence.getArtifact();
 		if (type.equals("YN")) {
 			q = new QuestionYN(kb, name);
 		}
@@ -95,10 +95,10 @@ public class QuestionHandler implements FragmentHandler {
 				answersElement = child;
 			}
 			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
-				XMLUtil.fillInfoStore(q.getInfoStore(), child, kb);
+				XMLUtil.fillInfoStore(persistence, q.getInfoStore(), child);
 			}
 			else if (ph.canRead(child)) {
-				InfoStoreUtil.copyEntries(ph.read(kb, child), q.getInfoStore());
+				InfoStoreUtil.copyEntries(ph.read(persistence, child), q.getInfoStore());
 			}
 			// If the child is none of the types above and it doesn't contain
 			// the children or the costs,
@@ -106,7 +106,7 @@ public class QuestionHandler implements FragmentHandler {
 			// Costs are no longer stored in IDObjects, so they are ignored
 			else if (!child.getNodeName().equals("Children")
 					&& !child.getNodeName().equals("Costs")) {
-				Object readFragment = PersistenceManager.getInstance().readFragment(child, kb);
+				Object readFragment = persistence.readFragment(child);
 				if (readFragment instanceof List<?>) {
 					intervalls = new ArrayList<NumericalInterval>();
 					List<?> list = (List<?>) readFragment;
@@ -130,8 +130,7 @@ public class QuestionHandler implements FragmentHandler {
 			List<Element> answerNodes = XMLUtil.getElementList(answersElement.getChildNodes());
 			List<Choice> answers = new ArrayList<Choice>();
 			for (Element answerElement : answerNodes) {
-				answers.add((Choice) PersistenceManager.getInstance().readFragment(answerElement,
-						kb));
+				answers.add((Choice) persistence.readFragment(answerElement));
 			}
 			qc.setAlternatives(answers);
 		}
@@ -139,9 +138,9 @@ public class QuestionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Question q = (Question) object;
-		Element e = doc.createElement("Question");
+		Element e = persistence.getDocument().createElement("Question");
 		e.setAttribute("name", q.getName());
 		if (q instanceof QuestionYN) {
 			e.setAttribute("type", "YN");
@@ -160,7 +159,7 @@ public class QuestionHandler implements FragmentHandler {
 			// adding intervalls
 			List<?> valuePartitions = ((QuestionNum) q).getValuePartitions();
 			if (valuePartitions != null) {
-				e.appendChild(PersistenceManager.getInstance().writeFragment(valuePartitions, doc));
+				e.appendChild(persistence.writeFragment(valuePartitions));
 			}
 		}
 		else if (q instanceof QuestionText) {
@@ -174,15 +173,14 @@ public class QuestionHandler implements FragmentHandler {
 			QuestionChoice qc = (QuestionChoice) q;
 			List<Choice> children = qc.getAllAlternatives();
 			if (children != null) {
-				Element answerNodes = doc.createElement("Answers");
+				Element answerNodes = persistence.getDocument().createElement("Answers");
 				for (Choice child : children) {
-					answerNodes.appendChild(PersistenceManager.getInstance().writeFragment(child,
-							doc));
+					answerNodes.appendChild(persistence.writeFragment(child));
 				}
 				e.appendChild(answerNodes);
 			}
 		}
-		XMLUtil.appendInfoStore(e, q, Autosave.basic);
+		XMLUtil.appendInfoStore(persistence, e, q, Autosave.basic);
 		return e;
 	}
 

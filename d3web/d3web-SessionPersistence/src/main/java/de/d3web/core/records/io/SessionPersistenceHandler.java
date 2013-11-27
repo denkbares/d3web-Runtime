@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.records.SessionRecord;
 
@@ -37,25 +38,27 @@ public interface SessionPersistenceHandler {
 	 * Reads the information from the sessionElement and adds them to the
 	 * sessionRecord
 	 * 
+	 * @param persistence the persistence object used to read the session record
 	 * @param sessionElement XML Element containing the session, the
 	 *        SessionPersistanceHandler automatically extracts his nodes
-	 * @param sessionRecord SessionRecord, in which the information will be
-	 *        inserted
 	 * @param listener ProgressListener, which will be informed about the
 	 *        progress
+	 * 
 	 * @throws IOException if an error occurs
 	 */
-	void read(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException;
+	void read(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException;
 
 	/**
 	 * Appends Elements containing knowledge this PersistanceHandler can handle
 	 * 
+	 * @param persistence the persistence object used to write the session
+	 *        record
 	 * @param sessionElement XML Element, where the created elements should be
 	 *        appended
-	 * @param sessionRecord SessionRecord containing the information
 	 * @param listener ProgressListener, which will be informed about the
 	 *        progress
+	 * 
 	 * @throws IOException if an error occurs
 	 */
-	void write(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException;
+	void write(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException;
 }

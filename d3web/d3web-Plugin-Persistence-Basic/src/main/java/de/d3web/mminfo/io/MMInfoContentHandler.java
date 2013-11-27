@@ -13,7 +13,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -25,7 +25,7 @@ import de.d3web.strings.Strings;
 
 public class MMInfoContentHandler extends DefaultHandler {
 
-	private final KnowledgeBase kb;
+	private final Persistence<KnowledgeBase> persistence;
 
 	// some parsing variables
 	private String currentData = null;
@@ -34,8 +34,8 @@ public class MMInfoContentHandler extends DefaultHandler {
 	private Locale currentLocale = null;
 	private DOMBuilder entityBuilder = null;
 
-	public MMInfoContentHandler(KnowledgeBase kb) {
-		this.kb = kb;
+	public MMInfoContentHandler(Persistence<KnowledgeBase> persistence) {
+		this.persistence = persistence;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 		// to use fragment handlers later on to decode the content
 		if (this.currentProperty != null) {
 			if (entityBuilder == null) {
-				entityBuilder = new DOMBuilder();
+				entityBuilder = new DOMBuilder(persistence.getDocument());
 			}
 			entityBuilder.startElement(uri, localName, qName, attributes);
 			return;
@@ -66,7 +66,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 		// otherwise we proceed in parsing the entries
 		this.currentData = "";
 		if (qName.equalsIgnoreCase("KnowledgeBase")) {
-			this.currentStore = kb.getInfoStore();
+			this.currentStore = persistence.getArtifact().getInfoStore();
 		}
 		else if (qName.equalsIgnoreCase("idObject")) {
 			String name = attributes.getValue("name");
@@ -109,7 +109,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 				Object value;
 				if (entityBuilder != null) {
 					List<Element> childNodes = XMLUtil.getElementList(entityBuilder.getElement().getChildNodes());
-					value = PersistenceManager.getInstance().readFragment(childNodes.get(0), kb);
+					value = persistence.readFragment(childNodes.get(0));
 				}
 				else {
 					value = property.parseValue(this.currentData);
@@ -151,7 +151,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 	 * @throws IOException if no such object with an info store exists
 	 */
 	private InfoStore findInfoStore(String name, String choice) throws SAXException {
-		NamedObject namedObject = kb.getManager().search(name);
+		NamedObject namedObject = persistence.getArtifact().getManager().search(name);
 		if (namedObject == null) {
 			throw new SAXException("NamedObject " + name
 					+ " cannot be found in KnowledgeBase.");

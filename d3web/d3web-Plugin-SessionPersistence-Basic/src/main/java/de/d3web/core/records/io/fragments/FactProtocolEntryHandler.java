@@ -23,12 +23,12 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
@@ -40,7 +40,7 @@ import de.d3web.core.session.protocol.FactProtocolEntry;
  * @author volker_belli
  * @created 20.10.2010
  */
-public class FactProtocolEntryHandler implements FragmentHandler {
+public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> {
 
 	private static final String ELEMENT_NAME = "entry";
 	private static final String ELEMENT_TYPE = "fact";
@@ -49,7 +49,7 @@ public class FactProtocolEntryHandler implements FragmentHandler {
 	private static final String ATTR_SOLVER = "psm";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		try {
 			// prepare fact entry header information
 			String dateString = element.getAttribute(ATTR_DATE);
@@ -58,12 +58,11 @@ public class FactProtocolEntryHandler implements FragmentHandler {
 			String solver = element.getAttribute(ATTR_SOLVER);
 
 			// load fact value by delegate it to the fragments
-			SessionPersistenceManager sm = SessionPersistenceManager.getInstance();
 			List<Element> children = XMLUtil.getElementList(element.getChildNodes());
 			if (children.size() != 1) {
 				throw new IOException("multiple values are not allowed for a fact entry");
 			}
-			Value value = (Value) sm.readFragment(children.get(0), null);
+			Value value = (Value) persistence.readFragment(children.get(0));
 
 			// and return the fact
 			return new FactProtocolEntry(date, name, solver, value);
@@ -74,21 +73,20 @@ public class FactProtocolEntryHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		// prepare information
 		FactProtocolEntry entry = (FactProtocolEntry) object;
 		String dateString = SessionPersistenceManager.DATE_FORMAT.format(entry.getDate());
 
 		// create element
-		Element element = doc.createElement(ELEMENT_NAME);
+		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
 		element.setAttribute("type", ELEMENT_TYPE);
 		element.setAttribute(ATTR_DATE, dateString);
 		element.setAttribute(ATTR_OBJECT_NAME, entry.getTerminologyObjectName());
 		element.setAttribute(ATTR_SOLVER, entry.getSolvingMethodClassName());
 
 		// append value child/children
-		SessionPersistenceManager sm = SessionPersistenceManager.getInstance();
-		element.appendChild(sm.writeFragment(entry.getValue(), doc));
+		element.appendChild(persistence.writeFragment(entry.getValue()));
 		return element;
 	}
 

@@ -22,9 +22,9 @@ package de.d3web.core.io.fragments.actions;
 import java.io.IOException;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +36,7 @@ import de.d3web.indication.ActionContraIndication;
  * 
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
-public class ContraIndicationActionHandler implements FragmentHandler {
+public class ContraIndicationActionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -49,12 +49,12 @@ public class ContraIndicationActionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 		List<QASet> qaSets = null;
 		for (Element child : childNodes) {
 			if (child.getNodeName().equalsIgnoreCase("targetQASets")) {
-				qaSets = XMLUtil.getTargetQASets(child, kb);
+				qaSets = XMLUtil.getTargetQASets(child, persistence.getArtifact());
 			}
 		}
 		ActionContraIndication actionContraIndication = new ActionContraIndication();
@@ -63,9 +63,9 @@ public class ContraIndicationActionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ActionContraIndication action = (ActionContraIndication) object;
-		Element element = doc.createElement("Action");
+		Element element = persistence.getDocument().createElement("Action");
 		element.setAttribute("type", "ActionContraIndication");
 		List<QASet> qaSets = action.getQASets();
 		XMLUtil.appendTargetQASets(element, qaSets);

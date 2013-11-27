@@ -35,14 +35,16 @@ public interface KnowledgeReader {
 	 * This method reads the input stream and inserts the knowledge in the
 	 * {@link KnowledgeBase} instance.
 	 * 
+	 * @param persistenceManager the persistence manager responsible for reading
 	 * @param knowledgeBase KnowledgeBase in which die knowledge should be
 	 *        inserted
 	 * @param stream InputStream containing the knowledge
 	 * @param listerner listener which will be informed during this operation,
 	 *        null is not accepted
+	 * 
 	 * @throws IOException when an IO errors occurs during reading the part of
 	 *         the knowledge base
 	 */
-	public void read(KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException;
+	public void read(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException;
 
 }

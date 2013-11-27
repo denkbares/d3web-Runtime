@@ -30,8 +30,10 @@ import org.junit.Test;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondDState;
 import de.d3web.core.inference.condition.CondNumEqual;
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.RuleHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Rating;
@@ -59,10 +61,14 @@ public class RuleComplexTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 		KnowledgeBase kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
+
 		qnum1 = new QuestionNum(kb, "qnum1-id");
 		diag1 = new Solution(kb, "diag1-id");
 
@@ -114,7 +120,7 @@ public class RuleComplexTest {
 		exceptionTag2.addChild(exceptionTag1);
 		shouldTag.addChild(exceptionTag2);
 
-		isTag = new XMLTag(rcw.write(rcomp, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(rcw.write(rcomp, persistence));
 
 		assertEquals("(0)", shouldTag, isTag);
 	}
@@ -144,7 +150,7 @@ public class RuleComplexTest {
 		exceptionTag2.addChild(exceptionTag1);
 		shouldTag.addChild(exceptionTag2);
 
-		isTag = new XMLTag(rcw.write(rcomp, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(rcw.write(rcomp, persistence));
 
 		assertEquals("(1)", shouldTag, isTag);
 	}
@@ -178,7 +184,7 @@ public class RuleComplexTest {
 		exceptionTag2.addChild(exceptionTag1);
 		shouldTag.addChild(exceptionTag2);
 
-		isTag = new XMLTag(rcw.write(rcomp, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(rcw.write(rcomp, persistence));
 
 		assertEquals("(2)", shouldTag, isTag);
 	}
@@ -210,7 +216,7 @@ public class RuleComplexTest {
 		conditionTag1.addAttribute("value", "EXCLUDED");
 		shouldTag.addChild(conditionTag1);
 
-		isTag = new XMLTag(rcw.write(rcomp, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(rcw.write(rcomp, persistence));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}

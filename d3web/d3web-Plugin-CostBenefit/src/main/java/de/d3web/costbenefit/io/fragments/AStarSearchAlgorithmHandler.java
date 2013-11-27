@@ -20,10 +20,9 @@ package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +35,7 @@ import de.d3web.costbenefit.inference.astar.Heuristic;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class AStarSearchAlgorithmHandler implements FragmentHandler {
+public class AStarSearchAlgorithmHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -53,7 +52,7 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		AStarAlgorithm alg = new AStarAlgorithm();
 		String processorsString = element.getAttribute("multiCore");
 		if (!processorsString.isEmpty()) {
@@ -66,8 +65,7 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 			}
 		}
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
-			PersistenceManager pm = PersistenceManager.getInstance();
-			Object fragment = pm.readFragment(e, kb);
+			Object fragment = persistence.readFragment(e);
 			if (fragment instanceof Heuristic) {
 				alg.setHeuristic((Heuristic) fragment);
 			}
@@ -79,20 +77,18 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		AStarAlgorithm alg = (AStarAlgorithm) object;
-		Element element = doc.createElement("searchAlgorithm");
+		Element element = persistence.getDocument().createElement("searchAlgorithm");
 		element.setAttribute("name", "AStarSearchAlgorithm");
 		element.setAttribute("multiCore", String.valueOf(alg.isMultiCore()));
 
 		// write heuristic
-		PersistenceManager pm = PersistenceManager.getInstance();
-		element.appendChild(pm.writeFragment(alg.getHeuristic(), doc));
+		element.appendChild(persistence.writeFragment(alg.getHeuristic()));
 		// write abort strategy
 		AbortStrategy abortStrategy = alg.getAbortStrategy();
 		if (abortStrategy != null) {
-			element.appendChild(pm.writeFragment(
-					abortStrategy, doc));
+			element.appendChild(persistence.writeFragment(abortStrategy));
 		}
 		return element;
 	}

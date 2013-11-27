@@ -20,10 +20,10 @@ package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.CondKnown;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.Question;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class KnownConditionHandler implements FragmentHandler {
+public class KnownConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element node) {
@@ -48,10 +48,10 @@ public class KnownConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element node) throws IOException {
+	public Object read(Element node, Persistence<KnowledgeBase> persistence) throws IOException {
 		String questionID = node.getAttribute("name");
 		if (questionID != null) {
-			NamedObject idObject = kb.getManager().search(questionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(questionID);
 			if (idObject instanceof Question) {
 				Question q = (Question) idObject;
 				return new CondKnown(q);
@@ -64,9 +64,9 @@ public class KnownConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondKnown cond = (CondKnown) object;
-		return XMLUtil.writeCondition(doc, cond.getQuestion(), "known");
+		return XMLUtil.writeCondition(persistence.getDocument(), cond.getQuestion(), "known");
 	}
 
 }

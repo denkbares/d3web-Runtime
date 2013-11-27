@@ -21,11 +21,11 @@ package de.d3web.core.io.fragments.actions;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -38,7 +38,7 @@ import de.d3web.scoring.Score;
  * 
  * @author Norman Brümmer, Markus Friedrich(denkbares GmbH)
  */
-public class HeuristicPSActionHandler implements FragmentHandler {
+public class HeuristicPSActionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -51,7 +51,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		Score score = null;
 		Solution diag = null;
 		NodeList children = element.getChildNodes();
@@ -63,7 +63,7 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 			}
 			else if (child.getNodeName().equalsIgnoreCase("Diagnosis")) {
 				String id = child.getAttributes().getNamedItem("name").getNodeValue();
-				diag = kb.getManager().searchSolution(id);
+				diag = persistence.getArtifact().getManager().searchSolution(id);
 			}
 		}
 		ActionHeuristicPS actionHeuristicPS = new ActionHeuristicPS();
@@ -73,9 +73,9 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ActionHeuristicPS action = (ActionHeuristicPS) object;
-		Element element = doc.createElement("Action");
+		Element element = persistence.getDocument().createElement("Action");
 		element.setAttribute("type", "ActionHeuristicPS");
 		Score theScore = action.getScore();
 		Solution theDiag = action.getSolution();
@@ -90,9 +90,9 @@ public class HeuristicPSActionHandler implements FragmentHandler {
 		if (theDiag != null) {
 			diagName = theDiag.getName();
 		}
-		Element scoreElement = doc.createElement("Score");
+		Element scoreElement = persistence.getDocument().createElement("Score");
 		scoreElement.setAttribute("value", scoreSymbol);
-		Element diagElement = doc.createElement("Diagnosis");
+		Element diagElement = persistence.getDocument().createElement("Diagnosis");
 		diagElement.setAttribute("name", diagName);
 		element.appendChild(scoreElement);
 		element.appendChild(diagElement);

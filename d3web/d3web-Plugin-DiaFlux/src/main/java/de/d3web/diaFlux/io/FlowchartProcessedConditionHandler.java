@@ -20,10 +20,10 @@ package de.d3web.diaFlux.io;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -34,12 +34,12 @@ import de.d3web.diaFlux.inference.FlowchartProcessedCondition;
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
-public class FlowchartProcessedConditionHandler implements FragmentHandler {
+public class FlowchartProcessedConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String FLOWCHART_PROCESSED = "FlowchartProcessed";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String flowName = element.getElementsByTagName(ComposedNodeFragmentHandler.FLOW_NAME).item(
 				0).getTextContent();
 
@@ -47,16 +47,16 @@ public class FlowchartProcessedConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		FlowchartProcessedCondition condition = (FlowchartProcessedCondition) object;
 
-		Element actionElem = doc.createElement("Condition");
+		Element actionElem = persistence.getDocument().createElement("Condition");
 		actionElem.setAttribute("type", FLOWCHART_PROCESSED);
 
-		Element flowElem = doc.createElement(ComposedNodeFragmentHandler.FLOW_NAME);
+		Element flowElem = persistence.getDocument().createElement(ComposedNodeFragmentHandler.FLOW_NAME);
 		actionElem.appendChild(flowElem);
 
-		Text flowNameNode = doc.createTextNode(condition.getFlowName());
+		Text flowNameNode = persistence.getDocument().createTextNode(condition.getFlowName());
 		flowElem.appendChild(flowNameNode);
 
 		return actionElem;

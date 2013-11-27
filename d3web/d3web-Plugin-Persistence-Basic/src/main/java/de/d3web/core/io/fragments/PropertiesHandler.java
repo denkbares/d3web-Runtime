@@ -27,11 +27,10 @@ import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
 
 /**
@@ -45,7 +44,7 @@ public class PropertiesHandler {
 		return element.getNodeName().equals("Properties");
 	}
 
-	public InfoStore read(KnowledgeBase kb, Element element) throws IOException {
+	public InfoStore read(Persistence<?> persistence, Element element) throws IOException {
 		InfoStore infoStore = new DefaultInfoStore();
 		List<Element> proplist = XMLUtil.getElementList(element.getChildNodes());
 		for (Element prop : proplist) {
@@ -82,8 +81,7 @@ public class PropertiesHandler {
 						infoStore.addValue(property, "");
 					}
 					else if (childNodes.size() == 1) {
-						infoStore.addValue(property, PersistenceManager.getInstance().readFragment(
-								childNodes.get(0), kb));
+						infoStore.addValue(property, persistence.readFragment(childNodes.get(0)));
 					}
 					else {
 						throw new IOException("Property must have exactly one child.");

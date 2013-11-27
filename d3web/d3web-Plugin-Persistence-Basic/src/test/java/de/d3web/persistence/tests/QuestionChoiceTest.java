@@ -29,8 +29,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.io.KnowledgeBasePersistence;
+import de.d3web.core.io.Persistence;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.fragments.QuestionHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -50,11 +52,14 @@ public class QuestionChoiceTest {
 	private XMLTag isTag;
 	private XMLTag shouldTag;
 
+	private Persistence<KnowledgeBase> persistence;
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
-
-		q1 = new QuestionOC(new KnowledgeBase(), "q1");
+		KnowledgeBase kb = new KnowledgeBase();
+		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
+		q1 = new QuestionOC(kb, "q1");
 
 		qw = new QuestionHandler();
 
@@ -67,7 +72,7 @@ public class QuestionChoiceTest {
 	public void testQuestionOCSimple() throws Exception {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
-		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, persistence));
 		assertEquals("(0)", shouldTag, isTag);
 	}
 
@@ -96,7 +101,7 @@ public class QuestionChoiceTest {
 		answerTag2.addAttribute("type", "AnswerChoice");
 		answersTag.addChild(answerTag2);
 
-		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, persistence));
 
 		assertEquals("(1)", shouldTag, isTag);
 
@@ -127,7 +132,7 @@ public class QuestionChoiceTest {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
 
-		isTag = new XMLTag(qw.write(q1, XMLUtil.createEmptyDocument()));
+		isTag = new XMLTag(qw.write(q1, persistence));
 
 		assertEquals("(3)", shouldTag, isTag);
 	}

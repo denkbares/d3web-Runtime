@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
@@ -35,7 +36,7 @@ import de.d3web.core.records.SessionRecord;
 public class NameHandler implements SessionPersistenceHandler {
 
 	@Override
-	public void read(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
+	public void read(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException {
 		List<Element> elementList = XMLUtil.getElementList(sessionElement.getChildNodes());
 		String name = null;
 		for (Element e : elementList) {
@@ -44,14 +45,14 @@ public class NameHandler implements SessionPersistenceHandler {
 			}
 		}
 		if (name != null) {
-			sessionRecord.setName(name);
+			persistence.getArtifact().setName(name);
 		}
 	}
 
 	@Override
-	public void write(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
+	public void write(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException {
 		Element element = sessionElement.getOwnerDocument().createElement("name");
-		String name = sessionRecord.getName();
+		String name = persistence.getArtifact().getName();
 		if (name != null) element.setTextContent(name);
 		sessionElement.appendChild(element);
 	}

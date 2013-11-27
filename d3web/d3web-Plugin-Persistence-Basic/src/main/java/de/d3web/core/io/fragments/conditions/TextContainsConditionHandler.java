@@ -20,13 +20,13 @@ package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.d3web.core.inference.condition.CondRegex;
 import de.d3web.core.inference.condition.CondTextContains;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -41,7 +41,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
  *             instead
  */
 @Deprecated
-public class TextContainsConditionHandler implements FragmentHandler {
+public class TextContainsConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -54,10 +54,10 @@ public class TextContainsConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String questionID = element.getAttribute("name");
 		if (questionID != null) {
-			NamedObject idObject = kb.getManager().search(questionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(questionID);
 			if (idObject instanceof QuestionText) {
 				QuestionText q = (QuestionText) idObject;
 				NodeList childNodes = element.getChildNodes();
@@ -71,9 +71,9 @@ public class TextContainsConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondTextContains cond = (CondTextContains) object;
-		return XMLUtil.writeConditionWithValueNode(doc, cond.getQuestion(), "textContains",
+		return XMLUtil.writeConditionWithValueNode(persistence, cond.getQuestion(), "textContains",
 				cond.getValue());
 	}
 

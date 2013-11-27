@@ -20,12 +20,11 @@ package de.d3web.diaFlux.io;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.ActionNode;
 
@@ -34,33 +33,25 @@ import de.d3web.diaFlux.flow.ActionNode;
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
-public class ActionNodeFragmentHandler extends
-		AbstractNodeFragmentHandler {
+public class ActionNodeFragmentHandler extends AbstractNodeFragmentHandler {
 
 	public static final String ACTION = "Action";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String id = element.getAttribute(DiaFluxPersistenceHandler.ID);
-
 		Node actionElem = element.getElementsByTagName(ACTION).item(0);
-
-		PSAction action = (PSAction) PersistenceManager.getInstance().readFragment(
-				(Element) actionElem, kb);
-
+		PSAction action = (PSAction) persistence.readFragment((Element) actionElem);
 		return new ActionNode(id, action);
 
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ActionNode node = (ActionNode) object;
-		Element nodeElement = createNodeElement(node, doc);
-
-		Element actionElem = PersistenceManager.getInstance().writeFragment(node.getAction(), doc);
-
+		Element nodeElement = createNodeElement(node, persistence.getDocument());
+		Element actionElem = persistence.writeFragment(node.getAction());
 		nodeElement.appendChild(actionElem);
-
 		return nodeElement;
 	}
 

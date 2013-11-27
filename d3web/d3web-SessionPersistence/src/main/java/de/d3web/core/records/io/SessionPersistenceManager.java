@@ -49,7 +49,7 @@ import de.d3web.plugin.PluginManager;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public final class SessionPersistenceManager extends FragmentManager {
+public final class SessionPersistenceManager {
 
 	private static final String EXTENDED_POINT_FRAGMENTHANDLER = "FragmentHandler";
 	private static final String EXTENDED_POINT_PERSISTENCEHANDLER = "SessionPersistenceHandler";
@@ -57,6 +57,7 @@ public final class SessionPersistenceManager extends FragmentManager {
 
 	private static SessionPersistenceManager manager;
 	private Extension[] handler;
+	private final FragmentManager<SessionRecord> fragmentManager = new FragmentManager<SessionRecord>();
 
 	private static final String REPOSITORY_TAG = "repository";
 	private static final String SESSION_TAG = "session";
@@ -65,7 +66,6 @@ public final class SessionPersistenceManager extends FragmentManager {
 			"yyyy-MM-dd HH:mm:ss.SS");
 
 	private SessionPersistenceManager() {
-
 	}
 
 	public static SessionPersistenceManager getInstance() {
@@ -75,11 +75,14 @@ public final class SessionPersistenceManager extends FragmentManager {
 		return manager;
 	}
 
+	public FragmentManager<SessionRecord> getFragmentManager() {
+		return fragmentManager;
+	}
+
 	private void updateHandler() {
 		PluginManager theManager = PluginManager.getInstance();
 		handler = theManager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_PERSISTENCEHANDLER);
-		fragmentPlugins = theManager.getExtensions(EXTENDED_PLUGIN_ID,
-				EXTENDED_POINT_FRAGMENTHANDLER);
+		getFragmentManager().init(EXTENDED_PLUGIN_ID, EXTENDED_POINT_FRAGMENTHANDLER);
 	}
 
 	/**
@@ -161,7 +164,8 @@ public final class SessionPersistenceManager extends FragmentManager {
 			sessionElement.setAttribute("changed", DATE_FORMAT.format(co.getLastChangeDate()));
 			for (Extension extension : handler) {
 				SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
-				theHandler.write(sessionElement, co, listener);
+				SessionPersistence persistence = new SessionPersistence(this, co, sessionElement);
+				theHandler.write(persistence, sessionElement, listener);
 			}
 			repElement.appendChild(sessionElement);
 		}
@@ -259,7 +263,8 @@ public final class SessionPersistenceManager extends FragmentManager {
 							new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
 					for (Extension extension : handler) {
 						SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
-						theHandler.read(e, sr, listener);
+						SessionPersistence persistence = new SessionPersistence(this, sr, e);
+						theHandler.read(persistence, e, listener);
 					}
 					sr.touch(dateOfLastEdit);
 					sessionRecords.add(sr);

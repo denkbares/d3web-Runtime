@@ -20,10 +20,10 @@ package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.CondSolutionRejected;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.Solution;
  * @author Reinhard Hatko
  * @created 22.11.2010
  */
-public class ConditionSolutionRejectedHandler implements FragmentHandler {
+public class ConditionSolutionRejectedHandler implements FragmentHandler<KnowledgeBase> {
 
 	public static final String TYPE = "solutionRejected";
 
@@ -51,10 +51,10 @@ public class ConditionSolutionRejectedHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element node) throws IOException {
+	public Object read(Element node, Persistence<KnowledgeBase> persistence) throws IOException {
 		String solutionID = node.getAttribute("name");
 		if (solutionID != null) {
-			NamedObject idObject = kb.getManager().search(solutionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution s = (Solution) idObject;
 				return new CondSolutionRejected(s);
@@ -64,9 +64,9 @@ public class ConditionSolutionRejectedHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondSolutionRejected cond = (CondSolutionRejected) object;
-		return XMLUtil.writeCondition(doc, cond.getSolution(), TYPE);
+		return XMLUtil.writeCondition(persistence.getDocument(), cond.getSolution(), TYPE);
 	}
 
 }

@@ -21,9 +21,9 @@ package de.d3web.core.io.fragments;
 import java.io.IOException;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.info.Property.Autosave;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class ChoiceHandler implements FragmentHandler {
+public class ChoiceHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -50,7 +50,7 @@ public class ChoiceHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String type = element.getAttribute("type");
 		String id = element.getAttribute("name");
 		Choice ac = null;
@@ -68,10 +68,10 @@ public class ChoiceHandler implements FragmentHandler {
 			PropertiesHandler ph = new PropertiesHandler();
 			for (Element node : childNodes) {
 				if (node.getNodeName().equals(XMLUtil.INFO_STORE)) {
-					XMLUtil.fillInfoStore(ac.getInfoStore(), node, kb);
+					XMLUtil.fillInfoStore(persistence, ac.getInfoStore(), node);
 				}
 				else if (ph.canRead(node)) {
-					InfoStoreUtil.copyEntries(ph.read(kb, node), ac.getInfoStore());
+					InfoStoreUtil.copyEntries(ph.read(persistence, node), ac.getInfoStore());
 				}
 			}
 		}
@@ -79,8 +79,8 @@ public class ChoiceHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("Answer");
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement("Answer");
 		Choice a = (Choice) object;
 		element.setAttribute("name", a.getName());
 		element.setAttribute("type", "answer");
@@ -93,7 +93,7 @@ public class ChoiceHandler implements FragmentHandler {
 		else {
 			element.setAttribute("type", "AnswerChoice");
 		}
-		XMLUtil.appendInfoStore(element, a, Autosave.basic);
+		XMLUtil.appendInfoStore(persistence, element, a, Autosave.basic);
 		return element;
 	}
 

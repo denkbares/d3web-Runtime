@@ -21,11 +21,10 @@ package de.d3web.core.io.fragments.conditions;
 import java.io.IOException;
 import java.util.List;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.CondNumIn;
-import de.d3web.core.io.PersistenceManager;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -38,7 +37,7 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class NumInConditionHandler implements FragmentHandler {
+public class NumInConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -51,17 +50,16 @@ public class NumInConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String questionID = element.getAttribute("name");
 		if (questionID != null) {
-			NamedObject idObject = kb.getManager().search(questionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(questionID);
 			if (idObject instanceof QuestionNum) {
 				QuestionNum q = (QuestionNum) idObject;
 				List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 				Element item = childNodes.get(0);
 				if (item != null && childNodes.size() == 1) {
-					NumericalInterval interval = (NumericalInterval) PersistenceManager.getInstance().readFragment(
-							item, kb);
+					NumericalInterval interval = (NumericalInterval) persistence.readFragment(item);
 					return new CondNumIn(q, interval);
 				}
 			}
@@ -70,11 +68,11 @@ public class NumInConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondNumIn cond = (CondNumIn) object;
-		Element intervalElemenent = PersistenceManager.getInstance().writeFragment(
-				cond.getInterval(), doc);
-		Element element = XMLUtil.writeConditionWithValueNode(doc, cond.getQuestion(), "numIn",
+		Element intervalElemenent = persistence.writeFragment(cond.getInterval());
+		Element element = XMLUtil.writeConditionWithValueNode(persistence, cond.getQuestion(),
+				"numIn",
 				intervalElemenent);
 		;
 		return element;

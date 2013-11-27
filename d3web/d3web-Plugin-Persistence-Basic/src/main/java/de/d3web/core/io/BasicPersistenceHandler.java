@@ -94,9 +94,11 @@ public class BasicPersistenceHandler implements
 	}
 
 	@Override
-	public void read(KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
 		listener.updateProgress(0, "Loading knowledge base");
-		Document doc = XMLUtil.streamToDocument(stream);
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
+		Document doc = persistence.getDocument();
+
 		List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
 		if (childNodes.size() != 1) {
 			throw new IOException("Document has more than one child.");
@@ -117,7 +119,6 @@ public class BasicPersistenceHandler implements
 		List<Element> qASetNodes = new ArrayList<Element>();
 		List<Element> diagnosisNodes = null;
 		List<Element> initquestionnodes = null;
-		FragmentManager pm = PersistenceManager.getInstance();
 		String rootQASetID = null;
 		String rootSolutionID = null;
 		PropertiesHandler ph = new PropertiesHandler();
@@ -143,7 +144,7 @@ public class BasicPersistenceHandler implements
 				qASetNodes.addAll(XMLUtil.getElementList(child.getChildNodes()));
 			}
 			else if (name.equalsIgnoreCase("InitQuestions")
-								// former name in previous versions
+					// former name in previous versions
 					|| name.equalsIgnoreCase("InitQASets")) {
 				initquestionnodes = XMLUtil.getElementList(child.getChildNodes());
 				abstime += initquestionnodes.size();
@@ -155,11 +156,11 @@ public class BasicPersistenceHandler implements
 				rootSolutionID = child.getTextContent();
 			}
 			else if (name.equals(XMLUtil.INFO_STORE)) {
-				XMLUtil.fillInfoStore(kb.getInfoStore(), child, kb);
+				XMLUtil.fillInfoStore(persistence, kb.getInfoStore(), child);
 			}
 			// read old persistence format
 			else if (ph.canRead(child)) {
-				InfoStoreUtil.copyEntries(ph.read(kb, child), kb.getInfoStore());
+				InfoStoreUtil.copyEntries(ph.read(persistence, child), kb.getInfoStore());
 			}
 		}
 		abstime += qASetNodes.size();
@@ -169,14 +170,14 @@ public class BasicPersistenceHandler implements
 
 		for (Element child : qASetNodes) {
 			listener.updateProgress(time++ / abstime, "Building qasets");
-			QASet q = (QASet) pm.readFragment(child, kb);
+			QASet q = (QASet) persistence.readFragment(child);
 			hierarchiemap.put(child, q);
 		}
 
 		if (diagnosisNodes != null) {
 			for (Element child : diagnosisNodes) {
 				listener.updateProgress(time++ / abstime, "Building diagnosis");
-				Solution diag = (Solution) pm.readFragment(child, kb);
+				Solution diag = (Solution) persistence.readFragment(child);
 				hierarchiemap.put(child, diag);
 			}
 		}
@@ -226,7 +227,7 @@ public class BasicPersistenceHandler implements
 		// former persistence versions
 		for (Element child : knowledgeslicesNodes) {
 			listener.updateProgress(time++ / abstime, "Loading knowledge base: knowledge slices");
-			readFragments.add(pm.readFragment(child, kb));
+			readFragments.add(persistence.readFragment(child));
 		}
 		// set the context, if it doesn't exist
 		for (Object o : readFragments) {
@@ -241,8 +242,10 @@ public class BasicPersistenceHandler implements
 	}
 
 	@Override
-	public void write(KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		Document doc = XMLUtil.createEmptyDocument();
+	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
+		Document doc = persistence.getDocument();
+
 		float time = 0;
 		int abstime = getEstimatedSize(kb);
 
@@ -256,7 +259,7 @@ public class BasicPersistenceHandler implements
 		father.setAttribute("system", "d3web");
 
 		listener.updateProgress(time++ / abstime, "Saving knowledge base: properties");
-		XMLUtil.appendInfoStore(father, kb, Autosave.basic);
+		XMLUtil.appendInfoStore(persistence, father, kb, Autosave.basic);
 
 		time = saveInitQuestions(father, kb, listener, time, abstime);
 
@@ -278,10 +281,9 @@ public class BasicPersistenceHandler implements
 		Map<TerminologyObject, Element> possibleParents = new HashMap<TerminologyObject, Element>();
 		List<QASet> qASets = kb.getManager().getQASets();
 		Collections.sort(qASets, new NamedObjectComparator());
-		PersistenceManager pm = PersistenceManager.getInstance();
 		for (QASet qASet : qASets) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: QASets");
-			Element qContainerElement = pm.writeFragment(qASet, doc);
+			Element qContainerElement = persistence.writeFragment(qASet);
 			qContainersElement.appendChild(qContainerElement);
 			possibleParents.put(qASet, qContainerElement);
 		}
@@ -302,7 +304,7 @@ public class BasicPersistenceHandler implements
 		Collections.sort(solutions, new NamedObjectComparator());
 		for (Solution diag : solutions) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: diagnosis");
-			Element singleDiagnosisElement = pm.writeFragment(diag, doc);
+			Element singleDiagnosisElement = persistence.writeFragment(diag);
 			diagnosisElement.appendChild(singleDiagnosisElement);
 			possibleParents.put(diag, singleDiagnosisElement);
 		}

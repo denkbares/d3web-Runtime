@@ -20,10 +20,10 @@ package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.condition.CondDState;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.terminology.Solution;
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class DStateConditionHandler implements FragmentHandler {
+public class DStateConditionHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -50,11 +50,11 @@ public class DStateConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String solutionID = element.getAttribute("name");
 		String value = element.getAttribute("value");
 		if (solutionID != null && value != null) {
-			NamedObject idObject = kb.getManager().search(solutionID);
+			NamedObject idObject = persistence.getArtifact().getManager().search(solutionID);
 			if (idObject instanceof Solution) {
 				Solution diag = (Solution) idObject;
 				Rating diagnosisState = getRating(value);
@@ -65,14 +65,15 @@ public class DStateConditionHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondDState cond = (CondDState) object;
 		String status = "";
 		State ratingState = cond.getRatingState();
 		if (ratingState != null) {
 			status = ratingState.name();
 		}
-		return XMLUtil.writeCondition(doc, cond.getSolution(), "DState", status);
+		return XMLUtil.writeCondition(
+				persistence.getDocument(), cond.getSolution(), "DState", status);
 	}
 
 	private static Rating getRating(String status) {

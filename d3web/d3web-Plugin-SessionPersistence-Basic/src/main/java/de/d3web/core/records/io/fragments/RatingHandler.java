@@ -20,12 +20,12 @@ package de.d3web.core.records.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.records.SessionRecord;
 
 /**
  * Handler for Rating
@@ -33,19 +33,19 @@ import de.d3web.core.knowledge.terminology.Rating;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
-public class RatingHandler implements FragmentHandler {
+public class RatingHandler implements FragmentHandler<SessionRecord> {
 
 	private static final String elementName = "rating";
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		return new Rating(element.getTextContent());
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
+	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		Rating rating = (Rating) object;
-		Element element = doc.createElement(elementName);
+		Element element = persistence.getDocument().createElement(elementName);
 		element.setTextContent(rating.getName());
 		return element;
 	}

@@ -82,7 +82,8 @@ public class TestKfz {
 		InitPluginManager.init();
 		BasicPersistenceHandler ph = new BasicPersistenceHandler();
 		kb = new KnowledgeBase();
-		ph.read(kb, kbURL.openStream(), new DummyProgressListener());
+		ph.read(PersistenceManager.getInstance(), kb, kbURL.openStream(),
+				new DummyProgressListener());
 	}
 
 	/**

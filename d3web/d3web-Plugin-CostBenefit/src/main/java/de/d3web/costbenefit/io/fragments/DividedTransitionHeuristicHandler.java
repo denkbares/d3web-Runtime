@@ -20,9 +20,9 @@ package de.d3web.costbenefit.io.fragments;
 
 import java.io.IOException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.astar.DividedTransitionHeuristic;
@@ -32,7 +32,7 @@ import de.d3web.costbenefit.inference.astar.DividedTransitionHeuristic;
  * 
  * @author Volker Belli (denkbares GmbH)
  */
-public class DividedTransitionHeuristicHandler implements FragmentHandler {
+public class DividedTransitionHeuristicHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
@@ -49,13 +49,13 @@ public class DividedTransitionHeuristicHandler implements FragmentHandler {
 	}
 
 	@Override
-	public Object read(KnowledgeBase kb, Element element) throws IOException {
+	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		return new DividedTransitionHeuristic();
 	}
 
 	@Override
-	public Element write(Object object, Document doc) throws IOException {
-		Element element = doc.createElement("heuristic");
+	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
+		Element element = persistence.getDocument().createElement("heuristic");
 		element.setAttribute("name", "DividedTransitionHeuristic");
 		return element;
 	}

@@ -26,6 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.NoSuchFragmentHandlerException;
+import de.d3web.core.io.Persistence;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.FactRecord;
@@ -41,7 +42,7 @@ import de.d3web.core.session.Value;
 public class FactHandler implements SessionPersistenceHandler {
 
 	@Override
-	public void read(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
+	public void read(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException {
 		List<Element> elementList = XMLUtil.getElementList(sessionElement.getChildNodes());
 		for (Element e : elementList) {
 			if (e.getNodeName().equals("facts")) {
@@ -50,23 +51,23 @@ public class FactHandler implements SessionPersistenceHandler {
 				List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
 				for (Element factCategorieElement : factCategorieList) {
 					if (factCategorieElement.getNodeName().equals("valueFacts")) {
-						getFacts(factCategorieElement, valueFacts);
+						getFacts(persistence, factCategorieElement, valueFacts);
 					}
 					else if (factCategorieElement.getNodeName().equals("interviewFacts")) {
-						getFacts(factCategorieElement, interviewFacts);
+						getFacts(persistence, factCategorieElement, interviewFacts);
 					}
 				}
 				for (FactRecord fact : valueFacts) {
-					sessionRecord.addValueFact(fact);
+					persistence.getArtifact().addValueFact(fact);
 				}
 				for (FactRecord fact : interviewFacts) {
-					sessionRecord.addInterviewFact(fact);
+					persistence.getArtifact().addInterviewFact(fact);
 				}
 			}
 		}
 	}
 
-	private void getFacts(Element factCategorieElement, List<FactRecord> facts) throws NoSuchFragmentHandlerException, IOException {
+	private void getFacts(Persistence<SessionRecord> persistence, Element factCategorieElement, List<FactRecord> facts) throws NoSuchFragmentHandlerException, IOException {
 		for (Element factElement : XMLUtil.getElementList(factCategorieElement.getChildNodes())) {
 			String idObjectName = factElement.getAttribute("objectName");
 			String psmName = factElement.getAttribute("psm");
@@ -75,8 +76,7 @@ public class FactHandler implements SessionPersistenceHandler {
 			// (used class.toString instead of class.getName)
 			if (psmName != null && psmName.startsWith("class ")) psmName = psmName.substring(6);
 			List<Element> valueNodes = XMLUtil.getElementList(factElement.getChildNodes());
-			SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
-			Object readFragment = spm.readFragment(valueNodes.get(0), null);
+			Object readFragment = persistence.readFragment(valueNodes.get(0));
 			FactRecord fact = new FactRecord(
 					idObjectName, psmName, (Value) readFragment);
 			facts.add(fact);
@@ -84,27 +84,29 @@ public class FactHandler implements SessionPersistenceHandler {
 	}
 
 	@Override
-	public void write(Element sessionElement, SessionRecord sessionRecord, ProgressListener listener) throws IOException {
+	public void write(Persistence<SessionRecord> persistence, Element sessionElement, ProgressListener listener) throws IOException {
 		Document doc = sessionElement.getOwnerDocument();
+		SessionRecord record = persistence.getArtifact();
+
 		Element factsElement = doc.createElement("facts");
 		sessionElement.appendChild(factsElement);
 		Element valueFactsElement = doc.createElement("valueFacts");
 		factsElement.appendChild(valueFactsElement);
 		Element interviewFactsElement = doc.createElement("interviewFacts");
 		factsElement.appendChild(interviewFactsElement);
-		addFacts(sessionRecord.getValueFacts(), doc, valueFactsElement);
-		addFacts(sessionRecord.getInterviewFacts(), doc, interviewFactsElement);
+
+		addFacts(persistence, record.getValueFacts(), valueFactsElement);
+		addFacts(persistence, record.getInterviewFacts(), interviewFactsElement);
 	}
 
-	private void addFacts(List<FactRecord> facts, Document doc, Element factsElement) throws NoSuchFragmentHandlerException, IOException {
+	private void addFacts(Persistence<SessionRecord> persistence, List<FactRecord> facts, Element factsElement) throws NoSuchFragmentHandlerException, IOException {
 		for (FactRecord fact : facts) {
-			Element factElement = doc.createElement("fact");
+			Element factElement = persistence.getDocument().createElement("fact");
 			factsElement.appendChild(factElement);
 			factElement.setAttribute("objectName", fact.getObjectName());
 			String psm = fact.getPSM();
 			if (psm != null) factElement.setAttribute("psm", psm);
-			factElement.appendChild(SessionPersistenceManager.getInstance().writeFragment(
-					fact.getValue(), doc));
+			factElement.appendChild(persistence.writeFragment(fact.getValue()));
 		}
 	}
 }
