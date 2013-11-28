@@ -211,13 +211,21 @@ public final class PersistenceManager {
 	 */
 	private PersistenceManager(Cipher cipher) {
 		this.cipher = cipher;
+		updatePlugins();
 	}
 
 	FragmentManager<KnowledgeBase> getFragmentManager() {
 		return fragmentManager;
 	}
 
-	private void updatePlugins() {
+	/**
+	 * Method to force the plugins to be updated. Usually it is not required to
+	 * call this method manually, because this will done by the persistence
+	 * manager of their own.
+	 * 
+	 * @created 28.11.2013
+	 */
+	public void updatePlugins() {
 		PluginManager manager = PluginManager.getInstance();
 		readerPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_READER);
 		writerPlugins = manager.getExtensions(EXTENDED_PLUGIN_ID, EXTENDED_POINT_WRITER);
@@ -274,7 +282,6 @@ public final class PersistenceManager {
 	 *         file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
-		updatePlugins();
 		ZipFile zipfile = new ZipFile(file);
 		try {
 			KnowledgeBase kb = new KnowledgeBase();
@@ -454,7 +461,6 @@ public final class PersistenceManager {
 	 * @throws IOException if an error occurs during saving the files
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file, ProgressListener listener) throws IOException {
-		updatePlugins();
 		Manifest manifest = new Manifest();
 		Attributes mainAttributes = manifest.getMainAttributes();
 		mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "2.0");
@@ -466,6 +472,9 @@ public final class PersistenceManager {
 		mainAttributes.put(new Attributes.Name("Author"),
 				knowledgeBase.getInfoStore().getValue(BasicProperties.AUTHOR));
 		mainAttributes.put(new Attributes.Name("User"), System.getProperty("user.name"));
+		if (cipher != null) {
+			mainAttributes.put(new Attributes.Name("Encrypted"), cipher.getAlgorithm());
+		}
 		File tempfile = new File(file.getCanonicalPath() + ".temp");
 
 		tempfile.getAbsoluteFile().getParentFile().mkdirs();

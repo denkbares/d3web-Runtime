@@ -110,8 +110,8 @@ public class BasicPersistenceHandlerTest {
 				return sb.toString();
 			}
 		};
-		basicPersistenceHandler.write(PersistenceManager.getInstance(), kb, stream,
-				new DummyProgressListener());
+		PersistenceManager pm = PersistenceManager.getInstance();
+		basicPersistenceHandler.write(pm, kb, stream, new DummyProgressListener());
 		xmlcode = stream.toString();
 		isTag = new XMLTag(XMLTagUtils.generateNodeFromXMLCode(xmlcode, "KnowledgeBase", 0));
 
