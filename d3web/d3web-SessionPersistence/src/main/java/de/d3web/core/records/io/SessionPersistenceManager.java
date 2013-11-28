@@ -75,7 +75,7 @@ public final class SessionPersistenceManager {
 		return manager;
 	}
 
-	public FragmentManager<SessionRecord> getFragmentManager() {
+	FragmentManager<SessionRecord> getFragmentManager() {
 		return fragmentManager;
 	}
 

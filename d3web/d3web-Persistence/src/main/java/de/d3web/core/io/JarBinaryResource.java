@@ -19,27 +19,33 @@
 package de.d3web.core.io;
 
 import java.io.File;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+
 import de.d3web.core.knowledge.Resource;
 
 /**
- * Class to store Jar Ressources in the KnowledgeBase
+ * Class to store Jar Resources in the KnowledgeBase
  * 
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class JarBinaryRessource implements Resource {
+public class JarBinaryResource implements Resource {
 
 	private int size;
 	private String entryPath;
 	private File file;
+	private final Cipher cipher;
 
-	public JarBinaryRessource(ZipEntry entry, File zipfile) throws IOException {
-		entryPath = entry.getName();
-		size = (int) entry.getSize();
+	public JarBinaryResource(ZipEntry entry, File zipfile, Cipher cipher) throws IOException {
+		this.entryPath = entry.getName();
+		this.size = (int) entry.getSize();
+		this.cipher = cipher;
 		this.file = zipfile;
 		if (entry.getSize() > Integer.MAX_VALUE) {
 			throw new IOException("File with more than 2 GB are not supported");
@@ -67,55 +73,19 @@ public class JarBinaryRessource implements Resource {
 
 		final ZipFile zipfile = new ZipFile(file);
 		ZipEntry entry = zipfile.getEntry(entryPath);
-		final InputStream inputStream = zipfile.getInputStream(entry);
+		InputStream stream = zipfile.getInputStream(entry);
+
+		// decrypt stream if required
+		if (cipher != null) stream = new CipherInputStream(stream, cipher);
+
 		// we will return a decoration stream
 		// that closes the zip file on closing the stream
-		return new InputStream() {
-
-			@Override
-			public int available() throws IOException {
-				return inputStream.available();
-			}
+		return new FilterInputStream(stream) {
 
 			@Override
 			public void close() throws IOException {
-				inputStream.close();
+				super.close();
 				zipfile.close();
-			}
-
-			@Override
-			public synchronized void mark(int count) {
-				inputStream.mark(count);
-			}
-
-			@Override
-			public boolean markSupported() {
-				return inputStream.markSupported();
-			}
-
-			@Override
-			public int read() throws IOException {
-				return inputStream.read();
-			}
-
-			@Override
-			public int read(byte[] buffer) throws IOException {
-				return inputStream.read(buffer);
-			}
-
-			@Override
-			public int read(byte[] buffer, int arg1, int arg2) throws IOException {
-				return inputStream.read(buffer, arg1, arg2);
-			}
-
-			@Override
-			public synchronized void reset() throws IOException {
-				inputStream.reset();
-			}
-
-			@Override
-			public long skip(long arg0) throws IOException {
-				return inputStream.skip(arg0);
 			}
 		};
 	}

@@ -19,6 +19,7 @@
  */
 package de.d3web.core.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,6 +39,10 @@ import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 
 import de.d3web.core.io.progress.CombinedProgressListener;
 import de.d3web.core.io.progress.DummyProgressListener;
@@ -79,8 +84,9 @@ public final class PersistenceManager {
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
 	private final FragmentManager<KnowledgeBase> fragmentManager = new FragmentManager<KnowledgeBase>();
+	private final Cipher cipher;
 
-	public final static class KnowledgeBaseInfo {
+	public final class KnowledgeBaseInfo {
 
 		private final String name;
 		private final String description;
@@ -179,14 +185,14 @@ public final class PersistenceManager {
 			return favIcon;
 		}
 
-		private static Resource createFavIconResource(File kbFile) {
+		private Resource createFavIconResource(File kbFile) {
 			try {
 				ZipFile zipfile = new ZipFile(kbFile);
 				try {
 					String path = MULTIMEDIA_PATH_PREFIX + "favicon.png";
 					ZipEntry entry = zipfile.getEntry(path);
 					if (entry != null) {
-						return new JarBinaryRessource(entry, kbFile);
+						return createResource(kbFile, entry);
 					}
 				}
 				finally {
@@ -203,11 +209,11 @@ public final class PersistenceManager {
 	/**
 	 * Private constructor: For public access getInstance() should be used
 	 */
-	private PersistenceManager() {
-		updatePlugins();
+	private PersistenceManager(Cipher cipher) {
+		this.cipher = cipher;
 	}
 
-	public FragmentManager<KnowledgeBase> getFragmentManager() {
+	FragmentManager<KnowledgeBase> getFragmentManager() {
 		return fragmentManager;
 	}
 
@@ -226,9 +232,33 @@ public final class PersistenceManager {
 	 */
 	public static PersistenceManager getInstance() {
 		if (instance == null) {
-			instance = new PersistenceManager();
+			instance = new PersistenceManager(null);
 		}
 		return instance;
+	}
+
+	/**
+	 * Method to create a instance of a {@link PersistenceManager} that
+	 * reads/writes encrypted knowledge base files. The encryption of each
+	 * content item is done by the specified cipher. The cipher need to be fully
+	 * initialized. The entry names of the knowledge base jar file are not
+	 * encrypted at all.
+	 * <p>
+	 * When loading a knowledge base, the Cipher also must not been modified or
+	 * reinitialized during the lifetime of the knowledge base, because the
+	 * persistence manager may be used later on to reload/encrypt some
+	 * additional data as they are required, e.g. multimedia content stored in
+	 * the knowledge base file.
+	 * <p>
+	 * Please not that the same {@link PersistenceManager} usually cannot be
+	 * used used for read and write, because the specified cipher is either
+	 * initialized for encryption or decryption mode.
+	 * 
+	 * @return the instance of this encrypting/encrypting
+	 *         {@link PersistenceManager}
+	 */
+	public static PersistenceManager getInstance(Cipher cipher) {
+		return new PersistenceManager(cipher);
 	}
 
 	/**
@@ -290,7 +320,7 @@ public final class PersistenceManager {
 						cpl.updateProgress(0, "reading entry " + name);
 						// initialize the reader
 						KnowledgeReader reader = (KnowledgeReader) plugin.getSingleton();
-						reader.read(this, kb, zipfile.getInputStream(entry), cpl);
+						reader.read(this, kb, createInputStream(zipfile, entry), cpl);
 						// and mark this as done
 						files.remove(entry);
 						parsedAnyFile = true;
@@ -313,8 +343,7 @@ public final class PersistenceManager {
 					// being "1" for multimedia
 					cpl.next(1);
 					cpl.updateProgress(0, "reading file " + name);
-					JarBinaryRessource jarBinaryRessource = new JarBinaryRessource(entry, file);
-					kb.addResouce(jarBinaryRessource);
+					kb.addResouce(createResource(file, entry));
 					// we prepare the progress for the next step
 				}
 				else {
@@ -335,6 +364,38 @@ public final class PersistenceManager {
 		finally {
 			zipfile.close();
 		}
+	}
+
+	/**
+	 * Creates an input stream for a specified zip entry to handle decryption.
+	 * If there is no request for decryption, the original zip input stream for
+	 * that entry is returned.
+	 * 
+	 * @created 27.11.2013
+	 * @param zipfile the zip file to read from
+	 * @param entry the entry to be read
+	 * @return the decrypted stream
+	 * @throws IOException if there is any io issue
+	 */
+	private InputStream createInputStream(ZipFile zipfile, ZipEntry entry) throws IOException {
+		InputStream stream = zipfile.getInputStream(entry);
+		if (cipher == null) return stream;
+		return new CipherInputStream(stream, cipher);
+	}
+
+	/**
+	 * Creates a decrypted resource for the specified zip entry. If there is no
+	 * request for decryption, the original zip input stream for that entry is
+	 * returned.
+	 * 
+	 * @created 27.11.2013
+	 * @param zipfile the zip file to read from
+	 * @param entry the entry to be read
+	 * @return the decrypted resource
+	 * @throws IOException if there is any io issue
+	 */
+	private JarBinaryResource createResource(File file, ZipEntry entry) throws IOException {
+		return new JarBinaryResource(entry, file, cipher);
 	}
 
 	private boolean isMultimediaEntry(ZipEntry entry) {
@@ -370,13 +431,13 @@ public final class PersistenceManager {
 	}
 
 	public KnowledgeBaseInfo loadKnowledgeBaseInfo(File file) throws IOException {
-		JarFile zipfile = new JarFile(file);
+		JarFile jarfile = new JarFile(file);
 		try {
-			Manifest manifest = zipfile.getManifest();
+			Manifest manifest = jarfile.getManifest();
 			return new KnowledgeBaseInfo(file, manifest);
 		}
 		finally {
-			zipfile.close();
+			jarfile.close();
 		}
 	}
 
@@ -455,23 +516,49 @@ public final class PersistenceManager {
 				jarOutputStream.putNextEntry(entry);
 				KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
 				cpl.next(writer.getEstimatedSize(knowledgeBase));
-				writer.write(this, knowledgeBase, jarOutputStream, cpl);
+				// unfortunately we corrupt the jar stream if we directly
+				// connect the cipher stream to the entry stream
+				if (cipher == null) {
+					writer.write(this, knowledgeBase, jarOutputStream, cpl);
+				}
+				else {
+					// therefore if encrypted, write to encrypted byte[] first
+					// afterwards write the bytes to the jar stream.
+					ByteArrayOutputStream bytes = new ByteArrayOutputStream(256 * 1024);
+					CipherOutputStream stream = new CipherOutputStream(bytes, cipher);
+					writer.write(this, knowledgeBase, stream, cpl);
+					stream.close();
+					bytes.writeTo(jarOutputStream);
+				}
 			}
 			cpl.next(knowledgeBase.getResources().size());
 			int i = 0;
-			for (Resource ressource : knowledgeBase.getResources()) {
-				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX + ressource.getPathName());
+			for (Resource resource : knowledgeBase.getResources()) {
+				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX + resource.getPathName());
 				jarOutputStream.putNextEntry(entry);
-				InputStream inputStream = ressource.getInputStream();
+				InputStream inputStream = resource.getInputStream();
 				try {
-					Streams.stream(inputStream, jarOutputStream);
+					// unfortunately we corrupt the jar stream if we directly
+					// connect the cipher stream to the entry stream
+					if (cipher == null) {
+						Streams.stream(inputStream, jarOutputStream);
+					}
+					else {
+						// therefore if encrypted, write to encrypted byte[]
+						// afterwards write the bytes to the jar stream.
+						ByteArrayOutputStream bytes = new ByteArrayOutputStream(256 * 1024);
+						CipherOutputStream stream = new CipherOutputStream(bytes, cipher);
+						Streams.stream(inputStream, stream);
+						stream.close();
+						bytes.writeTo(jarOutputStream);
+					}
 				}
 				finally {
 					inputStream.close();
 				}
 				i++;
 				float percent = i / (float) knowledgeBase.getResources().size();
-				cpl.updateProgress(percent, "Saving binary ressources");
+				cpl.updateProgress(percent, "Saving binary resources");
 			}
 		}
 		finally {
