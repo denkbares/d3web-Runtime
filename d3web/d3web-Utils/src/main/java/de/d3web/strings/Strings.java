@@ -463,20 +463,32 @@ public class Strings {
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char quote) {
-		return splitUnquoted(text, splitSymbol, true, new char[] { quote });
+		return splitUnquoted(text, splitSymbol, true,
+				new QuoteCharSet[] { QuoteCharSet.createUnaryQuote(QUOTE_DOUBLE) });
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol) {
-		return splitUnquoted(text, splitSymbol, true, new char[] { QUOTE_DOUBLE });
+		return splitUnquoted(text, splitSymbol, true,
+				new QuoteCharSet[] { QuoteCharSet.createUnaryQuote(QUOTE_DOUBLE) });
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments) {
-		return splitUnquoted(text, splitSymbol, includeBlancFragments, new char[] { QUOTE_DOUBLE });
+		return splitUnquoted(text, splitSymbol, includeBlancFragments,
+				new QuoteCharSet[] { QuoteCharSet.createUnaryQuote(QUOTE_DOUBLE) });
+	}
+
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteCharSet[] quoteChars) {
+		return splitUnquoted(text, splitSymbol, true, quoteChars);
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char[] quoteChars) {
-		return splitUnquoted(text, splitSymbol, true, quoteChars);
+		QuoteCharSet[] quotes = new QuoteCharSet[quoteChars.length];
+		for (int i = 0; i < quotes.length; i++) {
+			quotes[i] = QuoteCharSet.createUnaryQuote(quoteChars[i]);
+		}
+		return splitUnquoted(text, splitSymbol, true, quotes);
 	}
+
 
 	/**
 	 * Splits the text by the <tt>splitSymbol</tt> disregarding splitSymbols
@@ -486,19 +498,41 @@ public class Strings {
 	 * @param splitSymbol
 	 * @return the fragments of the text
 	 */
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments, char[] quoteSigns) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments, QuoteCharSet[] quotes) {
 		List<StringFragment> parts = new ArrayList<StringFragment>();
 		if (text == null) return parts;
-		boolean quoted = false;
+
+		// init quote state for each quote
+		boolean[] quoteStates = new boolean[quotes.length];
+		for (int i = 0; i < quotes.length; i++) {
+			quoteStates[i] = false;
+		}
+
 		StringBuffer actualPart = new StringBuffer();
 		// scanning the text
 		int startOfNewPart = 0;
 		for (int i = 0; i < text.length(); i++) {
 			// toggle quote state
-			if (isUnEscapedQuote(text, i, quoteSigns)) {
-				quoted = !quoted;
+
+			// tracking multiple quote states
+			for (int q = 0; q < quotes.length; q++) {
+				if (quoteStates[q]) {
+					// current quote state is true
+					if (isUnEscapedQuote(text, i, quotes[q].close())) {
+						// this one is just being closed
+						quoteStates[q] = false;
+					}
+
+				}
+				else {
+					// current quote state is false
+					if (isUnEscapedQuote(text, i, quotes[q].open())) {
+						// this one is just being closed
+						quoteStates[q] = true;
+					}
+				}
 			}
-			if (quoted) {
+			if (quoted(quoteStates)) {
 				actualPart.append(text.charAt(i));
 				continue;
 			}
@@ -520,6 +554,13 @@ public class Strings {
 			parts.add(new StringFragment(actualPartString, startOfNewPart, text));
 		}
 		return parts;
+	}
+
+	private static boolean quoted(boolean[] quoteStates) {
+		for (boolean b : quoteStates) {
+			if (b) return true;
+		}
+		return false;
 	}
 
 	private static boolean foundSplitSymbol(String text, String splitSymbol, int i) {
