@@ -555,7 +555,8 @@ public final class PersistenceManager {
 					else {
 						// therefore if encrypted, write to encrypted byte[]
 						// afterwards write the bytes to the jar stream.
-						ByteArrayOutputStream bytes = new ByteArrayOutputStream(256 * 1024);
+						ByteArrayOutputStream bytes = new ByteArrayOutputStream(
+								(int) resource.getSize() + 1);
 						CipherOutputStream stream = new CipherOutputStream(bytes, cipher);
 						Streams.stream(inputStream, stream);
 						stream.close();

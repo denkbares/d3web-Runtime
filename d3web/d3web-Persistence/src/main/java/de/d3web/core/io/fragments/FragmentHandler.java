@@ -62,7 +62,7 @@ public interface FragmentHandler<Artifact> {
 	public boolean canRead(Element element);
 
 	/**
-	 * Checks if this hanlder can write the object
+	 * Checks if this handler can write the object
 	 * 
 	 * @param object to be written
 	 * @return true, if it can be written, false otherwise
