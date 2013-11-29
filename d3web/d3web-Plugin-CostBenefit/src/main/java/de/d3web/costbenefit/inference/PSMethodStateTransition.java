@@ -50,9 +50,11 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 	}
 
 	private boolean isPartOfPermanentlyRelevantQContainer(Condition condition) {
-		for (TerminologyObject termObject : condition.getTerminalObjects()) {
-			if (CostBenefitUtil.hasPermanentlyRelevantParent(termObject)) {
-				return true;
+		if (condition != null) {
+			for (TerminologyObject termObject : condition.getTerminalObjects()) {
+				if (CostBenefitUtil.hasPermanentlyRelevantParent(termObject)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -117,10 +119,34 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		private final int number;
 		private final ConditionalValueSetter cvs;
 
+		/**
+		 * Default method to create a {@link StateTransitionFact}, it should be
+		 * used whenever possible
+		 * 
+		 * @param cvs {@link ConditionalValueSetter} that has fired
+		 * @param session actual {@link Session}
+		 * @param terminologyObject {@link TerminologyObject} which value should
+		 *        be set
+		 * @param value the Value that should be set
+		 */
 		public StateTransitionFact(ConditionalValueSetter cvs, Session session, TerminologyObject terminologyObject, Value value) {
 			super(terminologyObject, value, new Object(), findPSM(session));
 			this.cvs = cvs;
 			number = counter++;
+		}
+
+		/**
+		 * Creates a StateTransitionFact without a ConditionalValueSetter. This
+		 * method must not be used for values of final questions. Generally the
+		 * method using the {@link ConditionalValueSetter} should be preferred
+		 * 
+		 * @param session actual {@link Session}
+		 * @param terminologyObject {@link TerminologyObject} which value should
+		 *        be set
+		 * @param value the Value that should be set
+		 */
+		public StateTransitionFact(Session session, TerminologyObject terminologyObject, Value value) {
+			this(new ConditionalValueSetter(value, null), session, terminologyObject, value);
 		}
 
 		private static PSMethod findPSM(Session session) {
