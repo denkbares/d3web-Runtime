@@ -489,7 +489,6 @@ public class Strings {
 		return splitUnquoted(text, splitSymbol, true, quotes);
 	}
 
-
 	/**
 	 * Splits the text by the <tt>splitSymbol</tt> disregarding splitSymbols
 	 * which are quoted.
@@ -503,10 +502,7 @@ public class Strings {
 		if (text == null) return parts;
 
 		// init quote state for each quote
-		boolean[] quoteStates = new boolean[quotes.length];
-		for (int i = 0; i < quotes.length; i++) {
-			quoteStates[i] = false;
-		}
+		int[] quoteStates = new int[quotes.length];
 
 		StringBuffer actualPart = new StringBuffer();
 		// scanning the text
@@ -516,19 +512,34 @@ public class Strings {
 
 			// tracking multiple quote states
 			for (int q = 0; q < quotes.length; q++) {
-				if (quoteStates[q]) {
-					// current quote state is true
-					if (isUnEscapedQuote(text, i, quotes[q].close())) {
-						// this one is just being closed
-						quoteStates[q] = false;
-					}
 
-				}
-				else {
-					// current quote state is false
+				// first handle unary quotes
+				if (quotes[q].isUnary()) {
+					// open() == close() for this case
 					if (isUnEscapedQuote(text, i, quotes[q].open())) {
-						// this one is just being closed
-						quoteStates[q] = true;
+						// just toggle 0/1 value
+						if (quoteStates[q] == 0) {
+							quoteStates[q] = 1;
+						}
+						else {
+							if (quoteStates[q] == 1) {
+								quoteStates[q] = 0;
+							}
+						}
+					}
+				}
+				// then handle binary (potentially nested) quotes
+				else {
+
+					// check for opening char
+					if (isUnEscapedQuote(text, i, quotes[q].open())) {
+						// this one is just being opened (once more)
+						quoteStates[q]++;
+					}
+					// check for closing char
+					if (isUnEscapedQuote(text, i, quotes[q].close())) {
+						// this one is just being closed (once)
+						quoteStates[q]--;
 					}
 				}
 			}
@@ -556,9 +567,9 @@ public class Strings {
 		return parts;
 	}
 
-	private static boolean quoted(boolean[] quoteStates) {
-		for (boolean b : quoteStates) {
-			if (b) return true;
+	private static boolean quoted(int[] quoteStates) {
+		for (int b : quoteStates) {
+			if (b > 0) return true;
 		}
 		return false;
 	}
@@ -1029,6 +1040,27 @@ public class Strings {
 		BufferedWriter out = new BufferedWriter(fstream);
 		out.write(content);
 		out.close();
+	}
+
+	/**
+	 * Determines whether the given string ends with the end character being not
+	 * escaped by backslash.
+	 * 
+	 * @created 02.12.2013
+	 * @param text
+	 * @param end
+	 * @return
+	 */
+	public static boolean endsWithUnescaped(String text, char end) {
+		if (text.charAt(text.length() - 1) == end) {
+			if (text.charAt(text.length() - 2) == '\\') {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

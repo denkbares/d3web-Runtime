@@ -49,4 +49,8 @@ public class QuoteCharSet {
 		return close;
 	}
 
+	public boolean isUnary() {
+		return open == close;
+	}
+
 }
