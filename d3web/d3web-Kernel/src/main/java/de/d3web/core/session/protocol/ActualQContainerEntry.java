@@ -20,6 +20,8 @@ package de.d3web.core.session.protocol;
 
 import java.util.Date;
 
+import de.d3web.core.knowledge.terminology.QContainer;
+
 /**
  * This entry is added by interviews to the Protocol to indicate that the user
  * is presented a new QContainer
@@ -32,10 +34,16 @@ public class ActualQContainerEntry implements ProtocolEntry {
 	private final Date date;
 	private final String qContainer;
 
-	public ActualQContainerEntry(String qContainer) {
-		this(new Date(), qContainer);
-	}
-
+	/**
+	 * Constructor for the ActualQContainerEntry
+	 * 
+	 * Note: If the constructor is called within a propagation frame, the date
+	 * of the propagation manager should be used
+	 * (propagationManager.getPropagationTime()).
+	 * 
+	 * @param date Date of the Entry
+	 * @param qContainer {@link QContainer}
+	 */
 	public ActualQContainerEntry(Date date, String qContainer) {
 		this.date = date;
 		this.qContainer = qContainer;
