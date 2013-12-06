@@ -31,6 +31,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
+import de.d3web.costbenefit.inference.SolutionsRater;
 import de.d3web.costbenefit.inference.TargetFunction;
 import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
 
@@ -82,6 +83,9 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 			else if (o instanceof SearchAlgorithm) {
 				psm.setSearchAlgorithm((SearchAlgorithm) o);
 			}
+			else if (o instanceof SolutionsRater) {
+				psm.setSolutionRater((SolutionsRater) o);
+			}
 		}
 		return psconfig;
 	}
@@ -98,6 +102,7 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 		e.appendChild(persistence.writeFragment(psm.getTargetFunction()));
 		e.appendChild(persistence.writeFragment(psm.getSearchAlgorithm()));
 		e.appendChild(persistence.writeFragment(psm.getCostFunction()));
+		e.appendChild(persistence.writeFragment(psm.getSolutionRater()));
 		return e;
 	}
 

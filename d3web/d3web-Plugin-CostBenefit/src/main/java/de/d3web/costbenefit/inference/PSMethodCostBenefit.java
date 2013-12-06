@@ -92,6 +92,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
+	private SolutionsRater solutionsRater;
 	private double strategicBenefitFactor = 0.0;
 	private boolean manualMode = false;
 
@@ -135,16 +136,18 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
-			CostFunction costFunction, SearchAlgorithm searchAlgorithm) {
+			CostFunction costFunction, SearchAlgorithm searchAlgorithm, SolutionsRater solutionsRater) {
 		this.targetFunction = targetFunction;
 		this.costFunction = costFunction;
 		this.searchAlgorithm = searchAlgorithm;
+		this.solutionsRater = solutionsRater;
 	}
 
 	public PSMethodCostBenefit() {
 		this.targetFunction = new DefaultTargetFunction();
 		this.costFunction = new DefaultCostFunction();
 		this.searchAlgorithm = new AStarAlgorithm();
+		this.solutionsRater = new DefaultSolutionRater();
 	}
 
 	@Override
@@ -302,7 +305,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// (only if there is any benefit target)
 		initializeSearchModel(caseObject);
 		SearchModel searchModel = caseObject.getSearchModel();
-		if (searchModel.getBestBenefit() != 0) {
+		if (searchModel.getBestBenefit() != 0
+				&& solutionsRater.check(caseObject.getUndiscriminatedSolutions())) {
 			searchAlgorithm.search(session, searchModel);
 		}
 		// sets the new path based on the result stored in the search model
@@ -773,6 +777,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	public void setCostFunction(CostFunction costFunction) {
 		this.costFunction = costFunction;
+	}
+
+	public SolutionsRater getSolutionRater() {
+		return solutionsRater;
+	}
+
+	public void setSolutionRater(SolutionsRater solutionsRater) {
+		this.solutionsRater = solutionsRater;
 	}
 
 	public boolean isManualMode() {
