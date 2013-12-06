@@ -43,7 +43,7 @@ public class DateValue implements QuestionValue {
 	 * This format should be used when saving DateValues to be able to parse the
 	 * date with the static method {@link DateValue#createDateValue(String)}
 	 */
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss.SSS");
 
 	/**
@@ -85,6 +85,16 @@ public class DateValue implements QuestionValue {
 	}
 
 	/**
+	 * The format returned here should be used when saving DateValues to be able
+	 * to parse the date with the static method
+	 * {@link DateValue#createDateValue(String)}. Be aware that {
+	 * @link SimpleDateFormat}s are not thread safe.
+	 */
+	public static SimpleDateFormat getDefaultDateFormat() {
+		return new SimpleDateFormat(DATE_FORMAT.toPattern());
+	}
+
+	/**
 	 * Creates a {@link DateValue} from a given String. To be parseable, the
 	 * String has to come in one of the available {@link DateFormat} from
 	 * {@link DateValue#getAllowedFormatStrings()}
@@ -97,8 +107,10 @@ public class DateValue implements QuestionValue {
 	public static DateValue createDateValue(String valueString) throws IllegalArgumentException {
 		for (SimpleDateFormat dateFormat : dateFormats) {
 			try {
-				Date date = dateFormat.parse(valueString);
-				return new DateValue(date);
+				synchronized (dateFormat) {
+					Date date = dateFormat.parse(valueString);
+					return new DateValue(date);
+				}
 			}
 			catch (ParseException e) {
 			}
@@ -110,7 +122,9 @@ public class DateValue implements QuestionValue {
 		String[] result = new String[dateFormats.size()];
 		int index = 0;
 		for (SimpleDateFormat format : dateFormats) {
-			result[index++] = format.toPattern();
+			synchronized (format) {
+				result[index++] = format.toPattern();
+			}
 		}
 		return result;
 	}
@@ -133,7 +147,10 @@ public class DateValue implements QuestionValue {
 	 * for humans.
 	 */
 	public String getDateString() {
-		String dateString = DATE_FORMAT.format(value);
+		String dateString;
+		synchronized (DATE_FORMAT) {
+			dateString = DATE_FORMAT.format(value);
+		}
 		// we remove trailing zero milliseconds, seconds, minutes and hours,
 		// because it does not add any information to the date string and can
 		// still be parsed by the available formats
@@ -144,7 +161,9 @@ public class DateValue implements QuestionValue {
 
 	@Override
 	public String toString() {
-		return DATE_FORMAT.format(value);
+		synchronized (DATE_FORMAT) {
+			return DATE_FORMAT.format(value);
+		}
 	}
 
 	@Override
@@ -176,6 +195,6 @@ public class DateValue implements QuestionValue {
 			throw new IllegalArgumentException();
 		}
 		return value.compareTo(((DateValue) o).value);
-	}
+	} 
 
 }

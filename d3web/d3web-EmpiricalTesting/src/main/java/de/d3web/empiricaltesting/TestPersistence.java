@@ -267,7 +267,7 @@ public final class TestPersistence {
 		xmlsw.writeAttribute(NAME, stc.getName());
 		Date startDate = stc.getStartDate();
 		if (startDate != null) {
-			xmlsw.writeAttribute(STARTDATE, DateValue.DATE_FORMAT.format(startDate));
+			xmlsw.writeAttribute(STARTDATE, DateValue.getDefaultDateFormat().format(startDate));
 		}
 		for (RatedTestCase rtcases : stc.getCases()) {
 			write(rtcases, xmlsw);
@@ -288,7 +288,8 @@ public final class TestPersistence {
 		}
 
 		if (rtc.getTimeStamp() != null) {
-			xmlsw.writeAttribute(TIMESTAMP, DateValue.DATE_FORMAT.format(rtc.getTimeStamp()));
+			xmlsw.writeAttribute(TIMESTAMP,
+					DateValue.getDefaultDateFormat().format(rtc.getTimeStamp()));
 		}
 
 		String lastTested = rtc.getLastTested();
@@ -366,7 +367,8 @@ public final class TestPersistence {
 			xmlsw.writeAttribute(ANSWER, "unknown");
 		}
 		else if (v instanceof DateValue) {
-			xmlsw.writeAttribute(ANSWER, DateValue.DATE_FORMAT.format(((DateValue) v).getDate()));
+			xmlsw.writeAttribute(ANSWER,
+					DateValue.getDefaultDateFormat().format(((DateValue) v).getDate()));
 		}
 	}
 
@@ -404,7 +406,7 @@ public final class TestPersistence {
 			String dateString = sr.getAttributeValue(null, STARTDATE);
 			if (dateString != null) {
 				try {
-					stc.setStartDate(DateValue.DATE_FORMAT.parse(dateString));
+					stc.setStartDate(DateValue.getDefaultDateFormat().parse(dateString));
 				}
 				catch (ParseException e) {
 					e.printStackTrace();
@@ -418,7 +420,7 @@ public final class TestPersistence {
 			String time = sr.getAttributeValue(null, TIMESTAMP);
 			if (time != null) {
 				try {
-					rtc.setTimeStamp(DateValue.DATE_FORMAT.parse(time));
+					rtc.setTimeStamp(DateValue.getDefaultDateFormat().parse(time));
 				}
 				catch (ParseException e) {
 					e.printStackTrace();
