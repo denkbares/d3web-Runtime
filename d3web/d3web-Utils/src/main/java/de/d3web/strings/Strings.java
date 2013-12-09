@@ -464,17 +464,17 @@ public class Strings {
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char quote) {
 		return splitUnquoted(text, splitSymbol, true,
-				new QuoteCharSet[] { QuoteCharSet.createUnaryQuote(QUOTE_DOUBLE) });
+				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol) {
 		return splitUnquoted(text, splitSymbol, true,
-				new QuoteCharSet[] { QuoteCharSet.createUnaryQuote(QUOTE_DOUBLE) });
+				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments) {
 		return splitUnquoted(text, splitSymbol, includeBlancFragments,
-				new QuoteCharSet[] { QuoteCharSet.createUnaryQuote(QUOTE_DOUBLE) });
+				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteCharSet[] quoteChars) {
@@ -484,7 +484,7 @@ public class Strings {
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char[] quoteChars) {
 		QuoteCharSet[] quotes = new QuoteCharSet[quoteChars.length];
 		for (int i = 0; i < quotes.length; i++) {
-			quotes[i] = QuoteCharSet.createUnaryQuote(quoteChars[i]);
+			quotes[i] = QuoteCharSet.createUnaryHidingQuote(quoteChars[i]);
 		}
 		return splitUnquoted(text, splitSymbol, true, quotes);
 	}
@@ -513,33 +513,38 @@ public class Strings {
 			// tracking multiple quote states
 			for (int q = 0; q < quotes.length; q++) {
 
-				// first handle unary quotes
-				if (quotes[q].isUnary()) {
-					// open() == close() for this case
-					if (isUnEscapedQuote(text, i, quotes[q].open())) {
-						// just toggle 0/1 value
-						if (quoteStates[q] == 0) {
-							quoteStates[q] = 1;
-						}
-						else {
-							if (quoteStates[q] == 1) {
-								quoteStates[q] = 0;
+				// check whether the quote is hidden by another quote, e.g. a
+				// bracket in a literal-quote
+				if (!isHiddenByOtherQuote(quoteStates, quotes, q)) {
+
+					// first handle unary quotes
+					if (quotes[q].isUnary()) {
+						// open() == close() for this case
+						if (isUnEscapedQuote(text, i, quotes[q].open())) {
+							// just toggle 0/1 value
+							if (quoteStates[q] == 0) {
+								quoteStates[q] = 1;
+							}
+							else {
+								if (quoteStates[q] == 1) {
+									quoteStates[q] = 0;
+								}
 							}
 						}
 					}
-				}
-				// then handle binary (potentially nested) quotes
-				else {
+					// then handle binary (potentially nested) quotes
+					else {
 
-					// check for opening char
-					if (isUnEscapedQuote(text, i, quotes[q].open())) {
-						// this one is just being opened (once more)
-						quoteStates[q]++;
-					}
-					// check for closing char
-					if (isUnEscapedQuote(text, i, quotes[q].close())) {
-						// this one is just being closed (once)
-						quoteStates[q]--;
+						// check for opening char
+						if (isUnEscapedQuote(text, i, quotes[q].open())) {
+							// this one is just being opened (once more)
+							quoteStates[q]++;
+						}
+						// check for closing char
+						if (isUnEscapedQuote(text, i, quotes[q].close())) {
+							// this one is just being closed (once)
+							quoteStates[q]--;
+						}
 					}
 				}
 			}
@@ -565,6 +570,15 @@ public class Strings {
 			parts.add(new StringFragment(actualPartString, startOfNewPart, text));
 		}
 		return parts;
+	}
+
+	private static boolean isHiddenByOtherQuote(int[] quoteStates, QuoteCharSet[] quotes, int q) {
+		for (int i = 0; i < quotes.length; i++) {
+			if (quoteStates[i] > 0 && quotes[i].hidesOtherQuotes() && q != i) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean quoted(int[] quoteStates) {

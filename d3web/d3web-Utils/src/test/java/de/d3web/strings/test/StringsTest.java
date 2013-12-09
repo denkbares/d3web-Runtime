@@ -28,6 +28,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
+import de.d3web.strings.QuoteCharSet;
 import de.d3web.strings.Strings;
 
 /**
@@ -68,6 +69,16 @@ public class StringsTest {
 		assertEquals(
 				Arrays.asList("", "", "  ", " word1", "\"word.2\"", "word3", "").toString(),
 				Strings.splitUnquoted("..  . word1.\"word.2\".word3.", ".").toString());
+	}
+
+	@Test
+	public void splitUnquotedMulti() {
+		QuoteCharSet[] quotes = {
+				QuoteCharSet.createUnaryHidingQuote('"'), new QuoteCharSet('(', ')') };
+		assertEquals(
+				Arrays.asList("a", "\"literal mit Klammer. (xy\"", "(A.2)").toString(),
+				Strings.splitUnquoted("a.\"literal mit Klammer. (xy\".(A.2)", ".",
+						quotes).toString());
 	}
 
 	@Test

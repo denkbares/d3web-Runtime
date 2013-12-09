@@ -31,14 +31,26 @@ public class QuoteCharSet {
 
 	private final char open;
 	private final char close;
+	private boolean hidesOtherQuotes = false;
+
+	public boolean hidesOtherQuotes() {
+		return hidesOtherQuotes;
+	}
 
 	public QuoteCharSet(char open, char close) {
 		this.open = open;
 		this.close = close;
 	}
 
-	public static QuoteCharSet createUnaryQuote(char c) {
-		return new QuoteCharSet(c, c);
+	public QuoteCharSet(char open, char close, boolean hidesOther) {
+		this.open = open;
+		this.close = close;
+		this.hidesOtherQuotes = hidesOther;
+	}
+
+	public static QuoteCharSet createUnaryHidingQuote(char c) {
+		QuoteCharSet charSet = new QuoteCharSet(c, c, true);
+		return charSet;
 	}
 
 	public char open() {
