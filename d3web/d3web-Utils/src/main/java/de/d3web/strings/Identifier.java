@@ -95,7 +95,7 @@ public class Identifier implements Comparable<Identifier> {
 		if (len1 < len2) return -1;
 		if (len1 > len2) return 1;
 		// both are case sensitive equal, so use compare of external form
-		return externalFormLowerCase.compareTo(o.externalFormLowerCase);
+		return toExternalFormLowerCase().compareTo(o.toExternalFormLowerCase());
 	}
 
 	/**

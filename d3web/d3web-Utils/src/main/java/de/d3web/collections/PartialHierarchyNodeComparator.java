@@ -13,7 +13,7 @@ class PartialHierarchyNodeComparator<T> implements Comparator<PartialHierarchyTr
 	}
 
 	@Override
-	public int compare(PartialHierarchyTree.Node<T> arg0, PartialHierarchyTree.Node<T> arg1) {
+	public int compare(Node<T> arg0, Node<T> arg1) {
 		return comp.compare(arg0.data, arg1.data);
 	}
 
