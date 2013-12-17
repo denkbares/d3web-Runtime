@@ -762,10 +762,20 @@ public class Strings {
 	 * Quotes the given String with ". If the String contains ", it will be
 	 * escaped with the escape char \.
 	 * 
-	 * @param element the string to be quoted
+	 * @param text the string to be quoted
 	 */
-	public static String quote(String element) {
-		return quote(element, '"');
+	public static String quote(String text) {
+		return quote(text, QUOTE_DOUBLE);
+	}
+
+	/**
+	 * Quotes the given String with '. If the String contains ', it will be
+	 * escaped with the escape char \.
+	 * 
+	 * @param text the string to be quoted
+	 */
+	public static String quoteSingle(String text) {
+		return quote(text, QUOTE_SINGLE);
 	}
 
 	/**
