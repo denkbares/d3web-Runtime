@@ -64,7 +64,6 @@ public class TestExecutor {
 	private float overallTestsCount;
 	private ExecutorService executor;
 	private Thread executorThread;
-	private boolean terminated = false;
 
 	/**
 	 * Returns the current build or null if the build has been terminated.
@@ -226,30 +225,35 @@ public class TestExecutor {
 					Utils.checkInterrupt();
 				}
 				catch (InterruptedException e) {
-					progressListener.updateProgress(1f, "Aborted, please wait...");
+					setTerminateStatus();
 					executor.shutdownNow();
 					// build is discarded, method call terminated
-					build = null;
 					break outerLoop;
 				}
 			}
 		}
 	}
 
+	private void setTerminateStatus() {
+		synchronized (this) {
+			build = null;
+		}
+		progressListener.updateProgress(1f, "Aborted, please wait...");
+	}
+
 	private void shutdown(long buildStartTime) {
 		try {
 			executor.shutdown();
-			while (!executor.awaitTermination(1, TimeUnit.SECONDS)) { // NOSONAR
-				// wait
-			}
+			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		}
 		catch (InterruptedException e) {
-			progressListener.updateProgress(1f, "Aborted, please wait...");
+			setTerminateStatus();
 		}
 		finally {
-			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
-			if (terminated) {
-				build = null;
+			synchronized (this) {
+				if (build != null) {
+					build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+				}
 			}
 		}
 	}
@@ -262,12 +266,27 @@ public class TestExecutor {
 	 */
 	public void terminate() {
 		// aborted, so discard build
-		terminated = true;
+		setTerminateStatus();
 		// System.out.println("Terminating executor");
 		executor.shutdownNow();
 		executorThread.interrupt();
 		try {
 			executor.awaitTermination(5, TimeUnit.SECONDS);
+		}
+		catch (InterruptedException e) {
+		}
+	}
+
+	/**
+	 * Blocks/waits until all running tests are done, tests are not aborted by
+	 * calling this method.
+	 * 
+	 * @created 17.12.2013
+	 */
+	public void awaitTermination() {
+		executor.shutdown();
+		try {
+			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 		}
 		catch (InterruptedException e) {
 		}
