@@ -745,12 +745,27 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			currentSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
 		}
 		final Set<Solution> previousSolutions = caseObject.getUndiscriminatedSolutions();
-		if (currentSolutions.size() > previousSolutions.size()) {
+		if (!previousSolutions.containsAll(currentSolutions)) {
+			String message = "The sprint group has increased/changed.\nPrevious group: "
+					+ previousSolutions
+					+ "\nActual group: " + currentSolutions;
 			caseObject.getSession().getProtocol().addEntry(
 					new TextProtocolEntry(
 							caseObject.getSession().getPropagationManager().getPropagationTime(),
-							"The sprint group has increased.\nPrevious group: " + previousSolutions
-									+ "\nActual group: " + currentSolutions));
+							message));
+			log.warning(message);
+		}
+		Set<TerminologyObject> conflictingQuestions = CostBenefitUtil.calculatePossibleConflictingQuestions(
+				caseObject.getSession(), currentSolutions);
+		if (!caseObject.getConflictingObjects().containsAll(conflictingQuestions)) {
+			caseObject.setConflictingObjects(conflictingQuestions);
+			String message = "The following questions decreased the covering value of the sprint group: "
+					+ conflictingQuestions;
+			caseObject.getSession().getProtocol().addEntry(
+					new TextProtocolEntry(
+							caseObject.getSession().getPropagationManager().getPropagationTime(),
+							message));
+			log.warning(message);
 		}
 		return !previousSolutions.equals(currentSolutions);
 	}

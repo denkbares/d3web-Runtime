@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
@@ -49,6 +50,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private Set<Target> discriminatingTargets = new HashSet<Target>();
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
+	private Set<TerminologyObject> conflictingObjects = new HashSet<TerminologyObject>();
 
 	public CostBenefitCaseObject(Session session) {
 		this.session = session;
@@ -149,6 +151,20 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void setAbortedManuallySetTarget(boolean abortedManuallySetTarget) {
 		this.abortedManuallySetTarget = abortedManuallySetTarget;
+	}
+
+	/**
+	 * Returns the questions, having a negative influence on the sprint group.
+	 * 
+	 * @created 16.12.2013
+	 * @return Set containing the conflicting objects (Questions)
+	 */
+	public Set<TerminologyObject> getConflictingObjects() {
+		return Collections.unmodifiableSet(conflictingObjects);
+	}
+
+	public void setConflictingObjects(Set<TerminologyObject> conflictingObjects) {
+		this.conflictingObjects = conflictingObjects;
 	}
 
 }

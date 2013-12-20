@@ -18,7 +18,9 @@
  */
 package de.d3web.costbenefit;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
@@ -59,6 +62,9 @@ import de.d3web.interview.Form;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
+import de.d3web.xcl.InferenceTrace;
+import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.XCLRelation;
 
 /**
  * Provides basic static functions for the CostBenefit package.
@@ -345,5 +351,44 @@ public final class CostBenefitUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Calculates a set of questions, having negative affects on the solutions
+	 * size of the current solutions
+	 * 
+	 * @created 13.12.2013
+	 * @param solutions
+	 */
+	public static Set<TerminologyObject> calculatePossibleConflictingQuestions(Session session, HashSet<Solution> solutions) {
+		Set<TerminologyObject> negativeObjects = new HashSet<TerminologyObject>();
+		// TODO: handle positive relations?
+		for (Solution s : solutions) {
+			XCLModel model = s.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+			InferenceTrace inferenceTrace = model.getInferenceTrace(session);
+			addObjectsOfConditions(negativeObjects, inferenceTrace.getNegRelations());
+			addObjectsOfConditions(negativeObjects, inferenceTrace.getReqNegRelations());
+		}
+		return negativeObjects;
+	}
+
+	/**
+	 * Returns a set of all objects, having a negative influence on the sprint
+	 * group.
+	 * 
+	 * Note: This method is only updated, if a QContainer is completed.
+	 * 
+	 * @created 20.12.2013
+	 * @param session actual Session
+	 * @return a set of conflicting objects
+	 */
+	public static Set<TerminologyObject> getConflictingObjects(Session session) {
+		return session.getSessionObject(session.getPSMethodInstance(PSMethodCostBenefit.class)).getConflictingObjects();
+	}
+
+	private static void addObjectsOfConditions(Set<TerminologyObject> positiveObjects, Collection<XCLRelation> relations) {
+		for (XCLRelation r : relations) {
+			positiveObjects.addAll(r.getConditionedFinding().getTerminalObjects());
+		}
 	}
 }
