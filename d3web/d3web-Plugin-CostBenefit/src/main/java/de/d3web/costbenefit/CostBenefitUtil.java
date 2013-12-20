@@ -360,7 +360,7 @@ public final class CostBenefitUtil {
 	 * @created 13.12.2013
 	 * @param solutions
 	 */
-	public static Set<TerminologyObject> calculatePossibleConflictingQuestions(Session session, HashSet<Solution> solutions) {
+	public static Set<TerminologyObject> calculatePossibleConflictingQuestions(Session session, Collection<Solution> solutions) {
 		Set<TerminologyObject> negativeObjects = new HashSet<TerminologyObject>();
 		// TODO: handle positive relations?
 		for (Solution s : solutions) {
