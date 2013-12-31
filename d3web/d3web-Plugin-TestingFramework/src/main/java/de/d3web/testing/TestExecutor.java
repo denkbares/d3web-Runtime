@@ -62,7 +62,7 @@ public class TestExecutor {
 	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
 	private float finishedTests;
 	private float overallTestsCount;
-	private ExecutorService executor;
+	private final ExecutorService executor;
 	private Thread executorThread;
 
 	/**
@@ -83,6 +83,8 @@ public class TestExecutor {
 		this.objectProviders = providers;
 		this.specifications = specifications;
 		this.progressListener = listener;
+		this.executor = Executors.newFixedThreadPool(NUMBER_OF_PARALLEL_THREADS);
+		this.build = new BuildResult();
 	}
 
 	/**
@@ -97,20 +99,22 @@ public class TestExecutor {
 	public void run() {
 		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
-		build = new BuildResult();
-		executor = Executors.newFixedThreadPool(NUMBER_OF_PARALLEL_THREADS);
 
-		// checks the given tests of validity and only returns the valid ones
-		Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
+		try {
+			// checks the given tests of validity and only
+			// returns the valid ones
+			Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
 
-		// creates and returns a CallableTest for each Test and TestObject
-		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = getCallableTestsMap(validSpecifications);
+			// creates and returns a CallableTest for each Test and TestObject
+			Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = getCallableTestsMap(validSpecifications);
 
-		initProgressFields(callableTests);
+			initProgressFields(callableTests);
 
-		executeTests(callableTests);
-
-		shutdown(buildStartTime);
+			executeTests(callableTests);
+		}
+		finally {
+			shutdown(buildStartTime);
+		}
 	}
 
 	private void initProgressFields(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests) {
@@ -258,9 +262,14 @@ public class TestExecutor {
 		}
 	}
 
+	public boolean isRunning() {
+		return !executor.isShutdown();
+	}
+
 	/**
-	 * Terminates all running tests as fast as possible. Returns at the latest
-	 * after 5 seconds, even if the termination is not quite complete.
+	 * Terminates/aborts all running tests as fast as possible. This method does
+	 * not wait until the tests really have been terminated, use
+	 * {@link TestExecutor#awaitTermination()} for this purpose.
 	 * 
 	 * @created 21.09.2012
 	 */
@@ -269,9 +278,21 @@ public class TestExecutor {
 		setTerminateStatus();
 		// System.out.println("Terminating executor");
 		executor.shutdownNow();
-		executorThread.interrupt();
+		if (executorThread != null) executorThread.interrupt();
+	}
+
+	/**
+	 * Blocks/waits until all running tests are done, tests are not aborted or
+	 * shutdown by calling this method. Given timeout defines the maximum waited
+	 * time until the method returns.
+	 * 
+	 * @created 17.12.2013
+	 */
+	public void awaitTermination(long timeout, TimeUnit unit) {
+		// No shutdown needed, because shutdown is called at
+		// the end of method run.
 		try {
-			executor.awaitTermination(5, TimeUnit.SECONDS);
+			executor.awaitTermination(timeout, unit);
 		}
 		catch (InterruptedException e) {
 		}
@@ -284,12 +305,7 @@ public class TestExecutor {
 	 * @created 17.12.2013
 	 */
 	public void awaitTermination() {
-		executor.shutdown();
-		try {
-			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-		}
-		catch (InterruptedException e) {
-		}
+		awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 	}
 
 	private static <T> T cast(Object object, Class<T> objectClass) {
