@@ -61,7 +61,8 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 		PluginDescriptor declaringPluginDescriptor = extension
 				.getDeclaringPluginDescriptor();
 		try {
-			// secures that the plugin containing the defintion of the extension
+			// secures that the plugin containing the definition of the
+			// extension
 			// point is activated
 			manager.activatePlugin(extension.getExtendedPluginId());
 		}
@@ -76,23 +77,38 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 		catch (ClassNotFoundException e) {
 			Logger.getLogger("Plugin").log(
 					Level.SEVERE,
-					"The class specified in the plugin was not found.  This is a strong evidence for an incorrect plugin.",
+					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+							"The class specified in the plugin was not found.  " +
+							"This is a strong evidence for an incorrect plugin.",
 					e);
 			throw new NoClassDefFoundError(e.getMessage());
 		}
 		catch (InstantiationException e) {
 			Logger.getLogger("Plugin").log(
 					Level.SEVERE,
-					"It was not possible to instantiate an object. This is a strong evidence for an incorrect plugin.",
+					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+							"It was not possible to instantiate an object. " +
+							"This is a strong evidence for an incorrect plugin.",
 					e);
 			throw new InstantiationError(e.getMessage());
 		}
 		catch (IllegalAccessException e) {
 			Logger.getLogger("Plugin").log(
 					Level.SEVERE,
-					"The constructor or the class could not be accessed. This is a strong evidence for an incorrect plugin.",
+					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+							"The constructor or the class could not be accessed. " +
+							"This is a strong evidence for an incorrect plugin.",
 					e);
 			throw new IllegalAccessError(e.getMessage());
+		}
+		catch (LinkageError e) {
+			Logger.getLogger("Plugin").log(
+					Level.SEVERE,
+					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+							"The plugin uses code that cannot be found or linked. " +
+							"This is a strong evidence for out-dated plugin code.",
+					e);
+			throw new InstantiationError(e.getMessage());
 		}
 	}
 
