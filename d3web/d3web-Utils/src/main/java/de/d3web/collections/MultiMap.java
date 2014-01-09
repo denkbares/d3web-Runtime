@@ -219,7 +219,7 @@ public interface MultiMap<K, V> {
 	/**
 	 * Associates the specified value with the specified key in this map
 	 * (optional operation). If the map previously contained a mapping for the
-	 * equal key and value, it is not guaranteed if the exising mapping is
+	 * equal key and value, it is not guaranteed if the existing mapping is
 	 * overwritten or not.
 	 * 
 	 * @param key key with which the specified value is to be associated
@@ -421,6 +421,7 @@ public interface MultiMap<K, V> {
 	 * @param o object to be compared for equality with this map
 	 * @return <tt>true</tt> if the specified object is equal to this map
 	 */
+	@Override
 	boolean equals(Object o);
 
 	/**
@@ -436,6 +437,7 @@ public interface MultiMap<K, V> {
 	 * @see Object#equals(Object)
 	 * @see #equals(Object)
 	 */
+	@Override
 	int hashCode();
 
 	/**

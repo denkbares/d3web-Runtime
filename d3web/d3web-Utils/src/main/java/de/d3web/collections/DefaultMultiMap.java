@@ -32,8 +32,14 @@ import de.d3web.collections.MultiMaps.CollectionFactory;
  * This class provides an implementation for a {@link MultiMap} that only uses a
  * single hash map for the underlying representation. Therefore accessing the
  * values by the keys is efficient (O(1)), but accessing the keys for values or
- * the set of values or removing the values for all keys is O(n) in the worst
- * case.
+ * the set of values or removing a value for all keys is O(n) in the worst case:
+ * 
+ * <ul>
+ * <li>{@link #containsValue(Object)}
+ * <li>{@link #removeValue(Object)}
+ * <li>{@link #getKeys(Object)}
+ * <li> {@link #valueSet()}
+ * </ul>
  * 
  * @author Volker Belli (denkbares GmbH)
  * @created 07.01.2014
@@ -106,6 +112,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 		size = 0;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return size == 0;
 	}
