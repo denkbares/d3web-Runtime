@@ -29,18 +29,19 @@ import java.util.Set;
 import de.d3web.collections.MultiMaps.CollectionFactory;
 
 /**
- * This class provides an implementation for a {@link MultiMap} that is
- * efficient (= O(1)) in both directions, accessing values for keys and
- * accessing keys for values.
+ * This class provides an implementation for a {@link MultiMap} that only uses a
+ * single hash map for the underlying representation. Therefore accessing the
+ * values by the keys is efficient (O(1)), but accessing the keys for values or
+ * the set of values or removing the values for all keys is O(n) in the worst
+ * case.
  * 
  * @author Volker Belli (denkbares GmbH)
  * @created 07.01.2014
  */
-public class N2MMap<K, V> implements MultiMap<K, V> {
+public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 
 	private int size = 0;
 	private final Map<K, Set<V>> k2v;
-	private final Map<V, Set<K>> v2k;
 
 	private final CollectionFactory<K> keyFactory;
 	private final CollectionFactory<V> valueFactory;
@@ -49,7 +50,7 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 	 * Creates a new N2MMap using HashSets and HashMaps for the contained
 	 * objects.
 	 */
-	public N2MMap() {
+	public DefaultMultiMap() {
 		this(MultiMaps.<K> hashFactory(), MultiMaps.<V> hashFactory());
 	}
 
@@ -62,11 +63,10 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 	 * @param keyFactory the collection factory used to manage the keys
 	 * @param valueFactory the collection factory used to manage the values
 	 */
-	public N2MMap(CollectionFactory<K> keyFactory, CollectionFactory<V> valueFactory) {
+	public DefaultMultiMap(CollectionFactory<K> keyFactory, CollectionFactory<V> valueFactory) {
 		this.keyFactory = keyFactory;
 		this.valueFactory = valueFactory;
 		this.k2v = keyFactory.createMap();
-		this.v2k = valueFactory.createMap();
 	}
 
 	@Override
@@ -78,19 +78,8 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 			k2v.put(key, values);
 		}
 		boolean isNew = values.add(value);
-
-		// if the mapping already exists, we are done
-		if (!isNew) return false;
-		size++;
-
-		// otherwise also connect the value to the key
-		Set<K> keys = v2k.get(value);
-		if (keys == null) {
-			keys = keyFactory.createSet();
-			v2k.put(value, keys);
-		}
-		keys.add(key);
-		return true;
+		if (isNew) size++;
+		return isNew;
 	}
 
 	@Override
@@ -114,7 +103,6 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 	@Override
 	public void clear() {
 		k2v.clear();
-		v2k.clear();
 		size = 0;
 	}
 
@@ -124,8 +112,7 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 
 	@Override
 	public Set<K> removeValue(Object value) {
-		Set<K> keys = v2k.remove(value);
-		if (keys == null) return Collections.emptySet();
+		Set<K> keys = getKeys(value);
 		for (K key : keys) {
 			// for each key remove it from its support list
 			Set<V> values = k2v.get(key);
@@ -143,49 +130,34 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 	public Set<V> removeKey(Object key) {
 		Set<V> values = k2v.remove(key);
 		if (values == null) return Collections.emptySet();
-		for (V value : values) {
-			// for each value remove it from its support list
-			Set<K> keys = v2k.get(value);
-			keys.remove(key);
-			// is the support list is empty, also remove the term itself
-			if (keys.isEmpty()) {
-				v2k.remove(value);
-			}
-		}
 		size -= values.size();
 		return Collections.unmodifiableSet(values);
 	}
 
 	@Override
 	public boolean remove(Object key, Object value) {
-		// if no such value is known, noting to do
-		Set<K> keys = v2k.get(value);
-		if (keys == null) return false;
-
-		// if there is no such key for the value, noting to do
-		boolean hasFound = keys.remove(key);
-		if (!hasFound) return false;
-
-		// otherwise we have successfully removed the mapping
-		size--;
-		if (keys.isEmpty()) v2k.remove(value);
-
-		// also delete reference from key to values
 		Set<V> values = k2v.get(key);
-		values.remove(value);
-
-		// and check if the list has become empty
-		// and can be removed completely
-		if (values.isEmpty()) {
-			k2v.remove(key);
+		boolean isRemoved = values.remove(value);
+		if (isRemoved) {
+			size--;
+			// and check if the list has become empty
+			// and can be removed completely
+			if (values.isEmpty()) {
+				k2v.remove(key);
+			}
 		}
-		return true;
+		return isRemoved;
 	}
 
 	@Override
 	public Set<K> getKeys(Object value) {
-		Set<K> keys = v2k.get(value);
-		return (keys == null) ? Collections.<K> emptySet() : Collections.unmodifiableSet(keys);
+		Set<K> result = keyFactory.createSet();
+		for (Entry<K, Set<V>> entry : k2v.entrySet()) {
+			if (entry.getValue().contains(value)) {
+				result.add(entry.getKey());
+			}
+		}
+		return Collections.unmodifiableSet(result);
 	}
 
 	@Override
@@ -207,7 +179,10 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 
 	@Override
 	public boolean containsValue(Object value) {
-		return v2k.containsKey(value);
+		for (Set<V> values : k2v.values()) {
+			if (values.contains(value)) return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -217,7 +192,11 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 
 	@Override
 	public Set<V> valueSet() {
-		return Collections.unmodifiableSet(v2k.keySet());
+		Set<V> result = valueFactory.createSet();
+		for (Set<V> values : k2v.values()) {
+			result.addAll(values);
+		}
+		return Collections.unmodifiableSet(result);
 	}
 
 	@Override
@@ -251,7 +230,7 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 
 					@Override
 					public void remove() {
-						N2MMap.this.remove(currentKey, currentVal);
+						DefaultMultiMap.this.remove(currentKey, currentVal);
 					}
 				};
 			}
@@ -265,7 +244,7 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 			public boolean contains(Object entry) {
 				if (entry instanceof Entry) {
 					Entry<?, ?> e = (Entry<?, ?>) entry;
-					return N2MMap.this.contains(e.getKey(), e.getValue());
+					return DefaultMultiMap.this.contains(e.getKey(), e.getValue());
 				}
 				return false;
 			}
@@ -274,14 +253,14 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 			public boolean remove(Object entry) {
 				if (entry instanceof Entry) {
 					Entry<?, ?> e = (Entry<?, ?>) entry;
-					return N2MMap.this.remove(e.getKey(), e.getValue());
+					return DefaultMultiMap.this.remove(e.getKey(), e.getValue());
 				}
 				return false;
 			}
 
 			@Override
 			public void clear() {
-				N2MMap.this.clear();
+				DefaultMultiMap.this.clear();
 			}
 		};
 	}

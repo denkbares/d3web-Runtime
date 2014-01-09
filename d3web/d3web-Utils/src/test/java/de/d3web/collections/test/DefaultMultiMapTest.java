@@ -32,18 +32,19 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.collections.DefaultMultiMap;
 import de.d3web.collections.MultiMap;
 import de.d3web.collections.MultiMaps;
 import de.d3web.collections.N2MMap;
 
-public class N2MMapTest {
+public class DefaultMultiMapTest {
 
 	private MultiMap<String, Integer> map;
 
 	@Before
 	public void setUp() {
-		map = new N2MMap<String, Integer>(
-				MultiMaps.<String> linkedFactory(), MultiMaps.<Integer> linkedFactory());
+		map = new DefaultMultiMap<String, Integer>(
+				MultiMaps.<String> treeFactory(), MultiMaps.<Integer> treeFactory());
 	}
 
 	@Test

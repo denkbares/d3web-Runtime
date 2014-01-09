@@ -26,11 +26,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
+ * Utility class to provide useful methods for implementing and/or using
+ * MultiMaps.
  * 
  * @author Volker Belli (denkbares GmbH)
  * @created 09.01.2014
@@ -44,56 +47,84 @@ public class MultiMaps {
 	 * 
 	 * @author Volker Belli (denkbares GmbH)
 	 * @created 09.01.2014
-	 * @param <T>
+	 * @param <T> the elements to have the collection factory for
 	 */
 	public static interface CollectionFactory<T> {
 
+		/**
+		 * Creates a new set used for storing the elements.
+		 * 
+		 * @created 09.01.2014
+		 * @return a newly created set
+		 */
 		Set<T> createSet();
 
+		/**
+		 * Creates a new map used for storing objects by keys of this class'
+		 * elements.
+		 * 
+		 * @created 09.01.2014
+		 * @return a newly created map
+		 */
 		<E> Map<T, E> createMap();
 	}
 
+	private static final class TreeFactory<T> implements CollectionFactory<T> {
+
+		@Override
+		public Set<T> createSet() {
+			return new TreeSet<T>();
+		}
+
+		@Override
+		public <E> Map<T, E> createMap() {
+			return new TreeMap<T, E>();
+		}
+	}
+
+	private static final class LinkedHashFactory<T> implements CollectionFactory<T> {
+
+		@Override
+		public Set<T> createSet() {
+			return new LinkedHashSet<T>();
+		}
+
+		@Override
+		public <E> Map<T, E> createMap() {
+			return new LinkedHashMap<T, E>();
+		}
+	}
+
+	private static final class HashFactory<T> implements CollectionFactory<T> {
+
+		private int capacity;
+
+		public HashFactory(int capacity) {
+			this.capacity = capacity;
+		}
+
+		@Override
+		public Set<T> createSet() {
+			return new HashSet<T>(capacity);
+		}
+
+		@Override
+		public <E> Map<T, E> createMap() {
+			return new HashMap<T, E>();
+		}
+	}
+
 	@SuppressWarnings("rawtypes")
-	private static final CollectionFactory HASH = new CollectionFactory() {
-
-		@Override
-		public Set createSet() {
-			return new HashSet();
-		}
-
-		@Override
-		public Map createMap() {
-			return new HashMap();
-		}
-	};
+	private static final CollectionFactory HASH = new HashFactory(16);
 
 	@SuppressWarnings("rawtypes")
-	private static final CollectionFactory LINKED = new CollectionFactory() {
-
-		@Override
-		public Set createSet() {
-			return new LinkedHashSet();
-		}
-
-		@Override
-		public Map createMap() {
-			return new LinkedHashMap();
-		}
-	};
+	private static final CollectionFactory HASH_MINIMIZED = new HashFactory(2);
 
 	@SuppressWarnings("rawtypes")
-	private static final CollectionFactory TREE = new CollectionFactory() {
+	private static final CollectionFactory LINKED = new LinkedHashFactory();
 
-		@Override
-		public Set createSet() {
-			return new TreeSet();
-		}
-
-		@Override
-		public Map createMap() {
-			return new TreeMap();
-		}
-	};
+	@SuppressWarnings("rawtypes")
+	private static final CollectionFactory TREE = new TreeFactory();
 
 	/**
 	 * Returns a collection factory for hashing the entries, using
@@ -105,6 +136,19 @@ public class MultiMaps {
 	@SuppressWarnings("unchecked")
 	public static final <T> CollectionFactory<T> hashFactory() {
 		return (CollectionFactory<T>) HASH;
+	}
+
+	/**
+	 * Returns a collection factory for hashing the entries, using
+	 * {@link T#hashCode()} and {@link T#equals(Object)} method. The initial
+	 * hash tables to be used are kept as minimized as possible.
+	 * 
+	 * @created 09.01.2014
+	 * @return the collection factory
+	 */
+	@SuppressWarnings("unchecked")
+	public static final <T> CollectionFactory<T> hashMinimizedFactory() {
+		return (CollectionFactory<T>) HASH_MINIMIZED;
 	}
 
 /**
@@ -132,7 +176,37 @@ public class MultiMaps {
 		return (CollectionFactory<T>) LINKED;
 	}
 
-	public static <K, V> Map<K, Set<V>> asMap(final MultiMap<K, V> map) {
+	/**
+	 * Returns a string representation of this map. The string representation
+	 * consists of a list of key-value mappings in the order returned by the
+	 * map's <tt>entrySet</tt> view's iterator, enclosed in braces (
+	 * <tt>"{}"</tt>). Adjacent mappings are separated by the characters
+	 * <tt>", "</tt> (comma and space). Each key-value mapping is rendered as
+	 * the key followed by an equals sign (<tt>"="</tt>) followed by the
+	 * associated value. Keys and values are converted to strings as by
+	 * {@link String#valueOf(Object)}.
+	 * 
+	 * @return a string representation of this map
+	 */
+	static final <K, V> String toString(final MultiMap<K, V> map) {
+		Iterator<Entry<K, V>> i = map.entrySet().iterator();
+		if (!i.hasNext()) return "{}";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append('{');
+		for (;;) {
+			Entry<K, V> e = i.next();
+			K key = e.getKey();
+			V value = e.getValue();
+			sb.append(key == map ? "(this Map)" : key);
+			sb.append('=');
+			sb.append(value == map ? "(this Map)" : value);
+			if (!i.hasNext()) return sb.append('}').toString();
+			sb.append(", ");
+		}
+	}
+
+	static <K, V> Map<K, Set<V>> asMap(final MultiMap<K, V> map) {
 		return new AbstractMap<K, Set<V>>() {
 
 			@Override
