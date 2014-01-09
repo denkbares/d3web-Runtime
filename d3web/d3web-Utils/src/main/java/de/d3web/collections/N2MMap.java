@@ -22,16 +22,16 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.d3web.collections.MultiMaps.CollectionFactory;
+
 /**
- * This class provides an implementation for a {@link MultiMap} that is efficient
- * (= O(1)) in both directions, accessing values for keys and accessing keys for
- * values.
+ * This class provides an implementation for a {@link MultiMap} that is
+ * efficient (= O(1)) in both directions, accessing values for keys and
+ * accessing keys for values.
  * 
  * @author Volker Belli (denkbares GmbH)
  * @created 07.01.2014
@@ -39,15 +39,42 @@ import java.util.Set;
 public class N2MMap<K, V> implements MultiMap<K, V> {
 
 	private int size = 0;
-	private final Map<K, Set<V>> k2v = new LinkedHashMap<K, Set<V>>();
-	private final Map<V, Set<K>> v2k = new LinkedHashMap<V, Set<K>>();
+	private final Map<K, Set<V>> k2v;
+	private final Map<V, Set<K>> v2k;
+
+	private final CollectionFactory<K> keyFactory;
+	private final CollectionFactory<V> valueFactory;
+
+	/**
+	 * Creates a new N2MMap using HashSets and HashMaps for the contained
+	 * objects.
+	 */
+	public N2MMap() {
+		this(MultiMaps.<K> hashFactory(), MultiMaps.<V> hashFactory());
+	}
+
+	/**
+	 * Creates a new N2MMap using the specified collection factories to manage
+	 * the keys and values to be added. The {@link CollectionFactory} can be
+	 * accessed by the {@link MultiMaps} class through some utility methods
+	 * provided.
+	 * 
+	 * @param keyFactory the collection factory used to manage the keys
+	 * @param valueFactory the collection factory used to manage the values
+	 */
+	public N2MMap(CollectionFactory<K> keyFactory, CollectionFactory<V> valueFactory) {
+		this.keyFactory = keyFactory;
+		this.valueFactory = valueFactory;
+		this.k2v = keyFactory.createMap();
+		this.v2k = valueFactory.createMap();
+	}
 
 	@Override
 	public boolean put(K key, V value) {
 		// connect source to term
 		Set<V> values = k2v.get(key);
 		if (values == null) {
-			values = new LinkedHashSet<V>();
+			values = valueFactory.createSet();
 			k2v.put(key, values);
 		}
 		boolean isNew = values.add(value);
@@ -59,7 +86,7 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 		// otherwise also connect the value to the key
 		Set<K> keys = v2k.get(value);
 		if (keys == null) {
-			keys = new LinkedHashSet<K>();
+			keys = keyFactory.createSet();
 			v2k.put(value, keys);
 		}
 		keys.add(key);
@@ -306,5 +333,10 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 			if (!i.hasNext()) return sb.append('}').toString();
 			sb.append(", ");
 		}
+	}
+
+	@Override
+	public Map<K, Set<V>> toMap() {
+		return MultiMaps.asMap(this);
 	}
 }

@@ -452,4 +452,14 @@ public interface MultiMap<K, V> {
 	 */
 	@Override
 	public String toString();
+
+	/**
+	 * Returns an immutable {@link Map} that represents the contents of this
+	 * MultiMap, usually without copying the contents of this map. If this map
+	 * will be changed, the returned map will also change.
+	 * 
+	 * @created 09.01.2014
+	 * @return a map representation of the contents of this multi map
+	 */
+	public Map<K, Set<V>> toMap();
 }

@@ -32,8 +32,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.collections.N2MMap;
 import de.d3web.collections.MultiMap;
+import de.d3web.collections.MultiMaps;
+import de.d3web.collections.N2MMap;
 
 public class N2MMapTest {
 
@@ -41,7 +42,8 @@ public class N2MMapTest {
 
 	@Before
 	public void setUp() {
-		map = new N2MMap<String, Integer>();
+		map = new N2MMap<String, Integer>(
+				MultiMaps.<String> linkedFactory(), MultiMaps.<Integer> linkedFactory());
 	}
 
 	@Test
@@ -193,6 +195,15 @@ public class N2MMapTest {
 		map.put("b", 2);
 		assertEquals("[a, b]", toString(map.keySet()));
 		assertEquals("[1, 2]", toString(map.valueSet()));
+	}
+
+	@Test
+	public void toMap() {
+		map.put("a", 1);
+		map.put("a", 2);
+		map.put("b", 2);
+		map.put("c", 3);
+		assertEquals("{a=[1, 2], b=[2], c=[3]}", map.toMap().toString());
 	}
 
 	@Test
