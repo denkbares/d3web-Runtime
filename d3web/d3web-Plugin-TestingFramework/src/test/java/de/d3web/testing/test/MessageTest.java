@@ -43,7 +43,7 @@ public class MessageTest {
 	@Test
 	public void testEqualsHashCode() {
 		Message m1 = new Message(Type.ERROR, TEXT1);
-		Message m2 = new Message(Type.SUCCESS, TEXT1);
+		Message m2 = new Message(Type.SUCCESS);
 		Message m3 = new Message(Type.ERROR, TEXT2);
 		Message m1a = new Message(Type.ERROR, TEXT1);
 
