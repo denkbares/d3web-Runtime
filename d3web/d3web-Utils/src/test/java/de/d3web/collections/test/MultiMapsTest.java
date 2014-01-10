@@ -20,9 +20,7 @@ package de.d3web.collections.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.collections.MultiMaps;
@@ -31,26 +29,28 @@ import de.d3web.collections.N2MMap;
 
 public class MultiMapsTest {
 
+	private N2MMap<String, String> baseMap;
+
+	@Before
+	public void initBase() {
+		baseMap = new N2MMap<String, String>();
+		baseMap.put("a", "1");
+		baseMap.put("a", "2");
+		baseMap.put("b", "2");
+		baseMap.put("b", "3");
+	}
+
 	@Test
 	public void factories() {
-		N2MMap<String, Integer> base = new N2MMap<String, Integer>();
-		base.put("a", 1);
-		base.put("a", 2);
-		base.put("b", 2);
-		base.put("b", 3);
+		checkFactory(MultiMaps.<String> hashFactory());
+		checkFactory(MultiMaps.<String> hashMinimizedFactory());
+		checkFactory(MultiMaps.<String> treeFactory());
+		checkFactory(MultiMaps.<String> linkedFactory());
+	}
 
-		@SuppressWarnings("unchecked")
-		List<CollectionFactory<? extends Object>> factories = Arrays.asList(
-				MultiMaps.hashFactory(),
-				MultiMaps.hashMinimizedFactory(),
-				MultiMaps.treeFactory(),
-				MultiMaps.linkedFactory());
-		for (@SuppressWarnings("rawtypes")
-		CollectionFactory factory : factories) {
-			@SuppressWarnings("unchecked")
-			N2MMap<String, Integer> map = new N2MMap<String, Integer>(factory, factory);
-			map.putAll(base);
-			assertEquals(base, map);
-		}
+	private void checkFactory(CollectionFactory<String> factory) {
+		N2MMap<String, String> map = new N2MMap<String, String>(factory, factory);
+		map.putAll(baseMap);
+		assertEquals(baseMap, map);
 	}
 }
