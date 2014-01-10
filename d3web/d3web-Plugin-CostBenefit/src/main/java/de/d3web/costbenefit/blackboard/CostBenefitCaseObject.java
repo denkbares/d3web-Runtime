@@ -51,6 +51,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
 	private Set<TerminologyObject> conflictingObjects = new HashSet<TerminologyObject>();
+	private QContainer unreachedTarget = null;
 
 	public CostBenefitCaseObject(Session session) {
 		this.session = session;
@@ -72,6 +73,7 @@ public class CostBenefitCaseObject implements SessionObject {
 		this.currentSequence = Arrays.copyOf(newSequence, newSequence.length);
 		Logger.getLogger(getClass().getName()).fine(
 				"new cost benefit sequence: " + Arrays.asList(newSequence));
+		unreachedTarget = null;
 	}
 
 	public SearchModel getSearchModel() {
@@ -103,6 +105,9 @@ public class CostBenefitCaseObject implements SessionObject {
 	 * Resets the path
 	 */
 	public void resetPath() {
+		if (currentSequence != null && currentSequence.length - 1 > currentPathIndex) {
+			unreachedTarget = currentSequence[currentSequence.length - 1];
+		}
 		currentSequence = null;
 		for (Fact fact : indicatedFacts) {
 			session.getBlackboard().removeInterviewFact(fact);
@@ -167,4 +172,11 @@ public class CostBenefitCaseObject implements SessionObject {
 		this.conflictingObjects = conflictingObjects;
 	}
 
+	public QContainer getUnreachedTarget() {
+		return unreachedTarget;
+	}
+
+	public void resetUnreachedTarget() {
+		this.unreachedTarget = null;
+	}
 }

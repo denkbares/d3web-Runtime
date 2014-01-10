@@ -850,7 +850,24 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public void postPropagate(Session session) {
 		CostBenefitCaseObject sessionObject = session.getSessionObject(this);
 		if (!isManualMode() && !sessionObject.isAbortedManuallySetTarget()) {
-			calculateNewPath(sessionObject);
+			// target was manually set and the path was reset before it was
+			// finished -> try to calculate to the target again
+			if (sessionObject.getUndiscriminatedSolutions() == null
+					&& sessionObject.getUnreachedTarget() != null) {
+				try {
+					calculateNewPathTo(sessionObject,
+							new Target(sessionObject.getUnreachedTarget()));
+				}
+				catch (AbortException e) {
+					// if no path could be calculated, switch to manual
+					// calculation
+					sessionObject.resetPath();
+					calculateNewPath(sessionObject);
+				}
+			}
+			else {
+				calculateNewPath(sessionObject);
+			}
 		}
 	}
 }
