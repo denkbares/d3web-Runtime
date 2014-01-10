@@ -55,6 +55,9 @@ public class Message implements Comparable<Message> {
 	}
 
 	public Message(Type type, String message) {
+		if (type.equals(Type.SUCCESS) && message != null && message.length() > 0) {
+			throw new IllegalArgumentException("Success Messages with text are not supported, use constructor without message");
+		}
 		this.type = type;
 		this.message = message;
 	}
