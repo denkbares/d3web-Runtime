@@ -171,7 +171,7 @@ public class PriorityList<P extends Comparable<P>, E> extends AbstractList<E> {
 	 * @created 31.10.2013
 	 * @return the items of this list grouped by their priorities
 	 */
-	public Map<P, List<E>> getPriorityMap() {
+	public synchronized Map<P, List<E>> getPriorityMap() {
 		if (cachedPriorityMap == null) {
 			if (isEmpty()) {
 				cachedPriorityMap = Collections.emptyMap();
@@ -191,7 +191,7 @@ public class PriorityList<P extends Comparable<P>, E> extends AbstractList<E> {
 				}
 			}
 		}
-		return cachedPriorityMap;
+		return Collections.unmodifiableMap(cachedPriorityMap);
 	}
 
 	/**
