@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class TestExecutor {
 	private final Collection<TestObjectProvider> objectProviders;
 	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
-	private BuildResult build;
+	private final BuildResult build;
 	private String currentMessage;
 	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
 	private float finishedTests;
@@ -72,7 +73,7 @@ public class TestExecutor {
 	 * @return the current build
 	 */
 	public BuildResult getBuildResult() {
-		if (Thread.interrupted()) return null;
+		if (executorThread == null || executorThread.isInterrupted() || isRunning()) return null;
 		return build;
 	}
 
@@ -223,7 +224,14 @@ public class TestExecutor {
 		outerLoop: for (TestSpecification<?> specification : callablesMap.keySet()) {
 			Collection<CallableTest<?>> callableTests = callablesMap.get(specification);
 			for (CallableTest<?> callableTest : callableTests) {
-				executor.execute(new FutureTestTask(callableTest));
+				try {
+					executor.execute(new FutureTestTask(callableTest));
+				}
+				catch (RejectedExecutionException e) {
+					// it is possible that the executor is shut down during or
+					// before adding the tests to the executor... we just catch
+					// it
+				}
 
 				try {
 					Utils.checkInterrupt();
@@ -239,9 +247,6 @@ public class TestExecutor {
 	}
 
 	private void setTerminateStatus() {
-		synchronized (this) {
-			build = null;
-		}
 		progressListener.updateProgress(1f, "Aborted, please wait...");
 	}
 
@@ -254,11 +259,7 @@ public class TestExecutor {
 			setTerminateStatus();
 		}
 		finally {
-			synchronized (this) {
-				if (build != null) {
-					build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
-				}
-			}
+			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
 		}
 	}
 
