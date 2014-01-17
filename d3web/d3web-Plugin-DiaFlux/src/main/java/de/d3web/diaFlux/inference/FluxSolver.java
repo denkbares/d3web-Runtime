@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeKind;
@@ -124,7 +125,12 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).fine("Start propagating: " + changes);
+		Logger logger = Logger.getLogger(FluxSolver.class.getName());
+		if (logger.isLoggable(Level.FINE)) {
+			// we want to avoid creating large unneeded strings in sensitive
+			// positions
+			logger.fine("Start propagating: " + changes);
+		}
 		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
 
 		for (PropagationEntry propagationEntry : changes) {
@@ -171,7 +177,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 				}
 			}
 		}
-		Logger.getLogger(FluxSolver.class.getName()).fine("Finished propagating.");
+		logger.fine("Finished propagating.");
 
 	}
 
@@ -198,7 +204,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		}
 	}
 
-
 	/**
 	 * Removes support from a node.
 	 * 
@@ -217,7 +222,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			checkSuccessors(node, flowRun, session);
 		}
 	}
-
 
 	/**
 	 * Checks, if the states of outgoing edges are correct.
@@ -259,8 +263,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		removeSupport(edge.getEndNode(), edge, flowRun, session);
 	}
 
-
-
 	/**
 	 * Returns whether the specified node is currently active within the
 	 * specified session. Please note that a node previously being active and
@@ -279,8 +281,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		}
 		return false;
 	}
-
-
 
 	/**
 	 * 
@@ -318,7 +318,12 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 		Map<FlowRun, Collection<SnapshotNode>> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots, caseObject);
-		Logger.getLogger(FluxSolver.class.getName()).fine("Taking snapshots: " + snappyFlows);
+		Logger logger = Logger.getLogger(FluxSolver.class.getName());
+		if (logger.isLoggable(Level.FINE)) {
+			// we want to avoid creating unneeded large strings in sensitive
+			// positions
+			logger.fine("Taking snapshots: " + snappyFlows);
+		}
 
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<FlowRun>();

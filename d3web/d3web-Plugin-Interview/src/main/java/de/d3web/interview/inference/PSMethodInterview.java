@@ -22,6 +22,7 @@ package de.d3web.interview.inference;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethodAdapter;
@@ -65,8 +66,12 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 			 * therefore have other side effects.
 			 */
 			Collection<InterviewObject> objects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
-			Logger.getLogger(getClass().getName()).fine(
-					"Agenda (" + changes.size() + " changes): " + objects);
+			Logger logger = Logger.getLogger(getClass().getName());
+			if (logger.isLoggable(Level.FINE)) {
+				// we want to avoid creating large strings unneeded in sensitive
+				// positions
+				logger.fine("Agenda (" + changes.size() + " changes): " + objects);
+			}
 		}
 	}
 
