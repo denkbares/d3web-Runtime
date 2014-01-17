@@ -33,7 +33,6 @@ import de.d3web.core.inference.KnowledgeSlice;
 public class NodeList implements KnowledgeSlice, Iterable<Node> {
 
 	private final List<Node> nodes;
-	private static final String ID = "FOOBAR";
 
 	public NodeList() {
 		this.nodes = new ArrayList<Node>();
@@ -75,7 +74,7 @@ public class NodeList implements KnowledgeSlice, Iterable<Node> {
 
 	@Override
 	public String toString() {
-		return "NodeList [id=" + ID + ", nodes=" + nodes + "]";
+		return "NodeLists: " + nodes;
 	}
 
 }
