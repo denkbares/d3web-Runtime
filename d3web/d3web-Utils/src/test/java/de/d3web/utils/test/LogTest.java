@@ -18,6 +18,7 @@
  */
 package de.d3web.utils.test;
 
+import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -195,6 +196,83 @@ public class LogTest {
 
 	public void assertMessage(String message) {
 		Assert.assertEquals(message, handler.record.getMessage());
+	}
+
+	/**
+	 * Some performance measures for logging.
+	 * 
+	 * @created 20.01.2014
+	 * @param args will be ignored
+	 */
+	public static void main(String[] args) {
+		Log.logger().setFilter(new Filter() {
+
+			@Override
+			public boolean isLoggable(LogRecord record) {
+				return false;
+			}
+		});
+
+		// to enable jut for both
+		measureLogPerformance(false);
+
+		// measure different stack sizes
+		System.out.println("\nStack size: 1");
+		measureLogPerformance(1);
+		System.out.println("\nStack size: 10");
+		measureLogPerformance(10);
+		System.out.println("\nStack size: 100");
+		measureLogPerformance(100);
+		System.out.println("\nStack size: 1000");
+		measureLogPerformance(1000);
+		System.out.println("\nStack size: 10000");
+		measureLogPerformance(10000);
+	}
+
+	private static void measureLogPerformance(int i) {
+		if (i <= 0) {
+			measureLogPerformance(true);
+		}
+		else {
+			measureLogPerformance(i - 1);
+		}
+	}
+
+	private static void measureLogPerformance(boolean showResults) {
+		final int TEST_SIZE = 10000000;
+
+		// classic logging, turned off
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < TEST_SIZE; i++) {
+			Logger.getLogger(LogTest.class.getName()).finest("test");
+		}
+		double durConOff = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
+
+		// classic logging, turned on
+		start = System.currentTimeMillis();
+		for (int i = 0; i < TEST_SIZE; i++) {
+			Logger.getLogger(LogTest.class.getName()).info("test");
+		}
+		double durConOn = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
+
+		// new logging, turned off
+		start = System.currentTimeMillis();
+		for (int i = 0; i < TEST_SIZE; i++) {
+			Logger.getLogger(LogTest.class.getName()).finest("test");
+		}
+		double durNewOff = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
+
+		// new logging, turned on
+		start = System.currentTimeMillis();
+		for (int i = 0; i < TEST_SIZE; i++) {
+			Logger.getLogger(LogTest.class.getName()).info("test");
+		}
+		double durNewOn = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
+
+		if (!showResults) return;
+		System.out.println("\tOn\tOff");
+		System.out.println(String.format("java\t%ss\t%ss", durConOn, durConOff));
+		System.out.println(String.format("Log\t%ss\t%ss", durNewOn, durNewOff));
 	}
 
 }
