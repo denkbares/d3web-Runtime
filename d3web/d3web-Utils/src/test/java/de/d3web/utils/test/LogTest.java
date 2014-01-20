@@ -244,28 +244,28 @@ public class LogTest {
 		// classic logging, turned off
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < TEST_SIZE; i++) {
-			Logger.getLogger(LogTest.class.getName()).finest("test");
+			Log.finest("test");
 		}
 		double durConOff = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
 
 		// classic logging, turned on
 		start = System.currentTimeMillis();
 		for (int i = 0; i < TEST_SIZE; i++) {
-			Logger.getLogger(LogTest.class.getName()).info("test");
+			Log.info("test");
 		}
 		double durConOn = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
 
 		// new logging, turned off
 		start = System.currentTimeMillis();
 		for (int i = 0; i < TEST_SIZE; i++) {
-			Logger.getLogger(LogTest.class.getName()).finest("test");
+			Log.finest("test");
 		}
 		double durNewOff = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
 
 		// new logging, turned on
 		start = System.currentTimeMillis();
 		for (int i = 0; i < TEST_SIZE; i++) {
-			Logger.getLogger(LogTest.class.getName()).info("test");
+			Log.info("test");
 		}
 		double durNewOn = (System.currentTimeMillis() - start + 50) / 100 / 10.0;
 

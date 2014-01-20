@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,6 +36,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import de.d3web.utils.Log;
 
 /**
  * 
@@ -145,8 +146,7 @@ public class BuildResultPersistenceHandler {
 		for (String testObjectName : testObjects) {
 			Message message = result.getMessageForTestObject(testObjectName);
 			if (message == null) {
-				Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
-						"No message found for test object '" + testObjectName + "' in test '"
+				Log.warning("No message found for test object '" + testObjectName + "' in test '"
 								+ result.getTestName() + "'.");
 				continue;
 			}
@@ -191,8 +191,7 @@ public class BuildResultPersistenceHandler {
 					successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
 				}
 				catch (NumberFormatException e) {
-					Logger.getLogger(BuildResultPersistenceHandler.class.getName()).warning(
-							"NumberFormatException in build result persistence when loading number of succesful test object runs: "
+					Log.warning("NumberFormatException in build result persistence when loading number of succesful test object runs: "
 									+ successfulTests);
 				}
 			}

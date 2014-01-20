@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
@@ -39,6 +38,7 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 
 import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
+import de.d3web.utils.Log;
 
 /**
  * An implementation of the PluginManager for the Java Plugin Framework (JPF)
@@ -68,14 +68,12 @@ public final class JPFPluginManager extends PluginManager {
 					locations.add(location);
 				}
 				else {
-					Logger.getLogger("PluginManager").warning(
-							"File '" + pluginFile
+					Log.warning("File '" + pluginFile
 									+ "' is not a plugin. It will be ignored.");
 				}
 			}
 			catch (MalformedURLException e) {
-				Logger.getLogger("PluginManager").severe(
-						"error initializing plugin '" + pluginFile + "': " + e);
+				Log.severe("error initializing plugin '" + pluginFile + "': " + e);
 			}
 		}
 		Map<String, Identity> map = manager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
@@ -83,8 +81,7 @@ public final class JPFPluginManager extends PluginManager {
 		for (Identity i : map.values()) {
 			String id = i.getId();
 			manager.activatePlugin(id);
-			Logger.getLogger("PluginManager").info(
-					"Plugin '" + id + "' installed and activated.");
+			Log.info("Plugin '" + id + "' installed and activated.");
 		}
 	}
 
@@ -102,8 +99,7 @@ public final class JPFPluginManager extends PluginManager {
 	 */
 	public static void init(String directory) {
 		if (instance != null) {
-			Logger.getLogger("PluginManager").warning(
-					"PluginManager already initialised.");
+			Log.warning("PluginManager already initialised.");
 			return;
 		}
 		File pluginsDir = new File(directory);
@@ -127,16 +123,14 @@ public final class JPFPluginManager extends PluginManager {
 													// warning
 		if (pluginFiles == null) {
 			// throw new IllegalArgumentException("invalid plugin files");
-			Logger.getLogger("PluginManager").severe(
-					"invalid plugin files");
+			Log.severe("invalid plugin files");
 			return;
 		}
 		try {
 			instance = new JPFPluginManager(pluginFiles);
 		}
 		catch (JpfException e) {
-			Logger.getLogger("PluginManager").severe(
-					"internal error while initializing plugin manager: " + e);
+			Log.severe("internal error while initializing plugin manager: " + e);
 			throw new IllegalArgumentException(
 					"internal error while initializing plugin manager", e);
 		}

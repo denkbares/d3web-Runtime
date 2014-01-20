@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -62,6 +61,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.utils.Log;
 
 public final class TestPersistence {
 
@@ -445,8 +445,7 @@ public final class TestPersistence {
 			String name = sr.getAttributeValue(null, NAME);
 			Solution d = kb.getManager().searchSolution(name);
 			if (d == null) {
-				Logger.getLogger(getClass().getName()).warning(
-						"Solution not found '" + name + "'.");
+				Log.warning("Solution not found '" + name + "'.");
 				return;
 			}
 			Rating r;
@@ -471,8 +470,7 @@ public final class TestPersistence {
 		Question q = kb.getManager().searchQuestion(questionText);
 
 		if (q == null) {
-			Logger.getLogger(getClass().getName()).warning(
-					"Question not found '" + questionText + "'.");
+			Log.warning("Question not found '" + questionText + "'.");
 			return null;
 		}
 

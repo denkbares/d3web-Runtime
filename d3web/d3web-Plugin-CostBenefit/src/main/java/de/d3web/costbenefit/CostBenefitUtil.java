@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.w3c.dom.Node;
 
@@ -62,6 +61,7 @@ import de.d3web.interview.Form;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
+import de.d3web.utils.Log;
 import de.d3web.xcl.InferenceTrace;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -167,8 +167,7 @@ public final class CostBenefitUtil {
 						BasicProperties.DEFAULT_ABNORMALITIY);
 				if (abnormality == null) {
 					if (set) {
-						Logger.getLogger(CostBenefitUtil.class.getName()).info(
-								"no normal value for question " + q);
+						Log.info("no normal value for question " + q);
 					}
 					continue;
 				}

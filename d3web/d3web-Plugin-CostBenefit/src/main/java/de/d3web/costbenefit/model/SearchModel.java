@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -32,6 +31,7 @@ import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
+import de.d3web.utils.Log;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search
@@ -60,10 +60,7 @@ public class SearchModel {
 		}
 		else {
 			costFunction = new DefaultCostFunction();
-			Logger.getLogger(this.getClass().getName()).throwing(
-					this.getClass().getName(),
-					"No Costbenefit-PSMethod included in the session, using default cost function.",
-					null);
+			Log.warning("No Costbenefit-PSMethod included in the session, using default cost function.");
 		}
 		blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		transitionalStateTransitions = new HashSet<StateTransition>();

@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Logger;
+
+import de.d3web.utils.Log;
 
 public class JPFResource implements Resource {
 
@@ -53,8 +54,7 @@ public class JPFResource implements Resource {
 			size = connection.getContentLength();
 		}
 		catch (IOException e) {
-			Logger.getLogger(getClass().getName()).warning(
-					"cannot open resource to determine content size: " + e);
+			Log.warning("cannot open resource to determine content size", e);
 		}
 		return size;
 	}

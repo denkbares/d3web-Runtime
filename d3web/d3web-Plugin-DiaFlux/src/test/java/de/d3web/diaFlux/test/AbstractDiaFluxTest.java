@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +45,7 @@ import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.utils.Log;
 
 /**
  * 
@@ -241,7 +241,7 @@ public abstract class AbstractDiaFluxTest {
 			if (isSupported(node)) buffy.append(node.getID() + ", ");
 		}
 
-		Logger.getLogger(getClass().getName()).info(buffy.toString());
+		Log.info(buffy.toString());
 
 		Assert.fail("Node '" + id + "' must be active.");
 
@@ -278,8 +278,7 @@ public abstract class AbstractDiaFluxTest {
 
 	protected void setNumValue(QuestionNum question, double value) {
 
-		Logger.getLogger(getClass().getName()).info(
-				"Setting '" + question.getName() + "' to '" + value + "'.");
+		Log.info("Setting '" + question.getName() + "' to '" + value + "'.");
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new NumValue(value));
 		addFact(fact);
@@ -287,8 +286,7 @@ public abstract class AbstractDiaFluxTest {
 	}
 
 	protected void setChoiceValue(QuestionOC question, String answerName) {
-		Logger.getLogger(getClass().getName()).info(
-				"Setting '" + question.getName() + "' to '" + answerName + "'.");
+		Log.info("Setting '" + question.getName() + "' to '" + answerName + "'.");
 
 		Choice choice = KnowledgeBaseUtils.findChoice(question, answerName);
 

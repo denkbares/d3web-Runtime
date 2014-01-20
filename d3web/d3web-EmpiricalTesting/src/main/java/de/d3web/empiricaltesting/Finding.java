@@ -20,8 +20,6 @@
 
 package de.d3web.empiricaltesting;
 
-import java.util.logging.Logger;
-
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -30,6 +28,7 @@ import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.utils.Log;
 
 /**
  * A finding is a tuple of a {@link Question} and an {@link QuestionValue}.
@@ -56,7 +55,7 @@ public class Finding implements Comparable<Finding> {
 			if (choiceName.equals(choice.getName())) foundChoice = choice;
 		}
 		if (foundChoice == null) {
-			Logger.getLogger(getClass().getName()).warning("Choice not found: "
+			Log.warning("Choice not found: "
 					+ choiceName + " in question " + question.getName());
 			setup(question, new ChoiceValue(new ChoiceID(choiceName)));
 		}

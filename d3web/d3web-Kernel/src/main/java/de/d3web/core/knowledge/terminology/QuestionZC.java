@@ -22,9 +22,9 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.utils.Log;
 
 /**
  * @author Jochen
@@ -73,14 +73,12 @@ public class QuestionZC extends QuestionOC {
 	@Override
 	public void setAlternatives(List<Choice> l) {
 		if (l.size() > 0) {
-			Logger.getLogger(this.getClass().getName()).severe(
-					"Tried to set AnswerAlternatives for QuestionZC");
+			Log.severe("Tried to set AnswerAlternatives for QuestionZC");
 		}
 	}
 
 	@Override
 	public void addAlternative(Choice a) {
-		Logger.getLogger(this.getClass().getName()).severe(
-				"Tried to add AnswerAlternative for QuestionZC");
+		Log.severe("Tried to add AnswerAlternative for QuestionZC");
 	}
 }

@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -51,6 +50,7 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.utils.Log;
 import de.d3web.utils.Pair;
 
 /**
@@ -85,8 +85,6 @@ public class AStar {
 			return follower;
 		}
 	}
-
-	private static final Logger log = Logger.getLogger(AStar.class.getName());
 
 	private final SearchModel model;
 	private final Map<Question, Value> usedStateQuestions = new LinkedHashMap<Question, Value>();
@@ -142,7 +140,7 @@ public class AStar {
 			for (Node node : nodes.values()) {
 				if (node.getPath() == pre) {
 					if (node.getfValue() * 0.999 > targetNode.getfValue()) {
-						log.severe("Heuristic of " + targetNode.getPath()
+						Log.severe("Heuristic of " + targetNode.getPath()
 								+ " was not monotonous, f Value: " + node.getfValue()
 								+ ", max: " + targetNode.getfValue() + ", node: "
 								+ node.getPath().getQContainer().getName());
@@ -177,10 +175,10 @@ public class AStar {
 			removeInfiniteTargets();
 		}
 
-		log.info("Starting calculation, #targets: " + model.getTargets().size());
+		Log.info("Starting calculation, #targets: " + model.getTargets().size());
 		searchLoop();
 		long time2 = System.currentTimeMillis();
-		log.info("A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
+		Log.info("A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
 				"#steps: " + steps + ", " +
 				"time: " + (time2 - time1) + "ms, " +
 				"init: " + initTime + "ms, " +
@@ -211,7 +209,7 @@ public class AStar {
 			// ", f-Value:"
 			// + node.getfValue());
 			if (node.getfValue() == Double.POSITIVE_INFINITY) {
-				log.info("All targets are unreachable, calculation aborted");
+				Log.info("All targets are unreachable, calculation aborted");
 				break;
 			}
 
@@ -329,7 +327,7 @@ public class AStar {
 		}
 		// check if the precondition does hold
 		return stateTransition.getActivationCondition() == null
-					|| Conditions.isTrue(stateTransition.getActivationCondition(), actualSession);
+				|| Conditions.isTrue(stateTransition.getActivationCondition(), actualSession);
 	}
 
 	private void installNode(Node newFollower) {
@@ -359,7 +357,7 @@ public class AStar {
 					AStarPath oldPath = follower.getPath();
 					AStarPath newPath = newFollower.getPath();
 					if (oldPath.getCosts() - newPath.getCosts() > 0.00001) {
-						log.severe(newPath + " has lower costs than " + oldPath
+						Log.severe(newPath + " has lower costs than " + oldPath
 								+ ", please check that!");
 						checkPathFValues(follower);
 						checkPathFValues(newFollower);
@@ -425,7 +423,7 @@ public class AStar {
 				// be cheaper
 				synchronized (this) {
 					if (t.getMinPath() == null
-								|| t.getMinPath().getCosts() > newPath.getCosts()) {
+							|| t.getMinPath().getCosts() > newPath.getCosts()) {
 						t.setMinPath(newPath);
 						model.checkTarget(t);
 					}

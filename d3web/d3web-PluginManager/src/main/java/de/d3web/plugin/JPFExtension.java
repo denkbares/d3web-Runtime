@@ -21,13 +21,13 @@ package de.d3web.plugin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.java.plugin.PluginLifecycleException;
 import org.java.plugin.registry.Extension;
 import org.java.plugin.registry.Extension.Parameter;
 import org.java.plugin.registry.PluginDescriptor;
+
+import de.d3web.utils.Log;
 
 /**
  * The Implementation of the Extension-Interface for the java plugin framework
@@ -75,38 +75,30 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 			return clazz.newInstance();
 		}
 		catch (ClassNotFoundException e) {
-			Logger.getLogger("Plugin").log(
-					Level.SEVERE,
-					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
-							"The class specified in the plugin was not found.  " +
-							"This is a strong evidence for an incorrect plugin.",
+			Log.severe("Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+					"The class specified in the plugin was not found.  " +
+					"This is a strong evidence for an incorrect plugin.",
 					e);
 			throw new NoClassDefFoundError(e.getMessage());
 		}
 		catch (InstantiationException e) {
-			Logger.getLogger("Plugin").log(
-					Level.SEVERE,
-					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
-							"It was not possible to instantiate an object. " +
-							"This is a strong evidence for an incorrect plugin.",
+			Log.severe("Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+					"It was not possible to instantiate an object. " +
+					"This is a strong evidence for an incorrect plugin.",
 					e);
 			throw new InstantiationError(e.getMessage());
 		}
 		catch (IllegalAccessException e) {
-			Logger.getLogger("Plugin").log(
-					Level.SEVERE,
-					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
-							"The constructor or the class could not be accessed. " +
-							"This is a strong evidence for an incorrect plugin.",
+			Log.severe("Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+					"The constructor or the class could not be accessed. " +
+					"This is a strong evidence for an incorrect plugin.",
 					e);
 			throw new IllegalAccessError(e.getMessage());
 		}
 		catch (LinkageError e) {
-			Logger.getLogger("Plugin").log(
-					Level.SEVERE,
-					"Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
-							"The plugin uses code that cannot be found or linked. " +
-							"This is a strong evidence for out-dated plugin code.",
+			Log.severe("Error in plugin '" + getPluginID() + "', extension '" + getID() + "'. " +
+					"The plugin uses code that cannot be found or linked. " +
+					"This is a strong evidence for out-dated plugin code.",
 					e);
 			throw new InstantiationError(e.getMessage());
 		}

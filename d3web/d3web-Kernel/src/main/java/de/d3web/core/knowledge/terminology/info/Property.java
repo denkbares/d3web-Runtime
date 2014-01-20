@@ -26,13 +26,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
+import de.d3web.utils.Log;
 
 /**
  * Represents a Property. Properties can only be created by extending the
@@ -132,14 +131,12 @@ public final class Property<T> {
 				this.defaultValue = parseValue(this.defaultValueString);
 			}
 			catch (IllegalArgumentException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						"cannot parse/initialize property default value: " +
+				Log.severe("cannot parse/initialize property default value: " +
 								this.name + " = " + this.defaultValueString, e);
 				// do noting here, leave defaultValue on null
 			}
 			catch (NoSuchMethodException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						"cannot parse/initialize property default value: " +
+				Log.severe("cannot parse/initialize property default value: " +
 								this.name + " = " + this.defaultValueString, e);
 				// do noting here, leave defaultValue on null
 			}

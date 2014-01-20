@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -38,6 +37,8 @@ import org.java.plugin.PluginManager;
 import org.java.plugin.registry.Library;
 import org.java.plugin.registry.PluginAttribute;
 import org.java.plugin.registry.PluginDescriptor;
+
+import de.d3web.utils.Log;
 
 public class JPFPlugin implements Plugin {
 
@@ -196,8 +197,7 @@ public class JPFPlugin implements Plugin {
 			}
 		}
 		catch (IOException e) {
-			Logger.getLogger(getClass().getName()).warning(
-					"cannot read resources from plugin '" + pluginUrl + "': " + e);
+			Log.warning("cannot read resources from plugin '" + pluginUrl + "': " + e);
 		}
 		return result;
 	}

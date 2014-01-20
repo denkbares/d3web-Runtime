@@ -18,8 +18,7 @@
  */
 package de.d3web.testing;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import de.d3web.utils.Log;
 
 /**
  * Provides the actual TestObject and its name. We need this container, since
@@ -36,8 +35,7 @@ public class TestObjectContainer<T> {
 	public TestObjectContainer(String testObjectName, T testObject) {
 		this.testObject = testObject;
 		if (testObjectName == null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"test object name was null, using toString() as test object name");
+			Log.warning("test object name was null, using toString() as test object name");
 			this.testObjectname = testObject.toString();
 		}
 		else {

@@ -25,12 +25,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.astar.IterableExecutor;
 import de.d3web.costbenefit.model.SearchModel;
+import de.d3web.utils.Log;
 
 /**
  * A new {@link SearchAlgorithm} that delegates the search to a sequence of
@@ -109,12 +108,10 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 					model.merge(result);
 				}
 				catch (InterruptedException e) {
-					Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-							"error in cost/benefit search thread", e);
+					Log.severe("error in cost/benefit search thread", e);
 				}
 				catch (ExecutionException e) {
-					Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-							"error in cost/benefit search thread", e);
+					Log.severe("error in cost/benefit search thread", e);
 				}
 			}
 			// if no search task has succeeded,

@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -22,6 +20,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.strings.Strings;
+import de.d3web.utils.Log;
 
 public class MMInfoContentHandler extends DefaultHandler {
 
@@ -117,9 +116,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 				this.currentStore.addValue(property, currentLocale, value);
 			}
 			catch (NoSuchElementException e) {
-				Logger.getLogger(XMLUtil.class.getName()).log(
-						Level.WARNING,
-						"Property '" + currentProperty +
+				Log.warning("Property '" + currentProperty +
 								"' is not supported. Propably the corresponding plugin " +
 								"is missing. This property will be lost when saving " +
 								"the knowledge base.");

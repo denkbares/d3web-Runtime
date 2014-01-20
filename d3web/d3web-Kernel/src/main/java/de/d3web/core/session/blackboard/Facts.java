@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
@@ -38,6 +37,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
+import de.d3web.utils.Log;
 
 public final class Facts {
 
@@ -154,11 +154,10 @@ public final class Facts {
 		// so warn and use last fact (most recent one)
 		if (filteredFacts.length > 1) {
 			String className = filteredFacts[0].getPSMethod().getClass().getName();
-			Logger.getLogger(className).warning(
-					"Method "
-							+ className
-							+ ".mergeFacts(Fact[]) is called with multiple facts. "
-							+ "This usually should not happen.");
+			Log.warning("Method "
+					+ className
+					+ ".mergeFacts(Fact[]) is called with multiple facts. "
+					+ "This usually should not happen.");
 		}
 		return filteredFacts[filteredFacts.length - 1];
 	}

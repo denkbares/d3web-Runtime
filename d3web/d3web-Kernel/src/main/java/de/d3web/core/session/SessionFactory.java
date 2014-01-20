@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSMethod;
@@ -38,6 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
+import de.d3web.utils.Log;
 
 /**
  * Factory for Session objects.
@@ -121,8 +120,7 @@ public final class SessionFactory {
 			defaultSession.initPSMethods();
 		}
 		catch (SessionTerminatedException e) {
-			Logger.getLogger(SessionFactory.class.getName()).log(Level.WARNING,
-					"Endless loop in initialization detected, session terminated", e);
+			Log.warning("Endless loop in initialization detected, session terminated", e);
 		}
 		return defaultSession;
 	}

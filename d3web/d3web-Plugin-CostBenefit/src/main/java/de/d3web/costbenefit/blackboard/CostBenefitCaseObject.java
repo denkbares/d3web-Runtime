@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -34,6 +33,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.utils.Log;
 
 /**
  * CaseObject for CostBenefit
@@ -71,8 +71,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void setCurrentSequence(QContainer[] newSequence) {
 		this.currentSequence = Arrays.copyOf(newSequence, newSequence.length);
-		Logger.getLogger(getClass().getName()).fine(
-				"new cost benefit sequence: " + Arrays.asList(newSequence));
+		Log.fine("new cost benefit sequence: " + Arrays.asList(newSequence));
 		unreachedTarget = null;
 	}
 
@@ -94,8 +93,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void incCurrentPathIndex() {
 		currentPathIndex++;
-		Logger.getLogger(getClass().getName()).fine(
-				"next qcontianer: "
+		Log.fine("next qcontianer: "
 						+ (currentPathIndex >= currentSequence.length
 								? null
 								: currentSequence[currentPathIndex]));

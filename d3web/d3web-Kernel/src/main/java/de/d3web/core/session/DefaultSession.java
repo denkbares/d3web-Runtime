@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.DefaultPropagationManager;
@@ -50,6 +48,7 @@ import de.d3web.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
+import de.d3web.utils.Log;
 
 /**
  * The {@link DefaultSession} is the default implementation of {@link Session}.
@@ -223,8 +222,7 @@ public class DefaultSession implements Session {
 			psMethodInterviewClass = (Class<? extends PSMethod>) Class.forName("de.d3web.interview.inference.PSMethodInterview");
 		}
 		catch (ClassNotFoundException e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"No PSMethodInterview contained in session.");
+			Log.severe("No PSMethodInterview contained in session.");
 			return null;
 		}
 		PSMethod psMethodInstance = getPSMethodInstance(psMethodInterviewClass);

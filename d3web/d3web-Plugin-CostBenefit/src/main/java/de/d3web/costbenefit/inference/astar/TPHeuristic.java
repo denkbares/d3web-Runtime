@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -58,6 +57,7 @@ import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.utils.Log;
 import de.d3web.utils.Pair;
 
 /**
@@ -89,8 +89,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 		private Collection<QContainer> blockedQContainer = new HashSet<QContainer>();
 	}
-
-	private static final Logger log = Logger.getLogger(TPHeuristic.class.getName());
 
 	private static boolean targetCaching = false;
 
@@ -192,7 +190,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				sessionObject.targetCache.put(qcon, additionalConditions);
 			}
 		}
-		log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
+		Log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	private static List<Condition> getPrimitiveConditions(List<Pair<List<Condition>, Set<QContainer>>> temppairs, Set<Condition> alreadyExaminedConditions) {
@@ -307,7 +305,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 							getCommonConditions(neededConditions),
 							transitionalQContainer));
 		}
-		log.info("General init: " + (System.currentTimeMillis() - time) + "ms");
+		Log.info("General init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	/**

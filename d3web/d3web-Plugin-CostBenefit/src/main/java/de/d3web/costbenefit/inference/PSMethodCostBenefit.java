@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import de.d3web.core.inference.PSMethod;
@@ -77,6 +76,7 @@ import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
+import de.d3web.utils.Log;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
@@ -86,8 +86,6 @@ import de.d3web.interview.inference.PSMethodInterview;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject>, PostHookablePSMethod {
-
-	private static final Logger log = Logger.getLogger(PSMethodCostBenefit.class.getName());
 
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
@@ -252,7 +250,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
-			log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			activatePath(caseObject, minPath);
 		}
 		else {
@@ -314,7 +312,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
-			log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			activatePath(caseObject, minPath);
 		}
 		activateNextQContainer(caseObject);
@@ -753,7 +751,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					new TextProtocolEntry(
 							caseObject.getSession().getPropagationManager().getPropagationTime(),
 							message));
-			log.warning(message);
+			Log.warning(message);
 		}
 		Set<TerminologyObject> conflictingQuestions = CostBenefitUtil.calculatePossibleConflictingQuestions(
 				caseObject.getSession(), currentSolutions);
@@ -765,7 +763,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					new TextProtocolEntry(
 							caseObject.getSession().getPropagationManager().getPropagationTime(),
 							message));
-			log.warning(message);
+			Log.warning(message);
 		}
 		return !previousSolutions.equals(currentSolutions);
 	}

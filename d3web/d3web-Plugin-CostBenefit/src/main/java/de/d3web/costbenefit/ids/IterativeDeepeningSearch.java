@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
@@ -42,6 +41,7 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.IDSPath;
 import de.d3web.costbenefit.model.ids.Node;
+import de.d3web.utils.Log;
 
 /**
  * This IterativeDeepeningSearch is extended by multiple optimizations. It
@@ -64,8 +64,6 @@ class IterativeDeepeningSearch {
 			}
 		}
 	}
-
-	private static final Logger log = Logger.getLogger(IterativeDeepeningSearch.class.getName());
 
 	private final Node[] successorNodes;
 	private final Node[] finalNodes;
@@ -175,11 +173,11 @@ class IterativeDeepeningSearch {
 			model.setAbort(true);
 		}
 		long time2 = System.currentTimeMillis();
-		log.info("IDS Calculation " +
-					(model.isAborted() ? "aborted" : "done") + " (" +
-					"#steps: " + steps + ", " +
-					"time: " + (time2 - time1) + "ms, " +
-					"init: " + initTime + "ms)");
+		Log.info("IDS Calculation " +
+				(model.isAborted() ? "aborted" : "done") + " (" +
+				"#steps: " + steps + ", " +
+				"time: " + (time2 - time1) + "ms, " +
+				"init: " + initTime + "ms)");
 	}
 
 	private void search(Session testcase, int depth) throws AbortException {

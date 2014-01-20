@@ -22,8 +22,6 @@ package de.d3web.core.io.fragments;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 
@@ -32,6 +30,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.utils.Log;
 
 /**
  * Handler for properties
@@ -64,8 +63,7 @@ public class PropertiesHandler {
 					property = Property.getUntypedProperty(name);
 				}
 				catch (NoSuchElementException e) {
-					Logger.getLogger("Persistence").log(Level.WARNING,
-							"Property " + name + " is not in use any more.");
+					Log.warning("Property " + name + " is not in use any more.");
 					continue;
 				}
 				String textContent = prop.getTextContent();

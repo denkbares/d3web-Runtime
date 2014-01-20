@@ -22,7 +22,6 @@ package de.d3web.core.session;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -39,6 +38,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.utils.Log;
 
 public final class ValueFactory {
 
@@ -183,7 +183,7 @@ public final class ValueFactory {
 				choices.addAll(temp);
 			}
 			catch (IllegalArgumentException e) {
-				Logger.getLogger(ValueFactory.class.getName()).warning(e.getMessage());
+				Log.warning(e.getMessage());
 			}
 		}
 		if (choice != null && !choices.remove(choice)) {

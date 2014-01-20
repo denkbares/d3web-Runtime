@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -52,6 +51,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.utils.Log;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values. Especially
@@ -106,7 +106,7 @@ public class PSMethodInit implements PSMethod {
 						session.getBlackboard().addValueFact(fact);
 					}
 					catch (IllegalArgumentException e) {
-						Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
+						Log.warning(e.getMessage());
 					}
 				}
 			}

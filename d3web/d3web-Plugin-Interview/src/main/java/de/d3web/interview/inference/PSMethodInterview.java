@@ -37,6 +37,7 @@ import de.d3web.interview.DefaultInterview;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
+import de.d3web.utils.Log;
 
 /**
  * This PSMethod is used to notify the {@link Interview} of new facts added to
@@ -66,10 +67,8 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 			 * therefore have other side effects.
 			 */
 			Collection<InterviewObject> objects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
-			Logger logger = Logger.getLogger(getClass().getName());
+			Logger logger = Log.logger();
 			if (logger.isLoggable(Level.FINE)) {
-				// we want to avoid creating large strings unneeded in sensitive
-				// positions
 				logger.fine("Agenda (" + changes.size() + " changes): " + objects);
 			}
 		}

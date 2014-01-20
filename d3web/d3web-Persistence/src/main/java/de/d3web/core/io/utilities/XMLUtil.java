@@ -32,8 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -78,6 +76,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.scoring.Score;
+import de.d3web.utils.Log;
 import de.d3web.utils.Triple;
 
 /**
@@ -631,9 +630,7 @@ public final class XMLUtil {
 				property = Property.getUntypedProperty(child.getAttribute("property"));
 			}
 			catch (NoSuchElementException e) {
-				Logger.getLogger(XMLUtil.class.getName()).log(
-						Level.WARNING,
-						"Property '" + child.getAttribute("property") +
+				Log.warning("Property '" + child.getAttribute("property") +
 								"' is not supported. Propably the corresponding plugin " +
 								"is missing. This property will be lost when saving " +
 								"the knowledge base.");

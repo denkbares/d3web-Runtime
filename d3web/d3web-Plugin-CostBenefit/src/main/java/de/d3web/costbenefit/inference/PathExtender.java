@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
@@ -36,6 +35,7 @@ import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.utils.Log;
 
 /**
  * Extends the path of the sub {@link SearchAlgorithm} by adding specially
@@ -112,8 +112,7 @@ public class PathExtender implements SearchAlgorithm {
 			}
 			bestCostBenefitTarget.setMinPath(path);
 		}
-		Logger.getLogger(PathExtender.class.getName()).info(
-				"Time for extending path: " + (System.currentTimeMillis() - startTime) + "ms");
+		Log.info("Time for extending path: " + (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	private void applyQContainer(QContainer qcontainer, Session extendedSession) {

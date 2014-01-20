@@ -25,12 +25,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import de.d3web.core.records.filter.AndFilter;
 import de.d3web.core.records.filter.CreationDateFilter;
 import de.d3web.core.records.filter.Filter;
 import de.d3web.core.records.filter.OrFilter;
+import de.d3web.utils.Log;
 
 /**
  * Default Implementation of the SessionRepository Interface (@link
@@ -55,9 +55,8 @@ public class DefaultSessionRepository implements SessionRepository {
 		else {
 			// joba: I would recommend to keep the "==" comparison here
 			if (oldRecord == sessionRecord) {
-				Logger.getLogger(this.getClass().getSimpleName()).warning(
-						"SessionRecord " + sessionRecord.getId()
-								+ " is already in the SessionRepository.");
+				Log.warning("SessionRecord " + sessionRecord.getId()
+						+ " is already in the SessionRepository.");
 				return false;
 
 			}
@@ -115,7 +114,7 @@ public class DefaultSessionRepository implements SessionRepository {
 		sortFilters(filter, simpleFilters, orFilters, complexFilters);
 		// shrinks the possible matches by appling simply filtes first
 		Collection<SessionRecord> matchingRecords = filterRecords(sessionRecords,
-					simpleFilters.toArray(new Filter[simpleFilters.size()]));
+				simpleFilters.toArray(new Filter[simpleFilters.size()]));
 		// handels or, this may also shrink the matching records by using
 		// primarily the cheap filters:
 		// for example: (A and B) or (C and D)
@@ -127,7 +126,7 @@ public class DefaultSessionRepository implements SessionRepository {
 		}
 		// at last all nonoptimizable Filters are used
 		matchingRecords = filterRecords(matchingRecords,
-					complexFilters.toArray(new Filter[complexFilters.size()]));
+				complexFilters.toArray(new Filter[complexFilters.size()]));
 		return matchingRecords;
 	}
 

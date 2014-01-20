@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,6 +31,7 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.utils.Log;
 import de.d3web.utils.Triple;
 
 /**
@@ -111,8 +110,7 @@ public class DCMarkupHandler {
 					property, locale);
 		}
 		catch (NoSuchElementException e) {
-			Logger.getLogger("Persistence").log(Level.WARNING,
-					"Property " + parsedValues.get("dc.subject") + " is not in use any more.");
+			Log.warning("Property " + parsedValues.get("dc.subject") + " is not in use any more.");
 			return null;
 		}
 	}

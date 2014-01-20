@@ -23,12 +23,12 @@ package de.d3web.empiricaltesting.casevisualization.jung;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
+import de.d3web.utils.Log;
 
 /**
  * This singleton class serves as factory for CaseTree graphs. It converts
@@ -145,7 +145,7 @@ public final class CaseTreeFactory {
 				graph.addEdge(edge, previousRTC, currentRTC);
 			}
 			catch (IllegalArgumentException e) {
-				Logger.getLogger(this.getClass().toString()).warning(e.getMessage());
+				Log.warning("unexpected error", e);
 			}
 
 		}

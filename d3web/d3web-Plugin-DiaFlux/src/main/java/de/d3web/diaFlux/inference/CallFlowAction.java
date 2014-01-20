@@ -21,7 +21,6 @@ package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
@@ -30,6 +29,7 @@ import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.StartNode;
+import de.d3web.utils.Log;
 
 /**
  * 
@@ -55,8 +55,7 @@ public class CallFlowAction extends PSAction {
 				startNodeName);
 
 		if (startNode == null) {
-			Logger.getLogger(CallFlowAction.class.getName()).severe(
-					"Could not find start node '" + startNodeName + "' in flow '" +
+			Log.severe("Could not find start node '" + startNodeName + "' in flow '" +
 							flowName + "'.");
 			return;
 		}
@@ -72,8 +71,7 @@ public class CallFlowAction extends PSAction {
 				startNodeName);
 
 		if (startNode == null) {
-			Logger.getLogger(CallFlowAction.class.getName()).severe(
-					"Could not find start node '" + startNodeName + "' in flow '" +
+			Log.severe("Could not find start node '" + startNodeName + "' in flow '" +
 							flowName + "'.");
 			return;
 		}

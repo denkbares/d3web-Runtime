@@ -36,7 +36,6 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -57,6 +56,7 @@ import de.d3web.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 import de.d3web.plugin.PluginManager;
+import de.d3web.utils.Log;
 import de.d3web.utils.Streams;
 
 /**
@@ -357,8 +357,7 @@ public final class PersistenceManager {
 					cpl.next(entry.getSize());
 					cpl.updateProgress(0, "reading file " + name);
 					if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
-						Logger.getLogger("Persistence").warning(
-								"No parser for entry " + name +
+						Log.warning("No parser for entry " + name +
 										" available. This file will be lost" +
 										" when saving the KnowledgeBase.");
 					}

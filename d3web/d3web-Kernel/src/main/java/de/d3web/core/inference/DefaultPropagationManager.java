@@ -30,13 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.utils.Log;
 
 public class DefaultPropagationManager implements PropagationManager {
 
@@ -105,12 +104,9 @@ public class DefaultPropagationManager implements PropagationManager {
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}
-			catch (Throwable e) { // NOSONAR because execution has to continue
-									// after catch
-				Logger.getLogger("Kernel").log(
-						Level.SEVERE,
-						"internal error in pluggable problem solver #" +
-								getPSMethod().getClass(), e);
+			catch (Exception e) {
+				Log.severe("internal error in pluggable problem solver #" +
+						getPSMethod().getClass(), e);
 			}
 			finally {
 				setPropagated(true);

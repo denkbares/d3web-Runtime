@@ -14,11 +14,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.testing.Message.Type;
+import de.d3web.utils.Log;
 
 /*
  * Copyright (C) 2012 denkbares GmbH
@@ -442,7 +441,7 @@ public class TestExecutor {
 				testResult.addUnexpectedMessage(testObjectName,
 						new Message(Message.Type.ERROR,
 								message + ": " + e));
-				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, e);
+				Log.severe(message, e);
 				return null;
 			}
 		}

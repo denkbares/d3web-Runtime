@@ -26,18 +26,18 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import de.d3web.utils.Log;
 
 /**
- * 
+ * Class to decorate an executor service and allow to iterate over all futures
+ * results of the submitted callables.
  * 
  * @author volker_belli
  * @created 09.09.2011
  */
 public class IterableExecutor<T> implements Iterable<Future<T>> {
 
-	private static final Logger log = Logger.getLogger(IterableExecutor.class.getName());
 	// share one thread pool among the whole virtual machine
 	private static ExecutorService threadPool = null;
 
@@ -95,7 +95,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		if (threadPool == null) {
 			int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
 			threadPool = Executors.newFixedThreadPool(threadCount);
-			log.info("created multicore thread pool of size " + threadCount);
+			Log.info("created multicore thread pool of size " + threadCount);
 		}
 		// and return new executor based on the thread pool
 		return new IterableExecutor<T>(threadPool);
@@ -139,7 +139,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 				this.wait();
 			}
 			catch (InterruptedException e) {
-				log.log(Level.SEVERE, "wait interrupted", e);
+				Log.severe("wait interrupted", e);
 			}
 		}
 		return finishedWorkers.get(index);

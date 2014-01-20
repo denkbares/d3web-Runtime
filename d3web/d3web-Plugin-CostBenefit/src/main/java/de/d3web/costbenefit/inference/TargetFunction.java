@@ -21,8 +21,8 @@ package de.d3web.costbenefit.inference;
 import java.util.Collection;
 
 import de.d3web.core.inference.StrategicSupport;
-import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.model.Target;
 

@@ -21,10 +21,10 @@ package de.d3web.testing;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
+import de.d3web.utils.Log;
 
 /**
  * Utility class for plugins of the type Test.
@@ -53,8 +53,7 @@ public class TestManager {
 				}
 			}
 			else {
-				Logger.getLogger(TestManager.class.getName()).warning(
-						"extension of class '" + extension.getClass().getName() +
+				Log.warning("extension of class '" + extension.getClass().getName() +
 								"' is not of the expected type " + Test.class.getName());
 			}
 		}
@@ -98,8 +97,7 @@ public class TestManager {
 				result.add((Test<?>) singleton);
 			}
 			else {
-				Logger.getLogger(TestManager.class.getName()).warning(
-						"extension of class '" + extension.getClass().getName() +
+				Log.warning("extension of class '" + extension.getClass().getName() +
 								"' is not of the expected type " + Test.class.getName());
 			}
 		}

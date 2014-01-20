@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
@@ -39,6 +38,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.utils.Log;
 
 /**
  * The default implementation of {@link Interview}: This class stores an
@@ -122,8 +122,7 @@ public class DefaultInterview implements Interview {
 				checkParentalQContainer(indicatedObject);
 			}
 			else {
-				Logger.getLogger(this.getClass().getName()).warning(
-						"UNKNOWN VALUE CHANGE: old=(" + oldValue + ") new=(" + newValue + ")");
+				Log.warning("UNKNOWN VALUE CHANGE: old=(" + oldValue + ") new=(" + newValue + ")");
 			}
 		}
 		// Need to update indicated QContainers:
@@ -222,9 +221,8 @@ public class DefaultInterview implements Interview {
 			}
 		}
 		else if (!oldIndication.getState().equals(newIndication.getState())) {
-			Logger.getLogger(this.getClass().getName()).warning(
-					"unknown indication state: old=(" + oldIndication + ") new=("
-							+ newIndication + "), ignoring it");
+			Log.warning("unknown indication state: old=(" + oldIndication + ") new=("
+					+ newIndication + "), ignoring it");
 		}
 	}
 

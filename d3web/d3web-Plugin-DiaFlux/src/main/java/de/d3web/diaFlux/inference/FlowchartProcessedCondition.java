@@ -20,7 +20,6 @@ package de.d3web.diaFlux.inference;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -30,6 +29,7 @@ import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.Node;
+import de.d3web.utils.Log;
 
 /**
  * 
@@ -53,8 +53,7 @@ public class FlowchartProcessedCondition implements Condition {
 		Flow flow = DiaFluxUtils.getFlowSet(session).get(flowName);
 
 		if (flow == null) {
-			Logger.getLogger(getClass().getName()).warning(
-					"Flowchart '" + flowName + "' not found.");
+			Log.warning("Flowchart '" + flowName + "' not found.");
 			return false;
 		}
 

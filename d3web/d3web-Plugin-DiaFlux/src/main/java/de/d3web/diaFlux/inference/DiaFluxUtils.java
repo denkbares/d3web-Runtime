@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
@@ -40,6 +38,7 @@ import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
+import de.d3web.utils.Log;
 
 /**
  * @author Reinhard Hatko
@@ -145,16 +144,14 @@ public final class DiaFluxUtils {
 		FlowSet flowSet = getFlowSet(kb);
 
 		if (flowSet == null) {
-			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("No Flowcharts found in kb."));
+			Log.severe(("No Flowcharts found in kb."));
 			return null;
 		}
 
 		Flow subflow = flowSet.get(flowName);
 
 		if (subflow == null) {
-			Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-					("Flowchart '" + flowName + "' not found."));
+			Log.severe(("Flowchart '" + flowName + "' not found."));
 			return null;
 		}
 		return subflow;
@@ -168,8 +165,7 @@ public final class DiaFluxUtils {
 			}
 		}
 
-		Logger.getLogger(DiaFluxUtils.class.getName()).log(Level.SEVERE,
-				("Node '" + nodeName + "' not found."));
+		Log.severe(("Node '" + nodeName + "' not found."));
 		return null;
 
 	}

@@ -38,10 +38,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.d3web.utils.Log;
 
 public class Strings {
 
@@ -860,8 +860,7 @@ public class Strings {
 			return URLEncoder.encode(text, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
-			Logger.getLogger(Strings.class.getName()).log(
-					Level.WARNING, "Unsupported encoding UTF-8", e);
+			Log.warning("Unsupported encoding UTF-8", e);
 			return text;
 		}
 	}
@@ -983,13 +982,11 @@ public class Strings {
 			return URLDecoder.decode(text, encoding.getEncoding());
 		}
 		catch (UnsupportedEncodingException e) {
-			Logger.getLogger(Strings.class.getName()).log(
-					Level.WARNING, e.getMessage());
+			Log.warning(e.getMessage());
 			return text;
 		}
 		catch (IllegalArgumentException e) {
-			Logger.getLogger(Strings.class.getName()).log(
-					Level.WARNING, e.getMessage());
+			Log.warning(e.getMessage());
 			return text;
 		}
 	}

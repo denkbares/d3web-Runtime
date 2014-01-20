@@ -21,7 +21,6 @@ package de.d3web.interview;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -29,6 +28,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.interview.inference.PSMethodInterview;
+import de.d3web.utils.Log;
 
 /**
  * This class always creates a new {@link Form} that contains the
@@ -143,8 +143,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 				children.addAll(collectFollowUpQuestions(child));
 			}
 			else {
-				Logger.getLogger(this.getClass().getName())
-						.warning("UNHANDLED QASET TYPE");
+				Log.warning("UNHANDLED QASET TYPE");
 			}
 		}
 		return children;

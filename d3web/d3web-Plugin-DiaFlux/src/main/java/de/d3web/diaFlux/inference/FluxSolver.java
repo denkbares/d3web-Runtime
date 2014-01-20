@@ -53,6 +53,7 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.NodeList;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
+import de.d3web.utils.Log;
 
 /**
  * 
@@ -87,8 +88,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return;
 		}
 
-		Logger.getLogger(FluxSolver.class.getName()).fine(
-				"Initing FluxSolver with case: " + session);
+		Log.fine("Initing FluxSolver with case: " + session);
 
 		try {
 			session.getPropagationManager().openPropagation();
@@ -108,9 +108,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	public static void start(Session session, StartNode startNode) {
 
-		Logger.getLogger(FluxSolver.class.getName()).fine(
-				"Activating startnode '" + startNode.getName() + "' of flow '"
-						+ startNode.getFlow().getName() + "'.");
+		Log.fine("Activating startnode '" + startNode.getName() + "' of flow '"
+				+ startNode.getFlow().getName() + "'.");
 
 		FlowRun run = new FlowRun();
 		run.addStartNode(startNode);
@@ -125,10 +124,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return;
 		}
 
-		Logger logger = Logger.getLogger(FluxSolver.class.getName());
+		Logger logger = Log.logger();
 		if (logger.isLoggable(Level.FINE)) {
-			// we want to avoid creating large unneeded strings in sensitive
-			// positions
 			logger.fine("Start propagating: " + changes);
 		}
 		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
@@ -318,11 +315,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 		Map<FlowRun, Collection<SnapshotNode>> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots, caseObject);
-		Logger logger = Logger.getLogger(FluxSolver.class.getName());
+
+		// log debug output
+		Logger logger = Log.logger();
 		if (logger.isLoggable(Level.FINE)) {
-			// we want to avoid creating unneeded large strings in sensitive
-			// positions
-			logger.fine("Taking snapshots: " + snappyFlows);
+			Log.fine("Taking snapshots: " + snappyFlows);
 		}
 
 		// Calculate new flow runs (before changing anything in the session)
