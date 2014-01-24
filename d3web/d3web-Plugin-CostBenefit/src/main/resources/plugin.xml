@@ -260,6 +260,16 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="CalculatedPathEntryHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.CalculatedPathEntryHandler" />
+		<parameter id="name" value="CalculatedPathEntryHandler" />
+		<parameter id="description" value="Handler for CalculatedPathEntries" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="permanentlyRelevant">

@@ -50,6 +50,7 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
 import de.d3web.utils.Log;
 import de.d3web.utils.Pair;
 
@@ -184,6 +185,18 @@ public class AStar {
 				"init: " + initTime + "ms, " +
 				"#open: " + getOpenNodes().size() + ", " +
 				"#closed: " + getClosedNodes().size() + ")");
+		if (!model.isAborted()) {
+			try {
+				session.getProtocol().addEntry(
+						new CalculatedPathEntry(
+								session.getPropagationManager().getPropagationTime(),
+								model.getBestCostBenefitTarget().getMinPath().getPath(), time2
+										- time1));
+			}
+			catch (NullPointerException e) {
+				// nothing to do
+			}
+		}
 	}
 
 	private void removeInfiniteTargets() {
