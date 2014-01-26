@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -631,9 +632,9 @@ public final class XMLUtil {
 			}
 			catch (NoSuchElementException e) {
 				Log.warning("Property '" + child.getAttribute("property") +
-								"' is not supported. Propably the corresponding plugin " +
-								"is missing. This property will be lost when saving " +
-								"the knowledge base.");
+						"' is not supported. Propably the corresponding plugin " +
+						"is missing. This property will be lost when saving " +
+						"the knowledge base.");
 				continue;
 			}
 			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
@@ -861,5 +862,83 @@ public final class XMLUtil {
 					"knowledgebase uses pp-rules! - this will cause NullPointerException in rule firing");
 		}
 		return score;
+	}
+
+	/**
+	 * Writes a number of Strings to the specified element with a specified tag
+	 * name. Each specified string will create its own element with the
+	 * specified tag name.
+	 * 
+	 * @created 25.01.2014
+	 * @param element the element to add the tag(s) to
+	 * @param tagName the name of the tag(s) to be created
+	 * @param values the string values to add
+	 */
+	public static void writeStrings(Element element, String tagName, String... values) {
+		if (values == null) return;
+		for (String value : values) {
+			Element node = element.getOwnerDocument().createElement(tagName);
+			node.setTextContent(value);
+			element.appendChild(node);
+		}
+	}
+
+	/**
+	 * Writes a number of enum values to the specified element with a specified
+	 * tag name. Each specified string will create its own element with the
+	 * specified tag name.
+	 * 
+	 * @created 25.01.2014
+	 * @param element the element to add the tag(s) to
+	 * @param tagName the name of the tag(s) to be created
+	 * @param values the string values to add
+	 */
+	public static void writeEnums(Element element, String tagName, Enum<?>... values) {
+		if (values == null) return;
+		for (Enum<?> value : values) {
+			Element node = element.getOwnerDocument().createElement(tagName);
+			node.setTextContent(value.name());
+			element.appendChild(node);
+		}
+	}
+
+	/**
+	 * Reads a all elements with the specified tag name that are children of the
+	 * specified element and return their text contents as a string array.
+	 * 
+	 * @created 25.01.2014
+	 * @param element the element to get the tag's text contents for
+	 * @param tagName the tag name of the child elements to get the text
+	 *        contents for
+	 * @return the text contents of the matched elements
+	 */
+	public static String[] readStrings(Element element, String tagName) {
+		List<String> result = new ArrayList<String>(10);
+		List<Element> list = getElementList(element.getChildNodes(), tagName);
+		for (Element node : list) {
+			result.add(node.getTextContent());
+		}
+		return result.toArray(new String[result.size()]);
+	}
+
+	/**
+	 * Reads a all elements with the specified tag name that are children of the
+	 * specified element and return their text contents as an array of enum
+	 * values of the specified enum class.
+	 * 
+	 * @created 25.01.2014
+	 * @param element the element to get the tag's text contents for
+	 * @param tagName the tag name of the child elements to get the text
+	 *        contents for
+	 * @return the text contents of the matched elements
+	 */
+	public static <T extends Enum<T>> T[] readEnums(Element element, String tagName, Class<T> clazz) {
+		String[] names = readStrings(element, tagName);
+		@SuppressWarnings("unchecked")
+		T[] values = (T[]) Array.newInstance(clazz, names.length);
+		for (int i = 0; i < names.length; i++) {
+			values[i] = Enum.valueOf(clazz, names[i]);
+		}
+		return values;
 	}
 }
