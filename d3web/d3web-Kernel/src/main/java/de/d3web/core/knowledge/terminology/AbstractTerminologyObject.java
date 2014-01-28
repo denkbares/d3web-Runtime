@@ -20,16 +20,16 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import de.d3web.core.knowledge.DefaultKnowledgeStore;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeStore;
+import de.d3web.core.knowledge.TerminologyObject;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import de.d3web.core.knowledge.DefaultKnowledgeStore;
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.KnowledgeStore;
-import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * AbstractTerminologyObject is parent of knowledge-base objects such as QASet,
@@ -45,7 +45,6 @@ import de.d3web.core.knowledge.TerminologyObject;
  * 
  * @author joba, chris, hoernlein
  * @see de.d3web.core.knowledge.terminology.NamedObject
- * @see de.d3web.kernel.misc.PropertiesAdapter
  */
 public abstract class AbstractTerminologyObject extends AbstractNamedObject implements TerminologyObject {
 
@@ -78,7 +77,7 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 	 * Creates a new {@link AbstractTerminologyObject} instance with a given
 	 * name and inserts the newly created object to the KnowledgeBase.
 	 * 
-	 * @param id The global identifier of the instance
+	 * @param name the global name and identifier of the instance
 	 * @throws NullPointerException if kb or name is null
 	 */
 	public AbstractTerminologyObject(KnowledgeBase kb, String name) {
@@ -105,7 +104,6 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 	 * child.
 	 * 
 	 * @param child a new child of this {@link AbstractTerminologyObject}
-	 * @see #addParent(AbstractTerminologyObject parent)
 	 */
 	protected void addChild(AbstractTerminologyObject child) {
 		addChild(child, children.size());
