@@ -673,6 +673,11 @@ public class Strings {
 		return trimLeft(trimRight(text));
 	}
 
+	public static String toLowerCase(String text) {
+		if (text == null) return null;
+		return text.toLowerCase();
+	}
+
 	/**
 	 * Returns a collection containing all the strings from the passed
 	 * collection being trimmed using Strings.trim()
@@ -1061,6 +1066,65 @@ public class Strings {
 		BufferedWriter out = new BufferedWriter(fstream);
 		out.write(content);
 		out.close();
+	}
+
+	/**
+	 * Returns the enum constant referenced by the specified enum name. This
+	 * method is very similar to T.value(name), desprite that it is case
+	 * insensitive. If the specified name cannot be matched to a enum constant
+	 * of the specified enum type, null is returned. This method never throws an
+	 * exception.
+	 * 
+	 * @created 26.01.2014
+	 * @param name the name of the enum constant
+	 * @param enumType the type of the enum
+	 * @param defaultValue the default enum constant to be used if the name does
+	 *        not match a specific enum constant
+	 * @return the enum constant found case insensitive
+	 */
+	public static <T extends Enum<T>> T parseEnum(String name, Class<T> enumType) {
+		return parseEnum(name, enumType, null);
+	}
+
+	/**
+	 * Returns the enum constant referenced by the specified enum name. This
+	 * method is very similar to T.value(name), desprite that it is case
+	 * insensitive and provides the capability to specify a default value. The
+	 * default value is used every time the specified name cannot be matched to
+	 * a enum constant of the specified enum type. Therefore this method always
+	 * returns a valid enum constant, even if the name is null.
+	 * <p>
+	 * Please not that null as a default value is not allowed. In this case use
+	 * the method {@link #parseEnum(String, Class)}, because this method is not
+	 * capable to handle null.
+	 * 
+	 * @created 26.01.2014
+	 * @param name the name of the enum constant
+	 * @param defaultValue the default enum constant to be used if the name does
+	 *        not match a specific enum constant
+	 * @return the enum constant found case insensitive
+	 * @throws NullPointerException if the default value is null
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Enum<T>> T parseEnum(String name, T defaultValue) {
+		return parseEnum(name, (Class<T>) defaultValue.getClass(), defaultValue);
+
+	}
+
+	public static <T extends Enum<T>> T parseEnum(String name, Class<T> enumType, T defaultValue) {
+		if (name == null) return defaultValue;
+		try {
+			return Enum.valueOf(enumType, name);
+		}
+		catch (Exception e) {
+		}
+
+		for (T t : enumType.getEnumConstants()) {
+			if (t.name().equalsIgnoreCase(name)) {
+				return t;
+			}
+		}
+		return defaultValue;
 	}
 
 	/**
