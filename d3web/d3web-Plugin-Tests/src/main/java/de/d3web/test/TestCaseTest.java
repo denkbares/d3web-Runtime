@@ -46,8 +46,7 @@ import de.d3web.testing.Utils;
 
 /**
  * A simple test to execute test cases.
- * 
- * 
+ *
  * @author Jochen Reutelshöfer, Albrecht Striffler (denkbares GmbH)
  * @created 29.06.2012
  */
@@ -55,6 +54,10 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 	private static final long year = TimeUnit.DAYS.toMillis(365);
 	private static final String SEARCH_STRING_DESCRIPTION = "Specifies the knowledge base with which the test case is to be tested.";
+	public static final int SECOND = 1000;
+	public static final int MINUTE = 1000 * 60;
+	public static final int HOUR = 1000 * 60 * 60;
+	public static final int DAY = 1000 * 60 * 60 * 24;
 
 	public TestCaseTest() {
 		this.addParameter("KnowledgeBase", TestParameter.Type.Regex, TestParameter.Mode.Mandatory,
@@ -89,7 +92,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
 					String time = "(time ";
 					if (date.getTime() < year) {
-						time += date.getTime() + "ms";
+						time += getTimeVerbalization(date.getTime() - testCase.getStartDate().getTime());
 					}
 					else {
 						time += date;
@@ -118,6 +121,37 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		}
 
 		return new Message(Type.SUCCESS);
+	}
+
+	private String getTimeVerbalization(long timeInMillis) {
+
+		long millis = timeInMillis % SECOND;
+		long second = (timeInMillis / SECOND) % 60;
+		long minute = (timeInMillis / MINUTE) % 60;
+		long hour = (timeInMillis / HOUR) % 24;
+		long day = timeInMillis / DAY;
+		String time = "";
+		if (day > 0) {
+			time += day + "d";
+		}
+		if (hour > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += hour + "h";
+		}
+		if (minute > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += minute + "min";
+		}
+		if (second > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += second + "s";
+		}
+		if (second > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += millis + "ms";
+		}
+		if (time.length() == 0) time = "0ms";
+		return time;
 	}
 
 	private Message applyFinding(TestCase testCase, Session session, Date date) {
