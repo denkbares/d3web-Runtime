@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -54,6 +55,12 @@ import de.d3web.testcase.model.TestCase;
  * @created 24.01.2012
  */
 public class TestCaseUtils {
+
+	public static final long SECOND = TimeUnit.SECONDS.toMillis(1);
+	public static final long MINUTE = TimeUnit.MINUTES.toMillis(1);
+	public static final long HOUR = TimeUnit.HOURS.toMillis(1);
+	public static final long DAY = TimeUnit.DAYS.toMillis(1);
+	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
 
 	/**
 	 * Applies the findings of the specified {@link TestCase} at the specified
@@ -177,5 +184,36 @@ public class TestCaseUtils {
 						+ "\" needs a date value instead of \"" + value.toString() + "\".");
 			}
 		}
+	}
+
+	public static String getTimeVerbalization(long timeInMillis) {
+
+		long millis = timeInMillis % SECOND;
+		long second = (timeInMillis / SECOND) % 60;
+		long minute = (timeInMillis / MINUTE) % 60;
+		long hour = (timeInMillis / HOUR) % 24;
+		long day = timeInMillis / DAY;
+		String time = "";
+		if (day > 0) {
+			time += day + "d";
+		}
+		if (hour > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += hour + "h";
+		}
+		if (minute > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += minute + "min";
+		}
+		if (second > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += second + "s";
+		}
+		if (second > 0) {
+			if (time.length() > 0) time = time + " ";
+			time += millis + "ms";
+		}
+		if (time.length() == 0) time = "0ms";
+		return time;
 	}
 }
