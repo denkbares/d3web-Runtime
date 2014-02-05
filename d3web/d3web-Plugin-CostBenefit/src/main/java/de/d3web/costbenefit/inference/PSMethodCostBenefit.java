@@ -845,7 +845,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	@Override
-	public void postPropagate(Session session) {
+	public void postPropagate(Session session, Collection<PropagationEntry> entries) {
 		CostBenefitCaseObject sessionObject = session.getSessionObject(this);
 		if (!isManualMode() && !sessionObject.isAbortedManuallySetTarget()) {
 			// target was manually set and the path was reset before it was

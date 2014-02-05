@@ -292,7 +292,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	@Override
-	public void postPropagate(Session session) {
+	public void postPropagate(Session session, Collection<PropagationEntry> entries) {
 		if (!DiaFluxUtils.isFlowCase(session)) {
 			return;
 		}

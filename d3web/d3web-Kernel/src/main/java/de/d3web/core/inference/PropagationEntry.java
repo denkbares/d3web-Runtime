@@ -30,6 +30,7 @@ public class PropagationEntry {
 	private final Value newValue;
 	private boolean strategic = false;
 	private boolean forced = false;
+	private boolean hazard = false;
 
 	public PropagationEntry(TerminologyObject object, Value oldValue, Value newValue) {
 		this.object = object;
@@ -51,6 +52,14 @@ public class PropagationEntry {
 
 	public boolean isForced() {
 		return this.forced;
+	}
+
+	public void setHazard(boolean hazard) {
+		this.hazard = hazard;
+	}
+
+	public boolean isHazard() {
+		return this.hazard;
 	}
 
 	public TerminologyObject getObject() {
@@ -89,6 +98,11 @@ public class PropagationEntry {
 
 	public boolean hasChanged() {
 		if (isForced()) return true;
+		if (isHazard()) return true;
+		return hasChangedValue();
+	}
+
+	public boolean hasChangedValue() {
 		if (newValue == null && oldValue == null) return false;
 		if (newValue != null) return !newValue.equals(oldValue);
 		// newValue is null, oldvalue is not null

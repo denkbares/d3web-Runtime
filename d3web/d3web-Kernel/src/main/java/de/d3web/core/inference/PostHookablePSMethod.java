@@ -18,6 +18,8 @@
  */
 package de.d3web.core.inference;
 
+import java.util.Collection;
+
 import de.d3web.core.session.Session;
 
 /**
@@ -32,7 +34,11 @@ public interface PostHookablePSMethod extends PSMethod {
 	/**
 	 * This method will be called after propagation.
 	 * 
+	 * @param session the session the propagation is started on
+	 * @param entries the changes propagated so far, since propagation started
+	 *        or last post-propagation
+	 * 
 	 * @created 17.11.2010
 	 */
-	void postPropagate(Session session);
+	void postPropagate(Session session, Collection<PropagationEntry> entries);
 }

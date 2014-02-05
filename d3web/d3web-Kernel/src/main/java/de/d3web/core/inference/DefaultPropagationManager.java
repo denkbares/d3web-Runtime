@@ -22,6 +22,7 @@ package de.d3web.core.inference;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -54,6 +55,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		private boolean hasPropagated;
 		private final PSMethod psMethod;
 		private final Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
+		private final Set<ValueObject> hazardPropagationEntries = new HashSet<ValueObject>();
 		private final Map<InterviewObject, Value> interviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
 
 		public PSMethodHandler(PSMethod psMethod) {
@@ -61,12 +63,18 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 
 		public void addPropagationEntry(ValueObject key, Value oldValue) {
-			// if we already have an entry,
-			// combine the two entries to one or annihilate them
-			if (!propagationEntries.containsKey(key)) {
-				// we do not have a change for that object,
-				// so simply remember this change
+			Value oldestValue = propagationEntries.get(key);
+			if (oldestValue == null) {
 				propagationEntries.put(key, oldValue);
+			}
+			// if we already have an entry,
+			// check if it could be a hazard
+			else if (oldestValue.equals(session.getBlackboard().getValue(key))) {
+				hazardPropagationEntries.add(key);
+			}
+			else {
+				// if it was a hazard, it is a normal change again
+				hazardPropagationEntries.remove(key);
 			}
 		}
 
@@ -94,6 +102,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 		public void propagate() {
 			Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
+					hazardPropagationEntries,
 					interviewPropagationEntries, true);
 
 			try {
@@ -236,6 +245,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		// inform listener about starting entries
 		Collection<PropagationEntry> startingEntries = convertMapsToEntries(
 				globalPropagationEntries,
+				Collections.<ValueObject> emptySet(),
 				globalInterviewPropagationEntries, false);
 		for (PropagationListener listener : listeners) {
 			listener.propagationStarted(session, startingEntries);
@@ -253,6 +263,7 @@ public class DefaultPropagationManager implements PropagationManager {
 					// inform listener about post propagation entries
 					Collection<PropagationEntry> entries = convertMapsToEntries(
 							postPropagationEntries,
+							Collections.<ValueObject> emptySet(),
 							postInterviewPropagationEntries, true);
 					for (PropagationListener listener : listeners) {
 						listener.postPropagationStarted(session, entries);
@@ -260,7 +271,8 @@ public class DefaultPropagationManager implements PropagationManager {
 					for (PSMethodHandler handler : this.psHandlers) {
 						if (handler.getPSMethod() instanceof PostHookablePSMethod) {
 							checkTerminated();
-							((PostHookablePSMethod) handler.getPSMethod()).postPropagate(session);
+							PostHookablePSMethod postHookablePSMethod = (PostHookablePSMethod) handler.getPSMethod();
+							postHookablePSMethod.postPropagate(session, entries);
 						}
 					}
 					firstHandler = findNextHandler();
@@ -276,6 +288,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			// even if we have been terminated
 			Collection<PropagationEntry> entries = convertMapsToEntries(
 					globalPropagationEntries,
+					Collections.<ValueObject> emptySet(),
 					globalInterviewPropagationEntries, true);
 			forcedPropagationEntries.clear();
 			for (PropagationListener listener : listeners) {
@@ -284,7 +297,12 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 	}
 
-	private Collection<PropagationEntry> convertMapsToEntries(Map<ValueObject, Value> propagationEntries, Map<InterviewObject, Value> interviewPropagationEntries, boolean clearEntries) {
+	private Collection<PropagationEntry> convertMapsToEntries(
+			Map<ValueObject, Value> propagationEntries,
+			Set<ValueObject> hazardEntries,
+			Map<InterviewObject, Value> interviewPropagationEntries,
+			boolean clearEntries) {
+
 		Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
 				propagationEntries.size() + interviewPropagationEntries.size());
 		for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
@@ -293,6 +311,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			Value value = session.getBlackboard().getValue(object);
 			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 			if (forcedPropagationEntries.contains(object)) entry.setForced(true);
+			if (hazardEntries.contains(object)) entry.setHazard(true);
 			entries.add(entry);
 		}
 		for (Entry<InterviewObject, Value> change : interviewPropagationEntries.entrySet()) {
@@ -301,6 +320,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			Value value = session.getBlackboard().getIndication(object);
 			PropagationEntry entry = new PropagationEntry(object, oldValue, value);
 			if (forcedPropagationEntries.contains(object)) entry.setForced(true);
+			if (hazardEntries.contains(object)) entry.setHazard(true);
 			entry.setStrategic(true);
 			entries.add(entry);
 		}
