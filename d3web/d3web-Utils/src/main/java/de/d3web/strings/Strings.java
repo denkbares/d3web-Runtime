@@ -45,6 +45,7 @@ import de.d3web.utils.Log;
 
 public class Strings {
 
+	private static final Pattern PATTERN_BLANK = Pattern.compile("[\\s\\xA0]*");
 	public static final char QUOTE_DOUBLE = '"';
 	public static final char QUOTE_SINGLE = '\'';
 
@@ -295,6 +296,7 @@ public class Strings {
 	 * <li>Strings.isBlank(null): true
 	 * <li>Strings.isBlank(""): true
 	 * <li>Strings.isBlank(" "): true
+	 * <li>Strings.isBlank("\n\r"): true
 	 * <li>Strings.isBlank(" d3web "): false
 	 * </ul>
 	 * 
@@ -303,7 +305,8 @@ public class Strings {
 	 */
 	public static boolean isBlank(String text) {
 		if (text == null) return true;
-		return text.matches("[\\s\\xA0]*");
+		// matches against "[\\s\\xA0]*"
+		return PATTERN_BLANK.matcher(text).matches();
 	}
 
 	/**
@@ -632,6 +635,32 @@ public class Strings {
 			if (tc != pc) return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Compares the specified two {@code String}s, ignoring case considerations.
+	 * Two strings are considered equal if they are of the same length and
+	 * corresponding characters in the two strings are equal ignoring case. If
+	 * any of the two specified strings is null, it is considered to be the
+	 * empty string ("").
+	 * 
+	 * @param text1 The first {@code String} to be compared
+	 * @param text2 The second {@code String} to be compared
+	 * 
+	 * @return {@code true} if the arguments represents an equivalent
+	 *         {@code String} ignoring case; {@code false} otherwise
+	 * 
+	 * @see #equals(Object)
+	 */
+	public static boolean equalsIgnoreCase(String text1, String text2) {
+		// if both identical or both == null
+		if (text1 == text2) return true;
+		// otherwise (at least one is != null)
+		// check null against empty string
+		if (text1 == null) return text2.isEmpty();
+		if (text2 == null) return text1.isEmpty();
+		// otherwise we check the strings
+		return text1.equalsIgnoreCase(text2);
 	}
 
 	/**
