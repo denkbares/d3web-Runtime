@@ -21,8 +21,6 @@ package de.d3web.core.inference;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 import de.d3web.collections.IdentitySet;
 
@@ -37,8 +35,8 @@ public class RuleSet implements KnowledgeSlice {
 	// (reference-identity) will not be inserted twice
 	private final Collection<Rule> rules = new IdentitySet<Rule>();
 
-	public List<Rule> getRules() {
-		return Collections.unmodifiableList(new LinkedList<Rule>(rules));
+	public Collection<Rule> getRules() {
+		return Collections.unmodifiableCollection(rules);
 	}
 
 	public void removeRule(Rule r) {
