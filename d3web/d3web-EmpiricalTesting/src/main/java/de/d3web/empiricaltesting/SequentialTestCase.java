@@ -67,7 +67,7 @@ public class SequentialTestCase {
 	public boolean add(RatedTestCase ratedTestCase) {
 		Date timeStamp = ratedTestCase.getTimeStamp();
 		if (startDate == null) {
-			startDate = timeStamp == null ? new Date() : timeStamp;
+			startDate = timeStamp == null ? new Date(0) : timeStamp;
 		}
 		if (timeStamp == null) {
 			timeStamp = lastAddedDate == null ? startDate : new Date(lastAddedDate.getTime() + 1);
