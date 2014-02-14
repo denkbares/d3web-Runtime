@@ -93,8 +93,8 @@ public class JPFExtension implements de.d3web.plugin.Extension {
 				}
 				// accept double arguments
 				else if (argument.matches("\\d+\\.\\d+")) {
-					argTypes[i] = Integer.class;
-					argValues[i] = new Integer(argument);
+					argTypes[i] = Double.class;
+					argValues[i] = new Double(argument);
 				}
 				// allow other types as required
 				// if not, an exception if thrown
