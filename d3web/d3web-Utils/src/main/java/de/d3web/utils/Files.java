@@ -75,4 +75,34 @@ public class Files {
 	public static String getText(File file) throws IOException {
 		return Streams.getTextAndClose(new FileInputStream(file));
 	}
+
+	/**
+	 * Returns the file extension without the leading ".". If the file has no
+	 * ".", the empty String is returned. if the file is null, null is returned.
+	 * 
+	 * @created 15.02.2014
+	 * @param filename the file to get the extension from
+	 * @return the extension of the specified file
+	 */
+	public static String getExtension(String filename) {
+		return getExtension(new File(filename));
+	}
+
+	/**
+	 * Returns the file extension without the leading ".". If the file has no
+	 * ".", the empty String is returned. if the file is null, null is returned.
+	 * 
+	 * @created 15.02.2014
+	 * @param file the file to get the extension from
+	 * @return the extension of the specified file
+	 */
+	public static String getExtension(File file) {
+		if (file == null) return null;
+
+		String name = file.getName();
+		int index = name.lastIndexOf('.');
+		if (index == -1) return "";
+
+		return name.substring(index + 1);
+	}
 }
