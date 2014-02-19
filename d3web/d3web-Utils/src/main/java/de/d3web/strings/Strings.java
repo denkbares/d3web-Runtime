@@ -1177,4 +1177,21 @@ public class Strings {
 		return false;
 	}
 
+	/**
+	 * Returns the stack trace of a specified exception as a newly created
+	 * String object. If the exception is null, null is returned.
+	 * 
+	 * @created 19.02.2014
+	 * @param e the exception to get the stack trace for
+	 * @return the stack trace of the exception
+	 */
+	public static String getStackTrace(Throwable e) {
+		if (e == null) return null;
+		StringWriter buffer = new StringWriter();
+		PrintWriter print = new PrintWriter(buffer);
+		e.printStackTrace(print);
+		print.flush();
+		return buffer.toString();
+	}
+
 }
