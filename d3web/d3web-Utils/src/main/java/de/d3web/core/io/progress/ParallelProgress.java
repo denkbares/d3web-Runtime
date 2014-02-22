@@ -52,6 +52,8 @@ public class ParallelProgress implements ProgressListener {
 	private float current = 0f;
 	private final PartListener[] partListeners;
 
+	private String lastMessage = "";
+
 	/**
 	 * Creates a new {@link ParallelProgress} for a specified delegate listener.
 	 * If is divided into several sub-tasks (and a progress listener for each).
@@ -93,6 +95,13 @@ public class ParallelProgress implements ProgressListener {
 		}
 	}
 
+	/**
+	 * Returns the sub-task with the specified index, 0 for the first sub-task.
+	 *
+	 * @param index the index of the sub-task
+	 * @return the sub-task with the specified index
+	 * @throws java.lang.ArrayIndexOutOfBoundsException if the specified sub-task is not one of the created sub-tasks
+	 */
 	public ProgressListener getSubTaskProgressListener(int index) {
 		return this.partListeners[index];
 	}
@@ -105,8 +114,35 @@ public class ParallelProgress implements ProgressListener {
 
 	@Override
 	public void updateProgress(float percent, String message) {
+		lastMessage = message;
 		// write through to delegate, but not update current percentage
 		this.delegate.updateProgress(percent, message);
+	}
+
+	/**
+	 * Utility method to easily increment a progress of a special sub-task.
+	 *
+	 * @param subTaskIndex the index of the sub-task
+	 * @param percent the fraction of the progress of this sub-task (1.0 for 100%)
+	 * @param message the message to be applied
+	 * @see #getSubTaskProgressListener(int)
+	 * @throws java.lang.ArrayIndexOutOfBoundsException if the specified sub-task is not one of the created sub-tasks
+	 */
+	public void updateProgress(int subTaskIndex, float percent, String message) {
+		getSubTaskProgressListener(subTaskIndex).updateProgress(percent, message);
+	}
+
+	/**
+	 * Utility method to easily increment a progress of a special sub-task.
+	 * The previously set message is reused.
+	 *
+	 * @param subTaskIndex the index of the sub-task
+	 * @param percent the fraction of the progress of this sub-task (1.0 for 100%)
+	 * @see #getSubTaskProgressListener(int)
+	 * @throws java.lang.ArrayIndexOutOfBoundsException if the specified sub-task is not one of the created sub-tasks
+	 */
+	public void updateProgress(int subTaskIndex, float percent) {
+		getSubTaskProgressListener(subTaskIndex).updateProgress(percent, lastMessage);
 	}
 
 }
