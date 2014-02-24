@@ -354,9 +354,9 @@ public class Strings {
 	public static boolean isQuoted(String text) {
 		if (text.length() < 2) return false;
 		if (text.charAt(0) != QUOTE_DOUBLE) return false;
-		if (text.charAt(text.length() - 1) != QUOTE_DOUBLE) return false;
+		if (!isUnEscapedQuote(text, text.length() - 1)) return false;
 
-		for (int i = 1; i < text.length() - 1; i++) {
+		for (int i = 1; i < text.length() -1; i++) {
 			if (isUnEscapedQuote(text, i)) return false;
 		}
 		return true;
@@ -375,7 +375,7 @@ public class Strings {
 	}
 
 	public static boolean isUnEscapedQuote(String text, int i) {
-		return isUnEscapedQuote(text, i, new char[] { QUOTE_DOUBLE });
+		return isUnEscapedQuote(text, i, QUOTE_DOUBLE);
 	}
 
 	private static int getNumberOfDirectlyPrecedingBackSlashes(String text, int i) {
