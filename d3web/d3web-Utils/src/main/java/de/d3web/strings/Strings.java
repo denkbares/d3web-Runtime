@@ -1051,7 +1051,7 @@ public class Strings {
 			NAMED_ENTITIES.put("prop", "\u221D");
 			NAMED_ENTITIES.put("Psi", "\u03A8");
 			NAMED_ENTITIES.put("psi", "\u03C8");
-			NAMED_ENTITIES.put("quot", "\u0022");
+			NAMED_ENTITIES.put("quot", "\"");
 			NAMED_ENTITIES.put("radic", "\u221A");
 			NAMED_ENTITIES.put("rang", "\u232A");
 			NAMED_ENTITIES.put("raquo", "\u00bb");
