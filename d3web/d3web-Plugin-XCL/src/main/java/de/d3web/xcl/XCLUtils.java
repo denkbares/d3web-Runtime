@@ -18,13 +18,17 @@
  */
 package de.d3web.xcl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -33,6 +37,7 @@ import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.utils.Log;
 
 /**
  * Provides static methods for XCLModels
@@ -65,7 +70,7 @@ public class XCLUtils {
 				if (condition.getTerminalObjects().size() != 1) {
 					throw new IllegalArgumentException();
 				}
-				Set<Value> forbiddenValues = getValues(condition);
+				Set<Value> forbiddenValues = getValues(condition, question);
 				for (Choice c : ((QuestionChoice) question).getAllAlternatives()) {
 					ChoiceValue value = new ChoiceValue(c);
 					if (!forbiddenValues.contains(value)) {
@@ -74,7 +79,7 @@ public class XCLUtils {
 				}
 			}
 			else {
-				Set<Value> allowedValues = getValues(relation.getConditionedFinding());
+				Set<Value> allowedValues = getValues(relation.getConditionedFinding(), question);
 				if (allowedValues.size() > 0) {
 					return allowedValues.iterator().next();
 				}
@@ -96,26 +101,55 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns the values, fitting to the specified condition
+	 * Returns the values, fitting to the specified condition. This method can
+	 * only handle CondOr, CondEqual and CondAnd
+	 * 
+	 * For or conditions, it is assumed, that subconditions covering other
+	 * questions evaluate to false, so e.G. no value for (F1=A AND (F1=B OR
+	 * F2=C)) will be found
 	 * 
 	 * @created 22.02.2014
 	 * @param condition specified {@link Condition}
 	 * @return Set of fitting values
 	 */
-	public static Set<Value> getValues(Condition condition) {
+	public static Set<Value> getValues(Condition condition, Question question) {
 		Set<Value> result = new HashSet<Value>();
+		// return an empty set, if no value is covered
+		if (!condition.getTerminalObjects().contains(question)) {
+			return result;
+		}
 		if (condition instanceof CondOr) {
 			for (Condition c : ((CondOr) condition).getTerms()) {
-				result.addAll(getValues(c));
+				result.addAll(getValues(c, question));
 			}
 		}
 		else if (condition instanceof CondEqual) {
-			result.add(((CondEqual) condition).getValue());
+			if (question == ((CondEqual) condition).getQuestion()) {
+				result.add(((CondEqual) condition).getValue());
+			}
+		}
+		else if (condition instanceof CondAnd) {
+			List<Set<Value>> subSets = new ArrayList<Set<Value>>();
+			for (Condition c : ((CondOr) condition).getTerms()) {
+				// if the subcondition coveres the question, collect its values
+				if (c.getTerminalObjects().contains(question)) {
+					subSets.add(getValues(c, question));
+				}
+			}
+			if (subSets.size() > 0) {
+				result = subSets.get(0);
+				for (int i = 1; i < subSets.size(); i++) {
+					result.retainAll(subSets.get(i));
+				}
+			}
+			if (result.size() == 0) {
+				Log.warning("Cannot find value for " + question + " in " + condition);
+			}
 		}
 		else {
-			throw new IllegalArgumentException();
+			Log.warning("Condition of type " + condition.getClass() + " is not supported: "
+					+ condition);
 		}
 		return result;
 	}
-
 }
