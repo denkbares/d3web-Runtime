@@ -1,8 +1,11 @@
 package de.d3web.utils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class Files {
 
@@ -56,7 +59,7 @@ public class Files {
 	 * Returns the contents of the specified file as a byte[].
 	 * 
 	 * @created 01.10.2013
-	 * @param input the input file to read from
+	 * @param file the input file to read from
 	 * @return the content of the file
 	 * @throws IOException if the specified file cannot be read completely
 	 */
@@ -68,7 +71,7 @@ public class Files {
 	 * Returns the contents of the specified file as a String.
 	 * 
 	 * @created 01.10.2013
-	 * @param input the input file to read from
+	 * @param file the input file to read from
 	 * @return the content of the file
 	 * @throws IOException if the specified file cannot be read completely
 	 */
@@ -105,4 +108,27 @@ public class Files {
 
 		return name.substring(index + 1);
 	}
+
+	/**
+	 * Recursively gets all files matching the specified {@link FileFilter}.
+	 * If no filter is specified, all files recursively contained in the specified
+	 * directory are returned.
+	 *
+	 * @param root the root directory
+	 * @param filter filters the files
+	 * @return all files matching the specified filter in the specified directory (recursively)
+	 */
+	public static Collection<File> recursiveGet(File root, FileFilter filter) {
+		Collection<File> files = new LinkedList<File>();
+		File[] list = root.listFiles();
+		for (File f : list) {
+			if (f.isDirectory()) {
+				files.addAll(recursiveGet(f, filter));
+			} else if (filter == null || filter.accept(f)) {
+				files.add(f);
+			}
+		}
+		return files;
+	}
+
 }
