@@ -130,7 +130,7 @@ public class XCLUtils {
 		}
 		else if (condition instanceof CondAnd) {
 			List<Set<Value>> subSets = new ArrayList<Set<Value>>();
-			for (Condition c : ((CondOr) condition).getTerms()) {
+			for (Condition c : ((CondAnd) condition).getTerms()) {
 				// if the subcondition coveres the question, collect its values
 				if (c.getTerminalObjects().contains(question)) {
 					subSets.add(getValues(c, question));
