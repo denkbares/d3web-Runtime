@@ -149,8 +149,8 @@ public final class KnowledgeBaseUtils {
 			result.add(typeOf.cast(terminologyObject));
 		}
 		// ...and process its parents recursively
-		for (TerminologyObject child : terminologyObject.getParents()) {
-			collectAncestors(child, visited, result, typeOf);
+		for (TerminologyObject parent : terminologyObject.getParents()) {
+			collectAncestors(parent, visited, result, typeOf);
 		}
 	}
 
@@ -490,5 +490,4 @@ public final class KnowledgeBaseUtils {
 			}
 		}
 	}
-
 }
