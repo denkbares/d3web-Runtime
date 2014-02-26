@@ -23,9 +23,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.inference.condition.CondAnd;
-import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -92,14 +89,15 @@ public class PathExtender implements SearchAlgorithm {
 					Session copiedSession = CostBenefitUtil.createSearchCopy(session);
 					for (int i = 0; i < path.getPath().size(); i++) {
 						// check if the qcontainer is applicable
-						if (isApplicable(qconToInclude, copiedSession)) {
+						if (CostBenefitUtil.isApplicable(qconToInclude, copiedSession)) {
 							// check if the dynamic costs are lower or equal to
 							// the static costs
 							if (costFunction.getCosts(qconToInclude, copiedSession) <= staticCosts) {
 								// apply new QContainer
 								Session extendedSession = CostBenefitUtil.createSearchCopy(copiedSession);
 								applyQContainer(qconToInclude, extendedSession);
-								if (checkPath(path, extendedSession, i)) {
+								if (CostBenefitUtil.checkPath(path.getPath(), extendedSession, i,
+										true)) {
 									path = getNewPath(i, qconToInclude, path, session);
 									break;
 								}
@@ -128,45 +126,6 @@ public class PathExtender implements SearchAlgorithm {
 		ExtendedPath newPath = new ExtendedPath(qContainers, path.getCosts(),
 				path.getNegativeCosts());
 		return newPath;
-	}
-
-	private static boolean isApplicable(QContainer qcon, Session session) {
-		StateTransition stateTransition = StateTransition.getStateTransition(qcon);
-		ComfortBenefit comfort = qcon.getKnowledgeStore().getKnowledge(
-				ComfortBenefit.KNOWLEDGE_KIND);
-		Condition condition = null;
-		if (stateTransition != null && stateTransition.getActivationCondition() != null
-				&& comfort != null) {
-			List<Condition> conds = new LinkedList<Condition>();
-			conds.add(stateTransition.getActivationCondition());
-			conds.add(comfort.getCondition());
-			condition = new CondAnd(conds);
-		}
-		else if (comfort != null) {
-			condition = comfort.getCondition();
-		}
-		else if (stateTransition != null && stateTransition.getActivationCondition() != null) {
-			condition = stateTransition.getActivationCondition();
-		}
-		if (condition != null) {
-			return Conditions.isTrue(condition, session);
-		}
-		else {
-			return true;
-		}
-	}
-
-	private boolean checkPath(Path path, Session session, int position) {
-		for (int i = position; i < path.getPath().size(); i++) {
-			QContainer qContainer = path.getPath().get(i);
-			if (!isApplicable(qContainer, session)) {
-				return false;
-			}
-			CostBenefitUtil.setNormalValues(session, qContainer, this);
-			StateTransition stateTransition = StateTransition.getStateTransition(qContainer);
-			if (stateTransition != null) stateTransition.fire(session);
-		}
-		return true;
 	}
 
 	private static class ExtendedPath implements Path {

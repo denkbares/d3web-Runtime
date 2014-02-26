@@ -190,6 +190,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				caseObject.resetPath();
 				return;
 			}
+			// check if the rest of the path is applicable
+			else if (!CostBenefitUtil.checkPath(Arrays.asList(currentSequence), session,
+					caseObject.getCurrentPathIndex(), false)) {
+				caseObject.resetPath();
+				return;
+			}
 			// when activating the next qcontainer, which is applicable, check
 			// if it is already done and fire state transition and move to next
 			// QContainer if necessary

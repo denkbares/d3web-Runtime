@@ -29,6 +29,9 @@ import java.util.Set;
 import org.w3c.dom.Node;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.condition.CondAnd;
+import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -52,9 +55,11 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
+import de.d3web.costbenefit.inference.ComfortBenefit;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
+import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.Form;
@@ -388,6 +393,68 @@ public final class CostBenefitUtil {
 	private static void addObjectsOfConditions(Set<TerminologyObject> positiveObjects, Collection<XCLRelation> relations) {
 		for (XCLRelation r : relations) {
 			positiveObjects.addAll(r.getConditionedFinding().getTerminalObjects());
+		}
+	}
+
+	/**
+	 * Checks if the path is applicable in the actual session from the actual
+	 * position.
+	 * 
+	 * @created 26.02.2014
+	 * @param path actual path
+	 * @param session specified session
+	 * @param position actual position in the path
+	 * @param sessionIsCopy if the flag is set to true, the specified session is
+	 *        modified in this method, should only be used if an copied session
+	 *        is used
+	 * @return true if the path is applicable in the session
+	 */
+	public static boolean checkPath(List<QContainer> path, Session session, int position, boolean sessionIsCopy) {
+		if (!sessionIsCopy) session = createSearchCopy(session);
+		Object dummySource = new Object();
+		for (int i = position; i < path.size(); i++) {
+			QContainer qContainer = path.get(i);
+			if (!CostBenefitUtil.isApplicable(qContainer, session)) {
+				return false;
+			}
+			setNormalValues(session, qContainer, dummySource);
+			StateTransition stateTransition = StateTransition.getStateTransition(qContainer);
+			if (stateTransition != null) stateTransition.fire(session);
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if a qcontainer is applicable in the actual session
+	 * 
+	 * @created 26.02.2014
+	 * @param qcon QContainer
+	 * @param session Session
+	 * @return true if the qcontainer is applicable
+	 */
+	public static boolean isApplicable(QContainer qcon, Session session) {
+		StateTransition stateTransition = StateTransition.getStateTransition(qcon);
+		ComfortBenefit comfort = qcon.getKnowledgeStore().getKnowledge(
+				ComfortBenefit.KNOWLEDGE_KIND);
+		Condition condition = null;
+		if (stateTransition != null && stateTransition.getActivationCondition() != null
+				&& comfort != null) {
+			List<Condition> conds = new LinkedList<Condition>();
+			conds.add(stateTransition.getActivationCondition());
+			conds.add(comfort.getCondition());
+			condition = new CondAnd(conds);
+		}
+		else if (comfort != null) {
+			condition = comfort.getCondition();
+		}
+		else if (stateTransition != null && stateTransition.getActivationCondition() != null) {
+			condition = stateTransition.getActivationCondition();
+		}
+		if (condition != null) {
+			return Conditions.isTrue(condition, session);
+		}
+		else {
+			return true;
 		}
 	}
 }
