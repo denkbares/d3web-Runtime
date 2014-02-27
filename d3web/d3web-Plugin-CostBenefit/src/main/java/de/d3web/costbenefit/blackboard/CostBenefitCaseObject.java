@@ -94,9 +94,9 @@ public class CostBenefitCaseObject implements SessionObject {
 	public void incCurrentPathIndex() {
 		currentPathIndex++;
 		Log.fine("next qcontianer: "
-						+ (currentPathIndex >= currentSequence.length
-								? null
-								: currentSequence[currentPathIndex]));
+				+ (currentPathIndex >= currentSequence.length
+						? null
+						: currentSequence[currentPathIndex]));
 	}
 
 	/**
@@ -145,6 +145,11 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public QContainer getCurrentQContainer() {
 		if (currentSequence == null) return null;
+		if (currentPathIndex == -1) {
+			Log.warning("Sequence was generated and is accessed, but is not activated yet: "
+					+ currentSequence);
+			return null;
+		}
 		return currentSequence[currentPathIndex];
 	}
 
