@@ -90,6 +90,18 @@ public class StringsTest {
 	}
 
 	@Test
+	public void isUnescapedQuoted() {
+		String text = "x\\\'\\\"\'\"";
+		assertFalse(Strings.isUnEscapedQuote(text, 0, '"', '\''));
+		assertFalse(Strings.isUnEscapedQuote(text, 1, '"', '\''));
+		assertFalse(Strings.isUnEscapedQuote(text, 2, '"', '\''));
+		assertFalse(Strings.isUnEscapedQuote(text, 3, '"', '\''));
+		assertFalse(Strings.isUnEscapedQuote(text, 4, '"', '\''));
+		assertTrue(Strings.isUnEscapedQuote(text, 5, '"', '\''));
+		assertTrue(Strings.isUnEscapedQuote(text, 6, '"', '\''));
+	}
+
+	@Test
 	public void isQuotedIndex() {
 		String text = "012\"456\"890123\"5678\\\"1234567\"9";
 		assertFalse(Strings.isQuoted(text, 0));

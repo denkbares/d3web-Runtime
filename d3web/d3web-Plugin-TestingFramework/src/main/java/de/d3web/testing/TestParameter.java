@@ -21,6 +21,8 @@ package de.d3web.testing;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import de.d3web.strings.Strings;
+
 /**
  * Represents a test parameter.
  * 
@@ -30,7 +32,7 @@ import java.util.regex.PatternSyntaxException;
 public class TestParameter {
 
 	public enum Type {
-		String, Regex, Number, Enum
+		String, Regex, Number, Percentage, Enum
 	};
 
 	public enum Mode {
@@ -106,6 +108,15 @@ public class TestParameter {
 		else if (type.equals(Type.Number)) {
 			try {
 				Double.parseDouble(value);
+			}
+			catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		// check whether it is a valid percentage or fraction
+		else if (type.equals(Type.Percentage)) {
+			try {
+				Strings.parsePercentage(value);
 			}
 			catch (NumberFormatException e) {
 				return false;

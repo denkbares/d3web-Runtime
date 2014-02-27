@@ -23,17 +23,17 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an
- * (optional) message text.
- * 
+ * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an (optional) message
+ * text.
+ *
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 21.05.2012
  */
 public class Message implements Comparable<Message> {
 
 	/**
-	 * General success message, can be returned by tests in case of success if
-	 * no text message is needed
+	 * General success message, can be returned by tests in case of success if no text message is
+	 * needed
 	 */
 	public static final Message SUCCESS = new Message(Type.SUCCESS, null);
 
@@ -81,8 +81,18 @@ public class Message implements Comparable<Message> {
 	}
 
 	public enum Type {
+		/**
+		 * The specific test has failed to read its pass criteria.
+		 */
 		FAILURE,
+		/**
+		 * The specific test could not been executed due to an error, e.g. a wrong configuration or
+		 * compile errors.
+		 */
 		ERROR,
+		/**
+		 * The specific test has been passed successfully.
+		 */
 		SUCCESS
 	}
 
@@ -110,8 +120,7 @@ public class Message implements Comparable<Message> {
 			if (other.message != null) return false;
 		}
 		else if (!message.equals(other.message)) return false;
-		if (type != other.type) return false;
-		return true;
+		return type == other.type;
 	}
 
 	@Override

@@ -93,8 +93,6 @@ public class TestExecutor {
 	 * created.
 	 * 
 	 * @created 22.05.2012
-	 * @param buildNumber Build number for this build.
-	 * @return
 	 */
 	public void run() {
 		executorThread = Thread.currentThread();
@@ -148,6 +146,7 @@ public class TestExecutor {
 		return allTestObjects;
 	}
 
+	@SuppressWarnings("UnnecessaryLabelOnContinueStatement")
 	private Collection<TestSpecification<?>> getValidSpecifications() {
 		Collection<TestSpecification<?>> validTests = new ArrayList<TestSpecification<?>>();
 		prepareTests: for (TestSpecification<?> specification : specifications) {
@@ -233,7 +232,7 @@ public class TestExecutor {
 				}
 
 				try {
-					Utils.checkInterrupt();
+					TestingUtils.checkInterrupt();
 				}
 				catch (InterruptedException e) {
 					setTerminateStatus();
@@ -295,6 +294,7 @@ public class TestExecutor {
 			executor.awaitTermination(timeout, unit);
 		}
 		catch (InterruptedException e) {
+			// do nothing here
 		}
 	}
 
@@ -436,11 +436,10 @@ public class TestExecutor {
 				throw e;
 			}
 			catch (Exception e) {
-				String message = "Unexpected error in test " + testname + ", during testing "
-						+ testObjectName;
+				String message = "Unexpected error in test " + testname + ", " +
+						"during testing '" + testObjectName + "'";
 				testResult.addUnexpectedMessage(testObjectName,
-						new Message(Message.Type.ERROR,
-								message + ": " + e));
+						new Message(Message.Type.ERROR, message + ": " + e));
 				Log.severe(message, e);
 				return null;
 			}

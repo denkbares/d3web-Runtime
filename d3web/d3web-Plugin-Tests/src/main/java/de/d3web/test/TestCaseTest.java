@@ -41,7 +41,7 @@ import de.d3web.testing.TestObjectContainer;
 import de.d3web.testing.TestObjectProvider;
 import de.d3web.testing.TestObjectProviderManager;
 import de.d3web.testing.TestParameter;
-import de.d3web.testing.Utils;
+import de.d3web.testing.TestingUtils;
 
 /**
  * A simple test to execute test cases.
@@ -101,7 +101,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 						failed = true;
 					}
 
-					Utils.checkInterrupt();
+					TestingUtils.checkInterrupt();
 				}
 
 			}
@@ -135,7 +135,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 						+ " mainly involved in the loop: " +
 						Strings.concat(",  ", loopObjects.toArray()) + ".";
 
-				return D3webTestUtils.createFailureMessageWithObjects(loopObjects, kbName,
+				return D3webTestUtils.createFailure(loopObjects, kbName,
 						notificationText);
 			}
 			else {

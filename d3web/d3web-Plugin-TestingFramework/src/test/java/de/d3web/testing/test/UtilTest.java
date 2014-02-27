@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import de.d3web.testing.Utils;
+import de.d3web.testing.TestingUtils;
 
 /**
  * 
@@ -30,11 +30,11 @@ public class UtilTest {
 		String string4 = "xyz";
 		strings.add(string4);
 
-		Collection<Pattern> ignorePatterns = Utils.compileIgnores(new String[][] {
+		Collection<Pattern> ignorePatterns = TestingUtils.compileIgnores(new String[][] {
 				new String[] {
-				".*bb.*" }, new String[] { "\\w\\w" } });
+						".*bb.*" }, new String[] { "\\w\\w" } });
 
-		Collection<String> filtered = Utils.filterIgnored(strings, ignorePatterns);
+		Collection<String> filtered = TestingUtils.filterIgnored(strings, ignorePatterns);
 		assertEquals(2, filtered.size());
 		assertTrue(filtered.contains(string2));
 		assertTrue(filtered.contains(string4));

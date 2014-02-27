@@ -134,7 +134,7 @@ public class D3WebTestUtilsTest {
 		objects.add(q);
 		String notificationText = "dumbasstext";
 
-		Message message = D3webTestUtils.createFailureMessageWithObjects(objects, kb.getName(),
+		Message message = D3webTestUtils.createFailure(objects, kb.getName(),
 				notificationText);
 
 		// compare message text

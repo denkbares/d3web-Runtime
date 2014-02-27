@@ -29,7 +29,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 import de.d3web.testing.TestParameter.Mode;
-import de.d3web.testing.Utils;
+import de.d3web.testing.TestingUtils;
 
 /**
  * This Test searches for empty questionnaires in a knowledge base. It needs no
@@ -52,22 +52,21 @@ public class EmptyQuestionnaireTest extends KBTest {
 	public Message execute(KnowledgeBase kb, String[] args2, String[]... ignores) throws InterruptedException {
 		if (kb == null) throw new IllegalArgumentException("test called with out test object ");
 
-		Collection<Pattern> ignorePatterns = Utils.compileIgnores(ignores);
+		Collection<Pattern> ignorePatterns = TestingUtils.compileIgnores(ignores);
 
 		List<TerminologyObject> emptyQASets = new ArrayList<TerminologyObject>();
 		// iterate over QAsets and check if they are empty
 		for (QASet qaset : kb.getManager().getQASets()) {
 			if (!qaset.isQuestionOrHasQuestions()) {
-				if (Utils.isIgnored(qaset.getName(), ignorePatterns)) continue;
+				if (TestingUtils.isIgnored(qaset.getName(), ignorePatterns)) continue;
 				emptyQASets.add(qaset);
 			}
 		}
 		if (emptyQASets.size() > 0) {// empty QASets were found:
-			return D3webTestUtils.createErrorMessage(emptyQASets,
+			return D3webTestUtils.createFailure(emptyQASets,
 					"Knowledge base has empty questionnaires:");
 		}
 
-		// Utils.slowDowntest(this.getClass(), 10000, true);
 		// it seems everything was fine:
 		return new Message(Type.SUCCESS);
 	}

@@ -28,7 +28,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 import de.d3web.testing.MessageObject;
-import de.d3web.testing.Utils;
+import de.d3web.testing.TestingUtils;
 import de.d3web.utils.Pair;
 
 /**
@@ -44,30 +44,30 @@ public class D3webTestUtils {
 	 * {@link TerminologyObject}s.
 	 * 
 	 * @created 06.03.2013
-	 * @param erroneousObjects
-	 * @param failedMessage
-	 * @return s an error message containing
+	 * @param erroneousObjects the objects not passed the test
+	 * @param failedMessage the failure message for these objects
+	 * @return an error message for the objects
 	 */
-	public static Message createErrorMessage(Collection<? extends NamedObject> erroneousObjects, String failedMessage) {
+	public static Message createFailure(Collection<? extends NamedObject> erroneousObjects, String failedMessage) {
 		Collection<String> objectNames = new ArrayList<String>(erroneousObjects.size());
 		for (NamedObject object : erroneousObjects) {
 			objectNames.add(object.getName());
 		}
-		return Utils.createErrorMessage(objectNames, failedMessage, NamedObject.class);
+		return TestingUtils.createFailure(failedMessage, objectNames, NamedObject.class);
 	}
 
 	/**
-	 * Filters a list of {@link NamedObjects}s.
+	 * Filters a list of {@link NamedObject}s.
 	 * 
 	 * @created 16.05.2013
-	 * @param objects
+	 * @param objects the objects to be filtered
 	 * @param ignores derived from ignore parameters of a test
 	 * @param additionalIgnores additional ignores as given by specific test
 	 *        (e.g. name of the rootQASet)
 	 * @return s the filtered List
 	 */
 	public static <T extends NamedObject> Collection<T> filterNamed(Collection<T> objects, String[][] ignores, String... additionalIgnores) {
-		Collection<Pattern> ignorePatterns = Utils.compileIgnores(ignores);
+		Collection<Pattern> ignorePatterns = TestingUtils.compileIgnores(ignores);
 
 		for (String ignore : additionalIgnores) {
 			ignorePatterns.add(Pattern.compile(ignore, Pattern.CASE_INSENSITIVE));
@@ -76,7 +76,7 @@ public class D3webTestUtils {
 		Collection<T> result = new LinkedList<T>();
 
 		for (T object : objects) {
-			if (Utils.isIgnored(object.getName(), ignorePatterns)) continue;
+			if (TestingUtils.isIgnored(object.getName(), ignorePatterns)) continue;
 
 			result.add(object);
 		}
@@ -89,21 +89,18 @@ public class D3webTestUtils {
 	 * text and storing the given terminology objects as message objects.
 	 * 
 	 * @created 16.07.2013
-	 * @param loopObjects
-	 * @param kbName
-	 * @param notificationText
-	 * @return
+	 * @param objects the wrongly tested objects
+	 * @param kbName the name of the knowledge base affected
+	 * @param notificationText the failure message
+	 * @return the constructed failure message object
 	 */
-	public static Message createFailureMessageWithObjects(Collection<TerminologyObject> loopObjects, String kbName, String notificationText) {
+	public static Message createFailure(Collection<TerminologyObject> objects, String kbName, String notificationText) {
 		Message message = new Message(Type.FAILURE, notificationText);
 		Collection<MessageObject> msgObjects = new ArrayList<MessageObject>();
-		for (TerminologyObject loopObject : loopObjects) {
-			msgObjects.add(new MessageObject(loopObject.getName(),
-					NamedObject.class));
+		for (TerminologyObject object : objects) {
+			msgObjects.add(new MessageObject(object.getName(), NamedObject.class));
 		}
-		msgObjects.add(new MessageObject(kbName,
-				NamedObject.class));
-
+		msgObjects.add(new MessageObject(kbName, NamedObject.class));
 		message.setObjects(msgObjects);
 		return message;
 	}
@@ -112,7 +109,7 @@ public class D3webTestUtils {
 	 * Filters a list of {@link TerminologyObject}s.
 	 * 
 	 * @created 26.03.2013
-	 * @param objects
+	 * @param objects the objects to be filtered
 	 * @param ignores derived from ignore parameters of a test
 	 * @param additionalIgnores additional ignores as given by specific test
 	 *        (e.g. name of the rootQASet)
@@ -137,14 +134,9 @@ public class D3webTestUtils {
 		for (Pair<Pattern, Boolean> pair : ignorePatterns) {
 			if (isMatching(object, pair)) return true;
 		}
-
-		TerminologyObject[] parents = object.getParents();
-
-		for (int i = 0; i < parents.length; i++) {
-			if (isIgnoredInHierarchy(parents[i], ignorePatterns)) return true;
-
+		for (TerminologyObject parent : object.getParents()) {
+			if (isIgnoredInHierarchy(parent, ignorePatterns)) return true;
 		}
-
 		return false;
 	}
 
@@ -161,14 +153,9 @@ public class D3webTestUtils {
 		for (Pair<Pattern, Boolean> pair : ignorePatterns) {
 			if (isMatching(object, pair)) return pair.getB();
 		}
-
-		TerminologyObject[] parents = object.getParents();
-
-		for (int i = 0; i < parents.length; i++) {
-			if (isIgnoredInHierarchy(parents[i], ignorePatterns)) return true;
-
+		for (TerminologyObject parent : object.getParents()) {
+			if (isIgnoredInHierarchy(parent, ignorePatterns)) return true;
 		}
-
 		return false;
 	}
 

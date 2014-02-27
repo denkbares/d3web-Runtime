@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import de.d3web.strings.Strings;
+
 /**
  * Abstract implementation of a test that easily enables basic argument
  * checking.
@@ -47,6 +49,9 @@ public abstract class AbstractTest<T> implements Test<T> {
 
 	protected void addParameter(String name, TestParameter.Mode mode, String description, String... options) {
 		argParameters.add(new TestParameter(name, mode, description, options));
+	}
+	protected void addParameter(String name, TestParameter.Mode mode, String description, Enum<?>... options) {
+		argParameters.add(new TestParameter(name, mode, description, Strings.names(options)));
 	}
 
 	protected void addParameter(String name, TestParameter.Type type, TestParameter.Mode mode, String description) {

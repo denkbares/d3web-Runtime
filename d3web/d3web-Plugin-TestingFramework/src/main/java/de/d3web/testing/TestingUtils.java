@@ -31,7 +31,7 @@ import de.d3web.testing.Message.Type;
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 11.06.2012
  */
-public class Utils {
+public class TestingUtils {
 
 	/**
 	 * Checks whether the calling thread has been interrupted and throws
@@ -46,41 +46,11 @@ public class Utils {
 		}
 	}
 
-	/**
-	 * Method mostly for testing purposes.
-	 * 
-	 * @created 20.09.2012
-	 * @param testClass the name of the test you want to slow down (for log
-	 *        message)
-	 * @param milliseconds the estimated time in milliseconds by which the test
-	 *        will be slowed down
-	 * @param interruptible to make the test interruptible or not
-	 * @throws InterruptedException
-	 */
-	// public static void slowDowntest(Class<?> testClass, int milliseconds,
-	// boolean interruptible) throws InterruptedException {
-	// for (int i = 0; i < milliseconds; i++) {
-	// if (interruptible) {
-	// checkInterrupt();
-	// }
-	// List<Double> sortMe = new LinkedList<Double>();
-	// for (int j = 0; j < 3500; j++) {
-	// sortMe.add(Math.random());
-	// }
-	// Collections.sort(sortMe);
-	// if (i % 1000 == 0) Logger.getLogger(testClass.getName()).info(
-	// testClass.getSimpleName() + ": " + i + "/" + milliseconds +
-	// " iterations.");
-	// }
-	// Logger.getLogger(testClass.getName()).info(
-	// testClass.getSimpleName() + ": " + milliseconds + "/" + milliseconds
-	// + " iterations.");
-	// }
 
-	public static Message createErrorMessage(Collection<String> erroneousObjects, String failedMessage, Class<?> messageClass) {
+	public static Message createFailure(String failedMessage, Collection<String> erroneousObjects, Class<?> objectClass) {
 		ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
 		for (String object : erroneousObjects) {
-			messageObject.add(new MessageObject(object, messageClass));
+			messageObject.add(new MessageObject(object, objectClass));
 		}
 		String nameList = createTextFromList(erroneousObjects);
 		return new Message(Type.FAILURE, failedMessage + "\n" + nameList, messageObject);
