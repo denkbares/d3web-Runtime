@@ -179,8 +179,6 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * Starts a new propagation frame with a given time. If an other propagation
 	 * frame has already been opened, the specified time is ignored. For more
 	 * details see PropagationController.openProgagation()
-	 * 
-	 * @see PropagationController.openProgagation()
 	 */
 	@Override
 	public void openPropagation(long time) {
