@@ -54,9 +54,9 @@ public class FlowRun {
 
 	/**
 	 * Returns if the node has been activated by propagation within this flow
-	 * run. this means that the node has got an incoming edge in this flow run.
+	 * run. This means that the node has got an incoming edge in this flow run.
 	 * Please note that {@link #isActive(Node)} also returns true for start
-	 * nodes, regardless wether they have incoming active edges, while this
+	 * nodes, regardless whether they have incoming active edges, while this
 	 * method does not.
 	 * 
 	 * @created 28.02.2011
@@ -75,8 +75,8 @@ public class FlowRun {
 	 * method does not.
 	 * 
 	 * @created 28.02.2011
-	 * @param node the node to be checked to be activated
-	 * @return if the node is activated
+	 * @param edge the edge to be checked to be activated
+	 * @return if the edge is activated
 	 */
 	public boolean isActivated(Edge edge) {
 		Set<DiaFluxElement> supports = nodeSupports.get(edge.getEndNode());
