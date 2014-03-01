@@ -19,6 +19,8 @@
 package de.d3web.testing;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class holding a test instance ready to be executed with all specified
@@ -33,6 +35,8 @@ public class TestSpecification<T> {
 	private final String testObject;
 	private final String[] args;
 	private final String[][] ignores;
+
+	private final Map<String, Object> customInfos = new HashMap<String, Object>();
 
 	/**
 	 * @param test Instance of the test to be executed. (mandatory)
@@ -62,6 +66,29 @@ public class TestSpecification<T> {
 		return args;
 	}
 
+	/**
+	 * Returns the argument at the specified index or the default value if there are not enough
+	 * arguments specified by the user.
+	 *
+	 * @param index the index to get the argument for
+	 * @param defaultValue the default value if the argument is not specified
+	 * @return the argument at the specified index
+	 */
+	public String getArgument(int index, String defaultValue) {
+		return (index < args.length) ? args[index] : defaultValue;
+	}
+
+	/**
+	 * Returns the argument at the specified index or null if there are not enough
+	 * arguments specified by the user.
+	 *
+	 * @param index the index to get the argument for
+	 * @return the argument at the specified index
+	 */
+	public String getArgument(int index) {
+		return getArgument(index, null);
+	}
+
 	public String[][] getIgnores() {
 		return ignores;
 	}
@@ -74,4 +101,33 @@ public class TestSpecification<T> {
 		return testObject;
 	}
 
+	/**
+	 * Prepares this specification before the particular tests will be executed.
+	 */
+	public void prepareExecution() {
+		customInfos.clear();
+	}
+
+	/**
+	 * Sets a custom info object. These objects can be used by the test to place some
+	 * data to the test execution and recall it later, e.g. for summarizing the
+	 * test results. The stored objects will be lost for the next test run.
+	 *
+	 * @param key the key of the custom info object
+	 * @param value the custom info object
+	 */
+	public void setCustomInfo(String key, Object value) {
+		customInfos.put(key, value);
+	}
+	/**
+	 * Gets a custom info object. These objects can be used by the test to place some
+	 * data to the test execution and recall it later, e.g. for summarizing the
+	 * test results.
+	 *
+	 * @param key the key of the custom info object
+	 * @return the object previously stored by #setCustomInfo during the same test run
+	 */
+	public Object getCustomInfo(String key) {
+		return customInfos.get(key);
+	}
 }

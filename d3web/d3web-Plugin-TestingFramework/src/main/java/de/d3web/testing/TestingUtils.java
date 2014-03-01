@@ -46,6 +46,23 @@ public class TestingUtils {
 		}
 	}
 
+	public static Type getSummarizedType(TestResult testResult) {
+		Type t = Message.Type.SUCCESS;
+		for (String testObjectName : testResult.getTestObjectsWithUnexpectedOutcome()) {
+			Message test = testResult.getMessageForTestObject(testObjectName);
+			if (test == null || test.getType().equals(Type.ERROR)) {
+				return Type.ERROR;
+			}
+			if (test.getType().equals(Type.FAILURE)) {
+				t = Type.FAILURE;
+			}
+		}
+		return t;
+	}
+
+	public static void updateSummary(TestResult result) {
+		result.setSummary(new Message(getSummarizedType(result)));
+	}
 
 	public static Message createFailure(String failedMessage, Collection<String> erroneousObjects, Class<?> objectClass) {
 		ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();

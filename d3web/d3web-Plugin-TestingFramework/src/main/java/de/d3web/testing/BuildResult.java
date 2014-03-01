@@ -110,7 +110,7 @@ public final class BuildResult {
 	 * distinguishing builds later on, e.g. for rendering.
 	 * 
 	 * @created 18.09.2012
-	 * @param buildNumber
+	 * @param buildNumber the bild number to be set
 	 */
 	public void setBuildNumber(int buildNumber) {
 		this.buildNumber = buildNumber;
@@ -185,19 +185,23 @@ public final class BuildResult {
 	}
 
 	/**
-	 * Computes the overall TestResultType of this resultset, determined by the
-	 * "worst" Testresult
+	 * Computes the overall TestResultType of this result set, determined by the
+	 * "worst" test result
 	 * 
 	 * @created 03.06.2010
-	 * @return
+	 * @return the overall result type
 	 */
 	public Message.Type getOverallResult() {
 
 		Message.Type overallResult = Message.Type.SUCCESS;
 		for (TestResult testResult : testResults) {
-			if (testResult != null && testResult.getType().
-					compareTo(overallResult) < 0) {
-				overallResult = testResult.getType();
+			Message summary = testResult.getSummary();
+			if (summary == null) continue;
+			if (summary.getType().equals(Message.Type.ERROR)) {
+				return Message.Type.ERROR;
+			}
+			if (summary.getType().equals(Message.Type.FAILURE)){
+				overallResult = Message.Type.FAILURE;
 			}
 		}
 		return overallResult;
@@ -210,10 +214,14 @@ public final class BuildResult {
 	@Override
 	public String toString() {
 		StringBuilder build = new StringBuilder();
-		build.append("Build #" + getBuildNumber() + ", date: "
-				+ getBuildDate() + ", duration: " + buildDuration);
+		build.append("Build #")
+				.append(getBuildNumber())
+				.append(", date: ")
+				.append(getBuildDate())
+				.append(", duration: ")
+				.append(buildDuration);
 		for (TestResult result : getResults()) {
-			build.append("\n    " + result);
+			build.append("\n    ").append(result);
 		}
 		return build.toString();
 	}

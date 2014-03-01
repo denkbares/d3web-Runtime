@@ -137,7 +137,7 @@ public final class JPFPluginManager extends PluginManager {
 	}
 
 	@Override
-	public Extension[] getExtensions(String extendedPluginID, String extendedPointID) {
+	public synchronized Extension[] getExtensions(String extendedPluginID, String extendedPointID) {
 		List<Extension> result = new ArrayList<Extension>();
 		ExtensionPoint toolExtPoint = manager.getRegistry().getExtensionPoint(
 				extendedPluginID, extendedPointID);
@@ -157,7 +157,7 @@ public final class JPFPluginManager extends PluginManager {
 	}
 
 	@Override
-	public Extension[] getExtensions() {
+	public synchronized Extension[] getExtensions() {
 		List<Extension> result = new ArrayList<Extension>();
 		Collection<PluginDescriptor> pluginDescriptors = manager.getRegistry().getPluginDescriptors();
 		for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
@@ -186,7 +186,7 @@ public final class JPFPluginManager extends PluginManager {
 	}
 
 	@Override
-	public Plugin[] getPlugins() {
+	public synchronized Plugin[] getPlugins() {
 		// initialize plugins lazy
 		if (this.plugins == null) {
 			Collection<Plugin> result = new LinkedList<Plugin>();

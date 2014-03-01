@@ -39,8 +39,8 @@ public class TestManager {
 	 * Returns null if the test is not found.
 	 * 
 	 * @created 04.05.2012
-	 * @param testName
-	 * @return
+	 * @param testName the test to be searched
+	 * @return the test singleton
 	 */
 	public static Test<?> findTest(String testName) {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
@@ -82,10 +82,10 @@ public class TestManager {
 	}
 
 	/**
-	 * Searches and returns all plugged tests.
+	 * Searches and returns all test plugged into the current installation.
 	 * 
 	 * @created 31.07.2012
-	 * @return
+	 * @return the plugged test extensions
 	 */
 	public static List<Test<?>> findAllTests() {
 		List<Test<?>> result = new ArrayList<Test<?>>();

@@ -40,44 +40,28 @@ import org.w3c.dom.NodeList;
 import de.d3web.utils.Log;
 
 /**
- * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 13.06.2012
  */
 public class BuildResultPersistenceHandler {
 
 	private static final String DATE = "date";
-
 	private static final String DURATION = "duration";
-
 	private static final String SUCCESSES = "numberOfSuccessfullyTestedObjects";
-
 	private static final String BUILD = "build";
-
 	private static final String TEST_OBJECT = "testObject";
-
 	private static final String MESSAGE = "message";
-
 	private static final String TEXT = "text";
-
 	private static final String TYPE = "type";
-
+	private static final String SUMMARY = "summary";
 	private static final String CONFIGURATION = "configuration";
-
 	private static final String NAME = "name";
-
 	private static final String TEST = "test";
-
 	private static final String XMLNS = "xmlns";
-
 	private static final String DENKBARES = "http://www.denkbares.com";
-
 	private static final String RESULT_SCHEMA_FILE = "build_result.xsd";
-
 	private static final String XMLNS_XSI = "xmlns:xsi";
-
 	private static final String XML_SCHEM_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
-
 	private static final String XSI_SCHEMA_LOCATION = "xsi:schemaLocation";
 
 	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
@@ -135,19 +119,12 @@ public class BuildResultPersistenceHandler {
 		return document;
 	}
 
-	/**
-	 * 
-	 * @created 13.05.2013
-	 * @param document
-	 * @param result
-	 * @param test
-	 */
 	private static void writeMessages(Document document, TestResult result, Element parent, Collection<String> testObjects) {
 		for (String testObjectName : testObjects) {
 			Message message = result.getMessageForTestObject(testObjectName);
 			if (message == null) {
 				Log.warning("No message found for test object '" + testObjectName + "' in test '"
-								+ result.getTestName() + "'.");
+						+ result.getTestName() + "'.");
 				continue;
 			}
 
@@ -155,6 +132,16 @@ public class BuildResultPersistenceHandler {
 			messageElement.setAttribute(TYPE, message.getType().toString());
 			messageElement.setAttribute(TEXT, message.getText());
 			messageElement.setAttribute(TEST_OBJECT, testObjectName);
+			parent.appendChild(messageElement);
+		}
+
+		// new: append summary message if available
+		Message summary = result.getSummary();
+		if (summary != null) {
+			Element messageElement = document.createElement(MESSAGE);
+			messageElement.setAttribute(TYPE, summary.getType().toString());
+			messageElement.setAttribute(TEXT, summary.getText());
+			messageElement.setAttribute(SUMMARY, "true");
 			parent.appendChild(messageElement);
 		}
 	}
@@ -192,7 +179,7 @@ public class BuildResultPersistenceHandler {
 				}
 				catch (NumberFormatException e) {
 					Log.warning("NumberFormatException in build result persistence when loading number of succesful test object runs: "
-									+ successfulTests);
+							+ successfulTests);
 				}
 			}
 
@@ -204,6 +191,7 @@ public class BuildResultPersistenceHandler {
 			List<String> configParameters = TestParser.splitParameters(configuration);
 			Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
 			Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
+			Message summary = null;
 			for (int j = 0; j < messageElements.getLength(); j++) {
 				Element messageElement = (Element) messageElements.item(j);
 				if (messageElement != null) {
@@ -216,34 +204,45 @@ public class BuildResultPersistenceHandler {
 					if (text.length() == 0) {
 						text = null;
 					}
-					if (typeString.equals(Message.Type.SUCCESS.toString())) {
+					Message message = new Message(type, text);
+					// for new, we might have an additional message that
+					// represents the total test summary
+					if ("true".equalsIgnoreCase(messageElement.getAttribute(SUMMARY))) {
+						summary = message;
+					}
+					else if (typeString.equals(Message.Type.SUCCESS.toString())) {
 						String testObjectName = messageElement.getAttribute(TEST_OBJECT);
-						Message m = new Message(type, text);
-						expectedMessages.put(testObjectName, m);
+						expectedMessages.put(testObjectName, message);
 						successfulTests++;
 					}
 					else {
 						String testObjectName = messageElement.getAttribute(TEST_OBJECT);
-						Message m = new Message(type, text);
-						unexpectedMessages.put(testObjectName, m);
+						unexpectedMessages.put(testObjectName, message);
 					}
 				}
 			}
+			TestResult testResult;
 			if (successfulTests > 0) {
 				// was stored non-verbose persistence
-				resultList.add(TestResult.createTestResult(testName,
+				testResult = TestResult.createTestResult(testName,
 						configParameters.toArray(new String[configParameters.size()]),
-						unexpectedMessages,
-						successfulTests));
+						unexpectedMessages, successfulTests, null);
 			}
 			else {
 				// was stored verbose persistence
 				verbosePersistence = true;
-				resultList.add(TestResult.createTestResult(testName,
+				testResult = TestResult.createTestResult(testName,
 						configParameters.toArray(new String[configParameters.size()]),
-						unexpectedMessages,
-						expectedMessages));
+						unexpectedMessages, expectedMessages, null);
 			}
+			// backward compatibility: create summary as done before
+			if (summary == null) {
+				TestingUtils.updateSummary(testResult);
+			}
+			else {
+				testResult.setSummary(summary);
+			}
+			resultList.add(testResult);
 		}
 
 		return BuildResult.createBuildResult(duration, date, resultList,

@@ -39,18 +39,17 @@ import de.d3web.utils.Log;
  */
 
 /**
- * A TestExecutor executes a set of tests. It can use multiple threads to
- * execute the testing tasks in parallel. It uses updates a ProgressListener on
- * finished tasks.
- * 
+ * A TestExecutor executes a set of tests. It can use multiple threads to execute the testing tasks
+ * in parallel. It uses updates a ProgressListener on finished tasks.
+ *
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public class TestExecutor {
 
 	/**
-	 * Here the number of (parllel) threads are configured that will be used to
-	 * execute the testing tasks.
+	 * Here the number of (parllel) threads are configured that will be used to execute the testing
+	 * tasks.
 	 */
 	private static final int NUMBER_OF_PARALLEL_THREADS = 2;
 
@@ -67,9 +66,9 @@ public class TestExecutor {
 
 	/**
 	 * Returns the current build or null if the build has been terminated.
-	 * 
-	 * @created 14.08.2012
+	 *
 	 * @return the current build
+	 * @created 14.08.2012
 	 */
 	public BuildResult getBuildResult() {
 		if (executorThread == null || executorThread.isInterrupted() || isRunning()) return null;
@@ -88,30 +87,39 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Runs the tests given by the task list using the provided
-	 * TestObjectProvider. A BuildResultSet with the given build-number is
-	 * created.
-	 * 
+	 * Runs the tests given by the task list using the provided TestObjectProvider. A BuildResultSet
+	 * with the given build-number is created.
+	 *
 	 * @created 22.05.2012
 	 */
 	public void run() {
 		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
 
+		// checks the given tests of validity and only
+		// returns the valid ones
+		Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
+
+		// creates and returns a CallableTest for each Test and TestObject
+		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests =
+				getCallableTestsMap(validSpecifications);
 		try {
-			// checks the given tests of validity and only
-			// returns the valid ones
-			Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
-
-			// creates and returns a CallableTest for each Test and TestObject
-			Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = getCallableTestsMap(validSpecifications);
-
 			initProgressFields(callableTests);
-
 			executeTests(callableTests);
 		}
 		finally {
-			shutdown(buildStartTime);
+			shutdown();
+			updateTestResults(callableTests);
+			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
+		}
+	}
+
+	private void updateTestResults(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests) {
+		for (TestSpecification<?> specification : callableTests.keySet()) {
+			Collection<CallableTest<?>> ct = callableTests.get(specification);
+			if (ct.isEmpty()) continue;
+			TestResult testResult = ct.iterator().next().testResult;
+			specification.getTest().updateSummary(specification, testResult);
 		}
 	}
 
@@ -149,7 +157,8 @@ public class TestExecutor {
 	@SuppressWarnings("UnnecessaryLabelOnContinueStatement")
 	private Collection<TestSpecification<?>> getValidSpecifications() {
 		Collection<TestSpecification<?>> validTests = new ArrayList<TestSpecification<?>>();
-		prepareTests: for (TestSpecification<?> specification : specifications) {
+		prepareTests:
+		for (TestSpecification<?> specification : specifications) {
 
 			String[] testArgs = specification.getArguments();
 			String testObjectID = specification.getTestObject();
@@ -187,8 +196,8 @@ public class TestExecutor {
 			// create result
 			TestResult testResult = new TestResult(testName, testArgs);
 			build.addTestResult(testResult);
-			Collection<CallableTest<?>> futuresForCallableTest = getCallableTests(specification,
-					testResult);
+			Collection<CallableTest<?>> futuresForCallableTest =
+					getCallableTests(specification, testResult);
 			callableTests.put(specification, futuresForCallableTest);
 		}
 		return callableTests;
@@ -219,8 +228,10 @@ public class TestExecutor {
 
 	private void executeTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
 		// finally run execute on callable tests
-		outerLoop: for (TestSpecification<?> specification : callablesMap.keySet()) {
+		outerLoop:
+		for (TestSpecification<?> specification : callablesMap.keySet()) {
 			Collection<CallableTest<?>> callableTests = callablesMap.get(specification);
+			specification.prepareExecution();
 			for (CallableTest<?> callableTest : callableTests) {
 				try {
 					executor.execute(new FutureTestTask(callableTest));
@@ -248,16 +259,13 @@ public class TestExecutor {
 		progressListener.updateProgress(1f, "Aborted, please wait...");
 	}
 
-	private void shutdown(long buildStartTime) {
+	private void shutdown() {
 		try {
 			executor.shutdown();
 			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		}
 		catch (InterruptedException e) {
 			setTerminateStatus();
-		}
-		finally {
-			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
 		}
 	}
 
@@ -266,10 +274,10 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Terminates/aborts all running tests as fast as possible. This method does
-	 * not wait until the tests really have been terminated, use
-	 * {@link TestExecutor#awaitTermination()} for this purpose.
-	 * 
+	 * Terminates/aborts all running tests as fast as possible. This method does not wait until the
+	 * tests really have been terminated, use {@link TestExecutor#awaitTermination()} for this
+	 * purpose.
+	 *
 	 * @created 21.09.2012
 	 */
 	public void terminate() {
@@ -281,10 +289,9 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Blocks/waits until all running tests are done, tests are not aborted or
-	 * shutdown by calling this method. Given timeout defines the maximum waited
-	 * time until the method returns.
-	 * 
+	 * Blocks/waits until all running tests are done, tests are not aborted or shutdown by calling
+	 * this method. Given timeout defines the maximum waited time until the method returns.
+	 *
 	 * @created 17.12.2013
 	 */
 	public void awaitTermination(long timeout, TimeUnit unit) {
@@ -299,26 +306,12 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Blocks/waits until all running tests are done, tests are not aborted by
-	 * calling this method.
-	 * 
+	 * Blocks/waits until all running tests are done, tests are not aborted by calling this method.
+	 *
 	 * @created 17.12.2013
 	 */
 	public void awaitTermination() {
 		awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-	}
-
-	private static <T> T cast(Object object, Class<T> objectClass) {
-		// first check null, because Class.isInstance differs from
-		// "instanceof"-operator for null objects
-		if (object == null) return null;
-
-		// check the type of the test-object
-		if (!objectClass.isInstance(object)) {
-			throw new ClassCastException();
-		}
-		// and securely cast
-		return objectClass.cast(object);
 	}
 
 	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult) {
@@ -336,7 +329,10 @@ public class TestExecutor {
 		}
 
 		TestResult result = new TestResult(test.getName(), checkResult.getArguments());
-		if (message != null) result.addUnexpectedMessage(testObjectName, message);
+		if (message != null) {
+			result.addUnexpectedMessage(testObjectName, message);
+			result.setSummary(new Message(Type.ERROR));
+		}
 		return result;
 	}
 
@@ -363,21 +359,15 @@ public class TestExecutor {
 	class CallableTest<T> implements Callable<Void> {
 
 		private final String testObjectName;
+		private TestSpecification<T> specification;
 		private final T testObject;
-		private final Test<T> test;
 		private final TestResult testResult;
-		private final String[] args;
-		private final String testname;
-		private final String[][] ignores;
 
 		public CallableTest(TestSpecification<T> specification, String testObjectName, T testObject, TestResult testresult) {
-			this.test = specification.getTest();
+			this.specification = specification;
 			this.testObject = testObject;
 			this.testObjectName = testObjectName;
 			this.testResult = testresult;
-			this.args = specification.getArguments();
-			this.ignores = specification.getIgnores();
-			this.testname = specification.getTestName();
 		}
 
 		public void testStarted() {
@@ -408,7 +398,7 @@ public class TestExecutor {
 		}
 
 		public String getMessage() {
-			return testname + ": " + testObjectName;
+			return specification.getTestName() + ": " + testObjectName;
 		}
 
 		@Override
@@ -422,8 +412,8 @@ public class TestExecutor {
 							Message.Type.ERROR, "Test-object was null."));
 					return null;
 				}
-				Message message = test.execute(cast(testObject, test.getTestObjectClass()), args,
-						ignores);
+				Test<T> test = specification.getTest();
+				Message message = test.execute(specification, testObject);
 				if (message.getType().equals(Message.Type.SUCCESS)) {
 					testResult.addExpectedMessage(testObjectName, message);
 				}
@@ -436,7 +426,8 @@ public class TestExecutor {
 				throw e;
 			}
 			catch (Exception e) {
-				String message = "Unexpected error in test " + testname + ", " +
+				String message = "Unexpected error in test " +
+						specification.getTestName() + ", " +
 						"during testing '" + testObjectName + "'";
 				testResult.addUnexpectedMessage(testObjectName,
 						new Message(Message.Type.ERROR, message + ": " + e));
@@ -445,5 +436,4 @@ public class TestExecutor {
 			}
 		}
 	}
-
 }

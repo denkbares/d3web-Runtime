@@ -20,7 +20,7 @@
 package de.d3web.plugin;
 
 /**
- * Via this abstract class a Pluginmanager can be accessed. The pluginmanager
+ * Via this abstract class a PluginManager can be accessed. The plugin manager
  * can be used to access the extensions
  * 
  * @author Markus Friedrich (denkbares GmbH)
@@ -30,7 +30,7 @@ public abstract class PluginManager {
 	protected static PluginManager instance;
 
 	/**
-	 * This method is used to get an array of all Extensions, resgistered in
+	 * This method is used to get an array of all Extensions, registered in
 	 * this plugin manager.
 	 * 
 	 * @return array of all registered Extensions
@@ -53,11 +53,11 @@ public abstract class PluginManager {
 	 * 
 	 * @param extendedPluginID ID of the Plugin of the extended ExtensionPoint
 	 * @param extendedPointID ID of the extended ExtensionPoint
+	 * @param pluginID ID of the Plugin
 	 * @param extensionID ID of the Extension
-	 * @param extensionID
 	 * @return Extension specified with the parameters
 	 */
-	public abstract Extension getExtension(String extendetPluginID, String extendetPointID, String pluginID, String extensionID);
+	public abstract Extension getExtension(String extendedPluginID, String extendedPointID, String pluginID, String extensionID);
 
 	/**
 	 * Returns the list of all installed Plugins available to this manager.
@@ -70,7 +70,7 @@ public abstract class PluginManager {
 	 * Returns the plugin with the specified id
 	 * 
 	 * @param id of the plugin
-	 * @return the plugin with the speciefied id, if no plugin with the id
+	 * @return the plugin with the specified id, if no plugin with the id
 	 *         exists, null will be returned
 	 */
 	public abstract Plugin getPlugin(String id);

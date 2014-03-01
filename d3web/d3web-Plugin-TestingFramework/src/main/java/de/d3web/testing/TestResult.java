@@ -29,7 +29,6 @@ import java.util.TreeMap;
 import de.d3web.testing.Message.Type;
 
 /**
- * 
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
@@ -38,18 +37,17 @@ public class TestResult implements Comparable<TestResult> {
 	private final String[] configuration;
 	private final String testName;
 
+	private Message summary = null;
+
 	private final Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
 	private final Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
 
-	// private int successfullTestObjectRuns = 0;
-
 	/**
-	 * Creates a new TestResult for the specified test with the specified
-	 * arguments.
-	 * 
+	 * Creates a new TestResult for the specified test with the specified arguments.
+	 *
 	 * @param testName name of the test
-	 * @param configuration configuration parameters, if there are any, null or
-	 *        empty array otherwise
+	 * @param configuration configuration parameters, if there are any, null or empty array
+	 * otherwise
 	 */
 	public TestResult(String testName, String[] configuration) {
 		if (configuration == null) throw new NullPointerException();
@@ -67,22 +65,23 @@ public class TestResult implements Comparable<TestResult> {
 	// }
 	// }
 
-	private TestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages) {
+	private TestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages, Message summary) {
 		this(testName, configuration);
 		this.unexpectedMessages.putAll(unexpectedMessages);
 		this.expectedMessages.putAll(expectedMessages);
+		this.summary = summary;
 	}
 
-	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, int successfulRuns) {
+	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, int successfulRuns, Message summary) {
 		Map<String, Message> expectedMessages = new TreeMap<String, Message>();
 		for (int i = 0; i < successfulRuns; i++) {
 			expectedMessages.put(generateUnknownTestObjectString(i), Message.SUCCESS);
 		}
-		return new TestResult(testName, configuration, unexpectedMessages, expectedMessages);
+		return new TestResult(testName, configuration, unexpectedMessages, expectedMessages, summary);
 	}
 
-	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages) {
-		return new TestResult(testName, configuration, unexpectedMessages, expectedMessages);
+	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages, Message summary) {
+		return new TestResult(testName, configuration, unexpectedMessages, expectedMessages, summary);
 	}
 
 	public String getTestName() {
@@ -90,14 +89,14 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	public boolean isSuccessful() {
-		return getType() == Message.Type.SUCCESS;
+		return summary != null && summary.getType() == Message.Type.SUCCESS;
 	}
 
 	/**
 	 * Returns the arguments/parameters with which the test was executed.
-	 * 
-	 * @created 22.05.2012
+	 *
 	 * @return
+	 * @created 22.05.2012
 	 */
 	public String[] getConfiguration() {
 		return configuration;
@@ -123,9 +122,9 @@ public class TestResult implements Comparable<TestResult> {
 
 	/**
 	 * Returns if the test result described by this object has a configuration
-	 * 
-	 * @created 30.05.2011
+	 *
 	 * @return if this result has a configuration
+	 * @created 30.05.2011
 	 */
 	public boolean hasConfiguration() {
 		return this.configuration != null && !(this.configuration.length == 0);
@@ -140,7 +139,7 @@ public class TestResult implements Comparable<TestResult> {
 		}
 		result = prime * result
 				+ ((unexpectedMessages == null) ? 0 : unexpectedMessages.hashCode());
-		result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+		result = prime * result + ((getSummary() == null) ? 0 : getSummary().hashCode());
 		result = prime * result + getSuccessfullTestObjectRuns();
 		return result;
 	}
@@ -156,43 +155,45 @@ public class TestResult implements Comparable<TestResult> {
 		}
 		else if (!Arrays.equals(configuration, other.configuration)) return false;
 		Collection<String> otherTestObjectNames = other.getTestObjectsWithUnexpectedOutcome();
-		if (getTestObjectsWithUnexpectedOutcome().size() != otherTestObjectNames.size()) return false;
-		if (getType() != other.getType()) return false;
+		if (getTestObjectsWithUnexpectedOutcome().size() != otherTestObjectNames.size())
+			return false;
+		if (getSummary() == null) {
+			if (other.getSummary() != null) return false;
+		}
+		else if (!getSummary().equals(other.getSummary())) return false;
 		if (getSuccessfullTestObjectRuns() != other.getSuccessfullTestObjectRuns()) return false;
 		if (!unexpectedMessages.equals(other.unexpectedMessages)) return false;
 		return true;
 	}
 
 	/**
-	 * Returns the number of test objects that have been successfully tested by
-	 * this test.
-	 * 
-	 * 
-	 * @created 26.11.2012
+	 * Returns the number of test objects that have been successfully tested by this test.
+	 *
 	 * @return
+	 * @created 26.11.2012
 	 */
 	public int getSuccessfullTestObjectRuns() {
 		return this.expectedMessages.size();
 	}
 
 	/**
-	 * Summarized type of the contained messages.
-	 * 
+	 * Gets the summary of the test result.
+	 *
+	 * @return the summarized messages
 	 * @created 22.05.2012
-	 * @return
 	 */
-	public Type getType() {
-		Type t = Message.Type.SUCCESS;
-		for (String testObjectName : this.unexpectedMessages.keySet()) {
-			Message test = unexpectedMessages.get(testObjectName);
-			if (test == null || test.getType().equals(Type.ERROR)) {
-				return Type.ERROR;
-			}
-			if (test.getType().equals(Type.FAILURE)) {
-				t = Type.FAILURE;
-			}
-		}
-		return t;
+	public Message getSummary() {
+		return summary;
+	}
+
+	/**
+	 * Sets the summary of this test result.
+	 *
+	 * @param summary the new summarized type of the messages
+	 * @created 22.05.2012
+	 */
+	public void setSummary(Message summary) {
+		this.summary = summary;
 	}
 
 	@Override
@@ -214,12 +215,12 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	/**
-	 * Adds a test object/message pair to this TestResult. Note: If the type of
-	 * the message is "SUCCESS" then the message text will be ignored.
-	 * 
-	 * @created 14.08.2012
+	 * Adds a test object/message pair to this TestResult. Note: If the type of the message is
+	 * "SUCCESS" then the message text will be ignored.
+	 *
 	 * @param testObjectName
 	 * @param message
+	 * @created 14.08.2012
 	 */
 	public void addUnexpectedMessage(String testObjectName, Message message) {
 		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
@@ -232,12 +233,12 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	/**
-	 * Adds a test object/message pair to this TestResult. Note: If the type of
-	 * the message is "SUCCESS" then the message text will be ignored.
-	 * 
-	 * @created 14.08.2012
+	 * Adds a test object/message pair to this TestResult. Note: If the type of the message is
+	 * "SUCCESS" then the message text will be ignored.
+	 *
 	 * @param testObjectName
 	 * @param message
+	 * @created 14.08.2012
 	 */
 	public void addExpectedMessage(String testObjectName, Message message) {
 		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
@@ -269,14 +270,13 @@ public class TestResult implements Comparable<TestResult> {
 
 	/**
 	 * Increments the number of successful test object runs of this test result
-	 * 
+	 *
 	 * @created 26.11.2012
 	 */
 	// public void incSuccessfulTestObjectRuns() {
 	// this.expectedMessages.put(generateUnknownTestObjectString(expectedMessages.size()),
 	// Message.SUCCESS);
 	// }
-
 	private static String generateUnknownTestObjectString(int i) {
 		return "unknown-TestObject-" + new Integer(i).toString();
 	}

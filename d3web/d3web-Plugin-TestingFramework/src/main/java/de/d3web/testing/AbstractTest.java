@@ -26,9 +26,8 @@ import java.util.List;
 import de.d3web.strings.Strings;
 
 /**
- * Abstract implementation of a test that easily enables basic argument
- * checking.
- * 
+ * Abstract implementation of a test that easily enables basic argument checking.
+ *
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 30.05.2012
  */
@@ -50,6 +49,7 @@ public abstract class AbstractTest<T> implements Test<T> {
 	protected void addParameter(String name, TestParameter.Mode mode, String description, String... options) {
 		argParameters.add(new TestParameter(name, mode, description, options));
 	}
+
 	protected void addParameter(String name, TestParameter.Mode mode, String description, Enum<?>... options) {
 		argParameters.add(new TestParameter(name, mode, description, Strings.names(options)));
 	}
@@ -74,6 +74,26 @@ public abstract class AbstractTest<T> implements Test<T> {
 	@Override
 	public ArgsCheckResult checkIgnore(String[] args) {
 		return checkParameter(this, args, ignoreParameters, true);
+	}
+
+	@Override
+	public Message execute(TestSpecification<T> specification, T testObject) throws InterruptedException {
+		return execute(testObject, specification.getArguments(), specification.getIgnores());
+	}
+
+	/**
+	 * Optional method to provide backward compatibility for tests.
+	 * Overwrite either this method or (better) #execute(TestSpecification&lt;T&gt;, T)
+	 *
+	 * @param testObject the object to be tested
+	 * @param args the arguments of the test specification
+	 * @param ignores the ignore arguments of the test specification
+	 * @return the result of the test as a message
+	 * @throws InterruptedException if the user has interrupted the test
+	 * @see #execute(TestSpecification, Object)
+	 */
+	public Message execute(T testObject, String[] args, String[]... ignores) throws InterruptedException {
+		return null;
 	}
 
 	private static ArgsCheckResult checkParameter(Test<?> test, String[] args, List<TestParameter> parameters, boolean ignoreParams) {
@@ -121,6 +141,11 @@ public abstract class AbstractTest<T> implements Test<T> {
 	@Override
 	public String getName() {
 		return TestManager.getTestName(this);
+	}
+
+	@Override
+	public void updateSummary(TestSpecification<?> specification, TestResult result) {
+		TestingUtils.updateSummary(result);
 	}
 
 	private static int getNumberOfMandatoryParameters(List<TestParameter> parameters) {
