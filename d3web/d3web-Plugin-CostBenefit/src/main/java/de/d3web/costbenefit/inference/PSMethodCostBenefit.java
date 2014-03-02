@@ -535,6 +535,24 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @return set of blocked QContainers
 	 */
 	public static Set<QContainer> getBlockedQContainers(Session session) {
+		return getBlockedQContainers(session, true, true);
+	}
+
+	/**
+	 * Calculates a set of all QContainers, which are blocked by final
+	 * questions. There are two flags to specify, if contraindicated or
+	 * permanentlyrelevant TS should also be returned as blocked, even if they
+	 * are not blocked by final questions
+	 * 
+	 * @created 01.03.2014
+	 * @param session actual session
+	 * @param includeContraindicated if true, contraindicated QContainers are
+	 *        included in the returned set
+	 * @param includePermanentlyRelevant if true, permanently relevant
+	 *        QContainers are included in the returned set
+	 * @return set of blocked QContainers
+	 */
+	public static Set<QContainer> getBlockedQContainers(Session session, boolean includeContraindicated, boolean includePermanentlyRelevant) {
 		Set<QContainer> result = new HashSet<QContainer>();
 		Session emptySession = new CopiedSession(session);
 		Map<Question, Value> finalValues = getFinalValues(session);
@@ -545,13 +563,15 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 		for (StateTransition stateTransition : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
-			if (session.getBlackboard().getIndication(stateTransition.getQcontainer()).hasState(
-					State.CONTRA_INDICATED)) {
+			if (includeContraindicated
+					&& session.getBlackboard().getIndication(stateTransition.getQcontainer()).hasState(
+							State.CONTRA_INDICATED)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
-			if (stateTransition.getQcontainer().getInfoStore().getValue(
-					PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
+			if (includePermanentlyRelevant
+					&& stateTransition.getQcontainer().getInfoStore().getValue(
+							PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
