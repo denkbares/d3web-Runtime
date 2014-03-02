@@ -47,6 +47,11 @@ public class TestingUtils {
 	}
 
 	public static Type getSummarizedType(TestResult testResult) {
+		// return error if we have no test objects
+		if (testResult.getSuccessfullTestObjectRuns() == 0
+				&& testResult.getTestObjectsWithUnexpectedOutcome().isEmpty()) {
+			return Type.ERROR;
+		}
 		Type t = Message.Type.SUCCESS;
 		for (String testObjectName : testResult.getTestObjectsWithUnexpectedOutcome()) {
 			Message test = testResult.getMessageForTestObject(testObjectName);

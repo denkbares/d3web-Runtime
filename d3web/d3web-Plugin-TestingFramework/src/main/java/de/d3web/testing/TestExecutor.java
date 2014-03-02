@@ -219,9 +219,10 @@ public class TestExecutor {
 			result.add(callableTest);
 		}
 
+		// if no test can be applied, we assume test to be erroneous
 		if (noTestObjects) {
-			testResult.addUnexpectedMessage("", new Message(Message.Type.ERROR,
-					"No test-object found."));
+			testResult.setSummary(new Message(Message.Type.ERROR,
+					"No test objects available for this test."));
 		}
 		return result;
 	}
