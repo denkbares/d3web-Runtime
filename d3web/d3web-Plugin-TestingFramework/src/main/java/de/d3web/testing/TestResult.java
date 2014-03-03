@@ -21,12 +21,9 @@ package de.d3web.testing;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-import de.d3web.testing.Message.Type;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)
@@ -95,7 +92,7 @@ public class TestResult implements Comparable<TestResult> {
 	/**
 	 * Returns the arguments/parameters with which the test was executed.
 	 *
-	 * @return
+	 * @return the test configuration (arguments)
 	 * @created 22.05.2012
 	 */
 	public String[] getConfiguration() {
@@ -140,7 +137,7 @@ public class TestResult implements Comparable<TestResult> {
 		result = prime * result
 				+ ((unexpectedMessages == null) ? 0 : unexpectedMessages.hashCode());
 		result = prime * result + ((getSummary() == null) ? 0 : getSummary().hashCode());
-		result = prime * result + getSuccessfullTestObjectRuns();
+		result = prime * result + getSuccessfullyTestedObjects();
 		return result;
 	}
 
@@ -161,18 +158,17 @@ public class TestResult implements Comparable<TestResult> {
 			if (other.getSummary() != null) return false;
 		}
 		else if (!getSummary().equals(other.getSummary())) return false;
-		if (getSuccessfullTestObjectRuns() != other.getSuccessfullTestObjectRuns()) return false;
-		if (!unexpectedMessages.equals(other.unexpectedMessages)) return false;
-		return true;
+		return getSuccessfullyTestedObjects() == other.getSuccessfullyTestedObjects()
+				&& unexpectedMessages.equals(other.unexpectedMessages);
 	}
 
 	/**
 	 * Returns the number of test objects that have been successfully tested by this test.
 	 *
-	 * @return
+	 * @return the number of successfully tested objects
 	 * @created 26.11.2012
 	 */
-	public int getSuccessfullTestObjectRuns() {
+	public int getSuccessfullyTestedObjects() {
 		return this.expectedMessages.size();
 	}
 
@@ -201,51 +197,50 @@ public class TestResult implements Comparable<TestResult> {
 		StringBuilder result = new StringBuilder();
 		String configurationString = getConfigurationString();
 		configurationString = configurationString.isEmpty() ? "none" : configurationString;
-		result.append(getTestName() + " (configuration: " + configurationString
-				+ ", successes: "
-				+ getSuccessfullTestObjectRuns() + "): {");
+		result.append(getTestName())
+				.append(" (configuration: ").append(configurationString)
+				.append(", successes: ").append(getSuccessfullyTestedObjects())
+				.append("): {");
 		boolean first = true;
 		for (Entry<String, Message> messageEntry : this.unexpectedMessages.entrySet()) {
 			if (first) first = false;
 			else result.append(", ");
-			result.append(messageEntry.getKey() + ": " + messageEntry.getValue());
+			result.append(messageEntry.getKey()).append(": ").append(messageEntry.getValue());
 		}
 		result.append("}");
 		return result.toString();
 	}
 
 	/**
-	 * Adds a test object/message pair to this TestResult. Note: If the type of the message is
-	 * "SUCCESS" then the message text will be ignored.
+	 * Adds a test object/message pair to this TestResult. The message must not have the message
+	 * type Type#SUCCESS.
 	 *
-	 * @param testObjectName
-	 * @param message
+	 * @param testObjectName the test object name
+	 * @param message the fail or error message
 	 * @created 14.08.2012
 	 */
 	public void addUnexpectedMessage(String testObjectName, Message message) {
 		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
 		if (message == null) throw new NullPointerException("Message cannot be null");
 		if (message.getType().equals(Message.Type.SUCCESS)) {
-			throw new InputMismatchException("success logged as full message: "
-					+ message.toString());
+			throw new IllegalArgumentException("wrong failed/error message type: " + message);
 		}
 		this.unexpectedMessages.put(testObjectName, message);
 	}
 
 	/**
-	 * Adds a test object/message pair to this TestResult. Note: If the type of the message is
-	 * "SUCCESS" then the message text will be ignored.
+	 * Adds a test object/message pair to this TestResult. The message must be a success message of
+	 * type#SUCCESS. Note: The message text of "SUCCESS" message will be ignored.
 	 *
-	 * @param testObjectName
-	 * @param message
+	 * @param testObjectName the test object name
+	 * @param message the success message
 	 * @created 14.08.2012
 	 */
 	public void addExpectedMessage(String testObjectName, Message message) {
 		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
 		if (message == null) throw new NullPointerException("Message cannot be null");
 		if (!message.getType().equals(Message.Type.SUCCESS)) {
-			throw new InputMismatchException("not-success message logged as success message: "
-					+ message.toString());
+			throw new IllegalArgumentException("wrong success message type: " + message);
 		}
 		this.expectedMessages.put(testObjectName, message);
 	}
@@ -278,6 +273,6 @@ public class TestResult implements Comparable<TestResult> {
 	// Message.SUCCESS);
 	// }
 	private static String generateUnknownTestObjectString(int i) {
-		return "unknown-TestObject-" + new Integer(i).toString();
+		return "unknown-TestObject-" + i;
 	}
 }

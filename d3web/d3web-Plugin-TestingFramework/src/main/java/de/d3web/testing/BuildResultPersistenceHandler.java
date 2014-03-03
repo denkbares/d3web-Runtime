@@ -101,7 +101,7 @@ public class BuildResultPersistenceHandler {
 			else {
 				// add required test attribute for aggregated persistence of
 				// successful tests
-				String numberOfSuccessfulTestsString = "" + result.getSuccessfullTestObjectRuns();
+				String numberOfSuccessfulTestsString = "" + result.getSuccessfullyTestedObjects();
 				test.setAttribute(SUCCESSES, numberOfSuccessfulTestsString);
 			}
 

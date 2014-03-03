@@ -27,18 +27,18 @@ import de.d3web.testing.Message.Type;
 
 /**
  * General utility class of the Testing Framework.
- * 
+ *
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 11.06.2012
  */
 public class TestingUtils {
 
 	/**
-	 * Checks whether the calling thread has been interrupted and throws
-	 * InterruptedException in case.
-	 * 
-	 * @created 16.08.2012
+	 * Checks whether the calling thread has been interrupted and throws InterruptedException in
+	 * case.
+	 *
 	 * @throws InterruptedException
+	 * @created 16.08.2012
 	 */
 	public static void checkInterrupt() throws InterruptedException {
 		if (Thread.interrupted()) {
@@ -48,7 +48,7 @@ public class TestingUtils {
 
 	public static Type getSummarizedType(TestResult testResult) {
 		// return error if we have no test objects
-		if (testResult.getSuccessfullTestObjectRuns() == 0
+		if (testResult.getSuccessfullyTestedObjects() == 0
 				&& testResult.getTestObjectsWithUnexpectedOutcome().isEmpty()) {
 			return Type.ERROR;
 		}
@@ -83,7 +83,7 @@ public class TestingUtils {
 
 		StringBuilder htmlList = new StringBuilder();
 		for (String listItem : list) {
-			htmlList.append("* " + listItem);
+			htmlList.append("* ").append(listItem);
 			htmlList.append("\n");
 		}
 		htmlList.deleteCharAt(htmlList.length() - 1);
@@ -91,9 +91,8 @@ public class TestingUtils {
 	}
 
 	/**
-	 * Compiles ignores to a list of {@link Pattern}. Patterns are applied
-	 * case-insensitive.
-	 * 
+	 * Compiles ignores to a list of {@link Pattern}. Patterns are applied case-insensitive.
+	 *
 	 * @param ignores the patterns as string to compile
 	 * @return the list of patterns
 	 */
@@ -107,11 +106,11 @@ public class TestingUtils {
 
 	/**
 	 * Checks if a string should be ignored based on a list of {@link Pattern}s.
-	 * 
-	 * @created 06.03.2013
+	 *
 	 * @param object the name of the object to test
 	 * @param ignorePatterns the ignores
 	 * @return s if the object should be ignored
+	 * @created 06.03.2013
 	 */
 	public static boolean isIgnored(String object, Collection<Pattern> ignorePatterns) {
 		for (Pattern pattern : ignorePatterns) {
@@ -121,13 +120,13 @@ public class TestingUtils {
 	}
 
 	/**
-	 * Returns a new list without the strings to be ignored according to the
-	 * ignorePatterns.
-	 * 
-	 * @created 27.05.2013
-	 * @param objects
-	 * @param ignorePatterns
+	 * Filters the specified strings (test object names) and returns a new list without the strings
+	 * to be ignored according to the ignorePatterns.
+	 *
+	 * @param objects the test object names
+	 * @param ignorePatterns the object name patterns to be ignored
 	 * @return a new list, containing only the strings not to be ignored
+	 * @created 27.05.2013
 	 */
 	public static Collection<String> filterIgnored(Collection<String> objects, Collection<Pattern> ignorePatterns) {
 		Collection<String> result = new ArrayList<String>(objects);

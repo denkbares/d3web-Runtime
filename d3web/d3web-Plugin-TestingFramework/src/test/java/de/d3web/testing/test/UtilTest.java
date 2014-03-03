@@ -30,9 +30,9 @@ public class UtilTest {
 		String string4 = "xyz";
 		strings.add(string4);
 
-		Collection<Pattern> ignorePatterns = TestingUtils.compileIgnores(new String[][] {
-				new String[] {
-						".*bb.*" }, new String[] { "\\w\\w" } });
+		Collection<Pattern> ignorePatterns = TestingUtils.compileIgnores(
+				new String[] {".*bb.*" },
+				new String[] { "\\w\\w" });
 
 		Collection<String> filtered = TestingUtils.filterIgnored(strings, ignorePatterns);
 		assertEquals(2, filtered.size());
