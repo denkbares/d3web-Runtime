@@ -27,6 +27,7 @@ import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -151,5 +152,23 @@ public class XCLUtils {
 					+ condition);
 		}
 		return result;
+	}
+
+	/**
+	 * Adds all condequals of the specified condition to the set
+	 * 
+	 * @created 03.03.2014
+	 * @param condEquals set to be filled
+	 * @param condition specified condition
+	 */
+	public static void collectCondEqual(Set<CondEqual> condEquals, Condition condition) {
+		if (condition instanceof CondEqual) {
+			condEquals.add((CondEqual) condition);
+		}
+		else if (condition instanceof NonTerminalCondition) {
+			for (Condition subcondition : ((NonTerminalCondition) condition).getTerms()) {
+				collectCondEqual(condEquals, subcondition);
+			}
+		}
 	}
 }
