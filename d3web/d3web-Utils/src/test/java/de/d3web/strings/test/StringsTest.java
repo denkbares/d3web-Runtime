@@ -188,63 +188,66 @@ public class StringsTest {
 
 	@Test
 	public void indexOf() {
-		assertEquals(-1, Strings.indexOf("", false, false, "test"));
-		assertEquals(0, Strings.indexOf("test", false, false, "test"));
-		assertEquals(-1, Strings.indexOf("tes", false, false, "test"));
-		assertEquals(3, Strings.indexOf("as\"test\"das", false, false, "test"));
-		assertEquals(2, Strings.indexOf("astestdas", false, false, "test"));
-		assertEquals(4, Strings.indexOf("as\\\"test\"das", false, false, "test"));
-		assertEquals(2, Strings.indexOf("a\"test\"s\\\"test\"das", false, false, "test"));
-		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", false, false, "test", "a"));
+		assertEquals(-1, Strings.indexOf("", "test"));
+		assertEquals(0, Strings.indexOf("test", "test"));
+		assertEquals(-1, Strings.indexOf("tes", "test"));
+		assertEquals(3, Strings.indexOf("as\"test\"das",  "test"));
+		assertEquals(2, Strings.indexOf("astestdas", "test"));
+		assertEquals(4, Strings.indexOf("as\\\"test\"das", "test"));
+		assertEquals(2, Strings.indexOf("a\"test\"s\\\"test\"das", "test"));
+		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", "test", "a"));
 
-		assertEquals(-1, Strings.indexOf("", true, false, "test"));
-		assertEquals(0, Strings.indexOf("test", true, false, "test"));
-		assertEquals(-1, Strings.indexOf("tes", true, false, "test"));
-		assertEquals(-1, Strings.indexOf("as\"test\"das", true, false, "test"));
-		assertEquals(2, Strings.indexOf("astestdas", true, false, "test"));
-		assertEquals(4, Strings.indexOf("as\\\"test\"das", true, false, "test"));
-		assertEquals(10, Strings.indexOf("a\"test\"s\\\"test\"das", true, false, "test"));
-		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", true, false, "test", "a"));
+		int unquoted = Strings.UNQUOTED;
+		assertEquals(-1, Strings.indexOf("", unquoted, "test"));
+		assertEquals(0, Strings.indexOf("test", unquoted, "test"));
+		assertEquals(-1, Strings.indexOf("tes", unquoted, "test"));
+		assertEquals(-1, Strings.indexOf("as\"test\"das", unquoted, "test"));
+		assertEquals(2, Strings.indexOf("astestdas", unquoted, "test"));
+		assertEquals(4, Strings.indexOf("as\\\"test\"das", unquoted, "test"));
+		assertEquals(10, Strings.indexOf("a\"test\"s\\\"test\"das", unquoted, "test"));
+		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", unquoted, "test", "a"));
 
-		assertEquals(-1, Strings.indexOf("", false, true, "test"));
-		assertEquals(0, Strings.indexOf("test", false, true, "test"));
-		assertEquals(-1, Strings.indexOf("tes", false, true, "test"));
-		assertEquals(3, Strings.indexOf("as\"test\"das", false, true, "test"));
-		assertEquals(2, Strings.indexOf("astestdas", false, true, "test"));
-		assertEquals(4, Strings.indexOf("as\\\"test\"das", false, true, "test"));
-		assertEquals(2, Strings.indexOf("a\"test\"s\\\"test\"das", false, true, "test"));
-		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", false, true, "test", "a"));
+		int skipComments = Strings.SKIP_COMMENTS;
+		assertEquals(-1, Strings.indexOf("", skipComments, "test"));
+		assertEquals(0, Strings.indexOf("test", skipComments, "test"));
+		assertEquals(-1, Strings.indexOf("tes", skipComments, "test"));
+		assertEquals(3, Strings.indexOf("as\"test\"das", skipComments, "test"));
+		assertEquals(2, Strings.indexOf("astestdas", skipComments, "test"));
+		assertEquals(4, Strings.indexOf("as\\\"test\"das", skipComments, "test"));
+		assertEquals(2, Strings.indexOf("a\"test\"s\\\"test\"das", skipComments, "test"));
+		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", skipComments, "test", "a"));
 
-		assertEquals(-1, Strings.indexOf("aste//stdas", false, true, "test"));
-		assertEquals(-1, Strings.indexOf("aste//hitestdas", false, true, "test"));
-		assertEquals(16, Strings.indexOf("aste//hitest\ndastest", false, true, "test"));
-		assertEquals(-1, Strings.indexOf("asas\"das//comm\"entestdas", false, true, "test"));
-		assertEquals(2, Strings.indexOf("a\"test\"sasd//comment\nasd\"test\"asdetesthoho", false, true, "test"));
-		assertEquals(26, Strings.indexOf("asasd//testcomment\nasdasdetesthoho", false, true, "test"));
-		assertEquals(21, Strings.indexOf("asasd//testcomment\nasdasdetesthoho", false, true, "test", "das"));
-		assertEquals(22, Strings.indexOf("asasd//testcomment\na\"sdasdetestho\"ho", false, true, "test", "das"));
+		assertEquals(-1, Strings.indexOf("aste//stdas", skipComments, "test"));
+		assertEquals(-1, Strings.indexOf("aste//hitestdas", skipComments, "test"));
+		assertEquals(16, Strings.indexOf("aste//hitest\ndastest", skipComments, "test"));
+		assertEquals(-1, Strings.indexOf("asas\"das//comm\"entestdas", skipComments, "test"));
+		assertEquals(2, Strings.indexOf("a\"test\"sasd//comment\nasd\"test\"asdetesthoho", skipComments, "test"));
+		assertEquals(26, Strings.indexOf("asasd//testcomment\nasdasdetesthoho", skipComments, "test"));
+		assertEquals(21, Strings.indexOf("asasd//testcomment\nasdasdetesthoho", skipComments, "test", "das"));
+		assertEquals(22, Strings.indexOf("asasd//testcomment\na\"sdasdetestho\"ho", skipComments, "test", "das"));
 
-		assertEquals(-1, Strings.indexOf("", true, true, "test"));
-		assertEquals(0, Strings.indexOf("test", true, true, "test"));
-		assertEquals(-1, Strings.indexOf("tes", true, true, "test"));
-		assertEquals(-1, Strings.indexOf("as\"test\"das", true, true, "test"));
-		assertEquals(2, Strings.indexOf("astestdas", true, true, "test"));
-		assertEquals(4, Strings.indexOf("as\\\"test\"das", true, true, "test"));
-		assertEquals(10, Strings.indexOf("a\"test\"s\\\"test\"das", true, true, "test"));
-		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", true, true, "test", "a"));
+		int both = skipComments | unquoted;
+		assertEquals(-1, Strings.indexOf("", both, "test"));
+		assertEquals(0, Strings.indexOf("test", both, "test"));
+		assertEquals(-1, Strings.indexOf("tes", both, "test"));
+		assertEquals(-1, Strings.indexOf("as\"test\"das", both, "test"));
+		assertEquals(2, Strings.indexOf("astestdas", both, "test"));
+		assertEquals(4, Strings.indexOf("as\\\"test\"das", both, "test"));
+		assertEquals(10, Strings.indexOf("a\"test\"s\\\"test\"das", both, "test"));
+		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das",both, "test", "a"));
 
-		assertEquals(-1, Strings.indexOf("aste//stdas", true, true, "test"));
-		assertEquals(-1, Strings.indexOf("aste//hitestdas", true, true, "test"));
-		assertEquals(16, Strings.indexOf("aste//hitest\ndastest", true, true, "test"));
-		assertEquals(17, Strings.indexOf("asas\"das//comm\"entestdas", true, true, "test"));
-		assertEquals(34, Strings.indexOf("a\"test\"sasd//comment\nasd\"test\"asdetesthoho", true, true, "test"));
-		assertEquals(32, Strings.indexOf("a\"test\"sasd//testcomment\nasdasdetesthoho", true, true, "test"));
+		assertEquals(-1, Strings.indexOf("aste//stdas", both, "test"));
+		assertEquals(-1, Strings.indexOf("aste//hitestdas", both, "test"));
+		assertEquals(16, Strings.indexOf("aste//hitest\ndastest", both, "test"));
+		assertEquals(17, Strings.indexOf("asas\"das//comm\"entestdas", both, "test"));
+		assertEquals(34, Strings.indexOf("a\"test\"sasd//comment\nasd\"test\"asdetesthoho", both, "test"));
+		assertEquals(32, Strings.indexOf("a\"test\"sasd//testcomment\nasdasdetesthoho", both, "test"));
 
-		assertEquals(27, Strings.lastIndexOf("asasd//testcomment\na\"sdasdetestho\"ho", false, true, "test", "das"));
-		assertEquals(16, Strings.lastIndexOf("a\"test\"s\\\"test\"das", false, true, "test", "a"));
-		assertEquals(2, Strings.lastIndexOf("a\"test\"s//\"test\"das", false, true, "test", "a"));
-		assertEquals(14, Strings.lastIndexOf("atests//test\ndas", true, true, "test", "a"));
-		assertEquals(14, Strings.lastIndexOf("atests//test\ndas\"testatest\"", true, true, "test", "a"));
-		assertEquals(14, Strings.lastIndexOf("atests//test\ndas//testatest", true, true, "test", "a"));
+		assertEquals(27, Strings.lastIndexOf("asasd//testcomment\na\"sdasdetestho\"ho", skipComments, "test", "das"));
+		assertEquals(16, Strings.lastIndexOf("a\"test\"s\\\"test\"das", skipComments, "test", "a"));
+		assertEquals(2, Strings.lastIndexOf("a\"test\"s//\"test\"das", skipComments, "test", "a"));
+		assertEquals(14, Strings.lastIndexOf("atests//test\ndas", both, "test", "a"));
+		assertEquals(14, Strings.lastIndexOf("atests//test\ndas\"testatest\"", both, "test", "a"));
+		assertEquals(14, Strings.lastIndexOf("atests//test\ndas//testatest", both, "test", "a"));
 	}
 }

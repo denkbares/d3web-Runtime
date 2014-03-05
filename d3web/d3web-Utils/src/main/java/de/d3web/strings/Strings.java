@@ -242,41 +242,77 @@ public class Strings {
 	 * @return the index of the first unquoted occurrence of the strings
 	 */
 	public static int indexOfUnquoted(String text, String... strings) {
-		return indexOf(text, 0, true, false, strings);
+		return indexOf(text, UNQUOTED, strings);
 	}
 
 	/**
-	 * Finds the index of the first occurrence of one of the given strings in the given text. Use the booleans to ignore
-	 * strings between quotes or in comments or both. A comment is all text after double slashes (//) until the end of
-	 * the line. In case quotes are considered, a comment can not start between quotes.
+	 * Finds the index of the first occurrence of one of the given strings in the given text.
 	 *
-	 * @param text         the text where we search for the strings
-	 * @param unquoted     set to true if strings in quotes should be ignored
-	 * @param skipComments set to true if strings in comments should be ignored
-	 * @param strings      the strings for which you want the index in the text
+	 * @param text    the text where we search for the strings
+	 * @param strings the strings for which you want the index in the text
 	 * @return the first index of any of the strings in the text or -1 if none of the strings is found
 	 */
-	public static int indexOf(String text, boolean unquoted, boolean skipComments, String... strings) {
-		return indexOf(text, 0, unquoted, skipComments, true, strings);
+	public static int indexOf(String text, String... strings) {
+		return indexOf(text, 0, 0, strings);
 	}
 
 	/**
-	 * Finds the index of the first occurrence of one of the given strings in the given text. Use the booleans to ignore
-	 * strings between quotes or in comments or both. A comment is all text after double slashes (//) until the end of
-	 * the line. In case quotes are considered, a comment can not start between quotes.
+	 * Finds the index of the first occurrence of one of the given strings in the given text. Use
+	 * the flags for more options.
 	 *
-	 * @param text         the text where we search for the strings
-	 * @param offset       the offset from where the search should begin
-	 * @param unquoted     set to true if strings in quotes should be ignored
-	 * @param skipComments set to true if strings in comments should be ignored
-	 * @param strings      the strings for which you want the index in the text
+	 * @param text    the text where we search for the strings
+	 * @param flags   the settings flags to influence the behavior of the method
+	 * @param strings the strings for which you want the index in the text
 	 * @return the first index of any of the strings in the text or -1 if none of the strings is found
 	 */
-	public static int indexOf(String text, int offset, boolean unquoted, boolean skipComments, String... strings) {
-		return indexOf(text, offset, unquoted, skipComments, true, strings);
+	public static int indexOf(String text, int flags, String... strings) {
+		return indexOf(text, 0, flags, strings);
 	}
 
-	private static int indexOf(String text, int offset, boolean unquoted, boolean skipComments, boolean first, String... strings) {
+	/**
+	 * Flag to be used with {@link Strings#indexOf(String, int, String...)}<p>
+	 * Using this flag will skip quoted strings.
+	 */
+	public static final int UNQUOTED = 0x01;
+
+	/**
+	 * Flag to be used with {@link Strings#indexOf(String, int, String...)}<p>
+	 * Using this flag will skip comments (starting with double slash and ending at the end of the line).
+	 */
+	public static final int SKIP_COMMENTS = 0x02;
+
+	/**
+	 * Flag to be used with {@link Strings#indexOf(String, int, String...)}<p>
+	 * Using this flag will match strings case insensitive.
+	 */
+	public static final int CASE_INSENSITIVE = 0x08;
+
+	/**
+	 * Flag to be used with {@link Strings#indexOf(String, int, String...)}<p>
+	 * Using this flag will return the last index instead of the first.
+	 */
+	private static final int LAST_INDEX = 0x04;
+
+	private static boolean has(int flags, int flag) {
+		return (flags & flag) != 0;
+	}
+
+	/**
+	 * Finds the index of the first occurrence of one of the given strings in the given text after the given offset. Use
+	 * the flags for more options.
+	 *
+	 * @param text    the text where we search for the strings
+	 * @param offset  the offset from where the search should begin
+	 * @param flags   the settings flags to influence the behavior of the method
+	 * @param strings the strings for which you want the index in the text
+	 * @return the first index of any of the strings in the text or -1 if none of the strings is found
+	 */
+	public static int indexOf(String text, int offset, int flags, String... strings) {
+		boolean unquoted = has(flags, UNQUOTED);
+		boolean skipComments = has(flags, SKIP_COMMENTS);
+		boolean first = !has(flags, LAST_INDEX);
+		boolean caseInsensitive = has(flags, CASE_INSENSITIVE);
+
 		boolean quoted = false;
 		boolean comment = false;
 
@@ -312,10 +348,17 @@ public class Strings {
 
 			// when strings discovered return index
 			for (String symbol : strings) {
-				if ((i + symbol.length() <= text.length())
-						&& text.subSequence(i, i + symbol.length()).equals(symbol)) {
-					lastIndex = i;
-					if (first) return i;
+				if (i + symbol.length() <= text.length()) {
+					boolean matches;
+					if (caseInsensitive) {
+						matches = text.substring(i, i + symbol.length()).equalsIgnoreCase(symbol);
+					} else {
+						matches = text.substring(i, i + symbol.length()).equals(symbol);
+					}
+					if (matches) {
+						lastIndex = i;
+						if (first) return i;
+					}
 				}
 			}
 
@@ -445,22 +488,20 @@ public class Strings {
 	 * @return the last start index of the strings in unquoted text
 	 */
 	public static int lastIndexOfUnquoted(String text, String... strings) {
-		return lastIndexOf(text, true, false, strings);
+		return lastIndexOf(text, UNQUOTED, strings);
 	}
 
 	/**
-	 * Finds the index of the last occurrence of any of the given strings in the given text. Use the booleans to ignore
-	 * strings between quotes or in comments or both. A comment is all text after double slashes (//) until the end of
-	 * the line. In case quotes are considered, a comment can not start between quotes.
+	 * Finds the index of the last occurrence of any of the given strings in the given text. Use the flags for more
+	 * settings.
 	 *
-	 * @param text         the text where we search for the strings
-	 * @param unquoted     set to true if strings in quotes should be ignored
-	 * @param skipComments set to true if strings in comments should be ignored
-	 * @param strings      the strings for which you want the index in the text
+	 * @param text    the text where we search for the strings
+	 * @param flags   the settings flags to influence the behavior of the method
+	 * @param strings the strings for which you want the index in the text
 	 * @return the last index of any of the strings in the text or -1 if none of the strings is found
 	 */
-	public static int lastIndexOf(String text, boolean unquoted, boolean skipComments, String... strings) {
-		return indexOf(text, 0, unquoted, skipComments, false, strings);
+	public static int lastIndexOf(String text, int flags, String... strings) {
+		return indexOf(text, 0, flags | LAST_INDEX, strings);
 	}
 
 	public static String replaceUmlaut(String text) {
