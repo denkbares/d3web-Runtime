@@ -25,58 +25,72 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.core.session.Session;
+
 /**
- * 
  * @author Reinhard Hatko
  * @created 17.02.2011
  */
 public class FlowRun {
 
-	private final Map<Node, Set<DiaFluxElement>> nodeSupports;
-	private final Set<Node> startNodes;
+	private final Map<Node, Set<DiaFluxElement>> nodeSupports = new HashMap<Node, Set<DiaFluxElement>>();
+	private final Set<Node> startNodes = new HashSet<Node>();
 
-	public FlowRun() {
-		this.nodeSupports = new HashMap<Node, Set<DiaFluxElement>>();
-		this.startNodes = new HashSet<Node>();
+	private Set<SnapshotNode> blockedSnapshots = null;
+	private long blockedTime = Long.MIN_VALUE;
+
+	public void addBlockedSnapshot(SnapshotNode node, Session session) {
+		check(session);
+		blockedSnapshots.add(node);
+	}
+
+	public void addBlockedSnapshot(FlowRun flowRun, Session session) {
+		check(session);
+		flowRun.check(session);
+		blockedSnapshots.addAll(flowRun.blockedSnapshots);
+	}
+
+	private void check(Session session) {
+		long propagationTime = session.getPropagationManager().getPropagationTime();
+		if (propagationTime != blockedTime) {
+			blockedSnapshots = new HashSet<SnapshotNode>();
+			blockedTime = propagationTime;
+		}
 	}
 
 	/**
-	 * Returns if the node is active within this flow run. Active means the node
-	 * is either a start node or has been activated during the flow run.
-	 * 
-	 * @created 28.02.2011
+	 * Returns if the node is active within this flow run. Active means the node is either a start node or has been
+	 * activated during the flow run.
+	 *
 	 * @param node the node to be checked to be active
 	 * @return if the node is active
+	 * @created 28.02.2011
 	 */
 	public boolean isActive(Node node) {
 		return nodeSupports.containsKey(node) || startNodes.contains(node);
 	}
 
 	/**
-	 * Returns if the node has been activated by propagation within this flow
-	 * run. This means that the node has got an incoming edge in this flow run.
-	 * Please note that {@link #isActive(Node)} also returns true for start
-	 * nodes, regardless whether they have incoming active edges, while this
-	 * method does not.
-	 * 
-	 * @created 28.02.2011
+	 * Returns if the node has been activated by propagation within this flow run. This means that the node has got an
+	 * incoming edge in this flow run. Please note that {@link #isActive(Node)} also returns true for start nodes,
+	 * regardless whether they have incoming active edges, while this method does not.
+	 *
 	 * @param node the node to be checked to be activated
 	 * @return if the node is activated
+	 * @created 28.02.2011
 	 */
 	public boolean isActivated(Node node) {
 		return nodeSupports.containsKey(node);
 	}
 
 	/**
-	 * Returns if the node has been activated by propagation within this flow
-	 * run. this means that the node has got an incoming edge in this flow run.
-	 * Please note that {@link #isActive(Node)} also returns true for start
-	 * nodes, regardless whether they have incoming active edges, while this
-	 * method does not.
-	 * 
-	 * @created 28.02.2011
+	 * Returns if the node has been activated by propagation within this flow run. this means that the node has got an
+	 * incoming edge in this flow run. Please note that {@link #isActive(Node)} also returns true for start nodes,
+	 * regardless whether they have incoming active edges, while this method does not.
+	 *
 	 * @param edge the edge to be checked to be activated
 	 * @return if the edge is activated
+	 * @created 28.02.2011
 	 */
 	public boolean isActivated(Edge edge) {
 		Set<DiaFluxElement> supports = nodeSupports.get(edge.getEndNode());
@@ -92,13 +106,11 @@ public class FlowRun {
 
 	/**
 	 * Adds support for the specified node.
-	 * 
+	 *
+	 * @param node    the node to add support to
+	 * @param support the support to be added. may only be null for the autostart nodes
+	 * @return s true, if the node was not supported before, ie should be activated now
 	 * @created 02.09.2013
-	 * @param node the node to add support to
-	 * @param support the support to be added. may only be null for the
-	 *        autostart nodes
-	 * @return s true, if the node was not supported before, ie should be
-	 *         activated now
 	 */
 	public boolean addSupport(Node node, DiaFluxElement support) {
 		boolean contained = nodeSupports.containsKey(node);
@@ -117,9 +129,9 @@ public class FlowRun {
 
 	/**
 	 * Removes the support from the node.
-	 * 
-	 * @created 02.09.2013
+	 *
 	 * @return s if the node is still supported
+	 * @created 02.09.2013
 	 */
 	public boolean removeSupport(Node node, DiaFluxElement support) {
 		Set<DiaFluxElement> supports = nodeSupports.get(node);
@@ -147,13 +159,12 @@ public class FlowRun {
 	}
 
 	/**
-	 * Return the active nodes of that flow run, that matches the specified
-	 * class (being of this class or a subclass.
-	 * 
-	 * @created 28.02.2011
+	 * Return the active nodes of that flow run, that matches the specified class (being of this class or a subclass.
+	 *
 	 * @param <T>
 	 * @param clazz the class for the nodes
 	 * @return the active nodes
+	 * @created 28.02.2011
 	 */
 	public <T> Collection<T> getActiveNodesOfClass(Class<T> clazz) {
 		Collection<T> activeNodes = new HashSet<T>();
@@ -171,15 +182,13 @@ public class FlowRun {
 	}
 
 	/**
-	 * Return the activated nodes of that flow run, that matches the specified
-	 * class (being of this class or a subclass. Activated nodes are those notes
-	 * that have active incoming edges, regardless if they are start nodes or
-	 * not.
-	 * 
-	 * @created 28.02.2011
+	 * Return the activated nodes of that flow run, that matches the specified class (being of this class or a subclass.
+	 * Activated nodes are those notes that have active incoming edges, regardless if they are start nodes or not.
+	 *
 	 * @param <T>
 	 * @param clazz the class for the nodes
 	 * @return the activated nodes
+	 * @created 28.02.2011
 	 */
 	public <T> Collection<T> getActivatedNodesOfClass(Class<T> clazz) {
 		Collection<T> activeNodes = new HashSet<T>();
@@ -197,6 +206,11 @@ public class FlowRun {
 
 	public Collection<Node> getStartNodes() {
 		return Collections.unmodifiableCollection(this.startNodes);
+	}
+
+	public boolean isSnapshotBlocked(SnapshotNode node, Session session) {
+		check(session);
+		return blockedSnapshots.contains(node);
 	}
 
 }

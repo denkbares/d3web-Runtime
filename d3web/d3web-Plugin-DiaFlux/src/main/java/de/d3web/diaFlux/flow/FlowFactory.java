@@ -33,9 +33,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
- * 
  * @author Reinhard Hatko
- * 
  */
 public final class FlowFactory {
 
@@ -44,10 +42,9 @@ public final class FlowFactory {
 	}
 
 	/**
-	 * Creates a Flow instance with the supplied nodes and edges. Furthermore
-	 * creates the EdgeMap KnowledgeSlices and attaches them to the according
-	 * TerminologyObjects.
-	 * 
+	 * Creates a Flow instance with the supplied nodes and edges. Furthermore creates the EdgeMap KnowledgeSlices and
+	 * attaches them to the according TerminologyObjects.
+	 *
 	 * @param knowledgeBase
 	 * @param name
 	 * @param nodes
@@ -77,6 +74,7 @@ public final class FlowFactory {
 
 	/**
 	 * Adds the Flow to the FlowSet KnowledgeSlice
+	 *
 	 * @param flow
 	 * @created 16.05.2013
 	 */
@@ -108,7 +106,7 @@ public final class FlowFactory {
 						FluxSolver.DEPENDANT_EDGES);
 
 				if (slice == null) {
-					slice = new EdgeMap("EdgeMap" + nobject.getName());
+					slice = new EdgeMap();
 					nobject.getKnowledgeStore().addKnowledge(FluxSolver.DEPENDANT_EDGES,
 							slice);
 				}

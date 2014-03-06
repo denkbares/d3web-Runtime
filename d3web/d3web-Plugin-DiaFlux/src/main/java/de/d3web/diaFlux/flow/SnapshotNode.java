@@ -20,6 +20,16 @@
 
 package de.d3web.diaFlux.flow;
 
+import de.d3web.core.knowledge.DefaultInfoStore;
+import de.d3web.core.knowledge.DefaultKnowledgeStore;
+import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeStore;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
  * 
@@ -27,10 +37,62 @@ package de.d3web.diaFlux.flow;
  * @author Reinhard Hatko
  * @created 01.09.2010
  */
-public class SnapshotNode extends AbstractNode {
+public class SnapshotNode extends AbstractNode implements ValueObject {
+
+	private final KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
+	private final InfoStore infoStore = new DefaultInfoStore();
 
 	public SnapshotNode(String id, String name) {
 		super(id, name);
+		this.getKnowledgeStore().addKnowledge(FluxSolver.DEPENDANT_EDGES, new EdgeMap());
 	}
 
+	@Override
+	protected boolean addOutgoingEdge(Edge edge) {
+		EdgeMap edges = getKnowledgeStore().getKnowledge(FluxSolver.DEPENDANT_EDGES);
+		edges.addEdge(edge);
+		return super.addOutgoingEdge(edge);
+	}
+
+
+
+	@Override
+	public Value getDefaultValue() {
+		return UndefinedValue.getInstance();
+	}
+
+	@Override
+	public TerminologyObject[] getParents() {
+		return new TerminologyObject[0];
+	}
+
+	@Override
+	public TerminologyObject[] getChildren() {
+		return new TerminologyObject[0];
+	}
+
+	@Override
+	public KnowledgeBase getKnowledgeBase() {
+		return getFlow().getKnowledgeBase();
+	}
+
+	@Override
+	public void destroy() {
+
+	}
+
+	@Override
+	public KnowledgeStore getKnowledgeStore() {
+		return knowledgeStore;
+	}
+
+	@Override
+	public String getId() {
+		return getID();
+	}
+
+	@Override
+	public InfoStore getInfoStore() {
+		return infoStore;
+	}
 }

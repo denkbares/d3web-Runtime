@@ -33,10 +33,8 @@ import de.d3web.core.inference.KnowledgeSlice;
 public class EdgeMap implements KnowledgeSlice {
 
 	private final List<Edge> edges;
-	private final String id;
 
-	public EdgeMap(String id) {
-		this.id = id;
+	public EdgeMap() {
 		this.edges = new ArrayList<Edge>();
 	}
 
@@ -53,7 +51,6 @@ public class EdgeMap implements KnowledgeSlice {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -67,16 +64,12 @@ public class EdgeMap implements KnowledgeSlice {
 			if (other.edges != null) return false;
 		}
 		else if (!edges.equals(other.edges)) return false;
-		if (id == null) {
-			if (other.id != null) return false;
-		}
-		else if (!id.equals(other.id)) return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "EdgeMap [id=" + id + ", edges=" + edges + "]";
+		return "EdgeMap [" + edges + "]";
 	}
 
 }

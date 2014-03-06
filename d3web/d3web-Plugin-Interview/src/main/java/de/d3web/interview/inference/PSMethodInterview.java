@@ -40,12 +40,10 @@ import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.utils.Log;
 
 /**
- * This PSMethod is used to notify the {@link Interview} of new facts added to
- * the {@link Session}, i.e., new (contra-)indications and values added to the
- * {@link Blackboard}.
- * 
+ * This PSMethod is used to notify the {@link Interview} of new facts added to the {@link Session}, i.e., new
+ * (contra-)indications and values added to the {@link Blackboard}.
+ *
  * @author joba
- * 
  */
 public class PSMethodInterview extends PSMethodAdapter implements SessionObjectSource<Interview> {
 
@@ -54,11 +52,15 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		Interview interview = session.getSessionObject(this);
+		boolean hasChanges = false;
 		for (PropagationEntry change : changes) {
-			interview.notifyFactChange(change);
+			if (change.getObject() instanceof InterviewObject) {
+				interview.notifyFactChange(change);
+				hasChanges = true;
+			}
 		}
 		// force sorting
-		if (!changes.isEmpty()) {
+		if (hasChanges) {
 			/*
 			 * as a workaround we access the fully sorted interview agenda to
 			 * force the sorting strategy being activated this is required,

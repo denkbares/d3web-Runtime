@@ -32,9 +32,9 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 
 /**
- * 
+ *
  * @author Reinhard Hatko
- * 
+ *
  *         Created on: 04.11.2009
  */
 public class DiaFluxCaseObject implements SessionObject {
@@ -51,7 +51,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	 * Records that a snapshot has been executed for this session in this
 	 * propagation. This is required to detect cyclic propagations in flowcharts
 	 * with one or more snapshots in the cycle.
-	 * 
+	 *
 	 * @created 28.02.2011
 	 * @param node the snapshot node that have been snapshoted
 	 * @param session the session of this propagation
@@ -64,7 +64,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	/**
 	 * Returns the latest (most recent) time a snapshot has been taken. If no
 	 * snapshot has been taken yet, null is returned.
-	 * 
+	 *
 	 * @created 01.03.2011
 	 * @return the most recent snapshot time
 	 */
@@ -77,12 +77,6 @@ public class DiaFluxCaseObject implements SessionObject {
 			maxTime = Math.max(maxTime, time.longValue());
 		}
 		return new Date(maxTime);
-	}
-
-	private boolean snapshotAllowed(SnapshotNode node, Session session) {
-		long currentTime = session.getPropagationManager().getPropagationTime();
-		Long latestTime = this.latestSnapshotTime.get(node);
-		return (latestTime == null) || latestTime.longValue() < currentTime;
 	}
 
 	public void addRun(FlowRun run) {
@@ -100,7 +94,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	/**
 	 * Returns all activated snapshots, but remove those that have been detected
 	 * to be cyclic in this propagation.
-	 * 
+	 *
 	 * @created 28.02.2011
 	 * @param session the session of this propagation
 	 * @return the snapshot nodes to be snapshoted
@@ -109,7 +103,7 @@ public class DiaFluxCaseObject implements SessionObject {
 		Collection<SnapshotNode> result = new HashSet<SnapshotNode>();
 		for (FlowRun run : this.runs) {
 			for (SnapshotNode node : run.getActivatedNodesOfClass(SnapshotNode.class)) {
-				if (snapshotAllowed(node, session)) {
+				if (!run.isSnapshotBlocked(node, session)) {
 					result.add(node);
 				}
 			}

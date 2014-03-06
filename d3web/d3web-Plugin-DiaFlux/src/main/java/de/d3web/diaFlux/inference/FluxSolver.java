@@ -20,12 +20,12 @@
 
 package de.d3web.diaFlux.inference;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,10 +56,8 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.utils.Log;
 
 /**
- * 
  * @author Reinhard Hatko
  * @created: 10.09.2009
- * 
  */
 public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<DiaFluxCaseObject> {
 
@@ -129,7 +127,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			logger.fine("Start propagating: " + changes);
 		}
 		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
-
+		List<Node> changedNodes = new ArrayList<Node>();
 		for (PropagationEntry propagationEntry : changes) {
 
 			// strategic entries do not matter so far...
@@ -138,7 +136,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			}
 
 			TerminologyObject object = propagationEntry.getObject();
-
 			EdgeMap slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
 
 			// TO does not occur in any edge
@@ -148,15 +145,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 			// iterate over all edges that contain the changed TO
 			for (Edge edge : slice.getEdges()) {
-
-				Node start = edge.getStartNode();
-
-				for (FlowRun flowRun : runs) {
-					checkSuccessors(start, flowRun, session);
-				}
+				changedNodes.add(edge.getStartNode());
 			}
 		}
-
+		for (Node changedNode : changedNodes) {
+			for (FlowRun flowRun : runs) {
+				checkSuccessors(changedNode, flowRun, session);
+			}
+		}
 		// check backward knowledge: nodes that uses other objects to calculate
 		// e.g. a formula
 		for (PropagationEntry propagationEntry : changes) {
@@ -179,12 +175,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Adds support to a node. If the node is triggered, ie, was not active
-	 * before, it gets activated.
-	 * 
-	 * @created 03.09.2013
-	 * @param node the node to add support to
+	 * Adds support to a node. If the node is triggered, ie, was not active before, it gets activated.
+	 *
+	 * @param node    the node to add support to
 	 * @param support a node or edge supporting the node
+	 * @created 03.09.2013
 	 */
 	public static void addSupport(Node node, DiaFluxElement support, FlowRun flowRun, Session session) {
 		boolean triggered = flowRun.addSupport(node, support);
@@ -203,10 +198,10 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	/**
 	 * Removes support from a node.
-	 * 
-	 * @created 03.09.2013
-	 * @param node the node to remove the support from
+	 *
+	 * @param node    the node to remove the support from
 	 * @param support a node or edge supporting the node
+	 * @created 03.09.2013
 	 */
 	public static void removeSupport(Node node, DiaFluxElement support, FlowRun flowRun, Session session) {
 		boolean stillActive = flowRun.removeSupport(node, support);
@@ -261,15 +256,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Returns whether the specified node is currently active within the
-	 * specified session. Please note that a node previously being active and
-	 * then fixed by a snapshot is not considered to be active any longer, even
-	 * if its derived facts still persists.
-	 * 
-	 * @created 11.03.2013
-	 * @param node the node to be checked
+	 * Returns whether the specified node is currently active within the specified session. Please note that a node
+	 * previously being active and then fixed by a snapshot is not considered to be active any longer, even if its
+	 * derived facts still persists.
+	 *
+	 * @param node    the node to be checked
 	 * @param session the session to check the node for
 	 * @return if the node is active in the session
+	 * @created 11.03.2013
 	 */
 	public static boolean isActiveNode(Node node, Session session) {
 		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
@@ -280,11 +274,10 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * 
-	 * @created 17.02.2011
 	 * @param session
 	 * @param edge
 	 * @return
+	 * @created 17.02.2011
 	 */
 	public static boolean evalEdge(Session session, Edge edge) {
 		if (!Conditions.isTrue(edge.getStartNode().getEdgePrecondition(), session)) return false;
@@ -313,7 +306,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return;
 		}
 
-		Map<FlowRun, Collection<SnapshotNode>> snappyFlows = getFlowRunsWithEnteredSnapshot(
+		Collection<FlowRun> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots, caseObject);
 
 		// log debug output
@@ -327,17 +320,23 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		for (SnapshotNode snapshotNode : enteredSnapshots) {
 			FlowRun run = new FlowRun();
 			run.addStartNode(snapshotNode);
-			Collection<Node> snappyNodes =
-					getActiveNodesLeadingToSnapshopNode(snapshotNode, snappyFlows.keySet());
-			addParentsToStartNodes(run, snapshotNode, snappyNodes, session);
+			Collection<FlowRun> runsForSnapshot = getFlowRunsWithEnteredSnapshot(Arrays.asList(snapshotNode), caseObject);
+			Set<Node> activeNodes = new HashSet<Node>();
+			for (FlowRun flowRun : runsForSnapshot) {
+				run.addBlockedSnapshot(flowRun, session);
+				activeNodes.addAll(flowRun.getActiveNodes());
+			}
+			addParentsToStartNodes(run, snapshotNode, activeNodes, session);
 			newRuns.add(run);
+			run.addBlockedSnapshot(snapshotNode, session);
 			// inform the flux solver that this snapshot node has been
 			// snapshoted
 			caseObject.snapshotDone(snapshotNode, session);
+			session.getPropagationManager().forcePropagate(snapshotNode);
 		}
 
 		// Make snapshot of all related nodes
-		for (FlowRun flow : snappyFlows.keySet()) {
+		for (FlowRun flow : snappyFlows) {
 			Collection<Node> activeNodes = flow.getActiveNodes();
 			for (Node node : activeNodes) {
 				node.takeSnapshot(session);
@@ -348,28 +347,23 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		}
 
 		// Remove the old/snapshoted flow runs
-		for (FlowRun run : snappyFlows.keySet()) {
+		for (FlowRun run : snappyFlows) {
 			caseObject.removeRun(run);
 		}
 
 		// Add and propagate the new flow runs
 		for (FlowRun run : newRuns) {
 			caseObject.addRun(run);
-			for (Node node : run.getActiveNodesOfClass(SnapshotNode.class)) {
-				checkSuccessors(node, run, session);
-			}
 		}
 
 	}
 
 	/**
-	 * Creates a collection of all nodes that are active in any flow run that
-	 * leads towards this snapshot node.
-	 * 
-	 * @created 28.02.2011
+	 * Creates a collection of all nodes that are active in any flow run that leads towards this snapshot node.
+	 *
 	 * @param snapshotNode the target snapshot node
-	 * @param caseObject the case object of this session
 	 * @return the list of active snapshots
+	 * @created 28.02.2011
 	 */
 	public static Collection<Node> getActiveNodesLeadingToSnapshopNode(SnapshotNode snapshotNode, Collection<FlowRun> snapshotFlows) {
 		Collection<Node> result = new HashSet<Node>();
@@ -381,22 +375,22 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return result;
 	}
 
-	private void addParentsToStartNodes(FlowRun run, SnapshotNode snapshotNode, Collection<Node> snappyNodes, Session session) {
+	private void addParentsToStartNodes(FlowRun run, SnapshotNode snapshotNode, Collection<Node> activeNodes, Session session) {
 		// compute parents of snapshotNode
 		// compute callstack of these parents
 		Collection<Node> parents = new HashSet<Node>();
-		computeParentsRecursive(snapshotNode, parents, snappyNodes);
+		computeParentsRecursive(snapshotNode, parents, activeNodes);
 
 		for (Node parent : parents) {
-			if (hasIncomingActivation(parent, snappyNodes, session)
-					|| hasNotLeft(parent, snappyNodes, session)) {
+			if (hasIncomingActivation(parent, activeNodes, session)
+					|| hasNotLeft(parent, activeNodes, session)) {
 				run.addStartNode(parent);
 			}
 		}
 	}
 
-	private boolean hasNotLeft(Node node, Collection<Node> allActiveNodes, Session session) {
-		if (allActiveNodes.contains(node)) {
+	private boolean hasNotLeft(Node node, Collection<Node> activeNodes, Session session) {
+		if (activeNodes.contains(node)) {
 			for (Edge edge : node.getOutgoingEdges()) {
 				if (Conditions.isTrue(edge.getCondition(), session)) {
 					return false;
@@ -407,9 +401,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return false;
 	}
 
-	private static boolean hasIncomingActivation(Node child, Collection<Node> allActiveNodes, Session session) {
+	private static boolean hasIncomingActivation(Node child, Collection<Node> activeNodes, Session session) {
 		for (Edge edge : child.getIncomingEdges()) {
-			if (allActiveNodes.contains(edge.getStartNode())
+			if (activeNodes.contains(edge.getStartNode())
 					&& Conditions.isTrue(edge.getCondition(), session)) {
 				return true;
 			}
@@ -430,20 +424,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		}
 	}
 
-	public static Map<FlowRun, Collection<SnapshotNode>>
-			getFlowRunsWithEnteredSnapshot(Collection<SnapshotNode> enteredSnapshots,
-					DiaFluxCaseObject caseObject) {
-		Map<FlowRun, Collection<SnapshotNode>> snappyRuns = new HashMap<FlowRun, Collection<SnapshotNode>>();
+	public static Collection<FlowRun> getFlowRunsWithEnteredSnapshot(Collection<SnapshotNode> enteredSnapshots,
+																	 DiaFluxCaseObject caseObject) {
+		Set<FlowRun> snappyRuns = new HashSet<FlowRun>();
 
 		for (FlowRun flowRun : caseObject.getRuns()) {
 			for (SnapshotNode snapshotNode : enteredSnapshots) {
 				if (flowRun.isActive(snapshotNode)) {
-					Collection<SnapshotNode> snapshotNodes = snappyRuns.get(flowRun);
-					if (snapshotNodes == null) {
-						snapshotNodes = new HashSet<SnapshotNode>();
-					}
-					snapshotNodes.add(snapshotNode);
-					snappyRuns.put(flowRun, snapshotNodes);
+					snappyRuns.add(flowRun);
 				}
 			}
 		}
