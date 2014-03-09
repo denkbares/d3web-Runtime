@@ -234,6 +234,30 @@ public class Strings {
 	}
 
 	/**
+	 * Returns true if one of the given strings is contained in the given text.
+	 * The case of the text and the strings are ignored.
+	 *
+	 * @param text    the text to search in
+	 * @param strings the strings to be searched
+	 * @return weather there is an occurrence of any of the strings in the text
+	 */
+	public static boolean containsIgnoreCase(String text, String... strings) {
+		return indexOfIgnoreCase(text, strings) >= 0;
+	}
+
+	/**
+	 * Finds the index of the first occurrence of one of the given strings in the given text.
+	 * The case of the text and the strings are ignored.
+	 *
+	 * @param text    the text to search in
+	 * @param strings the strings to be searched
+	 * @return the index of the first occurrence of the strings
+	 */
+	public static int indexOfIgnoreCase(String text, String... strings) {
+		return indexOf(text, CASE_INSENSITIVE, strings);
+	}
+
+	/**
 	 * Finds the index of the first occurrence of one of the given strings in the given text. Occurrences between quotes
 	 * are ignored.
 	 *
@@ -361,7 +385,6 @@ public class Strings {
 					}
 				}
 			}
-
 		}
 		return lastIndex;
 	}
