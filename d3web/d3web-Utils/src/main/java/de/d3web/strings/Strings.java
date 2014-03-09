@@ -94,7 +94,8 @@ public class Strings {
 	 * @param text   the text string to be checked
 	 * @param suffix the suffix to be looked for
 	 * @return <code>true</code> if the character sequence represented by the argument is a suffix of the character
-	 * sequence represented by the specified text string; <code>false</code> otherwise. Note also that <code>true</code>
+	 * sequence represented by the specified text string; <code>false</code> otherwise. Note also that
+	 * <code>true</code>
 	 * will be returned if the argument is an empty string or is equal to this <code>String</code> object as determined
 	 * by the {@link #equals(Object)} method.
 	 * @throws NullPointerException if any of the specified strings is null
@@ -317,12 +318,24 @@ public class Strings {
 	 */
 	private static final int LAST_INDEX = 0x04;
 
+	/**
+	 * Flag to be used with {@link Strings#indexOf(String, int, String...)}<p>
+	 * If this flag is set, the strings will only be matched against the start of the line, ignoring white spaces.<p>
+	 * <b>Example:</b>
+	 * Consider the following text: "   TEXT, MORE TEXT"<br>
+	 * Using this flag looking for the indices of TEXT will return index 3, because there are 3 preceding white
+	 * spaces. The index for the second occurrence of TEXT will be ignored, because it is not at the start of the
+	 * line.
+	 */
+	public static final int FIRST_IN_LINE = 0x10;
+
 	private static boolean has(int flags, int flag) {
 		return (flags & flag) != 0;
 	}
 
 	/**
-	 * Finds the index of the first occurrence of one of the given strings in the given text after the given offset. Use
+	 * Finds the index of the first occurrence of one of the given strings in the given text after the given offset.
+	 * Use
 	 * the flags for more options.
 	 *
 	 * @param text    the text where we search for the strings
@@ -336,14 +349,34 @@ public class Strings {
 		boolean skipComments = has(flags, SKIP_COMMENTS);
 		boolean first = !has(flags, LAST_INDEX);
 		boolean caseInsensitive = has(flags, CASE_INSENSITIVE);
+		boolean firstInLine = has(flags, FIRST_IN_LINE);
 
 		boolean quoted = false;
 		boolean comment = false;
+		boolean atLineStart = true;
 
 		int lastIndex = -1;
 
 		// scanning the text
 		for (int i = offset; i < text.length(); i++) {
+
+			// if we reach a line end we know that we no longer are
+			// inside a comment and instead at a line start again
+			if (text.charAt(i) == '\n') {
+				comment = false;
+				atLineStart = true;
+			}
+
+			if (firstInLine) {
+				// we skip if we only look at line starts, but if we are currently in quotes,
+				// we first need to find the end of the quotes
+				if (!atLineStart && !quoted) {
+					continue;
+				}
+				if (!isWhitespace(text.charAt(i))) {
+					atLineStart = false;
+				}
+			}
 
 			// if we are inside commented out text, ignore quotes
 			if (unquoted && !(skipComments && comment)) {
@@ -362,13 +395,9 @@ public class Strings {
 						&& text.charAt(i + 1) == '/') {
 					comment = true;
 				}
-				if (text.charAt(i) == '\n') {
-					comment = false;
-				}
+				// ignore comment
+				if (comment) continue;
 			}
-
-			// ignore comment
-			if (comment) continue;
 
 			// when strings discovered return index
 			for (String symbol : strings) {
@@ -376,7 +405,8 @@ public class Strings {
 					boolean matches;
 					if (caseInsensitive) {
 						matches = text.substring(i, i + symbol.length()).equalsIgnoreCase(symbol);
-					} else {
+					}
+					else {
 						matches = text.substring(i, i + symbol.length()).equals(symbol);
 					}
 					if (matches) {
@@ -451,7 +481,8 @@ public class Strings {
 	}
 
 	/**
-	 * Checks whether the given text is correctly and completely quoted. This means that it starts and ends with a quote
+	 * Checks whether the given text is correctly and completely quoted. This means that it starts and ends with a
+	 * quote
 	 * that is not escaped and the text does not have any other not escaped quotes in between.<br/> An escaped quote is
 	 * a quote that is preceded by a backslash -> \"<br/> The escaping backslash cannot be escaped itself by another
 	 * backslash.
@@ -690,7 +721,8 @@ public class Strings {
 	 * @param text   the text string to be checked
 	 * @param prefix the prefix to be looked for
 	 * @return <code>true</code> if the character sequence represented by the argument is a prefix of the character
-	 * sequence represented by the specified text string; <code>false</code> otherwise. Note also that <code>true</code>
+	 * sequence represented by the specified text string; <code>false</code> otherwise. Note also that
+	 * <code>true</code>
 	 * will be returned if the argument is an empty string or is equal to this <code>String</code> object as determined
 	 * by the {@link #equals(Object)} method.
 	 * @throws NullPointerException if any of the specified strings is null
@@ -740,7 +772,8 @@ public class Strings {
 	 * <code>String</code> object representing an empty string is created and returned.
 	 * <p/>
 	 * Otherwise, let <i>k</i> be the index of the first character in the string whose code is greater than
-	 * <code>'&#92;u0020'</code>. A new <code>String</code> object is created, representing the substring of this string
+	 * <code>'&#92;u0020'</code>. A new <code>String</code> object is created, representing the substring of this
+	 * string
 	 * that begins with the character at index <i>k</i>, the result of <code>this.substring(<i>k</i>)</code>.
 	 * <p/>
 	 * This method may be used to trim whitespace (as defined above) from the beginning and end of a string.
@@ -806,7 +839,8 @@ public class Strings {
 	 * <code>String</code> object representing an empty string is created and returned.
 	 * <p/>
 	 * Otherwise, let <i>k</i> be the index of the first character in the string whose code is greater than
-	 * <code>'&#92;u0020'</code>. A new <code>String</code> object is created, representing the substring of this string
+	 * <code>'&#92;u0020'</code>. A new <code>String</code> object is created, representing the substring of this
+	 * string
 	 * that begins with the character at index <i>k</i>, the result of <code>this.substring(<i>k</i>)</code>.
 	 * <p/>
 	 * This method may be used to trim whitespace (as defined above) from the beginning and end of a string.
@@ -820,14 +854,15 @@ public class Strings {
 	}
 
 	/**
-	 * Given a text String, a start and a end index, this method will decrement the end index as long as the char before
+	 * Given a text String, a start and a end index, this method will decrement the end index as long as the char
+	 * before
 	 * the end index is a white space and start < end. If the end can no longer be decremented, the end is returned.
 	 */
 	public static int trimRight(String text, int start, int end) {
 		if (end > text.length()) return end;
 		while (end > 0
 				&& end > start
-				&& (text.charAt(end - 1) <= ' ' || isNonBreakingSpace(text.charAt(end - 1)))) {
+				&& isWhitespace(text.charAt(end - 1))) {
 			end--;
 		}
 		return end;
@@ -842,10 +877,14 @@ public class Strings {
 		while (start >= 0
 				&& start < end
 				&& start < text.length()
-				&& (text.charAt(start) <= ' ' || isNonBreakingSpace(text.charAt(start)))) {
+				&& isWhitespace(text.charAt(start))) {
 			start++;
 		}
 		return start;
+	}
+
+	public static boolean isWhitespace(char c) {
+		return c <= ' ' || isNonBreakingSpace(c);
 	}
 
 	/**
@@ -989,7 +1028,8 @@ public class Strings {
 	private static Map<String, String> NAMED_ENTITIES = null;
 
 	/**
-	 * Decodes the html entities of a given String. Currently the method only supports a little number of named entities
+	 * Decodes the html entities of a given String. Currently the method only supports a little number of named
+	 * entities
 	 * but all ascii-coded entities. More entities are easy to be added.
 	 *
 	 * @param text the text to be decoded
@@ -1408,7 +1448,8 @@ public class Strings {
 
 	/**
 	 * Returns the enum constant referenced by the specified enum name. This method is very similar to T.value(name),
-	 * desprite that it is case insensitive. If the specified name cannot be matched to a enum constant of the specified
+	 * desprite that it is case insensitive. If the specified name cannot be matched to a enum constant of the
+	 * specified
 	 * enum type, null is returned. This method never throws an exception.
 	 *
 	 * @param name     the name of the enum constant
@@ -1510,7 +1551,8 @@ public class Strings {
 	}
 
 	/**
-	 * Returns the stack trace of a specified exception as a newly created String object. If the exception is null, null
+	 * Returns the stack trace of a specified exception as a newly created String object. If the exception is null,
+	 * null
 	 * is returned.
 	 *
 	 * @param e the exception to get the stack trace for
