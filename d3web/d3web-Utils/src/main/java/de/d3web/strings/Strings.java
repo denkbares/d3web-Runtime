@@ -748,7 +748,7 @@ public class Strings {
 	 * @param text2 The second {@code String} to be compared
 	 * @return {@code true} if the arguments represents an equivalent {@code String} ignoring case; {@code false}
 	 * otherwise
-	 * @see #equals(Object)
+	 * @see String#equalsIgnoreCase(String)
 	 */
 	public static boolean equalsIgnoreCase(String text1, String text2) {
 		// if both identical or both == null
@@ -759,6 +759,28 @@ public class Strings {
 		if (text2 == null) return text1.isEmpty();
 		// otherwise we check the strings
 		return text1.equalsIgnoreCase(text2);
+	}
+
+	/**
+	 * Compares the specified two {@code String}s. Two strings are considered equal if
+	 * they are of the same length and corresponding characters in the two strings are equal. If any of
+	 * the two specified strings is null, it is considered to be the empty string ("").
+	 *
+	 * @param text1 The first {@code String} to be compared
+	 * @param text2 The second {@code String} to be compared
+	 * @return {@code true} if the arguments represents an equivalent {@code String}; {@code false}
+	 * otherwise
+	 * @see String#equals(Object)
+	 */
+	public static boolean equals(String text1, String text2) {
+		// if both identical or both == null
+		if (text1 == text2) return true;
+		// otherwise (at least one is != null)
+		// check null against empty string
+		if (text1 == null) return text2.isEmpty();
+		if (text2 == null) return text1.isEmpty();
+		// otherwise we check the strings
+		return text1.equals(text2);
 	}
 
 	/**
