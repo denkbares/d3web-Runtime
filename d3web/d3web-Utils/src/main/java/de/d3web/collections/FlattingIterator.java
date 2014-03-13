@@ -37,7 +37,7 @@ public class FlattingIterator<T> implements Iterator<T> {
 	private final Iterator<?> iterables;
 	private final IteratorFactory<Object, T> factory;
 
-	private Iterator<T> current = Collections.<T>emptyIterator();
+	private Iterator<T> current = Collections.emptyIterator();
 
 	public <I extends Iterable<T>> FlattingIterator(Iterator<I> iterables) {
 		this(iterables, new IteratorFactory<I, T>() {
