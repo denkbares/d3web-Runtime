@@ -25,9 +25,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +52,7 @@ public class GeneralizedSuffixTreePerformance {
 		// speed test
 		// find line numbers of very long text
 		List<String> lines = readFile("faust.txt");
-		for (int i=0; i<10; i++) measure(lines, 10, "Pudel", "last fahrender");
+		for (int i = 0; i < 10; i++) measure(lines, 10, "Pudel", "last fahrender");
 
 		lines = readFile("luther.txt");
 		measure(lines, 10, "Wasser", "Fische", "Jerusalem");
@@ -81,12 +78,12 @@ public class GeneralizedSuffixTreePerformance {
 		}
 		long searchTime = System.currentTimeMillis();
 
-		System.out.println("Datei "+lines.get(0)+":");
+		System.out.println("Datei " + lines.get(0) + ":");
 		System.out.println("  - indexing:  " + (indexTime - startTime) + "ms");
 		System.out.println("  - searching: " + (searchTime - indexTime) + "ms");
 		for (String query : queries) {
 			Set<Integer> result = results.get(query);
-			System.out.println("  - Lines of "+query+" ("+result.size()+"): " + result);
+			System.out.println("  - Lines of " + query + " (" + result.size() + "): " + result);
 		}
 	}
 
@@ -94,7 +91,7 @@ public class GeneralizedSuffixTreePerformance {
 		List<String> lines = new LinkedList<String>();
 		lines.add(file);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(new File("src/test/resources/exampleFiles/"+file))));
+				new FileInputStream(new File("src/test/resources/exampleFiles/" + file))));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			lines.add(line);
