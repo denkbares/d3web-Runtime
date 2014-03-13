@@ -47,7 +47,7 @@ import de.d3web.collections.MultiMaps.CollectionFactory;
 public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 
 	private int size = 0;
-	private final Map<K, Set<V>> k2v;
+	final Map<K, Set<V>> k2v;
 
 	private final CollectionFactory<K> keyFactory;
 	private final CollectionFactory<V> valueFactory;
@@ -95,7 +95,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 			hasChanged |= put(entry.getKey(), entry.getValue());
 		}
 		return hasChanged;
-	};
+	}
 
 	@Override
 	public boolean putAll(MultiMap<? extends K, ? extends V> map) {
@@ -104,7 +104,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 			hasChanged |= put(entry.getKey(), entry.getValue());
 		}
 		return hasChanged;
-	};
+	}
 
 	@Override
 	public void clear() {
