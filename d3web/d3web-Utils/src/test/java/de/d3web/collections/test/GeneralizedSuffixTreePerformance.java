@@ -66,9 +66,9 @@ public class GeneralizedSuffixTreePerformance {
 	private static void measure(List<String> lines, int maxResults, String... queries) {
 		long startTime = System.currentTimeMillis();
 		GeneralizedSuffixTree<Integer> lookup = new GeneralizedSuffixTree<Integer>();
-		int lineNo = 0;
+		int lineNo = 0; // starts with line '0' for filename
 		for (String line : lines) {
-			lookup.put(line, ++lineNo);
+			lookup.put(line, lineNo++);
 		}
 		long indexTime = System.currentTimeMillis();
 
@@ -89,6 +89,7 @@ public class GeneralizedSuffixTreePerformance {
 
 	private static List<String> readFile(String file) throws IOException {
 		List<String> lines = new LinkedList<String>();
+		// add filename as line '0'
 		lines.add(file);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(new File("src/test/resources/exampleFiles/" + file))));
