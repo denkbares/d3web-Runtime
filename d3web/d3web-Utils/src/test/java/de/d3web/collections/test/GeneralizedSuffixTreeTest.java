@@ -19,20 +19,20 @@
 
 package de.d3web.collections.test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import de.d3web.collections.GeneralizedSuffixTree;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Volker Belli (denkbares GmbH)
@@ -88,10 +88,15 @@ public class GeneralizedSuffixTreeTest {
 
 	private static <E> void assertSearch(GeneralizedSuffixTree<E> gst, String phrase, E... items) {
 		Set<E> expected = new TreeSet<E>(Arrays.asList(items));
+		Set<E> actual = search(gst, phrase);
+		assertEquals(expected, actual);
+	}
+
+	private static <E> Set<E> search(GeneralizedSuffixTree<E> gst, String phrase) {
 		Set<E> actual = new TreeSet<E>();
 		for (E item : gst.search(phrase)) {
 			actual.add(item);
 		}
-		assertEquals(expected, actual);
+		return actual;
 	}
 }
