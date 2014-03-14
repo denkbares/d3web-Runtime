@@ -72,17 +72,17 @@ public final class KnowledgeBaseUtils {
 	 *         one root QContainer (Q000).
 	 */
 	public static KnowledgeBase createKnowledgeBase() {
-		KnowledgeBase theK = new KnowledgeBase();
+		KnowledgeBase knowledgeBase = new KnowledgeBase();
 
 		// we don't use internal methods, because we need to set
 		// the ID/Name/noParent manually.
-		Solution p000 = new Solution(theK, "P000");
-		theK.setRootSolution(p000);
+		Solution p000 = new Solution(knowledgeBase, "P000");
+		knowledgeBase.setRootSolution(p000);
 
-		QContainer q000 = new QContainer(theK, "Q000");
-		theK.setRootQASet(q000);
+		QContainer q000 = new QContainer(knowledgeBase, "Q000");
+		knowledgeBase.setRootQASet(q000);
 
-		return theK;
+		return knowledgeBase;
 	}
 
 	public static Choice addChoiceAnswer(QuestionChoice question, String answerText, int pos) {
