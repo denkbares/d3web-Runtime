@@ -37,7 +37,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * A factory to create {@link Fact} instances.
- * 
+ *
  * @author joba
  */
 public final class FactFactory {
@@ -50,18 +50,35 @@ public final class FactFactory {
 	 * {@link TerminologyObject}. The specified source is responsible for the
 	 * setting the value, which acts in the context of the specified
 	 * {@link PSMethod}.
-	 * 
-	 * @param session TODO
+	 *
+	 * @param session           no longer used
 	 * @param terminologyObject the specified {@link TerminologyObject} instance
-	 * @param value the specified {@link Value} instance
-	 * @param source the responsible source
-	 * @param psMethod the fact is created in the context of the specified
-	 *        {@link PSMethod}
-	 * 
+	 * @param value             the specified {@link Value} instance
+	 * @param source            the responsible source
+	 * @param psMethod          the fact is created in the context of the specified
+	 *                          {@link PSMethod}
+	 * @return a newly created {@link Fact} instance
+	 * @deprecated use method {@link #createFact(TerminologyObject, Value, Object, PSMethod)} without session attribute
+	 */
+	@Deprecated
+	public static Fact createFact(Session session, TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
+		return createFact(terminologyObject, value, source, psMethod);
+	}
+
+	/**
+	 * Creates a new fact assigning the specified {@link Value} to the specified
+	 * {@link TerminologyObject}. The specified source is responsible for the
+	 * setting the value, which acts in the context of the specified
+	 * {@link PSMethod}.
+	 *
+	 * @param terminologyObject the specified {@link TerminologyObject} instance
+	 * @param value             the specified {@link Value} instance
+	 * @param source            the responsible source
+	 * @param psMethod          the fact is created in the context of the specified
+	 *                          {@link PSMethod}
 	 * @return a newly created {@link Fact} instance
 	 */
-	public static Fact createFact(Session session,
-			TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
+	public static Fact createFact(TerminologyObject terminologyObject, Value value, Object source, PSMethod psMethod) {
 		return new DefaultFact(terminologyObject, value, source, psMethod);
 	}
 
@@ -69,9 +86,9 @@ public final class FactFactory {
 	 * A new fact is created assigning the specified {@link Value} to the
 	 * specified {@link TerminologyObject}. The source and psMethod context of
 	 * this fact is the user (i.e., {@link PSMethodUserSelected}).
-	 * 
+	 *
 	 * @param terminologyObject the specified {@link TerminologyObject} instance
-	 * @param value the specified {@link Value} instance
+	 * @param value             the specified {@link Value} instance
 	 * @return a newly created {@link Fact} instance
 	 */
 	public static Fact createUserEnteredFact(
@@ -86,12 +103,12 @@ public final class FactFactory {
 	 * are searched by their ids in the given {@link KnowledgeBase}. The source
 	 * and psMethod context of this fact is the user (i.e.,
 	 * {@link PSMethodUserSelected}).
-	 * 
-	 * @param kb {@link KnowledgeBase}
+	 *
+	 * @param kb         {@link KnowledgeBase}
 	 * @param questionID ID of the {@link QuestionChoice}
-	 * @param answerID ID of the {@link Choice}
+	 * @param answerID   ID of the {@link Choice}
 	 * @return a newly created {@link Fact} instance or null, if the
-	 *         {@link QuestionChoice} or {@link Choice} could not be found
+	 * {@link QuestionChoice} or {@link Choice} could not be found
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, String answerID) {
 		Question question = kb.getManager().searchQuestion(questionID);
@@ -114,12 +131,12 @@ public final class FactFactory {
 	 * {@link QuestionNum}. The {@link QuestionNum} is searched by its id in the
 	 * given {@link KnowledgeBase}. The source and psMethod context of this fact
 	 * is the user (i.e., {@link PSMethodUserSelected}).
-	 * 
-	 * @param kb {@link KnowledgeBase}
+	 *
+	 * @param kb         {@link KnowledgeBase}
 	 * @param questionID ID of the {@link QuestionNum}
-	 * @param value the Double value of the question
+	 * @param value      the Double value of the question
 	 * @return a newly created {@link Fact} instance or null, if the
-	 *         {@link QuestionNum} could not be found
+	 * {@link QuestionNum} could not be found
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Double value) {
 		return createUserEnteredFact(kb, questionID, new NumValue(value));
@@ -130,12 +147,12 @@ public final class FactFactory {
 	 * The {@link Question} is searched by its id in the given
 	 * {@link KnowledgeBase}. The source and psMethod context of this fact is
 	 * the user (i.e., {@link PSMethodUserSelected}).
-	 * 
-	 * @param kb {@link KnowledgeBase}
+	 *
+	 * @param kb         {@link KnowledgeBase}
 	 * @param questionID ID of the {@link Question}
-	 * @param value the {@link Value} of the question
+	 * @param value      the {@link Value} of the question
 	 * @return a newly created {@link Fact} instance or null, if the
-	 *         {@link Question} could not be found
+	 * {@link Question} could not be found
 	 */
 	public static Fact createUserEnteredFact(KnowledgeBase kb, String questionID, Value value) {
 		Question question = kb.getManager().searchQuestion(questionID);
@@ -153,18 +170,18 @@ public final class FactFactory {
 	 * A new fact is created, that represents the specified indication of a
 	 * specified terminology object. The indication is performed in the context
 	 * of the specified source and problem-solving action.
-	 * 
-	 * @created 18.08.2010
+	 *
 	 * @param terminologyObject the specified terminologyObject to be indicated
-	 * @param indication the specified indication type
-	 * @param source the object (e.g., rule or user) actually indicating the
-	 *        {@link TerminologyObject}
-	 * @param psMethodContext the context problem-solving method indicating the
-	 *        {@link TerminologyObject}
+	 * @param indication        the specified indication type
+	 * @param source            the object (e.g., rule or user) actually indicating the
+	 *                          {@link TerminologyObject}
+	 * @param psMethodContext   the context problem-solving method indicating the
+	 *                          {@link TerminologyObject}
 	 * @return a fact representing the specified indication
+	 * @created 18.08.2010
 	 */
 	public static Fact createIndicationFact(TerminologyObject terminologyObject, Indication indication,
-			Object source, PSMethod psMethodContext) {
+											Object source, PSMethod psMethodContext) {
 		return new DefaultFact(terminologyObject, indication, source, psMethodContext);
 	}
 
@@ -172,10 +189,10 @@ public final class FactFactory {
 	 * This method returns the current time of the session, ie the time of the
 	 * current propagation if a propagation is opened, and the current system
 	 * time otherwise.
-	 * 
-	 * @created 18.11.2010
+	 *
 	 * @param session
 	 * @return the current time of the session
+	 * @created 18.11.2010
 	 */
 	public static long getCurrentTime(Session session) {
 
