@@ -19,6 +19,7 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -59,10 +60,13 @@ public class Message implements Comparable<Message> {
 		this.message = message;
 	}
 
+	public Message(Type type, String message, MessageObject... objects) {
+		this(type, message, Arrays.asList(objects));
+	}
+
 	public Message(Type type, String message, Collection<MessageObject> objects) {
 		this(type, message);
 		setObjects(objects);
-
 	}
 
 	public boolean isSuccess() {
