@@ -144,6 +144,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	@Override
 	public boolean remove(Object key, Object value) {
 		Set<V> values = k2v.get(key);
+		if (values == null) return false;
 		boolean isRemoved = values.remove(value);
 		if (isRemoved) {
 			size--;
