@@ -37,12 +37,12 @@ public abstract class AbstractTest<T> implements Test<T> {
 	private final List<TestParameter> ignoreParameters = new ArrayList<TestParameter>();
 
 	@Override
-	public List<TestParameter> getParameterSpecification() {
+	public final List<TestParameter> getParameterSpecification() {
 		return Collections.unmodifiableList(argParameters);
 	}
 
 	@Override
-	public List<TestParameter> getIgnoreSpecification() {
+	public final List<TestParameter> getIgnoreSpecification() {
 		return Collections.unmodifiableList(ignoreParameters);
 	}
 
