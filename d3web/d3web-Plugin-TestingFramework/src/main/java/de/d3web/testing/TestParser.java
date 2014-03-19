@@ -47,7 +47,7 @@ public class TestParser {
 	private TestSpecification<?> testSpecification;
 
 	/**
-	 * Creates an ExecutableTest object from a test command line string. The
+	 * Creates an TestParser object from a test declaration line. The
 	 * first argument (separated by whitespace) is the (class) name of the test.
 	 * Then any further arguments for the test execution follow while each
 	 * argument is quoted by double quotes. (The first argument in quotes will
@@ -55,9 +55,7 @@ public class TestParser {
 	 * providers.)
 	 * 
 	 * @created 13.06.2012
-	 * @param testDeclaration
-	 * @param msgs
-	 * @return
+	 * @param testDeclaration the test declaration
 	 */
 	@SuppressWarnings({
 			"unchecked", "rawtypes" })
@@ -156,10 +154,22 @@ public class TestParser {
 	 * @param parameters the parameters to be concatenated
 	 * @return the concatenated parameters
 	 */
-	public static String concatParameters(String[] parameters) {
+	public static String concatParameters(String... parameters) {
+		return concatParameters(0, parameters);
+	}
+	/**
+	 * Utility method to concatenate test parameters following the same rules by
+	 * which they are split.
+	 *
+	 * @created 23.09.2012
+	 * @param parameters the parameters to be concatenated
+	 * @return the concatenated parameters
+	 */
+	public static String concatParameters(int startIndex, String... parameters) {
 		StringBuilder concatenated = new StringBuilder();
 		boolean first = true;
 		for (String parameter : parameters) {
+			if (--startIndex >= 0) continue;
 			if (first) first = false;
 			else concatenated.append(" ");
 			boolean quote = parameter.contains(" ");

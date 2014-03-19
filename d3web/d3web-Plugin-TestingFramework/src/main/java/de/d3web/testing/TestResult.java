@@ -52,16 +52,6 @@ public class TestResult implements Comparable<TestResult> {
 		this.testName = testName;
 	}
 
-	// private TestResult(String testName, String[] configuration, Map<String,
-	// Message> unexpectedMessages, int successfulRuns) {
-	// this(testName, configuration);
-	// this.unexpectedMessages.putAll(unexpectedMessages);
-	// for (int i = 0; i < successfulRuns; i++) {
-	// expectedMessages.put(generateUnknownTestObjectString(i),
-	// Message.SUCCESS);
-	// }
-	// }
-
 	private TestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, Map<String, Message> expectedMessages, Message summary) {
 		this(testName, configuration);
 		this.unexpectedMessages.putAll(unexpectedMessages);

@@ -101,7 +101,7 @@ public class TestExecutor {
 		Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
 
 		// creates and returns a CallableTest for each Test and TestObject
-		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests =
+		Map<TestSpecification, Collection<CallableTest>> callableTests =
 				getCallableTestsMap(validSpecifications);
 		try {
 			initProgressFields(callableTests);
@@ -114,24 +114,24 @@ public class TestExecutor {
 		}
 	}
 
-	private void updateTestResults(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests) {
+	private void updateTestResults(Map<TestSpecification, Collection<CallableTest>> callableTests) {
 		for (TestSpecification<?> specification : callableTests.keySet()) {
-			Collection<CallableTest<?>> ct = callableTests.get(specification);
+			Collection<CallableTest> ct = callableTests.get(specification);
 			if (ct.isEmpty()) continue;
 			TestResult testResult = ct.iterator().next().testResult;
 			specification.getTest().updateSummary(specification, testResult);
 		}
 	}
 
-	private void initProgressFields(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests) {
+	private void initProgressFields(Map<TestSpecification, Collection<CallableTest>> callableTests) {
 		overallTestsCount = getNumberOfTests(callableTests);
 		finishedTests = 0f;
 		currentMessage = "Initializing...";
 	}
 
-	private float getNumberOfTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
+	private float getNumberOfTests(Map<TestSpecification, Collection<CallableTest>> callablesMap) {
 		int count = 0;
-		for (Collection<CallableTest<?>> callablesOfTest : callablesMap.values()) {
+		for (Collection<CallableTest> callablesOfTest : callablesMap.values()) {
 			count += callablesOfTest.size();
 		}
 		return count;
@@ -150,7 +150,6 @@ public class TestExecutor {
 
 			allTestObjects.addAll(testObjects);
 		}
-
 		return allTestObjects;
 	}
 
@@ -186,31 +185,42 @@ public class TestExecutor {
 		return validTests;
 	}
 
-	private Map<TestSpecification<?>, Collection<CallableTest<?>>> getCallableTestsMap(Collection<TestSpecification<?>> validSpecifications) {
-
-		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = new LinkedHashMap<TestSpecification<?>, Collection<CallableTest<?>>>();
-
-		for (TestSpecification<?> specification : validSpecifications) {
-			String[] testArgs = specification.getArguments();
-			String testName = specification.getTestName();
-			// create result
-			TestResult testResult = new TestResult(testName, testArgs);
-			build.addTestResult(testResult);
-			Collection<CallableTest<?>> futuresForCallableTest =
-					getCallableTests(specification, testResult);
+	@SuppressWarnings("unchecked")
+	private Map<TestSpecification, Collection<CallableTest>> getCallableTestsMap(Collection<TestSpecification<?>> validSpecifications) {
+		// Some weird non-generic stuff here to satisfy both Eclipse and Intellij compilers
+		Map callableTests = new LinkedHashMap();
+		for (TestSpecification specification : validSpecifications) {
+			Collection futuresForCallableTest = getCallableTests((TestSpecification<Object>) specification);
 			callableTests.put(specification, futuresForCallableTest);
 		}
 		return callableTests;
 	}
 
-	private <T> Collection<CallableTest<?>> getCallableTests(
-			final TestSpecification<T> specification,
-			final TestResult testResult) {
+	private <T> Collection<CallableTest<T>> getCallableTests(TestSpecification<T> specification) {
+		// prepare some information
+		String[] testArgs = specification.getArguments();
+		String testName = specification.getTestName();
+		Collection<TestObjectContainer<T>> testObjects = getTestObjects(specification);
 
-		Collection<CallableTest<?>> result = new HashSet<CallableTest<?>>();
+		// create (empty) result for test execution
+		String[] config = new String[testArgs.length + 1];
+		System.arraycopy(testArgs, 0, config, 1, testArgs.length);
+		config[0] = specification.getTestObject();
+		TestResult testResult = new TestResult(testName, config);
+		build.addTestResult(testResult);
+
+		// create callable tests to be executed
+		return getCallableTests(specification, testObjects, testResult);
+	}
+
+	private <T> Collection<CallableTest<T>> getCallableTests(
+			final TestSpecification<T> specification,
+			Collection<TestObjectContainer<T>> testObjects, final TestResult testResult) {
+
+		Collection<CallableTest<T>> result = new HashSet<CallableTest<T>>();
 		boolean noTestObjects = true;
 
-		for (final TestObjectContainer<T> testObjectContainer : getTestObjects(specification)) {
+		for (final TestObjectContainer<T> testObjectContainer : testObjects) {
 			noTestObjects = false;
 			String testObjectName = testObjectContainer.getTestObjectName();
 			T testObject = testObjectContainer.getTestObject();
@@ -227,13 +237,13 @@ public class TestExecutor {
 		return result;
 	}
 
-	private void executeTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
+	private void executeTests(Map<TestSpecification, Collection<CallableTest>> callablesMap) {
 		// finally run execute on callable tests
 		outerLoop:
 		for (TestSpecification<?> specification : callablesMap.keySet()) {
-			Collection<CallableTest<?>> callableTests = callablesMap.get(specification);
+			Collection<CallableTest> callableTests = callablesMap.get(specification);
 			specification.prepareExecution();
-			for (CallableTest<?> callableTest : callableTests) {
+			for (CallableTest callableTest : callableTests) {
 				try {
 					executor.execute(new FutureTestTask(callableTest));
 				}
