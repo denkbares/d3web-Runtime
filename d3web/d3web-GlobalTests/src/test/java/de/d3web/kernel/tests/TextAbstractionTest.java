@@ -140,7 +140,7 @@ public class TextAbstractionTest {
 		// SET 'Emoticon' = ':-)'
 		TextValue happinessIcon = new TextValue(":-)");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, emoticon,
+				FactFactory.createFact(emoticon,
 						happinessIcon, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -156,7 +156,7 @@ public class TextAbstractionTest {
 		// SET 'Emoticon' = ':-('
 		TextValue sadnessIcon = new TextValue(":-(");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, emoticon,
+				FactFactory.createFact(emoticon,
 						sadnessIcon, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -178,7 +178,7 @@ public class TextAbstractionTest {
 
 		// SET 'Emoticon' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, emoticon,
+				FactFactory.createFact(emoticon,
 						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 

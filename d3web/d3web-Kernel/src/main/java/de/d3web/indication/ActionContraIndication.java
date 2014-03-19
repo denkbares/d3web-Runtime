@@ -55,7 +55,7 @@ public class ActionContraIndication extends PSAction {
 		for (QASet qaset : getQASets()) {
 			Indication indication = new Indication(State.CONTRA_INDICATED,
 					qaset.getKnowledgeBase().getManager().getTreeIndex(qaset));
-			Fact fact = FactFactory.createFact(session, qaset, indication, source,
+			Fact fact = FactFactory.createFact(qaset, indication, source,
 					psmethod);
 
 			session.getBlackboard().addInterviewFact(fact);

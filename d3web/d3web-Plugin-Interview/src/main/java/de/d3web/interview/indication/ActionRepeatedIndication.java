@@ -56,8 +56,7 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 			Indication oldIndication = session.getBlackboard().getIndication(qaset);
 			Indication indication = new Indication(getState(),
 					qaset.getKnowledgeBase().getManager().getTreeIndex(qaset));
-			Fact fact = FactFactory.createFact(
-					session, qaset, indication, source,
+			Fact fact = FactFactory.createFact(qaset, indication, source,
 					psmethod);
 			session.getBlackboard().addInterviewFact(fact);
 			// notify immediately to enable usage in condition

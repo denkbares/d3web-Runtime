@@ -102,7 +102,7 @@ public class DiaFluxPersistenceTest {
 		// Answer question with "Yes", this should execute the flow
 		Value yes = KnowledgeBaseUtils.findValue(question, "Yes");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, question,
+				FactFactory.createFact(question,
 						yes, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		solutionState = session.getBlackboard().getRating(solution);
 		assertTrue("Solution has wrong state. Expected 'ESTABLISHED'",
@@ -112,7 +112,7 @@ public class DiaFluxPersistenceTest {
 		// should be retracted:
 		Value no = KnowledgeBaseUtils.findValue(question, "No");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, question,
+				FactFactory.createFact(question,
 						no, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		solutionState = session.getBlackboard().getRating(solution);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",

@@ -101,7 +101,7 @@ public class PSMethodInit implements PSMethod {
 				if (property != null) {
 					try {
 						Value value = getValue(q, property);
-						Fact fact = FactFactory.createFact(session, q, value, new Object(),
+						Fact fact = FactFactory.createFact(q, value, new Object(),
 								this);
 						session.getBlackboard().addValueFact(fact);
 					}

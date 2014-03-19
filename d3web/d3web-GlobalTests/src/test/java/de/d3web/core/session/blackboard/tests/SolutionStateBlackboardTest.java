@@ -91,13 +91,13 @@ public class SolutionStateBlackboardTest {
 
 		// put P4 => P4 = suggested
 
-		Fact p4Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.P4), rule1,
+		Fact p4Fact = FactFactory.createFact(happy, new HeuristicRating(Score.P4), rule1,
 				heuristicSource);
 		blackboard.addValueFact(p4Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 
 		// put another P5 => P4+P5 = established
-		Fact p5Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.P5), rule2,
+		Fact p5Fact = FactFactory.createFact(happy, new HeuristicRating(Score.P5), rule2,
 				heuristicSource);
 		blackboard.addValueFact(p5Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.ESTABLISHED));
@@ -107,7 +107,7 @@ public class SolutionStateBlackboardTest {
 		assertTrue(blackboard.getRating(happy).hasState(State.SUGGESTED));
 
 		// categorically exclude by rule3 => P4+N7 = excluded
-		Fact n7Fact = FactFactory.createFact(session, happy, new HeuristicRating(Score.N7), rule3,
+		Fact n7Fact = FactFactory.createFact(happy, new HeuristicRating(Score.N7), rule3,
 				heuristicSource);
 		blackboard.addValueFact(n7Fact);
 		assertTrue(blackboard.getRating(happy).hasState(State.EXCLUDED));

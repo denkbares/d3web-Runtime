@@ -204,7 +204,7 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Height' = 1.7
 		Value heightValue = new NumValue(1.7);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, height, heightValue,
+				FactFactory.createFact(height, heightValue,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Height' == 1.7
@@ -214,7 +214,7 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Weight' = 56.0
 		Value weightValue = new NumValue(56.0);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, weight, weightValue,
+				FactFactory.createFact(weight, weightValue,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weight' == 56.0
@@ -245,7 +245,7 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Weight' = 80.0
 		Value weightValue = new NumValue(80.0);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, weight, weightValue,
+				FactFactory.createFact(weight, weightValue,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Weight' == 80.0
@@ -270,7 +270,7 @@ public class FormulaExpressionAbstractionTest {
 		// SET 'Height' = 2.1
 		Value heightValue = new NumValue(2.1);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, height, heightValue,
+				FactFactory.createFact(height, heightValue,
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
 		// TEST 'Height' == 2.1
@@ -303,7 +303,7 @@ public class FormulaExpressionAbstractionTest {
 
 		// SET 'Weight' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, weight,
+				FactFactory.createFact(weight,
 						UndefinedValue.getInstance(),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 
@@ -313,7 +313,7 @@ public class FormulaExpressionAbstractionTest {
 
 		// SET 'Height' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, height,
+				FactFactory.createFact(height,
 						UndefinedValue.getInstance(),
 						PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 

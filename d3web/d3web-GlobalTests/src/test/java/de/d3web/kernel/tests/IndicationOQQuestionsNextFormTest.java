@@ -254,7 +254,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// SET Sex == Male and test whether that worked correctly
 		Value male = KnowledgeBaseUtils.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, sex,
+				FactFactory.createFact(sex,
 						male, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		Value sexValue = session.getBlackboard().getValue(sex);
@@ -279,7 +279,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// SET Sex == Female and test whether that worked correctly
 		Value female = KnowledgeBaseUtils.findValue(sex, "Female");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, sex,
+				FactFactory.createFact(sex,
 						female, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		sexValue = session.getBlackboard().getValue(sex);
@@ -302,7 +302,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// RESET Sex = Male and test whether setting worked
 		male = KnowledgeBaseUtils.findValue(sex, "Male");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, sex,
+				FactFactory.createFact(sex,
 						male, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		sexValue = session.getBlackboard().getValue(sex);
@@ -348,7 +348,7 @@ public class IndicationOQQuestionsNextFormTest {
 		// SET Ask_Headache == Yes and test setting
 		Value yes = KnowledgeBaseUtils.findValue(askHead, "Yes");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, askHead,
+				FactFactory.createFact(askHead,
 						yes, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value askHValue = session.getBlackboard().getValue(askHead);
 		assertEquals("Question Ask_Headache has wrong value ", yes, askHValue);
@@ -372,7 +372,7 @@ public class IndicationOQQuestionsNextFormTest {
 		System.out.println(session.getBlackboard().getIndication(headache));
 		Value no = KnowledgeBaseUtils.findValue(askHead, "No");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, askHead,
+				FactFactory.createFact(askHead,
 						no, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		askHValue = session.getBlackboard().getValue(askHead);
 		assertEquals("Question Ask_Headache has wrong value ", no, askHValue);

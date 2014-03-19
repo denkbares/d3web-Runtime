@@ -109,11 +109,11 @@ public class CostBenefitAgendaSortingTest {
 
 		// PUT the containers onto the agenda by indication, order must not
 		// change
-		Fact factHeig = FactFactory.createFact(session, heightWeightQuestions,
+		Fact factHeig = FactFactory.createFact(heightWeightQuestions,
 				new Indication(
 						State.INDICATED, 0), costBenefit, costBenefit);
 		session.getBlackboard().addInterviewFact(factHeig);
-		Fact factPreg = FactFactory.createFact(session, pregnancyQuestions,
+		Fact factPreg = FactFactory.createFact(pregnancyQuestions,
 				new Indication(State.INDICATED, 1), costBenefit, costBenefit);
 		session.getBlackboard().addInterviewFact(factPreg);
 		assertFalse(agenda.isEmpty());

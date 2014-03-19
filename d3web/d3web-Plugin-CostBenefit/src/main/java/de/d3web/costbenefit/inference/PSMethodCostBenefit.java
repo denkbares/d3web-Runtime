@@ -639,7 +639,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (QContainer qContainer : qContainers) {
 			currentSequence[i] = qContainer;
 			makeOKQuestionsUndone(currentSequence[i], session);
-			Fact fact = FactFactory.createFact(session, qContainer,
+			Fact fact = FactFactory.createFact(qContainer,
 					new Indication(State.MULTIPLE_INDICATED, i), new Object(), this);
 			facts.add(fact);
 			session.getBlackboard().addInterviewFact(fact);

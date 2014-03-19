@@ -141,7 +141,7 @@ public class ActionSetQuestion extends ActionAddValueFact {
 				// Fact fact = new DefaultFact(getQuestion(), tempVal, source,
 				// psmethod);
 
-				Fact fact = FactFactory.createFact(session, getQuestion(), tempVal, source,
+				Fact fact = FactFactory.createFact(getQuestion(), tempVal, source,
 						psmethod);
 
 				session.getBlackboard().addValueFact(fact);

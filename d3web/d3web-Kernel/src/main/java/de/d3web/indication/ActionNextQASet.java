@@ -56,7 +56,7 @@ public abstract class ActionNextQASet extends PSAction {
 			// find the reason for these null entries!
 			if (qaset == null) continue;
 
-			Fact fact = FactFactory.createFact(session, qaset, new Indication(getState(),
+			Fact fact = FactFactory.createFact(qaset, new Indication(getState(),
 					qaset.getKnowledgeBase().getManager().getTreeIndex(qaset)),
 					source, psmethod);
 			session.getBlackboard().addInterviewFact(fact);

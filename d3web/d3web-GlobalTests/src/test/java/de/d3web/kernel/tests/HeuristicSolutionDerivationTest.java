@@ -173,7 +173,7 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Exhaust fumes' = 'black'
 		Value black = KnowledgeBaseUtils.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, exhaustFumes,
+				FactFactory.createFact(exhaustFumes,
 						black, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -189,7 +189,7 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Fuel' = 'unleaded gasoline'
 		Value unleadedGasoline = KnowledgeBaseUtils.findValue(fuel, "unleaded gasoline");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, fuel,
+				FactFactory.createFact(fuel,
 						unleadedGasoline, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -217,7 +217,7 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Fuel' = 'diesel'
 		Value diesel = KnowledgeBaseUtils.findValue(fuel, "diesel");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, fuel,
+				FactFactory.createFact(fuel,
 						diesel, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -234,7 +234,7 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Exhaust fumes' = 'blue'
 		Value blue = KnowledgeBaseUtils.findValue(exhaustFumes, "blue");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, exhaustFumes,
+				FactFactory.createFact(exhaustFumes,
 						blue, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -258,7 +258,7 @@ public class HeuristicSolutionDerivationTest {
 		// SET 'Exhaust fumes' = 'black'
 		Value black = KnowledgeBaseUtils.findValue(exhaustFumes, "black");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, exhaustFumes,
+				FactFactory.createFact(exhaustFumes,
 						black, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -274,7 +274,7 @@ public class HeuristicSolutionDerivationTest {
 
 		// SET 'Exhaust fumes' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, exhaustFumes,
+				FactFactory.createFact(exhaustFumes,
 						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 

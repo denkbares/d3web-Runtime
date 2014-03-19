@@ -143,7 +143,7 @@ public final class CostBenefitUtil {
 		session.getPropagationManager().openPropagation();
 		QuestionOC question1 = (QuestionOC) kb.getManager().searchQuestion(question);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, question1,
+				FactFactory.createFact(question1,
 						KnowledgeBaseUtils.findValue(question1, answer),
 						PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
@@ -241,7 +241,7 @@ public final class CostBenefitUtil {
 						? new PSMethodCostBenefit()
 						: psmCostBenefit;
 
-				Fact fact = FactFactory.createFact(session, q, valuesToSet.get(q), source, psMethod);
+				Fact fact = FactFactory.createFact(q, valuesToSet.get(q), source, psMethod);
 
 				session.getBlackboard().addValueFact(fact);
 				facts.add(fact);

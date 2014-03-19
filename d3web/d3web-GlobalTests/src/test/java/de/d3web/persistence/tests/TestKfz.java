@@ -115,7 +115,7 @@ public class TestKfz {
 		}
 		MultipleChoiceValue mcv = MultipleChoiceValue.fromChoices(values);
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, Mf7,
+				FactFactory.createFact(Mf7,
 						mcv, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance()));
 		Value value = session.getBlackboard().getValue(Mf5);
 		Assert.assertNotNull(value);
@@ -140,12 +140,12 @@ public class TestKfz {
 				"Bewertung Kraftstoffverbrauch");
 		Choice Mf4a1 = KnowledgeBaseUtils.findChoice(Mf4, "normal");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, Mf4,
+				FactFactory.createFact(Mf4,
 						new ChoiceValue(Mf4a1), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		//
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, Mf6,
+				FactFactory.createFact(Mf6,
 						new NumValue(new Double(10)), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		Value Mf58Value = session.getBlackboard().getValue(Mf58);
@@ -173,7 +173,7 @@ public class TestKfz {
 		Choice answerChoice = KnowledgeBaseUtils.findChoice(questionOC,
 				"schwarz");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, questionOC,
+				FactFactory.createFact(questionOC,
 						new ChoiceValue(answerChoice), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -181,7 +181,7 @@ public class TestKfz {
 				"Error while setting/getting known OC-Value (2)",
 				new ChoiceValue(answerChoice), session.getBlackboard().getValue(questionOC));
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, questionOC,
+				FactFactory.createFact(questionOC,
 						Unknown.getInstance(), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -249,7 +249,7 @@ public class TestKfz {
 			Question q1 = (Question) qaSet;
 
 			session.getBlackboard().addValueFact(
-					FactFactory.createFact(session, q1,
+					FactFactory.createFact(q1,
 							Unknown.getInstance(), PSMethodUserSelected.getInstance(),
 							PSMethodUserSelected.getInstance()));
 			Assert.assertTrue(Unknown.assignedTo(session.getBlackboard().getValue(q1)));

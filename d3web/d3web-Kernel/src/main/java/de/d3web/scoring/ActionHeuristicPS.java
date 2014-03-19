@@ -75,7 +75,7 @@ public class ActionHeuristicPS extends ActionAddValueFact {
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 
-		Fact fact = FactFactory.createFact(session, getSolution(), new HeuristicRating(getScore()),
+		Fact fact = FactFactory.createFact(getSolution(), new HeuristicRating(getScore()),
 				source, psmethod);
 
 		session.getBlackboard().addValueFact(fact);

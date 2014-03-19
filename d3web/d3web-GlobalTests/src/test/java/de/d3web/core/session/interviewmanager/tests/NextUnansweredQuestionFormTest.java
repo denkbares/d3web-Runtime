@@ -187,7 +187,7 @@ public class NextUnansweredQuestionFormTest {
 
 	private void setValue(Question question, Value value) {
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, question,
+				FactFactory.createFact(question,
 						value, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 	}

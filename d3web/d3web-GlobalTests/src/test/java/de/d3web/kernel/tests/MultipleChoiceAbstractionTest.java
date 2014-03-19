@@ -210,7 +210,7 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Workday'
 		Value workday = KnowledgeBaseUtils.findValue(day, "Workday");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, day,
+				FactFactory.createFact(day,
 						workday, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -227,7 +227,7 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Weekend'
 		Value weekend = KnowledgeBaseUtils.findValue(day, "Weekend");
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, day,
+				FactFactory.createFact(day,
 						weekend, PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -250,7 +250,7 @@ public class MultipleChoiceAbstractionTest {
 
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, day,
+				FactFactory.createFact(day,
 						getDayMCValue(Arrays.asList("")), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
@@ -275,7 +275,7 @@ public class MultipleChoiceAbstractionTest {
 
 		// SET 'Day' = 'UNDEFINED'
 		session.getBlackboard().addValueFact(
-				FactFactory.createFact(session, day,
+				FactFactory.createFact(day,
 						UndefinedValue.getInstance(), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
