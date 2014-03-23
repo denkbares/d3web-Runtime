@@ -134,7 +134,7 @@ public class MultiMaps {
 	 * @return the collection factory
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> CollectionFactory<T> hashFactory() {
+	public static <T> CollectionFactory<T> hashFactory() {
 		return (CollectionFactory<T>) HASH;
 	}
 
@@ -147,7 +147,7 @@ public class MultiMaps {
 	 * @return the collection factory
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> CollectionFactory<T> hashMinimizedFactory() {
+	public static <T> CollectionFactory<T> hashMinimizedFactory() {
 		return (CollectionFactory<T>) HASH_MINIMIZED;
 	}
 
@@ -159,7 +159,7 @@ public class MultiMaps {
 	 * @return the collection factory
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T extends Comparable<? super T>> CollectionFactory<T> treeFactory() {
+	public static <T extends Comparable<? super T>> CollectionFactory<T> treeFactory() {
 		return (CollectionFactory<T>) TREE;
 	}
 
@@ -172,7 +172,7 @@ public class MultiMaps {
 	 * @return the collection factory
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> CollectionFactory<T> linkedFactory() {
+	public static <T> CollectionFactory<T> linkedFactory() {
 		return (CollectionFactory<T>) LINKED;
 	}
 
@@ -188,7 +188,7 @@ public class MultiMaps {
 	 * 
 	 * @return a string representation of this map
 	 */
-	static final <K, V> String toString(final MultiMap<K, V> map) {
+	static <K, V> String toString(final MultiMap<K, V> map) {
 		Iterator<Entry<K, V>> i = map.entrySet().iterator();
 		if (!i.hasNext()) return "{}";
 

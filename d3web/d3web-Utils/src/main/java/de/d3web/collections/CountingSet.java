@@ -63,6 +63,7 @@ public class CountingSet<E> implements Set<E> {
 
 	@Override
 	public boolean contains(Object o) {
+		//noinspection SuspiciousMethodCalls
 		return counters.containsKey(o);
 	}
 
@@ -78,6 +79,7 @@ public class CountingSet<E> implements Set<E> {
 
 	@Override
 	public <T> T[] toArray(T[] a) {
+		//noinspection SuspiciousToArrayCall
 		return counters.keySet().toArray(a);
 	}
 
@@ -182,6 +184,7 @@ public class CountingSet<E> implements Set<E> {
 	 * @param object the object to add / increase the counter for
 	 * @return the actual counter of that object
 	 */
+	@SuppressWarnings("SuspiciousMethodCalls")
 	public int dec(Object object) {
 		Count count = counters.get(object);
 		if (count != null) {

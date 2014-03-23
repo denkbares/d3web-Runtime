@@ -44,6 +44,10 @@ import de.d3web.collections.MultiMaps.CollectionFactory;
  * @author Volker Belli (denkbares GmbH)
  * @created 07.01.2014
  */
+// we are suppressing warnings when using "Object"s as key and value.
+// They are used when accessing entries, because java.util.Map also does it this way.
+// only methods that adds items are forcing to have the correct parameter types.
+@SuppressWarnings("SuspiciousMethodCalls")
 public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 
 	private int size = 0;
@@ -177,7 +181,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	@Override
 	public boolean contains(Object key, Object value) {
 		Set<V> values = k2v.get(key);
-		return (values == null) ? false : values.contains(value);
+		return (values != null) && values.contains(value);
 	}
 
 	@Override
@@ -286,7 +290,8 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof MultiMap) {
-			return entrySet().equals(((MultiMap<?, ?>) obj).entrySet());
+			MultiMap<?, ?> multiMap = (MultiMap<?, ?>) obj;
+			return entrySet().equals(multiMap.entrySet());
 		}
 		return false;
 	}
