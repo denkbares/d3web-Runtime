@@ -62,10 +62,8 @@ import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
@@ -299,8 +297,8 @@ public final class XMLUtil {
 	public static String getValue(TerminologyObject nob, Object answer) throws IOException {
 		if (answer instanceof ChoiceValue) {
 			ChoiceValue v = (ChoiceValue) answer;
-			Choice choice = v.getChoice((QuestionChoice) nob);
-			return choice.getName();
+			ChoiceID choice = v.getChoiceID();
+			return choice.getText();
 		}
 		else if (answer instanceof Unknown) {
 			return Unknown.UNKNOWN_ID;
