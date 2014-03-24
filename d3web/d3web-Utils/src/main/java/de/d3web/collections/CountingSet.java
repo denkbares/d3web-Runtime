@@ -51,6 +51,24 @@ public class CountingSet<E> implements Set<E> {
 
 	private final HashMap<E, Count> counters = new HashMap<E, Count>();
 
+	/**
+	 * Constructs a new, empty counting set.
+	 */
+	public CountingSet() {
+	}
+
+	/**
+	 * Constructs a new counting set containing the elements in the specified
+	 * collection. If the specified collections contains equal elements multiple
+	 * times, they are already counted by this set.
+	 *
+	 * @param c the collection whose elements are to be placed into this set
+	 * @throws NullPointerException if the specified collection is null
+	 */
+	public CountingSet(Collection<? extends E> c) {
+		addAll(c);
+	}
+
 	@Override
 	public int size() {
 		return counters.size();
