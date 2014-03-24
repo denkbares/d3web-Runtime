@@ -28,10 +28,10 @@ import java.util.Iterator;
  */
 public class ConcatenateIterator<T> implements Iterator<T> {
 
-	private final Iterator<T> iterators[];
+	private final Iterator<? extends T> iterators[];
 	private int current;
 
-	public ConcatenateIterator(Iterator<T>... iterators) {
+	public ConcatenateIterator(Iterator<? extends T>... iterators) {
 		this.iterators = iterators;
 		this.current = 0;
 	}
