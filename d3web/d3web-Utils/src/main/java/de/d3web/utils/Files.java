@@ -1,11 +1,18 @@
 package de.d3web.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+
+import de.d3web.collections.Matrix;
+import de.d3web.strings.StringFragment;
+import de.d3web.strings.Strings;
 
 public class Files {
 
@@ -77,6 +84,50 @@ public class Files {
 	 */
 	public static String getText(File file) throws IOException {
 		return Streams.getTextAndClose(new FileInputStream(file));
+	}
+
+	public static List<String> getLines(File file) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		try {
+			List<String> result = new LinkedList<String>();
+			String line;
+			while ((line = br.readLine()) != null) {
+				result.add(line);
+			}
+			return result;
+		}
+		finally {
+			br.close();
+		}
+	}
+
+	public static Matrix<String> getCSVCells(File file) throws IOException {
+		return getCSVCells(file, ",");
+	}
+
+	public static Matrix<String> getCSVCells(File file, String splitSymbol) throws IOException {
+		List<String> lines = getLines(file);
+		Matrix<String> matrix = new Matrix<String>();
+		int row = 0;
+		for (String line : lines) {
+			List<StringFragment> fragments = Strings.splitUnquoted(line, splitSymbol);
+			int col = 0;
+			for (StringFragment fragment : fragments) {
+				String raw = fragment.getContent().trim();
+				raw = Strings.unquote(raw);
+				if (raw.startsWith("\"")) {
+					raw = raw.substring(1);
+				}
+				if (raw.endsWith("\"")) {
+					raw = raw.substring(0, raw.length() - 1);
+				}
+
+				matrix.set(row, col, raw);
+				col++;
+			}
+			row++;
+		}
+		return matrix;
 	}
 
 	/**
