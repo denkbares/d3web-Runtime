@@ -114,15 +114,7 @@ public class Files {
 			int col = 0;
 			for (StringFragment fragment : fragments) {
 				String raw = fragment.getContent().trim();
-				raw = Strings.unquote(raw);
-				if (raw.startsWith("\"")) {
-					raw = raw.substring(1);
-				}
-				if (raw.endsWith("\"")) {
-					raw = raw.substring(0, raw.length() - 1);
-				}
-
-				matrix.set(row, col, raw);
+				matrix.set(row, col, Strings.unquote(raw));
 				col++;
 			}
 			row++;
