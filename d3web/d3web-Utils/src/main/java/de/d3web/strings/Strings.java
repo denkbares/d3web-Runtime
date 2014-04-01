@@ -259,7 +259,8 @@ public class Strings {
 	}
 
 	/**
-	 * Finds the index of the first occurrence of one of the given strings in the given text. Occurrences between quotes
+	 * Finds the index of the first occurrence of one of the given strings in the given text. Occurrences between
+	 * quotes
 	 * are ignored.
 	 *
 	 * @param text    the text to search in
@@ -335,11 +336,11 @@ public class Strings {
 
 	/**
 	 * Finds the index of the first occurrence of one of the given strings in the given text after the given offset.
-	 * Use
-	 * the flags for more options.
+	 * Use the flags for more options.
 	 *
 	 * @param text    the text where we search for the strings
-	 * @param offset  the offset from where the search should begin
+	 * @param offset  the offset from where we start to look for the strings (flags like UNQUOTED or FIRST_IN_LINE also
+	 *                consider the text before the offset!)
 	 * @param flags   the settings flags to influence the behavior of the method
 	 * @param strings the strings for which you want the index in the text
 	 * @return the first index of any of the strings in the text or -1 if none of the strings is found
@@ -358,7 +359,7 @@ public class Strings {
 		int lastIndex = -1;
 
 		// scanning the text
-		for (int i = offset; i < text.length(); i++) {
+		for (int i = 0; i < text.length(); i++) {
 
 			// if we reach a line end we know that we no longer are
 			// inside a comment and instead at a line start again
@@ -398,6 +399,9 @@ public class Strings {
 				// ignore comment
 				if (comment) continue;
 			}
+
+			// we are before the offset, we don't yet look for the strings
+			if (i < offset) continue;
 
 			// when strings discovered return index
 			for (String symbol : strings) {
