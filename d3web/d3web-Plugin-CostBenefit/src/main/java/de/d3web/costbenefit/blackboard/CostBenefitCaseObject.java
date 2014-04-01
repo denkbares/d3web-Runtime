@@ -103,7 +103,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	 * Resets the path
 	 */
 	public void resetPath() {
-		if (currentSequence != null && currentSequence.length - 1 > currentPathIndex) {
+		if (currentSequence != null && currentSequence.length > currentPathIndex) {
 			unreachedTarget = currentSequence[currentSequence.length - 1];
 		}
 		currentSequence = null;
