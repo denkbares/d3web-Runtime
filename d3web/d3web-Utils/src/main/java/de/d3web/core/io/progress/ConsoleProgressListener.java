@@ -20,20 +20,32 @@ package de.d3web.core.io.progress;
 
 /**
  * A simple ProgressListener that prints the progress to the console
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
-public class ConsoleProgressListener implements ProgressListener {
+public class ConsoleProgressListener implements ExtendedProgressListener {
 
 	private String lastProgressText = "";
+	private float percent = 0;
 
 	@Override
 	public void updateProgress(float percent, String message) {
+		this.percent = percent;
 		String progressText = "" + Math.round(percent * 100) + "%: " + message;
 		if (!progressText.equals(lastProgressText)) {
 			lastProgressText = progressText;
 			System.out.println(progressText);
 		}
+	}
+
+	@Override
+	public float getProgress() {
+		return percent;
+	}
+
+	@Override
+	public String getMessage() {
+		return lastProgressText;
 	}
 
 }

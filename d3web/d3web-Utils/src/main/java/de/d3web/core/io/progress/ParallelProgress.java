@@ -26,12 +26,13 @@ package de.d3web.core.io.progress;
  * @author volker_belli
  * @created 09.09.2012
  */
-public class ParallelProgress implements ProgressListener {
+public class ParallelProgress implements ExtendedProgressListener {
 
-	private class PartListener implements ProgressListener {
+	private class PartListener implements ExtendedProgressListener {
 
 		private float current = 0f;
 		private final float fraction;
+		private float partCurrent = 0f;
 
 		public PartListener(float fraction) {
 			this.fraction = fraction;
@@ -41,10 +42,21 @@ public class ParallelProgress implements ProgressListener {
 		public void updateProgress(float percent, String message) {
 			if (percent > 1f) percent = 1f;
 			if (percent < 0f) percent = 0f;
+			this.partCurrent = percent;
 			float absolute = percent * fraction;
 			float delta = absolute - current;
 			this.current = absolute;
 			incrementProgress(delta, message);
+		}
+
+		@Override
+		public float getProgress() {
+			return partCurrent;
+		}
+
+		@Override
+		public String getMessage() {
+			return lastMessage;
 		}
 	}
 
@@ -102,7 +114,7 @@ public class ParallelProgress implements ProgressListener {
 	 * @return the sub-task with the specified index
 	 * @throws java.lang.ArrayIndexOutOfBoundsException if the specified sub-task is not one of the created sub-tasks
 	 */
-	public ProgressListener getSubTaskProgressListener(int index) {
+	public ExtendedProgressListener getSubTaskProgressListener(int index) {
 		return this.partListeners[index];
 	}
 
@@ -143,6 +155,16 @@ public class ParallelProgress implements ProgressListener {
 	 */
 	public void updateProgress(int subTaskIndex, float percent) {
 		getSubTaskProgressListener(subTaskIndex).updateProgress(percent, lastMessage);
+	}
+
+	@Override
+	public float getProgress() {
+		return current;
+	}
+
+	@Override
+	public String getMessage() {
+		return lastMessage;
 	}
 
 }

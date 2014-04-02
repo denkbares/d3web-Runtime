@@ -30,4 +30,9 @@ public interface ExtendedProgressListener extends ProgressListener {
 	 * Returns the current progress of this listener.
 	 */
 	float getProgress();
+
+	/**
+	 * Returns the current message of this listener.
+	 */
+	String getMessage();
 }
