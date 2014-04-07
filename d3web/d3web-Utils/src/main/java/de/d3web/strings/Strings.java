@@ -574,11 +574,6 @@ public class Strings {
 		return result;
 	}
 
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char quote) {
-		return splitUnquoted(text, splitSymbol, true,
-				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(quote) });
-	}
-
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol) {
 		return splitUnquoted(text, splitSymbol, true,
 				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
@@ -589,11 +584,11 @@ public class Strings {
 				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
 	}
 
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteCharSet[] quoteChars) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteCharSet... quoteChars) {
 		return splitUnquoted(text, splitSymbol, true, quoteChars);
 	}
 
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char[] quoteChars) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char... quoteChars) {
 		QuoteCharSet[] quotes = new QuoteCharSet[quoteChars.length];
 		for (int i = 0; i < quotes.length; i++) {
 			quotes[i] = QuoteCharSet.createUnaryHidingQuote(quoteChars[i]);
