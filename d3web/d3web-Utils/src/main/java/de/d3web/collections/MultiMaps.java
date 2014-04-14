@@ -247,4 +247,152 @@ public class MultiMaps {
 		};
 	}
 
+	public static <K,V> MultiMap<K, V> synchronizedMultiMap(MultiMap<K, V> map) {
+		return new SynchronizedMultiMap<K, V>(map);
+	}
+
+	private static class SynchronizedMultiMap<K, V> implements MultiMap<K, V> {
+
+		private final MultiMap<K,V> map;     // Backing Map
+		final Object mutex;        // Object on which to synchronize
+
+		SynchronizedMultiMap(MultiMap<K,V> m) {
+			if (m==null) throw new NullPointerException();
+			this.map = m;
+			mutex = this;
+		}
+
+		SynchronizedMultiMap(MultiMap<K,V> m, Object mutex) {
+			this.map = m;
+			this.mutex = mutex;
+		}
+
+
+		@Override
+		public int size() {
+			synchronized (mutex) {
+				return map.size();
+			}
+		}
+
+		@Override
+		public boolean isEmpty() {
+			synchronized (mutex) {
+				return map.isEmpty();
+			}
+		}
+
+		@Override
+		public boolean containsKey(Object key) {
+			synchronized (mutex) {
+				return map.containsKey(key);
+			}
+		}
+
+		@Override
+		public boolean containsValue(Object value) {
+			synchronized (mutex) {
+				return map.containsValue(value);
+			}
+		}
+
+		@Override
+		public boolean contains(Object key, Object value) {
+			synchronized (mutex) {
+				return map.contains(key, value);
+			}
+		}
+
+		@Override
+		public Set<V> getValues(Object key) {
+			synchronized (mutex) {
+				return map.getValues(key);
+			}
+		}
+
+		@Override
+		public Set<K> getKeys(Object value) {
+			synchronized (mutex) {
+				return map.getKeys(value);
+			}
+		}
+
+		@Override
+		public boolean put(K key, V value) {
+			synchronized (mutex) {
+				return map.put(key, value);
+			}
+		}
+
+		@Override
+		public Set<V> removeKey(Object key) {
+			synchronized (mutex) {
+				return map.removeKey(key);
+			}
+		}
+
+		@Override
+		public Set<K> removeValue(Object value) {
+			synchronized (mutex) {
+				return map.removeValue(value);
+			}
+		}
+
+		@Override
+		public boolean remove(Object key, Object value) {
+			synchronized (mutex) {
+				return map.remove(key, value);
+			}
+		}
+
+		@Override
+		public boolean putAll(Map<? extends K, ? extends V> m) {
+			synchronized (mutex) {
+				return this.map.putAll(m);
+			}
+		}
+
+		@Override
+		public boolean putAll(MultiMap<? extends K, ? extends V> m) {
+			synchronized (mutex) {
+				return this.map.putAll(m);
+			}
+		}
+
+		@Override
+		public void clear() {
+			synchronized (mutex) {
+				map.clear();
+			}
+		}
+
+		@Override
+		public Set<K> keySet() {
+			synchronized (mutex) {
+				return map.keySet();
+			}
+		}
+
+		@Override
+		public Set<V> valueSet() {
+			synchronized (mutex) {
+				return map.valueSet();
+			}
+		}
+
+		@Override
+		public Set<Entry<K, V>> entrySet() {
+			synchronized (mutex) {
+				return map.entrySet();
+			}
+		}
+
+		@Override
+		public Map<K, Set<V>> toMap() {
+			synchronized (mutex) {
+				return map.toMap();
+			}
+		}
+	}
+
 }
