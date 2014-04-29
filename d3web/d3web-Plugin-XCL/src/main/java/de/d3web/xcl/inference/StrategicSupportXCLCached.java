@@ -153,7 +153,6 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 					result.add(q);
 				}
 			}
-			result.addAll(form.getActiveQuestions());
 		}
 		return result;
 	}
@@ -213,6 +212,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				getExcludingQuestion(solutions, questions);
 
 		Set<XCLModel> coveringModels = new HashSet<XCLModel>();
+		// collect models of the specified solutions, covering the questions
 		for (Question q : questions) {
 			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
 					XCLContributedModelSet.KNOWLEDGE_KIND);
@@ -264,8 +264,15 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		float allWeight = getTotalWeight(solutions);
 		ArrayList<Set<Condition>> conditionsForQuestions =
 				new ArrayList<Set<Condition>>(questions.size());
-		for (int i = 0; i < questions.size(); i++) {
-			conditionsForQuestions.add(NULL_SET);
+		for (Question q : questions) {
+			Set<Condition> set = NULL_SET;
+			Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
+			if (excludingRelations != null) {
+				for (XCLRelation r : excludingRelations) {
+					set = lazyAddAll(set, getExtractedOrs(r));
+				}
+			}
+			conditionsForQuestions.add(set);
 		}
 		pots.addWeights(allWeight - pots.getTotalWeight(), conditionsForQuestions);
 
