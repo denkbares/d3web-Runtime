@@ -185,17 +185,20 @@ public class AStar {
 				"init: " + initTime + "ms, " +
 				"#open: " + getOpenNodes().size() + ", " +
 				"#closed: " + getClosedNodes().size() + ")");
-		if (!model.isAborted()) {
-			try {
-				session.getProtocol().addEntry(
-						new CalculatedPathEntry(
-								session.getPropagationManager().getPropagationTime(),
-								model.getBestCostBenefitTarget().getMinPath().getPath(), time2
-										- time1));
-			}
-			catch (NullPointerException e) {
-				// nothing to do
-			}
+		if (model.getBestCostBenefitTarget() != null
+				&& model.getBestCostBenefitTarget().getMinPath() != null) {
+			session.getProtocol().addEntry(
+					new CalculatedPathEntry(
+							session.getPropagationManager().getPropagationTime(),
+							model.getBestCostBenefitTarget().getMinPath().getPath(), time2
+									- time1));
+		}
+		else {
+			session.getProtocol().addEntry(
+					new CalculatedPathEntry(
+							session.getPropagationManager().getPropagationTime(),
+							Collections.<QContainer> emptyList(), time2
+									- time1));
 		}
 	}
 
