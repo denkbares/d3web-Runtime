@@ -68,16 +68,16 @@ public class XCLUtils {
 			// contradicting and normal relations
 			if (relation.hasType(XCLRelationType.contradicted)) {
 				Condition condition = relation.getConditionedFinding();
-				if (condition.getTerminalObjects().size() != 1) {
-					throw new IllegalArgumentException();
-				}
-				Set<Value> forbiddenValues = getValues(condition, question);
+				Set<Value> forbiddenValues = new HashSet<Value>();
+				fillForbiddenValues(question, condition, forbiddenValues);
 				for (Choice c : ((QuestionChoice) question).getAllAlternatives()) {
 					ChoiceValue value = new ChoiceValue(c);
 					if (!forbiddenValues.contains(value)) {
 						return value;
 					}
 				}
+				throw new IllegalArgumentException("All values of " + question
+						+ " are used in contradicting relations.");
 			}
 			else {
 				Set<Value> allowedValues = getValues(relation.getConditionedFinding(), question);
@@ -99,6 +99,22 @@ public class XCLUtils {
 			}
 		}
 		return null;
+	}
+
+	private static void fillForbiddenValues(QuestionOC question, Condition condition, Set<Value> forbiddenValues) {
+		if (condition instanceof CondAnd) {
+			for (Condition c : ((CondAnd) condition).getTerms()) {
+				if (c.getTerminalObjects().contains(question)) {
+					fillForbiddenValues(question, c, forbiddenValues);
+				}
+			}
+		}
+		else {
+			if (condition.getTerminalObjects().size() != 1) {
+				throw new IllegalArgumentException();
+			}
+			forbiddenValues.addAll(getValues(condition, question));
+		}
 	}
 
 	/**
