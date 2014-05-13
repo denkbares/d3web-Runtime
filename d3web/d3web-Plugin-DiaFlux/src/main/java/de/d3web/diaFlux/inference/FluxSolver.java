@@ -280,8 +280,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * @created 17.02.2011
 	 */
 	public static boolean evalEdge(Session session, Edge edge) {
-		if (!Conditions.isTrue(edge.getStartNode().getEdgePrecondition(), session)) return false;
-		return Conditions.isTrue(edge.getCondition(), session);
+		return Conditions.isTrue(edge.getStartNode().getEdgePrecondition(), session)
+				&& Conditions.isTrue(edge.getCondition(), session);
 	}
 
 	@Override
@@ -318,19 +318,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<FlowRun>();
 		for (SnapshotNode snapshotNode : enteredSnapshots) {
-			FlowRun run = new FlowRun();
-			run.addStartNode(snapshotNode);
-			Collection<FlowRun> runsForSnapshot = getFlowRunsWithEnteredSnapshot(Arrays.asList(snapshotNode), caseObject);
-			Set<Node> activeNodes = new HashSet<Node>();
-			for (FlowRun flowRun : runsForSnapshot) {
-				run.addBlockedSnapshot(flowRun, session);
-				activeNodes.addAll(flowRun.getActiveNodes());
-			}
-			addParentsToStartNodes(run, snapshotNode, activeNodes, session);
-			newRuns.add(run);
-			run.addBlockedSnapshot(snapshotNode, session);
-			// inform the flux solver that this snapshot node has been
-			// snapshoted
+			// Generate a new FlowRun for each snapshot
+			newRuns.add(generateNewFlowRunForSnapshot(session, snapshotNode));
+			// inform the flux solver that this snapshot node has been snapshoted
 			caseObject.snapshotDone(snapshotNode, session);
 			session.getPropagationManager().forcePropagate(snapshotNode);
 		}
@@ -359,13 +349,72 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Creates a collection of all nodes that are active in any flow run that leads towards this snapshot node.
+	 * For each entered snapshot we generate a new FlowRun.<br>
+	 * There might be multiple FlowRuns that have entered the snapshot. We merge these FlowRuns into one new FlowRun
+	 * starting from the entered snapshot. It needs some information from the FlowRuns leading into snapshot, which
+	 * will
+	 * be set here.
+	 */
+	private FlowRun generateNewFlowRunForSnapshot(Session session, SnapshotNode snapshotNode) {
+		FlowRun run = new FlowRun();
+		run.addStartNode(snapshotNode);
+		// avoid reasoning loops
+		run.addBlockedSnapshot(snapshotNode, session);
+
+		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
+		Collection<FlowRun> runsForSnapshot = getFlowRunsWithEnteredSnapshot(Arrays.asList(snapshotNode), caseObject);
+
+		// collect the parents, active nodes and blocked nodes from the previous FlowRuns
+		Set<Node> parents = new HashSet<Node>();
+		Set<Node> activeNodes = new HashSet<Node>();
+		for (FlowRun flowRun : runsForSnapshot) {
+			run.addBlockedSnapshot(flowRun, session);
+			appendParentsRecursive(flowRun.getActiveNodes(), snapshotNode, parents);
+			appendActiveNodesLeadingToNode(flowRun, snapshotNode, activeNodes);
+		}
+
+		// we only add the parents that are still active or relevant for the new FlowRun
+		for (Node parent : parents) {
+			if (hasIncomingActivation(parent, activeNodes, session)
+					|| stillInside(parent, activeNodes, session)) {
+				run.addStartNode(parent);
+			}
+		}
+		return run;
+	}
+
+	/**
+	 * This method ignores active nodes in sub flows, because they are not needed in the current context. We just move
+	 * up in any parent nodes calling the start nodes.
+	 */
+	private void appendActiveNodesLeadingToNode(FlowRun flowRun, Node node, Collection<Node> activeNodes) {
+		if (!activeNodes.add(node)) return;
+		// start node... go up, find the calling node
+		if (node instanceof StartNode) {
+			for (ComposedNode composedNode : flowRun.getActiveNodesOfClass(ComposedNode.class)) {
+				if (composedNode.getCalledFlowName().equals(node.getFlow().getName())
+						&& composedNode.getCalledStartNodeName().equals(node.getName())) {
+					appendActiveNodesLeadingToNode(flowRun, composedNode, activeNodes);
+				}
+			}
+		}
+		else {
+			for (Edge incomingEdge : node.getIncomingEdges()) {
+				Node startNode = incomingEdge.getStartNode();
+				if (!flowRun.isActive(startNode)) continue;
+				appendActiveNodesLeadingToNode(flowRun, startNode, activeNodes);
+			}
+		}
+	}
+
+	/**
+	 * Creates a collection of all nodes that are active in any flow run that leads towards the given snapshot node.
 	 *
 	 * @param snapshotNode the target snapshot node
 	 * @return the list of active snapshots
 	 * @created 28.02.2011
 	 */
-	public static Collection<Node> getActiveNodesLeadingToSnapshopNode(SnapshotNode snapshotNode, Collection<FlowRun> snapshotFlows) {
+	public static Collection<Node> getAllActiveNodesOfRunsWithSnapshot(SnapshotNode snapshotNode, Collection<FlowRun> snapshotFlows) {
 		Collection<Node> result = new HashSet<Node>();
 		for (FlowRun run : snapshotFlows) {
 			if (run.isActivated(snapshotNode)) {
@@ -375,32 +424,25 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return result;
 	}
 
-	private void addParentsToStartNodes(FlowRun run, SnapshotNode snapshotNode, Collection<Node> activeNodes, Session session) {
-		// compute parents of snapshotNode
-		// compute callstack of these parents
-		Collection<Node> parents = new HashSet<Node>();
-		computeParentsRecursive(snapshotNode, parents, activeNodes);
-
-		for (Node parent : parents) {
-			if (hasIncomingActivation(parent, activeNodes, session)
-					|| hasNotLeft(parent, activeNodes, session)) {
-				run.addStartNode(parent);
-			}
-		}
-	}
-
-	private boolean hasNotLeft(Node node, Collection<Node> activeNodes, Session session) {
+	/**
+	 * We check if the outgoing edge is active/true. If the node is not part of the active nodes, it is one of the
+	 * parent start nodes that are declared active because the flow has to resume there eventually.
+	 */
+	private boolean stillInside(Node node, Collection<Node> activeNodes, Session session) {
 		if (activeNodes.contains(node)) {
 			for (Edge edge : node.getOutgoingEdges()) {
 				if (Conditions.isTrue(edge.getCondition(), session)) {
 					return false;
 				}
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
+	/**
+	 * Not sure if we really still need this. We check if a parent node has an incoming edge with a active node as the
+	 * start node and the condition true.
+	 */
 	private static boolean hasIncomingActivation(Node child, Collection<Node> activeNodes, Session session) {
 		for (Edge edge : child.getIncomingEdges()) {
 			if (activeNodes.contains(edge.getStartNode())
@@ -411,14 +453,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return false;
 	}
 
-	private static void computeParentsRecursive(Node child, Collection<Node> result, Collection<Node> allNodes) {
+	private static void appendParentsRecursive(Collection<Node> allNodes, Node child, Collection<Node> result) {
 		Flow calledFlow = child.getFlow();
 		for (Node node : allNodes) {
 			if (node instanceof ComposedNode) {
-				String calledFlowname = ((ComposedNode) node).getCalledFlowName();
-				if (calledFlow.getName().equals(calledFlowname)) {
+				String calledFlowName = ((ComposedNode) node).getCalledFlowName();
+				if (calledFlow.getName().equals(calledFlowName)) {
 					result.add(node);
-					computeParentsRecursive(node, result, allNodes);
+					appendParentsRecursive(allNodes, node, result);
 				}
 			}
 		}
