@@ -369,8 +369,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		Set<Node> activeNodes = new HashSet<Node>();
 		for (FlowRun flowRun : runsForSnapshot) {
 			run.addBlockedSnapshot(flowRun, session);
-			appendParentsRecursive(flowRun.getActiveNodes(), snapshotNode, parents);
-			appendActiveNodesLeadingToNode(flowRun, snapshotNode, activeNodes);
+			addParents(flowRun, snapshotNode, parents);
+			addActiveNodesLeadingToNode(flowRun, snapshotNode, activeNodes);
 		}
 
 		// we only add the parents that are still active or relevant for the new FlowRun
@@ -387,14 +387,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * This method ignores active nodes in sub flows, because they are not needed in the current context. We just move
 	 * up in any parent nodes calling the start nodes.
 	 */
-	private void appendActiveNodesLeadingToNode(FlowRun flowRun, Node node, Collection<Node> activeNodes) {
+	private void addActiveNodesLeadingToNode(FlowRun flowRun, Node node, Collection<Node> activeNodes) {
 		if (!activeNodes.add(node)) return;
 		// start node... go up, find the calling node
 		if (node instanceof StartNode) {
 			for (ComposedNode composedNode : flowRun.getActiveNodesOfClass(ComposedNode.class)) {
 				if (composedNode.getCalledFlowName().equals(node.getFlow().getName())
 						&& composedNode.getCalledStartNodeName().equals(node.getName())) {
-					appendActiveNodesLeadingToNode(flowRun, composedNode, activeNodes);
+					addActiveNodesLeadingToNode(flowRun, composedNode, activeNodes);
 				}
 			}
 		}
@@ -402,7 +402,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			for (Edge incomingEdge : node.getIncomingEdges()) {
 				Node startNode = incomingEdge.getStartNode();
 				if (!flowRun.isActive(startNode)) continue;
-				appendActiveNodesLeadingToNode(flowRun, startNode, activeNodes);
+				addActiveNodesLeadingToNode(flowRun, startNode, activeNodes);
 			}
 		}
 	}
@@ -453,14 +453,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return false;
 	}
 
-	private static void appendParentsRecursive(Collection<Node> allNodes, Node child, Collection<Node> result) {
+	private void addParents(FlowRun flowRun, Node child, Collection<Node> result) {
 		Flow calledFlow = child.getFlow();
-		for (Node node : allNodes) {
+		for (Node node : flowRun.getActiveNodes()) {
 			if (node instanceof ComposedNode) {
 				String calledFlowName = ((ComposedNode) node).getCalledFlowName();
 				if (calledFlow.getName().equals(calledFlowName)) {
 					result.add(node);
-					appendParentsRecursive(allNodes, node, result);
+					addParents(flowRun, node, result);
 				}
 			}
 		}
