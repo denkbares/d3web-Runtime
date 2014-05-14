@@ -1,0 +1,469 @@
+!Interview
+
+%%QuickInterview 
+  
+%
+
+%%DiaFlux
+<flowchart fcid="flow_cc17758e" name="Flow Start" icon="sanduhr.gif" width="380" height="71" autostart="true" idCounter="7">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="135" top="20"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 1(Start)]]]></action>
+	</node>
+
+	<node fcid="#node_4">
+		<position left="20" top="31"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_6">
+		<position left="292" top="31"></position>
+		<exit>Exit</exit>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_5">
+		<origin>#node_4</origin>
+		<target>#node_2</target>
+	</edge>
+
+	<edge fcid="#rule_7">
+		<origin>#node_2</origin>
+		<target>#node_6</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 1]]]></guard>
+	</edge>
+
+</flowchart>
+
+%
+
+%%DiaFlux
+<flowchart fcid="flow_b3d42500" name="Flow 1 " icon="sanduhr.gif" width="1187" height="120" autostart="false" idCounter="88">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_65">
+		<position left="20" top="51"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_66">
+		<position left="1099" top="57"></position>
+		<exit>Exit</exit>
+	</node>
+
+	<node fcid="#node_67">
+		<position left="656" top="20"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 2a(Start)]]]></action>
+	</node>
+
+	<node fcid="#node_69">
+		<position left="926" top="40"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 3(Start)]]]></action>
+	</node>
+
+	<node fcid="#node_70">
+		<position left="829" top="51"></position>
+		<snapshot>Snapshot</snapshot>
+	</node>
+
+	<node fcid="#node_74">
+		<position left="130" top="40"></position>
+		<action markup="KnOffice"><![CDATA[Trigger]]></action>
+	</node>
+
+	<node fcid="#node_78">
+		<position left="291" top="40"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 4(Start)]]]></action>
+	</node>
+
+	<node fcid="#node_81">
+		<position left="656" top="69"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 2b(Start)]]]></action>
+	</node>
+
+	<node fcid="#node_84">
+		<position left="459" top="40"></position>
+		<decision><![CDATA[Mode]]></decision>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_71">
+		<origin>#node_67</origin>
+		<target>#node_70</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 2a]]]></guard>
+	</edge>
+
+	<edge fcid="#rule_72">
+		<origin>#node_70</origin>
+		<target>#node_69</target>
+	</edge>
+
+	<edge fcid="#rule_73">
+		<origin>#node_69</origin>
+		<target>#node_66</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 3]]]></guard>
+	</edge>
+
+	<edge fcid="#rule_68">
+		<origin>#node_65</origin>
+		<target>#node_74</target>
+	</edge>
+
+	<edge fcid="#rule_75">
+		<origin>#node_74</origin>
+		<target>#node_78</target>
+		<guard markup="KnOffice"><![CDATA["Trigger" > 0]]></guard>
+	</edge>
+
+	<edge fcid="#rule_83">
+		<origin>#node_81</origin>
+		<target>#node_70</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 2b]]]></guard>
+	</edge>
+
+	<edge fcid="#rule_80">
+		<origin>#node_78</origin>
+		<target>#node_84</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 4]]]></guard>
+	</edge>
+
+	<edge fcid="#rule_85">
+		<origin>#node_84</origin>
+		<target>#node_67</target>
+		<guard markup="KnOffice"><![CDATA["Mode" = "Left"]]></guard>
+		<routingPoint x="0" y="17" />
+	</edge>
+
+	<edge fcid="#rule_86">
+		<origin>#node_84</origin>
+		<target>#node_81</target>
+		<guard markup="KnOffice"><![CDATA["Mode" = "Right"]]></guard>
+		<routingPoint x="0" y="8" />
+	</edge>
+
+	<edge fcid="#rule_87">
+		<origin>#node_84</origin>
+		<target>#node_67</target>
+		<guard markup="KnOffice"><![CDATA["Mode" = "Both"]]></guard>
+	</edge>
+
+	<edge fcid="#rule_88">
+		<origin>#node_84</origin>
+		<target>#node_81</target>
+		<guard markup="KnOffice"><![CDATA["Mode" = "Both"]]></guard>
+	</edge>
+
+</flowchart> 
+  
+%
+
+
+%%DiaFlux
+<flowchart fcid="flow_fe28eddd" name="Flow 2a" icon="sanduhr.gif" width="682" height="168" autostart="false" idCounter="18">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="20" top="31"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_3">
+		<position left="594" top="31"></position>
+		<exit>Exit 1</exit>
+	</node>
+
+	<node fcid="#node_6">
+		<position left="152" top="31"></position>
+		<snapshot>Snapshot 1</snapshot>
+	</node>
+
+	<node fcid="#node_7">
+		<position left="594" top="128"></position>
+		<exit>Exit 2</exit>
+	</node>
+
+	<node fcid="#node_8">
+		<position left="306" top="20"></position>
+		<action markup="KnOffice"><![CDATA[Question1 = (5)]]></action>
+	</node>
+
+	<node fcid="#node_11">
+		<position left="453" top="31"></position>
+		<snapshot>Snapshot 2</snapshot>
+	</node>
+
+	<node fcid="#node_13">
+		<position left="306" top="117"></position>
+		<action markup="KnOffice"><![CDATA[Question2 = (6)]]></action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_4">
+		<origin>#node_2</origin>
+		<target>#node_6</target>
+	</edge>
+
+	<edge fcid="#rule_9">
+		<origin>#node_6</origin>
+		<target>#node_8</target>
+	</edge>
+
+	<edge fcid="#rule_12">
+		<origin>#node_11</origin>
+		<target>#node_3</target>
+	</edge>
+
+	<edge fcid="#rule_14">
+		<origin>#node_6</origin>
+		<target>#node_13</target>
+	</edge>
+
+	<edge fcid="#rule_15">
+		<origin>#node_13</origin>
+		<target>#node_7</target>
+	</edge>
+
+	<edge fcid="#rule_18">
+		<origin>#node_8</origin>
+		<target>#node_11</target>
+	</edge>
+
+</flowchart>
+
+%
+
+
+%%DiaFlux
+<flowchart fcid="flow_fe28eddd" name="Flow 2b" icon="sanduhr.gif" width="682" height="168" autostart="false" idCounter="19">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="20" top="31"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_3">
+		<position left="594" top="31"></position>
+		<exit>Exit 1</exit>
+	</node>
+
+	<node fcid="#node_7">
+		<position left="594" top="128"></position>
+		<exit>Exit 2</exit>
+	</node>
+
+	<node fcid="#node_8">
+		<position left="306" top="20"></position>
+		<action markup="KnOffice"><![CDATA[Question1 = (5)]]></action>
+	</node>
+
+	<node fcid="#node_11">
+		<position left="453" top="31"></position>
+		<snapshot>Snapshot 2</snapshot>
+	</node>
+
+	<node fcid="#node_13">
+		<position left="306" top="117"></position>
+		<action markup="KnOffice"><![CDATA[Question2 = (6)]]></action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_12">
+		<origin>#node_11</origin>
+		<target>#node_3</target>
+	</edge>
+
+	<edge fcid="#rule_15">
+		<origin>#node_13</origin>
+		<target>#node_7</target>
+	</edge>
+
+	<edge fcid="#rule_18">
+		<origin>#node_8</origin>
+		<target>#node_11</target>
+	</edge>
+
+	<edge fcid="#rule_4">
+		<origin>#node_2</origin>
+		<target>#node_8</target>
+	</edge>
+
+	<edge fcid="#rule_19">
+		<origin>#node_2</origin>
+		<target>#node_13</target>
+	</edge>
+
+</flowchart>
+
+%
+
+
+%%DiaFlux
+<flowchart fcid="flow_baccfd4e" name="Flow 3" icon="sanduhr.gif" width="382" height="71" autostart="false" idCounter="6">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="20" top="31"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_3">
+		<position left="294" top="31"></position>
+		<exit>Exit</exit>
+	</node>
+
+	<node fcid="#node_4">
+		<position left="145" top="20"></position>
+		<action markup="KnOffice"><![CDATA[Trigger]]></action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_5">
+		<origin>#node_2</origin>
+		<target>#node_4</target>
+	</edge>
+
+	<edge fcid="#rule_6">
+		<origin>#node_4</origin>
+		<target>#node_3</target>
+		<guard markup="KnOffice"><![CDATA["Trigger" > 1]]></guard>
+	</edge>
+
+</flowchart> 
+  
+%
+
+
+%%DiaFlux
+<flowchart fcid="flow_7e953755" name="Flow 4" icon="sanduhr.gif" width="387" height="71" autostart="false" idCounter="6">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="20" top="31"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_3">
+		<position left="299" top="31"></position>
+		<exit>Exit</exit>
+	</node>
+
+	<node fcid="#node_5">
+		<position left="143" top="20"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 5(Start)]]]></action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_4">
+		<origin>#node_2</origin>
+		<target>#node_5</target>
+	</edge>
+
+	<edge fcid="#rule_6">
+		<origin>#node_5</origin>
+		<target>#node_3</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 5]]]></guard>
+	</edge>
+
+</flowchart> 
+  
+%
+
+
+%%DiaFlux
+<flowchart fcid="flow_cc5bc98a" name="Flow 5" icon="sanduhr.gif" width="550" height="71" autostart="false" idCounter="8">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="20" top="31"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_3">
+		<position left="462" top="31"></position>
+		<exit>Exit</exit>
+	</node>
+
+	<node fcid="#node_5">
+		<position left="157" top="31"></position>
+		<snapshot>Snapshot</snapshot>
+	</node>
+
+	<node fcid="#node_6">
+		<position left="293" top="20"></position>
+		<action markup="KnOffice"><![CDATA[CALL[Flow 6(Start)]]]></action>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_4">
+		<origin>#node_2</origin>
+		<target>#node_5</target>
+	</edge>
+
+	<edge fcid="#rule_7">
+		<origin>#node_5</origin>
+		<target>#node_6</target>
+	</edge>
+
+	<edge fcid="#rule_8">
+		<origin>#node_6</origin>
+		<target>#node_3</target>
+		<guard markup="KnOffice"><![CDATA[PROCESSED[Flow 6]]]></guard>
+	</edge>
+
+</flowchart> 
+  
+%
+
+
+%%DiaFlux
+<flowchart fcid="flow_a0c54680" name="Flow 6" icon="sanduhr.gif" width="269" height="50" autostart="false" idCounter="4">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="#node_2">
+		<position left="20" top="20"></position>
+		<start>Start</start>
+	</node>
+
+	<node fcid="#node_3">
+		<position left="181" top="20"></position>
+		<exit>Exit</exit>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_4">
+		<origin>#node_2</origin>
+		<target>#node_3</target>
+	</edge>
+
+</flowchart> 
+  
+%
+
+%%Question
+Mode [oc]
+- Left
+- Right
+- Both
+Question1 [num]
+Question2 [num]
+Trigger [num]
+%
+
+%%Package 
+parallelFlowsTest
+%
+
+%%KnowledgeBase 
+  
+%

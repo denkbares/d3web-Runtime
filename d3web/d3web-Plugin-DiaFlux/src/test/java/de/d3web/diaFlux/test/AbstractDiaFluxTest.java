@@ -29,6 +29,7 @@ import org.junit.Before;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -39,16 +40,18 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.diaFlux.flow.ActionNode;
+import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.strings.Strings;
 import de.d3web.utils.Log;
 
 /**
- * 
  * @author Reinhard Hatko
  * @created 03.12.2010
  */
@@ -131,9 +134,18 @@ public abstract class AbstractDiaFluxTest {
 	protected final String nodeQ9_2 = nodeQ9 + "_2";
 	protected final String nodeQ10_2 = nodeQ10 + "_2";
 	private long time;
+	private MatchingMode mode = MatchingMode.ID;
 
 	public AbstractDiaFluxTest(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public enum MatchingMode {
+		NAME, ID
+	}
+
+	public void setNodeMatchingMode(MatchingMode mode) {
+		this.mode = mode;
 	}
 
 	@Before
@@ -179,8 +191,9 @@ public abstract class AbstractDiaFluxTest {
 
 		List<String> inactiveIDs = new ArrayList<String>();
 
-		nextNode: for (Node node : flow.getNodes()) {
-			String nodeID = node.getID();
+		nextNode:
+		for (Node node : flow.getNodes()) {
+			String nodeID = getID(node);
 
 			for (String id : activeIDs) {
 				if (nodeID.equalsIgnoreCase(id)) continue nextNode;
@@ -204,14 +217,16 @@ public abstract class AbstractDiaFluxTest {
 
 		Flow flow = flowSet.get(flowName);
 
-		nextNode: for (Node node : flow.getNodes()) {
+		nextNode:
+		for (Node node : flow.getNodes()) {
 			boolean supported = isSupported(node);
 
-			for (String id : activeIDs) {
-				if (node.getID().equalsIgnoreCase(id)) {
+			for (String activeId : activeIDs) {
+				String id = getID(node);
+				if (id.equalsIgnoreCase(activeId)) {
 
 					if (!supported) {
-						failWithUnsupportedNode(flowName, id);
+						failWithUnsupportedNode(flowName, activeId);
 
 					}
 					continue nextNode;
@@ -238,7 +253,7 @@ public abstract class AbstractDiaFluxTest {
 		StringBuffer buffy = new StringBuffer("Supported Nodes in '" + flowName + "': ");
 
 		for (Node node : flow.getNodes()) {
-			if (isSupported(node)) buffy.append(node.getID() + ", ");
+			if (isSupported(node)) buffy.append(getID(node) + ", ");
 		}
 
 		Log.info(buffy.toString());
@@ -253,19 +268,37 @@ public abstract class AbstractDiaFluxTest {
 
 		Flow flow = flowSet.get(flowName);
 
-		nextNode: for (Node node : flow.getNodes()) {
+		nextNode:
+		for (Node node : flow.getNodes()) {
 			boolean supported = isSupported(node);
 
-			for (String id : inactiveIDs) {
-				if (node.getID().equalsIgnoreCase(id)) {
+			for (String inactiveID : inactiveIDs) {
+				String id = getID(node);
+				if (id.equalsIgnoreCase(inactiveID)) {
 
-					Assert.assertFalse("Node '" + id + "' must be inactive.", supported);
+					Assert.assertFalse("Node '" + inactiveID + "' must be inactive.", supported);
 					continue nextNode;
 				}
 			}
 
 		}
 
+	}
+
+	private String getID(Node node) {
+		if (mode == MatchingMode.ID) {
+			return node.getID();
+		}
+		else {
+			if (node instanceof ComposedNode) {
+				return ((ComposedNode) node).getCalledFlowName();
+			}
+			else if (node instanceof ActionNode) {
+				return Strings.concat(", ", ((ActionNode) node).getOutgoingEdges()
+						.iterator().next().getCondition().getTerminalObjects());
+			}
+			return node.getName();
+		}
 	}
 
 	protected void assertNumValue(QuestionNum num, double expected) {
@@ -285,6 +318,11 @@ public abstract class AbstractDiaFluxTest {
 
 	}
 
+	protected void setNumValue(String questionName, double value) {
+		Question question = kb.getManager().searchQuestion(questionName);
+		setNumValue((QuestionNum) question, value);
+	}
+
 	protected void setChoiceValue(QuestionOC question, String answerName) {
 		Log.info("Setting '" + question.getName() + "' to '" + answerName + "'.");
 
@@ -294,6 +332,11 @@ public abstract class AbstractDiaFluxTest {
 
 		addFact(fact);
 
+	}
+
+	protected void setChoiceValue(String questionName, String answerName) {
+		Question question = kb.getManager().searchQuestion(questionName);
+		setChoiceValue((QuestionOC) question, answerName);
 	}
 
 	public void addFact(Fact fact) {

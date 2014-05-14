@@ -352,8 +352,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * For each entered snapshot we generate a new FlowRun.<br>
 	 * There might be multiple FlowRuns that have entered the snapshot. We merge these FlowRuns into one new FlowRun
 	 * starting from the entered snapshot. It needs some information from the FlowRuns leading into snapshot, which
-	 * will
-	 * be set here.
+	 * will be set here.
 	 */
 	private FlowRun generateNewFlowRunForSnapshot(Session session, SnapshotNode snapshotNode) {
 		FlowRun run = new FlowRun();
