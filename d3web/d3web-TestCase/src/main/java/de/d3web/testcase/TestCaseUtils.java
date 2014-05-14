@@ -20,6 +20,7 @@ package de.d3web.testcase;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,10 +48,11 @@ import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
+import de.d3web.testcase.prefix.PrefixedTestCase;
 
 /**
  * Provides basic static functions
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 24.01.2012
  */
@@ -65,11 +67,11 @@ public class TestCaseUtils {
 	/**
 	 * Applies the findings of the specified {@link TestCase} at the specified
 	 * {@link Date} to the {@link Session}
-	 * 
-	 * @created 24.01.2012
-	 * @param session Session on which the Findings should be applied
+	 *
+	 * @param session  Session on which the Findings should be applied
 	 * @param testCase specified TestCase
-	 * @param date specified Date
+	 * @param date     specified Date
+	 * @created 24.01.2012
 	 */
 	public static void applyFindings(Session session, TestCase testCase, Date date) {
 		Blackboard blackboard = session.getBlackboard();
@@ -99,20 +101,23 @@ public class TestCaseUtils {
 
 	/**
 	 * Returns all questions used in Findings
-	 * 
-	 * @created 24.01.2012
+	 *
 	 * @param testCase {@link TestCase} to examine
-	 * @param kb {@link KnowledgeBase}
+	 * @param kb       {@link KnowledgeBase}
 	 * @return Collection of questions used in the specified {@link TestCase}
+	 * @created 24.01.2012
 	 */
 	public static Collection<Question> getUsedQuestions(TestCase testCase, KnowledgeBase kb) {
-		Collection<Question> questions = new LinkedList<Question>();
-		for (Date date : testCase.chronology()) {
-			for (Finding f : testCase.getFindings(date, kb)) {
-				if (f.getTerminologyObject() instanceof Question) {
-					Question question = (Question) f.getTerminologyObject();
-					if (!questions.contains(question)) {
-						questions.add(question);
+		Collection<Question> questions = new LinkedHashSet<Question>();
+		if (testCase instanceof PrefixedTestCase) {
+			questions.addAll(getUsedQuestions(((PrefixedTestCase) testCase).getTestCase(), kb));
+			questions.addAll(getUsedQuestions(((PrefixedTestCase) testCase).getPrefix(), kb));
+		}
+		else {
+			for (Date date : testCase.chronology()) {
+				for (Finding f : testCase.getFindings(date, kb)) {
+					if (f.getTerminologyObject() instanceof Question) {
+						questions.add((Question) f.getTerminologyObject());
 					}
 				}
 			}
@@ -122,12 +127,12 @@ public class TestCaseUtils {
 
 	/**
 	 * Checks if the {@link Value} contains a choice which isn't in the kb
-	 * 
-	 * @created 14.03.2012
+	 *
 	 * @param errors if the value does not fit, an error is entered in this
-	 *        collection
+	 *               collection
 	 * @param object {@link TerminologyObject}
-	 * @param value {@link Value}
+	 * @param value  {@link Value}
+	 * @created 14.03.2012
 	 */
 	public static void checkValues(Collection<String> errors, TerminologyObject object, Value value) {
 		if (object == null) {

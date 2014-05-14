@@ -37,6 +37,20 @@ public class PrefixedTestCase implements TestCase {
 		this.testCase = testCase;
 	}
 
+	/**
+	 * Returns the prefix part of this PrefixedTestCase
+	 */
+	public TestCase getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * Returns the actual TestCase of this PrefixedTestCase. Meaning: The part after the prefix.
+	 */
+	public TestCase getTestCase() {
+		return testCase;
+	}
+
 	private void lazyInit() {
 		if (!initialized) {
 			init();
