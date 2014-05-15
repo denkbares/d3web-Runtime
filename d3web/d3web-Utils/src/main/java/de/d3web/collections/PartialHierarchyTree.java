@@ -19,6 +19,7 @@
 package de.d3web.collections;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -106,7 +107,7 @@ public class PartialHierarchyTree<T> {
 	 * 
 	 * 
 	 * @created 12.04.2013
-	 * @param t
+	 * @param term
 	 * @return whether t has been found and removed
 	 */
 	public boolean removeNodeFromTree(T term) {
@@ -199,7 +200,7 @@ public class PartialHierarchyTree<T> {
 	/**
 	 * 
 	 * @created 12.04.2013
-	 * @param root2
+	 * @param n
 	 * @param result
 	 */
 	private void collectNodes(Node<T> n, Set<Node<T>> result) {
@@ -209,6 +210,32 @@ public class PartialHierarchyTree<T> {
 			collectNodes(child, result);
 		}
 		result.remove(root);
+	}
+
+	/**
+	 * Collects and returns all leafs of this partial hierarchy.
+	 * <p/>
+	 * Note that in this partial hierarchy (i.e. forest) data structure a leaf can at the same time also be a root.
+	 *
+	 * @return all leafs of the hierarchy
+	 */
+	public Collection<T> getLeafNodes() {
+		Collection<T> result = new HashSet<T>();
+		addLeafNodes(root, result);
+		return result;
+	}
+
+	private void addLeafNodes(Node<T> node, Collection<T> result) {
+		final List<Node<T>> children = node.getChildren();
+		if (children == null || children.size() == 0) {
+			//is a leaf
+			result.add(node.getData());
+		}
+		else {
+			for (Node<T> child : children) {
+				addLeafNodes(child, result);
+			}
+		}
 	}
 
 	public int getNodeCount() {
@@ -304,7 +331,7 @@ public class PartialHierarchyTree<T> {
 	 * 
 	 * @created 12.04.2013
 	 * @param term
-	 * @param root2
+	 * @param node
 	 */
 	private boolean removeNodeFromTree(T term, Node<T> node) {
 		boolean found = false;
@@ -346,7 +373,7 @@ public class PartialHierarchyTree<T> {
 
 		final T data;
 		private transient Node<T> parent;
-		private List<Node<T>> children = new ArrayList<Node<T>>();;
+		private List<Node<T>> children = new ArrayList<Node<T>>();
 
 		@Override
 		public String toString() {

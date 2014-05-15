@@ -1,14 +1,14 @@
 package de.d3web.collections.test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
 
 import de.d3web.collections.PartialHierarchyTree;
 import de.d3web.collections.PartialHierarchyTree.Node;
+
+import static org.junit.Assert.*;
 
 public class PartialHierarchyTreeTest {
 
@@ -55,7 +55,7 @@ public class PartialHierarchyTreeTest {
 		assertEquals(0, baNode.getChildren().size());
 		assertTrue(baNode.getParent().getData().equals(b));
 
-		// has should have BA as child now
+		// b should have BA as child now
 		bNode = tree.find(b);
 		assertTrue(bNode != null);
 		assertTrue(bNode.getData().equals(b));
@@ -68,6 +68,12 @@ public class PartialHierarchyTreeTest {
 		assertTrue(aNode != null);
 		assertTrue(aNode.getData().equals(a));
 		assertEquals(0, aNode.getChildren().size());
+
+		// test leafs
+		final Collection<String> leafNodes = tree.getLeafNodes();
+		assertEquals(2, leafNodes.size());
+		assertTrue(leafNodes.contains(a));
+		assertTrue(leafNodes.contains(ba));
 
 	}
 
@@ -107,6 +113,11 @@ public class PartialHierarchyTreeTest {
 		assertEquals(1, bChildren.size());
 		assertTrue(bChildren.contains(bacNode));
 		assertTrue(bacNode.getParent().equals(bNode));
+
+		// test leafs
+		final Collection<String> leafNodes = tree.getLeafNodes();
+		assertEquals(1, leafNodes.size());
+		assertTrue(leafNodes.contains(bac));
 	}
 
 	@Test
