@@ -368,10 +368,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// collect the parents, active nodes and blocked nodes from the previous FlowRuns
 		for (FlowRun flowRun : runsForSnapshot) {
 			Set<Node> parents = new LinkedHashSet<Node>();
+			Set<ComposedNode> activeComposedNodes = new LinkedHashSet<ComposedNode>();
 			Set<DiaFluxElement> activeElements = new LinkedHashSet<DiaFluxElement>();
 			run.addBlockedSnapshot(flowRun, session);
-			addActiveNodesLeadingToNode(flowRun, snapshotNode, null, activeElements);
-			addParents(flowRun, activeElements, snapshotNode, parents);
+			addActiveNodesLeadingToNode(flowRun, snapshotNode, null, activeComposedNodes, activeElements);
+			addParents(flowRun, activeComposedNodes, snapshotNode, parents);
 			// we only add the parents that are still active or relevant for the new FlowRun
 			for (Node parent : parents) {
 				if (hasIncomingActivation(parent, activeElements)
@@ -384,12 +385,13 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return run;
 	}
 
-	private void addActiveNodesLeadingToNode(FlowRun flowRun, Node node, Edge edge, Collection<DiaFluxElement> activeElements) {
+	private void addActiveNodesLeadingToNode(FlowRun flowRun, Node node, Edge edge, Set<ComposedNode> activeComposedNodes, Collection<DiaFluxElement> activeElements) {
 		if (edge != null) activeElements.add(edge);
+		if (node instanceof ComposedNode) {
+			activeComposedNodes.add((ComposedNode) node);
+		}
 		if (!activeElements.add(node)) {
-			if (!(node instanceof ComposedNode)) {
-				return;
-			}
+			if (!(node instanceof ComposedNode)) return;
 		}
 		// start node... go up, find the calling node
 		if (node instanceof StartNode) {
@@ -400,7 +402,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 						// we only continue, if the parent note really was activated in this flow
 						// (it is possible, that it was just exited in another part of the flow run)
 						if (flowRun.isActivated(incomingEdge)) {
-							addActiveNodesLeadingToNode(flowRun, composedNode, null, activeElements);
+							addActiveNodesLeadingToNode(flowRun, composedNode, null, activeComposedNodes, activeElements);
 							break;
 						}
 					}
@@ -413,7 +415,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName())) continue;
 				if (edge.getCondition() instanceof FlowchartProcessedCondition
 						|| endNode.getName().equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
-					addActiveNodesLeadingToNode(flowRun, endNode, null, activeElements);
+					addActiveNodesLeadingToNode(flowRun, endNode, null, activeComposedNodes, activeElements);
 				}
 			}
 		}
@@ -422,7 +424,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 				if (!flowRun.isActivated(incomingEdge)) continue;
 				Node startNode = incomingEdge.getStartNode();
 				//if (!flowRun.isActive(startNode)) continue;
-				addActiveNodesLeadingToNode(flowRun, startNode, incomingEdge, activeElements);
+				addActiveNodesLeadingToNode(flowRun, startNode, incomingEdge, activeComposedNodes, activeElements);
 			}
 		}
 	}
@@ -472,17 +474,15 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return false;
 	}
 
-	private void addParents(FlowRun flowRun, Set<DiaFluxElement> activeNodes, Node child, Collection<Node> result) {
+	private void addParents(FlowRun flowRun, Set<ComposedNode> activeComposedNodes, Node child, Collection<Node> result) {
 		Flow calledFlow = child.getFlow();
 		boolean foundCaller = false;
-		for (DiaFluxElement node : activeNodes) {
-			if (node instanceof ComposedNode) {
-				String calledFlowName = ((ComposedNode) node).getCalledFlowName();
-				if (calledFlow.getName().equals(calledFlowName)) {
-					result.add((ComposedNode) node);
-					foundCaller = true;
-					addParents(flowRun, activeNodes, (ComposedNode) node, result);
-				}
+		for (DiaFluxElement node : activeComposedNodes) {
+			String calledFlowName = ((ComposedNode) node).getCalledFlowName();
+			if (calledFlow.getName().equals(calledFlowName)) {
+				result.add((ComposedNode) node);
+				foundCaller = true;
+				addParents(flowRun, activeComposedNodes, (ComposedNode) node, result);
 			}
 		}
 		// only if it was not found in the activeNodes, we check in the start node of the previous flow run
@@ -491,7 +491,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 				if (startNode instanceof ComposedNode) {
 					String calledFlowName = ((ComposedNode) startNode).getCalledFlowName();
 					if (calledFlow.getName().equals(calledFlowName)) {
-						addParents(flowRun, activeNodes, startNode, result);
+						addParents(flowRun, activeComposedNodes, startNode, result);
 						result.add(startNode);
 					}
 				}
