@@ -31,7 +31,7 @@ import de.d3web.plugin.PluginManager;
 /**
  * This is a utility class to write and read fragments to/from xml documents
  * using Extensions
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 20.09.2010
  */
@@ -43,14 +43,12 @@ public class FragmentManager<Artifact> {
 	 * This method is used to create an XML element ({@link Document})for the
 	 * specified object using the {@link FragmentHandler} with the highest
 	 * priority who can create the element.
-	 * 
+	 *
 	 * @param object the specified object
-	 * @param doc the specified XML element, in which the element should be
-	 *        created
 	 * @return the {@link Element} representing the input object
 	 * @throws NoSuchFragmentHandlerException if no appropriate
-	 *         {@link FragmentHandler} is available for the specified object
-	 * @throws IOException if an error occurs during saving the specified object
+	 *                                        {@link FragmentHandler} is available for the specified object
+	 * @throws IOException                    if an error occurs during saving the specified object
 	 */
 	public Element writeFragment(Object object, Persistence<Artifact> persistence) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin : fragmentPlugins) {
@@ -60,7 +58,8 @@ public class FragmentManager<Artifact> {
 				return handler.write(object, persistence);
 			}
 		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + object);
+		throw new NoSuchFragmentHandlerException("No fragment handler found for: '" + object + "' ."
+				+ " Very likely a plugin is missing which was used to while creating this knowledge base.");
 	}
 
 	/**
@@ -69,13 +68,12 @@ public class FragmentManager<Artifact> {
 	 * priority and ability to handle the element is used. The specified
 	 * {@link KnowledgeBase} instance is used to retrieve the appropriate object
 	 * instances.
-	 * 
+	 *
 	 * @param child the specified XML Element
-	 * @param knowledgeBase the specified knowledge base
 	 * @return the created object
 	 * @throws NoSuchFragmentHandlerException if no appropriate
-	 *         {@link FragmentHandler} is available
-	 * @throws IOException if an IO error occurs during the read operation
+	 *                                        {@link FragmentHandler} is available
+	 * @throws IOException                    if an IO error occurs during the read operation
 	 */
 	public Object readFragment(Element child, Persistence<Artifact> persistence) throws NoSuchFragmentHandlerException, IOException {
 		for (Extension plugin : fragmentPlugins) {
@@ -85,18 +83,19 @@ public class FragmentManager<Artifact> {
 				return handler.read(child, persistence);
 			}
 		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: " + child);
+		throw new NoSuchFragmentHandlerException("No fragment handler found for: '" + child.getTextContent()
+				.trim() + "'. Very likely a plugin is missing which was used to while creating this knowledge base.");
 	}
 
 	/**
 	 * Initializes this manager with all extensions of a specific plugin / point
 	 * id.
-	 * 
-	 * @created 26.11.2013
+	 *
 	 * @param extendedPluginID the plugin id of the extensions point to get the
-	 *        {@link FragmentHandler}s for
-	 * @param extendedPointID the point id of the extensions point to get the
-	 *        {@link FragmentHandler}s for
+	 *                         {@link FragmentHandler}s for
+	 * @param extendedPointID  the point id of the extensions point to get the
+	 *                         {@link FragmentHandler}s for
+	 * @created 26.11.2013
 	 */
 	public void init(String extendedPluginID, String extendedPointID) {
 		PluginManager manager = PluginManager.getInstance();
