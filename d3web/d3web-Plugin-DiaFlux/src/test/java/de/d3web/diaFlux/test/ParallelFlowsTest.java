@@ -21,9 +21,7 @@ package de.d3web.diaFlux.test;
 import org.junit.Test;
 
 /**
- * 
- * @author Reinhard Hatko
- * @created 02.03.2011
+ * @created Albrecht Striffler (denkbares GmbH)
  */
 public class ParallelFlowsTest extends AbstractDiaFluxTest {
 

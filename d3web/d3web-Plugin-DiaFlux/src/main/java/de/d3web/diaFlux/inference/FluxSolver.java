@@ -396,7 +396,14 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			for (ComposedNode composedNode : flowRun.getActiveNodesOfClass(ComposedNode.class)) {
 				if (composedNode.getCalledFlowName().equals(node.getFlow().getName())
 						&& composedNode.getCalledStartNodeName().equals(node.getName())) {
-					addActiveNodesLeadingToNode(flowRun, composedNode, null, activeElements);
+					for (Edge incomingEdge : composedNode.getIncomingEdges()) {
+						// we only continue, if the parent note really was activated in this flow
+						// (it is possible, that it was just exited in another part of the flow run)
+						if (flowRun.isActivated(incomingEdge)) {
+							addActiveNodesLeadingToNode(flowRun, composedNode, null, activeElements);
+							break;
+						}
+					}
 				}
 			}
 		}
