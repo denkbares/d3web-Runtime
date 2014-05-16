@@ -20,8 +20,9 @@ package de.d3web.diaFlux.flow;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,8 +34,8 @@ import de.d3web.core.session.Session;
  */
 public class FlowRun {
 
-	private final Map<Node, Set<DiaFluxElement>> nodeSupports = new HashMap<Node, Set<DiaFluxElement>>();
-	private final Set<Node> startNodes = new HashSet<Node>();
+	private final Map<Node, Set<DiaFluxElement>> nodeSupports = new LinkedHashMap<Node, Set<DiaFluxElement>>();
+	private final Set<Node> startNodes = new LinkedHashSet<Node>();
 
 	private Set<SnapshotNode> blockedSnapshots = null;
 	private long blockedTime = Long.MIN_VALUE;
@@ -182,7 +183,8 @@ public class FlowRun {
 	}
 
 	/**
-	 * Return the activated nodes of that flow run, that matches the specified class (being of this class or a subclass.
+	 * Return the activated nodes of that flow run, that matches the specified class (being of this class or a
+	 * subclass.
 	 * Activated nodes are those notes that have active incoming edges, regardless if they are start nodes or not.
 	 *
 	 * @param <T>

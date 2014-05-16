@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -46,6 +47,7 @@ import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.DiaFluxElement;
 import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.EdgeMap;
+import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.FlowSet;
@@ -364,44 +366,56 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		Collection<FlowRun> runsForSnapshot = getFlowRunsWithEnteredSnapshot(Arrays.asList(snapshotNode), caseObject);
 
 		// collect the parents, active nodes and blocked nodes from the previous FlowRuns
-		Set<Node> parents = new HashSet<Node>();
-		Set<Node> activeNodes = new HashSet<Node>();
 		for (FlowRun flowRun : runsForSnapshot) {
+			Set<Node> parents = new LinkedHashSet<Node>();
+			Set<DiaFluxElement> activeElements = new LinkedHashSet<DiaFluxElement>();
 			run.addBlockedSnapshot(flowRun, session);
-			addParents(flowRun, snapshotNode, parents);
-			addActiveNodesLeadingToNode(flowRun, snapshotNode, activeNodes);
-		}
-
-		// we only add the parents that are still active or relevant for the new FlowRun
-		for (Node parent : parents) {
-			if (hasIncomingActivation(parent, activeNodes, session)
-					|| stillInside(parent, activeNodes, session)) {
-				run.addStartNode(parent);
+			addActiveNodesLeadingToNode(flowRun, snapshotNode, null, activeElements);
+			addParents(flowRun, activeElements, snapshotNode, parents);
+			// we only add the parents that are still active or relevant for the new FlowRun
+			for (Node parent : parents) {
+				if (hasIncomingActivation(parent, activeElements)
+						|| stillInside(parent, activeElements)) {
+					run.addStartNode(parent);
+				}
 			}
 		}
+
 		return run;
 	}
 
-	/**
-	 * This method ignores active nodes in sub flows, because they are not needed in the current context. We just move
-	 * up in any parent nodes calling the start nodes.
-	 */
-	private void addActiveNodesLeadingToNode(FlowRun flowRun, Node node, Collection<Node> activeNodes) {
-		if (!activeNodes.add(node)) return;
+	private void addActiveNodesLeadingToNode(FlowRun flowRun, Node node, Edge edge, Collection<DiaFluxElement> activeElements) {
+		if (edge != null) activeElements.add(edge);
+		if (!activeElements.add(node)) {
+			if (!(node instanceof ComposedNode)) {
+				return;
+			}
+		}
 		// start node... go up, find the calling node
 		if (node instanceof StartNode) {
 			for (ComposedNode composedNode : flowRun.getActiveNodesOfClass(ComposedNode.class)) {
 				if (composedNode.getCalledFlowName().equals(node.getFlow().getName())
 						&& composedNode.getCalledStartNodeName().equals(node.getName())) {
-					addActiveNodesLeadingToNode(flowRun, composedNode, activeNodes);
+					addActiveNodesLeadingToNode(flowRun, composedNode, null, activeElements);
+				}
+			}
+		}
+		// composite node... go down, find exit node
+		else if (node instanceof ComposedNode && edge != null) {
+			for (EndNode endNode : flowRun.getActiveNodesOfClass(EndNode.class)) {
+				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName())) continue;
+				if (edge.getCondition() instanceof FlowchartProcessedCondition
+						|| endNode.getName().equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
+					addActiveNodesLeadingToNode(flowRun, endNode, null, activeElements);
 				}
 			}
 		}
 		else {
 			for (Edge incomingEdge : node.getIncomingEdges()) {
+				if (!flowRun.isActivated(incomingEdge)) continue;
 				Node startNode = incomingEdge.getStartNode();
-				if (!flowRun.isActive(startNode)) continue;
-				addActiveNodesLeadingToNode(flowRun, startNode, activeNodes);
+				//if (!flowRun.isActive(startNode)) continue;
+				addActiveNodesLeadingToNode(flowRun, startNode, incomingEdge, activeElements);
 			}
 		}
 	}
@@ -427,10 +441,10 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * We check if the outgoing edge is active/true. If the node is not part of the active nodes, it is one of the
 	 * parent start nodes that are declared active because the flow has to resume there eventually.
 	 */
-	private boolean stillInside(Node node, Collection<Node> activeNodes, Session session) {
-		if (activeNodes.contains(node)) {
+	private boolean stillInside(Node node, Collection<DiaFluxElement> activeElements) {
+		if (activeElements.contains(node)) {
 			for (Edge edge : node.getOutgoingEdges()) {
-				if (Conditions.isTrue(edge.getCondition(), session)) {
+				if (activeElements.contains(edge)) {
 					return false;
 				}
 			}
@@ -442,24 +456,37 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * Not sure if we really still need this. We check if a parent node has an incoming edge with a active node as the
 	 * start node and the condition true.
 	 */
-	private static boolean hasIncomingActivation(Node child, Collection<Node> activeNodes, Session session) {
+	private static boolean hasIncomingActivation(Node child, Collection<DiaFluxElement> activeElements) {
 		for (Edge edge : child.getIncomingEdges()) {
-			if (activeNodes.contains(edge.getStartNode())
-					&& Conditions.isTrue(edge.getCondition(), session)) {
+			if (activeElements.contains(edge)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void addParents(FlowRun flowRun, Node child, Collection<Node> result) {
+	private void addParents(FlowRun flowRun, Set<DiaFluxElement> activeNodes, Node child, Collection<Node> result) {
 		Flow calledFlow = child.getFlow();
-		for (Node node : flowRun.getActiveNodes()) {
+		boolean foundCaller = false;
+		for (DiaFluxElement node : activeNodes) {
 			if (node instanceof ComposedNode) {
 				String calledFlowName = ((ComposedNode) node).getCalledFlowName();
 				if (calledFlow.getName().equals(calledFlowName)) {
-					result.add(node);
-					addParents(flowRun, node, result);
+					result.add((ComposedNode) node);
+					foundCaller = true;
+					addParents(flowRun, activeNodes, (ComposedNode) node, result);
+				}
+			}
+		}
+		// only if it was not found in the activeNodes, we check in the start node of the previous flow run
+		if (!foundCaller) {
+			for (Node startNode : flowRun.getStartNodes()) {
+				if (startNode instanceof ComposedNode) {
+					String calledFlowName = ((ComposedNode) startNode).getCalledFlowName();
+					if (calledFlow.getName().equals(calledFlowName)) {
+						addParents(flowRun, activeNodes, startNode, result);
+						result.add(startNode);
+					}
 				}
 			}
 		}
