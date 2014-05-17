@@ -45,6 +45,8 @@ public abstract class NonTerminalCondition implements Condition {
 	 */
 	private final List<Condition> terms;
 
+	private final Set<Condition> termSet;
+
 	private final int hash;
 
 	/**
@@ -54,10 +56,11 @@ public abstract class NonTerminalCondition implements Condition {
 	 */
 	public NonTerminalCondition(List<Condition> conditions) {
 		terms = Collections.unmodifiableList(new ArrayList<Condition>(conditions));
+		termSet = new HashSet<Condition>(conditions);
 		// create hash code an cache it
 		int temphash = HashCodeUtils.SEED;
 		temphash = HashCodeUtils.hash(temphash, getClass().getName());
-		temphash = HashCodeUtils.hashOrdered(temphash, terms);
+		temphash = HashCodeUtils.hashUnordered(temphash, terms);
 		hash = temphash;
 	}
 
@@ -92,7 +95,7 @@ public abstract class NonTerminalCondition implements Condition {
 		}
 		else {
 			NonTerminalCondition otherNTC = (NonTerminalCondition) other;
-			return this.terms.equals(otherNTC.terms);
+			return this.termSet.equals(otherNTC.termSet);
 			// return this.terms.containsAll(otherNTC.terms)
 			// && otherNTC.terms.containsAll(this.terms);
 		}
