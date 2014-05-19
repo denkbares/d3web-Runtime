@@ -32,6 +32,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
+import de.d3web.diaFlux.flow.DiaFluxElement;
 import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
@@ -168,6 +169,17 @@ public final class DiaFluxUtils {
 		Log.severe(("Node '" + nodeName + "' not found."));
 		return null;
 
+	}
+
+	public static DiaFluxElement findObjectById(Flow flow, String id) {
+		for (Node node : flow.getNodes()) {
+			if (node.getID().equals(id)) return node;
+		}
+
+		for (Edge edge : flow.getEdges()) {
+			if (edge.getID().equals(id)) return edge;
+		}
+		return null;
 	}
 
 	/**
