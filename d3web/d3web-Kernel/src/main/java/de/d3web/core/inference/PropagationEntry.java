@@ -97,9 +97,7 @@ public class PropagationEntry {
 	}
 
 	public boolean hasChanged() {
-		if (isForced()) return true;
-		if (isHazard()) return true;
-		return hasChangedValue();
+		return isForced() || isHazard() || hasChangedValue();
 	}
 
 	public boolean hasChangedValue() {
