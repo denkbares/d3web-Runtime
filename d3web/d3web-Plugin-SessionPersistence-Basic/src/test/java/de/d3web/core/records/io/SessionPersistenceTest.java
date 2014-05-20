@@ -122,10 +122,12 @@ public class SessionPersistenceTest {
 	private Date lastChangeDate;
 	private DefaultSession session;
 	private Session session2;
+	private File targetFolder;
 
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
+		targetFolder = new File("target/temp");
 		startDate = new Date();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		kb.setId("TestKB");
@@ -179,7 +181,7 @@ public class SessionPersistenceTest {
 		blackboard2.addValueFact(FactFactory.createUserEnteredFact(questionNum, NUMVALUE));
 		session2.getPropagationManager().commitPropagation();
 		sessionRecord2 = SessionConversionFactory.copyToSessionRecord(session2);
-		directory = new File("target/temp/directory");
+		directory = new File(targetFolder, "directory");
 		directory.mkdirs();
 	}
 
@@ -188,7 +190,10 @@ public class SessionPersistenceTest {
 		SingleXMLSessionRepository sessionRepository = new SingleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
 		sessionRepository.add(sessionRecord2);
-		File file = new File("target/temp/file.xml");
+		File file = new File(targetFolder, "file.xml");
+		if (file.exists()) {
+			Assert.assertTrue(file.delete());
+		}
 		sessionRepository.save(file);
 		SingleXMLSessionRepository reloadedRepository = new SingleXMLSessionRepository();
 		reloadedRepository.load(file);
@@ -265,7 +270,7 @@ public class SessionPersistenceTest {
 		Assert.assertTrue(error);
 		error = false;
 		// Test if file doesn't exist
-		File noFile = new File("target/temp/noFile.file");
+		File noFile = new File(targetFolder, "noFile.file");
 		noFile.delete();
 		Assert.assertFalse(
 				"Something manipulated test by creating a folder nofile.file in target/temp",
@@ -294,7 +299,7 @@ public class SessionPersistenceTest {
 		for (File f : directory.listFiles()) {
 			markXMLFile(f);
 		}
-		File directory2 = new File("target/temp/copiedFiles");
+		File directory2 = new File(targetFolder, "copiedFiles");
 		directory2.mkdirs();
 		clearDirectory(directory2);
 		reloadedRepository.save(directory2);
@@ -373,7 +378,7 @@ public class SessionPersistenceTest {
 		Assert.assertTrue(error);
 		error = false;
 		// testing file instead of a folder
-		File file = new File("target/temp/aFile.error");
+		File file = new File(targetFolder, "/aFile.error");
 		file.createNewFile();
 		try {
 			errorTestingRepository.load(file);
@@ -728,7 +733,7 @@ public class SessionPersistenceTest {
 	public void testSingleXMLPersistenceFolderCreation() throws IOException {
 		SingleXMLSessionRepository sessionRepository = new SingleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
-		File file = new File("target/temp/folder3/file.xml");
+		File file = new File(targetFolder, "folder3/file.xml");
 		file.getParentFile().mkdirs();
 		clearDirectory(file.getParentFile());
 		Assert.assertTrue(file.getParentFile().delete());
@@ -740,7 +745,7 @@ public class SessionPersistenceTest {
 	public void testMultipleXMLPersistenceFolderCreation() throws IOException {
 		MultipleXMLSessionRepository sessionRepository = new MultipleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
-		File folder = new File("target/temp/folder2/folder");
+		File folder = new File(targetFolder, "folder2/folder");
 		folder.mkdirs();
 		clearDirectory(folder);
 		Assert.assertTrue(folder.delete());
