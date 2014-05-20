@@ -170,6 +170,13 @@ public class SessionPersistenceTest {
 		creationDate = session.getCreationDate();
 		lastChangeDate = session.getLastChangeDate();
 		sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
+		// force a time differnce beetween the two sessions
+		try {
+			Thread.sleep(10);
+		}
+		catch (InterruptedException e) {
+			// nothing to do
+		}
 		session2 = SessionFactory.createSession(kb);
 		session2ID = session2.getId();
 		session2.getPropagationManager().openPropagation();
