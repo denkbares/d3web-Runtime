@@ -40,9 +40,9 @@ import de.d3web.utils.EqualsUtils;
 /**
  * Sets a specified value for a specified question. The value can be a
  * {@link FormulaExpression} or a specified {@link Choice} of a question.
- * 
+ *
  * Creation date: (20.06.2001 18:19:13)
- * 
+ *
  * @author Joachim Baumeister
  */
 public class ActionSetQuestion extends ActionAddValueFact {
@@ -90,13 +90,6 @@ public class ActionSetQuestion extends ActionAddValueFact {
 	 */
 	public Question getQuestion() {
 		return question;
-	}
-
-	@Override
-	public boolean hasChangedValue(Session session) {
-		// always return true, the change management will be handled by doIt()
-		return true;
-
 	}
 
 	/**
@@ -147,6 +140,12 @@ public class ActionSetQuestion extends ActionAddValueFact {
 				session.getBlackboard().addValueFact(fact);
 			}
 		}
+	}
+
+	@Override
+	public void update(Session session, Object source, PSMethod psmethod) {
+		undo(session, source, psmethod);
+		doIt(session, source, psmethod);
 	}
 
 	@Override

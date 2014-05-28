@@ -29,16 +29,16 @@ import de.d3web.core.session.Session;
 /**
  * Abstract class to describe actions executed by a given source, when their
  * conditions are true.
- * 
+ *
  * @author Joachim Baumeister
  */
 public abstract class PSAction {
 
 	/**
 	 * Executes the included action.
-	 * 
-	 * @param session the Case
-	 * @param source the object executing the action
+	 *
+	 * @param session  the Case
+	 * @param source   the object executing the action
 	 * @param psmethod the psmethod of the source
 	 */
 	public abstract void doIt(Session session, Object source, PSMethod psmethod);
@@ -48,7 +48,7 @@ public abstract class PSAction {
 	 * by modifying them. E.g. these are the question(s) that may be changed by
 	 * the action. The method is utilized by {@link Rule} to manage dynamic
 	 * references of knowledge maps.
-	 * 
+	 *
 	 * @return the backward (potentially modified) objects
 	 */
 	public abstract List<? extends TerminologyObject> getBackwardObjects();
@@ -58,28 +58,30 @@ public abstract class PSAction {
 	 * knowledge, that means that the action and the action's outcome depends on
 	 * these objects. For example the list contains all objects a value-setting
 	 * action requires to calculate the value to be set.
-	 * 
-	 * @created 30.09.2010
+	 *
 	 * @return the forward (utilized) objects
+	 * @created 30.09.2010
 	 */
 	public List<? extends TerminologyObject> getForwardObjects() {
 		return new LinkedList<TerminologyObject>();
 	}
 
 	/**
-	 * Checks if any action value (e.g. terminal objects of a formula) have
-	 * changed since last call to {@link #doIt(Session)}.
-	 * 
-	 * @see RuleComplex
-	 */
-	public boolean hasChangedValue(Session session) {
-		return false;
-	}
-
-	/**
 	 * Tries to undo the included action.
-	 * 
+	 *
 	 * @param psmethod psmethod the psmethod of the source
 	 */
 	public abstract void undo(Session session, Object source, PSMethod psmethod);
+
+	/**
+	 * Redoes the action if necessary. This method is called if the action remains active, e.g. if a rule has checked
+	 * due to some fact changes but the precondition remains true. Should be implemented if the result depends on the
+	 * forward objects.
+	 *
+	 * @param psmethod psmethod the psmethod of the source
+	 */
+	public void update(Session session, Object source, PSMethod psmethod) {
+
+	}
+
 }

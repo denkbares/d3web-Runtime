@@ -70,7 +70,9 @@ public class DefaultPropagationManager implements PropagationManager {
 			// if we already have an entry,
 			// check if it could be a hazard
 			else if (oldestValue.equals(session.getBlackboard().getValue(key))) {
-				hazardPropagationEntries.add(key);
+				if (!oldValue.equals(oldestValue)) {
+					hazardPropagationEntries.add(key);
+				}
 			}
 			else {
 				// if it was a hazard, it is a normal change again
@@ -157,7 +159,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * method under any circumstances (!) even in case of unexpected exceptions.
 	 * Therefore always use the following snipplet:
 	 * <p>
-	 * 
+	 * <p/>
 	 * <pre>
 	 * try {
 	 * 	session.getPropagationManager().openPropagation();
@@ -167,7 +169,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 	session.getPropagationManager().commitPropagation();
 	 * }
 	 * </pre>
-	 * 
+	 * <p/>
 	 * </p>
 	 */
 	@Override
@@ -202,7 +204,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * openPropagation() under any circumstances (!) even in case of unexpected
 	 * exceptions. Therefore always use the following snipplet:
 	 * <p>
-	 * 
+	 * <p/>
 	 * <pre>
 	 * try {
 	 * 	session.getPropagationManager().openPropagation();
@@ -212,7 +214,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 	session.getPropagationManager().commitPropagation();
 	 * }
 	 * </pre>
-	 * 
+	 * <p/>
 	 * </p>
 	 */
 	@Override
@@ -243,7 +245,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		// inform listener about starting entries
 		Collection<PropagationEntry> startingEntries = convertMapsToEntries(
 				globalPropagationEntries,
-				Collections.<ValueObject> emptySet(),
+				Collections.<ValueObject>emptySet(),
 				globalInterviewPropagationEntries, false);
 		for (PropagationListener listener : listeners) {
 			listener.propagationStarted(session, startingEntries);
@@ -261,7 +263,7 @@ public class DefaultPropagationManager implements PropagationManager {
 					// inform listener about post propagation entries
 					Collection<PropagationEntry> entries = convertMapsToEntries(
 							postPropagationEntries,
-							Collections.<ValueObject> emptySet(),
+							Collections.<ValueObject>emptySet(),
 							postInterviewPropagationEntries, true);
 					for (PropagationListener listener : listeners) {
 						listener.postPropagationStarted(session, entries);
@@ -286,7 +288,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			// even if we have been terminated
 			Collection<PropagationEntry> entries = convertMapsToEntries(
 					globalPropagationEntries,
-					Collections.<ValueObject> emptySet(),
+					Collections.<ValueObject>emptySet(),
 					globalInterviewPropagationEntries, true);
 			forcedPropagationEntries.clear();
 			for (PropagationListener listener : listeners) {
@@ -325,15 +327,16 @@ public class DefaultPropagationManager implements PropagationManager {
 		if (clearEntries) {
 			propagationEntries.clear();
 			interviewPropagationEntries.clear();
+			hazardEntries.clear();
 		}
 		return entries;
 	}
 
 	/**
 	 * find first handler that requires propagation
-	 * 
-	 * @created 17.11.2010
+	 *
 	 * @return next handler requiring propagation
+	 * @created 17.11.2010
 	 */
 	private PSMethodHandler findNextHandler() {
 		for (PSMethodHandler handler : this.psHandlers) {
@@ -357,15 +360,15 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	/**
 	 * Propagates a change value of an object through the different PSMethods.
-	 * <p>
+	 * <p/>
 	 * This method may cause other value propagations and therefore may be
 	 * called recursively. It is called after the value has been updated in the
 	 * case. Thus the case already contains the new value.
-	 * <p>
+	 * <p/>
 	 * <b>Do not call this method directly! It will be called by the case to
 	 * propagate facts updated into the case.</b>
-	 * 
-	 * @param object the object that has been updated
+	 *
+	 * @param object   the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 */
 	@Override
@@ -377,15 +380,15 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * Propagates a change value of an object through one selected PSMethod. All
 	 * changes that will be derived by that PSMethod will be propagated normally
 	 * throughout the whole system.
-	 * <p>
+	 * <p/>
 	 * This method may be used after a problem solver has been added to
 	 * distribute existing facts to him and enable him to derive additional
 	 * facts.
-	 * <p>
+	 * <p/>
 	 * <b>Do not call this method directly! It will be called by the case to
 	 * propagate facts updated into the case.</b>
-	 * 
-	 * @param object the object that has been updated
+	 *
+	 * @param object   the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
@@ -427,7 +430,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	/**
 	 * Returns if there is an open propagation frame (and therefore the kernel
 	 * is in propagation mode).
-	 * 
+	 *
 	 * @return if the kernel is in propagation
 	 */
 	@Override

@@ -141,11 +141,6 @@ public abstract class AbstractNode implements Node {
 	}
 
 	@Override
-	public boolean isReevaluate(Session session) {
-		return false;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -184,4 +179,8 @@ public abstract class AbstractNode implements Node {
 		return nameString;
 	}
 
+	@Override
+	public void update(Session session, FlowRun run) {
+    	// by default, nothing to do here...
+	}
 }

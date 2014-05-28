@@ -84,7 +84,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
-		// for rules we check all rules sequentally
+		// for rules we check all rules sequentially
 		for (PropagationEntry change : changes) {
 			if (!change.isStrategic() && change.hasChanged()) {
 				this.propagate(session, change.getObject());

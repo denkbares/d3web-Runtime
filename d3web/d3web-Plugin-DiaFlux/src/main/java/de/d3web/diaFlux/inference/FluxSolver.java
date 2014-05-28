@@ -166,8 +166,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 			for (Node node : knowledge) {
 				for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
-					if (run.isActive(node) && node.isReevaluate(session)) {
-						node.execute(session, run);
+					if (run.isActive(node)) {
+						node.update(session, run);
 					}
 				}
 			}

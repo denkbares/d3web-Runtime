@@ -18,10 +18,6 @@
  */
 package de.d3web.core.session.interviewmanager.tests;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +47,8 @@ import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static junit.framework.Assert.*;
 
 /**
  * Checks, that the repeated indication of some questions is performed
@@ -99,7 +97,7 @@ public class RepeatedIndicationTest {
 		Condition cond = new CondAnd(conditions);
 		ActionRepeatedIndication action = new ActionRepeatedIndication();
 		action.setQASets(sex);
-		RuleFactory.createRule(action, cond);
+		RuleFactory.createStrategicRule(action, cond);
 
 		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
 

@@ -95,11 +95,6 @@ public class ActionNode extends AbstractNode {
 	}
 
 	@Override
-	public boolean isReevaluate(Session session) {
-		return this.action.hasChangedValue(session);
-	}
-
-	@Override
 	public void takeSnapshot(Session session) {
 
 		super.takeSnapshot(session);
@@ -113,4 +108,8 @@ public class ActionNode extends AbstractNode {
 
 	}
 
+	@Override
+	public void update(Session session, FlowRun run) {
+		this.action.update(session, this, session.getPSMethodInstance(FluxSolver.class));
+	}
 }

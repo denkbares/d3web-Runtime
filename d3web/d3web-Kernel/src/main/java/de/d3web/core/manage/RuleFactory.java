@@ -206,17 +206,17 @@ public final class RuleFactory {
 	 * Creates a rule with the specified action and condition
 	 * 
 	 */
-	public static Rule createRule(
+	public static Rule createStrategicRule(
 			PSAction theAction,
 			Condition theCondition) {
-		return createRule(theAction, theCondition, null);
+		return createStrategicRule(theAction, theCondition, null);
 	}
 
 	/**
 	 * Creates a rule with the specified action, condition and exception
 	 * 
 	 */
-	public static Rule createRule(
+	public static Rule createStrategicRule(
 			PSAction theAction,
 			Condition theCondition,
 			Condition theRuleException) {

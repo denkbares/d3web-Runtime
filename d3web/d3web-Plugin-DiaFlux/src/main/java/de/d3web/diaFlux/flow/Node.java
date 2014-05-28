@@ -31,18 +31,15 @@ import de.d3web.core.session.Session;
 
 /**
  * @author Reinhard Hatko
- * 
  */
 public interface Node extends DiaFluxElement {
 
 	/**
-	 * 
 	 * @return s a list of this node's outgoing edges.
 	 */
 	List<Edge> getOutgoingEdges();
 
 	/**
-	 * 
 	 * @return s a list of this node's incoming edges.
 	 */
 	List<Edge> getIncomingEdges();
@@ -58,8 +55,6 @@ public interface Node extends DiaFluxElement {
 	void setFlow(Flow flow);
 
 	/**
-	 * 
-	 * 
 	 * @return s the name of the node
 	 */
 	String getName();
@@ -70,56 +65,49 @@ public interface Node extends DiaFluxElement {
 	 * as the conditions on outgoing edges are checked against all changes.
 	 * Certain types (like formula nodes) but have to receive state changes of
 	 * their own.
-	 * 
-	 * 
+	 *
 	 * @return s the list of questions and diagnosis, this node wants to be
-	 *         notified of.
+	 * notified of.
 	 */
 	List<? extends TerminologyObject> getHookedObjects();
 
 	/**
 	 * Does the action that is associated with this node.
-	 * 
+	 *
 	 * @param session the session
-	 * @param run TODO
+	 * @param run     TODO
 	 */
 	void execute(Session session, FlowRun run);
 
 	/**
 	 * Undoes the action that is associated with this node.
-	 * 
+	 *
 	 * @param session the session
-	 * @param run TODO
+	 * @param run     TODO
 	 */
 	void retract(Session session, FlowRun run);
 
 	/**
 	 * This method is called during a snapshot. It can carry out node specific
 	 * actions.
-	 * 
-	 * @created 12.11.2010
+	 *
 	 * @param session the current session
+	 * @created 12.11.2010
 	 */
 	void takeSnapshot(Session session);
 
 	/**
-	 * Returns if the node should be re-evaluated on changes in its forward
-	 * knowledge. Nodes containing e.g. calculations have to return true
-	 * 
-	 * @created 10.12.2010
-	 * @param session
-	 * @return true if the node should be reevaluated
-	 */
-	boolean isReevaluate(Session session);
-
-	/**
 	 * A node can specify a special condition that has to be true, before its
 	 * outgoing edges can fire.
-	 * 
-	 * 
-	 * @created 02.03.2011
+	 *
 	 * @return a Condition
+	 * @created 02.03.2011
 	 */
 	Condition getEdgePrecondition();
 
+	/**
+	 * Redoes the action of a node if necessary. This method is called if the node remains active, but its result may
+	 * have changed due to new facts. Should be implemented if the result depends on the forward objects.
+	 */
+	void update(Session session, FlowRun run);
 }

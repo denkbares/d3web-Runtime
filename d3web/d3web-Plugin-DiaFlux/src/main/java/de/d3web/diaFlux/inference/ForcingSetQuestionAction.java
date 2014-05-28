@@ -34,7 +34,7 @@ import de.d3web.utils.EqualsUtils;
  * @author Reinhard Hatko
  * @created 13.05.2013
  */
-public class ForcingSetQuestionAction extends ActionSetQuestion{
+public class ForcingSetQuestionAction extends ActionSetQuestion {
 
 	private final ActionSetQuestion delegate;
 
@@ -65,11 +65,6 @@ public class ForcingSetQuestionAction extends ActionSetQuestion{
 	@Override
 	public List<? extends TerminologyObject> getForwardObjects() {
 		return delegate.getForwardObjects();
-	}
-
-	@Override
-	public boolean hasChangedValue(Session session) {
-		return delegate.hasChangedValue(session);
 	}
 
 	@Override

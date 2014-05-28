@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -35,7 +35,7 @@ import de.d3web.core.session.blackboard.CaseRuleComplex;
  * It stores the condition, the check routine and if it has fired or not. The
  * action of a rule is specified by the extensions of Rule. Additionally, it is
  * possible to store an exception, when this rule must not fire.
- * 
+ *
  * @author Michael Wolber, joba
  */
 public class Rule implements SessionObjectSource<CaseRuleComplex> {
@@ -68,9 +68,9 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	/**
 	 * This is needed to fill the maps of FORWARD and BACKWARD in
 	 * PSMethodRuleBased
-	 * 
-	 * @created 16.02.2011
+	 *
 	 * @param context
+	 * @created 16.02.2011
 	 */
 	private void activateContextClass(Class<? extends PSMethodRulebased> context) {
 		if (context != null) {
@@ -128,66 +128,35 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * Buawa: This method checks a lot:<BR>
 	 * is this rule able to fire? (check condition) If it is able to fire the
 	 * rule executes the action part.<BR>
-	 * 
+	 * <p/>
 	 * Different from rules which fire to diagnosis, this check-method does not
 	 * need to check whether the rule already has fired - since the value is not
 	 * accumulative. It is instead an error to do so - since the action of the
 	 * rule might evaluate to another value when the source values change.
-	 * 
+	 * <p/>
 	 * If it has fired but is now not able to fire (cause the conditions are now
 	 * not fulfilled) the action's backtrack mechanism is executed.
-	 * 
+	 * <p/>
 	 * If the rule has already fired, can fire AND the depending Action is a
 	 * ActionQuestionSetter whose elementary values have changed (e.g. terminals
 	 * in a formula) it will be undone and fired again, so that the e.g.
 	 * depending formula will be recalculated.
 	 */
 	public void check(Session session) {
-		// should we execute the rule action ???
-		boolean executeRuleAction = false;
-		// should we undo the rule action ???
-		boolean undoRuleAction = false;
-
 		boolean hasFired = hasFired(session);
+		boolean canFire = false;
 		try {
-			boolean canFire = canFire(session);
-
-			if (!hasFired && canFire) {
-				executeRuleAction = true;
-			}
-
-			if (hasFired && !canFire) {
-				undoRuleAction = true;
-			}
-
-			// if this is a multipleFire-rule that has fired AND can fire again
-			// AND any depending value has changed, its action will be undone
-			// and executed again.
-			// This change fixes the "fire-undo-fire-bug" (when a question gets
-			// the same value several times (see MQDialogController)) and some
-			// problems with the "cycle-check".
-			if (hasFired && canFire) {
-				// if the action is a question setter action, changes in
-				// depending values (e.g. elements of a formula)
-				// will be noticed
-				boolean isQuestionSetterActionWithChangedValues =
-						getAction().hasChangedValue(session);
-				if (isQuestionSetterActionWithChangedValues) {
-					undoRuleAction = true;
-					executeRuleAction = true;
-				}
-			}
+			canFire = canFire(session);
 		}
 		catch (UnknownAnswerException ex) {
-			if (hasFired) {
-				undoRuleAction = true;
-			}
 		}
-
-		if (undoRuleAction) {
+		if (hasFired && canFire) {
+			update(session);
+		}
+		else if (hasFired) {
 			undo(session);
 		}
-		if (executeRuleAction) {
+		else if (canFire) {
 			doIt(session);
 		}
 	}
@@ -206,6 +175,12 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 			getAction().doIt(session, this, session.getPSMethodInstance(getProblemsolverContext()));
 		}
 
+	}
+
+	public void update(Session session) {
+		if (getAction() != null) {
+			getAction().update(session, this, session.getPSMethodInstance(getProblemsolverContext()));
+		}
 	}
 
 	public PSAction getAction() {
@@ -256,7 +231,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 * If the rule action changes, we also have to change the references for the
 	 * condition entries (since the knowledge map key changes for them as well)
 	 * and diagnosisContext, rule exceptions.
-	 * */
+	 */
 	private void updateActionReferences(
 			PSAction oldAction,
 			PSAction newAction) {
@@ -299,7 +274,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	/**
 	 * Remove terminal objects of specified condition from the old action and
 	 * insert them into the specified new action.
-	 * */
+	 */
 	private void updateConditionTerminals(
 			PSAction oldAction,
 			PSAction newAction,
@@ -323,12 +298,12 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	/**
 	 * Removes the specified rule from the knowledge map of the specified
 	 * objects.
-	 * 
+	 *
 	 * @param namedObjects list of named objects, in which the rule should be
-	 *        removed
-	 * @param psContext key for the specified knowledge map
-	 * @param kind key for the specified knowledge map
-	 * */
+	 *                     removed
+	 * @param psContext    key for the specified knowledge map
+	 * @param kind         key for the specified knowledge map
+	 */
 	public static void removeFrom(
 			Rule r,
 			Collection<? extends TerminologyObject> namedObjects,
@@ -342,10 +317,10 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	/**
 	 * Removes the specified rule from the knowledge of the specified object.
-	 * 
-	 * @param r specified rule
+	 *
+	 * @param r    specified rule
 	 * @param kind knowledge kind
-	 * @param nob specified object
+	 * @param nob  specified object
 	 */
 	public static void removeFrom(Rule r, KnowledgeKind<RuleSet> kind, TerminologyObject nob) {
 		if (nob != null) {
@@ -362,12 +337,12 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	/**
 	 * Adds the specified rule to the knowledge map of the specified objects.
-	 * 
+	 *
 	 * @param namedObjects list of named objects, in which the rule should be
-	 *        added
-	 * @param psContext key for the specified knowledge map
-	 * @param kind key for the specified knowledge map
-	 * */
+	 *                     added
+	 * @param psContext    key for the specified knowledge map
+	 * @param kind         key for the specified knowledge map
+	 */
 	public static void insertInto(
 			Rule r,
 			Collection<? extends TerminologyObject> namedObjects,
@@ -381,10 +356,10 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	/**
 	 * Adds the specified rule to the knowledge map of the specified objects.
-	 * 
-	 * @param r specified rule
+	 *
+	 * @param r    specified rule
 	 * @param kind knowledge kind
-	 * @param nob specified object
+	 * @param nob  specified object
 	 */
 	public static void insertInto(Rule r, KnowledgeKind<RuleSet> kind, TerminologyObject nob) {
 		if (nob != null) {

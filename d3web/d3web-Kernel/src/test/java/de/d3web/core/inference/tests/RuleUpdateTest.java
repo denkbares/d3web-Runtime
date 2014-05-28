@@ -55,17 +55,21 @@ public class RuleUpdateTest {
 		QuestionNum bmi = new QuestionNum(kb, "bmi");
 		QuestionNum weight = new QuestionNum(kb, "weight");
 		QuestionNum height = new QuestionNum(kb, "height");
+
 		QNumWrapper weightWrapper = new QNumWrapper(weight);
 		QNumWrapper heightWrapper = new QNumWrapper(height);
 		Operator quad = new Operator(heightWrapper, heightWrapper, Operator.Operation.Mult);
 		Operator div = new Operator(weightWrapper, quad, Operator.Operation.Div);
 		RuleFactory.createSetValueRule(bmi, div, new CondAnd(new LinkedList<Condition>()));
+
 		Session session = SessionFactory.createSession(kb);
 		Blackboard blackboard = session.getBlackboard();
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(weight, new NumValue(75)));
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(height, new NumValue(1.87)));
+
 		Value firstValue = blackboard.getValue(bmi);
 		Assert.assertTrue(UndefinedValue.isNotUndefinedValue(firstValue));
+
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(weight, new NumValue(80)));
 		Value secondValue = blackboard.getValue(bmi);
 		Assert.assertFalse(firstValue.getValue().equals(secondValue.getValue()));
