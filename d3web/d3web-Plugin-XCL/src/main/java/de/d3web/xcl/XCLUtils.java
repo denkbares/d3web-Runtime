@@ -19,6 +19,8 @@
 package de.d3web.xcl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,8 +51,7 @@ import de.d3web.utils.Log;
 public class XCLUtils {
 
 	/**
-	 * Returns a value fitting for the question fitting to the coverings of the
-	 * solution
+	 * Returns a value for the question fitting to the coverings of the solution
 	 * 
 	 * @created 22.02.2014
 	 * @param solution specified {@link Solution}
@@ -58,10 +59,30 @@ public class XCLUtils {
 	 * @return fitting value or null
 	 */
 	public static Value getFittingValue(Solution solution, QuestionOC question) {
-		XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
-		if (model == null) {
+		Collection<Value> fittingValues = getFittingValues(solution, question);
+		if (fittingValues.size() > 0) {
+			return fittingValues.iterator().next();
+		}
+		else {
 			return null;
 		}
+	}
+
+	/**
+	 * Returns all values for the question fitting to the coverings of the
+	 * solution
+	 * 
+	 * @created 27.05.2014
+	 * @param solution specified {@link Solution}
+	 * @param question specified {@link QuestionOC}
+	 * @return fitting values (may be emtpy)
+	 */
+	public static Collection<Value> getFittingValues(Solution solution, QuestionOC question) {
+		XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+		if (model == null) {
+			return Collections.emptyList();
+		}
+		Set<Value> values = new HashSet<Value>();
 		Set<XCLRelation> coveringRelations = model.getCoveringRelations(question);
 		for (XCLRelation relation : coveringRelations) {
 			// we assume that terminology objects cannot be used in
@@ -73,8 +94,11 @@ public class XCLUtils {
 				for (Choice c : ((QuestionChoice) question).getAllAlternatives()) {
 					ChoiceValue value = new ChoiceValue(c);
 					if (!forbiddenValues.contains(value)) {
-						return value;
+						values.add(value);
 					}
+				}
+				if (values.size() > 0) {
+					return values;
 				}
 				throw new IllegalArgumentException("All values of " + question
 						+ " are used in contradicting relations.");
@@ -82,7 +106,8 @@ public class XCLUtils {
 			else {
 				Set<Value> allowedValues = getValues(relation.getConditionedFinding(), question);
 				if (allowedValues.size() > 0) {
-					return allowedValues.iterator().next();
+					values.addAll(allowedValues);
+					return values;
 				}
 			}
 		}
@@ -90,15 +115,15 @@ public class XCLUtils {
 		DefaultAbnormality abnormality = question.getInfoStore().getValue(
 				BasicProperties.DEFAULT_ABNORMALITIY);
 		if (abnormality == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		for (Choice c : ((QuestionChoice) question).getAllAlternatives()) {
 			ChoiceValue choiceValue = new ChoiceValue(c);
 			if (abnormality.getValue(choiceValue) == Abnormality.A0) {
-				return choiceValue;
+				values.add(choiceValue);
 			}
 		}
-		return null;
+		return values;
 	}
 
 	private static void fillForbiddenValues(QuestionOC question, Condition condition, Set<Value> forbiddenValues) {
