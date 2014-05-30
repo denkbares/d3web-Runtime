@@ -232,7 +232,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
 				for (XCLRelation r : coveringRelations) {
 					if (r.hasType(XCLRelationType.contradicted)) {
-						set = lazyAddAll(set, getNegatedExtractedOrs(r));
+						set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
 					}
 					else {
 						set = lazyAddAll(set, getExtractedOrs(r));
@@ -249,7 +249,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 						if (coveringRelations != null && coveringRelations.contains(r)) {
 							continue;
 						}
-						set = lazyAddAll(set, getExtractedOrs(r));
+						set = lazyAddAll(set, filterForeignConditions(q,
+								getExtractedOrs(r)));
 					}
 				}
 				conditionsForQuestions.add(set);
@@ -269,7 +270,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
 			if (excludingRelations != null) {
 				for (XCLRelation r : excludingRelations) {
-					set = lazyAddAll(set, getExtractedOrs(r));
+					set = lazyAddAll(set, filterForeignConditions(q, getExtractedOrs(r)));
 				}
 			}
 			conditionsForQuestions.add(set);
@@ -278,6 +279,16 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 		// calculate information gain
 		return pots.getInformationGain();
+	}
+
+	private Collection<Condition> filterForeignConditions(Question q, Collection<Condition> extractedOrs) {
+		Collection<Condition> filteredExtractedOrs = new HashSet<Condition>();
+		for (Condition c : extractedOrs) {
+			if (c == null || c.getTerminalObjects().contains(q)) {
+				filteredExtractedOrs.add(c);
+			}
+		}
+		return filteredExtractedOrs;
 	}
 
 	// use come cache mechanism to avoid multiple calculation
