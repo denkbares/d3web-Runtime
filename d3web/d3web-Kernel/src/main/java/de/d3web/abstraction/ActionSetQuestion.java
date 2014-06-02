@@ -40,7 +40,7 @@ import de.d3web.utils.EqualsUtils;
 /**
  * Sets a specified value for a specified question. The value can be a
  * {@link FormulaExpression} or a specified {@link Choice} of a question.
- *
+ * <p/>
  * Creation date: (20.06.2001 18:19:13)
  *
  * @author Joachim Baumeister
@@ -144,8 +144,10 @@ public class ActionSetQuestion extends ActionAddValueFact {
 
 	@Override
 	public void update(Session session, Object source, PSMethod psmethod) {
-		undo(session, source, psmethod);
-		doIt(session, source, psmethod);
+		if (getValue() instanceof FormulaElement) {
+			undo(session, source, psmethod);
+			doIt(session, source, psmethod);
+		}
 	}
 
 	@Override
