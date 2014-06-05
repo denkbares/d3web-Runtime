@@ -16,19 +16,19 @@
 <Action type="ActionSetValue">
 <Question name="Mileage evaluation"/>
 <Values>
-<Value name="increased" type="answer"/>
+<Value name="normal" type="answer"/>
 </Values>
 </Action>
-<Condition name="Num. Mileage evaluation" type="numGreater" value="130.0"/>
+<Condition name="Num. Mileage evaluation" type="numLess" value="110.0"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
 <Question name="Mileage evaluation"/>
 <Values>
-<Value name="normal" type="answer"/>
+<Value name="increased" type="answer"/>
 </Values>
 </Action>
-<Condition name="Num. Mileage evaluation" type="numLess" value="110.0"/>
+<Condition name="Num. Mileage evaluation" type="numGreater" value="130.0"/>
 </KnowledgeSlice>
 <KnowledgeSlice type="RuleComplex">
 <Action type="ActionSetValue">
