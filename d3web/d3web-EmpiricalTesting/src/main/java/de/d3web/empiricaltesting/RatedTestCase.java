@@ -56,6 +56,11 @@ public class RatedTestCase {
 	private List<Finding> expectedFindings;
 
 	/**
+	 * List of expected regex findings (derived by a psmethod)
+	 */
+	private List<RegexFinding> expectedRegexFindings;
+
+	/**
 	 * This Rated Testcase's List of derived Solutions (derived from the
 	 * KnowledgeBase while in TestRun)
 	 */
@@ -93,6 +98,7 @@ public class RatedTestCase {
 		// contained in the rtc
 		expectedSolutions = new ArrayList<RatedSolution>();
 		expectedFindings = new ArrayList<Finding>();
+		expectedRegexFindings = new ArrayList<RegexFinding>();
 		derivedSolutions = new ArrayList<RatedSolution>();
 		lastTested = "";
 		wasTestedBefore = false;
@@ -100,8 +106,8 @@ public class RatedTestCase {
 
 	/**
 	 * Appends a Finding to this RatedTestCase's List of findings.
-	 * 
-	 * @param findings The Finding to be added
+	 *
+	 * @param finding The Finding to be added
 	 * @return True if the Finding was successfully appended
 	 */
 	public boolean add(Finding finding) {
@@ -112,7 +118,7 @@ public class RatedTestCase {
 	/**
 	 * Appends a whole list of Findings to this RatedTestCase's List of
 	 * findings.
-	 * 
+	 *
 	 * @param findings The List of Findings to be added
 	 * @return True if the Findings were successfully appended
 	 */
@@ -127,7 +133,7 @@ public class RatedTestCase {
 	/**
 	 * Appends some RatedSolution instances to this RatedTestCase's List of
 	 * expected solutions.
-	 * 
+	 *
 	 * @param solutions The RatedSolution instances to be added
 	 * @return True if the solutions were successfully appended
 	 */
@@ -142,7 +148,7 @@ public class RatedTestCase {
 	/**
 	 * Appends a whole list of RatedSolutions to this RatedTestCase's List of
 	 * expected Solutions.
-	 * 
+	 *
 	 * @param solutions The List of RatedSolutions to be added
 	 * @return True if the RatedSolutions were successfully appended
 	 */
@@ -162,6 +168,14 @@ public class RatedTestCase {
 		return allAdded;
 	}
 
+	public boolean addExpectedRegexFinding(RegexFinding... findings) {
+		boolean allAdded = true;
+		for (RegexFinding finding : findings) {
+			allAdded = allAdded && this.expectedRegexFindings.add(finding);
+		}
+		return allAdded;
+	}
+
 	public boolean addExpectedFindings(Collection<Finding> expectedFindings) {
 		return this.expectedFindings.addAll(expectedFindings);
 	}
@@ -169,7 +183,7 @@ public class RatedTestCase {
 	/**
 	 * Appends some RatedSolution instances to this RatedTestCase´s List of
 	 * derived solutions.
-	 * 
+	 *
 	 * @param solutions The RatedSolution instances to be added
 	 * @return True if RatedSolution was successfully appended
 	 */
@@ -184,11 +198,11 @@ public class RatedTestCase {
 	/**
 	 * Appends a whole list of RatedSolutions to this RatedTestCase's List of
 	 * derived Solutions.
-	 * 
+	 *
 	 * @param solutions The List of RatedSolutions to be added
-	 * @deprecated no longer use this method, it will be removed with the next
-	 *             release
 	 * @return True if the RatedSolutions were successfully appended
+	 * @deprecated no longer use this method, it will be removed with the next
+	 * release
 	 */
 	@Deprecated
 	public boolean addDerived(List<RatedSolution> solutions) {
@@ -201,7 +215,7 @@ public class RatedTestCase {
 
 	/**
 	 * Returns the Date on which this RatedTestCase was last tested.
-	 * 
+	 *
 	 * @return the lastTested
 	 */
 	public String getLastTested() {
@@ -209,9 +223,9 @@ public class RatedTestCase {
 	}
 
 	/**
-	 * @deprecated no longer use this method, it will be removed with the next
-	 *             release
 	 * @return the derivedSolutionsAreUpToDate
+	 * @deprecated no longer use this method, it will be removed with the next
+	 * release
 	 */
 	@Deprecated
 	public boolean getDerivedSolutionsAreUpToDate() {
@@ -219,9 +233,9 @@ public class RatedTestCase {
 	}
 
 	/**
-	 * @deprecated no longer use this method, it will be removed with the next
-	 *             release
 	 * @param derivedSolutionsAreUpToDate the derivedSolutionsAreUpToDate to set
+	 * @deprecated no longer use this method, it will be removed with the next
+	 * release
 	 */
 	public void setDerivedSolutionsAreUpToDate(
 			boolean derivedSolutionsAreUpToDate) {
@@ -230,7 +244,7 @@ public class RatedTestCase {
 
 	/**
 	 * Sets TestingDate to a specified date.
-	 * 
+	 *
 	 * @param date String formatted date
 	 */
 	public void setTestingDate(String date) {
@@ -257,7 +271,7 @@ public class RatedTestCase {
 
 	/**
 	 * Returns the Findings of this RatedTestCase.
-	 * 
+	 *
 	 * @return List of Findings
 	 */
 	public synchronized List<Finding> getFindings() {
@@ -266,7 +280,7 @@ public class RatedTestCase {
 
 	/**
 	 * Returns the ExpectedSolutions of this RatedTestCase.
-	 * 
+	 *
 	 * @return List of RatedSolutions
 	 */
 	public synchronized List<RatedSolution> getExpectedSolutions() {
@@ -279,7 +293,7 @@ public class RatedTestCase {
 
 	/**
 	 * Returns the derivedSolutions of this RatedTestCase.
-	 * 
+	 *
 	 * @return List of RatedSolutions
 	 */
 	public synchronized List<RatedSolution> getDerivedSolutions() {
@@ -308,7 +322,7 @@ public class RatedTestCase {
 	/**
 	 * A new instance is created and the lists solutions and findings are copied
 	 * into the new instance.
-	 * 
+	 *
 	 * @return a flat clone of the instance
 	 */
 	public RatedTestCase flatClone() {
@@ -316,6 +330,7 @@ public class RatedTestCase {
 		newRTC.name = name;
 		newRTC.findings = findings;
 		newRTC.expectedFindings = expectedFindings;
+		newRTC.expectedRegexFindings = expectedRegexFindings;
 		newRTC.expectedSolutions = expectedSolutions;
 		newRTC.derivedSolutions = derivedSolutions;
 		newRTC.timeStamp = timeStamp;
@@ -324,7 +339,7 @@ public class RatedTestCase {
 
 	/**
 	 * Returns the name of this RatedTestCase.
-	 * 
+	 *
 	 * @return String representing the name of this RatedTestCase
 	 */
 	public String getName() {
@@ -333,7 +348,7 @@ public class RatedTestCase {
 
 	/**
 	 * Sets the name of this RatedTestCase.
-	 * 
+	 *
 	 * @param name desired name
 	 */
 	public void setName(String name) {
@@ -345,6 +360,7 @@ public class RatedTestCase {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((expectedFindings == null) ? 0 : expectedFindings.hashCode());
+		result = prime * result + ((expectedRegexFindings == null) ? 0 : expectedRegexFindings.hashCode());
 		result = prime * result + ((expectedSolutions == null) ? 0 : expectedSolutions.hashCode());
 		result = prime * result + ((findings == null) ? 0 : findings.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -362,6 +378,10 @@ public class RatedTestCase {
 			if (other.expectedFindings != null) return false;
 		}
 		else if (!expectedFindings.equals(other.expectedFindings)) return false;
+		if (expectedRegexFindings == null) {
+			if (other.expectedRegexFindings != null) return false;
+		}
+		else if (!expectedRegexFindings.equals(other.expectedRegexFindings)) return false;
 		if (expectedSolutions == null) {
 			if (other.expectedSolutions != null) return false;
 		}
@@ -383,7 +403,7 @@ public class RatedTestCase {
 
 	/**
 	 * Returns true if this RatedTestCase was tested before.
-	 * 
+	 *
 	 * @return True if this RatedTestCase was tested before. Else false.
 	 */
 	public boolean wasTestedBefore() {
@@ -392,7 +412,7 @@ public class RatedTestCase {
 
 	/**
 	 * Sets if this RatedTestCase was tested before.
-	 * 
+	 *
 	 * @param wasTestedBefore Boolean value.
 	 */
 	public void setWasTestedBefore(boolean wasTestedBefore) {
@@ -409,6 +429,10 @@ public class RatedTestCase {
 
 	public Collection<Finding> getExpectedFindings() {
 		return Collections.unmodifiableCollection(expectedFindings);
+	}
+
+	public Collection<RegexFinding> getExpectedRegexFindings() {
+		return Collections.unmodifiableCollection(expectedRegexFindings);
 	}
 
 	public void setNote(String note) {

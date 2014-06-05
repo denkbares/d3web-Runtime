@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.d3web.core.inference.condition.CondRegex;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -49,16 +50,18 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.empiricaltesting.CaseUtils;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
+import de.d3web.empiricaltesting.RegexFinding;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
+import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
 
 /**
  * Wraps an {@link SequentialTestCase} to a {@link TestCase}
- * 
+ *
  * @author Markus Friedrich, Albrecht Striffler (denkbares GmbH)
  * @created 24.01.2012
  */
@@ -83,11 +86,10 @@ public class STCWrapper implements TestCase {
 	 * <b>Attention</b> Be aware, that the given reference to the
 	 * {@link RatedTestCase} has to be the same (equal is not enough) as the one
 	 * present in the {@link SequentialTestCase}.
-	 * 
-	 * 
-	 * @created 01.11.2013
-	 * @param rtc the {@link RatedTestCase} to add the {@link Check}s to
+	 *
+	 * @param rtc    the {@link RatedTestCase} to add the {@link Check}s to
 	 * @param checks the {@link Check}s to add
+	 * @created 01.11.2013
 	 */
 	public void addChecks(RatedTestCase rtc, Check... checks) {
 		if (checks.length == 0) return;
@@ -177,13 +179,21 @@ public class STCWrapper implements TestCase {
 			checks.add(new DerivedSolutionCheck(solution,
 					CaseUtils.getState(f.getRating())));
 		}
-		for (de.d3web.empiricaltesting.Finding f : rtc.getExpectedFindings()) {
-			Question question = f.getQuestion();
+		for (de.d3web.empiricaltesting.Finding finding : rtc.getExpectedFindings()) {
+			Question question = finding.getQuestion();
 			if (question.getKnowledgeBase() != kb) {
 				question = kb.getManager().searchQuestion(question.getName());
 				if (question == null) continue;
 			}
-			checks.add(new DerivedQuestionCheck(question, repairValue(f, question)));
+			checks.add(new DerivedQuestionCheck(question, repairValue(finding, question)));
+		}
+		for (RegexFinding regexFinding : rtc.getExpectedRegexFindings()) {
+			Question question = regexFinding.getQuestion();
+			if (question.getKnowledgeBase() != kb) {
+				question = kb.getManager().searchQuestion(question.getName());
+				if (question == null) continue;
+			}
+			checks.add(new ConditionCheck(new CondRegex(question, regexFinding.getRegex())));
 		}
 
 		// also add additional checks if available
@@ -212,15 +222,24 @@ public class STCWrapper implements TestCase {
 			Collection<de.d3web.empiricaltesting.Finding> findings = new LinkedList<de.d3web.empiricaltesting.Finding>();
 			findings.addAll(rtc.getFindings());
 			findings.addAll(rtc.getExpectedFindings());
-			for (de.d3web.empiricaltesting.Finding f : findings) {
-				String questionName = f.getQuestion().getName();
+			for (de.d3web.empiricaltesting.Finding finding : findings) {
+				String questionName = finding.getQuestion().getName();
 				Question question = kb.getManager().searchQuestion(questionName);
 				if (question == null) {
 					errors.add("Question \"" + questionName
 							+ "\" is not contained in the KB.");
 				}
 				else {
-					TestCaseUtils.checkValues(errors, question, repairValue(f, question));
+					TestCaseUtils.checkValues(errors, question, repairValue(finding, question));
+				}
+			}
+			Collection<RegexFinding> expectedRegexFindings = rtc.getExpectedRegexFindings();
+			for (RegexFinding expectedRegexFinding : expectedRegexFindings) {
+				String questionName = expectedRegexFinding.getQuestion().getName();
+				Question question = kb.getManager().searchQuestion(questionName);
+				if (question == null) {
+					errors.add("Question \"" + questionName
+							+ "\" is not contained in the KB.");
 				}
 			}
 			for (RatedSolution ratedSolution : rtc.getExpectedSolutions()) {

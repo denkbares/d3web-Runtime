@@ -72,6 +72,8 @@ public final class TestPersistence {
 	private static final String FINDING = "Finding";
 	private static final String EXPECTEDFINDING = "ExpectedFinding";
 
+	private static final String MATCHES = "Matches";
+
 	private static final String SOLUTIONS = "Solutions";
 	private static final String SOLUTION = "Solution";
 
@@ -138,7 +140,6 @@ public final class TestPersistence {
 	}
 
 	/**
-	 * 
 	 * @param casesUrl
 	 * @param kb
 	 * @return
@@ -147,7 +148,7 @@ public final class TestPersistence {
 	 * @throws URISyntaxException
 	 */
 	private List<SequentialTestCase> loadTheCases(URL casesUrl,
-			KnowledgeBase kb) throws FileNotFoundException, XMLStreamException, URISyntaxException {
+												  KnowledgeBase kb) throws FileNotFoundException, XMLStreamException, URISyntaxException {
 
 		File fCases = new File(casesUrl.toURI().getPath());
 		InputStream in = new FileInputStream(fCases);
@@ -156,12 +157,11 @@ public final class TestPersistence {
 	}
 
 	/**
-	 * 
-	 * @created 11.05.2011
 	 * @param in
 	 * @param kb
 	 * @return
 	 * @throws XMLStreamException
+	 * @created 11.05.2011
 	 */
 	public List<SequentialTestCase> loadCases(InputStream in, KnowledgeBase kb) throws XMLStreamException {
 		// First create a new XMLInputFactory
@@ -174,13 +174,13 @@ public final class TestPersistence {
 			int etype = sr.next();
 
 			switch (etype) {
-			case XMLStreamConstants.START_ELEMENT:
-				parseStartElement(sr, kb);
-				break;
+				case XMLStreamConstants.START_ELEMENT:
+					parseStartElement(sr, kb);
+					break;
 
-			case XMLStreamConstants.END_ELEMENT:
-				parseEndElement(sr);
-				break;
+				case XMLStreamConstants.END_ELEMENT:
+					parseEndElement(sr);
+					break;
 			}
 		}
 		return imported;
@@ -312,6 +312,9 @@ public final class TestPersistence {
 		for (Finding f : rtc.getExpectedFindings()) {
 			write(f, xmlsw, true);
 		}
+		for (RegexFinding f : rtc.getExpectedRegexFindings()) {
+			write(f, xmlsw, true);
+		}
 		xmlsw.writeCharacters("\n\t\t\t");
 		xmlsw.writeEndElement();
 
@@ -372,6 +375,15 @@ public final class TestPersistence {
 		}
 	}
 
+	private void write(RegexFinding f, XMLStreamWriter xmlsw, boolean expected)
+			throws XMLStreamException {
+
+		xmlsw.writeCharacters("\n\t\t\t\t");
+		xmlsw.writeEmptyElement(EXPECTEDFINDING);
+		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
+		xmlsw.writeAttribute(MATCHES, f.getRegex());
+	}
+
 	private void write(RatedSolution rs, XMLStreamWriter xmlsw)
 			throws XMLStreamException {
 
@@ -389,7 +401,6 @@ public final class TestPersistence {
 	}
 
 	/**
-	 * 
 	 * @param sr
 	 * @param kb
 	 */
@@ -438,8 +449,14 @@ public final class TestPersistence {
 			if (f != null) rtc.add(f);
 		}
 		else if (elName.equals(EXPECTEDFINDING)) {
-			Finding f = getFinding(sr, kb);
-			if (f != null) rtc.addExpectedFinding(f);
+			String matches = sr.getAttributeValue(null, MATCHES);
+			if (matches == null) {
+				Finding f = getFinding(sr, kb);
+				if (f != null) rtc.addExpectedFinding(f);
+			} else {
+				RegexFinding rf = getRegexFinding(sr, kb);
+				if (rf != null) rtc.addExpectedRegexFinding(rf);
+			}
 		}
 		else if (elName.equals(SOLUTION)) {
 			String name = sr.getAttributeValue(null, NAME);
@@ -461,6 +478,17 @@ public final class TestPersistence {
 			RatedSolution rs = new RatedSolution(d, r);
 			rtc.addExpected(rs);
 		}
+	}
+
+	private RegexFinding getRegexFinding(XMLStreamReader sr, KnowledgeBase kb) {
+		String questionText = sr.getAttributeValue(null, QUESTION);
+		String regex = sr.getAttributeValue(null, MATCHES);
+		Question q = kb.getManager().searchQuestion(questionText);
+		if (q == null) {
+			Log.warning("Question not found '" + questionText + "'.");
+			return null;
+		}
+		return new RegexFinding(q, regex);
 	}
 
 	private Finding getFinding(XMLStreamReader sr, KnowledgeBase kb) {
@@ -523,7 +551,6 @@ public final class TestPersistence {
 	}
 
 	/**
-	 * 
 	 * @param sr
 	 */
 	private void parseEndElement(XMLStreamReader sr) {

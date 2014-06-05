@@ -81,7 +81,7 @@ public class Finding implements Comparable<Finding> {
 	 * Creates new Finding with committed question and answer.
 	 * 
 	 * @param question The committed question
-	 * @param answer The committed answer
+	 * @param value The committed answer
 	 * @return new Finding consisting of committed question and answer
 	 */
 	public Finding(Question question, QuestionValue value) {
