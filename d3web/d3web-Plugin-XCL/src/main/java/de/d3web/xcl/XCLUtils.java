@@ -100,7 +100,8 @@ public class XCLUtils {
 				if (values.size() > 0) {
 					return values;
 				}
-				throw new IllegalArgumentException("All values of " + question
+				// do not abort, normal answer is taken
+				System.err.println("All values of " + question
 						+ " are used in contradicting relations.");
 			}
 			else {
@@ -129,6 +130,14 @@ public class XCLUtils {
 	private static void fillForbiddenValues(QuestionOC question, Condition condition, Set<Value> forbiddenValues) {
 		if (condition instanceof CondAnd) {
 			for (Condition c : ((CondAnd) condition).getTerms()) {
+				if (c.getTerminalObjects().contains(question)) {
+					fillForbiddenValues(question, c, forbiddenValues);
+				}
+			}
+		}
+		else if (condition instanceof CondOr) {
+			// CONDOR belonging to the same question are not supported
+			for (Condition c : ((CondOr) condition).getTerms()) {
 				if (c.getTerminalObjects().contains(question)) {
 					fillForbiddenValues(question, c, forbiddenValues);
 				}
