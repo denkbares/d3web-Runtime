@@ -184,7 +184,7 @@ public class ActionSetQuestion extends ActionAddValueFact {
 
 	@Override
 	public String toString() {
-		return "set: " + getQuestion().getName() + " = " + getValue();
+		return getQuestion().getName() + " = " + getValue();
 	}
 
 }

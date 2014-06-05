@@ -119,13 +119,10 @@ public class ActionSuppressAnswer extends PSAction {
 	 */
 	@Override
 	public String toString() {
-		return "<RuleAction type=\"SupressAnswer\">\n"
-				+ "  ["
+		return "Suppress "
 				+ getQuestion().getName()
-				+ ": "
-				+ getSuppress()
-				+ "]"
-				+ "\n</RuleAction>";
+				+ "#"
+				+ getSuppress();
 	}
 
 	/**

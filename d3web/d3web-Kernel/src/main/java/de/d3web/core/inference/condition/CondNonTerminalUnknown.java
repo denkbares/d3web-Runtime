@@ -3,6 +3,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.session.Session;
+import de.d3web.strings.Strings;
 
 /**
  * Created by Albrecht Striffler (denkbares GmbH) on 03.03.14.
@@ -45,17 +46,6 @@ public class CondNonTerminalUnknown extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret = "\u2190 CondUnknown {";
-		for (Condition condition : getTerms()) {
-			if (condition != null) {
-				ret += condition.toString() + "; ";
-			}
-		}
-		// remove last "; "
-		if (ret.endsWith("; ")) {
-			ret = ret.substring(0, ret.length() - 2);
-		}
-		ret += "}";
-		return ret;
+		return "(" + Strings.concat(", ", getTerms()) + ") = unknown";
 	}
 }

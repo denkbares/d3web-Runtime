@@ -51,7 +51,8 @@ public class CondUnknown extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondUnknown question: " + getQuestion().getName();
+		return getQuestion().getName()
+				+ " = unknown";
 	}
 
 }

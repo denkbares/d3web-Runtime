@@ -25,7 +25,7 @@ import de.d3web.core.session.Session;
 
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value and was
- * not answered with {@link AnswerUnknown}. The composite pattern is used for
+ * not answered with {@link de.d3web.core.session.values.Unknown}. The composite pattern is used for
  * this. This class is a "leaf". Creation date: (13.09.2000 14:07:14)
  *
  * @author Norman Bruemmer

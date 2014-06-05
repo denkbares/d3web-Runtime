@@ -107,19 +107,7 @@ public class CondMofN extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret = "\u2190 CondMofN min="
-				+ getMin()
-				+ " max="
-				+ getMax()
-				+ " size="
-				+ getTerms().size() + " {";
-		for (Condition condition : getTerms()) {
-			if (condition != null) {
-				ret += condition.toString();
-			}
-		}
-		ret += "}";
-		return ret;
+		return "Between " + getMin() + " and " + getMax() + " true out of " + getTerms();
 	}
 
 	@Override

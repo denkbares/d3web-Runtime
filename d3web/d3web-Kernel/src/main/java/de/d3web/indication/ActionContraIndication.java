@@ -99,6 +99,11 @@ public class ActionContraIndication extends PSAction {
 	}
 
 	@Override
+	public String toString() {
+		return "Contra indicate " + getQASets();
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
 			return true;

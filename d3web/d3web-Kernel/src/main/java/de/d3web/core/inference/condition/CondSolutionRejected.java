@@ -63,7 +63,7 @@ public class CondSolutionRejected extends TerminalCondition {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "(" + getSolution().getName() + ")";
+		return getSolution().getName() + " = rejected";
 	}
 
 }

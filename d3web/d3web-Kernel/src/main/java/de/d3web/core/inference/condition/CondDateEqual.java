@@ -45,9 +45,8 @@ public class CondDateEqual extends CondDate {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondDateEqual question: "
-				+ getQuestion().getName()
-				+ " value: "
+		return getQuestion().getName()
+				+ " = "
 				+ getValue();
 	}
 

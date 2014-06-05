@@ -123,7 +123,7 @@ public abstract class ActionNextQASet extends PSAction {
 
 	@Override
 	public String toString() {
-		return "Indicate: " + getQASets();
+		return "Indicate " + getQASets();
 	}
 
 	@Override

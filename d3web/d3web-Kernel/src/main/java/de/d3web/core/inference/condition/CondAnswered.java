@@ -24,7 +24,7 @@ import de.d3web.core.session.Session;
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
  * answered with {@link AnswerUnknown}.
- * 
+ *
  * @author Reinhard Hatko
  * @created 02.03.2011
  */
@@ -32,8 +32,8 @@ public class CondAnswered extends CondQuestion {
 
 	/**
 	 * Creates a new CondAnswered object for the given {@link Question}.
-	 * 
-	 * @param the given question
+	 *
+	 * @param question the given question
 	 */
 	public CondAnswered(Question question) {
 		super(question);
@@ -52,6 +52,6 @@ public class CondAnswered extends CondQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondAnswered question: " + getQuestion().getName();
+		return getQuestion().getName() + " = answered";
 	}
 }

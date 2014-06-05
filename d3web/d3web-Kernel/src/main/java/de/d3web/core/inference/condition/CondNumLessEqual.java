@@ -48,9 +48,8 @@ public class CondNumLessEqual extends CondNum {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondNumLessEqual question: "
-				+ getQuestion().getName()
-				+ " value: "
+		return getQuestion().getName()
+				+ " < "
 				+ getConditionValue();
 	}
 }

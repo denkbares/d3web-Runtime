@@ -43,7 +43,7 @@ public class CondNumIn extends CondNum {
 	 * @param maxValue the specified maximum value (Double)
 	 */
 	public CondNumIn(QuestionNum question, Double minValue, Double maxValue) {
-		this(question, new NumericalInterval(minValue.doubleValue(), maxValue.doubleValue()));
+		this(question, new NumericalInterval(minValue, maxValue));
 		numericalInterval.checkValidity();
 	}
 
@@ -61,7 +61,7 @@ public class CondNumIn extends CondNum {
 
 	@Override
 	protected boolean compare(Double caseValue, Double conditionedValue) {
-		return numericalInterval.contains(caseValue.doubleValue());
+		return numericalInterval.contains(caseValue);
 	}
 
 	/**
@@ -70,28 +70,23 @@ public class CondNumIn extends CondNum {
 	 * @return the maximum value of the condition
 	 */
 	public Double getMaxValue() {
-		return new Double(numericalInterval.getRight());
+		return numericalInterval.getRight();
 	}
 
 	/**
 	 * Returns the minimum value required by this condition
 	 * 
-	 * @return
-	 * 
 	 * @return the minimum value of this condition
 	 */
 	public Double getMinValue() {
-		return new Double(numericalInterval.getLeft());
+		return numericalInterval.getLeft();
 	}
 
 	@Override
 	public String toString() {
-		return "\u2190 CondNumIn question: "
-				+ getQuestion().getName()
-				+ " minValue: "
-				+ getMinValue()
-				+ " maxValue: "
-				+ getMaxValue();
+		return getQuestion().getName()
+				+ " in "
+				+ getValue();
 	}
 
 	@Override
@@ -143,7 +138,7 @@ public class CondNumIn extends CondNum {
 		StringBuffer out = new StringBuffer();
 		out.append(getInterval().isLeftOpen() ? "(" : "[");
 		out.append(getInterval().getLeft());
-		out.append(", ");
+		out.append(" ");
 		out.append(getInterval().getRight());
 		out.append(getInterval().isRightOpen() ? ")" : "]");
 		return out.toString();

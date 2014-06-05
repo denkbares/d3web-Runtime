@@ -63,7 +63,7 @@ public class CondSolutionConfirmed extends TerminalCondition {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "(" + getSolution().getName() + ")";
+		return getSolution().getName() + " = confirmed";
 	}
 
 }

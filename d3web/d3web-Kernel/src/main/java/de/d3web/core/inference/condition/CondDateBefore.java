@@ -45,9 +45,8 @@ public class CondDateBefore extends CondDate {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondDateBefore question: "
-				+ getQuestion().getName()
-				+ " value: "
+		return getQuestion().getName()
+				+ " < "
 				+ getValue();
 	}
 

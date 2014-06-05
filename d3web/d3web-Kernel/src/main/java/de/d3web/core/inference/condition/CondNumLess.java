@@ -50,9 +50,8 @@ public class CondNumLess extends CondNum {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondNumLess question: "
-				+ getQuestion().getName()
-				+ " value: "
+		return getQuestion().getName()
+				+ " < "
 				+ getConditionValue();
 	}
 }

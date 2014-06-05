@@ -45,7 +45,7 @@ public class ActionHeuristicPS extends ActionAddValueFact {
 
 	@Override
 	public String toString() {
-		return "set: " + (getSolution() == null ? "-?-" : getSolution()) + " = "
+		return (getSolution() == null ? "-?-" : getSolution()) + " = "
 				+ getScore();
 	}
 

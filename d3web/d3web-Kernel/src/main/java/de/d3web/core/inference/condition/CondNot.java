@@ -56,6 +56,6 @@ public class CondNot extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondNot {" + String.valueOf(condition) + "}";
+		return "NOT(" + condition + ")";
 	}
 }

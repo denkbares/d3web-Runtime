@@ -41,7 +41,7 @@ public class CondDState extends TerminalCondition {
 	 * rating-state of a certain state. Please note that only the state of the
 	 * rating will be checked.
 	 * 
-	 * @param diagnose diagnosis to check
+	 * @param solution diagnosis to check
 	 * @param rating the rating to take the state from
 	 */
 	public CondDState(Solution solution, Rating rating) {
@@ -69,7 +69,6 @@ public class CondDState extends TerminalCondition {
 	 * is true.
 	 * 
 	 * @param solution diagnosis to check
-	 * @param solutionState state of the diagnosis to check
 	 */
 	public CondDState(Solution solution) {
 		this(solution, (Rating.State) null);
@@ -99,9 +98,8 @@ public class CondDState extends TerminalCondition {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondDState diagnosis: "
-				+ solution.getName()
-				+ " value: "
+		return  solution.getName()
+				+ " = "
 				+ this.getRatingState();
 	}
 

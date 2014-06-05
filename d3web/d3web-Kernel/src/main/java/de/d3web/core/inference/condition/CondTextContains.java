@@ -51,9 +51,7 @@ public class CondTextContains extends CondTextQuestion {
 
 	@Override
 	public String toString() {
-		return "\u2190 CondTextContains question: "
-				+ getQuestion().getName()
-				+ " value: "
-				+ getValue();
+		return getQuestion().getName()
+				+ " CONTAINS " + getValue();
 	}
 }

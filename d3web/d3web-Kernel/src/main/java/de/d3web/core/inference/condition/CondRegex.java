@@ -31,18 +31,18 @@ import de.d3web.core.session.Value;
  * This condition checks, whether a specified regular expression matches the
  * value assigned to a question The composite pattern is used for this. This
  * class is a "leaf".
- * <p>
+ * <p/>
  * Being intended to be used for QuestionText, this condition may be used for
  * the string representation of any type of questions. The value of the question
  * is converted into the base objects default string representation and then the
  * regular expression is matched against the entire value string. Especially for
  * one-choice values (despite text-values) this might be handy.
- * <p>
+ * <p/>
  * For a detailed documentation of regular expressions, see {@link Pattern}
  * class. Please also note that no flags can be specified, but they might be
  * specified inline as part of the regular expression as described in the
  * {@link Pattern}'s documentation.
- * 
+ *
  * @author Volker Belli (denkbares GmbH)
  */
 public class CondRegex extends CondQuestion {
@@ -53,10 +53,10 @@ public class CondRegex extends CondQuestion {
 	/**
 	 * Creates a new condition to check the value assigned to a question against
 	 * a regular expression.
-	 * 
+	 *
 	 * @param question the question to check
-	 * @param regex the regular expression to match the question's value
-	 * @throws NullPointerException if any of the arguments are null
+	 * @param regex    the regular expression to match the question's value
+	 * @throws NullPointerException   if any of the arguments are null
 	 * @throws PatternSyntaxException if the regex is not in correct syntax
 	 */
 	public CondRegex(Question question, String regex) throws NullPointerException, PatternSyntaxException {

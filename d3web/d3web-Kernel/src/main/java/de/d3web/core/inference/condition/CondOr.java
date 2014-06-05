@@ -23,6 +23,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.session.Session;
+import de.d3web.strings.Strings;
 
 /**
  * Implements an "OR"-condition, where at least one sub-condition has to be
@@ -72,17 +73,6 @@ public class CondOr extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		String ret = "\u2190 CondOr {";
-		for (Condition condition : getTerms()) {
-			if (condition != null) {
-				ret += condition.toString() + "; ";
-			}
-		}
-		// remove last "; "
-		if (ret.endsWith("; ")) {
-			ret = ret.substring(0, ret.length() - 2);
-		}
-		ret += "}";
-		return ret;
+		return "(" + Strings.concat(" OR ", getTerms()) + ")";
 	}
 }
