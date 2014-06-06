@@ -38,7 +38,7 @@ public class ChoiceID implements Comparable<ChoiceID> {
 	/**
 	 * Constructs a new ChoiceID from a specified choice text
 	 * 
-	 * @param value the choice text for which a new ChoiceID should be
+	 * @param text the choice text for which a new ChoiceID should be
 	 *        instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -52,7 +52,7 @@ public class ChoiceID implements Comparable<ChoiceID> {
 	/**
 	 * Constructs a new ChoiceID from a specified {@link Choice}
 	 * 
-	 * @param value the choice for which a new ChoiceID should be instantiated
+	 * @param choice the choice for which a new ChoiceID should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public ChoiceID(Choice choice) {
@@ -81,6 +81,7 @@ public class ChoiceID implements Comparable<ChoiceID> {
 		return null;
 	}
 
+	@SuppressWarnings("SimplifiableIfStatement")
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;

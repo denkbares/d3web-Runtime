@@ -37,7 +37,7 @@ public class ChoiceValue implements QuestionValue {
 	/**
 	 * Constructs a new ChoiceValue from a specified choice
 	 * 
-	 * @param value the Choice for which a new ChoiceValue should be
+	 * @param choice the Choice for which a new ChoiceValue should be
 	 *        instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -48,7 +48,7 @@ public class ChoiceValue implements QuestionValue {
 	/**
 	 * Constructs a new ChoiceValue from a specified choice text
 	 * 
-	 * @param value the choice text for which a new ChoiceValue should be
+	 * @param text the choice text for which a new ChoiceValue should be
 	 *        instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -59,7 +59,7 @@ public class ChoiceValue implements QuestionValue {
 	/**
 	 * Constructs a new ChoiceValue from a specified {@link ChoiceID}
 	 * 
-	 * @param value the {@link ChoiceID} for which a new ChoiceValue should be
+	 * @param choiceID the {@link ChoiceID} for which a new ChoiceValue should be
 	 *        instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -124,12 +124,7 @@ public class ChoiceValue implements QuestionValue {
 		}
 		else if (obj instanceof MultipleChoiceValue) {
 			MultipleChoiceValue other = (MultipleChoiceValue) obj;
-			if (other.getChoiceIDs().size() != 1) {
-				return false;
-			}
-			else {
-				return other.getChoiceIDs().contains(choiceID);
-			}
+			return other.getChoiceIDs().size() == 1 && other.getChoiceIDs().contains(choiceID);
 		}
 		else if (obj instanceof ChoiceValue) {
 			ChoiceValue other = (ChoiceValue) obj;
