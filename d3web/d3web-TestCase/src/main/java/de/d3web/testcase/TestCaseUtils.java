@@ -59,15 +59,6 @@ import de.d3web.testcase.prefix.PrefixedTestCase;
 public class TestCaseUtils {
 
 	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
-	private static final long[] TIME_FACTORS = {
-			TimeUnit.MILLISECONDS.toMillis(1),
-			TimeUnit.SECONDS.toMillis(1),
-			TimeUnit.MINUTES.toMillis(1),
-			TimeUnit.HOURS.toMillis(1),
-			TimeUnit.DAYS.toMillis(1)};
-
-	private static final String[] TIME_UNITS = {
-			"ms", "s", "min", "h", "d" };
 
 	/**
 	 * Applies the findings of the specified {@link TestCase} at the specified
@@ -194,22 +185,5 @@ public class TestCaseUtils {
 						+ "\" needs a date value instead of \"" + value.toString() + "\".");
 			}
 		}
-	}
-
-	public static String getTimeVerbalization(long time) {
-
-		if (time == 0) return "0s";
-
-		String t = "";
-		for (int i = TIME_FACTORS.length - 1; i >= 0; i--) {
-			long factor = TIME_FACTORS[i];
-			long amount = (time / factor);
-			if (amount >= 1) {
-				if (!t.isEmpty()) t += " ";
-				t += amount + TIME_UNITS[i];
-				time -= amount * factor;
-			}
-		}
-		return t;
 	}
 }

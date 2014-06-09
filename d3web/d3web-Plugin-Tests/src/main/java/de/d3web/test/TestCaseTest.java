@@ -86,7 +86,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
 					String time = "(time ";
 					if (date.getTime() < TestCaseUtils.YEAR) {
-						time += TestCaseUtils.getTimeVerbalization(date.getTime()
+						time += Strings.getDurationVerbalization(date.getTime()
 								- testCase.getStartDate().getTime());
 					}
 					else {
