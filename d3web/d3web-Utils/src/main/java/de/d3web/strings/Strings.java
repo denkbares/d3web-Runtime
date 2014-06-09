@@ -1643,7 +1643,7 @@ public class Strings {
 	}
 
 	public static String getDurationVerbalization(long timeMillis) {
-		return getDurationVerbalization(timeMillis, true);
+		return getDurationVerbalization(timeMillis, false);
 	}
 
 	public static String getDurationVerbalization(long timeMillis, boolean longVersion) {
