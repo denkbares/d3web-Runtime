@@ -65,7 +65,7 @@ import de.d3web.testcase.model.TestCase;
  * @author Markus Friedrich, Albrecht Striffler (denkbares GmbH)
  * @created 24.01.2012
  */
-public class STCWrapper implements TestCase {
+public class STCWrapper implements CommentedTestCase {
 
 	private final SequentialTestCase stc;
 	private final Map<RatedTestCase, List<Check>> additionalChecks = new IdentityHashMap<RatedTestCase, List<Check>>();
@@ -98,9 +98,7 @@ public class STCWrapper implements TestCase {
 			checksOfRTC = new ArrayList<Check>();
 			additionalChecks.put(rtc, checksOfRTC);
 		}
-		for (Check check : checks) {
-			checksOfRTC.add(check);
-		}
+		Collections.addAll(checksOfRTC, checks);
 	}
 
 	@Override
@@ -144,7 +142,7 @@ public class STCWrapper implements TestCase {
 			}
 			if (value == null) {
 				if (question instanceof QuestionOC) {
-					value = new ChoiceValue(f.getValuePrompt().toString());
+					value = new ChoiceValue(f.getValuePrompt());
 				}
 				else {
 					value = f.getValue();
@@ -163,6 +161,11 @@ public class STCWrapper implements TestCase {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String getComment(Date date) {
+		return stc.getCase(date).getName();
 	}
 
 	@Override

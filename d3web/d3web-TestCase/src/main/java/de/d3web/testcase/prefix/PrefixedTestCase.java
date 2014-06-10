@@ -14,6 +14,7 @@ import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
+import de.d3web.testcase.stc.CommentedTestCase;
 
 /**
  * This class allows to add a {@link TestCase} as a prefix to another
@@ -23,7 +24,7 @@ import de.d3web.testcase.model.TestCase;
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 15.02.2013
  */
-public class PrefixedTestCase implements TestCase {
+public class PrefixedTestCase implements CommentedTestCase {
 
 	private boolean initialized = false;
 	private final TestCase prefix;
@@ -128,6 +129,29 @@ public class PrefixedTestCase implements TestCase {
 						toPrefixFinding(testCaseFinding));
 			}
 			return mergedFindings.values();
+		}
+	}
+
+	@Override
+	public String getComment(Date date) {
+		if (!chronology().contains(date)) return null;
+		if (date.before(mergedDate) && prefix instanceof CommentedTestCase) {
+			return ((CommentedTestCase) prefix).getComment(date);
+		}
+		else if (date.after(mergedDate) && testCase instanceof CommentedTestCase) {
+			return ((CommentedTestCase) testCase).getComment(toTestCaseDate(date));
+		}
+		else {
+			String comment = null;
+			if (prefix instanceof CommentedTestCase) {
+				comment = ((CommentedTestCase) prefix).getComment(date);
+			}
+			if (testCase instanceof CommentedTestCase) {
+				String tcComment = ((CommentedTestCase) testCase).getComment(toTestCaseDate(date));
+				if (comment == null) comment = tcComment;
+				else comment += "\n" + tcComment;
+			}
+			return comment;
 		}
 	}
 
