@@ -36,15 +36,13 @@ public interface Finding {
 	 * Returns the terminology object of this Finding
 	 * 
 	 * @created 23.01.2012
-	 * @return TerminologyObject of this Finding
 	 */
 	TerminologyObject getTerminologyObject();
 
 	/**
-	 * Retunrs the Value of this Finding
+	 * Returns the Value of this Finding
 	 * 
 	 * @created 23.01.2012
-	 * @return Value of this Finding
 	 */
 	Value getValue();
 
@@ -52,7 +50,6 @@ public interface Finding {
 	 * Returns the Date of this Finding
 	 * 
 	 * @created 23.01.2012
-	 * @return Date of this Finding
 	 */
 	Date getDate();
 

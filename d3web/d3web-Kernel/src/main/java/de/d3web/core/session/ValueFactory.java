@@ -133,8 +133,8 @@ public final class ValueFactory {
 	 *          representation for a Value for the given Question
 	 */
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString, Value existingValue) {
-		Value value = null;
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
+		Value value = null;
 		if (question instanceof QuestionMC) {
 			value = createQuestionMCValue((QuestionMC) question, choice, existingValue);
 		}
