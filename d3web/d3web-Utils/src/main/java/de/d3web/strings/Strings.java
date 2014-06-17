@@ -1109,7 +1109,7 @@ public class Strings {
 		if (text == null) return null;
 
 		if (ENTITY_PATTERN == null) {
-			ENTITY_PATTERN = Pattern.compile("&(\\w{1,4});");
+			ENTITY_PATTERN = Pattern.compile("&(?:#(\\d{1,5})|(\\w{1,8}));");
 
 			NAMED_ENTITIES = new HashMap<String, String>(340);
 			NAMED_ENTITIES.put("apos", "'");
@@ -1381,15 +1381,14 @@ public class Strings {
 			result.append(text.substring(pos, start));
 
 			// then try to decode
-			String content = matcher.group(1);
 			try {
 				// try coded entity
-				int code = Integer.parseInt(content);
+				int code = Integer.parseInt(matcher.group(1));
 				result.append((char) code);
 			}
 			catch (NumberFormatException e) {
 				// try named entity
-				String decoded = NAMED_ENTITIES.get(content);
+				String decoded = NAMED_ENTITIES.get(matcher.group(2));
 				if (decoded != null) {
 					result.append(decoded);
 				}
