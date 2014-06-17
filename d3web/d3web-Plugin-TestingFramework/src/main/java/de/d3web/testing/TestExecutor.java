@@ -71,7 +71,7 @@ public class TestExecutor {
 	 * @created 14.08.2012
 	 */
 	public BuildResult getBuildResult() {
-		if (executorThread == null || executorThread.isInterrupted() || isRunning()) return null;
+		if (executorThread == null || executorThread.isInterrupted() || !isShutdown()) return null;
 		return build;
 	}
 
@@ -280,8 +280,8 @@ public class TestExecutor {
 		}
 	}
 
-	public boolean isRunning() {
-		return !executor.isShutdown();
+	public boolean isShutdown() {
+		return executor.isShutdown();
 	}
 
 	/**
