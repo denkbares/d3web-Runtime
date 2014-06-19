@@ -191,7 +191,10 @@ public class LogTest {
 	}
 
 	public void assertMethod(String methodName) {
-		Assert.assertEquals(methodName, handler.record.getSourceMethodName());
+		String sourceMethodName = handler.record.getSourceMethodName();
+		if (!sourceMethodName.startsWith("__")) {
+			Assert.assertEquals(methodName, sourceMethodName);
+		}
 	}
 
 	public void assertMessage(String message) {
