@@ -26,17 +26,31 @@ import de.d3web.plugin.Extension;
 /**
  * Compares Plugins by its priority. Using this Class to sort arrays or
  * collections will sort the plugins ascending. This means, plugins with a
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PluginCollectionComparatorByPriority implements Comparator<Extension> {
 
 	@Override
 	public int compare(Extension o1, Extension o2) {
-		if (o1.getPriority() > o2.getPriority()) {
+		double p1;
+		try {
+			p1 = o1.getPriority();
+		}
+		catch (Exception e) {
+			p1 = 0;
+		}
+		double p2;
+		try {
+			p2 = o2.getPriority();
+		}
+		catch (Exception e) {
+			p2 = 0;
+		}
+		if (p1 > p2) {
 			return 1;
 		}
-		else if (o1.getPriority() < o2.getPriority()) {
+		else if (p1 < p2) {
 			return -1;
 		}
 		else {
