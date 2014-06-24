@@ -26,8 +26,6 @@
  */
 package de.d3web.persistence.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.junit.Before;
@@ -40,6 +38,9 @@ import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.persistence.tests.utils.XMLTag;
+import de.d3web.plugin.test.InitPluginManager;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author vogele
@@ -55,6 +56,7 @@ public class QuestionDateTest {
 
 	@Before
 	public void setUp() throws IOException {
+		InitPluginManager.init();
 		KnowledgeBase kb = new KnowledgeBase();
 		persistence = new KnowledgeBasePersistence(PersistenceManager.getInstance(), kb);
 
