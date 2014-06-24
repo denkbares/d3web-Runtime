@@ -161,11 +161,13 @@ public class LogTest {
 
 	@Test
 	public void sunFactory() {
-		Log.init(ClassDetection.sun);
-		Log.logger().setLevel(Level.WARNING);
-		Log.severe("testing sunFactory");
-		assertClass(getClass().getName());
-		assertMethod("sunFactory");
+		if (!System.getProperty("java.vm.name").toLowerCase().contains("openjdk")) {
+			Log.init(ClassDetection.sun);
+			Log.logger().setLevel(Level.WARNING);
+			Log.severe("testing sunFactory");
+			assertClass(getClass().getName());
+			assertMethod("sunFactory");
+		}
 	}
 
 	@Test

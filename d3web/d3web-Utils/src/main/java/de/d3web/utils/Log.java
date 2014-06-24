@@ -263,6 +263,10 @@ public class Log {
 	 */
 	public static void init(ClassDetection method) throws IllegalStateException {
 		try {
+			if (method == ClassDetection.sun
+					&& System.getProperty("java.vm.name").toLowerCase().contains("openjdk")) {
+				throw new IllegalArgumentException("Method sun is not usable with OpenJDK");
+			}
 			String className = Log.class.getName() + "$" + method.getClassName();
 			ClassLoader classLoader = Log.class.getClassLoader();
 			Class<?> clazz = classLoader.loadClass(className);
@@ -285,7 +289,7 @@ public class Log {
 	 * given message is forwarded to all the registered output Handler objects.
 	 * <p>
 	 * 
-	 * @param msg The string message (or a key in the message catalog)
+	 * @param message The string message (or a key in the message catalog)
 	 */
 	public static void finest(String message) {
 		log(1, Level.FINEST, message);
