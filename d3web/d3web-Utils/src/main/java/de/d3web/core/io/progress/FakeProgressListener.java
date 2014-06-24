@@ -70,7 +70,7 @@ public class FakeProgressListener implements ExtendedProgressListener {
 	public void updateProgress(float percent, String message) {
 		thread.interrupt();
 		//noinspection StatementWithEmptyBody
-		while (thread.isAlive()) {
+		while (thread.isAlive()) { // NOSONAR
 			// wait until thread is down
 		}
 		delegate.updateProgress(percent, message);

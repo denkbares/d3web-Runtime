@@ -85,11 +85,6 @@ public class HeuristicRating extends Rating {
 		return score;
 	}
 
-	@Override
-	public int hashCode() {
-		return (int) (super.hashCode() + 47 * Math.round(getScore()));
-	}
-
 	/**
 	 * Sums up a number of HeuristicRatings, creating a new one that represents
 	 * the combined score.
