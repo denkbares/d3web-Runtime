@@ -50,14 +50,6 @@ public class RegexFinding implements Comparable<RegexFinding> {
 		this.regex = v;
 	}
 
-	/**
-	 * @deprecated no longer use this method, it will be removed with the next
-	 */
-	@Deprecated
-	public void setQuestion(Question q) {
-		this.question = q;
-	}
-
 	public Question getQuestion() {
 		return question;
 	}

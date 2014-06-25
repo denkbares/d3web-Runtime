@@ -18,12 +18,26 @@
  */
 package de.d3web.test.empiricalTesting;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.Test;
 
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.empiricaltesting.Finding;
+import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
+import de.d3web.empiricaltesting.ScoreRating;
+import de.d3web.plugin.test.InitPluginManager;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * 
@@ -33,10 +47,39 @@ import de.d3web.empiricaltesting.RatedTestCase;
 public class RatedTestCaseTest {
 
 	@Test
-	public void testEquals() {
+	public void testEquals() throws IOException {
+
+		InitPluginManager.init();
+		KnowledgeBase knowledge = KnowledgeBaseUtils.createKnowledgeBase();
+		String name = "solution name";
+		Solution solution = new Solution(knowledge, name);
+
 		RatedTestCase rtc1 = new RatedTestCase();
 		assertFalse(rtc1.equals(null));
 		assertFalse(rtc1.equals(Boolean.FALSE));
 		assertTrue(rtc1.equals(rtc1));
+
+		RatedSolution rs = new RatedSolution(solution, new ScoreRating(100));
+		rtc1.addExpected(Arrays.asList(rs));
+		assertTrue(rtc1.getExpectedSolutions().contains(rs));
+
+		rtc1.addDerived(Arrays.asList(rs));
+		assertTrue(rtc1.getDerivedSolutions().contains(rs));
+
+		rtc1.setExpectedSolutions(Arrays.asList(rs));
+		assertTrue(rtc1.getDerivedSolutions().contains(rs));
+
+
+		String qname = "question name";
+		QuestionChoice q = new QuestionOC(knowledge, qname);
+		Finding f = new Finding(q, qname);
+		String choiceName = "c1";
+		Choice c1 = new Choice(choiceName);
+		q.addAlternative(c1);
+		ChoiceValue value1 = new ChoiceValue(c1);
+		f.setValue(value1);
+
+		rtc1.addExpectedFindings(Arrays.asList(f));
+		assertTrue(rtc1.getExpectedFindings().contains(f));
 	}
 }

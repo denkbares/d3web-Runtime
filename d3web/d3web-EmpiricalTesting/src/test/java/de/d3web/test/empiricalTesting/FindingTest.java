@@ -18,44 +18,40 @@
  */
 package de.d3web.test.empiricalTesting;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.empiricaltesting.Finding;
+import de.d3web.empiricaltesting.RegexFinding;
 import de.d3web.plugin.test.InitPluginManager;
 
+import static org.junit.Assert.*;
+
 /**
- * 
  * @author jochenreutelshofer
  * @created 22.07.2013
  */
 public class FindingTest {
 
 	@Test
-	public void testFinding() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testFinding() throws IOException {
+		InitPluginManager.init();
 		KnowledgeBase knowledge = KnowledgeBaseUtils.createKnowledgeBase();
 		String name = "question name";
 		QuestionChoice q = new QuestionOC(knowledge, name);
@@ -90,5 +86,44 @@ public class FindingTest {
 		f3.setValue(value1);
 		assertTrue(f.equals(f3));
 		assertTrue(f.compareTo(f3) == 0);
+	}
+
+	@Test
+	public void testRegexFinding() throws IOException {
+		InitPluginManager.init();
+		KnowledgeBase knowledge = KnowledgeBaseUtils.createKnowledgeBase();
+		String name = "question name";
+		QuestionDate q = new QuestionDate(knowledge, name);
+		RegexFinding f = new RegexFinding(q, name);
+		String regex = "2014-05-02 12:00:00";
+		f.setRegex(regex);
+
+		assertEquals(f.toString(), name + " = " + regex);
+		assertEquals(f.getQuestionPrompt(), name);
+		assertEquals(f.getRegex(), regex);
+
+		String name2 = "question name2";
+		QuestionText q2 = new QuestionText(knowledge, name2);
+		RegexFinding f2 = new RegexFinding(q2, name2);
+		String regex2 = "^hello$";
+		f2.setRegex(regex2);
+		assertEquals(f2.getRegex(), regex2);
+
+		assertTrue(f.equals(f));
+		assertFalse(f.equals(f2));
+		assertFalse(f.equals(null));
+		assertFalse(f.equals(Boolean.FALSE));
+		assertTrue(f.compareTo(f2) < 0);
+
+		RegexFinding f3 = new RegexFinding(q, name);
+		f3.setRegex(regex);
+		assertTrue(f.equals(f3));
+		assertTrue(f.compareTo(f3) == 0);
+
+		Set<RegexFinding> hashTest = new HashSet<RegexFinding>();
+		hashTest.add(f);
+		assertTrue(hashTest.contains(f));
+		assertFalse(hashTest.contains(f2));
+
 	}
 }
