@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -38,13 +40,14 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.utils.Log;
 
 /**
  * Provides static methods for XCLModels
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.02.2014
  */
@@ -52,11 +55,11 @@ public class XCLUtils {
 
 	/**
 	 * Returns a value for the question fitting to the coverings of the solution
-	 * 
-	 * @created 22.02.2014
+	 *
 	 * @param solution specified {@link Solution}
 	 * @param question specified {@link QuestionOC}
 	 * @return fitting value or null
+	 * @created 22.02.2014
 	 */
 	public static Value getFittingValue(Solution solution, QuestionOC question) {
 		Collection<Value> fittingValues = getFittingValues(solution, question);
@@ -69,15 +72,30 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns all values for the question fitting to the coverings of the
-	 * solution
-	 * 
-	 * @created 27.05.2014
+	 * Returns all values for the question fitting to the coverings of the solution
+	 *
 	 * @param solution specified {@link Solution}
 	 * @param question specified {@link QuestionOC}
-	 * @return fitting values (may be emtpy)
+	 * @return fitting values (may be empty)
+	 * @created 27.05.2014
 	 */
 	public static Collection<Value> getFittingValues(Solution solution, QuestionOC question) {
+		return getFittingValues(solution, question, null);
+	}
+
+	/**
+	 * Returns all values for the question fitting to the coverings of the solution. If a session is
+	 * specified (not null), the values are also filtered for the ones are really capable to still
+	 * get an positive coverage (e.g. some fitting values of an AND-combined conditions where one
+	 * subcondition remains false will be omitted).
+	 *
+	 * @param solution specified {@link Solution}
+	 * @param question specified {@link QuestionOC}
+	 * @param session the session to evaluate the condition for
+	 * @return fitting values (may be empty)
+	 * @created 27.05.2014
+	 */
+	public static Collection<Value> getFittingValues(Solution solution, QuestionOC question, Session session) {
 		XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 		if (model == null) {
 			return Collections.emptyList();
@@ -91,7 +109,7 @@ public class XCLUtils {
 				Condition condition = relation.getConditionedFinding();
 				Set<Value> forbiddenValues = new HashSet<Value>();
 				fillForbiddenValues(question, condition, forbiddenValues);
-				for (Choice c : ((QuestionChoice) question).getAllAlternatives()) {
+				for (Choice c : question.getAllAlternatives()) {
 					ChoiceValue value = new ChoiceValue(c);
 					if (!forbiddenValues.contains(value)) {
 						values.add(value);
@@ -105,7 +123,8 @@ public class XCLUtils {
 						+ " are used in contradicting relations.");
 			}
 			else {
-				Set<Value> allowedValues = getValues(relation.getConditionedFinding(), question);
+				Set<Value> allowedValues =
+						getValues(relation.getConditionedFinding(), question, session);
 				if (allowedValues.size() > 0) {
 					values.addAll(allowedValues);
 					return values;
@@ -118,7 +137,7 @@ public class XCLUtils {
 		if (abnormality == null) {
 			return Collections.emptyList();
 		}
-		for (Choice c : ((QuestionChoice) question).getAllAlternatives()) {
+		for (Choice c : question.getAllAlternatives()) {
 			ChoiceValue choiceValue = new ChoiceValue(c);
 			if (abnormality.getValue(choiceValue) == Abnormality.A0) {
 				values.add(choiceValue);
@@ -152,26 +171,55 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns the values, fitting to the specified condition. This method can
-	 * only handle CondOr, CondEqual and CondAnd
-	 * 
-	 * For or conditions, it is assumed, that subconditions covering other
-	 * questions evaluate to false, so e.G. no value for (F1=A AND (F1=B OR
-	 * F2=C)) will be found
-	 * 
-	 * @created 22.02.2014
+	 * Returns the values, fitting to the specified condition. This method can only handle CondOr,
+	 * CondEqual and CondAnd.
+	 * <p/>
+	 * For or conditions, it is assumed, that subconditions covering other questions evaluate to
+	 * false, so e.G. no value for (F1=A AND (F1=B OR F2=C)) will be found.
+	 *
 	 * @param condition specified {@link Condition}
 	 * @return Set of fitting values
+	 * @created 22.02.2014
 	 */
 	public static Set<Value> getValues(Condition condition, Question question) {
+		return getValues(condition, question, null);
+	}
+
+	/**
+	 * Returns the values, fitting to the specified condition. This method can only handle CondOr,
+	 * CondEqual and CondAnd.
+	 * <p/>
+	 * For or conditions, it is assumed, that subconditions covering other questions evaluate to
+	 * false, so e.G. no value for (F1=A AND (F1=B OR F2=C)) will be found.
+	 * <p/>
+	 * If the session is specified (not null), the session is used to check if parts of the
+	 * condition can become true with any value of the specified question, e.g. if an AND condition
+	 * does not already have some false subcondition. If not, this value of the question is
+	 * omitted.
+	 *
+	 * @param condition specified {@link Condition}
+	 * @return Set of fitting values
+	 * @created 22.02.2014
+	 */
+	public static Set<Value> getValues(Condition condition, Question question, Session session) {
 		Set<Value> result = new HashSet<Value>();
 		// return an empty set, if no value is covered
 		if (!condition.getTerminalObjects().contains(question)) {
 			return result;
 		}
 		if (condition instanceof CondOr) {
-			for (Condition c : ((CondOr) condition).getTerms()) {
-				result.addAll(getValues(c, question));
+			// in case of OR check if the condition is already true,
+			// then any value will create a "true" result (only possible for choice questions)
+			if (session != null && (question instanceof QuestionChoice)
+					&& Conditions.isTrue(condition, session)) {
+				for (Choice choice : ((QuestionChoice) question).getAllAlternatives()) {
+					result.add(new ChoiceValue(choice));
+				}
+			}
+			else {
+				for (Condition c : ((CondOr) condition).getTerms()) {
+					result.addAll(getValues(c, question, session));
+				}
 			}
 		}
 		else if (condition instanceof CondEqual) {
@@ -180,21 +228,29 @@ public class XCLUtils {
 			}
 		}
 		else if (condition instanceof CondAnd) {
-			List<Set<Value>> subSets = new ArrayList<Set<Value>>();
-			for (Condition c : ((CondAnd) condition).getTerms()) {
-				// if the subcondition coveres the question, collect its values
-				if (c.getTerminalObjects().contains(question)) {
-					subSets.add(getValues(c, question));
-				}
+			// in case of AND check if the condition is already false,
+			// then no value can create a "true" result
+			if (session != null && Conditions.isFalse(condition, session)) {
+				// do nothing, result remains empty
+				Log.info("skip values due to false sub-condition of AND condition: " + condition);
 			}
-			if (subSets.size() > 0) {
-				result = subSets.get(0);
-				for (int i = 1; i < subSets.size(); i++) {
-					result.retainAll(subSets.get(i));
+			else {
+				List<Set<Value>> subSets = new ArrayList<Set<Value>>();
+				for (Condition c : ((CondAnd) condition).getTerms()) {
+					// if the subcondition coveres the question, collect its values
+					if (c.getTerminalObjects().contains(question)) {
+						subSets.add(getValues(c, question, session));
+					}
 				}
-			}
-			if (result.size() == 0) {
-				Log.warning("Cannot find value for " + question + " in " + condition);
+				if (subSets.size() > 0) {
+					result = subSets.get(0);
+					for (int i = 1; i < subSets.size(); i++) {
+						result.retainAll(subSets.get(i));
+					}
+				}
+				if (result.size() == 0) {
+					Log.warning("Cannot find value for " + question + " in " + condition);
+				}
 			}
 		}
 		else {
@@ -205,11 +261,24 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Adds all condequals of the specified condition to the set
-	 * 
+	 * Returns all CondEqual instances of the specified condition as a set.
+	 *
+	 * @param condition the condition to get the CondEquals from
+	 * @return the (ordered) set of conditions
 	 * @created 03.03.2014
+	 */
+	public static Set<CondEqual> getCondEquals(Condition condition) {
+		Set<CondEqual> result = new LinkedHashSet<CondEqual>();
+		collectCondEqual(result, condition);
+		return result;
+	}
+
+	/**
+	 * Adds all CondEqual instances of the specified condition to the set
+	 *
 	 * @param condEquals set to be filled
 	 * @param condition specified condition
+	 * @created 03.03.2014
 	 */
 	public static void collectCondEqual(Set<CondEqual> condEquals, Condition condition) {
 		if (condition instanceof CondEqual) {

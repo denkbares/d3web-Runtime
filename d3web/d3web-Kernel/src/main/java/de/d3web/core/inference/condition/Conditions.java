@@ -22,24 +22,45 @@ import de.d3web.core.session.Session;
 
 /**
  * Utility class for Conditions
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 04.07.2012
  */
 public class Conditions {
 
 	/**
-	 * Returns true, if the condition evals to true. In all other cases false is
-	 * returned.
-	 * 
-	 * @created 04.07.2012
+	 * Returns true, if the condition evaluates to true. In all other cases, including unknown or
+	 * undefined, false is returned.
+	 *
 	 * @param condition specified Condition
 	 * @param session specified Session
-	 * @return if the condition evals to true
+	 * @return if the condition evaevaluatesls to true
+	 * @created 04.07.2012
 	 */
 	public static boolean isTrue(Condition condition, Session session) {
 		try {
 			return condition.eval(session);
+		}
+		catch (NoAnswerException e) {
+			return false;
+		}
+		catch (UnknownAnswerException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true, if the condition evaluates to false. In all other cases, including unknown or
+	 * undefined, false is returned.
+	 *
+	 * @param condition specified Condition
+	 * @param session specified Session
+	 * @return if the condition evaluates to false
+	 * @created 04.07.2012
+	 */
+	public static boolean isFalse(Condition condition, Session session) {
+		try {
+			return !condition.eval(session);
 		}
 		catch (NoAnswerException e) {
 			return false;
