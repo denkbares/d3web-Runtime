@@ -20,6 +20,7 @@ package de.d3web.collections;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,39 +33,36 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * Utility class to provide useful methods for implementing and/or using
- * MultiMaps.
- * 
+ * Utility class to provide useful methods for implementing and/or using MultiMaps.
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 09.01.2014
  */
 public class MultiMaps {
 
 	/**
-	 * Interface to provide factories to create the individual collection
-	 * instances used by the MultiMap implementations to collect the keys and/or
-	 * values.
-	 * 
+	 * Interface to provide factories to create the individual collection instances used by the
+	 * MultiMap implementations to collect the keys and/or values.
+	 *
+	 * @param <T> the elements to have the collection factory for
 	 * @author Volker Belli (denkbares GmbH)
 	 * @created 09.01.2014
-	 * @param <T> the elements to have the collection factory for
 	 */
 	public static interface CollectionFactory<T> {
 
 		/**
 		 * Creates a new set used for storing the elements.
-		 * 
-		 * @created 09.01.2014
+		 *
 		 * @return a newly created set
+		 * @created 09.01.2014
 		 */
 		Set<T> createSet();
 
 		/**
-		 * Creates a new map used for storing objects by keys of this class'
-		 * elements.
-		 * 
-		 * @created 09.01.2014
+		 * Creates a new map used for storing objects by keys of this class' elements.
+		 *
 		 * @return a newly created map
+		 * @created 09.01.2014
 		 */
 		<E> Map<T, E> createMap();
 	}
@@ -127,11 +125,11 @@ public class MultiMaps {
 	private static final CollectionFactory TREE = new TreeFactory();
 
 	/**
-	 * Returns a collection factory for hashing the entries, using
-	 * {@link T#hashCode()} and {@link T#equals(Object)} method.
-	 * 
-	 * @created 09.01.2014
+	 * Returns a collection factory for hashing the entries, using {@link T#hashCode()} and {@link
+	 * T#equals(Object)} method.
+	 *
 	 * @return the collection factory
+	 * @created 09.01.2014
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> CollectionFactory<T> hashFactory() {
@@ -139,24 +137,24 @@ public class MultiMaps {
 	}
 
 	/**
-	 * Returns a collection factory for hashing the entries, using
-	 * {@link T#hashCode()} and {@link T#equals(Object)} method. The initial
-	 * hash tables to be used are kept as minimized as possible.
-	 * 
-	 * @created 09.01.2014
+	 * Returns a collection factory for hashing the entries, using {@link T#hashCode()} and {@link
+	 * T#equals(Object)} method. The initial hash tables to be used are kept as minimized as
+	 * possible.
+	 *
 	 * @return the collection factory
+	 * @created 09.01.2014
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> CollectionFactory<T> hashMinimizedFactory() {
 		return (CollectionFactory<T>) HASH_MINIMIZED;
 	}
 
-/**
-	 * Returns a collection factory for handling the entries as a tree, using
-	 * {@link T#compareTo(Object)) method.
-	 * 
-	 * @created 09.01.2014
+	/**
+	 * Returns a collection factory for handling the entries as a tree, using {@link
+	 * T#compareTo(Object)) method.
+	 *
 	 * @return the collection factory
+	 * @created 09.01.2014
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Comparable<? super T>> CollectionFactory<T> treeFactory() {
@@ -164,12 +162,12 @@ public class MultiMaps {
 	}
 
 	/**
-	 * Returns a collection factory for hashing the entries in linked sets/maps,
-	 * using {@link T#hashCode()} and {@link T#equals(Object)} method. The order
-	 * of the contained objects will remain stable.
-	 * 
-	 * @created 09.01.2014
+	 * Returns a collection factory for hashing the entries in linked sets/maps, using {@link
+	 * T#hashCode()} and {@link T#equals(Object)} method. The order of the contained objects will
+	 * remain stable.
+	 *
 	 * @return the collection factory
+	 * @created 09.01.2014
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> CollectionFactory<T> linkedFactory() {
@@ -177,15 +175,13 @@ public class MultiMaps {
 	}
 
 	/**
-	 * Returns a string representation of this map. The string representation
-	 * consists of a list of key-value mappings in the order returned by the
-	 * map's <tt>entrySet</tt> view's iterator, enclosed in braces (
-	 * <tt>"{}"</tt>). Adjacent mappings are separated by the characters
-	 * <tt>", "</tt> (comma and space). Each key-value mapping is rendered as
-	 * the key followed by an equals sign (<tt>"="</tt>) followed by the
-	 * associated value. Keys and values are converted to strings as by
-	 * {@link String#valueOf(Object)}.
-	 * 
+	 * Returns a string representation of this map. The string representation consists of a list of
+	 * key-value mappings in the order returned by the map's <tt>entrySet</tt> view's iterator,
+	 * enclosed in braces ( <tt>"{}"</tt>). Adjacent mappings are separated by the characters <tt>",
+	 * "</tt> (comma and space). Each key-value mapping is rendered as the key followed by an equals
+	 * sign (<tt>"="</tt>) followed by the associated value. Keys and values are converted to
+	 * strings as by {@link String#valueOf(Object)}.
+	 *
 	 * @return a string representation of this map
 	 */
 	static <K, V> String toString(final MultiMap<K, V> map) {
@@ -194,7 +190,7 @@ public class MultiMaps {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append('{');
-		for (;;) {
+		for (; ; ) {
 			Entry<K, V> e = i.next();
 			K key = e.getKey();
 			V value = e.getValue();
@@ -247,26 +243,25 @@ public class MultiMaps {
 		};
 	}
 
-	public static <K,V> MultiMap<K, V> synchronizedMultiMap(MultiMap<K, V> map) {
+	public static <K, V> MultiMap<K, V> synchronizedMultiMap(MultiMap<K, V> map) {
 		return new SynchronizedMultiMap<K, V>(map);
 	}
 
 	private static class SynchronizedMultiMap<K, V> implements MultiMap<K, V> {
 
-		private final MultiMap<K,V> map;     // Backing Map
+		private final MultiMap<K, V> map;     // Backing Map
 		final Object mutex;        // Object on which to synchronize
 
-		SynchronizedMultiMap(MultiMap<K,V> m) {
-			if (m==null) throw new NullPointerException();
+		SynchronizedMultiMap(MultiMap<K, V> m) {
+			if (m == null) throw new NullPointerException();
 			this.map = m;
 			mutex = this;
 		}
 
-		SynchronizedMultiMap(MultiMap<K,V> m, Object mutex) {
+		SynchronizedMultiMap(MultiMap<K, V> m, Object mutex) {
 			this.map = m;
 			this.mutex = mutex;
 		}
-
 
 		@Override
 		public int size() {
@@ -392,6 +387,125 @@ public class MultiMaps {
 			synchronized (mutex) {
 				return map.toMap();
 			}
+		}
+	}
+
+	public static <K, V> MultiMap<K, V> unmodifiableMultiMap(MultiMap<K, V> map) {
+		return new UnmodifiableMultiMap<K, V>(map);
+	}
+
+	private static class UnmodifiableMultiMap<K, V> implements MultiMap<K, V> {
+
+		private final MultiMap<K, V> map;
+
+		private UnmodifiableMultiMap(MultiMap<K, V> map) {
+			this.map = map;
+		}
+
+		@Override
+		public int size() {
+			return map.size();
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return map.isEmpty();
+		}
+
+		@Override
+		public boolean containsKey(Object key) {
+			return map.containsKey(key);
+		}
+
+		@Override
+		public boolean containsValue(Object value) {
+			return map.containsValue(value);
+		}
+
+		@Override
+		public boolean contains(Object key, Object value) {
+			return map.contains(key, value);
+		}
+
+		@Override
+		public Set<V> getValues(Object key) {
+			return Collections.unmodifiableSet(map.getValues(key));
+		}
+
+		@Override
+		public Set<K> getKeys(Object value) {
+			return Collections.unmodifiableSet(map.getKeys(value));
+		}
+
+		@Override
+		public boolean put(K key, V value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<V> removeKey(Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<K> removeValue(Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean remove(Object key, Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean putAll(Map<? extends K, ? extends V> m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean putAll(MultiMap<? extends K, ? extends V> m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<K> keySet() {
+			return Collections.unmodifiableSet(map.keySet());
+		}
+
+		@Override
+		public Set<V> valueSet() {
+			return Collections.unmodifiableSet(map.valueSet());
+		}
+
+		@Override
+		public Set<Entry<K, V>> entrySet() {
+			return Collections.unmodifiableSet(map.entrySet());
+		}
+
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+		@Override
+		public boolean equals(Object o) {
+			return map.equals(o);
+		}
+
+		@Override
+		public int hashCode() {
+			return map.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return map.toString();
+		}
+
+		@Override
+		public Map<K, Set<V>> toMap() {
+			return Collections.unmodifiableMap(map.toMap());
 		}
 	}
 
