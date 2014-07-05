@@ -20,6 +20,7 @@
 package de.d3web.utils;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * This class implements a typed, null-save tuple of a number of other objects.
@@ -37,6 +38,14 @@ public class Tuple {
 
 	public Object get(int index) {
 		return items[index];
+	}
+
+	public int getSize() {
+		return items.length;
+	}
+
+	public Collection<?> asList() {
+		return Arrays.asList(items);
 	}
 
 	@Override
