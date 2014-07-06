@@ -18,20 +18,11 @@
  */
 package de.d3web.core.io.progress;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -43,7 +34,7 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 
 	private static final long serialVersionUID = 3380517180403399192L;
 	private final JLabel statusLabel = new JLabel("initializing");
-	private final JLabel tickLabel = new JLabel("-");
+	private final JLabel tickLabel = new JLabel(TICKS[0]);
 	private final JProgressBar progressBar = new JProgressBar(0, 100);
 
 	private Runnable cancelAction = null;
@@ -121,8 +112,19 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 		}
 	}
 
-	private static final String[] TICKS = new String[] {
-			"-", "\\", "|", "/" };
+	private static final ImageIcon[] TICKS = new ImageIcon[] {
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_0.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_1.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_2.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_3.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_4.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_5.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_6.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_7.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_8.png")),
+			new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("de/d3web/core/io/progress/spinner_9.png"))
+	};
+
 	private int tickIndex = 0;
 	private long lastTick = 0;
 
@@ -131,7 +133,7 @@ public class ProgressDialog extends JFrame implements ProgressListener {
 		if (now > lastTick + 100) {
 			lastTick = now;
 			tickIndex = (tickIndex + 1) % TICKS.length;
-			tickLabel.setText(TICKS[tickIndex]);
+			tickLabel.setIcon(TICKS[tickIndex]);
 		}
 	}
 
