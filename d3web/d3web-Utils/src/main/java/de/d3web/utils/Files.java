@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
@@ -52,14 +54,60 @@ public class Files {
 	public static boolean recursiveDelete(File fileOrDir) {
 		if (fileOrDir.isDirectory()) {
 			// recursively delete contents
+			//noinspection ConstantConditions
 			for (File innerFile : fileOrDir.listFiles()) {
 				if (!recursiveDelete(innerFile)) {
 					return false;
 				}
 			}
 		}
-
 		return fileOrDir.delete();
+	}
+
+	/**
+	 * Copies the source file to the target file. If the target file already exists it will be
+	 * overwritten. If any of the specified files denote a folder, an IOException is thrown. If the
+	 * path of the target file does not exists, the required parent folders will be created.
+	 *
+	 * @param source the source file to read from
+	 * @param target the target file
+	 * @throws IOException if the file cannot be copied
+	 */
+	public static void copy(File source, File target) throws IOException {
+		FileInputStream in = new FileInputStream(source);
+		target.getAbsoluteFile().getParentFile().mkdirs();
+		FileOutputStream out = new FileOutputStream(target);
+		Streams.streamAndClose(in, out);
+	}
+
+	/**
+	 * Checks if two files have the same content. Returns true if both files exists, both denote a
+	 * file (not a directory), and the bytes of each file are identical.
+	 *
+	 * @param file1 the first file to compare
+	 * @param file2 the second file to compare
+	 * @return if both files have the same content
+	 */
+	public static boolean hasEqualContent(File file1, File file2) throws IOException {
+		if (!file1.isFile()) return false;
+		if (!file2.isFile()) return false;
+		if (file1.length() != file2.length()) return false;
+
+		FileInputStream in1 = null, in2 = null;
+		try {
+			in1 = new FileInputStream(file1);
+			in2 = new FileInputStream(file2);
+			while (true) {
+				int byte1 = in1.read();
+				int byte2 = in2.read();
+				if (byte1 != byte2) return false;
+				if (byte1 == -1) return true;
+			}
+		}
+		finally {
+			if (in1 != null) in1.close();
+			if (in2 != null) in2.close();
+		}
 	}
 
 	/**
@@ -194,7 +242,7 @@ public class Files {
 	public static Collection<File> recursiveGet(File root, FileFilter filter) {
 		Collection<File> files = new LinkedList<File>();
 		File[] list = root.listFiles();
-		for (File f : list) {
+		if (list != null) for (File f : list) {
 			if (f.isDirectory()) {
 				files.addAll(recursiveGet(f, filter));
 			}
