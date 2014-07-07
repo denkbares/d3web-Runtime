@@ -21,6 +21,7 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -192,7 +193,17 @@ public final class BuildResult {
 	 * @return the overall result type
 	 */
 	public Message.Type getOverallResult() {
+		return getOverallResult(this.testResults);
+	}
 
+	/**
+	 * Computes the overall TestResultType of this result set, determined by the
+	 * "worst" test result
+	 *
+	 * @created 03.06.2010
+	 * @return the overall result type
+	 */
+	public static Message.Type getOverallResult(Collection <TestResult> testResults) {
 		Message.Type overallResult = Message.Type.SUCCESS;
 		for (TestResult testResult : testResults) {
 			Message summary = testResult.getSummary();

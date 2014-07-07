@@ -121,6 +121,7 @@ public class TestResult implements Comparable<TestResult> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((testName == null) ? 0 : testName.hashCode());
 		for (String configString : configuration) {
 			result = prime * result + ((configString == null) ? 0 : configString.hashCode());
 		}
@@ -137,6 +138,10 @@ public class TestResult implements Comparable<TestResult> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		TestResult other = (TestResult) obj;
+		if (testName == null) {
+			if (other.testName != null) return false;
+		}
+		else if (!testName.equals(other.testName)) return false;
 		if (configuration == null) {
 			if (other.configuration != null) return false;
 		}

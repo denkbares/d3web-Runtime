@@ -141,14 +141,12 @@ public class TestExecutor {
 
 		Collection<TestObjectContainer<T>> allTestObjects = new LinkedList<TestObjectContainer<T>>();
 		Test<T> test = specification.getTest();
+		Class<T> objectClass = test.getTestObjectClass();
+		if (objectClass == null) return Collections.emptyList();
+
 		String testObjectID = specification.getTestObject();
-
 		for (TestObjectProvider testObjectProvider : objectProviders) {
-
-			List<TestObjectContainer<T>> testObjects = testObjectProvider.getTestObjects(
-					test.getTestObjectClass(), testObjectID);
-
-			allTestObjects.addAll(testObjects);
+			allTestObjects.addAll(testObjectProvider.getTestObjects(objectClass, testObjectID));
 		}
 		return allTestObjects;
 	}

@@ -19,10 +19,10 @@
 package de.d3web.testing;
 
 /**
- * Objects (e.g. of a knowledge base) can be associated with an error message.
- * In that way a system displaying the message can render the object in a
- * special way (if a corresponding renderer is at hand).
- * 
+ * Objects (e.g. of a knowledge base) can be associated with an error message. In that way a system
+ * displaying the message can render the object in a special way (if a corresponding renderer is at
+ * hand).
+ *
  * @author Albrecht Striffler
  */
 public class MessageObject {
@@ -33,6 +33,8 @@ public class MessageObject {
 	public MessageObject(String objectName, Class<?> clazz) {
 		this.objectName = objectName;
 		this.clazz = clazz;
+		if (objectName == null) throw new NullPointerException();
+		if (clazz == null) throw new NullPointerException();
 	}
 
 	public Class<?> geObjectClass() {
@@ -41,5 +43,25 @@ public class MessageObject {
 
 	public String getObjectName() {
 		return objectName;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MessageObject that = (MessageObject) o;
+
+		if (!clazz.equals(that.clazz)) return false;
+		if (!objectName.equals(that.objectName)) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = objectName.hashCode();
+		result = 31 * result + clazz.hashCode();
+		return result;
 	}
 }

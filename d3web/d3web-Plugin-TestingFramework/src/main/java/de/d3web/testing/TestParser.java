@@ -28,7 +28,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Class to parse and validate a single test declaration.
- * 
+ *
  * @author Jochen Reutelshöfer, Volker Belli (denkbares GmbH)
  * @created 11.06.2012
  */
@@ -47,19 +47,19 @@ public class TestParser {
 	private TestSpecification<?> testSpecification;
 
 	/**
-	 * Creates an TestParser object from a test declaration line. The
-	 * first argument (separated by whitespace) is the (class) name of the test.
-	 * Then any further arguments for the test execution follow while each
-	 * argument is quoted by double quotes. (The first argument in quotes will
-	 * later by used to retrieve the test object from the test object
-	 * providers.)
-	 * 
-	 * @created 13.06.2012
+	 * Creates an TestParser object from a test declaration line. The first argument (separated by
+	 * whitespace) is the (class) name of the test. Then any further arguments for the test
+	 * execution follow while each argument is quoted by double quotes. (The first argument in
+	 * quotes will later by used to retrieve the test object from the test object providers.)
+	 *
 	 * @param testDeclaration the test declaration
+	 * @created 13.06.2012
 	 */
 	@SuppressWarnings({
 			"unchecked", "rawtypes" })
 	public TestParser(String testDeclaration) {
+		// remove end-line comments
+		// testDeclaration = testDeclaration.replaceAll("(\\s+|^\\s*)//[^\n\r]*$", "");
 		this.declaration = testDeclaration;
 
 		// parse ignores and remove them from test's command line
@@ -125,13 +125,12 @@ public class TestParser {
 	}
 
 	/**
-	 * Splits the given parameter String into its single parameters. Parameters
-	 * containing white spaces have to be quoted, the quotes will not be part of
-	 * that parameter.
-	 * 
-	 * @created 23.09.2012
+	 * Splits the given parameter String into its single parameters. Parameters containing white
+	 * spaces have to be quoted, the quotes will not be part of that parameter.
+	 *
 	 * @param parameters the parameters as a String
 	 * @return the single parameters from the given String in a List
+	 * @created 23.09.2012
 	 */
 	public static List<String> splitParameters(String parameters) {
 		Matcher matcher = PARAMETER_PATTERN.matcher(parameters);
@@ -147,23 +146,24 @@ public class TestParser {
 	}
 
 	/**
-	 * Utility method to concatenate test parameters following the same rules by
-	 * which they are split.
-	 * 
-	 * @created 23.09.2012
+	 * Utility method to concatenate test parameters following the same rules by which they are
+	 * split.
+	 *
 	 * @param parameters the parameters to be concatenated
 	 * @return the concatenated parameters
+	 * @created 23.09.2012
 	 */
 	public static String concatParameters(String... parameters) {
 		return concatParameters(0, parameters);
 	}
+
 	/**
-	 * Utility method to concatenate test parameters following the same rules by
-	 * which they are split.
+	 * Utility method to concatenate test parameters following the same rules by which they are
+	 * split.
 	 *
-	 * @created 23.09.2012
 	 * @param parameters the parameters to be concatenated
 	 * @return the concatenated parameters
+	 * @created 23.09.2012
 	 */
 	public static String concatParameters(int startIndex, String... parameters) {
 		StringBuilder concatenated = new StringBuilder();
