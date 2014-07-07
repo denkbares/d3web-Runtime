@@ -21,16 +21,20 @@ package de.d3web.strings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Data structure to identify and match terms in d3web.
- * 
+ *
  * @author Albrecht Striffler
  * @created 08.01.2011
  */
 public class Identifier implements Comparable<Identifier> {
 
 	private static final String SEPARATOR = "#";
+	private static final String CONTROL_CHARS = " " + SEPARATOR + "()[]{}<>\"\'#=&|\\*+-,.\t";
+	private static final Pattern CONTROL_PATTERN = Pattern.compile(
+			"(?:[" + Pattern.quote(CONTROL_CHARS) + "])");
 
 	private final String[] pathElements;
 
@@ -48,8 +52,8 @@ public class Identifier implements Comparable<Identifier> {
 	/**
 	 * Creates a new Identifier based on an existing identifier by appending
 	 * additional path elements.
-	 * 
-	 * @param parent the existing parent identifier
+	 *
+	 * @param parent                 the existing parent identifier
 	 * @param additionalPathElements the additional path elements
 	 */
 	public Identifier(Identifier parent, String... additionalPathElements) {
@@ -57,6 +61,10 @@ public class Identifier implements Comparable<Identifier> {
 		int additionalLen = additionalPathElements.length;
 		this.pathElements = Arrays.copyOf(parent.pathElements, parentLen + additionalLen);
 		System.arraycopy(additionalPathElements, 0, pathElements, parentLen, additionalLen);
+	}
+
+	public static boolean needsQuotes(String text) {
+		return CONTROL_PATTERN.matcher(text).find();
 	}
 
 	@Override
@@ -75,7 +83,7 @@ public class Identifier implements Comparable<Identifier> {
 
 	/**
 	 * Returns the external form of this {@link Identifier}.
-	 * 
+	 *
 	 * @see Identifier#toExternalForm()
 	 */
 	@Override
@@ -101,9 +109,9 @@ public class Identifier implements Comparable<Identifier> {
 	/**
 	 * Returns whether this {@link Identifier} starts with the given
 	 * {@link Identifier}'s path.
-	 * 
-	 * @created 23.04.2012
+	 *
 	 * @param identifier the identifier to check
+	 * @created 23.04.2012
 	 */
 	public boolean startsWith(Identifier identifier) {
 		if (identifier.pathElements.length > this.pathElements.length) return false;
@@ -116,7 +124,7 @@ public class Identifier implements Comparable<Identifier> {
 	/**
 	 * Returns the last element of the path given to create this
 	 * {@link Identifier}.
-	 * 
+	 *
 	 * @created 23.04.2012
 	 */
 	public String getLastPathElement() {
@@ -126,7 +134,7 @@ public class Identifier implements Comparable<Identifier> {
 
 	/**
 	 * Returns an nth path element of this identifiers path.
-	 * 
+	 *
 	 * @param index the index of the path element to access
 	 * @created 23.04.2012
 	 */
@@ -136,7 +144,7 @@ public class Identifier implements Comparable<Identifier> {
 
 	/**
 	 * Returns a copy of the path elements of this {@link Identifier}.
-	 * 
+	 *
 	 * @created 25.04.2012
 	 */
 	public String[] getPathElements() {
@@ -147,9 +155,9 @@ public class Identifier implements Comparable<Identifier> {
 	 * Returns a new {@link Identifier} consisting of the identifier elements of
 	 * the given {@link Identifier} appended to the identifier elements of this
 	 * {@link Identifier}.
-	 * 
-	 * @created 23.04.2012
+	 *
 	 * @param termIdentifier the {@link Identifier} to append
+	 * @created 23.04.2012
 	 */
 	public Identifier append(Identifier termIdentifier) {
 		int newLength = this.pathElements.length + termIdentifier.pathElements.length;
@@ -168,7 +176,7 @@ public class Identifier implements Comparable<Identifier> {
 	 * Basically the external form is the path elements connected with a
 	 * separator and proper quoting if the separator icon is contained in one of
 	 * the path elements.
-	 * 
+	 *
 	 * @created 07.05.2012
 	 */
 	public String toExternalForm() {
@@ -176,8 +184,12 @@ public class Identifier implements Comparable<Identifier> {
 			StringBuilder externalForm = new StringBuilder();
 			boolean first = true;
 			for (String element : pathElements) {
-				if (first) first = false;
-				else externalForm.append(SEPARATOR);
+				if (first) {
+					first = false;
+				}
+				else {
+					externalForm.append(SEPARATOR);
+				}
 				if (needsQuotes(element)) {
 					externalForm.append(Strings.quote(element));
 				}
@@ -197,17 +209,6 @@ public class Identifier implements Comparable<Identifier> {
 		return this.externalFormLowerCase;
 	}
 
-	public static boolean needsQuotes(String text) {
-		// return text.contains("\"") || text.contains(SEPARATOR) ||
-		// text.contains("\\");
-		return text.contains("\"")
-				|| text.contains(SEPARATOR)
-				|| text.contains("\\")
-				|| text.contains(" ")
-				|| text.contains(",")
-				|| text.contains("\t");
-	}
-
 	/**
 	 * Returns the {@link Identifier} of this identifier that represents the
 	 * rest of the path defined by the specified parameter "startIdentifier".
@@ -216,13 +217,13 @@ public class Identifier implements Comparable<Identifier> {
 	 * accepted starting of this identifier, a new identifier is created that
 	 * represents the rest of this identifier. Thus
 	 * <code>a.append(b).rest(a)</code> will result to <code>b</code>.
-	 * 
-	 * @created 15.05.2012
+	 *
 	 * @param startIdentifier
 	 * @return the {@link Identifier} appended to the specified startIdentifier
-	 *         that will together make this identifier, or null if not possible
-	 *         (because this identifier does not start with parameter
-	 *         startIdentifier)
+	 * that will together make this identifier, or null if not possible
+	 * (because this identifier does not start with parameter
+	 * startIdentifier)
+	 * @created 15.05.2012
 	 */
 	public Identifier rest(Identifier startIdentifier) {
 		if (!startsWith(startIdentifier)) return null;
@@ -233,9 +234,9 @@ public class Identifier implements Comparable<Identifier> {
 
 	/**
 	 * Returns if the path of this identifier is empty
-	 * 
-	 * @created 15.05.2012
+	 *
 	 * @return if path is empty
+	 * @created 15.05.2012
 	 */
 	public boolean isEmpty() {
 		return this.externalForm.isEmpty();
@@ -250,11 +251,11 @@ public class Identifier implements Comparable<Identifier> {
 	 * external form for that {@link Identifier} and then generate another
 	 * {@link Identifier} from that external form, both TermIdentifiers will be
 	 * equal.
-	 * 
-	 * @created 07.05.2012
+	 *
 	 * @param externalForm the external form of a {@link Identifier} created by
-	 *        using {@link Identifier#toExternalForm()}
+	 *                     using {@link Identifier#toExternalForm()}
 	 * @return a {@link Identifier} representing the given external form
+	 * @created 07.05.2012
 	 */
 	public static Identifier fromExternalForm(String externalForm) {
 		List<StringFragment> pathElementFragments = Strings.splitUnquoted(externalForm, SEPARATOR,
@@ -268,9 +269,9 @@ public class Identifier implements Comparable<Identifier> {
 
 	/**
 	 * Returns the number of path elements of this Identifier.
-	 * 
-	 * @created 23.08.2013
+	 *
 	 * @return the number of path elements
+	 * @created 23.08.2013
 	 */
 	public int countPathElements() {
 		return this.pathElements.length;
