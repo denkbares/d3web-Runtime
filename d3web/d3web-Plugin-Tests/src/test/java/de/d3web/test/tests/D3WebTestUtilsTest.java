@@ -18,11 +18,6 @@
  */
 package de.d3web.test.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +37,9 @@ import de.d3web.test.D3webTestUtils;
 import de.d3web.testing.Message;
 import de.d3web.testing.MessageObject;
 import de.d3web.utils.Pair;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 /**
  * 
@@ -132,9 +130,9 @@ public class D3WebTestUtilsTest {
 		objects.add(mess);
 		objects.add(user);
 		objects.add(q);
-		String notificationText = "dumbasstext";
+		String notificationText = "some text";
 
-		Message message = D3webTestUtils.createFailure(objects, kb.getName(),
+		Message message = D3webTestUtils.createFailure(objects, "some name",
 				notificationText);
 
 		// compare message text
