@@ -3,6 +3,7 @@ package de.d3web.testing;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -15,6 +16,8 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import de.d3web.collections.DefaultMultiMap;
+import de.d3web.collections.MultiMap;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.testing.Message.Type;
 import de.d3web.utils.Log;
@@ -57,6 +60,7 @@ public class TestExecutor {
 	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
 	private final BuildResult build;
+	private final HashMap<TestSpecification, TestResult> testResults = new HashMap<TestSpecification, TestResult>();
 	private String currentMessage;
 	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
 	private float finishedTests;
@@ -70,7 +74,7 @@ public class TestExecutor {
 	 * @return the current build
 	 * @created 14.08.2012
 	 */
-	public BuildResult getBuildResult() {
+	public synchronized BuildResult getBuildResult() {
 		if (executorThread == null || executorThread.isInterrupted() || !isShutdown()) return null;
 		return build;
 	}
@@ -115,11 +119,28 @@ public class TestExecutor {
 	}
 
 	private void updateTestResults(Map<TestSpecification, Collection<CallableTest>> callableTests) {
+		MultiMap<TestResult, TestResult> groups =
+				new DefaultMultiMap<TestResult, TestResult>();
+		TestResult currentGroup = null;
 		for (TestSpecification<?> specification : callableTests.keySet()) {
 			Collection<CallableTest> ct = callableTests.get(specification);
-			if (ct.isEmpty()) continue;
-			TestResult testResult = ct.iterator().next().testResult;
-			specification.getTest().updateSummary(specification, testResult);
+			if (specification.getTest() instanceof TestGroup) {
+				// if this is a group, remember the group, but do nothing,
+				// because we will update the groups later on
+				currentGroup = createTestResult(specification);
+			}
+			else {
+				if (ct.isEmpty()) continue;
+				TestResult testResult = ct.iterator().next().testResult;
+				// update test and add to group (if there is any)
+				specification.getTest().updateSummary(specification, testResult);
+				if (currentGroup != null) groups.put(currentGroup, testResult);
+			}
+		}
+		// finally update the groups
+		for (TestResult group : groups.keySet()) {
+			Type type = BuildResult.getOverallResult(groups.getValues(group));
+			group.setSummary(new Message(type));
 		}
 	}
 
@@ -195,25 +216,38 @@ public class TestExecutor {
 	}
 
 	private <T> Collection<CallableTest<T>> getCallableTests(TestSpecification<T> specification) {
-		// prepare some information
-		String[] testArgs = specification.getArguments();
-		String testName = specification.getTestName();
+		// prepare test objects
 		Collection<TestObjectContainer<T>> testObjects = getTestObjects(specification);
 
 		// create (empty) result for test execution
-		String[] config = new String[testArgs.length + 1];
-		System.arraycopy(testArgs, 0, config, 1, testArgs.length);
-		config[0] = specification.getTestObject();
-		TestResult testResult = new TestResult(testName, config);
+		TestResult testResult = createTestResult(specification);
 		build.addTestResult(testResult);
 
 		// create callable tests to be executed
 		return getCallableTests(specification, testObjects, testResult);
 	}
 
+	private <T> TestResult createTestResult(TestSpecification<T> specification) {
+		TestResult testResult = testResults.get(specification);
+		if (testResult == null) {
+			String[] testArgs = specification.getArguments();
+			String testName = specification.getTestName();
+			String[] config = new String[testArgs.length + 1];
+			System.arraycopy(testArgs, 0, config, 1, testArgs.length);
+			config[0] = specification.getTestObject();
+			testResult = new TestResult(testName, config);
+			testResults.put(specification, testResult);
+		}
+		return testResult;
+	}
+
 	private <T> Collection<CallableTest<T>> getCallableTests(
 			final TestSpecification<T> specification,
 			Collection<TestObjectContainer<T>> testObjects, final TestResult testResult) {
+
+		if (specification.getTest() instanceof TestGroup) {
+			return Collections.emptyList();
+		}
 
 		Collection<CallableTest<T>> result = new HashSet<CallableTest<T>>();
 		boolean noTestObjects = true;
