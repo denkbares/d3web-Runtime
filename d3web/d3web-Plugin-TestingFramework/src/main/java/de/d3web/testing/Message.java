@@ -18,10 +18,14 @@
  */
 package de.d3web.testing;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+
+import de.d3web.collections.DefaultMultiMap;
+import de.d3web.collections.MultiMap;
 
 /**
  * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an (optional) message
@@ -41,6 +45,7 @@ public class Message implements Comparable<Message> {
 	private final Type type;
 	private final String message;
 	private Collection<MessageObject> objects = new ArrayList<MessageObject>();
+	private MultiMap<Boolean, File> attachments = new DefaultMultiMap<Boolean, File>();
 
 	public Message(Type type) {
 		this(type, null);
@@ -97,6 +102,34 @@ public class Message implements Comparable<Message> {
 		SUCCESS
 	}
 
+	/**
+	 * Attaches a file to this message. You may also specify if the file is a temp file and shall be
+	 * deleted after usage (e.g. after copied to the target folder or attached to the wiki page). If
+	 * the file shall be deleted and the folder becomes empty after that, the folder will be deleted
+	 * as well.
+	 *
+	 * @param attachment the source file to be attached
+	 * @param autoDelete if the source shall be deleted automatically
+	 */
+	public void addAttachment(File attachment, boolean autoDelete) {
+		attachment = attachment.getAbsoluteFile();
+		attachments.put(autoDelete, attachment);
+		if (autoDelete) attachment.deleteOnExit();
+	}
+
+	public Collection<File> getAttachments() {
+		return attachments.valueSet();
+	}
+
+	public void handleAutoDelete() {
+		for (File file : attachments.getValues(true)) {
+			if (file.delete()) {
+				// if file is deleted, also delete empty parent directory
+				file.getParentFile().delete();
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
 		return getType().toString() + ": " + getText();
@@ -130,9 +163,9 @@ public class Message implements Comparable<Message> {
 		if (this.type == Type.ERROR && o.type == Type.SUCCESS) return -1;
 		if (this.type != Type.FAILURE && o.type == Type.FAILURE) return 1;
 		if (this.type == Type.SUCCESS && o.type == Type.ERROR) return 1;
-		if (this.message != null && o.message == null) return -1;
-		if (this.message == null && o.message != null) return 1;
-		if (this.message == null && o.message == null) return 0;
+		if (this.message == o.message) return 0;
+		if (this.message == null) return 1;
+		if (o.message == null) return -1;
 		return this.message.compareTo(o.message);
 	}
 

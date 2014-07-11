@@ -18,12 +18,16 @@
  */
 package de.d3web.testing;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
+import de.d3web.collections.ConcatenateIterable;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)
@@ -186,6 +190,24 @@ public class TestResult implements Comparable<TestResult> {
 	public void setSummary(Message summary) {
 		this.summary = summary;
 	}
+
+	public Collection<File> getAttachments() {
+		Collection<File> files = new LinkedList<File>();
+		for (Message message : new ConcatenateIterable<Message>(
+				expectedMessages.values(), unexpectedMessages.values())) {
+			files.addAll(message.getAttachments());
+		}
+		return files;
+	}
+
+	public void handleAutoDelete() {
+		Collection<File> files = new LinkedList<File>();
+		for (Message message : new ConcatenateIterable<Message>(
+				expectedMessages.values(), unexpectedMessages.values())) {
+			message.handleAutoDelete();
+		}
+	}
+
 
 	@Override
 	public String toString() {
