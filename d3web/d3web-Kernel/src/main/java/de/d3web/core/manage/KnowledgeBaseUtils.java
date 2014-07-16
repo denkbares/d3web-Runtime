@@ -128,7 +128,7 @@ public final class KnowledgeBaseUtils {
 	 * 
 	 * @created 26.02.2013
 	 * @param <T> the type of the ancestors to be found
-	 * @param terminologyObject the leaf where the search starts
+	 * @param parent the leaf where the search starts
 	 * @param typeOf the class of the ancestors to be found
 	 * @return the ancestors of the given {@link TerminologyObject}
 	 */
