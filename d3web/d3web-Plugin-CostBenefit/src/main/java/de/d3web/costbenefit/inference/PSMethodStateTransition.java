@@ -42,6 +42,7 @@ import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.CostBenefitUtil;
+import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.inference.PSMethodStateTransition.StateTransitionSessionObject;
 
 public final class PSMethodStateTransition extends PSMethodAdapter implements SessionObjectSource<StateTransitionSessionObject> {
@@ -168,8 +169,9 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				CostBenefitUtil.addParentContainers(answeredQuestionnaires, object);
 			}
 		}
-		QContainer qcontainer = session.getSessionObject(
-				session.getPSMethodInstance(PSMethodCostBenefit.class)).getCurrentQContainer();
+		CostBenefitCaseObject cbCaseObject = session.getSessionObject(
+				session.getPSMethodInstance(PSMethodCostBenefit.class));
+		QContainer qcontainer = cbCaseObject.getCurrentQContainer();
 		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
 		for (QContainer qcon : answeredQuestionnaires) {
 			if (CostBenefitUtil.isDone(qcon, session)) {
@@ -194,6 +196,11 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 					if (ks != null) {
 						StateTransition st = (StateTransition) ks;
 						sessionObject.facts = st.fire(session);
+						for (Fact fact : cbCaseObject.getIndicatedFacts()) {
+							if (fact.getTerminologyObject() == st.getQcontainer()) {
+								session.getBlackboard().removeInterviewFact(fact);
+							}
+						}
 						sessionObject.qContainer = qcon;
 					}
 				}
