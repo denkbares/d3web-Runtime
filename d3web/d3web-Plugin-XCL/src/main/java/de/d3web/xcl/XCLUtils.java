@@ -36,6 +36,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
@@ -47,7 +48,7 @@ import de.d3web.utils.Log;
 
 /**
  * Provides static methods for XCLModels
- *
+ * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.02.2014
  */
@@ -55,7 +56,7 @@ public class XCLUtils {
 
 	/**
 	 * Returns a value for the question fitting to the coverings of the solution
-	 *
+	 * 
 	 * @param solution specified {@link Solution}
 	 * @param question specified {@link QuestionOC}
 	 * @return fitting value or null
@@ -72,8 +73,9 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns all values for the question fitting to the coverings of the solution
-	 *
+	 * Returns all values for the question fitting to the coverings of the
+	 * solution
+	 * 
 	 * @param solution specified {@link Solution}
 	 * @param question specified {@link QuestionOC}
 	 * @return fitting values (may be empty)
@@ -84,11 +86,12 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns all values for the question fitting to the coverings of the solution. If a session is
-	 * specified (not null), the values are also filtered for the ones are really capable to still
-	 * get an positive coverage (e.g. some fitting values of an AND-combined conditions where one
-	 * subcondition remains false will be omitted).
-	 *
+	 * Returns all values for the question fitting to the coverings of the
+	 * solution. If a session is specified (not null), the values are also
+	 * filtered for the ones are really capable to still get an positive
+	 * coverage (e.g. some fitting values of an AND-combined conditions where
+	 * one subcondition remains false will be omitted).
+	 * 
 	 * @param solution specified {@link Solution}
 	 * @param question specified {@link QuestionOC}
 	 * @param session the session to evaluate the condition for
@@ -171,12 +174,13 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns the values, fitting to the specified condition. This method can only handle CondOr,
-	 * CondEqual and CondAnd.
+	 * Returns the values, fitting to the specified condition. This method can
+	 * only handle CondOr, CondEqual and CondAnd.
 	 * <p/>
-	 * For or conditions, it is assumed, that subconditions covering other questions evaluate to
-	 * false, so e.G. no value for (F1=A AND (F1=B OR F2=C)) will be found.
-	 *
+	 * For or conditions, it is assumed, that subconditions covering other
+	 * questions evaluate to false, so e.G. no value for (F1=A AND (F1=B OR
+	 * F2=C)) will be found.
+	 * 
 	 * @param condition specified {@link Condition}
 	 * @return Set of fitting values
 	 * @created 22.02.2014
@@ -186,17 +190,18 @@ public class XCLUtils {
 	}
 
 	/**
-	 * Returns the values, fitting to the specified condition. This method can only handle CondOr,
-	 * CondEqual and CondAnd.
+	 * Returns the values, fitting to the specified condition. This method can
+	 * only handle CondOr, CondEqual and CondAnd.
 	 * <p/>
-	 * For or conditions, it is assumed, that subconditions covering other questions evaluate to
-	 * false, so e.G. no value for (F1=A AND (F1=B OR F2=C)) will be found.
+	 * For or conditions, it is assumed, that subconditions covering other
+	 * questions evaluate to false, so e.G. no value for (F1=A AND (F1=B OR
+	 * F2=C)) will be found.
 	 * <p/>
-	 * If the session is specified (not null), the session is used to check if parts of the
-	 * condition can become true with any value of the specified question, e.g. if an AND condition
-	 * does not already have some false subcondition. If not, this value of the question is
-	 * omitted.
-	 *
+	 * If the session is specified (not null), the session is used to check if
+	 * parts of the condition can become true with any value of the specified
+	 * question, e.g. if an AND condition does not already have some false
+	 * subcondition. If not, this value of the question is omitted.
+	 * 
 	 * @param condition specified {@link Condition}
 	 * @return Set of fitting values
 	 * @created 22.02.2014
@@ -209,7 +214,8 @@ public class XCLUtils {
 		}
 		if (condition instanceof CondOr) {
 			// in case of OR check if the condition is already true,
-			// then any value will create a "true" result (only possible for choice questions)
+			// then any value will create a "true" result (only possible for
+			// choice questions)
 			if (session != null && (question instanceof QuestionChoice)
 					&& Conditions.isTrue(condition, session)) {
 				for (Choice choice : ((QuestionChoice) question).getAllAlternatives()) {
@@ -237,7 +243,8 @@ public class XCLUtils {
 			else {
 				List<Set<Value>> subSets = new ArrayList<Set<Value>>();
 				for (Condition c : ((CondAnd) condition).getTerms()) {
-					// if the subcondition coveres the question, collect its values
+					// if the subcondition coveres the question, collect its
+					// values
 					if (c.getTerminalObjects().contains(question)) {
 						subSets.add(getValues(c, question, session));
 					}
@@ -262,7 +269,7 @@ public class XCLUtils {
 
 	/**
 	 * Returns all CondEqual instances of the specified condition as a set.
-	 *
+	 * 
 	 * @param condition the condition to get the CondEquals from
 	 * @return the (ordered) set of conditions
 	 * @created 03.03.2014
@@ -275,7 +282,7 @@ public class XCLUtils {
 
 	/**
 	 * Adds all CondEqual instances of the specified condition to the set
-	 *
+	 * 
 	 * @param condEquals set to be filled
 	 * @param condition specified condition
 	 * @created 03.03.2014
@@ -288,6 +295,23 @@ public class XCLUtils {
 			for (Condition subcondition : ((NonTerminalCondition) condition).getTerms()) {
 				collectCondEqual(condEquals, subcondition);
 			}
+		}
+	}
+
+	/**
+	 * Returns the sprint group of the specified session
+	 * 
+	 * @created 20.07.2014
+	 * @param session
+	 * @return List of Solutions being part of the sprint group
+	 */
+	public static List<Solution> getSprintGroup(Session session) {
+		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
+		if (!solutions.isEmpty()) {
+			return solutions;
+		}
+		else {
+			return session.getBlackboard().getSolutions(State.SUGGESTED);
 		}
 	}
 }
