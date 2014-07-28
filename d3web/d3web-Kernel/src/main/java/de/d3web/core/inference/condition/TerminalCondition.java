@@ -71,7 +71,7 @@ public abstract class TerminalCondition implements Condition {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((terminals == null) ? 0 : terminals.hashCode());
+		result = prime * result + (terminals.hashCode());
 		return result;
 	}
 
@@ -81,11 +81,7 @@ public abstract class TerminalCondition implements Condition {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		TerminalCondition other = (TerminalCondition) obj;
-		if (terminals == null) {
-			if (other.terminals != null) return false;
-		}
-		else if (!terminals.equals(other.terminals)) return false;
-		return true;
+		return terminals.equals(other.terminals);
 	}
 
 }

@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * Compares NamendObjects by their names
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 11.02.2011
  */

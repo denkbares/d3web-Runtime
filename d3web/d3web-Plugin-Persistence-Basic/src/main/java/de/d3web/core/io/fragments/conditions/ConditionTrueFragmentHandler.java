@@ -19,6 +19,8 @@
 package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +32,8 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.NamedObject;
+import de.d3web.core.utilities.NamedObjectComparator;
 
 /**
  * 
@@ -56,7 +60,9 @@ public class ConditionTrueFragmentHandler implements FragmentHandler<KnowledgeBa
 	public Element write(Object condition, Persistence<KnowledgeBase> persistence) throws IOException {
 		ConditionTrue cond = (ConditionTrue) condition;
 		Element element = XMLUtil.writeCondition(persistence.getDocument(), "True");
-		for (TerminologyObject object : cond.getTerminalObjects()) {
+		List<NamedObject> terminalObjects = new ArrayList<NamedObject>(cond.getTerminalObjects());
+		Collections.sort(terminalObjects, new NamedObjectComparator());
+		for (NamedObject object : terminalObjects) {
 			Element objectElement = persistence.getDocument().createElement("object");
 			objectElement.setTextContent(object.getName());
 			element.appendChild(objectElement);
