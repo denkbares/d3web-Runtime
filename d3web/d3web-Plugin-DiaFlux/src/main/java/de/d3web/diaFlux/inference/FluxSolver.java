@@ -558,7 +558,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// of all nodes setting the requested object
 		//
 		// PLEASE NOTE:
-		// "snapshot"ed objects are not deliver their deriving
+		// "snapshot"ed objects do not deliver their deriving
 		// objects any longer
 		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
 		NodeList nodes = derivedObject.getKnowledgeStore().getKnowledge(DERIVING_NODES);
