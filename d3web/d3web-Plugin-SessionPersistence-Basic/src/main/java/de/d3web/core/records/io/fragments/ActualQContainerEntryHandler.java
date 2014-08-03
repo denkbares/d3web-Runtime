@@ -49,7 +49,7 @@ public class ActualQContainerEntryHandler implements FragmentHandler<SessionReco
 		String dateString = element.getAttribute(ATTR_DATE);
 		String name = element.getAttribute(ATTR_OBJECT_NAME);
 		try {
-			Date date = SessionPersistenceManager.DATE_FORMAT.parse(dateString);
+			Date date = SessionPersistenceManager.parseDate(dateString);
 			return new ActualQContainerEntry(date, name);
 		}
 		catch (ParseException e) {
@@ -61,7 +61,7 @@ public class ActualQContainerEntryHandler implements FragmentHandler<SessionReco
 	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		ActualQContainerEntry entry = (ActualQContainerEntry) object;
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
-		String dateString = SessionPersistenceManager.DATE_FORMAT.format(entry.getDate());
+		String dateString = SessionPersistenceManager.formatDate(entry.getDate());
 		element.setAttribute(ATTR_DATE, dateString);
 		element.setAttribute("type", ELEMENT_TYPE);
 		element.setAttribute(ATTR_OBJECT_NAME, entry.getQContainerName());

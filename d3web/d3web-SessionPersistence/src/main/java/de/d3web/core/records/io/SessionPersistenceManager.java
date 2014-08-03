@@ -62,8 +62,7 @@ public final class SessionPersistenceManager {
 	private static final String REPOSITORY_TAG = "repository";
 	private static final String SESSION_TAG = "session";
 
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss.SS");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
 	private SessionPersistenceManager() {
 	}
@@ -73,6 +72,18 @@ public final class SessionPersistenceManager {
 			manager = new SessionPersistenceManager();
 		}
 		return manager;
+	}
+
+	public static Date parseDate(String dateString) throws ParseException {
+		synchronized (DATE_FORMAT) {
+			return DATE_FORMAT.parse(dateString);
+		}
+	}
+
+	public static String formatDate(Date date) {
+		synchronized (DATE_FORMAT) {
+			return DATE_FORMAT.format(date);
+		}
 	}
 
 	FragmentManager<SessionRecord> getFragmentManager() {
@@ -160,8 +171,8 @@ public final class SessionPersistenceManager {
 
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
-			sessionElement.setAttribute("created", DATE_FORMAT.format(co.getCreationDate()));
-			sessionElement.setAttribute("changed", DATE_FORMAT.format(co.getLastChangeDate()));
+			sessionElement.setAttribute("created", formatDate(co.getCreationDate()));
+			sessionElement.setAttribute("changed", formatDate(co.getLastChangeDate()));
 			for (Extension extension : handler) {
 				SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
 				SessionPersistence persistence = new SessionPersistence(this, co, sessionElement);
@@ -257,8 +268,8 @@ public final class SessionPersistenceManager {
 				String created = e.getAttribute("created");
 				String changed = e.getAttribute("changed");
 				try {
-					Date creationDate = DATE_FORMAT.parse(created);
-					Date dateOfLastEdit = DATE_FORMAT.parse(changed);
+					Date creationDate = parseDate(created);
+					Date dateOfLastEdit = parseDate(changed);
 					DefaultSessionRecord sr =
 							new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
 					for (Extension extension : handler) {

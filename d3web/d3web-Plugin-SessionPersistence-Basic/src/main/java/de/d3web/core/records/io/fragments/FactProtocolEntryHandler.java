@@ -53,7 +53,7 @@ public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 		try {
 			// prepare fact entry header information
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = SessionPersistenceManager.DATE_FORMAT.parse(dateString);
+			Date date = SessionPersistenceManager.parseDate(dateString);
 			String name = element.getAttribute(ATTR_OBJECT_NAME);
 			String solver = element.getAttribute(ATTR_SOLVER);
 
@@ -76,7 +76,7 @@ public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		// prepare information
 		FactProtocolEntry entry = (FactProtocolEntry) object;
-		String dateString = SessionPersistenceManager.DATE_FORMAT.format(entry.getDate());
+		String dateString = SessionPersistenceManager.formatDate(entry.getDate());
 
 		// create element
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);

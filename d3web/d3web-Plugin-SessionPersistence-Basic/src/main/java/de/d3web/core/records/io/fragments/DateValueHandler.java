@@ -43,8 +43,7 @@ public class DateValueHandler implements FragmentHandler<SessionRecord> {
 	@Override
 	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		try {
-			return new DateValue(
-					SessionPersistenceManager.DATE_FORMAT.parse(element.getTextContent()));
+			return new DateValue(SessionPersistenceManager.parseDate(element.getTextContent()));
 		}
 		catch (ParseException e) {
 			throw new IOException(e);
@@ -56,7 +55,7 @@ public class DateValueHandler implements FragmentHandler<SessionRecord> {
 		DateValue dv = (DateValue) object;
 		Date date = (Date) dv.getValue();
 		Element element = persistence.getDocument().createElement(elementName);
-		element.setTextContent(SessionPersistenceManager.DATE_FORMAT.format(date));
+		element.setTextContent(SessionPersistenceManager.formatDate(date));
 		return element;
 	}
 
