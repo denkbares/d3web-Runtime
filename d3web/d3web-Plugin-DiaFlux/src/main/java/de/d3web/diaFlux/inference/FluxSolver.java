@@ -37,6 +37,7 @@ import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
@@ -276,11 +277,23 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * @param session
-	 * @param edge
-	 * @return
-	 * @created 17.02.2011
+	 * Returns whether the specified edge is currently active within the specified session. Please note that a edge
+	 * previously being active and then fixed by a snapshot is not considered to be active any longer, even if its
+	 * derived facts still persists.
+	 *
+	 * @param edge    the Edge to be checked
+	 * @param session the session to check the node for
+	 * @return if the edge is active in the session
+	 * @created 11.03.2013
 	 */
+	public static boolean isActiveEdge(Edge edge, Session session) {
+		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
+		for (FlowRun flowRun : runs) {
+			if (flowRun.isActivated(edge)) return true;
+		}
+		return false;
+	}
+
 	public static boolean evalEdge(Session session, Edge edge) {
 		return Conditions.isTrue(edge.getStartNode().getEdgePrecondition(), session)
 				&& Conditions.isTrue(edge.getCondition(), session);
@@ -551,7 +564,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		return getSources(derivedObject, session);
 	}
 
-	private static Set<TerminologyObject> getSources(TerminologyObject derivedObject, Session session) {
+	private Set<TerminologyObject> getSources(TerminologyObject derivedObject, Session session) {
 		// similar to rules.
 		// returns the incoming edges condition objects
 		// and the actions forward objects
@@ -560,22 +573,72 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// PLEASE NOTE:
 		// "snapshot"ed objects do not deliver their deriving
 		// objects any longer
+
 		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		Set<Node> visited = new HashSet<Node>();
 		NodeList nodes = derivedObject.getKnowledgeStore().getKnowledge(DERIVING_NODES);
 		if (nodes == null) return Collections.emptySet();
 		for (Node node : nodes.getNodes()) {
-			// if the node is known not to be inactive, ignore it
-			if (session != null && !isActiveNode(node, session)) continue;
+			getObjectsOfNode(session, node, null, visited, result);
+		}
+		return result;
+	}
+
+	/**
+	 * Recursively adds all objects involved in reaching the current node, potentially or actually, to the result list.
+	 * If the session is null, the potentially involved nodes will be added, if it is not null, the actually used
+	 * (active) nodes will be added.
+	 */
+	private void getObjectsOfNode(Session session, Node node, Edge edge, Set<Node> visited, Set<TerminologyObject> result) {
+		if (!visited.add(node)) {
+			if (!(node instanceof ComposedNode)) return;
+		}
+		// if the node is known not to be inactive, ignore it
+		if (session != null && !isActiveNode(node, session)) return;
+
+		// start node... go up, find the calling node
+		if (node instanceof StartNode) {
+			KnowledgeBase knowledgeBase = node.getFlow().getKnowledgeBase();
+			List<ComposedNode> callingNodes = DiaFluxUtils.getCallingNodes(knowledgeBase, (StartNode) node);
+			for (ComposedNode callingNode : callingNodes) {
+				if (session == null) {
+					getObjectsOfNode(null, callingNode, null, visited, result);
+				}
+				else {
+					for (Edge incomingEdge : callingNode.getIncomingEdges()) {
+						// we only continue, if the parent note really was activated in this flow
+						// (it is possible, that it was just exited in another part of the flow run)
+						if (isActiveEdge(incomingEdge, session)) {
+							getObjectsOfNode(session, callingNode, null, visited, result);
+							break;
+						}
+					}
+				}
+			}
+		}
+		// composite node... go down, find exit node
+		else if (node instanceof ComposedNode && edge != null) {
+			Flow calledFlow = DiaFluxUtils.getCalledFlow((ComposedNode) node);
+			for (EndNode endNode : calledFlow.getNodesOfClass(EndNode.class)) {
+				if (edge.getCondition() instanceof FlowchartProcessedCondition
+						|| endNode.getName().equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
+					getObjectsOfNode(session, endNode, null, visited, result);
+				}
+			}
+		}
+		else {
 			// add precondition values of all edges
-			for (Edge edge : node.getIncomingEdges()) {
-				Condition condition = edge.getCondition();
+			for (Edge incomingEdge : node.getIncomingEdges()) {
+				Condition condition = incomingEdge.getCondition();
+				if (session != null && !isActiveEdge(incomingEdge, session)) continue;
+				getObjectsOfNode(session, incomingEdge.getStartNode(), incomingEdge, visited, result);
 				if (condition != null) {
 					result.addAll(condition.getTerminalObjects());
 				}
 			}
-			// add action formula values
-			result.addAll(node.getHookedObjects());
 		}
-		return result;
+
+		// add action formula values
+		result.addAll(node.getHookedObjects());
 	}
 }

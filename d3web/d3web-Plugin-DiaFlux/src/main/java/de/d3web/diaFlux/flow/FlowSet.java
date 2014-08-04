@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.collections.DefaultMultiMap;
 import de.d3web.core.inference.KnowledgeSlice;
 
 /**
@@ -33,11 +34,9 @@ import de.d3web.core.inference.KnowledgeSlice;
  */
 public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 
-	private final Map<String, Flow> map;
+	private final Map<String, Flow> map = new HashMap<String, Flow>();
 
-	public FlowSet() {
-		this.map = new HashMap<String, Flow>();
-	}
+	private final DefaultMultiMap<String, ComposedNode> calledFlowToComposedNode = new DefaultMultiMap<String, ComposedNode>();
 
 	public boolean contains(String name) {
 		return map.containsKey(name);
@@ -51,12 +50,21 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 		return map.get(name);
 	}
 
-	public Set<String> getIDs() {
+	public Set<String> getFlowNames() {
 		return map.keySet();
 	}
 
 	public Flow put(Flow flow) {
+		Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
+		for (ComposedNode composedNode : composedNodes) {
+			String calledFlowName = composedNode.getCalledFlowName();
+			calledFlowToComposedNode.put(calledFlowName, composedNode);
+		}
 		return map.put(flow.getName(), flow);
+	}
+
+	public Collection<ComposedNode> getNodesCalling(String flowName) {
+		return calledFlowToComposedNode.getValues(flowName);
 	}
 
 	public int size() {
@@ -80,7 +88,7 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((map == null) ? 0 : map.hashCode());
+		result = prime * result + map.hashCode();
 		return result;
 	}
 
@@ -90,12 +98,7 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		FlowSet other = (FlowSet) obj;
-
-		if (map == null) {
-			if (other.map != null) return false;
-		}
-		else if (!map.equals(other.map)) return false;
-		return true;
+		return map.equals(other.map);
 	}
 
 	@Override

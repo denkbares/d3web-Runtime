@@ -20,6 +20,7 @@
 
 package de.d3web.diaFlux.inference;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ import de.d3web.utils.Log;
 
 /**
  * @author Reinhard Hatko
- * 
+ *         <p/>
  *         Created: 07.08.2010
  */
 public final class DiaFluxUtils {
@@ -63,18 +64,13 @@ public final class DiaFluxUtils {
 	}
 
 	public static boolean isFlowCase(Session session) {
-
-		if (session == null) {
-			return false;
-		}
-
-		return hasFlows(session.getKnowledgeBase());
+		return session != null && hasFlows(session.getKnowledgeBase());
 	}
-	
+
 	public static boolean hasFlows(KnowledgeBase base) {
-		
+
 		FlowSet flowSet = getFlowSet(base);
-		
+
 		return flowSet != null && !flowSet.getFlows().isEmpty();
 	}
 
@@ -82,21 +78,25 @@ public final class DiaFluxUtils {
 		return session.getSessionObject(session.getPSMethodInstance(FluxSolver.class));
 	}
 
+	public static <C extends Node> Collection<C> getNodesOfClass(KnowledgeBase knowledgeBase, Class<C> clazz) {
+		Collection<C> nodes = new ArrayList<C>();
+		for (Flow flow : DiaFluxUtils.getFlowSet(knowledgeBase).getFlows()) {
+			nodes.addAll(flow.getNodesOfClass(clazz));
+		}
+		return nodes;
+	}
+
 	/**
 	 * checks if there is a connecting Path from the {@link Node} fromNode to
 	 * the {@link Node} toNode. This method does NOT do a "deep" search, it only
 	 * works for Nodes in the same flow.
-	 * 
+	 * <p/>
 	 * if fromNode and toNode are equal, this method checks for a cycle.
-	 * 
+	 *
 	 * @created 04.04.2012
-	 * @param fromNode
-	 * @param toNode
-	 * @return
 	 */
 	public static boolean areConnectedNodes(Node fromNode, Node toNode) {
-		if (fromNode.getFlow() != toNode.getFlow()) return false;
-		return areConnectedNodes(fromNode, toNode, new LinkedList<Edge>());
+		return fromNode.getFlow() == toNode.getFlow() && areConnectedNodes(fromNode, toNode, new LinkedList<Edge>());
 	}
 
 	private static boolean areConnectedNodes(Node fromNode, Node toNode, Collection<Edge> activeEdges) {
@@ -110,7 +110,7 @@ public final class DiaFluxUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns a set of connected nodes.
 	 */
@@ -161,7 +161,7 @@ public final class DiaFluxUtils {
 	private static <T extends Node> T findNode(List<T> nodes, String nodeName) {
 
 		for (T node : nodes) {
-			if (node.getName().equalsIgnoreCase(nodeName)) {
+			if (node.getName().equals(nodeName)) {
 				return node;
 			}
 		}
@@ -184,10 +184,7 @@ public final class DiaFluxUtils {
 
 	/**
 	 * Searches a startnode by its name and the name of the containing flow.
-	 * 
-	 * @param kb
-	 * @param flowName
-	 * @param startNodeName
+	 *
 	 * @return s the start node, or null, if the flow or startnode do not exist
 	 */
 	public static StartNode findStartNode(KnowledgeBase kb, String flowName, String startNodeName) {
@@ -201,10 +198,7 @@ public final class DiaFluxUtils {
 
 	/**
 	 * Searches an exit node by its name and the name of the containing flow.
-	 * 
-	 * @param kb
-	 * @param flowName
-	 * @param startNodeName
+	 *
 	 * @return s the exit node, or null, if the flow or exit node do not exist
 	 */
 	public static EndNode findExitNode(KnowledgeBase kb, NodeActiveCondition condition) {
@@ -222,10 +216,7 @@ public final class DiaFluxUtils {
 	/**
 	 * Returns the startnode that is called by the composed node. May return
 	 * null, if no such flow exists.
-	 * 
-	 * @param kb
-	 * @param flowName
-	 * @param startNodeName
+	 *
 	 * @return s the start node, or null, if the called startnode does not exist
 	 */
 	public static StartNode getCalledStartNode(ComposedNode composedNode) {
@@ -236,10 +227,10 @@ public final class DiaFluxUtils {
 
 	/**
 	 * Returns the {@link Flow} that is called by composedNode
-	 * 
-	 * @created 08.02.2012
+	 *
 	 * @return s the flow containing the called start node, or null, if the
-	 *         start node does not exist
+	 * start node does not exist
+	 * @created 08.02.2012
 	 */
 	public static Flow getCalledFlow(ComposedNode composedNode) {
 		StartNode calledStartNode = getCalledStartNode(composedNode);
@@ -253,49 +244,29 @@ public final class DiaFluxUtils {
 
 	/**
 	 * Returns all {@link ComposedNode}s, that call the supplied {@link Flow}.
-	 * 
-	 * @created 15.03.2012
-	 * @param flow
+	 *
 	 * @return a List containing all the ComposedNodes
+	 * @created 15.03.2012
 	 */
-	public static List<ComposedNode> getCallingNodes(Flow calledFlow) {
-		List<ComposedNode> result = new LinkedList<ComposedNode>();
-
-		for (Flow flow : getFlowSet(calledFlow.getKnowledgeBase())) {
-			Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
-
-			for (ComposedNode composedNode : composedNodes) {
-				if (getCalledFlow(composedNode) == calledFlow) {
-					result.add(composedNode);
-				}
-			}
-		}
-
-		return result;
+	public static Collection<ComposedNode> getCallingNodes(Flow calledFlow) {
+		return getFlowSet(calledFlow.getKnowledgeBase()).getNodesCalling(calledFlow.getName());
 	}
 
 	/**
 	 * Returns all {@link ComposedNode}s, that call the supplied
 	 * {@link StartNode}.
-	 * 
-	 * @created 15.03.2012
-	 * @param kb
-	 * @param flow
+	 *
 	 * @return a List containing all the ComposedNodes
+	 * @created 15.03.2012
 	 */
 	public static List<ComposedNode> getCallingNodes(KnowledgeBase kb, StartNode startNode) {
-		List<ComposedNode> result = new LinkedList<ComposedNode>();
+		List<ComposedNode> result = new ArrayList<ComposedNode>();
 
-		for (Flow flow : getFlowSet(kb)) {
-			Collection<ComposedNode> composedNodes = flow.getNodesOfClass(ComposedNode.class);
-
-			for (ComposedNode composedNode : composedNodes) {
-				if (getCalledStartNode(composedNode) == startNode) {
-					result.add(composedNode);
-				}
+		for (ComposedNode composedNode : getFlowSet(kb).getNodesCalling(startNode.getFlow().getName())) {
+			if (composedNode.getCalledStartNodeName().equals(startNode.getName())) {
+				result.add(composedNode);
 			}
 		}
-
 		return result;
 	}
 
@@ -303,28 +274,26 @@ public final class DiaFluxUtils {
 	 * Returns a DFS mapping of Flow -> contained ComposedNodes. If a flow is called
 	 * from multiple flows, the only first one according to a DF search is
 	 * contained.
-	 * 
+	 *
 	 * @created 14.03.2013
-	 * @param kb
-	 * @return
 	 */
 	public static Map<Flow, Collection<ComposedNode>> createFlowStructure(KnowledgeBase kb) {
 		List<StartNode> nodes = DiaFluxUtils.getAutostartNodes(kb);
 		assert nodes.size() == 1; // TODO for now works only with 1
 
 		Flow callingFlow = nodes.get(0).getFlow();
-		return createFlowStructure(kb, new HashMap<Flow, Collection<ComposedNode>>(), callingFlow);
+		return createFlowStructure(new HashMap<Flow, Collection<ComposedNode>>(), callingFlow);
 
 	}
 
-	private static Map<Flow, Collection<ComposedNode>> createFlowStructure(KnowledgeBase base, Map<Flow, Collection<ComposedNode>> result, Flow callingFlow) {
+	private static Map<Flow, Collection<ComposedNode>> createFlowStructure(Map<Flow, Collection<ComposedNode>> result, Flow callingFlow) {
 		Collection<ComposedNode> composed = callingFlow.getNodesOfClass(ComposedNode.class);
 		for (ComposedNode composedNode : composed) {
 			Flow calledFlow = DiaFluxUtils.getCalledFlow(composedNode);
 			addFlow(result, callingFlow);
 			addFlow(result, calledFlow);
 			addCall(result, callingFlow, composedNode);
-			createFlowStructure(base, result, calledFlow);
+			createFlowStructure(result, calledFlow);
 		}
 
 		return result;

@@ -18,11 +18,6 @@
  */
 package de.d3web.diaFlux.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +30,8 @@ import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
+
+import static org.junit.Assert.*;
 
 public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 
@@ -88,8 +85,9 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 				ComposedNode.class).iterator().next();
 		ComposedNode composedNode4 = DiaFluxUtils.findFlow(kb, "Flow4").getNodesOfClass(
 				ComposedNode.class).iterator().next();
-		assertEquals(Arrays.asList(composedNode3, composedNode4),
-				DiaFluxUtils.getCallingNodes(DiaFluxUtils.findFlow(kb, "Flow2")));
+		List<ComposedNode> expected = Arrays.asList(composedNode3, composedNode4);
+		Collection<ComposedNode> actual = DiaFluxUtils.getCallingNodes(DiaFluxUtils.findFlow(kb, "Flow2"));
+		assertTrue(expected.containsAll(actual) && actual.containsAll(expected));
 	}
 
 	@Test
@@ -98,8 +96,9 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 				ComposedNode.class).iterator().next();
 		ComposedNode composedNode4 = DiaFluxUtils.findFlow(kb, "Flow4").getNodesOfClass(
 				ComposedNode.class).iterator().next();
-		assertEquals(Arrays.asList(composedNode3, composedNode4),
-				DiaFluxUtils.getCallingNodes(kb, DiaFluxUtils.findStartNode(kb, "Flow2", "start1")));
+		List<ComposedNode> actual = DiaFluxUtils.getCallingNodes(kb, DiaFluxUtils.findStartNode(kb, "Flow2", "start1"));
+		List<ComposedNode> expected = Arrays.asList(composedNode3, composedNode4);
+		assertTrue(expected.containsAll(actual) && actual.containsAll(expected));
 	}
 
 	@Test

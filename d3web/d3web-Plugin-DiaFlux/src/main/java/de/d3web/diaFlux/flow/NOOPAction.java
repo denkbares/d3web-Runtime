@@ -18,6 +18,7 @@
  */
 package de.d3web.diaFlux.flow;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,8 +48,13 @@ public final class NOOPAction extends PSAction {
 	}
 
 	@Override
-	public List<? extends TerminologyObject> getBackwardObjects() {
+	public List<? extends TerminologyObject> getForwardObjects() {
 		return objects;
+	}
+
+	@Override
+	public List<? extends TerminologyObject> getBackwardObjects() {
+		return Collections.emptyList();
 	}
 
 	@Override
