@@ -24,7 +24,10 @@ import de.d3web.utils.EqualsUtils;
  * elements of the same priority are returning in constant O(1) calculation
  * complexity. On the other hand insert operations are taking up to O(n)
  * complexity.
- * 
+ *
+ * @param <P> the comparable type used to define the priority of the items
+ * @param <E> the type of the items itself
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 31.10.2013
  */
