@@ -65,4 +65,18 @@ public final class NOOPAction extends PSAction {
 	public String toString() {
 		return "NOOP" + objects;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		NOOPAction that = (NOOPAction) o;
+		return objects.equals(that.objects);
+	}
+
+	@Override
+	public int hashCode() {
+		return objects.hashCode();
+	}
 }

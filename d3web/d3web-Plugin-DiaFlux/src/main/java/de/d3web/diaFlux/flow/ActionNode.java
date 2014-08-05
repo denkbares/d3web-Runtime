@@ -43,7 +43,6 @@ public class ActionNode extends AbstractNode {
 	public ActionNode(String id, PSAction action) {
 		super(id, action.toString());
 
-
 		Condition preCondition = ConditionTrue.INSTANCE;
 		if (action instanceof ActionRepeatedIndication) {
 			Question question = (Question) ((ActionRepeatedIndication) action).getQASets().get(0);
@@ -55,7 +54,6 @@ public class ActionNode extends AbstractNode {
 
 		this.action = action;
 		this.edgePrecondition = preCondition;
-
 	}
 
 	// do not call this method internally, as it unwraps a
@@ -72,7 +70,6 @@ public class ActionNode extends AbstractNode {
 	@Override
 	public void execute(Session session, FlowRun run) {
 		this.action.doIt(session, this, session.getPSMethodInstance(FluxSolver.class));
-
 	}
 
 	@Override
@@ -96,7 +93,6 @@ public class ActionNode extends AbstractNode {
 
 	@Override
 	public void takeSnapshot(Session session) {
-
 		super.takeSnapshot(session);
 
 		// redo action with SSN as source
@@ -105,7 +101,6 @@ public class ActionNode extends AbstractNode {
 			this.action.doIt(session, FluxSolver.SNAPSHOT_SOURCE,
 					session.getPSMethodInstance(FluxSolver.class));
 		}
-
 	}
 
 	@Override

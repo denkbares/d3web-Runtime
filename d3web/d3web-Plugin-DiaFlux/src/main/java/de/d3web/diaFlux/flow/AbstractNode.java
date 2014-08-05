@@ -173,9 +173,7 @@ public abstract class AbstractNode implements Node {
 		String nameString = getClass().getSimpleName() + "[" + getID() + ", " + getName() + "]";
 		if (flow != null) {
 			nameString += " in " + flow.getName();
-
 		}
-
 		return nameString;
 	}
 

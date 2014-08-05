@@ -32,7 +32,6 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.utils.Log;
 
 /**
- * 
  * @author Reinhard Hatko
  * @created 03.11.2009
  */
@@ -56,7 +55,7 @@ public class CallFlowAction extends PSAction {
 
 		if (startNode == null) {
 			Log.severe("Could not find start node '" + startNodeName + "' in flow '" +
-							flowName + "'.");
+					flowName + "'.");
 			return;
 		}
 
@@ -72,7 +71,7 @@ public class CallFlowAction extends PSAction {
 
 		if (startNode == null) {
 			Log.severe("Could not find start node '" + startNodeName + "' in flow '" +
-							flowName + "'.");
+					flowName + "'.");
 			return;
 		}
 
@@ -93,4 +92,28 @@ public class CallFlowAction extends PSAction {
 		return startNodeName;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CallFlowAction that = (CallFlowAction) o;
+		return !(flowName != null
+				? !flowName.equals(that.flowName)
+				: that.flowName != null) && !(startNodeName != null
+				? !startNodeName.equals(that.startNodeName)
+				: that.startNodeName != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = flowName != null ? flowName.hashCode() : 0;
+		result = 31 * result + (startNodeName != null ? startNodeName.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "CALL[" + flowName + "(" + startNodeName + ")]";
+	}
 }
