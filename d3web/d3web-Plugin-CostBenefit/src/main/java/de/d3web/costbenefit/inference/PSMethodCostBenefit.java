@@ -18,7 +18,6 @@
  */
 package de.d3web.costbenefit.inference;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PostHookablePSMethod;
@@ -60,7 +58,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
-import de.d3web.core.session.protocol.TextProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
@@ -276,7 +273,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		HashSet<Solution> allSolutions = new HashSet<Solution>();
 		HashSet<Target> allTargets = new HashSet<Target>();
 		SearchModel searchModel = new SearchModel(session);
-		List<StrategicSupport> strategicSupports = getStrategicSupports(session);
+		List<StrategicSupport> strategicSupports = CostBenefitUtil.getStrategicSupports(session);
 		for (StrategicSupport strategicSupport : strategicSupports) {
 			// calculate the targets from the strategic support items
 			Collection<Solution> solutions = strategicSupport
@@ -551,17 +548,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		return finalValues;
 	}
 
-	private List<StrategicSupport> getStrategicSupports(Session session) {
-		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
-		for (PSMethod psm : session.getPSMethods()) {
-			if (psm instanceof StrategicSupport) {
-				ret.add((StrategicSupport) psm);
-			}
-		}
-		return ret;
-	}
-
-	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		CostBenefitCaseObject caseObject = session.getSessionObject(this);
 		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
@@ -613,11 +599,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// questionnaire has been completed
 		if (!isAnyQuesionnaireDone) return;
 
-		// 2. check if there are any changed to our remembered solutions
-		if (hasChangedUndiscriminatedSolutions(caseObject)) {
-			caseObject.resetPath();
-			return;
-		}
 		// caseObject.activateNextQContainer();
 		QContainer qc =
 				caseObject.getCurrentSequence()[caseObject.getCurrentPathIndex()];
@@ -627,54 +608,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 	}
 
-	/**
-	 * Returns if the undiscriminated solutions have changed since the last use
-	 * of the search algorithm. This indicates that a new search should be
-	 * performed to adapt to the new diagnostic situation.
-	 * 
-	 * @created 08.03.2011
-	 * @param caseObject the cost benefit case object to be checked for changed
-	 *        solutions
-	 * @return if the undiscriminated solutions have been changed
-	 */
-	private boolean hasChangedUndiscriminatedSolutions(CostBenefitCaseObject caseObject) {
-		// if the current set of undiscriminated solutions is null
-		// this indicated that we will not check for undiscriminated solutions
-		// at all
-		if (caseObject.getUndiscriminatedSolutions() == null) return false;
-
-		// otherwise calculate the current solution to be discriminated and
-		// compare them to the previous ones
-		Session session = caseObject.getSession();
-		HashSet<Solution> currentSolutions = new HashSet<Solution>();
-		for (StrategicSupport strategicSupport : getStrategicSupports(session)) {
-			currentSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
-		}
-		final Set<Solution> previousSolutions = caseObject.getUndiscriminatedSolutions();
-		if (!previousSolutions.containsAll(currentSolutions)) {
-			String message = "The sprint group has increased/changed.\nPrevious group: "
-					+ previousSolutions
-					+ "\nActual group: " + currentSolutions;
-			caseObject.getSession().getProtocol().addEntry(
-					new TextProtocolEntry(
-							caseObject.getSession().getPropagationManager().getPropagationTime(),
-							message));
-			Log.warning(message);
-		}
-		Set<TerminologyObject> conflictingQuestions = CostBenefitUtil.calculatePossibleConflictingQuestions(
-				caseObject.getSession(), currentSolutions);
-		if (!caseObject.getConflictingObjects().containsAll(conflictingQuestions)) {
-			caseObject.setConflictingObjects(conflictingQuestions);
-			String message = "The following questions decreased the covering value of the sprint group: "
-					+ conflictingQuestions;
-			caseObject.getSession().getProtocol().addEntry(
-					new TextProtocolEntry(
-							caseObject.getSession().getPropagationManager().getPropagationTime(),
-							message));
-			Log.warning(message);
-		}
-		return !previousSolutions.equals(currentSolutions);
-	}
+	
 
 	public TargetFunction getTargetFunction() {
 		return targetFunction;

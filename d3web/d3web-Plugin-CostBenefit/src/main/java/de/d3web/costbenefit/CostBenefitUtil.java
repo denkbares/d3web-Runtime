@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import java.util.Set;
 import org.w3c.dom.Node;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
@@ -456,5 +458,15 @@ public final class CostBenefitUtil {
 		else {
 			return true;
 		}
+	}
+
+	public static List<StrategicSupport> getStrategicSupports(Session session) {
+		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
+		for (PSMethod psm : session.getPSMethods()) {
+			if (psm instanceof StrategicSupport) {
+				ret.add((StrategicSupport) psm);
+			}
+		}
+		return ret;
 	}
 }
