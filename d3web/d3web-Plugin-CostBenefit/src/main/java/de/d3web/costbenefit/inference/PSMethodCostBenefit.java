@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
@@ -58,7 +57,6 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
@@ -93,9 +91,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private SolutionsRater solutionsRater;
 	private double strategicBenefitFactor = 0.0;
 	private boolean manualMode = false;
-
-	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
-			Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Marks a Question indicating that the value of the question cannot be
@@ -158,72 +153,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * This method is just for refreshing the path of the CaseObject, the Facts
-	 * get pushed into the blackboard by calculateNewPath
-	 * 
-	 * @param caseObject {@link SessionObjectSource}
-	 */
-	void activateNextQContainer(CostBenefitCaseObject caseObject) {
-		QContainer[] currentSequence = caseObject.getCurrentSequence();
-		Session session = caseObject.getSession();
-		if (currentSequence == null) return;
-		// only check if the current one is done
-		// (or no current one has been activated yet)
-		if (caseObject.getCurrentPathIndex() == -1
-				|| CostBenefitUtil.isDone(currentSequence[caseObject.getCurrentPathIndex()],
-						session)) {
-			caseObject.incCurrentPathIndex();
-			if (caseObject.getCurrentPathIndex() >= currentSequence.length) {
-				caseObject.resetPath();
-				return;
-			}
-			QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
-			// normally ok questions are made undone when starting a sequence,
-			// but one item can occur more than once in a sequence, so it's
-			// questions have to be handled earlier.
-			for (int i = 0; i < caseObject.getCurrentPathIndex(); i++) {
-				if (currentSequence[0] == qc) {
-					makeOKQuestionsUndone(qc, session);
-				}
-			}
-			if (!new Node(qc, null).isApplicable(session)) {
-				caseObject.resetPath();
-				return;
-			}
-			// check if the rest of the path is applicable
-			else if (!CostBenefitUtil.checkPath(Arrays.asList(currentSequence), session,
-					caseObject.getCurrentPathIndex(), false)) {
-				caseObject.resetPath();
-				return;
-			}
-			// when activating the next qcontainer, which is applicable, check
-			// if it is already done and fire state transition and move to next
-			// QContainer if necessary
-			if (CostBenefitUtil.isDone(qc, session)) {
-				StateTransition st = StateTransition.getStateTransition(qc);
-				if (st != null) st.fire(session);
-				// remove indication
-				for (Fact fact : caseObject.getIndicatedFacts()) {
-					if (fact.getTerminologyObject() == qc) {
-						session.getBlackboard().removeInterviewFact(fact);
-					}
-				}
-				activateNextQContainer(caseObject);
-			}
-		}
-		// if the counter can't be increased, check if the actual qcontainer is
-		// still applicable, perhaps the states of the previous QContainer
-		// changed
-		else {
-			QContainer qc = currentSequence[caseObject.getCurrentPathIndex()];
-			if (!new Node(qc, null).isApplicable(session)) {
-				caseObject.resetPath();
-				return;
-			}
-		}
-	}
-
-	/**
 	 * Calculates a new path to a specific target. The method also selects the
 	 * calculated path into the interview. The method ensures that the path will
 	 * be followed as long as possible.
@@ -257,7 +186,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
 			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
-			activatePath(caseObject, minPath);
+			caseObject.activatePath(minPath, this);
 		}
 		else {
 			caseObject.setAbortedManuallySetTarget(true);
@@ -319,9 +248,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
 			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
-			activatePath(caseObject, minPath);
+			caseObject.activatePath(minPath, this);
 		}
-		activateNextQContainer(caseObject);
+		caseObject.activateNextQContainer();
 	}
 
 	private boolean hasUnansweredQuestions(Session session) {
@@ -622,34 +551,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		return finalValues;
 	}
 
-	/**
-	 * Activates a ready-made path by indicating its questionnaires and storing
-	 * it into the specified case object
-	 * 
-	 * @created 08.03.2011
-	 * @param caseObject the case object for this cost benefit session
-	 * @param path the path to be activated
-	 */
-	private void activatePath(CostBenefitCaseObject caseObject, Path path) {
-		Session session = caseObject.getSession();
-		Collection<QContainer> qContainers = path.getPath();
-		QContainer[] currentSequence = new QContainer[qContainers.size()];
-		int i = 0;
-		List<Fact> facts = new LinkedList<Fact>();
-		for (QContainer qContainer : qContainers) {
-			currentSequence[i] = qContainer;
-			makeOKQuestionsUndone(currentSequence[i], session);
-			Fact fact = FactFactory.createFact(qContainer,
-					new Indication(State.MULTIPLE_INDICATED, i), new Object(), this);
-			facts.add(fact);
-			session.getBlackboard().addInterviewFact(fact);
-			i++;
-		}
-		caseObject.setCurrentSequence(currentSequence);
-		caseObject.setCurrentPathIndex(-1);
-		caseObject.setIndicatedFacts(facts);
-	}
-
 	private List<StrategicSupport> getStrategicSupports(Session session) {
 		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
 		for (PSMethod psm : session.getPSMethods()) {
@@ -658,27 +559,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 		}
 		return ret;
-	}
-
-	private void makeOKQuestionsUndone(TerminologyObject container, Session session) {
-		for (TerminologyObject nob : container.getChildren()) {
-			// if ok-question
-			if (nob instanceof QuestionOC) {
-				QuestionOC qoc = (QuestionOC) nob;
-				List<Choice> choices = qoc.getAllAlternatives();
-				if (choices.size() == 1
-						&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
-					Blackboard blackboard = session.getBlackboard();
-					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
-						Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(qoc);
-						for (PSMethod contributing : contributingPSMethods) {
-							blackboard.removeValueFact(blackboard.getValueFact(qoc, contributing));
-						}
-					}
-				}
-			}
-			makeOKQuestionsUndone(nob, session);
-		}
 	}
 
 	@Override
@@ -738,11 +618,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			caseObject.resetPath();
 			return;
 		}
-
-		// continue with our current sequence
-		// if current qcontainer is done
-		// recalculate if next step of sequence is not applicable
-		activateNextQContainer(caseObject);
+		// caseObject.activateNextQContainer();
+		QContainer qc =
+				caseObject.getCurrentSequence()[caseObject.getCurrentPathIndex()];
+		if (!new Node(qc, null).isApplicable(session)) {
+			caseObject.resetPath();
+			return;
+		}
 	}
 
 	/**

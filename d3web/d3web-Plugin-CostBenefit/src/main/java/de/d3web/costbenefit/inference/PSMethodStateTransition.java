@@ -196,6 +196,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 					if (ks != null) {
 						StateTransition st = (StateTransition) ks;
 						sessionObject.facts = st.fire(session);
+						cbCaseObject.activateNextQContainer();
 						for (Fact fact : cbCaseObject.getIndicatedFacts()) {
 							if (fact.getTerminologyObject() == st.getQcontainer()) {
 								session.getBlackboard().removeInterviewFact(fact);

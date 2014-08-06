@@ -19,20 +19,35 @@
 package de.d3web.costbenefit.blackboard;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import de.d3web.core.inference.PSMethod;
+import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.costbenefit.CostBenefitUtil;
+import de.d3web.costbenefit.inference.StateTransition;
+import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.utils.Log;
 
 /**
@@ -52,6 +67,9 @@ public class CostBenefitCaseObject implements SessionObject {
 	private boolean abortedManuallySetTarget = false;
 	private Set<TerminologyObject> conflictingObjects = new HashSet<TerminologyObject>();
 	private QContainer unreachedTarget = null;
+
+	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
+			Pattern.CASE_INSENSITIVE);
 
 	public CostBenefitCaseObject(Session session) {
 		this.session = session;
@@ -181,5 +199,109 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void resetUnreachedTarget() {
 		this.unreachedTarget = null;
+	}
+
+	/**
+	 * This method is just for refreshing the path of the CaseObject, the Facts
+	 * get pushed into the blackboard by calculateNewPath
+	 * 
+	 * @param caseObject {@link SessionObjectSource}
+	 */
+	public void activateNextQContainer() {
+		if (currentSequence == null) return;
+		// only check if the current one is done
+		// (or no current one has been activated yet)
+		if (this.getCurrentPathIndex() == -1
+				|| CostBenefitUtil.isDone(currentSequence[this.getCurrentPathIndex()],
+						session)) {
+			this.incCurrentPathIndex();
+			if (this.getCurrentPathIndex() >= currentSequence.length) {
+				this.resetPath();
+				return;
+			}
+			QContainer qc = currentSequence[this.getCurrentPathIndex()];
+			// normally ok questions are made undone when starting a sequence,
+			// but one item can occur more than once in a sequence, so it's
+			// questions have to be handled earlier.
+			// TODO maybe just make the questions of the previous container
+			// undone? all others should be made undone earlier
+			for (int i = 0; i < this.getCurrentPathIndex(); i++) {
+				if (currentSequence[0] == qc) {
+					makeOKQuestionsUndone(qc, session);
+				}
+			}
+			if (!new Node(qc, null).isApplicable(session)) {
+				this.resetPath();
+				return;
+			}
+			// check if the rest of the path is applicable
+			else if (!CostBenefitUtil.checkPath(Arrays.asList(currentSequence), session,
+					this.getCurrentPathIndex(), false)) {
+				this.resetPath();
+				return;
+			}
+			// when activating the next qcontainer, which is applicable, check
+			// if it is already done and fire state transition and move to next
+			// QContainer if necessary
+			if (CostBenefitUtil.isDone(qc, session)) {
+				StateTransition st = StateTransition.getStateTransition(qc);
+				if (st != null) st.fire(session);
+				// remove indication
+				for (Fact fact : this.getIndicatedFacts()) {
+					if (fact.getTerminologyObject() == qc) {
+						session.getBlackboard().removeInterviewFact(fact);
+					}
+				}
+				activateNextQContainer();
+			}
+		}
+	}
+
+	private void makeOKQuestionsUndone(TerminologyObject container, Session session) {
+		for (TerminologyObject nob : container.getChildren()) {
+			// if ok-question
+			if (nob instanceof QuestionOC) {
+				QuestionOC qoc = (QuestionOC) nob;
+				List<Choice> choices = qoc.getAllAlternatives();
+				if (choices.size() == 1
+						&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
+					Blackboard blackboard = session.getBlackboard();
+					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
+						Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(qoc);
+						for (PSMethod contributing : contributingPSMethods) {
+							blackboard.removeValueFact(blackboard.getValueFact(qoc, contributing));
+						}
+					}
+				}
+			}
+			makeOKQuestionsUndone(nob, session);
+		}
+	}
+
+	/**
+	 * Activates a ready-made path by indicating its questionnaires and storing
+	 * it into the specified case object
+	 * 
+	 * @created 08.03.2011
+	 * @param caseObject the case object for this cost benefit session
+	 * @param path the path to be activated
+	 */
+	public void activatePath(Path path, PSMethod psmethod) {
+		Collection<QContainer> qContainers = path.getPath();
+		QContainer[] currentSequence = new QContainer[qContainers.size()];
+		int i = 0;
+		List<Fact> facts = new LinkedList<Fact>();
+		for (QContainer qContainer : qContainers) {
+			currentSequence[i] = qContainer;
+			makeOKQuestionsUndone(currentSequence[i], session);
+			Fact fact = FactFactory.createFact(qContainer,
+					new Indication(State.MULTIPLE_INDICATED, i), new Object(), psmethod);
+			facts.add(fact);
+			session.getBlackboard().addInterviewFact(fact);
+			i++;
+		}
+		this.setCurrentSequence(currentSequence);
+		this.setCurrentPathIndex(-1);
+		this.setIndicatedFacts(facts);
 	}
 }

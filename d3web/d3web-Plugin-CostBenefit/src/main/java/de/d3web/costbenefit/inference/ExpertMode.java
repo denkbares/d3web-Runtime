@@ -181,7 +181,7 @@ public class ExpertMode implements SessionObject {
 							target.getQContainers().toArray(
 									new QContainer[target.getQContainers().size()])));
 			psm.calculateNewPathTo(pso, target);
-			psm.activateNextQContainer(pso);
+			pso.activateNextQContainer();
 		}
 		finally {
 			propagationManager.commitPropagation();
@@ -210,7 +210,7 @@ public class ExpertMode implements SessionObject {
 		try {
 			propagationManager.openPropagation();
 			psm.calculateNewPathTo(pso, targets);
-			psm.activateNextQContainer(pso);
+			pso.activateNextQContainer();
 		}
 		finally {
 			propagationManager.commitPropagation();
