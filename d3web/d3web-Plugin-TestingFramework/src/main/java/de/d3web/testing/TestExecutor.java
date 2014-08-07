@@ -468,7 +468,9 @@ public class TestExecutor {
 			catch (InterruptedException e) {
 				throw e;
 			}
-			catch (Exception e) {
+			catch (Throwable e) {
+				// must catch throwable here to also handle unexpected errors
+				// such as StackOverflow, memory issues or invalid plugins (linkage) errors
 				String message = "Unexpected error in test " +
 						specification.getTestName() + ", " +
 						"during testing '" + testObjectName + "'";
