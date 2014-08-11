@@ -59,8 +59,10 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.utils.Log;
 
 /**
+ * Problem solver to process the flowcharts of a knowledge base.
+ *
  * @author Reinhard Hatko
- * @created: 10.09.2009
+ * @created 10.09.2009
  */
 public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<DiaFluxCaseObject> {
 
@@ -79,7 +81,17 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	public static final Object SNAPSHOT_SOURCE = SnapshotNode.class;
 
+	private boolean suggestPotentialSolutions = false;
+
 	public FluxSolver() {
+	}
+
+	public boolean isSuggestPotentialSolutions() {
+		return suggestPotentialSolutions;
+	}
+
+	public void setSuggestPotentialSolutions(boolean suggestPotentialSolutions) {
+		this.suggestPotentialSolutions = suggestPotentialSolutions;
 	}
 
 	@Override
@@ -89,7 +101,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return;
 		}
 
-		Log.fine("Initing FluxSolver with case: " + session);
+		Log.fine("Initializing FluxSolver with case: " + session);
 
 		try {
 			session.getPropagationManager().openPropagation();
@@ -109,7 +121,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	public static void start(Session session, StartNode startNode) {
 
-		Log.fine("Activating startnode '" + startNode.getName() + "' of flow '"
+		Log.fine("Activating start node '" + startNode.getName() + "' of flow '"
 				+ startNode.getFlow().getName() + "'.");
 
 		FlowRun run = new FlowRun();
@@ -129,7 +141,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		if (logger.isLoggable(Level.FINE)) {
 			logger.fine("Start propagating: " + changes);
 		}
-		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
+		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
+		List<FlowRun> runs = caseObject.getRuns();
 		List<Node> changedNodes = new ArrayList<Node>();
 		for (PropagationEntry propagationEntry : changes) {
 
@@ -166,21 +179,26 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			if (knowledge == null) continue;
 
 			for (Node node : knowledge) {
-				for (FlowRun run : DiaFluxUtils.getDiaFluxCaseObject(session).getRuns()) {
+				for (FlowRun run : caseObject.getRuns()) {
 					if (run.isActive(node)) {
 						node.update(session, run);
+						if (suggestPotentialSolutions) {
+							caseObject.updateUndefinedEdges(node, true);
+						}
 					}
 				}
 			}
 		}
-		logger.fine("Finished propagating.");
 
+		caseObject.updateSuspectedSolutions();
+		logger.fine("Finished propagating.");
 	}
 
 	/**
-	 * Adds support to a node. If the node is triggered, ie, was not active before, it gets activated.
+	 * Adds support to a node. If the node is triggered, ie, was not active before, it gets
+	 * activated.
 	 *
-	 * @param node    the node to add support to
+	 * @param node the node to add support to
 	 * @param support a node or edge supporting the node
 	 * @created 03.09.2013
 	 */
@@ -202,7 +220,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	/**
 	 * Removes support from a node.
 	 *
-	 * @param node    the node to remove the support from
+	 * @param node the node to remove the support from
 	 * @param support a node or edge supporting the node
 	 * @created 03.09.2013
 	 */
@@ -222,7 +240,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * Checks, if the states of outgoing edges are correct.
 	 */
 	public static void checkSuccessors(Node node, FlowRun run, Session session) {
-		if (run.isActive(node)) { // node is active...
+		boolean isActive = run.isActive(node);
+		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
+		caseObject.updateUndefinedEdges(node, isActive);
+
+		if (isActive) { // node is active...
 			for (Edge edge : node.getOutgoingEdges()) {
 				// ...now check inactive edges, that eval to true
 				if (!run.isActivated(edge) && evalEdge(session, edge)) {
@@ -232,7 +254,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 					deactivateEdge(edge, run, session);
 				}
 			}
-
 		}
 		else {// node is inactive...
 			for (Edge edge : node.getOutgoingEdges()) {
@@ -247,7 +268,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	@Override
 	public DiaFluxCaseObject createSessionObject(Session session) {
-		return new DiaFluxCaseObject();
+		return new DiaFluxCaseObject(session, this, suggestPotentialSolutions);
 	}
 
 	private static void activateEdge(Edge edge, FlowRun flowRun, Session session) {
@@ -259,11 +280,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Returns whether the specified node is currently active within the specified session. Please note that a node
-	 * previously being active and then fixed by a snapshot is not considered to be active any longer, even if its
-	 * derived facts still persists.
+	 * Returns whether the specified node is currently active within the specified session. Please
+	 * note that a node previously being active and then fixed by a snapshot is not considered to be
+	 * active any longer, even if its derived facts still persists.
 	 *
-	 * @param node    the node to be checked
+	 * @param node the node to be checked
 	 * @param session the session to check the node for
 	 * @return if the node is active in the session
 	 * @created 11.03.2013
@@ -277,11 +298,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Returns whether the specified edge is currently active within the specified session. Please note that a edge
-	 * previously being active and then fixed by a snapshot is not considered to be active any longer, even if its
-	 * derived facts still persists.
+	 * Returns whether the specified edge is currently active within the specified session. Please
+	 * note that a edge previously being active and then fixed by a snapshot is not considered to be
+	 * active any longer, even if its derived facts still persists.
 	 *
-	 * @param edge    the Edge to be checked
+	 * @param edge the Edge to be checked
 	 * @param session the session to check the node for
 	 * @return if the edge is active in the session
 	 * @created 11.03.2013
@@ -316,7 +337,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// ...create new flow with s and parents as start node
 		// remove all flows f in SF from the active flows
 
-		Collection<SnapshotNode> enteredSnapshots = caseObject.getActivatedSnapshots(session);
+		Collection<SnapshotNode> enteredSnapshots = caseObject.getActivatedSnapshots();
 		if (enteredSnapshots.isEmpty()) {
 			return;
 		}
@@ -336,7 +357,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			// Generate a new FlowRun for each snapshot
 			newRuns.add(generateNewFlowRunForSnapshot(session, snapshotNode));
 			// inform the flux solver that this snapshot node has been snapshoted
-			caseObject.snapshotDone(snapshotNode, session);
+			caseObject.snapshotDone(snapshotNode);
 			session.getPropagationManager().forcePropagate(snapshotNode);
 		}
 
@@ -364,10 +385,10 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * For each entered snapshot we generate a new FlowRun.<br>
-	 * There might be multiple FlowRuns that have entered the snapshot. We merge these FlowRuns into one new FlowRun
-	 * starting from the entered snapshot. It needs some information from the FlowRuns leading into snapshot, which
-	 * will be set here.
+	 * For each entered snapshot we generate a new FlowRun.<br> There might be multiple FlowRuns
+	 * that have entered the snapshot. We merge these FlowRuns into one new FlowRun starting from
+	 * the entered snapshot. It needs some information from the FlowRuns leading into snapshot,
+	 * which will be set here.
 	 */
 	private FlowRun generateNewFlowRunForSnapshot(Session session, SnapshotNode snapshotNode) {
 		FlowRun run = new FlowRun();
@@ -425,9 +446,11 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// composite node... go down, find exit node
 		else if (node instanceof ComposedNode && edge != null) {
 			for (EndNode endNode : flowRun.getActiveNodesOfClass(EndNode.class)) {
-				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName())) continue;
+				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName()))
+					continue;
 				if (edge.getCondition() instanceof FlowchartProcessedCondition
-						|| endNode.getName().equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
+						|| endNode.getName()
+						.equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
 					addActiveNodesLeadingToNode(flowRun, endNode, null, activeComposedNodes, activeElements);
 				}
 			}
@@ -443,7 +466,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Creates a collection of all nodes that are active in any flow run that leads towards the given snapshot node.
+	 * Creates a collection of all nodes that are active in any flow run that leads towards the
+	 * given snapshot node.
 	 *
 	 * @param snapshotNode the target snapshot node
 	 * @return the list of active snapshots
@@ -460,8 +484,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * We check if the outgoing edge is active/true. If the node is not part of the active nodes, it is one of the
-	 * parent start nodes that are declared active because the flow has to resume there eventually.
+	 * We check if the outgoing edge is active/true. If the node is not part of the active nodes, it
+	 * is one of the parent start nodes that are declared active because the flow has to resume
+	 * there eventually.
 	 */
 	private boolean stillInside(Node node, Collection<DiaFluxElement> activeElements) {
 		if (activeElements.contains(node)) {
@@ -475,8 +500,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Not sure if we really still need this. We check if a parent node has an incoming edge with a active node as the
-	 * start node and the condition true.
+	 * Not sure if we really still need this. We check if a parent node has an incoming edge with a
+	 * active node as the start node and the condition true.
 	 */
 	private static boolean hasIncomingActivation(Node child, Collection<DiaFluxElement> activeElements) {
 		for (Edge edge : child.getIncomingEdges()) {
@@ -585,9 +610,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	}
 
 	/**
-	 * Recursively adds all objects involved in reaching the current node, potentially or actually, to the result list.
-	 * If the session is null, the potentially involved nodes will be added, if it is not null, the actually used
-	 * (active) nodes will be added.
+	 * Recursively adds all objects involved in reaching the current node, potentially or actually,
+	 * to the result list. If the session is null, the potentially involved nodes will be added, if
+	 * it is not null, the actually used (active) nodes will be added.
 	 */
 	private void getObjectsOfNode(Session session, Node node, Edge edge, Set<Node> visited, Set<TerminologyObject> result) {
 		if (!visited.add(node)) {
@@ -621,7 +646,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			Flow calledFlow = DiaFluxUtils.getCalledFlow((ComposedNode) node);
 			for (EndNode endNode : calledFlow.getNodesOfClass(EndNode.class)) {
 				if (edge.getCondition() instanceof FlowchartProcessedCondition
-						|| endNode.getName().equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
+						|| endNode.getName()
+						.equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
 					getObjectsOfNode(session, endNode, null, visited, result);
 				}
 			}
