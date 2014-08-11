@@ -59,7 +59,7 @@ import de.d3web.utils.Triple;
 
 /**
  * Provides utilitymethods for {@link KnowledgeBase}
- * 
+ *
  * @author baumeister
  */
 public final class KnowledgeBaseUtils {
@@ -69,7 +69,7 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * @return a newly creates knowledge base with one root Solution (P000) and
-	 *         one root QContainer (Q000).
+	 * one root QContainer (Q000).
 	 */
 	public static KnowledgeBase createKnowledgeBase() {
 		KnowledgeBase knowledgeBase = new KnowledgeBase();
@@ -110,10 +110,10 @@ public final class KnowledgeBaseUtils {
 	 * Collects all ancestors starting from the specified object. Duplicate
 	 * objects will be contained only once at its first occurrence. The
 	 * specified terminologyObject is always the first element of this list.
-	 * 
-	 * @created 26.02.2013
+	 *
 	 * @param terminologyObject the leaf of the sub-tree to be specified
 	 * @return the ancestors of the given {@link TerminologyObject}
+	 * @created 26.02.2013
 	 */
 	public static List<TerminologyObject> getAncestors(TerminologyObject terminologyObject) {
 		return getAncestors(terminologyObject, TerminologyObject.class);
@@ -125,12 +125,12 @@ public final class KnowledgeBaseUtils {
 	 * specified object. Duplicate objects will be contained only once at its
 	 * first occurrence. The specified terminologyObject is always the first
 	 * element of this list.
-	 * 
-	 * @created 26.02.2013
-	 * @param <T> the type of the ancestors to be found
+	 *
+	 * @param <T>    the type of the ancestors to be found
 	 * @param parent the leaf where the search starts
 	 * @param typeOf the class of the ancestors to be found
 	 * @return the ancestors of the given {@link TerminologyObject}
+	 * @created 26.02.2013
 	 */
 	public static <T extends TerminologyObject> List<T> getAncestors(TerminologyObject parent, Class<T> typeOf) {
 		List<T> result = new LinkedList<T>();
@@ -141,8 +141,7 @@ public final class KnowledgeBaseUtils {
 
 	private static <T extends TerminologyObject> void collectAncestors(TerminologyObject terminologyObject, Set<TerminologyObject> visited, List<T> result, Class<T> typeOf) {
 		// if not already visited, we add the object...
-		if (visited.contains(terminologyObject)) return;
-		visited.add(terminologyObject);
+		if (!visited.add(terminologyObject)) return;
 
 		// ...add the current item if matches
 		if (typeOf.isInstance(terminologyObject)) {
@@ -160,10 +159,10 @@ public final class KnowledgeBaseUtils {
 	 * multiple parents within this sub-tree) will be contained only once at its
 	 * first occurrence. The specified terminologyObject is always the first
 	 * element of this list.
-	 * 
-	 * @created 20.04.2011
+	 *
 	 * @param terminologyObject the root of the sub-tree to be specified
 	 * @return the depth-first search tree items
+	 * @created 20.04.2011
 	 */
 	public static List<TerminologyObject> getSuccessors(TerminologyObject terminologyObject) {
 		return getSuccessors(terminologyObject, TerminologyObject.class);
@@ -175,12 +174,12 @@ public final class KnowledgeBaseUtils {
 	 * Duplicate objects (having multiple parents within this sub-tree) will be
 	 * contained only once at its first occurrence. The specified
 	 * terminologyObject is always the first element of this list.
-	 * 
-	 * @created 04.05.2011
-	 * @param <T> the type of the successors to be found
+	 *
+	 * @param <T>               the type of the successors to be found
 	 * @param terminologyObject the root of the sub-tree to be specified
-	 * @param typeOf the class of the successors to be found
+	 * @param typeOf            the class of the successors to be found
 	 * @return the depth-first search tree items
+	 * @created 04.05.2011
 	 */
 	public static <T extends TerminologyObject> List<T> getSuccessors(TerminologyObject terminologyObject, Class<T> typeOf) {
 		List<T> result = new LinkedList<T>();
@@ -208,8 +207,8 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of
 	 * the specified question, that has the specified case sensitive text as
 	 * answer text.
-	 * 
-	 * @param question the specified question
+	 *
+	 * @param question   the specified question
 	 * @param answerText the requested answer text
 	 * @return null, if no answer found for specified params
 	 */
@@ -220,9 +219,9 @@ public final class KnowledgeBaseUtils {
 	/**
 	 * Retrieves the AnswerChoice object contained in the alternatives list of
 	 * the specified question, that has the specified text as answer text.
-	 * 
-	 * @param question the specified question
-	 * @param answerText the requested answer text
+	 *
+	 * @param question      the specified question
+	 * @param answerText    the requested answer text
 	 * @param caseSensitive decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
@@ -261,15 +260,15 @@ public final class KnowledgeBaseUtils {
 	 * that question, null is returned. This may happen e.g. if the denoted
 	 * choice is not available or for a numeric question if the string is not a
 	 * valid double representation.
-	 * <p>
+	 * <p/>
 	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED"
 	 * (if there is no such choice). The method created the unknown for "MaU",
 	 * "-?-" or "UNKNOWN" (if there is no such choice).
-	 * 
-	 * @created 23.09.2013
-	 * @param question the question to create the value for
+	 *
+	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
+	 * @created 23.09.2013
 	 */
 	public static QuestionValue findValue(Question question, String valueString) {
 		return findValue(question, valueString, true);
@@ -282,15 +281,15 @@ public final class KnowledgeBaseUtils {
 	 * is returned. This may happen e.g. if the denoted choice is not available
 	 * or for a numeric question if the string is not a valid double
 	 * representation.
-	 * <p>
+	 * <p/>
 	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED"
 	 * (if there is no such choice). The method created the unknown for "MaU",
 	 * "-?-" or "UNKNOWN" (if there is no such choice).
-	 * 
-	 * @created 23.09.2013
-	 * @param question the question to create the value for
+	 *
+	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
+	 * @created 23.09.2013
 	 */
 	public static QuestionValue findValue(Question question, String valueString, boolean caseSensitive) {
 		if (question == null || valueString == null) {
@@ -396,15 +395,13 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Sorts a given list of QContainer according to DFS
-	 * 
+	 * Sorts a given list of TerminologyObjects according to DFS. Use this algorithm method for small knowledge bases or
+	 * lists containing almost all of the knowledge bases objects. Do not mix Solutions and QASets in the same list.
+	 *
 	 * @param unsorted the unsorted list
 	 */
-	public static void sortQContainers(List<QContainer> unsorted) {
-		if (unsorted.isEmpty()) {
-			// empty list doesn't need be sorted
-			return;
-		}
+	public static void sortTerminologyObjects(List<? extends TerminologyObject> unsorted) {
+		if (unsorted.isEmpty()) return;
 		KnowledgeBase knowledgeBase = unsorted.get(0).getKnowledgeBase();
 		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
 		reindex(knowledgeBase.getRootQASet(), qcontainerIndex);
@@ -422,9 +419,6 @@ public final class KnowledgeBaseUtils {
 			if (!qcontainerIndex.containsKey(child)) {
 				reindex(child, qcontainerIndex);
 			}
-			else {
-				continue;// terminate recursion in case of cyclic hierarchies
-			}
 		}
 	}
 
@@ -434,7 +428,7 @@ public final class KnowledgeBaseUtils {
 	 * index number
 	 */
 
-	private static class DFSTreeSortingComparator implements Comparator<QContainer> {
+	private static class DFSTreeSortingComparator implements Comparator<TerminologyObject> {
 
 		private final Map<TerminologyObject, Integer> index;
 
@@ -444,7 +438,7 @@ public final class KnowledgeBaseUtils {
 		}
 
 		@Override
-		public int compare(QContainer entry1, QContainer entry2) {
+		public int compare(TerminologyObject entry1, TerminologyObject entry2) {
 			int order1 = this.index.get(entry1);
 			int order2 = this.index.get(entry2);
 			return order1 - order2;
@@ -455,15 +449,15 @@ public final class KnowledgeBaseUtils {
 	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its
 	 * containing {@link NamedObject}s). It will return every {@link Locale}
 	 * that is used for at least one property within the knowledge base.
-	 * <p>
+	 * <p/>
 	 * Implementation note: <br>
 	 * Because of searching every property within the whole knowledge base it is
 	 * a good idea to store and reused the result of this operation instead of
 	 * calling this method multiple times on the same knowledge base.
-	 * 
-	 * @created 15.12.2010
+	 *
 	 * @param kb the knowledge base to be examined
 	 * @return the available locales
+	 * @created 15.12.2010
 	 */
 	public static Set<Locale> getAvailableLocales(KnowledgeBase kb) {
 		Set<Locale> locales = new HashSet<Locale>();

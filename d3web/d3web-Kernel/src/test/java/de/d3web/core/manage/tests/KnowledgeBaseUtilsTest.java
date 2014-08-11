@@ -261,7 +261,7 @@ public class KnowledgeBaseUtilsTest {
 		QContainer qc6 = new QContainer(qc3, "qc6");
 		List<QContainer> qcs = Arrays.asList(qc6, qc5, qc4, qc3,
 				qc2, qc1);
-		KnowledgeBaseUtils.sortQContainers(qcs);
+		KnowledgeBaseUtils.sortTerminologyObjects(qcs);
 		assertEquals(Arrays.asList(qc1, qc2, qc4, qc5, qc3, qc6), qcs);
 	}
 
