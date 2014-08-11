@@ -115,7 +115,8 @@ public class DefaultPropagationManager implements PropagationManager {
 				// propagate the changes, using the new interface
 				getPSMethod().propagate(DefaultPropagationManager.this.session, entries);
 			}
-			catch (Exception e) {
+			catch (Throwable e) { // NOSONAR
+				// we catch Throwable here, to also handle runtime errors such as StackOverflow
 				Log.severe("internal error in pluggable problem solver #" +
 						getPSMethod().getClass(), e);
 			}
@@ -148,18 +149,12 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Starts a new propagation frame.
-	 * <p>
-	 * Every propagation will be delayed until the last propagation frame has
-	 * been commit. There is no essential need to call this method manually.
-	 * <p>
-	 * This method can be called manually before setting a bunch of question
-	 * values to enabled optimized propagation throughout the PSMethods. You
-	 * must ensure that to call commitPropagation() once for each call to this
-	 * method under any circumstances (!) even in case of unexpected exceptions.
-	 * Therefore always use the following snipplet:
-	 * <p>
-	 * <p/>
+	 * Starts a new propagation frame. <p> Every propagation will be delayed until the last
+	 * propagation frame has been commit. There is no essential need to call this method manually.
+	 * <p> This method can be called manually before setting a bunch of question values to enabled
+	 * optimized propagation throughout the PSMethods. You must ensure that to call
+	 * commitPropagation() once for each call to this method under any circumstances (!) even in
+	 * case of unexpected exceptions. Therefore always use the following snipplet: <p> <p/>
 	 * <pre>
 	 * try {
 	 * 	session.getPropagationManager().openPropagation();
@@ -169,8 +164,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 	session.getPropagationManager().commitPropagation();
 	 * }
 	 * </pre>
-	 * <p/>
-	 * </p>
+	 * <p/> </p>
 	 */
 	@Override
 	public void openPropagation() {
@@ -178,9 +172,9 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Starts a new propagation frame with a given time. If an other propagation
-	 * frame has already been opened, the specified time is ignored. For more
-	 * details see PropagationController.openProgagation()
+	 * Starts a new propagation frame with a given time. If an other propagation frame has already
+	 * been opened, the specified time is ignored. For more details see
+	 * PropagationController.openProgagation()
 	 */
 	@Override
 	public void openPropagation(long time) {
@@ -192,19 +186,12 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Commits a propagation frame.
-	 * <p>
-	 * By commit the last propagation frame, the changes will be propagated
-	 * throughout the PSMethods. There is no essential need to call this method
-	 * manually.
-	 * <p>
-	 * This method can be called manually after setting a bunch of question
-	 * values to enabled optimized propagation throughout the PSMethods. You
-	 * must ensure that this method is called once for each call to
-	 * openPropagation() under any circumstances (!) even in case of unexpected
-	 * exceptions. Therefore always use the following snipplet:
-	 * <p>
-	 * <p/>
+	 * Commits a propagation frame. <p> By commit the last propagation frame, the changes will be
+	 * propagated throughout the PSMethods. There is no essential need to call this method manually.
+	 * <p> This method can be called manually after setting a bunch of question values to enabled
+	 * optimized propagation throughout the PSMethods. You must ensure that this method is called
+	 * once for each call to openPropagation() under any circumstances (!) even in case of
+	 * unexpected exceptions. Therefore always use the following snipplet: <p> <p/>
 	 * <pre>
 	 * try {
 	 * 	session.getPropagationManager().openPropagation();
@@ -214,8 +201,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * 	session.getPropagationManager().commitPropagation();
 	 * }
 	 * </pre>
-	 * <p/>
-	 * </p>
+	 * <p/> </p>
 	 */
 	@Override
 	public void commitPropagation() {
@@ -238,8 +224,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * This method does all the work as it notifies all problem solvers about
-	 * all changes.
+	 * This method does all the work as it notifies all problem solvers about all changes.
 	 */
 	private void distribute() {
 		// inform listener about starting entries
@@ -271,7 +256,8 @@ public class DefaultPropagationManager implements PropagationManager {
 					for (PSMethodHandler handler : this.psHandlers) {
 						if (handler.getPSMethod() instanceof PostHookablePSMethod) {
 							checkTerminated();
-							PostHookablePSMethod postHookablePSMethod = (PostHookablePSMethod) handler.getPSMethod();
+							PostHookablePSMethod postHookablePSMethod = (PostHookablePSMethod) handler
+									.getPSMethod();
 							postHookablePSMethod.postPropagate(session, entries);
 						}
 					}
@@ -361,14 +347,14 @@ public class DefaultPropagationManager implements PropagationManager {
 	/**
 	 * Propagates a change value of an object through the different PSMethods.
 	 * <p/>
-	 * This method may cause other value propagations and therefore may be
-	 * called recursively. It is called after the value has been updated in the
-	 * case. Thus the case already contains the new value.
+	 * This method may cause other value propagations and therefore may be called recursively. It is
+	 * called after the value has been updated in the case. Thus the case already contains the new
+	 * value.
 	 * <p/>
-	 * <b>Do not call this method directly! It will be called by the case to
-	 * propagate facts updated into the case.</b>
+	 * <b>Do not call this method directly! It will be called by the case to propagate facts updated
+	 * into the case.</b>
 	 *
-	 * @param object   the object that has been updated
+	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 */
 	@Override
@@ -377,18 +363,16 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Propagates a change value of an object through one selected PSMethod. All
-	 * changes that will be derived by that PSMethod will be propagated normally
-	 * throughout the whole system.
+	 * Propagates a change value of an object through one selected PSMethod. All changes that will
+	 * be derived by that PSMethod will be propagated normally throughout the whole system.
 	 * <p/>
-	 * This method may be used after a problem solver has been added to
-	 * distribute existing facts to him and enable him to derive additional
-	 * facts.
+	 * This method may be used after a problem solver has been added to distribute existing facts to
+	 * him and enable him to derive additional facts.
 	 * <p/>
-	 * <b>Do not call this method directly! It will be called by the case to
-	 * propagate facts updated into the case.</b>
+	 * <b>Do not call this method directly! It will be called by the case to propagate facts updated
+	 * into the case.</b>
 	 *
-	 * @param object   the object that has been updated
+	 * @param object the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
@@ -428,8 +412,8 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Returns if there is an open propagation frame (and therefore the kernel
-	 * is in propagation mode).
+	 * Returns if there is an open propagation frame (and therefore the kernel is in propagation
+	 * mode).
 	 *
 	 * @return if the kernel is in propagation
 	 */

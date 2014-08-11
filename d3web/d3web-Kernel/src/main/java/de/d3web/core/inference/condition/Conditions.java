@@ -70,4 +70,26 @@ public class Conditions {
 		}
 	}
 
+	/**
+	 * Returns true, if the condition evaluates to undefined. In all other cases,
+	 * including unknown, false is returned.
+	 *
+	 * @param condition specified Condition
+	 * @param session specified Session
+	 * @return if the condition evaluates to undefined
+	 * @created 04.07.2012
+	 */
+	public static boolean isUndefined(Condition condition, Session session) {
+		try {
+			condition.eval(session);
+			return false;
+		}
+		catch (NoAnswerException e) {
+			return true;
+		}
+		catch (UnknownAnswerException e) {
+			return false;
+		}
+	}
+
 }
