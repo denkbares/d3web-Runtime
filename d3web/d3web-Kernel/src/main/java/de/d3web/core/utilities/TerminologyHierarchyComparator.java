@@ -45,7 +45,7 @@ public class TerminologyHierarchyComparator implements Comparator<TerminologyObj
 		// optimization in case they have the same parent
 		if (o1.getParents().length == 1 && o2.getParents().length == 1
 				&& o1.getParents()[0] == o2.getParents()[0]) {
-			return Integer.compare(indexOf(o1.getParents()[0].getChildren(), o1), indexOf(o2.getParents()[0].getChildren(), o2));
+			return Integer.valueOf(indexOf(o1.getParents()[0].getChildren(), o1)).compareTo(Integer.valueOf(indexOf(o2.getParents()[0].getChildren(), o2)));
 		}
 
 		TerminologyObject commonAncestor = null;
@@ -69,7 +69,7 @@ public class TerminologyHierarchyComparator implements Comparator<TerminologyObj
 			// should only happen with different types of terminology objects, e.g. comparing solutions to questions
 			return o1.getClass().getSimpleName().compareTo(o2.getClass().getSimpleName());
 		}
-		return Integer.compare(indexOf(commonAncestor.getChildren(), compare1), indexOf(commonAncestor.getChildren(), compare2));
+		return Integer.valueOf(indexOf(commonAncestor.getChildren(), compare1)).compareTo(Integer.valueOf(indexOf(commonAncestor.getChildren(), compare2)));
 	}
 
 	private static int indexOf(TerminologyObject[] objectArray, TerminologyObject object) {
