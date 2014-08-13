@@ -80,6 +80,28 @@ public class Files {
 	}
 
 	/**
+	 * Checks if two files have the same fingerprint, including the timestamp, so it appears that
+	 * they have the same content, without fully reading the files contents! This method is much
+	 * quicker that {#hasEqualContent} but you cannot be sure if the content really differs if the
+	 * method return true.
+	 * <p/>
+	 * Returns true if both files exists, both denote a file (not a directory), and the file seems
+	 * to be identical.
+	 *
+	 * @param file1 the first file to compare
+	 * @param file2 the second file to compare
+	 * @return if both files seems to be identical
+	 */
+	@SuppressWarnings("RedundantIfStatement")
+	public static boolean hasEqualFingerprint(File file1, File file2) throws IOException {
+		if (!file1.isFile()) return false;
+		if (!file2.isFile()) return false;
+		if (file1.length() != file2.length()) return false;
+		if (file1.lastModified() != file2.lastModified()) return false;
+		return true;
+	}
+
+	/**
 	 * Checks if two files have the same content. Returns true if both files exists, both denote a
 	 * file (not a directory), and the bytes of each file are identical.
 	 *
