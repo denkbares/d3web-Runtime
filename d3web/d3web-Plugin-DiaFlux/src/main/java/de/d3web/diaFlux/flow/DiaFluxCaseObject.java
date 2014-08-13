@@ -38,11 +38,11 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
+import de.d3web.diaFlux.inference.FluxSolver.SuggestMode;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
-
-import static de.d3web.diaFlux.inference.FluxSolver.SuggestMode;
 
 /**
  * @author Reinhard Hatko
@@ -56,8 +56,8 @@ public class DiaFluxCaseObject implements SessionObject {
 	private final Map<SnapshotNode, Long> latestSnapshotTime = new HashMap<SnapshotNode, Long>();
 
 	/**
-	 * Provide a set of edges from active nodes, but with still undefined conditions, that might
-	 * become "true" in the further interview process.
+	 * Provide a set of edges from active nodes, but with still undefined
+	 * conditions, that might become "true" in the further interview process.
 	 */
 	private final Set<Edge> undefinedEdges = new HashSet<Edge>();
 
@@ -72,10 +72,10 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Updates the set of undefined edges, after a node has been updated and is active. The method
-	 * ensures that all undefined edges of the particular node are used as sources for suggesting
-	 * potential solutions.
-	 *
+	 * Updates the set of undefined edges, after a node has been updated and is
+	 * active. The method ensures that all undefined edges of the particular
+	 * node are used as sources for suggesting potential solutions.
+	 * 
 	 * @param node the node that is active
 	 */
 	public void addUndefinedEdges(Node node) {
@@ -93,10 +93,10 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Updates the set of undefined edges, after a node has been updated and is not active. The
-	 * method ensures that no edges of the particular node ist used as a source for suggesting
-	 * potential solutions.
-	 *
+	 * Updates the set of undefined edges, after a node has been updated and is
+	 * not active. The method ensures that no edges of the particular node ist
+	 * used as a source for suggesting potential solutions.
+	 * 
 	 * @param node the node that is inactive
 	 */
 	public void removeUndefinedEdges(Node node) {
@@ -119,7 +119,7 @@ public class DiaFluxCaseObject implements SessionObject {
 
 	/**
 	 * Returns the set of active nodes of all current flow runs.
-	 *
+	 * 
 	 * @return all active nodes
 	 */
 	public Set<Node> getActiveNodes() {
@@ -131,13 +131,14 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns all edges of the current session that are at active nodes but being undefined, that
-	 * means they may become true in the further interview process. It represents the number of
-	 * potentially still open paths of the current interview.
+	 * Returns all edges of the current session that are at active nodes but
+	 * being undefined, that means they may become true in the further interview
+	 * process. It represents the number of potentially still open paths of the
+	 * current interview.
 	 * <p/>
-	 * Please note that the edge will be empty of the flag "suspectPotentialSolutions" is not active
-	 * in this instance.
-	 *
+	 * Please note that the edge will be empty of the flag
+	 * "suspectPotentialSolutions" is not active in this instance.
+	 * 
 	 * @return the start edges of the potentially still open paths
 	 */
 	public Set<Edge> getUndefinedEdges() {
@@ -145,10 +146,10 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Records that a snapshot has been executed for this session in this propagation. This is
-	 * required to detect cyclic propagations in flowcharts with one or more snapshots in the
-	 * cycle.
-	 *
+	 * Records that a snapshot has been executed for this session in this
+	 * propagation. This is required to detect cyclic propagations in flowcharts
+	 * with one or more snapshots in the cycle.
+	 * 
 	 * @param node the snapshot node that have been snapshoted
 	 * @created 28.02.2011
 	 */
@@ -158,9 +159,9 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns the latest (most recent) time a snapshot has been taken. If no snapshot has been
-	 * taken yet, null is returned.
-	 *
+	 * Returns the latest (most recent) time a snapshot has been taken. If no
+	 * snapshot has been taken yet, null is returned.
+	 * 
 	 * @return the most recent snapshot time
 	 * @created 01.03.2011
 	 */
@@ -188,9 +189,9 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns all activated snapshots, but remove those that have been detected to be cyclic in
-	 * this propagation.
-	 *
+	 * Returns all activated snapshots, but remove those that have been detected
+	 * to be cyclic in this propagation.
+	 * 
 	 * @return the snapshot nodes to be snapshoted
 	 * @created 28.02.2011
 	 */
@@ -207,8 +208,9 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Suspects all the potential solutions that might become established in the further interview
-	 * process. It also de-suspect all the solutions that are no longer in that list.
+	 * Suspects all the potential solutions that might become established in the
+	 * further interview process. It also de-suspect all the solutions that are
+	 * no longer in that list.
 	 */
 	public void updateSuspectedSolutions() {
 		Set<Node> startNodes = new HashSet<Node>();
@@ -222,7 +224,8 @@ public class DiaFluxCaseObject implements SessionObject {
 		// remove facts for no longer suspected solutions
 		for (Solution solution : suspectedSolutions) {
 			if (!solutions.contains(solution)) {
-				Fact fact = FactFactory.createFact(solution, suggest, FluxSolver.SUGGEST_SOURCE, fluxSolver);
+				Fact fact = FactFactory.createFact(solution, suggest, FluxSolver.SUGGEST_SOURCE,
+						fluxSolver);
 				session.getBlackboard().removeValueFact(fact);
 			}
 		}
@@ -230,7 +233,8 @@ public class DiaFluxCaseObject implements SessionObject {
 		// add facts for newly suspected solutions
 		for (Solution solution : solutions) {
 			if (!suspectedSolutions.contains(solution)) {
-				Fact fact = FactFactory.createFact(solution, suggest, FluxSolver.SUGGEST_SOURCE, fluxSolver);
+				Fact fact = FactFactory.createFact(solution, suggest, FluxSolver.SUGGEST_SOURCE,
+						fluxSolver);
 				session.getBlackboard().addValueFact(fact);
 			}
 		}
@@ -283,7 +287,8 @@ public class DiaFluxCaseObject implements SessionObject {
 				// to minimize condition evaluation)
 				if (skipFalseEdges && !openNodes.contains(next)) {
 					Condition condition = edge.getCondition();
-					// if the edge has a condition and the condition is false, skip it
+					// if the edge has a condition and the condition is false,
+					// skip it
 					if (condition != null && Conditions.isFalse(condition, session)) {
 						continue;
 					}
@@ -291,6 +296,9 @@ public class DiaFluxCaseObject implements SessionObject {
 
 				// add all next nodes, if the edges are accepted
 				openNodes.add(next);
+				if (next instanceof ComposedNode) {
+					openNodes.add(DiaFluxUtils.getCalledStartNode((ComposedNode) next));
+				}
 			}
 		}
 
@@ -298,10 +306,11 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns whether the specified node is currently active within this session. Please note that
-	 * a node previously being active and then fixed by a snapshot is not considered to be active
-	 * any longer, even if its derived facts still persists.
-	 *
+	 * Returns whether the specified node is currently active within this
+	 * session. Please note that a node previously being active and then fixed
+	 * by a snapshot is not considered to be active any longer, even if its
+	 * derived facts still persists.
+	 * 
 	 * @param node the node to be checked
 	 * @return if the node is active in the session
 	 * @created 11.03.2013
@@ -314,10 +323,11 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns whether the specified edge is currently active within this session. Please note that
-	 * a edge previously being active and then fixed by a snapshot is not considered to be active
-	 * any longer, even if its derived facts still persists.
-	 *
+	 * Returns whether the specified edge is currently active within this
+	 * session. Please note that a edge previously being active and then fixed
+	 * by a snapshot is not considered to be active any longer, even if its
+	 * derived facts still persists.
+	 * 
 	 * @param edge the Edge to be checked
 	 * @return if the edge is active in the session
 	 * @created 11.03.2013
