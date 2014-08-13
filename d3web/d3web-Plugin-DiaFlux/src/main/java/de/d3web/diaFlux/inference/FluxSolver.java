@@ -28,8 +28,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
@@ -66,6 +64,10 @@ import de.d3web.utils.Log;
  */
 public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<DiaFluxCaseObject> {
 
+	public static enum SuggestMode {
+		ignore, suggest, precise
+	}
+
 	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
 			"DEPENDANT_EDGES", EdgeMap.class);
 	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(
@@ -80,47 +82,39 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			"FLOW_SET", FlowSet.class);
 
 	public static final Object SNAPSHOT_SOURCE = SnapshotNode.class;
+	public static final Object SUGGEST_SOURCE = SuggestMode.class;
 
-	private boolean suggestPotentialSolutions = false;
+	private SuggestMode suggestMode = SuggestMode.ignore;
 
 	public FluxSolver() {
 	}
 
-	public boolean isSuggestPotentialSolutions() {
-		return suggestPotentialSolutions;
+	public SuggestMode getSuggestMode() {
+		return suggestMode;
 	}
 
-	public void setSuggestPotentialSolutions(boolean suggestPotentialSolutions) {
-		this.suggestPotentialSolutions = suggestPotentialSolutions;
+	public void setSuggestMode(SuggestMode suggestMode) {
+		this.suggestMode = suggestMode;
 	}
 
 	@Override
 	public void init(Session session) {
-
-		if (!DiaFluxUtils.isFlowCase(session)) {
-			return;
-		}
-
+		if (!DiaFluxUtils.isFlowCase(session)) return;
 		Log.fine("Initializing FluxSolver with case: " + session);
 
 		try {
 			session.getPropagationManager().openPropagation();
-
 			List<StartNode> list = DiaFluxUtils.getAutostartNodes(session.getKnowledgeBase());
-
 			for (StartNode startNode : list) {
 				start(session, startNode);
 			}
-
 		}
 		finally {
 			session.getPropagationManager().commitPropagation();
 		}
-
 	}
 
 	public static void start(Session session, StartNode startNode) {
-
 		Log.fine("Activating start node '" + startNode.getName() + "' of flow '"
 				+ startNode.getFlow().getName() + "'.");
 
@@ -132,15 +126,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
+		if (!DiaFluxUtils.isFlowCase(session)) return;
+		Log.fine("Start propagating: " + changes);
 
-		if (!DiaFluxUtils.isFlowCase(session)) {
-			return;
-		}
-
-		Logger logger = Log.logger();
-		if (logger.isLoggable(Level.FINE)) {
-			logger.fine("Start propagating: " + changes);
-		}
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 		List<FlowRun> runs = caseObject.getRuns();
 		List<Node> changedNodes = new ArrayList<Node>();
@@ -154,10 +142,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			TerminologyObject object = propagationEntry.getObject();
 			EdgeMap slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
 
-			// TO does not occur in any edge
-			if (slice == null) {
-				continue;
-			}
+			// the object does not occur in any edge
+			if (slice == null) continue;
 
 			// iterate over all edges that contain the changed TO
 			for (Edge edge : slice.getEdges()) {
@@ -169,29 +155,24 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 				checkSuccessors(changedNode, flowRun, session);
 			}
 		}
-		// check backward knowledge: nodes that uses other objects to calculate
-		// e.g. a formula
+		// check backward knowledge:
+		// nodes that uses other objects to calculate something, e.g. a formula
 		for (PropagationEntry propagationEntry : changes) {
 			TerminologyObject object = propagationEntry.getObject();
-			NodeList knowledge =
-					object.getKnowledgeStore().getKnowledge(DEPENDANT_NODES);
-
+			NodeList knowledge = object.getKnowledgeStore().getKnowledge(DEPENDANT_NODES);
 			if (knowledge == null) continue;
-
 			for (Node node : knowledge) {
 				for (FlowRun run : caseObject.getRuns()) {
 					if (run.isActive(node)) {
 						node.update(session, run);
-						if (suggestPotentialSolutions) {
-							caseObject.updateUndefinedEdges(node, true);
-						}
+						caseObject.addUndefinedEdges(node);
 					}
 				}
 			}
 		}
 
 		caseObject.updateSuspectedSolutions();
-		logger.fine("Finished propagating.");
+		Log.fine("Finished propagating.");
 	}
 
 	/**
@@ -240,11 +221,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * Checks, if the states of outgoing edges are correct.
 	 */
 	public static void checkSuccessors(Node node, FlowRun run, Session session) {
-		boolean isActive = run.isActive(node);
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
-		caseObject.updateUndefinedEdges(node, isActive);
-
-		if (isActive) { // node is active...
+		if (run.isActive(node)) { // node is active...
+			caseObject.addUndefinedEdges(node);
 			for (Edge edge : node.getOutgoingEdges()) {
 				// ...now check inactive edges, that eval to true
 				if (!run.isActivated(edge) && evalEdge(session, edge)) {
@@ -256,6 +235,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			}
 		}
 		else {// node is inactive...
+			caseObject.removeUndefinedEdges(node);
 			for (Edge edge : node.getOutgoingEdges()) {
 				// ...deactivate all edges
 				if (run.isActivated(edge)) {
@@ -268,7 +248,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	@Override
 	public DiaFluxCaseObject createSessionObject(Session session) {
-		return new DiaFluxCaseObject(session, this, suggestPotentialSolutions);
+		return new DiaFluxCaseObject(session, this);
 	}
 
 	private static void activateEdge(Edge edge, FlowRun flowRun, Session session) {
@@ -290,11 +270,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * @created 11.03.2013
 	 */
 	public static boolean isActiveNode(Node node, Session session) {
-		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
-		for (FlowRun flowRun : runs) {
-			if (flowRun.isActive(node)) return true;
-		}
-		return false;
+		return DiaFluxUtils.getDiaFluxCaseObject(session).isActiveNode(node);
 	}
 
 	/**
@@ -308,11 +284,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * @created 11.03.2013
 	 */
 	public static boolean isActiveEdge(Edge edge, Session session) {
-		List<FlowRun> runs = DiaFluxUtils.getDiaFluxCaseObject(session).getRuns();
-		for (FlowRun flowRun : runs) {
-			if (flowRun.isActivated(edge)) return true;
-		}
-		return false;
+		return DiaFluxUtils.getDiaFluxCaseObject(session).isActiveEdge(edge);
 	}
 
 	public static boolean evalEdge(Session session, Edge edge) {
@@ -337,19 +309,16 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// ...create new flow with s and parents as start node
 		// remove all flows f in SF from the active flows
 
+		// check if we have entered a snapshot
+		// otherwise fo nothing here
 		Collection<SnapshotNode> enteredSnapshots = caseObject.getActivatedSnapshots();
-		if (enteredSnapshots.isEmpty()) {
-			return;
-		}
+		if (enteredSnapshots.isEmpty()) return;
 
 		Collection<FlowRun> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots, caseObject);
 
 		// log debug output
-		Logger logger = Log.logger();
-		if (logger.isLoggable(Level.FINE)) {
-			Log.fine("Taking snapshots: " + snappyFlows);
-		}
+		Log.fine("Taking snapshots: " + snappyFlows);
 
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<FlowRun>();
@@ -382,6 +351,10 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			caseObject.addRun(run);
 		}
 
+		// finally simply rebuild the undefined edges
+		// which is for more efficient (!) and reliant
+		// that incrementally updating them during snapshot creation
+		caseObject.rebuildUndefinedEdges();
 	}
 
 	/**
@@ -557,13 +530,30 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 			return Facts.mergeIndicationFacts(facts);
 		}
 		else {
-
+			// ignore suggest and snapshot facts until no other fact is found
+			// the facts itself will not be merged
+			// prio 1: normal facts
+			// prio 2: suggest facts
+			// prio 3: snapshot facts
+			Fact snapFact = null;
+			Fact suggFact = null;
 			for (Fact fact : facts) {
-				if (!(fact.getSource() == SNAPSHOT_SOURCE)) {
+				if (fact.getSource() == SUGGEST_SOURCE) {
+					// remember the first suggest fact
+					if (suggFact == null) suggFact = fact;
+				}
+				else if (fact.getSource() == SNAPSHOT_SOURCE) {
+					// remember the first snapshot fact
+					if (snapFact == null) snapFact = fact;
+				}
+				else {
+					// immediately return the first normal fact
 					return fact;
 				}
 			}
-			return facts[0];
+			// if no normal fact is found, return suggest fact
+			// or snapshot fact if there was no suggest fact
+			return (suggFact != null) ? suggFact : snapFact;
 		}
 	}
 

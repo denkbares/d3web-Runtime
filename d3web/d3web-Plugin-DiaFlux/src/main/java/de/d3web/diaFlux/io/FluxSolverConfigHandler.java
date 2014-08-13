@@ -29,6 +29,8 @@ import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
 import de.d3web.strings.Strings;
 
+import static de.d3web.diaFlux.inference.FluxSolver.SuggestMode;
+
 public class FluxSolverConfigHandler extends DefaultPSConfigHandler {
 
 	private static final String SUGGEST_POTENTIAL_SOLUTIONS_ATTRIBUTE = "suggestPotentialSolutions";
@@ -56,7 +58,8 @@ public class FluxSolverConfigHandler extends DefaultPSConfigHandler {
 		FluxSolver psm = (FluxSolver) psconfig.getPsMethod();
 		String suggest = element.getAttribute(SUGGEST_POTENTIAL_SOLUTIONS_ATTRIBUTE);
 		if (!Strings.isBlank(suggest)) {
-			psm.setSuggestPotentialSolutions(Boolean.parseBoolean(suggest));
+			SuggestMode mode = Strings.parseEnum(suggest, SuggestMode.ignore);
+			psm.setSuggestMode(mode);
 		}
 		return psconfig;
 	}
@@ -66,8 +69,7 @@ public class FluxSolverConfigHandler extends DefaultPSConfigHandler {
 		Element element = super.write(object, persistence);
 		PSConfig config = (PSConfig) object;
 		FluxSolver psm = (FluxSolver) config.getPsMethod();
-		element.setAttribute(SUGGEST_POTENTIAL_SOLUTIONS_ATTRIBUTE,
-				String.valueOf(psm.isSuggestPotentialSolutions()));
+		element.setAttribute(SUGGEST_POTENTIAL_SOLUTIONS_ATTRIBUTE, psm.getSuggestMode().name());
 		return element;
 	}
 

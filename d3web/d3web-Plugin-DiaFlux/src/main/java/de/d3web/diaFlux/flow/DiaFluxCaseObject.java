@@ -42,16 +42,16 @@ import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 
+import static de.d3web.diaFlux.inference.FluxSolver.SuggestMode;
+
 /**
  * @author Reinhard Hatko
- *         <p/>
- *         Created on: 04.11.2009
+ * @created 04.11.2009
  */
 public class DiaFluxCaseObject implements SessionObject {
 
 	private final Session session;
 	private final FluxSolver fluxSolver;
-	private final boolean suspectPotentialSolutions;
 	private final List<FlowRun> runs = new ArrayList<FlowRun>();
 	private final Map<SnapshotNode, Long> latestSnapshotTime = new HashMap<SnapshotNode, Long>();
 
@@ -66,38 +66,68 @@ public class DiaFluxCaseObject implements SessionObject {
 	 */
 	private Set<Solution> suspectedSolutions = Collections.emptySet();
 
-	public DiaFluxCaseObject(Session session, FluxSolver fluxSolver, boolean suspectPotentialSolutions) {
+	public DiaFluxCaseObject(Session session, FluxSolver fluxSolver) {
 		this.session = session;
 		this.fluxSolver = fluxSolver;
-		this.suspectPotentialSolutions = suspectPotentialSolutions;
 	}
 
 	/**
-	 * Updates the set of undefined edges, after a node has been updated.
+	 * Updates the set of undefined edges, after a node has been updated and is active. The method
+	 * ensures that all undefined edges of the particular node are used as sources for suggesting
+	 * potential solutions.
 	 *
-	 * @param node the node that has been updated
-	 * @param isActive true, if the node is now active or false otherwise
+	 * @param node the node that is active
 	 */
-	public void updateUndefinedEdges(Node node, boolean isActive) {
-		if (!suspectPotentialSolutions) return;
-		if (isActive) {
-			// if the node is active, we have to check all outgoing
-			// edges whether they are "undefined" or not
-			for (Edge edge : node.getOutgoingEdges()) {
-				Condition condition = edge.getCondition();
-				if (condition != null && Conditions.isUndefined(condition, session)) {
-					undefinedEdges.add(edge);
-				}
-				else {
-					undefinedEdges.remove(edge);
-				}
+	public void addUndefinedEdges(Node node) {
+		if (fluxSolver.getSuggestMode() == SuggestMode.ignore) return;
+		// check all outgoing edges whether they are "undefined" or not
+		for (Edge edge : node.getOutgoingEdges()) {
+			Condition condition = edge.getCondition();
+			if (condition != null && Conditions.isUndefined(condition, session)) {
+				undefinedEdges.add(edge);
+			}
+			else {
+				undefinedEdges.remove(edge);
 			}
 		}
-		else {
-			// if the node is deactivated, we also do not want the edges
-			// in our "potentially becoming active" edge-set.
-			undefinedEdges.removeAll(node.getOutgoingEdges());
+	}
+
+	/**
+	 * Updates the set of undefined edges, after a node has been updated and is not active. The
+	 * method ensures that no edges of the particular node ist used as a source for suggesting
+	 * potential solutions.
+	 *
+	 * @param node the node that is inactive
+	 */
+	public void removeUndefinedEdges(Node node) {
+		if (fluxSolver.getSuggestMode() == SuggestMode.ignore) return;
+		// if the node is deactivated, we also do not want the edges
+		// in our "potentially becoming active" edge-set.
+		undefinedEdges.removeAll(node.getOutgoingEdges());
+	}
+
+	/**
+	 * Updates the set of undefined edges for the current session from scratch.
+	 */
+	public void rebuildUndefinedEdges() {
+		if (fluxSolver.getSuggestMode() == SuggestMode.ignore) return;
+		undefinedEdges.clear();
+		for (Node node : getActiveNodes()) {
+			addUndefinedEdges(node);
 		}
+	}
+
+	/**
+	 * Returns the set of active nodes of all current flow runs.
+	 *
+	 * @return all active nodes
+	 */
+	public Set<Node> getActiveNodes() {
+		Set<Node> activeNodes = new HashSet<Node>();
+		for (FlowRun run : runs) {
+			activeNodes.addAll(run.getActiveNodes());
+		}
+		return activeNodes;
 	}
 
 	/**
@@ -192,7 +222,7 @@ public class DiaFluxCaseObject implements SessionObject {
 		// remove facts for no longer suspected solutions
 		for (Solution solution : suspectedSolutions) {
 			if (!solutions.contains(solution)) {
-				Fact fact = FactFactory.createFact(solution, suggest, fluxSolver, fluxSolver);
+				Fact fact = FactFactory.createFact(solution, suggest, FluxSolver.SUGGEST_SOURCE, fluxSolver);
 				session.getBlackboard().removeValueFact(fact);
 			}
 		}
@@ -200,8 +230,8 @@ public class DiaFluxCaseObject implements SessionObject {
 		// add facts for newly suspected solutions
 		for (Solution solution : solutions) {
 			if (!suspectedSolutions.contains(solution)) {
-				Fact fact = FactFactory.createFact(solution, suggest, fluxSolver, fluxSolver);
-				session.getBlackboard().removeValueFact(fact);
+				Fact fact = FactFactory.createFact(solution, suggest, FluxSolver.SUGGEST_SOURCE, fluxSolver);
+				session.getBlackboard().addValueFact(fact);
 			}
 		}
 
@@ -231,7 +261,7 @@ public class DiaFluxCaseObject implements SessionObject {
 
 	private Set<Node> findPotentialNodes(Set<Node> openNodes) {
 		Set<Node> closedNodes = new HashSet<Node>();
-		Set<Solution> solutions = new HashSet<Solution>();
+		boolean skipFalseEdges = (fluxSolver.getSuggestMode() == SuggestMode.precise);
 
 		while (!openNodes.isEmpty()) {
 			// select node to process
@@ -241,13 +271,61 @@ public class DiaFluxCaseObject implements SessionObject {
 
 			// add all subsequential nodes
 			for (Edge edge : node.getOutgoingEdges()) {
+				// skip next node if already processed
 				Node next = edge.getEndNode();
-				if (!closedNodes.contains(next)) {
-					openNodes.add(next);
+				if (closedNodes.contains(next)) continue;
+
+				// also skip all nodes that are already active
+				if (FluxSolver.isActiveNode(next, session)) continue;
+
+				// check if the edges shall be checked
+				// (in this case we also check if the node is already open,
+				// to minimize condition evaluation)
+				if (skipFalseEdges && !openNodes.contains(next)) {
+					Condition condition = edge.getCondition();
+					// if the edge has a condition and the condition is false, skip it
+					if (condition != null && Conditions.isFalse(condition, session)) {
+						continue;
+					}
 				}
+
+				// add all next nodes, if the edges are accepted
+				openNodes.add(next);
 			}
 		}
 
 		return closedNodes;
+	}
+
+	/**
+	 * Returns whether the specified node is currently active within this session. Please note that
+	 * a node previously being active and then fixed by a snapshot is not considered to be active
+	 * any longer, even if its derived facts still persists.
+	 *
+	 * @param node the node to be checked
+	 * @return if the node is active in the session
+	 * @created 11.03.2013
+	 */
+	public boolean isActiveNode(Node node) {
+		for (FlowRun flowRun : runs) {
+			if (flowRun.isActive(node)) return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns whether the specified edge is currently active within this session. Please note that
+	 * a edge previously being active and then fixed by a snapshot is not considered to be active
+	 * any longer, even if its derived facts still persists.
+	 *
+	 * @param edge the Edge to be checked
+	 * @return if the edge is active in the session
+	 * @created 11.03.2013
+	 */
+	public boolean isActiveEdge(Edge edge) {
+		for (FlowRun flowRun : runs) {
+			if (flowRun.isActivated(edge)) return true;
+		}
+		return false;
 	}
 }
