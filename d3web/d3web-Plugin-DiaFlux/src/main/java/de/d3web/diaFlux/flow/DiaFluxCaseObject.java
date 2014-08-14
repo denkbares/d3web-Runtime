@@ -271,6 +271,16 @@ public class DiaFluxCaseObject implements SessionObject {
 			openNodes.remove(node);
 			closedNodes.add(node);
 
+			// if a subflow is called, add the subflow's start node for further processing
+			// if the start node has not already been processed or is already active
+			if (node instanceof ComposedNode) {
+				StartNode calledNode = DiaFluxUtils.getCalledStartNode((ComposedNode) node);
+				if (!closedNodes.contains(calledNode) &&
+						!FluxSolver.isActiveNode(calledNode, session)) {
+					openNodes.add(calledNode);
+				}
+			}
+
 			// TODO: process differently if "node instanceof ComposedNode" in preciseMode
 			// process other nodes first and the follow only those outgoing edges
 			// that are connected to the active or visited exit nodes
@@ -304,9 +314,6 @@ public class DiaFluxCaseObject implements SessionObject {
 
 				// add all next nodes, if the edges are accepted
 				openNodes.add(next);
-				if (next instanceof ComposedNode) {
-					openNodes.add(DiaFluxUtils.getCalledStartNode((ComposedNode) next));
-				}
 			}
 		}
 
