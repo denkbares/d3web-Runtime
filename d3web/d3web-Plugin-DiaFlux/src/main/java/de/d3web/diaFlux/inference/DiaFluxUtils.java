@@ -22,6 +22,7 @@ package de.d3web.diaFlux.inference;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -63,14 +64,21 @@ public final class DiaFluxUtils {
 		return getFlowSet(session.getKnowledgeBase());
 	}
 
+	public static Collection<Flow> getFlows(KnowledgeBase knowledgeBase) {
+		FlowSet flowSet = getFlowSet(knowledgeBase);
+		return (flowSet == null) ? Collections.<Flow>emptyList() : flowSet.getFlows();
+	}
+
+	public static Collection<Flow> getFlows(Session session) {
+		return getFlows(session.getKnowledgeBase());
+	}
+
 	public static boolean isFlowCase(Session session) {
 		return session != null && hasFlows(session.getKnowledgeBase());
 	}
 
 	public static boolean hasFlows(KnowledgeBase base) {
-
 		FlowSet flowSet = getFlowSet(base);
-
 		return flowSet != null && !flowSet.getFlows().isEmpty();
 	}
 
