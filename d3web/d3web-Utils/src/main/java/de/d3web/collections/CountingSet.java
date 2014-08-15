@@ -111,7 +111,7 @@ public class CountingSet<E> implements Set<E> {
 	 */
 	@Override
 	public boolean remove(Object object) {
-		return dec(object) <= 0;
+		return dec(object) == 0;
 	}
 
 	/**
