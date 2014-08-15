@@ -18,10 +18,6 @@
  */
 package de.d3web.collections.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.collections.CountingSet;
+
+import static org.junit.Assert.*;
 
 public class CountingSetTest {
 
@@ -145,6 +143,8 @@ public class CountingSetTest {
 
 	@Test
 	public void misc() {
-		assertEquals(0, set.dec("huhu"));
+		assertEquals(-1, set.dec("huhu"));
+		assertEquals(-1, set.dec("huhu"));
+		assertFalse(set.remove("huhu"));
 	}
 }
