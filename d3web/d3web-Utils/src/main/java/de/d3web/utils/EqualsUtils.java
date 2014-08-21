@@ -39,9 +39,6 @@ public final class EqualsUtils {
 	 * The method is null-safe, so each of the arguments may be null.
 	 * 
 	 * @created 19.10.2010
-	 * @param a
-	 * @param b
-	 * @return
 	 */
 	public static boolean equals(Object a, Object b) { // NOSONAR
 		// check for identity and make null-safe
