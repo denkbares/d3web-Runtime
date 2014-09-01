@@ -50,10 +50,10 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Creates a new Identifier based on an existing identifier by appending
-	 * additional path elements.
+	 * Creates a new Identifier based on an existing identifier by appending additional path
+	 * elements.
 	 *
-	 * @param parent                 the existing parent identifier
+	 * @param parent the existing parent identifier
 	 * @param additionalPathElements the additional path elements
 	 */
 	public Identifier(Identifier parent, String... additionalPathElements) {
@@ -107,8 +107,7 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Returns whether this {@link Identifier} starts with the given
-	 * {@link Identifier}'s path.
+	 * Returns whether this {@link Identifier} starts with the given {@link Identifier}'s path.
 	 *
 	 * @param identifier the identifier to check
 	 * @created 23.04.2012
@@ -122,8 +121,7 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Returns the last element of the path given to create this
-	 * {@link Identifier}.
+	 * Returns the last element of the path given to create this {@link Identifier}.
 	 *
 	 * @created 23.04.2012
 	 */
@@ -152,9 +150,8 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Returns a new {@link Identifier} consisting of the identifier elements of
-	 * the given {@link Identifier} appended to the identifier elements of this
-	 * {@link Identifier}.
+	 * Returns a new {@link Identifier} consisting of the identifier elements of the given {@link
+	 * Identifier} appended to the identifier elements of this {@link Identifier}.
 	 *
 	 * @param termIdentifier the {@link Identifier} to append
 	 * @created 23.04.2012
@@ -169,13 +166,11 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Generates and returns the external representation or form of this
-	 * {@link Identifier}. It is a String that can be transformed back into an
-	 * identical {@link Identifier} as the originating one by using
-	 * {@link Identifier#fromExternalForm(String)}.<br/>
-	 * Basically the external form is the path elements connected with a
-	 * separator and proper quoting if the separator icon is contained in one of
-	 * the path elements.
+	 * Generates and returns the external representation or form of this {@link Identifier}. It is a
+	 * String that can be transformed back into an identical {@link Identifier} as the originating
+	 * one by using {@link Identifier#fromExternalForm(String)}.<br/> Basically the external form is
+	 * the path elements connected with a separator and proper quoting if the separator icon is
+	 * contained in one of the path elements.
 	 *
 	 * @created 07.05.2012
 	 */
@@ -210,25 +205,40 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Returns the {@link Identifier} of this identifier that represents the
-	 * rest of the path defined by the specified parameter "startIdentifier".
-	 * The method checks if the specified "startIdentifier" is the beginning of
-	 * this identifier, otherwise null is returned. If the startIdentifier is a
-	 * accepted starting of this identifier, a new identifier is created that
-	 * represents the rest of this identifier. Thus
-	 * <code>a.append(b).rest(a)</code> will result to <code>b</code>.
+	 * Returns the {@link Identifier} of this identifier that represents the rest of the path
+	 * defined by the specified parameter "startIdentifier". The method checks if the specified
+	 * "startIdentifier" is the beginning of this identifier, otherwise null is returned. If the
+	 * startIdentifier is an accepted starting of this identifier, a new identifier is created that
+	 * represents the rest of this identifier. Thus <code>a.append(b).rest(a)</code> will result to
+	 * <code>b</code>.
 	 *
-	 * @param startIdentifier
-	 * @return the {@link Identifier} appended to the specified startIdentifier
-	 * that will together make this identifier, or null if not possible
-	 * (because this identifier does not start with parameter
-	 * startIdentifier)
+	 * @param startIdentifier the prefix identifier to be skipped
+	 * @return the {@link Identifier} appended to the specified startIdentifier that will together
+	 * make this identifier, or null if not possible (because this identifier does not start with
+	 * parameter startIdentifier)
 	 * @created 15.05.2012
 	 */
 	public Identifier rest(Identifier startIdentifier) {
 		if (!startsWith(startIdentifier)) return null;
-		String newPath[] = Arrays.copyOfRange(this.pathElements,
-				startIdentifier.pathElements.length, this.pathElements.length);
+		int fromIndex = startIdentifier.pathElements.length;
+		return rest(fromIndex);
+	}
+
+	/**
+	 * Returns the {@link Identifier} of this identifier that represents the rest of the path
+	 * defined by the specified index parameter "fromIndex". A new identifier is created that
+	 * represents the rest of this identifier, from the specified index, inclusively.
+	 * <p/>
+	 * If the fromIndex is greater than the number of path elements this identifier contains, an an
+	 * {@link java.lang.IndexOutOfBoundsException}
+	 *
+	 * @param fromIndex the path element index to start from
+	 * @return the {@link Identifier} the rest identifier
+	 * @throws java.lang.IndexOutOfBoundsException if the index is to high or below 0
+	 * @created 01.09.2014
+	 */
+	public Identifier rest(int fromIndex) {
+		String newPath[] = Arrays.copyOfRange(this.pathElements, fromIndex, this.pathElements.length);
 		return new Identifier(newPath);
 	}
 
@@ -243,17 +253,14 @@ public class Identifier implements Comparable<Identifier> {
 	}
 
 	/**
-	 * Generates a {@link Identifier} from the external form of a
-	 * {@link Identifier}. Do not confuse this with creating a
-	 * {@link Identifier} with the constructor using the path of identifier
-	 * Strings.<br/>
-	 * Per definition, if you have a {@link Identifier} and generate the
-	 * external form for that {@link Identifier} and then generate another
-	 * {@link Identifier} from that external form, both TermIdentifiers will be
-	 * equal.
+	 * Generates a {@link Identifier} from the external form of a {@link Identifier}. Do not confuse
+	 * this with creating a {@link Identifier} with the constructor using the path of identifier
+	 * Strings.<br/> Per definition, if you have a {@link Identifier} and generate the external form
+	 * for that {@link Identifier} and then generate another {@link Identifier} from that external
+	 * form, both TermIdentifiers will be equal.
 	 *
-	 * @param externalForm the external form of a {@link Identifier} created by
-	 *                     using {@link Identifier#toExternalForm()}
+	 * @param externalForm the external form of a {@link Identifier} created by using {@link
+	 * Identifier#toExternalForm()}
 	 * @return a {@link Identifier} representing the given external form
 	 * @created 07.05.2012
 	 */
