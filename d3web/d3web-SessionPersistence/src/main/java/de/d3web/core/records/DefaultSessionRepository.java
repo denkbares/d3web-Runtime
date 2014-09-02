@@ -112,10 +112,10 @@ public class DefaultSessionRepository implements SessionRepository {
 		List<OrFilter> orFilters = new LinkedList<OrFilter>();
 		List<Filter> complexFilters = new LinkedList<Filter>();
 		sortFilters(filter, simpleFilters, orFilters, complexFilters);
-		// shrinks the possible matches by appling simply filtes first
+		// shrinks the possible matches by applying simply filters first
 		Collection<SessionRecord> matchingRecords = filterRecords(sessionRecords,
 				simpleFilters.toArray(new Filter[simpleFilters.size()]));
-		// handels or, this may also shrink the matching records by using
+		// handles or, this may also shrink the matching records by using
 		// primarily the cheap filters:
 		// for example: (A and B) or (C and D)
 		for (OrFilter or : orFilters) {
@@ -124,7 +124,7 @@ public class DefaultSessionRepository implements SessionRepository {
 			temp.addAll(getSessionRecords(matchingRecords, or.getF2()));
 			matchingRecords = new LinkedList<SessionRecord>(temp);
 		}
-		// at last all nonoptimizable Filters are used
+		// at last all non-optimizable Filters are used
 		matchingRecords = filterRecords(matchingRecords,
 				complexFilters.toArray(new Filter[complexFilters.size()]));
 		return matchingRecords;
@@ -132,7 +132,7 @@ public class DefaultSessionRepository implements SessionRepository {
 
 	/**
 	 * @created 08.03.2011
-	 * @return a Collection of all SessionRecods, being matched by all filters
+	 * @return a Collection of all SessionRecords, being matched by all filters
 	 */
 	private static Collection<SessionRecord> filterRecords(Collection<SessionRecord> sessionRecords, Filter... filters) {
 		Collection<SessionRecord> matchingRecords = new LinkedList<SessionRecord>();
