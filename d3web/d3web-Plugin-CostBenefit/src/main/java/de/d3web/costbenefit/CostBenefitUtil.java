@@ -469,4 +469,38 @@ public final class CostBenefitUtil {
 		}
 		return ret;
 	}
+
+	/**
+	 * Calculates all values of final questions that can be reached in the
+	 * actual session by setting the normal values in a QContainer (if no values
+	 * are set)
+	 * 
+	 * @created 09.09.2014
+	 * @param session actual Session
+	 * @return Map representing the result
+	 */
+	public static Map<Question, Set<Value>> calculateReachableFinalValues(Session session) {
+		Map<Question, Set<Value>> result = new HashMap<Question, Set<Value>>();
+		Session copiedSession = new CopiedSession(session);
+		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+				StateTransition.KNOWLEDGE_KIND)) {
+			// ignore permanently relevant QContainer
+			if (st.getQcontainer().getInfoStore().getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) continue;
+			setNormalValues(copiedSession, st.getQcontainer(), new Object());
+			List<Fact> facts = st.fire(copiedSession);
+			for (Fact fact : facts) {
+				if (fact.getTerminologyObject() instanceof Question
+						&& fact.getTerminologyObject().getInfoStore().getValue(
+								PSMethodCostBenefit.FINAL_QUESTION)) {
+					Set<Value> set = result.get(fact.getTerminologyObject());
+					if (set == null) {
+						set = new HashSet<Value>();
+						result.put((Question) fact.getTerminologyObject(), set);
+					}
+					set.add(fact.getValue());
+				}
+			}
+		}
+		return result;
+	}
 }
