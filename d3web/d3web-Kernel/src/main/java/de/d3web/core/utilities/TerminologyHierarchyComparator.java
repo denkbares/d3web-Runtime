@@ -20,10 +20,9 @@
 package de.d3web.core.utilities;
 
 import java.util.Comparator;
-import java.util.List;
 
+import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.manage.KnowledgeBaseUtils;
 
 /**
  * Compares TerminologyObjects according to their position inside the tree hierarchy according to DFS.
@@ -34,49 +33,8 @@ public class TerminologyHierarchyComparator implements Comparator<TerminologyObj
 
 	@Override
 	public int compare(TerminologyObject o1, TerminologyObject o2) {
-		return compareObjects(o1, o2);
-	}
-
-	public static int compareObjects(TerminologyObject o1, TerminologyObject o2) {
-		if (o1 == o2) return 0;
-		if (o1 == null) return -1;
-		if (o2 == null) return 1;
-
-		// optimization in case they have the same parent
-		if (o1.getParents().length == 1 && o2.getParents().length == 1
-				&& o1.getParents()[0] == o2.getParents()[0]) {
-			return Integer.valueOf(indexOf(o1.getParents()[0].getChildren(), o1)).compareTo(Integer.valueOf(indexOf(o2.getParents()[0].getChildren(), o2)));
-		}
-
-		TerminologyObject commonAncestor = null;
-		List<TerminologyObject> ancestors1 = KnowledgeBaseUtils.getAncestors(o1);
-		List<TerminologyObject> ancestors2 = KnowledgeBaseUtils.getAncestors(o2);
-		TerminologyObject compare1 = o1;
-		TerminologyObject compare2 = o2;
-
-		outer:
-		for (TerminologyObject ancestor1 : ancestors1) {
-			for (TerminologyObject ancestor2 : ancestors2) {
-				if (ancestor1 == ancestor2) {
-					commonAncestor = ancestor1;
-					break outer;
-				}
-				compare2 = ancestor2;
-			}
-			compare1 = ancestor1;
-		}
-		if (commonAncestor == null) {
-			// should only happen with different types of terminology objects, e.g. comparing solutions to questions
-			return o1.getClass().getSimpleName().compareTo(o2.getClass().getSimpleName());
-		}
-		return Integer.valueOf(indexOf(commonAncestor.getChildren(), compare1)).compareTo(Integer.valueOf(indexOf(commonAncestor.getChildren(), compare2)));
-	}
-
-	private static int indexOf(TerminologyObject[] objectArray, TerminologyObject object) {
-		for (int i = 0; i < objectArray.length; i++) {
-			if (objectArray[i] == object) return i;
-		}
-		return -1;
+		TerminologyManager manager = o1.getKnowledgeBase().getManager();
+		return manager.getTreeIndex(o1) - manager.getTreeIndex(o2);
 	}
 
 }

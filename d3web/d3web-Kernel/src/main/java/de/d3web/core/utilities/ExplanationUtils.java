@@ -2,16 +2,18 @@ package de.d3web.core.utilities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 
 /**
  * Provides utility methods to conveniently track down the facts involved in deriving other facts.
- * <p>
+ * <p/>
  * Created by Albrecht Striffler (denkbares GmbH) on 24.08.2014.
  */
 public class ExplanationUtils {
@@ -36,7 +38,18 @@ public class ExplanationUtils {
 		return predecessorFacts;
 	}
 
+	public static Collection<Fact> getPredecessorFactsNonBlocking(Session session, TerminologyObject object) {
+		try {
+			return getPredecessorFacts(session, object);
+		}
+		catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
 	/**
+	 * Use this method in multi threaded environments. If the kernel is propagating during the call of this method,
+	 * exceptions will be caught and an empty collection returned.<p/>
 	 * Provides all source facts that were involved in deriving the current value of the given object in the given
 	 * session. Source facts don't have any other predecessors and are usually the ones entered by an user.
 	 *
@@ -53,12 +66,31 @@ public class ExplanationUtils {
 
 	private static void getSourceFacts(Session session, Fact fact, Set<Fact> sources) {
 		Collection<Fact> predecessors = getPredecessorFacts(session, fact.getTerminologyObject());
-		if (predecessors.isEmpty()) {
+		if (fact.getPSMethod().hasType(PSMethod.Type.source)) {
 			sources.add(fact);
 			return;
 		}
 		for (Fact predecessor : predecessors) {
 			getSourceFacts(session, predecessor, sources);
+		}
+	}
+
+	/**
+	 * Use this method in multi threaded environments. If the kernel is propagating during the call of this method,
+	 * exceptions will be caught and an empty collection returned.<p/>
+	 * Provides all source facts that were involved in deriving the current value of the given object in the given
+	 * session. Source facts don't have any other predecessors and are usually the ones entered by an user.
+	 *
+	 * @param session the session where the facts should be looked up
+	 * @param object  the object for which we want the source facts
+	 * @return the source facts for the given object
+	 */
+	public static Collection<Fact> getSourceFactsNonBlocking(Session session, TerminologyObject object) {
+		try {
+			return getSourceFacts(session, object);
+		}
+		catch (Exception e) {
+			return Collections.emptyList();
 		}
 	}
 }
