@@ -10,6 +10,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Provides utility methods to conveniently track down the facts involved in deriving other facts.
@@ -66,7 +67,11 @@ public class ExplanationUtils {
 
 	private static void getSourceFacts(Session session, Fact fact, Set<Fact> sources) {
 		Collection<Fact> predecessors = getPredecessorFacts(session, fact.getTerminologyObject());
-		if (fact.getPSMethod().hasType(PSMethod.Type.source)) {
+		PSMethod psMethod = fact.getPSMethod();
+		// a source fact can either be a fact where the PSM has Type.source or a
+		// heuristic fact without predecessors, in case the fact was added externally to be added to derived scores
+		if (psMethod.hasType(PSMethod.Type.source) ||
+				(psMethod instanceof PSMethodHeuristic && predecessors.isEmpty())) {
 			sources.add(fact);
 			return;
 		}
