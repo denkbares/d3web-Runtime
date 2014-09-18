@@ -21,6 +21,7 @@ package de.d3web.costbenefit.blackboard;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +51,7 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
+import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.utils.Log;
 
 /**
@@ -69,6 +71,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private boolean abortedManuallySetTarget = false;
 	private Set<TerminologyObject> conflictingObjects = new HashSet<TerminologyObject>();
 	private QContainer unreachedTarget = null;
+	private final Set<QContainer> watchedQContainers = new HashSet<QContainer>();
 
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
@@ -305,8 +308,9 @@ public class CostBenefitCaseObject implements SessionObject {
 		this.setCurrentSequence(currentSequence);
 		this.setCurrentPathIndex(-1);
 		this.setIndicatedFacts(facts);
+		checkWatchedQContainers();
 	}
-	
+
 	/**
 	 * Returns if the undiscriminated solutions have changed since the last use
 	 * of the search algorithm. This indicates that a new search should be
@@ -351,5 +355,24 @@ public class CostBenefitCaseObject implements SessionObject {
 			Log.warning(message);
 		}
 		return !previousSolutions.equals(currentSolutions);
+	}
+
+	public Set<QContainer> getWatchedQContainers() {
+		return watchedQContainers;
+	}
+
+	public void addWatch(QContainer watchedQContainer) {
+		watchedQContainers.add(watchedQContainer);
+	}
+
+	private void checkWatchedQContainers() {
+		if ((searchModel.getBestCostBenefitTarget() != null)
+				&& !Collections.disjoint(watchedQContainers,
+						searchModel.getBestCostBenefitTarget().getQContainers())) {
+			session.getProtocol().addEntry(
+					new CalculatedTargetEntry(searchModel.getBestCostBenefitTarget(),
+							searchModel.getTargets(), new Date(
+									session.getPropagationManager().getPropagationTime())));
+		}
 	}
 }

@@ -524,8 +524,8 @@
 		<parameter id="name" value="PluginConfigPersistenceHandler" />
 		<parameter id="description" value="Writes Plugin Configurations." />
 		<parameter id="version" value="1.0" />
-		<!-- Parsing the plugin.xml first, avoids parsing other files without being able to use them -->
-		<parameter id="priority" value="1" />
+		<!-- Parsing the settings.xml second (after basic.xml), avoids parsing other files without being able to use them -->
+		<parameter id="priority" value="1.1" />
 		<parameter id="filename" value="kb/settings.xml" />
 	</extension>
 	

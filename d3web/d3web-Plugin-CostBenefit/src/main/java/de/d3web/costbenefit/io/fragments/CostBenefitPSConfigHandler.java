@@ -33,6 +33,7 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.SolutionsRater;
 import de.d3web.costbenefit.inference.TargetFunction;
+import de.d3web.costbenefit.inference.WatchSet;
 import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
 
 public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
@@ -86,6 +87,9 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 			else if (o instanceof SolutionsRater) {
 				psm.setSolutionRater((SolutionsRater) o);
 			}
+			else if (o instanceof WatchSet) {
+				psm.setWatchSet((WatchSet) o);
+			}
 		}
 		return psconfig;
 	}
@@ -103,6 +107,9 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 		e.appendChild(persistence.writeFragment(psm.getSearchAlgorithm()));
 		e.appendChild(persistence.writeFragment(psm.getCostFunction()));
 		e.appendChild(persistence.writeFragment(psm.getSolutionRater()));
+		if (psm.getWatchSet() != null) {
+			e.appendChild(persistence.writeFragment(psm.getWatchSet()));
+		}
 		return e;
 	}
 

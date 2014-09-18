@@ -99,6 +99,16 @@
 	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="WatchSetHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.WatchSetHandler" />
+		<parameter id="name" value="WatchSetHandler" />
+		<parameter id="description" value="Handler for WatchSets" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="SwitchingHeuristicHandler">
 		<parameter id="class"
 			value="de.d3web.costbenefit.io.fragments.SwitchingHeuristicHandler" />
@@ -267,6 +277,16 @@
 			value="de.d3web.costbenefit.io.fragments.CalculatedPathEntryHandler" />
 		<parameter id="name" value="CalculatedPathEntryHandler" />
 		<parameter id="description" value="Handler for CalculatedPathEntries" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="CalculatedTargetEntryHandler">
+		<parameter id="class"
+			value="de.d3web.costbenefit.io.fragments.CalculatedTargetEntryHandler" />
+		<parameter id="name" value="CalculatedTargetEntryHandler" />
+		<parameter id="description" value="Handler for CalculatedTargetEntries" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>

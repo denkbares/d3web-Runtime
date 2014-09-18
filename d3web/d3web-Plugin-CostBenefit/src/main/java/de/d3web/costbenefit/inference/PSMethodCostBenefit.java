@@ -88,6 +88,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private SolutionsRater solutionsRater;
 	private double strategicBenefitFactor = 0.0;
 	private boolean manualMode = false;
+	private WatchSet watchSet;
 
 	/**
 	 * Marks a Question indicating that the value of the question cannot be
@@ -142,7 +143,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void init(Session session) {
-		// CostBenefitCaseObject caseObject = session.getSessionObject(this);
+		if (watchSet != null) {
+			CostBenefitCaseObject caseObject = session.getSessionObject(this);
+			for (QContainer qcon : watchSet.getqContainers()) {
+				caseObject.addWatch(qcon);
+			}
+		}
 		// session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().setAgendaSortingStrategy(
 		// new CostBenefitAgendaSortingStrategy(caseObject));
 		// calculateNewPath(caseObject);
@@ -548,6 +554,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		return finalValues;
 	}
 
+	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		CostBenefitCaseObject caseObject = session.getSessionObject(this);
 		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
@@ -608,8 +615,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 	}
 
-	
-
 	public TargetFunction getTargetFunction() {
 		return targetFunction;
 	}
@@ -620,6 +625,30 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	public SearchAlgorithm getSearchAlgorithm() {
 		return searchAlgorithm;
+	}
+
+	/**
+	 * NOTE: Modifying the {@link WatchSet} only affects newly created session,
+	 * sessions being created before setting this set are not affected
+	 * 
+	 * @created 17.09.2014
+	 * @return the actual watchset or null, if none is defined
+	 */
+	public WatchSet getWatchSet() {
+		return watchSet;
+	}
+
+	/**
+	 * Sets a set of watched QContainers
+	 * 
+	 * NOTE: This method only affects newly created session, sessions being
+	 * created before setting this set are not affected
+	 * 
+	 * @created 17.09.2014
+	 * @param watchedQContainers
+	 */
+	public void setWatchSet(WatchSet watchedQContainers) {
+		this.watchSet = watchedQContainers;
 	}
 
 	public void setSearchAlgorithm(SearchAlgorithm searchAlgorithm) {

@@ -30,6 +30,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import de.d3web.core.inference.PSConfig;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.manage.KnowledgeBaseUtils;
@@ -39,40 +40,53 @@ import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.protocol.ProtocolEntry;
+import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.ExpertMode;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.WatchSet;
 import de.d3web.costbenefit.model.Target;
+import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
 import de.d3web.plugin.test.InitPluginManager;
 
 /**
- * Tests ManualTargetSelectionEntry (including its persistence)
+ * Tests {@link ManualTargetSelectionEntry} and {@link CalculatedTargetEntry}
+ * (including their persistence)
  * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 28.06.2012
  */
-public class TestManualTargetSelectionEntry {
+public class TestTargetProtocolEntries {
 
-	private File file = new File("target/session/ManualTargetSelectionEntry.xml");
+	private final File file = new File("target/session/ManualTargetSelectionEntry.xml");
+	private final File kbfile = new File("target/session/TestTargetProtocolEntriesKB.d3web");
 
 	@Test
 	public void test() throws AbortException, IOException {
 		InitPluginManager.init();
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+		QContainer target1 = new QContainer(kb, "Target1");
+		QContainer target2 = new QContainer(kb, "Target2");
 		PSMethodCostBenefit psMethod = new PSMethodCostBenefit();
 		// use IDS because we also test multitarget, which are not fully
 		// supported by AStar
 		psMethod.setSearchAlgorithm(new IterativeDeepeningSearchAlgorithm());
+		WatchSet watchSet = new WatchSet();
+		// watch of target 1 is configured in the kb
+		watchSet.addQContainer(target1);
+		psMethod.setWatchSet(watchSet);
 		kb.addPSConfig(new PSConfig(PSConfig.PSState.active, psMethod,
 				"PSMethodCostBenefit",
 				"d3web-CostBenefit", 6));
-		QContainer target1 = new QContainer(kb, "Target1");
-		QContainer target2 = new QContainer(kb, "Target2");
 		Target multiTarget = new Target(Arrays.asList(target1, target2));
 		Session session = SessionFactory.createSession(kb);
+		CostBenefitCaseObject cbo = session.getSessionObject(psMethod);
+		// target2 is configured in the session
+		cbo.addWatch(target2);
 		ExpertMode em = ExpertMode.getExpertMode(session);
+
 		em.selectTarget(target1);
 		em.selectTarget(target2);
 		em.selectTarget(multiTarget);
@@ -89,10 +103,26 @@ public class TestManualTargetSelectionEntry {
 		checkEntries(target1, target2, reloadedSession, true);
 		Assert.assertTrue(removeLastEntry(reloadedSession));
 		checkEntries(target1, target2, reloadedSession, false);
+		// testing kb loading and saving
+		PersistenceManager.getInstance().save(kb, kbfile);
+		KnowledgeBase loadedKB = PersistenceManager.getInstance().load(kbfile);
+		boolean foundCB = false;
+		for (PSConfig config : loadedKB.getPsConfigs()) {
+			if (config.getPsMethod() instanceof PSMethodCostBenefit) {
+				PSMethodCostBenefit loadedCB = (PSMethodCostBenefit) config.getPsMethod();
+				WatchSet loadedWatchSet = loadedCB.getWatchSet();
+				Assert.assertNotNull(loadedWatchSet);
+				Assert.assertEquals(1, loadedWatchSet.getqContainers().size());
+				Assert.assertEquals(target1.getName(),
+						loadedWatchSet.getqContainers().iterator().next().getName());
+				foundCB = true;
+			}
+		}
+		Assert.assertTrue(foundCB);
 	}
 
 	private void checkEntries(QContainer target1, QContainer target2, Session session, boolean containsMultitarget) {
-		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = getEntries(session);
+		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = getManualTargetSelectionEntries(session);
 		Assert.assertEquals(target1.getName(),
 				manualTargetSelectionEntries.get(0).getTargetNames()[0]);
 		Assert.assertEquals(target2.getName(),
@@ -103,13 +133,43 @@ public class TestManualTargetSelectionEntry {
 			Assert.assertEquals(target2.getName(),
 					manualTargetSelectionEntries.get(2).getTargetNames()[1]);
 		}
+		List<CalculatedTargetEntry> calculatedTargetEntries = getCalculatedTargetEntries(session);
+		Assert.assertEquals(
+				target1.getName(),
+				calculatedTargetEntries.get(0).getCalculatedTarget().getqContainerNames().iterator().next());
+		Assert.assertTrue(calculatedTargetEntries.get(0).getTargets().iterator().next().getqContainerNames().contains(
+				target1.getName()));
+		Assert.assertEquals(
+				target2.getName(),
+				calculatedTargetEntries.get(1).getCalculatedTarget().getqContainerNames().iterator().next());
+		// 10000000000.0 is the benefit the cb uses for manual targets
+		Assert.assertEquals(10000000000.0,
+				calculatedTargetEntries.get(0).getCalculatedTarget().getBenefit());
+		// cost is 1
+		Assert.assertEquals(1 / 10000000000.0,
+				calculatedTargetEntries.get(0).getCalculatedTarget().getCostbenefit());
+		if (containsMultitarget) {
+			Assert.assertEquals(
+					2,
+					calculatedTargetEntries.get(2).getTargets().iterator().next().getqContainerNames().size());
+		}
 	}
 
-	public List<ManualTargetSelectionEntry> getEntries(Session session) {
+	private static List<ManualTargetSelectionEntry> getManualTargetSelectionEntries(Session session) {
 		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = new LinkedList<ManualTargetSelectionEntry>();
 		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
 			if (entry instanceof ManualTargetSelectionEntry) {
 				manualTargetSelectionEntries.add((ManualTargetSelectionEntry) entry);
+			}
+		}
+		return manualTargetSelectionEntries;
+	}
+
+	private static List<CalculatedTargetEntry> getCalculatedTargetEntries(Session session) {
+		List<CalculatedTargetEntry> manualTargetSelectionEntries = new LinkedList<CalculatedTargetEntry>();
+		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
+			if (entry instanceof CalculatedTargetEntry) {
+				manualTargetSelectionEntries.add((CalculatedTargetEntry) entry);
 			}
 		}
 		return manualTargetSelectionEntries;
