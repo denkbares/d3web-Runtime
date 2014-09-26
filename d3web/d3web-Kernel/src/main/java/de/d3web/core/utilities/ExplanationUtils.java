@@ -15,7 +15,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * Provides utility methods to conveniently track down the facts involved in deriving other facts.
  * <p/>
- * Created by Albrecht Striffler (denkbares GmbH) on 24.08.2014.
+ * @author Albrecht Striffler (denkbares GmbH) on 24.08.2014.
  */
 public class ExplanationUtils {
 

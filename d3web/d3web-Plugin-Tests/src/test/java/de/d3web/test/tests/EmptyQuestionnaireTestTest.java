@@ -34,7 +34,7 @@ import de.d3web.testing.Message;
 /**
  * Test the behavior of the class EmptyQuestionnaireTest
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 30.07.2012
  */
 public class EmptyQuestionnaireTestTest {

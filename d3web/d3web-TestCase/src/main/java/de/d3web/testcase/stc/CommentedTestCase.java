@@ -26,7 +26,8 @@ import de.d3web.testcase.model.TestCase;
 /**
  * This is a interface for TestCases also providing comments for their checks.
  * <p/>
- * Created by Albrecht Striffler (denkbares GmbH) on 10.06.14.
+ * @author Albrecht Striffler (denkbares GmbH)
+ * @created 10.06.2014
  */
 public interface CommentedTestCase extends TestCase {
 

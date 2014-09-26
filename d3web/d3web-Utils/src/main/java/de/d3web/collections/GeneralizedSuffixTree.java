@@ -46,7 +46,7 @@ import de.d3web.strings.Strings;
  * keys.
  * 
  * @author Volker Belli (denkbares GmbH)
- * @created 13.03.14.
+ * @created 13.03.2014
  */
 public class GeneralizedSuffixTree<E> extends DefaultMultiMap<String, E> {
 

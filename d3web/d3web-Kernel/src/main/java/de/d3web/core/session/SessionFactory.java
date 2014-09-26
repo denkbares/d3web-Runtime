@@ -148,7 +148,7 @@ public final class SessionFactory {
 
 	/**
 	 * Adds a {@link PropagationListener} which will be added to each session
-	 * created by this factory before the initialization of the {@link PSMethod}
+	 * @author this factory before the initialization of the {@link PSMethod}
 	 * s
 	 * 
 	 * @created 23.04.2012

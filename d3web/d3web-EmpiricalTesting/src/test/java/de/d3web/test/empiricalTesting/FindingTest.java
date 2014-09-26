@@ -44,7 +44,7 @@ import de.d3web.plugin.test.InitPluginManager;
 import static org.junit.Assert.*;
 
 /**
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 22.07.2013
  */
 public class FindingTest {

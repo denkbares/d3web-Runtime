@@ -24,7 +24,8 @@ import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.session.Session;
 
 /**
- * Created by Albrecht Striffler (denkbares GmbH) on 05.06.14.
+ * @author Albrecht Striffler (denkbares GmbH)
+ * @created 05.06.2014
  */
 public class ConditionCheck implements Check {
 

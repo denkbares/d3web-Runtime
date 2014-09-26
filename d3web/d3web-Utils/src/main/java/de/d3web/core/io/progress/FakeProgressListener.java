@@ -23,7 +23,8 @@ package de.d3web.core.io.progress;
  * Use this ProgressListener to fake the progress of an operation, for which you can't
  * get the exact progress.<b></b>
  * <p/>
- * Created by Albrecht Striffler (denkbares GmbH) on 31.03.14.
+ * @author Albrecht Striffler (denkbares GmbH)
+ * @created 31.03.2014
  */
 public class FakeProgressListener implements ExtendedProgressListener {
 

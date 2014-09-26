@@ -24,7 +24,7 @@ import de.d3web.testing.TestParameter.Mode;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 13.08.2013
  */
 public class TestParameterTest extends AbstractTest<Object> {

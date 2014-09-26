@@ -45,7 +45,7 @@ import java.util.Set;
  * NOTE: This data structure only works correct for well-formed hierarchies,
  * this is each node has at most one parent and the hierarchy is free of cycles.
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 12.04.2013
  */
 public class PartialHierarchyTree<T> {

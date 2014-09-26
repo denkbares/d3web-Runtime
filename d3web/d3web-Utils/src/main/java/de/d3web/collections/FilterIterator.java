@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
  * Class to filter the elements of an given iterator by some accept method.
  *
  * @author Volker Belli (denkbares GmbH)
- * @created 13.03.14.
+ * @created 13.03.2014
  */
 public abstract class FilterIterator<E> implements Iterator<E> {
 

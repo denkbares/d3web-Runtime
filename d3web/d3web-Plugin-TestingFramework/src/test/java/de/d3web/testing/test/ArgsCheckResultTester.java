@@ -26,7 +26,7 @@ import de.d3web.testing.ArgsCheckResult;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 17.07.2013
  */
 public class ArgsCheckResultTester {

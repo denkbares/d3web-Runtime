@@ -32,7 +32,7 @@ import de.d3web.utils.Pair;
  * arrays.
  *
  * @author Volker Belli (denkbares GmbH)
- * @created 28.03.14.
+ * @created 28.03.2014
  */
 public class Matrix<E> {
 

@@ -31,7 +31,7 @@ import de.d3web.testing.TestObjectProviderManager;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 13.08.2013
  */
 public class TestParameterTestTest {

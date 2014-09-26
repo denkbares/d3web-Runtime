@@ -31,7 +31,7 @@ import de.d3web.testing.TestParameter.Type;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 17.07.2013
  */
 public class TestParameterTest {

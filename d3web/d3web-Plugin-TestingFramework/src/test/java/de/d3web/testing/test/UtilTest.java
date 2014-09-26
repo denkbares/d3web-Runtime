@@ -13,7 +13,7 @@ import de.d3web.testing.TestingUtils;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 17.07.2013
  */
 public class UtilTest {

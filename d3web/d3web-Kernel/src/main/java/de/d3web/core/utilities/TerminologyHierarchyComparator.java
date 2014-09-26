@@ -27,7 +27,8 @@ import de.d3web.core.knowledge.TerminologyObject;
 /**
  * Compares TerminologyObjects according to their position inside the tree hierarchy according to DFS.
  * <p/>
- * Created by Albrecht Striffler (denkbares GmbH) on 11.08.14.
+ * @author Albrecht Striffler (denkbares GmbH)
+ * @created 11.08.2014
  */
 public class TerminologyHierarchyComparator implements Comparator<TerminologyObject> {
 

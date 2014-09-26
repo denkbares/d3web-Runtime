@@ -27,7 +27,7 @@ import de.d3web.empiricaltesting.RatedSolution;
 
 /**
  * 
- * @author jochenreutelshofer
+ * @author Jochen Reutelshöfer
  * @created 22.07.2013
  */
 public class RatedSolutionTest {

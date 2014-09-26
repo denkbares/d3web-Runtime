@@ -6,7 +6,8 @@ import de.d3web.core.session.Session;
 import de.d3web.strings.Strings;
 
 /**
- * Created by Albrecht Striffler (denkbares GmbH) on 03.03.14.
+ * @author Albrecht Striffler (denkbares GmbH)
+ * @created 03.03.2014
  */
 public class CondNonTerminalUnknown extends NonTerminalCondition {
 
