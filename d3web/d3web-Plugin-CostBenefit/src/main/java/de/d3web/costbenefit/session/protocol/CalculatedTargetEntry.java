@@ -90,6 +90,18 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 			return costbenefit;
 		}
 
+		@Override
+		public String toString() {
+			if (benefit != Float.MAX_VALUE) {
+				return qContainerNames.toString() + " Benefit: " + benefit + " Cost/Benefit: "
+						+ costbenefit;
+			}
+			else {
+				return qContainerNames.toString() + " Benefit: " + benefit
+						+ " Cost/Benefit: unknown";
+			}
+		}
+
 	}
 
 }
