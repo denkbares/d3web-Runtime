@@ -59,8 +59,10 @@ public class ExplanationUtils {
 	 * @return the source facts for the given object
 	 */
 	public static Collection<Fact> getSourceFacts(Session session, TerminologyObject object) {
-		Set<Fact> sources = new HashSet<Fact>();
 		Fact valueFact = session.getBlackboard().getValueFact(object);
+		if (valueFact == null) return Collections.emptyList();
+
+		Set<Fact> sources = new HashSet<Fact>();
 		getSourceFacts(session, valueFact, sources);
 		return sources;
 	}
