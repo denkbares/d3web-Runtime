@@ -30,16 +30,21 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import de.d3web.core.inference.PSConfig;
+import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.records.SessionConversionFactory;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.ProtocolEntry;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costbenefit.inference.AbortException;
@@ -50,6 +55,7 @@ import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
 import de.d3web.plugin.test.InitPluginManager;
+import de.d3web.xcl.XCLModel;
 
 /**
  * Tests {@link ManualTargetSelectionEntry} and {@link CalculatedTargetEntry}
@@ -67,6 +73,11 @@ public class TestTargetProtocolEntries {
 	public void test() throws AbortException, IOException {
 		InitPluginManager.init();
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+		Solution solution = new Solution(kb, "solution");
+		QuestionYN q = new QuestionYN(kb, "q1");
+		ChoiceValue yes = new ChoiceValue(q.getAnswerChoiceYes());
+		XCLModel.insertXCLRelation(kb, new CondEqual(q, yes),
+				solution);
 		QContainer target1 = new QContainer(kb, "Target1");
 		QContainer target2 = new QContainer(kb, "Target2");
 		PSMethodCostBenefit psMethod = new PSMethodCostBenefit();
@@ -88,6 +99,8 @@ public class TestTargetProtocolEntries {
 		ExpertMode em = ExpertMode.getExpertMode(session);
 
 		em.selectTarget(target1);
+		// answer question to put solution in sprint group
+		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q, yes));
 		em.selectTarget(target2);
 		em.selectTarget(multiTarget);
 		checkEntries(target1, target2, session, true);
@@ -139,9 +152,13 @@ public class TestTargetProtocolEntries {
 				calculatedTargetEntries.get(0).getCalculatedTarget().getqContainerNames().iterator().next());
 		Assert.assertTrue(calculatedTargetEntries.get(0).getTargets().iterator().next().getqContainerNames().contains(
 				target1.getName()));
+		Assert.assertEquals(0, calculatedTargetEntries.get(0).getSprintGroup().size());
 		Assert.assertEquals(
 				target2.getName(),
 				calculatedTargetEntries.get(1).getCalculatedTarget().getqContainerNames().iterator().next());
+		Assert.assertEquals(1, calculatedTargetEntries.get(1).getSprintGroup().size());
+		Assert.assertNotNull(session.getKnowledgeBase().getManager().searchSolution(
+				calculatedTargetEntries.get(1).getSprintGroup().iterator().next()));
 		// 10000000000.0 is the benefit the cb uses for manual targets
 		Assert.assertEquals(10000000000.0,
 				calculatedTargetEntries.get(0).getCalculatedTarget().getBenefit());

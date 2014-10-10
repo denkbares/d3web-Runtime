@@ -51,6 +51,8 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 	private static final String TARGETS = "targets";
 	private static final String CALCULATEDTARGET = "calculatedTarget";
 	private static final String QCONTAINER = "qcontainer";
+	private static final String SOLUTION = "solution";
+	private static final String SPRINT_GROUP = "sprintGroup";
 	private static String BENEFIT;
 
 	@Override
@@ -59,11 +61,12 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 			String dateString = element.getAttribute(ATTR_DATE);
 			Date date = SessionPersistenceManager.parseDate(dateString);
 			List<Element> elementList = XMLUtil.getElementList(element.getChildNodes());
-			if (elementList.size() != 2
+			if (elementList.size() < 2
 					|| !elementList.get(0).getNodeName().equals(CALCULATEDTARGET)
 					|| !elementList.get(1).getNodeName().equals(TARGETS)) {
-				throw new IOException("Element must have exactly two children named "
-						+ CALCULATEDTARGET + " and " + TARGETS);
+				throw new IOException(
+						"Element must have two ore more children, the first ones must be named "
+								+ CALCULATEDTARGET + " and " + TARGETS);
 			}
 			Target calculatedTarget = readTarget(XMLUtil.getElementList(
 					elementList.get(0).getChildNodes()).get(0));
@@ -72,7 +75,18 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 			for (Element grandChild : grandChildren) {
 				targets.add(readTarget(grandChild));
 			}
-			return new CalculatedTargetEntry(calculatedTarget, targets, date);
+			Set<String> solutions = new HashSet<String>();
+			if (elementList.size() >= 3) {
+				if (!elementList.get(2).getNodeName().equals(SPRINT_GROUP)) {
+					throw new IOException("The third element must be named " + SPRINT_GROUP);
+				}
+				else {
+					for (Element e : XMLUtil.getElementList(elementList.get(2).getChildNodes())) {
+						solutions.add(e.getTextContent());
+					}
+				}
+			}
+			return new CalculatedTargetEntry(calculatedTarget, targets, date, solutions);
 		}
 		catch (ParseException e) {
 			throw new IOException(e);
@@ -94,6 +108,15 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 		e.appendChild(targets);
 		for (Target target : entry.getTargets()) {
 			targets.appendChild(writeTarget(target, persistence.getDocument()));
+		}
+		if (!entry.getSprintGroup().isEmpty()) {
+			Element sprintGroupElement = persistence.getDocument().createElement(SPRINT_GROUP);
+			for (String solution : entry.getSprintGroup()) {
+				Element solutionElement = persistence.getDocument().createElement(SOLUTION);
+				solutionElement.setTextContent(solution);
+				sprintGroupElement.appendChild(solutionElement);
+			}
+			e.appendChild(sprintGroupElement);
 		}
 		return e;
 	}

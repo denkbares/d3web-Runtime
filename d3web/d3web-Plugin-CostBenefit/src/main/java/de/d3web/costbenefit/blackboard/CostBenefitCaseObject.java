@@ -53,6 +53,7 @@ import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.utils.Log;
+import de.d3web.xcl.XCLUtils;
 
 /**
  * CaseObject for CostBenefit
@@ -369,10 +370,12 @@ public class CostBenefitCaseObject implements SessionObject {
 		if ((searchModel.getBestCostBenefitTarget() != null)
 				&& !Collections.disjoint(watchedQContainers,
 						searchModel.getBestCostBenefitTarget().getQContainers())) {
+			List<Solution> sprintGroup = XCLUtils.getSprintGroup(session);
 			session.getProtocol().addEntry(
 					new CalculatedTargetEntry(searchModel.getBestCostBenefitTarget(),
 							searchModel.getTargets(), new Date(
-									session.getPropagationManager().getPropagationTime())));
+									session.getPropagationManager().getPropagationTime()),
+							sprintGroup));
 		}
 	}
 }

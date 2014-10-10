@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.protocol.ProtocolEntry;
 
 /**
@@ -21,9 +22,10 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 
 	private final Collection<CalculatedTargetEntry.Target> targets;
 	private final Target calculatedTarget;
+	private final Set<String> sprintGroup;
 	private final Date date;
 
-	public CalculatedTargetEntry(de.d3web.costbenefit.model.Target calculatedTarget, Set<de.d3web.costbenefit.model.Target> targets, Date date) {
+	public CalculatedTargetEntry(de.d3web.costbenefit.model.Target calculatedTarget, Set<de.d3web.costbenefit.model.Target> targets, Date date, Collection<Solution> solutions) {
 		super();
 		this.calculatedTarget = convertTarget(calculatedTarget);
 		this.targets = new HashSet<CalculatedTargetEntry.Target>();
@@ -31,13 +33,18 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 			this.targets.add(convertTarget(cbTarget));
 		}
 		this.date = date;
+		this.sprintGroup = new HashSet<String>();
+		for (Solution s : solutions) {
+			this.sprintGroup.add(s.getName());
+		}
 	}
 
-	public CalculatedTargetEntry(Target calculatedTarget, Set<Target> targets, Date date) {
+	public CalculatedTargetEntry(Target calculatedTarget, Set<Target> targets, Date date, Set<String> solutions) {
 		super();
 		this.calculatedTarget = calculatedTarget;
 		this.targets = targets;
 		this.date = date;
+		this.sprintGroup = solutions;
 	}
 
 	@Override
@@ -59,6 +66,10 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 			qContainerNames.add(qContainer.getName());
 		}
 		return new Target(qContainerNames, cbTarget.getBenefit(), cbTarget.getCostBenefit());
+	}
+
+	public Set<String> getSprintGroup() {
+		return sprintGroup;
 	}
 
 	public static class Target {
