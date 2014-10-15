@@ -26,6 +26,10 @@ import java.util.NoSuchElementException;
  * Implements an iterator that allows to fetch the next object without proceeding to it. Multiple
  * calls to the "peek" method will return the element that will be returned by the next call to the
  * "next" method.
+ * <p/>
+ * The PeekableIterator does not implement the {@link java.util.Iterator#remove()} method. This is
+ * not possible because internally the iterator always has already proceeded to the next element to
+ * provide peek functionality.
  *
  * @author Volker Belli (denkbares GmbH)
  * @created 14.10.14.
@@ -37,6 +41,24 @@ public class PeekableIterator<E> implements Iterator<E> {
 	private final Iterator<E> iterator;
 	private Object next = null;
 
+	/**
+	 * Creates a new PeekableIterator for the specified collection or other iterable.
+	 *
+	 * @param collection an iterable to be iterated
+	 */
+	public PeekableIterator(Iterable<E> collection) {
+		this(collection.iterator());
+	}
+
+	/**
+	 * Creates a new PeekableIterator to wrap the specified iterator. By proceeding this iterator,
+	 * the wrapped iterator will also be proceeded.
+	 * <p/>
+	 * <strong>Please note</strong>:<br/> after creating a peekable iterator the original wrapped
+	 * iterator should no longer be used directly. This may lead to unpredictable results.
+	 *
+	 * @param iterator the iterator to be wrapped and iterated
+	 */
 	public PeekableIterator(Iterator<E> iterator) {
 		this.iterator = iterator;
 		updateNext();
