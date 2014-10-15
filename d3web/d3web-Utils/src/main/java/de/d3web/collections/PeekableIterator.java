@@ -93,4 +93,9 @@ public class PeekableIterator<E> implements Iterator<E> {
 	public boolean hasNext() {
 		return next != SENTINEL;
 	}
+
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException("remove");
+	}
 }
