@@ -163,6 +163,7 @@ public class GeneralizedSuffixTree<E> extends DefaultMultiMap<String, E> {
 		// used)
 		String end = tree.floorKey(infix + '\uffff');
 		if (end == null) return null;
+		if (start.compareTo(end) > 0) return null;
 		return tree.subMap(start, true, end, true);
 	}
 
