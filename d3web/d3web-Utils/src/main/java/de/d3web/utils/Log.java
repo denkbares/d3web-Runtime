@@ -134,7 +134,7 @@ public class Log {
 	}
 
 	/**
-	 * Class name extraction from the jvm native class. This is the most imcompatible method, but
+	 * Class name extraction from the jvm native class. This is the most incompatible method, but
 	 * also the fastest one.
 	 *
 	 * @author Volker Belli (denkbares GmbH)
@@ -436,7 +436,7 @@ public class Log {
 	 * @created 19.01.2014
 	 */
 	public static Logger rootLogger() {
-		return Logger.getGlobal().getParent();
+		return Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).getParent();
 	}
 
 	/**
