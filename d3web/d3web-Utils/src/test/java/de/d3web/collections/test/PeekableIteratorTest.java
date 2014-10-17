@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2013 denkbares GmbH
- *
+ * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -33,7 +33,7 @@ import de.d3web.collections.PeekableIterator;
 
 /**
  * Class for testing the PeekableIterator
- *
+ * 
  * @author Volker Belli (denkbares GmbH)
  * @created 15.10.14.
  */
@@ -44,7 +44,8 @@ public class PeekableIteratorTest {
 		// create list to iterate
 		int COUNT = 100;
 		List<Integer> list = new ArrayList<Integer>(COUNT);
-		for (int i=0; i<COUNT; i++) list.add(i);
+		for (int i = 0; i < COUNT; i++)
+			list.add(i);
 
 		// compare the iterators
 		Iterator<Integer> expected = list.iterator();
@@ -58,7 +59,7 @@ public class PeekableIteratorTest {
 			int exp = expected.next();
 
 			// try peek first (0-4 times)
-			for (int i=0; i<(exp+2)%5; i++) {
+			for (int i = 0; i < (exp + 2) % 5; i++) {
 				int act = actual.peek();
 				Assert.assertEquals("peek returns wrong value", exp, act);
 			}
@@ -107,13 +108,13 @@ public class PeekableIteratorTest {
 		Assert.assertFalse(iter.hasNext());
 	}
 
-	@Test (expected = NoSuchElementException.class)
+	@Test(expected = NoSuchElementException.class)
 	public void exceedRangeByNext() {
-		new PeekableIterator<Integer>(Collections.<Integer>emptyIterator()).next();
+		new PeekableIterator<Integer>(Collections.<Integer> emptyList().iterator()).next();
 	}
 
-	@Test (expected = NoSuchElementException.class)
+	@Test(expected = NoSuchElementException.class)
 	public void exceedRangeByPeek() {
-		new PeekableIterator<Integer>(Collections.<Integer>emptyIterator()).peek();
+		new PeekableIterator<Integer>(Collections.<Integer> emptyList().iterator()).peek();
 	}
 }
