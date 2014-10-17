@@ -77,6 +77,7 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 		private final Set<String> qContainerNames;
 		private final double benefit;
 		private final double costbenefit;
+		private final int hashCode;
 
 		public Target(Set<String> qContainerNames, double benefit) {
 			this(qContainerNames, benefit, Float.MAX_VALUE);
@@ -87,6 +88,8 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 			this.qContainerNames = qContainerNames;
 			this.benefit = benefit;
 			this.costbenefit = costbenefit;
+			hashCode = (qContainerNames.hashCode() * 13 + Double.valueOf(benefit).hashCode()) * 31
+					+ Double.valueOf(costbenefit).hashCode();
 		}
 
 		public Set<String> getqContainerNames() {
@@ -113,6 +116,20 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 			}
 		}
 
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof Target)) {
+				return false;
+			}
+			Target t = (Target) o;
+			return qContainerNames.equals(t.qContainerNames) && benefit == t.benefit
+					&& costbenefit == t.costbenefit;
+		}
+
+		@Override
+		public int hashCode() {
+			return hashCode;
+		}
 	}
 
 }
