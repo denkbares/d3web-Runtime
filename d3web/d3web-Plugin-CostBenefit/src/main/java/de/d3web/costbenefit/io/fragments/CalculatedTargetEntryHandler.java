@@ -53,7 +53,7 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 	private static final String QCONTAINER = "qcontainer";
 	private static final String SOLUTION = "solution";
 	private static final String SPRINT_GROUP = "sprintGroup";
-	private static String BENEFIT;
+	private static final String BENEFIT = "benefit";;
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
@@ -123,7 +123,6 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 
 	private static Element writeTarget(Target target, Document document) {
 		Element element = document.createElement("target");
-		BENEFIT = "benefit";
 		element.setAttribute(BENEFIT, Double.toString(target.getBenefit()));
 		if (target.getCostbenefit() != Float.MAX_VALUE) {
 			element.setAttribute(COSTBENEFIT, Double.toString(target.getCostbenefit()));
