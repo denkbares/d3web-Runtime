@@ -72,6 +72,7 @@ public class Strings {
 	public static final Comparator<String> CASE_INSENSITIVE_ORDER = new Comparator<String>() {
 		@Override
 		public int compare(String o1, String o2) {
+			//noinspection StringEquality
 			if (o1 == o2) return 0;
 			if (o1 == null) return -1;
 			if (o2 == null) return 1;
@@ -791,6 +792,7 @@ public class Strings {
 	 */
 	public static boolean equalsIgnoreCase(String text1, String text2) {
 		// if both identical or both == null
+		//noinspection StringEquality
 		if (text1 == text2) return true;
 		// otherwise (at least one is != null)
 		// check null against empty string
@@ -813,6 +815,7 @@ public class Strings {
 	 */
 	public static boolean equals(String text1, String text2) {
 		// if both identical or both == null
+		//noinspection StringEquality
 		if (text1 == text2) return true;
 		// otherwise (at least one is != null)
 		// check null against empty string
@@ -961,10 +964,11 @@ public class Strings {
 	 * Moves the given start and end indices together until they point to the boundaries of a
 	 * trimmed string inside the text.
 	 *
-	 * @returns a pair of integers representing start and end of trimmed string inside the given
+	 * @return a pair of integers representing start and end of trimmed string inside the given
 	 * text
 	 */
 	public static Pair<Integer, Integer> trim(String text, int start, int end) {
+		//noinspection unchecked
 		return new Pair(trimLeft(text, start, end), trimRight(text, start, end));
 	}
 
@@ -1409,6 +1413,31 @@ public class Strings {
 		// append rest of string
 		result.append(text.substring(pos));
 		return result.toString();
+	}
+
+	/**
+	 * Trims .0 from strings. This is useful in case double values are displayed as strings.
+	 *
+	 * @param dString is the String to trim
+	 * @return trimmed {@link String}
+	 * @created 16.05.2011
+	 */
+	public static String trimTrailingZero(String dString) {
+		if (dString.endsWith(".0")) {
+			dString = dString.substring(0, dString.length() - 2);
+		}
+		return dString;
+	}
+
+	/**
+	 * Util method to get a String from a double, where the decimal point is omitted in case it is zero.
+	 *
+	 * @param d is the double to trim
+	 * @return trimmed {@link String} representation of the {@link Double}
+	 * @created 16.05.2011
+	 */
+	public static String trimTrailingZero(double d) {
+		return trimTrailingZero(String.valueOf(d));
 	}
 
 	public static enum Encoding {
