@@ -120,11 +120,8 @@ public final class XMLUtil {
 	public static boolean checkNameAndType(Element element, String elementname, String typeToCheck) {
 		String nodeName = element.getNodeName();
 		String type = element.getAttribute("type");
-		if (nodeName != null && nodeName.equals(elementname) && type != null
-				&& type.equals(typeToCheck)) {
-			return true;
-		}
-		return false;
+		return nodeName != null && nodeName.equals(elementname) && type != null
+				&& type.equals(typeToCheck);
 	}
 
 	/**
@@ -279,7 +276,7 @@ public final class XMLUtil {
 	 * @param doc Document, where the Element should be created
 	 * @param nob TerminologyObject, whose ID should be used
 	 * @param type type of the condition
-	 * @param values List of answers, which are used as values
+	 * @param value answer of the condition
 	 * @return condition element
 	 * @throws IOException if one of the elements in values is neither a Choice
 	 *         nor a Unknown Answer
@@ -528,7 +525,7 @@ public final class XMLUtil {
 	public static void appendInfoStoreEntries(Persistence<?> persistance, Element father, InfoStore infoStore, Autosave autosave) throws IOException {
 		Document doc = father.getOwnerDocument();
 		for (Triple<Property<?>, Locale, Object> entry : sortEntries(infoStore.entries())) {
-			if (autosave == null || (autosave != null && entry.getA().hasState(autosave))) {
+			if (autosave == null || entry.getA().hasState(autosave)) {
 				Element entryElement = doc.createElement("entry");
 				father.appendChild(entryElement);
 				entryElement.setAttribute("property", entry.getA().getName());
@@ -551,12 +548,6 @@ public final class XMLUtil {
 		}
 	}
 
-	/**
-	 * 
-	 * @created 11.11.2010
-	 * @param entries
-	 * @return
-	 */
 	public static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
 		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<Triple<Property<?>, Locale, Object>>(
 				entries);
@@ -619,7 +610,6 @@ public final class XMLUtil {
 	 * @created 08.11.2010
 	 * @param infoStore {@link InfoStore}
 	 * @param father {@link Element}
-	 * @param kb {@link KnowledgeBase}
 	 * @throws IOException
 	 */
 	public static void fillInfoStore(Persistence<?> persistance, InfoStore infoStore, Element father) throws IOException {
@@ -636,7 +626,7 @@ public final class XMLUtil {
 				continue;
 			}
 			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
-			Object value = "";
+			Object value;
 			if (childNodes.size() > 0) {
 				value = persistance.readFragment(childNodes.get(0));
 			}
@@ -695,7 +685,7 @@ public final class XMLUtil {
 	 */
 	public static Document streamToDocument(InputStream stream, EntityResolver resolver) throws IOException {
 		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-		DocumentBuilder parser = null;
+		DocumentBuilder parser;
 		try {
 			parser = fac.newDocumentBuilder();
 			if (resolver != null) parser.setEntityResolver(resolver);
@@ -790,13 +780,13 @@ public final class XMLUtil {
 			xformer.transform(source, result);
 		}
 		catch (TransformerConfigurationException e) {
-			new IOException(e.getMessage());
+			throw new IOException(e.getMessage());
 		}
 		catch (TransformerFactoryConfigurationError e) {
-			new IOException(e.getMessage());
+			throw new IOException(e.getMessage());
 		}
 		catch (TransformerException e) {
-			new IOException(e.getMessage());
+			throw new IOException(e.getMessage());
 		}
 
 	}
