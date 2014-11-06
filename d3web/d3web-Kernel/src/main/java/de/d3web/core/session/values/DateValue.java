@@ -112,7 +112,7 @@ public class DateValue implements QuestionValue {
 					return new DateValue(date);
 				}
 			}
-			catch (ParseException e) {
+			catch (ParseException ignore) {
 			}
 		}
 		throw new IllegalArgumentException("'" + valueString + "' can not be recognized as a date");
