@@ -49,7 +49,7 @@ public class StringFragment {
 	}
 
 	public String getContentTrimmed() {
-		return content.trim();
+		return Strings.trim(content);
 	}
 
 	public int getStartTrimmed() {

@@ -615,13 +615,11 @@ public class Strings {
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol) {
-		return splitUnquoted(text, splitSymbol, true,
-				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
+		return splitUnquoted(text, splitSymbol, true, QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE));
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlankFragments) {
-		return splitUnquoted(text, splitSymbol, includeBlankFragments,
-				new QuoteCharSet[] { QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE) });
+		return splitUnquoted(text, splitSymbol, includeBlankFragments, QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE));
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteCharSet... quoteChars) {
@@ -643,7 +641,7 @@ public class Strings {
 	 * @param splitSymbol the symbol to split by
 	 * @return the fragments of the text
 	 */
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlancFragments, QuoteCharSet[] quotes) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlankFragments, QuoteCharSet... quotes) {
 		List<StringFragment> parts = new ArrayList<StringFragment>();
 		if (text == null) return parts;
 
@@ -700,7 +698,7 @@ public class Strings {
 			}
 			if (foundSplitSymbol(text, splitSymbol, i)) {
 				String actualPartString = actualPart.toString();
-				if (includeBlancFragments || !isBlank(actualPartString)) {
+				if (includeBlankFragments || !isBlank(actualPartString)) {
 					parts.add(new StringFragment(actualPartString, startOfNewPart, text));
 				}
 				actualPart = new StringBuffer();
@@ -712,7 +710,7 @@ public class Strings {
 
 		}
 		String actualPartString = actualPart.toString();
-		if (includeBlancFragments || !isBlank(actualPartString)) {
+		if (includeBlankFragments || !isBlank(actualPartString)) {
 			parts.add(new StringFragment(actualPartString, startOfNewPart, text));
 		}
 		return parts;
@@ -1438,64 +1436,6 @@ public class Strings {
 	 */
 	public static String trimTrailingZero(double d) {
 		return trimTrailingZero(String.valueOf(d));
-	}
-
-	/**
-	 * Concatenates an array of Strings in a way, that it can be parsed again without having to worry about the
-	 * separator being present in the concatenated Strings, using the method #parseConcat. If necessary, path elements
-	 * are set in quotes and quotes inside the strings are escaped properly.
-	 *
-	 * @param separator the separator used to concatenate
-	 * @param strings the strings to be concatenated
-	 * @return a concatenated, properly escaped and again parsable string
-	 */
-	public static String concatParsable(String separator, String[] strings) {
-		return concatParsable(separator, null, strings);
-	}
-
-	/**
-	 * Concatenates an array of Strings in a way, that it can be parsed again without having to worry about the
-	 * separator being present in the concatenated Strings, using the method #parseConcat. If necessary, path elements
-	 * are set in quotes and quotes inside the strings are escaped properly.
-	 *
-	 * @param separator the separator used to concatenate
-	 * @param quotePattern optional pattern which will be used to decide, whether quotes should be added for the
-	 *                        different concatenated strings. It should at least contain the separator and back space!
-	 * @param strings the strings to be concatenated
-	 * @return a concatenated, properly escaped and again parsable string
-	 */
-	public static String concatParsable(String separator, Pattern quotePattern, String[] strings) {
-		StringBuilder externalForm = new StringBuilder();
-		for (int i = 0; i < strings.length; i++) {
-			String element = strings[i];
-			if (i > 0) externalForm.append(separator);
-			if ((quotePattern != null && quotePattern.matcher(element).find())
-					|| element.contains(separator) || element.contains("\\")) {
-				externalForm.append(quote(element));
-			}
-			else {
-				externalForm.append(element);
-			}
-		}
-		return externalForm.toString();
-	}
-
-	/**
-	 * Parsed a String, that was previously concatenated using the method #concatParsable. The returned string elements
-	 * are unescaped and unqouted properly.
-	 *
-	 * @param separator the separator used to concat the string
-	 * @param concatenatedString the string to parse the elements from
-	 * @return the elements of the concatenated string
-	 */
-	public static String[] parseConcat(String separator, String concatenatedString) {
-		List<StringFragment> pathElementFragments = splitUnquoted(concatenatedString, separator, true);
-		String[] pathElements = new String[pathElementFragments.size()];
-		for (int i = 0; i < pathElementFragments.size(); i++) {
-			StringFragment pathElementFragment = pathElementFragments.get(i);
-			pathElements[i] = unquote(pathElementFragment.getContent());
-		}
-		return pathElements;
 	}
 
 	public static enum Encoding {

@@ -19,6 +19,7 @@
 package de.d3web.strings;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -63,6 +64,64 @@ public class Identifier implements Comparable<Identifier> {
 
 	public static boolean needsQuotes(String text) {
 		return CONTROL_PATTERN.matcher(text).find();
+	}
+
+	/**
+	 * Concatenates an array of Strings in a way, that it can be parsed again without having to worry about the
+	 * separator being present in the concatenated Strings, using the method #parseConcat. If necessary, path elements
+	 * are set in quotes and quotes inside the strings are escaped properly.
+	 *
+	 * @param separator the separator used to concatenate
+	 * @param strings the strings to be concatenated
+	 * @return a concatenated, properly escaped and again parsable string
+	 */
+	public static String concatParsable(String separator, String[] strings) {
+		return concatParsable(separator, null, strings);
+	}
+
+	/**
+	 * Concatenates an array of Strings in a way, that it can be parsed again without having to worry about the
+	 * separator being present in the concatenated Strings, using the method #parseConcat. If necessary, path elements
+	 * are set in quotes and quotes inside the strings are escaped properly.
+	 *
+	 * @param separator the separator used to concatenate
+	 * @param quotePattern optional pattern which will be used to decide, whether quotes should be added for the
+	 *                        different concatenated strings. It should at least contain the separator and back space!
+	 * @param strings the strings to be concatenated
+	 * @return a concatenated, properly escaped and again parsable string
+	 */
+	public static String concatParsable(String separator, Pattern quotePattern, String[] strings) {
+		StringBuilder externalForm = new StringBuilder();
+		for (int i = 0; i < strings.length; i++) {
+			String element = strings[i];
+			if (i > 0) externalForm.append(separator);
+			if ((quotePattern != null && quotePattern.matcher(element).find())
+					|| element.contains(separator) || element.contains("\\")) {
+				externalForm.append(Strings.quote(element));
+			}
+			else {
+				externalForm.append(element);
+			}
+		}
+		return externalForm.toString();
+	}
+
+	/**
+	 * Parsed a String, that was previously concatenated using the method #concatParsable. The returned string elements
+	 * are unescaped and unqouted properly.
+	 *
+	 * @param separator the separator used to concat the string
+	 * @param concatenatedString the string to parse the elements from
+	 * @return the elements of the concatenated string
+	 */
+	public static String[] parseConcat(String separator, String concatenatedString) {
+		List<StringFragment> pathElementFragments = Strings.splitUnquoted(concatenatedString, separator, true);
+		String[] pathElements = new String[pathElementFragments.size()];
+		for (int i = 0; i < pathElementFragments.size(); i++) {
+			StringFragment pathElementFragment = pathElementFragments.get(i);
+			pathElements[i] = Strings.unquote(pathElementFragment.getContent());
+		}
+		return pathElements;
 	}
 
 	@Override
@@ -174,7 +233,7 @@ public class Identifier implements Comparable<Identifier> {
 	 */
 	public String toExternalForm() {
 		if (this.externalForm == null) {
-			this.externalForm = Strings.concatParsable(SEPARATOR, CONTROL_PATTERN, pathElements);
+			this.externalForm = concatParsable(SEPARATOR, CONTROL_PATTERN, pathElements);
 		}
 		return this.externalForm;
 	}
@@ -247,7 +306,7 @@ public class Identifier implements Comparable<Identifier> {
 	 * @created 07.05.2012
 	 */
 	public static Identifier fromExternalForm(String externalForm) {
-		return new Identifier(Strings.parseConcat(SEPARATOR, externalForm));
+		return new Identifier(parseConcat(SEPARATOR, externalForm));
 	}
 
 	/**
