@@ -18,9 +18,7 @@
  */
 package de.d3web.strings;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -176,23 +174,7 @@ public class Identifier implements Comparable<Identifier> {
 	 */
 	public String toExternalForm() {
 		if (this.externalForm == null) {
-			StringBuilder externalForm = new StringBuilder();
-			boolean first = true;
-			for (String element : pathElements) {
-				if (first) {
-					first = false;
-				}
-				else {
-					externalForm.append(SEPARATOR);
-				}
-				if (needsQuotes(element)) {
-					externalForm.append(Strings.quote(element));
-				}
-				else {
-					externalForm.append(element);
-				}
-			}
-			this.externalForm = externalForm.toString();
+			this.externalForm = Strings.concatParsable(SEPARATOR, CONTROL_PATTERN, pathElements);
 		}
 		return this.externalForm;
 	}
@@ -265,13 +247,7 @@ public class Identifier implements Comparable<Identifier> {
 	 * @created 07.05.2012
 	 */
 	public static Identifier fromExternalForm(String externalForm) {
-		List<StringFragment> pathElementFragments = Strings.splitUnquoted(externalForm, SEPARATOR,
-				true);
-		ArrayList<String> pathElements = new ArrayList<String>(pathElementFragments.size());
-		for (StringFragment pathElementFragment : pathElementFragments) {
-			pathElements.add(Strings.unquote(pathElementFragment.getContent()));
-		}
-		return new Identifier(pathElements.toArray(new String[pathElements.size()]));
+		return new Identifier(Strings.parseConcat(SEPARATOR, externalForm));
 	}
 
 	/**
