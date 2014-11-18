@@ -21,12 +21,13 @@ package de.d3web.strings.test;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
+
 import de.d3web.strings.Identifier;
 
 /**
  * Test for the critical conversion from {@link Identifier} to its external
  * form and back.
- * 
+ *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 25.04.2012
  */
@@ -71,13 +72,34 @@ public class IdentifierTest extends TestCase {
 		String listOutPutFromExternalForm = Arrays.asList(fromExternalForm.getPathElements()).toString();
 
 		boolean equals = listOutput.equals(listOutPutFromExternalForm);
-		System.out.println("equals: " + equals + " " + listOutput + " ==> " + externalForm
-				+ " ==> " + listOutPutFromExternalForm);
-		assertTrue(
-				"Conversion from TermIdentifier to external form and back to TermIdentifier failed:\n"
-						+ listOutput + " ==> " + externalForm
-						+ " ==> " + listOutPutFromExternalForm,
-				equals);
+		System.out.println("equals: " + equals + " " + listOutput + " ==> " + externalForm + " ==> " + listOutPutFromExternalForm);
+		assertTrue("Conversion from TermIdentifier to external form and back to TermIdentifier failed:\n"
+				+ listOutput + " ==> " + externalForm + " ==> " + listOutPutFromExternalForm, equals);
+	}
+
+	public void testConcatParse() {
+		concatParse("\"", "\"");
+		concatParse("term, Identifier", ", ");
+		concatParse("term\\, Identifier", ", ");
+		concatParse(" ", "termIdentifier", "\"termIdenti\"fier\"");
+		concatParse("", "termIdentifier", "\"termIdenti\"fier\"");
+		concatParse("asd\\\\lök", "termIdentifier", "\"termIdenti\"fier\"");
+		concatParse("asd\\\\lök", "termIdentifier", "\"termIdenti\"fier\"", "test");
+		concatParse("asd\\\\lök", "termIdentifier", "\"termIdenti\"fier\"", " ");
+		concatParse("asd\\\\lök", "termIdentifier", "\"termIdenti\"fier\"", "");
+		concatParse("1, 1", "2", "3" , "4, 4", "5\", \"5");
+	}
+
+	private void concatParse(String... pathElements) {
+		String concat = Identifier.concatParsable(", ", pathElements);
+		String[] strings = Identifier.parseConcat(", ", concat);
+
+		String listOutput = Arrays.asList(pathElements).toString();
+		String listOutPutFromExternalForm = Arrays.asList(strings).toString();
+
+		boolean equals = listOutput.equals(listOutPutFromExternalForm);
+		System.out.println("equals: " + equals + " " + listOutput + " ==> " + concat + " ==> " + listOutPutFromExternalForm);
+		assertTrue("Concat and parse again failed:\n" + listOutput + " ==> " + concat + " ==> " + listOutPutFromExternalForm, equals);
 	}
 
 }

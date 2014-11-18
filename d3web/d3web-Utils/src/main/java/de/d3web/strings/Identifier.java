@@ -86,7 +86,7 @@ public class Identifier implements Comparable<Identifier> {
 	 *
 	 * @param separator the separator used to concatenate
 	 * @param quotePattern optional pattern which will be used to decide, whether quotes should be added for the
-	 *                        different concatenated strings. It should at least contain the separator and back space!
+	 *                        different concatenated strings. It should at least contain the separator, quote, and back slash!
 	 * @param strings the strings to be concatenated
 	 * @return a concatenated, properly escaped and again parsable string
 	 */
@@ -96,7 +96,7 @@ public class Identifier implements Comparable<Identifier> {
 			String element = strings[i];
 			if (i > 0) externalForm.append(separator);
 			if ((quotePattern != null && quotePattern.matcher(element).find())
-					|| element.contains(separator) || element.contains("\\")) {
+					|| element.contains(separator) || element.contains("\\") || element.contains("\"")) {
 				externalForm.append(Strings.quote(element));
 			}
 			else {
