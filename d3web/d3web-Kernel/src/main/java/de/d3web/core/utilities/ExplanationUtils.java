@@ -1,6 +1,5 @@
 package de.d3web.core.utilities;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,7 +29,7 @@ public class ExplanationUtils {
 	public static Collection<Fact> getPredecessorFacts(Session session, TerminologyObject object) {
 		Fact valueFact = session.getBlackboard().getValueFact(object);
 		Set<TerminologyObject> predecessorObjects = valueFact.getPSMethod().getActiveDerivationSources(object, session);
-		Collection<Fact> predecessorFacts = new ArrayList<Fact>(predecessorObjects.size());
+		Collection<Fact> predecessorFacts = new HashSet<Fact>(predecessorObjects.size());
 		for (TerminologyObject predecessorObject : predecessorObjects) {
 			Fact predecessorFact = session.getBlackboard().getValueFact(predecessorObject);
 			if (predecessorFact == null) continue;
@@ -63,12 +62,16 @@ public class ExplanationUtils {
 		if (valueFact == null) return Collections.emptyList();
 
 		Set<Fact> sources = new HashSet<Fact>();
-		getSourceFacts(session, valueFact, sources);
+		Set<Fact> visited = new HashSet<Fact>();
+		getSourceFacts(session, valueFact, sources, visited);
 		return sources;
 	}
 
-	private static void getSourceFacts(Session session, Fact fact, Set<Fact> sources) {
+	private static void getSourceFacts(Session session, Fact fact, Set<Fact> sources, Set<Fact> visited) {
 		Collection<Fact> predecessors = getPredecessorFacts(session, fact.getTerminologyObject());
+		predecessors.removeAll(visited); // loops can happen with unfortunate rule design,
+		visited.addAll(predecessors);    // so we track the visited facts
+
 		PSMethod psMethod = fact.getPSMethod();
 		// a source fact can either be a fact where the PSM has Type.source or a
 		// heuristic fact without predecessors, in case the fact was added externally to be added to derived scores
@@ -78,7 +81,7 @@ public class ExplanationUtils {
 			return;
 		}
 		for (Fact predecessor : predecessors) {
-			getSourceFacts(session, predecessor, sources);
+			getSourceFacts(session, predecessor, sources, visited);
 		}
 	}
 
