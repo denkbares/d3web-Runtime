@@ -35,6 +35,8 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -70,12 +72,37 @@ public class TestCaseUtils {
 	 * @created 24.01.2012
 	 */
 	public static void applyFindings(Session session, TestCase testCase, Date date) {
+		applyFindings(session, testCase, date, false);
+	}
+
+	/**
+	 * Applies the findings of the specified {@link TestCase} at the specified
+	 * {@link Date} to the {@link Session}
+	 *
+	 * @param session                  Session on which the Findings should be applied
+	 * @param testCase                 specified TestCase
+	 * @param date                     specified Date
+	 * @param ignoreNumValueOutOfRange if this is set to true, findings that try to set values outside the defined
+	 *                                 range of a
+	 *                                 question are ignored
+	 * @created 26.11.2014
+	 */
+	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
+	public static void applyFindings(Session session, TestCase testCase, Date date, boolean ignoreNumValueOutOfRange) {
 		Blackboard blackboard = session.getBlackboard();
 		session.getPropagationManager().openPropagation(date.getTime());
 		for (Finding f : testCase.getFindings(date, session.getKnowledgeBase())) {
 			List<String> errors = new LinkedList<String>();
 			checkValues(errors, f.getTerminologyObject(), f.getValue());
 			if (errors.isEmpty()) {
+				if (ignoreNumValueOutOfRange) {
+					NumericalInterval numericalInterval = f.getTerminologyObject()
+							.getInfoStore()
+							.getValue(BasicProperties.QUESTION_NUM_RANGE);
+					if (numericalInterval != null && f.getValue() instanceof NumValue) {
+						if (!numericalInterval.contains(((NumValue) f.getValue()).getDouble())) continue;
+					}
+				}
 				Fact fact = FactFactory.createUserEnteredFact(f.getTerminologyObject(),
 						f.getValue());
 				if (f.getValue() instanceof Indication) {
