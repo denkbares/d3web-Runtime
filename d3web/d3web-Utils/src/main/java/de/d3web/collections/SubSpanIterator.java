@@ -61,4 +61,9 @@ public class SubSpanIterator<E> implements Iterator<E> {
 		index++;
 		return next;
 	}
+
+	@Override
+	public void remove() {
+		delegate.remove();
+	}
 }

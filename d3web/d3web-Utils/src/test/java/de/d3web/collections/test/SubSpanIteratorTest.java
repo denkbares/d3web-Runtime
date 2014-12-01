@@ -33,17 +33,21 @@ public class SubSpanIteratorTest {
 	@Test
 	public void basic() {
 		List<String> list = Arrays.asList("a", "b", "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 0, 3), "a", "b", "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 0, 0));
-		assertElements(new SubSpanIterator<String>(list.iterator(), 0, -1), "a", "b", "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), -1, -1), "a", "b", "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 1, 1));
-		assertElements(new SubSpanIterator<String>(list.iterator(), 1, 2), "b");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 1, 3), "b", "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 2, 3), "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 2, 4), "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 2, -1), "c");
-		assertElements(new SubSpanIterator<String>(list.iterator(), 10, -1));
+		assertElements(list, 0, 3, "a", "b", "c");
+		assertElements(list, 0, 0);
+		assertElements(list, 0, -1, "a", "b", "c");
+		assertElements(list, -1, -1, "a", "b", "c");
+		assertElements(list, 1, 1);
+		assertElements(list, 1, 2, "b");
+		assertElements(list, 1, 3, "b", "c");
+		assertElements(list, 2, 3, "c");
+		assertElements(list, 2, 4, "c");
+		assertElements(list, 2, -1, "c");
+		assertElements(list, 10, -1);
+	}
+
+	private <E> void assertElements(Iterable<E> actual, int start, int end, E... expected) {
+		assertElements(new SubSpanIterator<E>(actual.iterator(), start, end), expected);
 	}
 
 	private <E> void assertElements(Iterator<E> actual, E... expected) {
