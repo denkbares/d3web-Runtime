@@ -60,6 +60,8 @@ import de.d3web.testcase.prefix.PrefixedTestCase;
  */
 public class TestCaseUtils {
 
+	public static final String NUM_VALUE_OUT_OF_RANGE = "NumValueOutOfRange";
+
 	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
 
 	/**
