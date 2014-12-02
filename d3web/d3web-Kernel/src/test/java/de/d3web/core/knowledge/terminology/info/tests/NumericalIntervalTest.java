@@ -97,10 +97,22 @@ public class NumericalIntervalTest {
 		assertThat(NumericalInterval.valueOf("[1.2 2.3]"),
 				is(new NumericalInterval(1.2, 2.3, false, false)));
 
+		assertThat(NumericalInterval.valueOf("[1.2 2.3)"),
+				is(new NumericalInterval(1.2, 2.3, false, true)));
+
+		assertThat(NumericalInterval.valueOf("(1,2 2,3)"),
+				is(new NumericalInterval(1.2, 2.3, true, true)));
+
 		assertThat(NumericalInterval.valueOf("]2 3]"),
 				is(new NumericalInterval(2, 3, true, false)));
 
+		assertThat(NumericalInterval.valueOf("(2 3]"),
+				is(new NumericalInterval(2, 3, true, false)));
+
 		assertThat(NumericalInterval.valueOf("]4 5["),
+				is(new NumericalInterval(4, 5, true, true)));
+
+		assertThat(NumericalInterval.valueOf("(4  5)"),
 				is(new NumericalInterval(4, 5, true, true)));
 
 	}
