@@ -128,27 +128,6 @@ public class MultiMaps {
 		}
 	}
 
-	public static void main(String[] args) {
-		MinimizedHashSet<String> strings = new MinimizedHashSet<String>();
-		strings.add("Hallo");
-		strings.add("Du");
-		System.out.println(strings.size());
-		Iterator<String> iterator = strings.iterator();
-		System.out.println(iterator.hasNext());
-		System.out.println(iterator.next());
-		System.out.println(iterator.hasNext());
-		//iterator.next();
-		System.out.println(strings.size());
-		iterator.remove();
-		System.out.println(strings.size());
-		System.out.println(iterator.hasNext());
-		System.out.println(iterator.next());
-		iterator.remove();
-		System.out.println(strings.size());
-		System.out.println(iterator.hasNext());
-		iterator.remove();
-	}
-
 	/**
 	 * HashSet memory optimized for cases where you have a lot of them but most of the time with only one element.
 	 */
