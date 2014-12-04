@@ -18,7 +18,9 @@
  */
 package de.d3web.collections.test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,8 @@ import org.junit.Test;
 import de.d3web.collections.MultiMaps;
 import de.d3web.collections.MultiMaps.CollectionFactory;
 import de.d3web.collections.N2MMap;
+
+import static org.junit.Assert.*;
 
 public class MultiMapsTest {
 
@@ -46,6 +50,93 @@ public class MultiMapsTest {
 		checkFactory(MultiMaps.<String> hashMinimizedFactory());
 		checkFactory(MultiMaps.<String> treeFactory());
 		checkFactory(MultiMaps.<String> linkedFactory());
+	}
+
+	@Test
+	public void minimizedHashSet() {
+		Set<String> set = MultiMaps.<String>hashMinimizedFactory().createSet();
+		// test empty set
+		assertTrue(set.isEmpty());
+		assertEquals(0, set.size());
+		assertFalse(set.iterator().hasNext());
+
+		// one element
+		set.add("test");
+		assertTrue(set.contains("test"));
+		assertFalse(set.contains(null));
+		assertFalse(set.contains("?"));
+
+		assertFalse(set.isEmpty());
+		assertEquals(1, set.size());
+		Iterator<String> iterator = set.iterator();
+		assertTrue(iterator.hasNext());
+		assertEquals("test", iterator.next());
+		assertFalse(iterator.hasNext());
+		iterator.remove();
+		assertTrue(set.isEmpty());
+
+		// three elements
+		set.add("1");
+		set.add(null);
+		set.add("3");
+		assertTrue(set.contains("1"));
+		assertTrue(set.contains(null));
+		assertTrue(set.contains("3"));
+		assertFalse(set.contains("2"));
+
+		assertFalse(set.isEmpty());
+		assertEquals(3, set.size());
+
+		iterator = set.iterator();
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		assertFalse(iterator.hasNext());
+
+		iterator = set.iterator();
+		iterator.next();
+		iterator.remove();
+		assertEquals(2, set.size());
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		iterator.remove();
+		assertEquals(1, set.size());
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		iterator.remove();
+		assertEquals(0, set.size());
+	}
+
+	@Test(expected=NoSuchElementException.class)
+	public void minimizedHashSetException1() {
+		Set<String> set = MultiMaps.<String>hashMinimizedFactory().createSet();
+		set.iterator().next();
+	}
+
+	@Test(expected=IllegalStateException.class)
+	public void minimizedHashSetException2() {
+		Set<String> set = MultiMaps.<String>hashMinimizedFactory().createSet();
+		set.iterator().remove();
+	}
+
+	@Test(expected=IllegalStateException.class)
+	public void minimizedHashSetException3() {
+		Set<String> set = MultiMaps.<String>hashMinimizedFactory().createSet();
+		set.add("test");
+		set.iterator().remove();
+	}
+
+	@Test(expected=IllegalStateException.class)
+	public void minimizedHashSetException4() {
+		Set<String> set = MultiMaps.<String>hashMinimizedFactory().createSet();
+		set.add("test");
+		Iterator<String> iterator = set.iterator();
+		iterator.next();
+		iterator.remove();
+		iterator.remove();
 	}
 
 	private void checkFactory(CollectionFactory<String> factory) {

@@ -28,9 +28,12 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import de.d3web.utils.EqualsUtils;
 
 /**
  * Utility class to provide useful methods for implementing and/or using MultiMaps.
@@ -112,11 +115,155 @@ public class MultiMaps {
 		}
 	}
 
+	private static final class MinimizedHashFactory<T> implements CollectionFactory<T> {
+
+		@Override
+		public Set<T> createSet() {
+			return new MinimizedHashSet<T>();
+		}
+
+		@Override
+		public <E> Map<T, E> createMap() {
+			return new HashMap<T, E>();
+		}
+	}
+
+	public static void main(String[] args) {
+		MinimizedHashSet<String> strings = new MinimizedHashSet<String>();
+		strings.add("Hallo");
+		strings.add("Du");
+		System.out.println(strings.size());
+		Iterator<String> iterator = strings.iterator();
+		System.out.println(iterator.hasNext());
+		System.out.println(iterator.next());
+		System.out.println(iterator.hasNext());
+		//iterator.next();
+		System.out.println(strings.size());
+		iterator.remove();
+		System.out.println(strings.size());
+		System.out.println(iterator.hasNext());
+		System.out.println(iterator.next());
+		iterator.remove();
+		System.out.println(strings.size());
+		System.out.println(iterator.hasNext());
+		iterator.remove();
+	}
+
+	/**
+	 * HashSet memory optimized for cases where you have a lot of them but most of the time with only one element.
+	 */
+	static class MinimizedHashSet<T> extends AbstractSet<T> {
+
+		private static Object EMPTY = new Object();
+		private Object element = EMPTY;
+		private HashSet<T> backUpSet = null;
+
+		@Override
+		public int size() {
+			if (backUpSet != null) return backUpSet.size();
+			if (element != EMPTY) return 1;
+			return 0;
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if (backUpSet != null) return backUpSet.contains(o);
+			return element != EMPTY && EqualsUtils.equals(element, o);
+		}
+
+		@Override
+		public Iterator<T> iterator() {
+			return new Iterator<T>() {
+
+				private Object current = EMPTY;
+				boolean removable = false;
+				private Iterator<T> backupIterator = backUpSet == null ? null : backUpSet.iterator();
+
+				@Override
+				public boolean hasNext() {
+					return (backupIterator != null && backupIterator.hasNext()) || (element != EMPTY && current != element);
+				}
+
+				@SuppressWarnings("unchecked")
+				@Override
+				public T next() {
+					removable = true;
+					if (backupIterator != null && backupIterator.hasNext()) {
+						current = backupIterator.next();
+						return (T) current;
+					}
+					if (current != element) {
+						current = element;
+						return (T) current;
+					}
+					removable = false;
+					throw new NoSuchElementException();
+				}
+
+				@Override
+				public void remove() {
+					if (!removable) throw new IllegalStateException();
+					removable = false;
+					if (current == element && element != EMPTY) {
+						element = EMPTY;
+						return;
+					}
+					if (backupIterator != null) backupIterator.remove();
+					if (backUpSet.size() == 1) {
+						element = backupIterator.next();
+						backUpSet = null;
+					}
+				}
+			};
+		}
+
+		@Override
+		public boolean add(T t) {
+			if (backUpSet != null) return backUpSet.add(t);
+			if (element != EMPTY && EqualsUtils.equals(element, t)) {
+				return false;
+			}
+			if (element != EMPTY && !EqualsUtils.equals(element, t)) {
+				backUpSet = new HashSet<T>(4);
+				//noinspection unchecked
+				backUpSet.add((T) element);
+				backUpSet.add(t);
+				element = EMPTY;
+				return true;
+			}
+			element = t;
+			return true;
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			if (backUpSet != null) {
+				boolean remove = backUpSet.remove(o);
+				if (backUpSet.size() == 1) {
+					element = backUpSet.iterator().next();
+					backUpSet = null;
+				}
+				return remove;
+			}
+			if (element != EMPTY && EqualsUtils.equals(element, o)) {
+				element = EMPTY;
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public void clear() {
+			backUpSet = null;
+			element = EMPTY;
+		}
+	}
+
 	@SuppressWarnings("rawtypes")
 	private static final CollectionFactory HASH = new HashFactory(16);
 
 	@SuppressWarnings("rawtypes")
-	private static final CollectionFactory HASH_MINIMIZED = new HashFactory(2);
+	private static final CollectionFactory HASH_MINIMIZED = new MinimizedHashFactory();
 
 	@SuppressWarnings("rawtypes")
 	private static final CollectionFactory LINKED = new LinkedHashFactory();
