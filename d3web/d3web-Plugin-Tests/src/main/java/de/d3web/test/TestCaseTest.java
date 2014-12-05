@@ -52,14 +52,14 @@ import de.d3web.testing.TestingUtils;
 public class TestCaseTest extends AbstractTest<TestCase> {
 
 	private static final String KB_SEARCH_STRING_DESCRIPTION = "Specifies the knowledge base with which the test case is to be tested.";
-	private static final String NUM_VALUE_OUT_OF_RANGE_DESCRIPTION
-			= "Specifies whether numerical values out of the defined ranges should be ignored or not. By default they are not ignored.";
+	private static final String SKIP_OUT_OF_RANGE_DESCRIPTION
+			= "Specifies whether values out of the defined ranges should be skipped or not. By default they are not ignored.";
 
 	public TestCaseTest() {
 		this.addParameter("KnowledgeBase", TestParameter.Type.Regex, TestParameter.Mode.Mandatory,
 				KB_SEARCH_STRING_DESCRIPTION);
-		this.addParameter(TestCaseUtils.NUM_VALUE_OUT_OF_RANGE, TestParameter.Mode.Optional,
-				NUM_VALUE_OUT_OF_RANGE_DESCRIPTION, "ignore", "set");
+		this.addParameter(TestCaseUtils.VALUE_OUT_OF_RANGE, TestParameter.Mode.Optional,
+				SKIP_OUT_OF_RANGE_DESCRIPTION, "skip", "set");
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		List<String> failedKBs = new ArrayList<String>();
 		List<String> passedKBs = new ArrayList<String>();
 
-		boolean ignoreNumValuesOutOfRange = args.length >= 2 && "ignore".equalsIgnoreCase(args[1]);
+		boolean skipValuesOutOfRange = args.length >= 2 && "skip".equalsIgnoreCase(args[1]);
 
 		for (KnowledgeBase kb : kbs) {
 
@@ -87,7 +87,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 			Session session = SessionFactory.createSession(kb, testCase.getStartDate());
 			boolean failed = false;
 			for (Date date : testCase.chronology()) {
-				Message applyMessage = applyFinding(testCase, session, date, ignoreNumValuesOutOfRange);
+				Message applyMessage = applyFinding(testCase, session, date, skipValuesOutOfRange);
 				if (applyMessage != null) return applyMessage;
 				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
 					String time = "(time ";

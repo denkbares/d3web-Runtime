@@ -60,7 +60,7 @@ import de.d3web.testcase.prefix.PrefixedTestCase;
  */
 public class TestCaseUtils {
 
-	public static final String NUM_VALUE_OUT_OF_RANGE = "NumValueOutOfRange";
+	public static final String VALUE_OUT_OF_RANGE = "ValueOutOfRange";
 
 	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
 
@@ -81,23 +81,22 @@ public class TestCaseUtils {
 	 * Applies the findings of the specified {@link TestCase} at the specified
 	 * {@link Date} to the {@link Session}
 	 *
-	 * @param session                  Session on which the Findings should be applied
-	 * @param testCase                 specified TestCase
-	 * @param date                     specified Date
-	 * @param ignoreNumValueOutOfRange if this is set to true, findings that try to set values outside the defined
-	 *                                 range of a
-	 *                                 question are ignored
+	 * @param session             Session on which the Findings should be applied
+	 * @param testCase            specified TestCase
+	 * @param date                specified Date
+	 * @param skipValueOutOfRange if this is set to true, findings that try to set values outside the defined
+	 *                            range of a question are ignored
 	 * @created 26.11.2014
 	 */
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public static void applyFindings(Session session, TestCase testCase, Date date, boolean ignoreNumValueOutOfRange) {
+	public static void applyFindings(Session session, TestCase testCase, Date date, boolean skipValueOutOfRange) {
 		Blackboard blackboard = session.getBlackboard();
 		session.getPropagationManager().openPropagation(date.getTime());
 		for (Finding f : testCase.getFindings(date, session.getKnowledgeBase())) {
 			List<String> errors = new LinkedList<String>();
 			checkValues(errors, f.getTerminologyObject(), f.getValue());
 			if (errors.isEmpty()) {
-				if (ignoreNumValueOutOfRange) {
+				if (skipValueOutOfRange) {
 					NumericalInterval numericalInterval = f.getTerminologyObject()
 							.getInfoStore()
 							.getValue(BasicProperties.QUESTION_NUM_RANGE);
