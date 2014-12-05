@@ -114,8 +114,8 @@ public class TestParser {
 		// check ignores and create error messages if necessary
 		String[][] ignores = new String[ignoreParameters.size()][];
 		int index = 0;
-		for (String ingore : ignoreParameters) {
-			List<String> args = splitParameters(ingore);
+		for (String ignore : ignoreParameters) {
+			List<String> args = splitParameters(ignore);
 			String[] array = args.toArray(new String[args.size()]);
 			ignores[index++] = array;
 			ignoreCheckResults.add(test.checkIgnore(array));
