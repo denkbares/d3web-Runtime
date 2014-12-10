@@ -5,7 +5,6 @@
     <groupId>de.uniwue.d3web</groupId>
     <version>0.2-SNAPSHOT</version>
   </parent>
-  <groupId>de.uniwue.d3web</groupId>
   <artifactId>d3web-Plugin-Interview</artifactId>
   <name>d3web-Plugin-Interview</name>
   <version>0.2-SNAPSHOT</version>
@@ -22,7 +21,6 @@
 							<goal>build-classpath</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/dependencies</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>

@@ -8,9 +8,8 @@
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-Plugin-DiaFlux</artifactId>
-	<name>d3web Plugin: DiaFlux</name>
+	<name>d3web-Plugin-DiaFlux</name>
 	<version>0.2-SNAPSHOT</version>
 
 	<build>
@@ -26,7 +25,6 @@
 							<goal>build-classpath</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/dependencies</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
