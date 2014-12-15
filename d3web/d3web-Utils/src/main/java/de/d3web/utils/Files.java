@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -155,19 +156,40 @@ public class Files {
 		return Streams.getTextAndClose(new FileInputStream(file));
 	}
 
+	/**
+	 * Returns the lines of the specified file as a list of Strings.
+	 *
+	 * @param file the input file to read from
+	 * @return the lines of the file
+	 * @throws IOException if the specified file cannot be read completely
+	 * @created 01.10.2013
+	 */
 	public static List<String> getLines(File file) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(file));
+		Reader reader = new FileReader(file);
 		try {
-			List<String> result = new LinkedList<String>();
-			String line;
-			while ((line = br.readLine()) != null) {
-				result.add(line);
-			}
-			return result;
+			return getLines(reader);
 		}
 		finally {
-			br.close();
+			reader.close();
 		}
+	}
+
+	/**
+	 * Returns the lines of the specified file as a list of Strings.
+	 *
+	 * @param reader the input file to read from
+	 * @return the lines of the file
+	 * @throws IOException if the specified file cannot be read completely
+	 * @created 15.12.2014
+	 */
+	public static List<String> getLines(Reader reader) throws IOException {
+		BufferedReader br = new BufferedReader(reader);
+		List<String> result = new LinkedList<String>();
+		String line;
+		while ((line = br.readLine()) != null) {
+			result.add(line);
+		}
+		return result;
 	}
 
 	public static Matrix<String> getCSVCells(File file) throws IOException {
