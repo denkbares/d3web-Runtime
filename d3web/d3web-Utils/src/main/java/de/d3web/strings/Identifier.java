@@ -40,8 +40,20 @@ public class Identifier implements Comparable<Identifier> {
 	private String externalForm = null;
 
 	private String externalFormLowerCase = null;
+	private boolean caseSensitive;
 
 	public Identifier(String... pathElements) {
+		this(false, pathElements);
+	}
+
+	/**
+	 * Creates a new identifier with the given path elements.
+	 *
+	 * @param caseSensitive decides whether the identifier should match case sensitive or not
+	 * @param pathElements the elements used
+	 */
+	public Identifier(boolean caseSensitive, String... pathElements) {
+		this.caseSensitive = caseSensitive;
 		if (pathElements.length >= 1 && pathElements[0] == null) {
 			throw new IllegalArgumentException("Cannot create TermIdentifier with null");
 		}
@@ -126,7 +138,11 @@ public class Identifier implements Comparable<Identifier> {
 
 	@Override
 	public int hashCode() {
-		return toExternalFormLowerCase().hashCode();
+		if (isCaseSensitive()) {
+			return toExternalForm().hashCode();
+		} else {
+			return toExternalFormLowerCase().hashCode();
+		}
 	}
 
 	@Override
@@ -135,7 +151,26 @@ public class Identifier implements Comparable<Identifier> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		Identifier other = (Identifier) obj;
-		return this.toExternalFormLowerCase().equals(other.toExternalFormLowerCase());
+		if (isCaseSensitive()) {
+			return this.toExternalForm().equals(other.toExternalForm());
+		} else {
+			return this.toExternalFormLowerCase().equals(other.toExternalFormLowerCase());
+		}
+	}
+
+	/**
+	 * Returns whether this Identifier should match case sensitive or not.
+	 */
+	public boolean isCaseSensitive() {
+		return caseSensitive;
+	}
+
+	/**
+	 * Decides whether this Identifier should match case sensitive or not.
+	 */
+	public void setCaseSensitive(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+		if (caseSensitive) this.externalFormLowerCase = null; // no longer needed
 	}
 
 	/**
