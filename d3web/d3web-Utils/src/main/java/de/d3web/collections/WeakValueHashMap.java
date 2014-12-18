@@ -71,6 +71,11 @@ public class WeakValueHashMap<K, V> extends AbstractMap<K, V> {
 							}
 						};
 					}
+
+					@Override
+					public void remove() {
+						iterator.remove();
+					}
 				};
 			}
 
