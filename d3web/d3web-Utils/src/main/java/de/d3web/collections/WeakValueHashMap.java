@@ -38,6 +38,76 @@ import java.util.Set;
  */
 public class WeakValueHashMap<K, V> extends AbstractMap<K, V> {
 
+	/* Hash table mapping keys to it weak values references */
+	private Map<K, WeakValueRef<K, V>> hash;
+
+	/* Reference queue for cleared weak values references */
+	private ReferenceQueue<V> queue = new ReferenceQueue<V>();
+
+	/**
+	 * This method does the trick. It removes all invalidated entries from the map, by removing
+	 * those entries whose values have been discarded. We must be a little careful here, because the
+	 * key's value might be already overwritten by some other (newer) value. In this case the key
+	 * must remain in the hash table.
+	 */
+	private void processQueue() {
+		while (true) {
+			WeakValueRef reference = (WeakValueRef) queue.poll();
+			if (reference == null) break;
+			// only remove if the stored value in the hash-table is still the queued one
+			@SuppressWarnings("unchecked") K key = (K) reference.key;
+			if (reference == hash.get(key)) {
+				hash.remove(key);
+			}
+		}
+	}
+
+	/**
+	 * Constructs a new, empty <code>WeakValueHashMap</code> with the given initial capacity and the
+	 * given load factor.
+	 *
+	 * @param initialCapacity The initial capacity of the <code>WeakHashMap</code>
+	 * @param loadFactor The load factor of the <code>WeakHashMap</code>
+	 * @throws IllegalArgumentException If the initial capacity is less than zero, or if the load
+	 * factor is nonpositive
+	 */
+	public WeakValueHashMap(int initialCapacity, float loadFactor) {
+		hash = new HashMap<K, WeakValueRef<K, V>>(initialCapacity, loadFactor);
+	}
+
+	/**
+	 * Constructs a new, empty <code>WeakValueHashMap</code> with the given initial capacity and the
+	 * default load factor, which is <code>0.75</code>.
+	 *
+	 * @param initialCapacity The initial capacity of the <code>WeakHashMap</code>
+	 * @throws IllegalArgumentException If the initial capacity is less than zero
+	 */
+	public WeakValueHashMap(int initialCapacity) {
+		this(initialCapacity, 0.75f);
+	}
+
+	/**
+	 * Constructs a new, empty <code>WeakValueHashMap</code> with the default initial capacity and
+	 * the default load factor, which is <code>0.75</code>.
+	 */
+	public WeakValueHashMap() {
+		this(16);
+	}
+
+	/**
+	 * Constructs a new <code>WeakValueHashMap</code> with the same mappings as the specified
+	 * <tt>Map</tt>.  The <tt>HashMap</tt> is created with default load factor (0.75) and an initial
+	 * capacity sufficient to hold the mappings in the specified <tt>Map</tt>.
+	 *
+	 * @param map the map whose mappings are to be placed in this map
+	 * @since 1.3
+	 */
+	public WeakValueHashMap(Map<? extends K, ? extends V> map) {
+		this(Math.max(2 * map.size(), 11), 0.75f);
+		putAll(map);
+	}
+
+	@Override
 	public Set<Entry<K, V>> entrySet() {
 		processQueue();
 		final Set<Entry<K, WeakValueRef<K, V>>> entries = hash.entrySet();
@@ -84,71 +154,6 @@ public class WeakValueHashMap<K, V> extends AbstractMap<K, V> {
 				return entries.size();
 			}
 		};
-	}
-
-	/* Hash table mapping WeakKeys to values */
-	private Map<K, WeakValueRef<K, V>> hash;
-
-	/* Reference queue for cleared WeakKeys */
-	private ReferenceQueue<V> queue = new ReferenceQueue<V>();
-
-	// Remove all invalidated entries from the map:
-	// remove all entries whose values have been discarded
-	private void processQueue() {
-		while (true) {
-			WeakValueRef reference = (WeakValueRef) queue.poll();
-			if (reference == null) break;
-			// only remove if the stored value in the hash-table is still the queued one
-			@SuppressWarnings("unchecked") K key = (K) reference.key;
-			if (reference == hash.get(key)) {
-				hash.remove(key);
-			}
-		}
-	}
-
-	/**
-	 * Constructs a new, empty <code>WeakValueHashMap</code> with the given initial capacity and the
-	 * given load factor.
-	 *
-	 * @param initialCapacity The initial capacity of the <code>WeakHashMap</code>
-	 * @param loadFactor The load factor of the <code>WeakHashMap</code>
-	 * @throws IllegalArgumentException If the initial capacity is less than zero, or if the load
-	 * factor is nonpositive
-	 */
-	public WeakValueHashMap(int initialCapacity, float loadFactor) {
-		hash = new HashMap<K, WeakValueRef<K, V>>(initialCapacity, loadFactor);
-	}
-
-	/**
-	 * Constructs a new, empty <code>WeakValueHashMap</code> with the given initial capacity and the
-	 * default load factor, which is <code>0.75</code>.
-	 *
-	 * @param initialCapacity The initial capacity of the <code>WeakHashMap</code>
-	 * @throws IllegalArgumentException If the initial capacity is less than zero
-	 */
-	public WeakValueHashMap(int initialCapacity) {
-		hash = new HashMap<K, WeakValueRef<K, V>>(initialCapacity);
-	}
-
-	/**
-	 * Constructs a new, empty <code>WeakValueHashMap</code> with the default initial capacity and
-	 * the default load factor, which is <code>0.75</code>.
-	 */
-	public WeakValueHashMap() {
-		hash = new HashMap<K, WeakValueRef<K, V>>();
-	}
-
-	/**
-	 * Constructs a new <code>WeakValueHashMap</code> with the same mappings as the specified
-	 * <tt>Map</tt>.  The <tt>HashMap</tt> is created with default load factor (0.75) and an initial
-	 * capacity sufficient to hold the mappings in the specified <tt>Map</tt>.
-	 *
-	 * @param map the map whose mappings are to be placed in this map
-	 * @since 1.3
-	 */
-	public WeakValueHashMap(Map<? extends K, ? extends V> map) {
-		this(Math.max(2 * map.size(), 11), 0.75f);
-		putAll(map);
 	}
 
 	/**
@@ -226,10 +231,22 @@ public class WeakValueHashMap<K, V> extends AbstractMap<K, V> {
 		hash.clear();
 	}
 
+	/**
+	 * This enclosing map implementation stores only weak references to the values. Thus the values
+	 * can be garbage collected. To be able to also remove the entries from the map after the value
+	 * has been discarded, we use a trick: We derive our own weak reference that also knows the key
+	 * this reference is stored for. By garbage collecting the value, the garbage collector adds
+	 * this extended weak references to a queue. When processing the queue (see method
+	 * processQueue), we can remove these keys from the map.
+	 *
+	 * @param <K> the key type stored in the enclosing map
+	 * @param <V> the value type stored in the enclosing map
+	 * @see #processQueue()
+	 */
 	private static class WeakValueRef<K, V> extends WeakReference<V> {
-		public K key;
+		public final K key;
 
-		private WeakValueRef(K key, V val, ReferenceQueue<V> q) {
+		public WeakValueRef(K key, V val, ReferenceQueue<V> q) {
 			super(val, q);
 			this.key = key;
 		}
