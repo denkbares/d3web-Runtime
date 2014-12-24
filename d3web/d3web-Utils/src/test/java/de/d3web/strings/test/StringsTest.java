@@ -21,6 +21,7 @@ package de.d3web.strings.test;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -28,11 +29,10 @@ import de.d3web.strings.QuoteCharSet;
 import de.d3web.strings.Strings;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
- * This test does only test methods which are not used very frequently and are therefore not tested by other tests
- * already (like Headless-App-Tests).
+ * This test does only test methods which are not used very frequently and are therefore not tested
+ * by other tests already (like Headless-App-Tests).
  *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 18.04.2013
@@ -151,6 +151,16 @@ public class StringsTest {
 	}
 
 	@Test
+	public void parseLocale() {
+		Locale[] locales = Locale.getAvailableLocales();
+		for (Locale locale : locales) {
+			// TODO: java 6 does not support scripts, so Strings also does not. Remove this skip operation when migrate to java 7
+			if (locale.toString().contains("#")) continue;
+			assertEquals(locale, Strings.parseLocale(locale.toString()));
+		}
+	}
+
+	@Test
 	public void stackTrace() {
 		String expected = "java.lang.NullPointerException: test";
 		assertTrue(Strings.stackTrace(new NullPointerException("test")).startsWith(expected));
@@ -191,7 +201,7 @@ public class StringsTest {
 		assertEquals(-1, Strings.indexOf("", "test"));
 		assertEquals(0, Strings.indexOf("test", "test"));
 		assertEquals(-1, Strings.indexOf("tes", "test"));
-		assertEquals(3, Strings.indexOf("as\"test\"das",  "test"));
+		assertEquals(3, Strings.indexOf("as\"test\"das", "test"));
 		assertEquals(2, Strings.indexOf("astestdas", "test"));
 		assertEquals(4, Strings.indexOf("as\\\"test\"das", "test"));
 		assertEquals(2, Strings.indexOf("a\"test\"s\\\"test\"das", "test"));
@@ -234,7 +244,7 @@ public class StringsTest {
 		assertEquals(2, Strings.indexOf("astestdas", both, "test"));
 		assertEquals(4, Strings.indexOf("as\\\"test\"das", both, "test"));
 		assertEquals(10, Strings.indexOf("a\"test\"s\\\"test\"das", both, "test"));
-		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das",both, "test", "a"));
+		assertEquals(0, Strings.indexOf("a\"test\"s\\\"test\"das", both, "test", "a"));
 
 		assertEquals(-1, Strings.indexOf("aste//stdas", both, "test"));
 		assertEquals(-1, Strings.indexOf("aste//hitestdas", both, "test"));

@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -962,8 +963,7 @@ public class Strings {
 	 * Moves the given start and end indices together until they point to the boundaries of a
 	 * trimmed string inside the text.
 	 *
-	 * @return a pair of integers representing start and end of trimmed string inside the given
-	 * text
+	 * @return a pair of integers representing start and end of trimmed string inside the given text
 	 */
 	public static Pair<Integer, Integer> trim(String text, int start, int end) {
 		//noinspection unchecked
@@ -1428,7 +1428,8 @@ public class Strings {
 	}
 
 	/**
-	 * Util method to get a String from a double, where the decimal point is omitted in case it is zero.
+	 * Util method to get a String from a double, where the decimal point is omitted in case it is
+	 * zero.
 	 *
 	 * @param d is the double to trim
 	 * @return trimmed {@link String} representation of the {@link Double}
@@ -1546,6 +1547,36 @@ public class Strings {
 		out.close();
 	}
 
+	private static final Pattern LOCALE_PATTERN = Pattern.compile("(\\w\\w)(?:_(\\w\\w)(?:_#([^_]*))?(?:_(\\p{Graph}+))?)?");
+
+	/**
+	 * Parses a locale from a locale string representation. This is the inverse method to {@link
+	 * java.util.Locale#toString()}. If the specified text is null or cannot be parsed, null is
+	 * returned. If the specified text is empty, the root locale is returned. Leading or trailing
+	 * whitespaces will be ignored by this method.
+	 *
+	 * @param text the locale's text representation to be parsed
+	 * @return the parsed locale
+	 */
+	public static Locale parseLocale(String text) {
+		if (text == null) return null;
+		text = text.trim();
+		if (text.isEmpty()) return Locale.ROOT;
+		Matcher matcher = LOCALE_PATTERN.matcher(text);
+		if (matcher.matches()) {
+			String lang = matcher.group(1);
+			String country = matcher.group(2);
+			String variant = matcher.group(4);
+			// TODO: also use script to create locale (use LocaleBuilder) as soon as Java 7 is supported.
+			// String script = matcher.group(3);
+			return new Locale(
+					lang == null ? "" : lang,
+					country == null ? "" : country,
+					variant == null ? "" : variant);
+		}
+		return null;
+	}
+
 	/**
 	 * Returns the enum constant referenced by the specified enum name. This method is very similar
 	 * to T.value(name), desprite that it is case insensitive. If the specified name cannot be
@@ -1601,8 +1632,7 @@ public class Strings {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Enum<T>> T parseEnum(String name, T defaultValue) {
-		return parseEnum(name, (Class<T>) defaultValue.getClass(), defaultValue);
-
+		return (T) parseEnum(name, (Class<Enum>) defaultValue.getClass(), defaultValue);
 	}
 
 	private static <T extends Enum<T>> T parseEnum(String name, Class<T> enumType, T defaultValue) {
