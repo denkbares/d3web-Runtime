@@ -43,6 +43,7 @@ public class CountingSetTest {
 
 	@Test
 	public void toStringTest() {
+		@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 		Set<String> s = new HashSet<String>();
 		s.add("foo");
 		set.add("foo");
