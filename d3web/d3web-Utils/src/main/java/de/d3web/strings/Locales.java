@@ -56,6 +56,22 @@ public class Locales {
 	 * @param available the available locales
 	 * @return the best matching locale
 	 */
+	public static Locale findBestLocale(Locale preferred, Locale... available) {
+		return findBestLocale(preferred, Arrays.asList(available));
+	}
+
+	/**
+	 * Returns the best matching locale out of a collection of available locales. It returns the
+	 * ROOT locale if no locales matches the available locales, but the root locales is included. It
+	 * returns the first locale of the specified available locales if neither any locale matches the
+	 * preferred locale, not the ROOT locale is included.
+	 * <p/>
+	 * If the available locales are null or empty, null is returned.
+	 *
+	 * @param preferred the preferred locale to be used
+	 * @param available the available locales
+	 * @return the best matching locale
+	 */
 	public static Locale findBestLocale(Locale preferred, Collection<Locale> available) {
 		if (available == null || available.isEmpty()) return null;
 
@@ -68,6 +84,13 @@ public class Locales {
 					Arrays.asList(new Locale.LanguageRange(preferred.toLanguageTag())),
 					available);
 			if (best != null) return best;
+
+			// if not try if any locale matches the language
+			for (Locale locale : available) {
+				if (locale.getLanguage().equalsIgnoreCase(preferred.getLanguage())) {
+					return locale;
+				}
+			}
 		}
 
 		// otherwise use root locale or any if not available
