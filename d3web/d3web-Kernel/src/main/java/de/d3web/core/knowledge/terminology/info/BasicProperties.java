@@ -23,6 +23,7 @@ import java.util.Date;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 
@@ -152,6 +153,35 @@ public class BasicProperties {
 	 */
 	public static final Property<AbnormalityNum> ABNORMALITIY_NUM = Property.getProperty(
 			"abnormalityNum", AbnormalityNum.class);
+
+	/**
+	 * Allows to specify the desired display type of date questions.
+	 *
+	 * @return DateDisplay
+	 */
+	public static final Property<DateDisplay> DATE_DISPLAY = Property.getProperty("dateDisplay", DateDisplay.class);
+
+	/**
+	 * Return the desired display type for the specified date question.
+	 * The date display type is defined by the property "dateDisplay" for the date question.
+	 * If there is no such property, the "dateDisplay" of the questions
+	 * knowledge base object will be used as the default value. If there is no
+	 * such knowledge base specific default value, the type DATE is used.
+	 *
+	 * @param question the question to get the date format for
+	 * @return the questions date format
+	 * @created 20.08.2012
+	 */
+	public static DateDisplay getDateDisplay(QuestionDate question) {
+		DateDisplay prompt = question.getInfoStore().getValue(DATE_DISPLAY);
+		if (prompt == null) {
+			prompt = question.getKnowledgeBase().getInfoStore().getValue(DATE_DISPLAY);
+		}
+		if (prompt == null) {
+			prompt = DateDisplay.DATE;
+		}
+		return prompt;
+	}
 
 	public static boolean isAbstract(Question question) {
 		Boolean value = question.getInfoStore().getValue(ABSTRACTION_QUESTION);

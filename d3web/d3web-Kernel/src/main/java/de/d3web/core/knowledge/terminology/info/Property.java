@@ -31,15 +31,16 @@ import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
+import de.d3web.strings.Strings;
 import de.d3web.utils.Log;
 
 /**
  * Represents a Property. Properties can only be created by extending the
  * Extensionpoint "Property"
- * 
+ *
  * For more information about the xml markup, see plugin.xml of
  * d3web-Plugin-ExtensionPoints
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 06.10.2010
  */
@@ -104,7 +105,7 @@ public final class Property<T> {
 	 * ). In this case, the <code>Property.getProperty()</code> will be called
 	 * while initializing the storedClass and not been able to find the
 	 * property.
-	 * 
+	 *
 	 * @created 28.10.2010
 	 */
 	@SuppressWarnings("unchecked")
@@ -156,7 +157,7 @@ public final class Property<T> {
 	 * <p>
 	 * When specifying the default value in the plugin.xml, the stored class
 	 * must define the prerequisites defined in {@link #parseValue(String)}.
-	 * 
+	 *
 	 * @created 31.10.2010
 	 * @return the default value of this property
 	 * @see #setDefaultValue(T)
@@ -175,7 +176,7 @@ public final class Property<T> {
 	 * Instead of using this method, the default value may also be specified in
 	 * the plugin.xml using the "default" attribute when extending the
 	 * "property" extension point.
-	 * 
+	 *
 	 * @created 31.10.2010
 	 * @param defaultValue
 	 */
@@ -185,7 +186,7 @@ public final class Property<T> {
 
 	/**
 	 * Returns the class of all data to be stored in this property.
-	 * 
+	 *
 	 * @created 28.10.2010
 	 * @return the class of the data stored in this property
 	 */
@@ -196,16 +197,16 @@ public final class Property<T> {
 
 	/**
 	 * Returns the Property with the specified name.
-	 * 
+	 *
 	 * This method will not generate Properties lazy, it only returns Properties
 	 * defined in a plugin. The class specified has to be identical with the
 	 * plugin definition, otherwise an ClassCastException is thrown.
-	 * 
+	 *
 	 * @created 07.10.2010
 	 * @param name specified name of the {@link Property}
 	 * @return {@link Property} if a property with this name is defined, null
 	 *         otherwise
-	 * 
+	 *
 	 * @throws NoSuchElementException if there is no property defined with that
 	 *         name
 	 * @throws ClassCastException if the specified class instance is not
@@ -225,15 +226,15 @@ public final class Property<T> {
 
 	/**
 	 * Returns the Property with the specified name.
-	 * 
+	 *
 	 * This method will not generate Properties lazy, it only returns Properties
 	 * defined in a Plugin.
-	 * 
+	 *
 	 * @created 07.10.2010
 	 * @param name specified name of the {@link Property}
 	 * @return {@link Property} if a property with this name is defined, null
 	 *         otherwise
-	 * 
+	 *
 	 * @throws NoSuchElementException if there is no property defined with that
 	 *         name
 	 */
@@ -251,7 +252,7 @@ public final class Property<T> {
 
 	/**
 	 * Dynamically casts the specified value to the type of the stored value.
-	 * 
+	 *
 	 * @created 28.10.2010
 	 * @param o
 	 * @return
@@ -276,8 +277,8 @@ public final class Property<T> {
 	 * there is any checked exception during parsing, an
 	 * IllegalArgumentException is thrown, containing the original exception as
 	 * its cause.
-	 * 
-	 * 
+	 *
+	 *
 	 * @created 31.10.2010
 	 * @param string the string to be parsed
 	 * @return the resulting value
@@ -290,6 +291,14 @@ public final class Property<T> {
 		// instead of valueOf(String)
 		Class<T> clazz = getStoredClass();
 		if (String.class.isAssignableFrom(clazz)) return castToStoredValue(string);
+		// lets parse enums case insensitive
+		if (Enum.class.isAssignableFrom(clazz)) {
+			Enum value = Strings.parseEnum(string, (Class) clazz);
+			if (value == null) {
+				throw new IllegalArgumentException(string + " is not a valid value for property " + getName());
+			}
+			return castToStoredValue(value);
+		}
 
 		// find method
 		try {
@@ -318,7 +327,7 @@ public final class Property<T> {
 	/**
 	 * Returns if this property have the ability to parse String representations
 	 * into a value of this property.
-	 * 
+	 *
 	 * @created 02.11.2010
 	 * @return if this property can be parsed from a String
 	 */
@@ -328,7 +337,7 @@ public final class Property<T> {
 		// instead of valueOf(String)
 		Class<T> clazz = getStoredClass();
 		if (String.class.isAssignableFrom(clazz)) return true;
-
+		if (Enum.class.isAssignableFrom(clazz)) return true;
 		// find method and check for public access
 		try {
 			Method method = clazz.getMethod("valueOf", String.class);
@@ -371,7 +380,7 @@ public final class Property<T> {
 	 * After this call there will be no difference when accessing the property
 	 * by its original name or its synonym name. This method may be used to
 	 * provide backward compatibility when renaming properties.
-	 * 
+	 *
 	 * @created 20.08.2012
 	 * @param otherName the synonym name of the property (usually the old /
 	 *        original name of the property)
@@ -387,7 +396,7 @@ public final class Property<T> {
 
 	/**
 	 * Returns a Collection of all plugged Properties
-	 * 
+	 *
 	 * @created 07.10.2010
 	 * @return Collection of all plugged Properties
 	 */

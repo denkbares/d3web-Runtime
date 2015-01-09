@@ -204,5 +204,15 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum" />
 	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="dateDisplay">
+		<parameter id="name" value="dateDisplay" />
+		<parameter id="description" value="Represents the display type of date questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.DateDisplay" />
+	</extension>
 	
 </plugin>
