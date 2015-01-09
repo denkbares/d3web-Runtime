@@ -178,7 +178,7 @@ public class BasicProperties {
 			prompt = question.getKnowledgeBase().getInfoStore().getValue(DATE_DISPLAY);
 		}
 		if (prompt == null) {
-			prompt = DateDisplay.DATE;
+			prompt = DateDisplay.date;
 		}
 		return prompt;
 	}
