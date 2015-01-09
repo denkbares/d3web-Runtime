@@ -36,12 +36,29 @@ public class LocalesTest {
 
 	@Test
 	public void bestMatch() {
+		// match existing one
+		Assert.assertEquals(Locale.GERMAN, Locales.findBestLocale(Locale.GERMAN,
+				Locale.GERMAN, Locale.ENGLISH, Locale.ROOT));
+		Assert.assertEquals(Locale.ENGLISH, Locales.findBestLocale(Locale.ENGLISH,
+				Locale.GERMANY, Locale.ENGLISH, Locale.ROOT));
+		Assert.assertEquals(Locale.ROOT, Locales.findBestLocale(Locale.ROOT,
+				Locale.GERMANY, Locale.ENGLISH, Locale.ROOT));
+		Assert.assertEquals(Locale.GERMAN, Locales.findBestLocale(Locale.GERMAN,
+				Locale.GERMAN, Locale.GERMANY, new Locale("de", "DE", "platt"), Locale.ENGLISH, Locale.ROOT));
+		Assert.assertEquals(Locale.GERMANY, Locales.findBestLocale(Locale.GERMANY,
+				Locale.GERMAN, Locale.GERMANY, new Locale("de", "DE", "platt"), Locale.ENGLISH, Locale.ROOT));
+
+		// match same language
 		Assert.assertEquals(Locale.GERMAN, Locales.findBestLocale(Locale.GERMANY,
 				Locale.GERMAN, Locale.ENGLISH, Locale.ROOT));
 		Assert.assertEquals(Locale.GERMANY, Locales.findBestLocale(Locale.GERMAN,
 				Locale.GERMANY, Locale.ENGLISH, Locale.ROOT));
+
+		// match root one if preferred is not contained, but root is
 		Assert.assertEquals(Locale.ROOT, Locales.findBestLocale(Locale.CHINESE,
 				Locale.GERMANY, Locale.ENGLISH, Locale.ROOT));
+
+		// match first one if preferred is not contained, and root is also not
 		Assert.assertEquals(Locale.GERMANY, Locales.findBestLocale(Locale.CHINESE,
 				Locale.GERMANY, Locale.ENGLISH));
 	}
