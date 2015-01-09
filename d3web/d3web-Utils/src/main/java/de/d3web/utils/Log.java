@@ -259,8 +259,8 @@ public class Log {
 			Log.extractor = extractor;
 		}
 		catch (Exception e) {
-			String message = "method " + method + " cannot be initialized";
-			Logger.getLogger(Log.class.getName()).log(Level.WARNING, message, e);
+			String message = "method " + method + " cannot be initialized. "+e.getMessage();
+			Logger.getLogger(Log.class.getName()).log(Level.WARNING, message);
 			throw new IllegalStateException(message, e);
 		}
 	}
