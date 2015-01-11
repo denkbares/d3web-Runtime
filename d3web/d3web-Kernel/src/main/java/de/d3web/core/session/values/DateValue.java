@@ -33,7 +33,7 @@ import de.d3web.core.session.Value;
 
 /**
  * This class stores a date assigned as value to a {@link QuestionDate}.
- * 
+ *
  * @author joba (denkbares GmbH), Sebastian Furth
  * @created 07.04.2010
  */
@@ -51,6 +51,7 @@ public class DateValue implements QuestionValue {
 	 * saving DateValues.
 	 */
 	private static final List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
+
 	static {
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
@@ -66,14 +67,19 @@ public class DateValue implements QuestionValue {
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm"));
 		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
+		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"));
+		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
+		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm"));
+		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy"));
 		// can parse Date.toString()
 		dateFormats.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
 	}
+
 	private final Date value;
 
 	/**
 	 * Constructs a new DateValue
-	 * 
+	 *
 	 * @param value the Date for which a new DateValue should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -88,6 +94,7 @@ public class DateValue implements QuestionValue {
 	 * The format returned here should be used when saving DateValues to be able
 	 * to parse the date with the static method
 	 * {@link DateValue#createDateValue(String)}. Be aware that {
+	 *
 	 * @link SimpleDateFormat}s are not thread safe.
 	 */
 	public static SimpleDateFormat getDefaultDateFormat() {
@@ -98,11 +105,11 @@ public class DateValue implements QuestionValue {
 	 * Creates a {@link DateValue} from a given String. To be parseable, the
 	 * String has to come in one of the available {@link DateFormat} from
 	 * {@link DateValue#getAllowedFormatStrings()}
-	 * 
-	 * @created 23.10.2013
+	 *
 	 * @param valueString the value to parse
 	 * @return the parsed DateValue
 	 * @throws IllegalArgumentException if the given string cannot be parsed
+	 * @created 23.10.2013
 	 */
 	public static DateValue createDateValue(String valueString) throws IllegalArgumentException {
 		for (SimpleDateFormat dateFormat : dateFormats) {
@@ -151,11 +158,30 @@ public class DateValue implements QuestionValue {
 		synchronized (DATE_FORMAT) {
 			dateString = DATE_FORMAT.format(value);
 		}
+		dateString = trimTime(dateString);
+
+		return dateString;
+	}
+
+	/**
+	 * If the given date string ends with trailing zeros from the time, those zeros will
+	 * be trimmed correctly. Trims milli seconds, seconds, and hours with minutes.<p/>
+	 * Example:
+	 * <ul>
+	 * <li>2000-01-01 15:44:32.000 -> 2000-01-01 15:44:32</li>
+	 * <li>2000-01-01 15:44:00.000 -> 2000-01-01 15:44</li>
+	 * <li>2000-01-01 00:00:00.000 -> 2000-01-01</li>
+	 * </ul>
+	 *
+	 * @param dateString the date verbalization to trim
+	 * @return a trimmed version of the date string
+	 */
+	public static String trimTime(String dateString) {
 		// we remove trailing zero milliseconds, seconds, minutes and hours,
 		// because it does not add any information to the date string and can
 		// still be parsed by the available formats
-		dateString = dateString.replaceAll(".000$", "")
-				.replaceAll(":00$", "").replaceAll(" 00:00$", "");
+		dateString = dateString.replaceAll("[.:]000$", "")
+				.replaceAll("(?<=\\d\\d:\\d\\d):00$", "").replaceAll(" 00:00$", "");
 		return dateString;
 	}
 
@@ -195,6 +221,6 @@ public class DateValue implements QuestionValue {
 			throw new IllegalArgumentException();
 		}
 		return value.compareTo(((DateValue) o).value);
-	} 
+	}
 
 }

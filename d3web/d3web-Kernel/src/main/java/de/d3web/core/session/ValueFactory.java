@@ -21,6 +21,7 @@
 package de.d3web.core.session;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.d3web.core.knowledge.terminology.Choice;
@@ -49,13 +50,13 @@ public final class ValueFactory {
 	 * Creates a {@link Value} for a {@link Question}. If the given String is no
 	 * valid representation for a Value for the given Question, <tt>null</tt>
 	 * will be returned.
-	 * 
-	 * @created 11.08.2012
-	 * @param question the question for which the {@link Value} is created
+	 *
+	 * @param question    the question for which the {@link Value} is created
 	 * @param valueString a String representation of the {@link Value} to be
-	 *        created
+	 *                    created
+	 * @created 11.08.2012
 	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
-	 *          representation for a Value for the given Question
+	 * representation for a Value for the given Question
 	 */
 	public static Value createValue(Question question, String valueString) {
 		return createValue(question, valueString, null);
@@ -68,15 +69,15 @@ public final class ValueFactory {
 	 * In case of a {@link QuestionMC}, the new Value is merged with the
 	 * existing Value (if possible). The existing value is allowed to be
 	 * <tt>null</tt>!
-	 * 
-	 * @created 11.08.2012
-	 * @param question the question for which the {@link Value} is created
-	 * @param valueString a String representation of the {@link Value} to be
-	 *        created
+	 *
+	 * @param question      the question for which the {@link Value} is created
+	 * @param valueString   a String representation of the {@link Value} to be
+	 *                      created
 	 * @param existingValue the existing value for the question to be merged in
-	 *        case of a QuestionMC
+	 *                      case of a QuestionMC
+	 * @created 11.08.2012
 	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
-	 *          representation for a Value for the given Question
+	 * representation for a Value for the given Question
 	 */
 	public static Value createValue(Question question, String valueString, Value existingValue) {
 
@@ -108,8 +109,13 @@ public final class ValueFactory {
 			try {
 				value = DateValue.createDateValue(valueString);
 			}
-			catch (IllegalArgumentException e) {
-				// null will be returned
+			catch (IllegalArgumentException ignore) {
+				try {
+					value = new DateValue(new Date(Long.parseLong(valueString)));
+				}
+				catch (NumberFormatException e) {
+					// null will be returned
+				}
 			}
 		}
 		return value;
@@ -122,15 +128,15 @@ public final class ValueFactory {
 	 * In case of a {@link QuestionMC}, the new Value is merged with the
 	 * existing Value (if possible). The existing value is allowed to be
 	 * <tt>null</tt>!
-	 * 
-	 * @created 11.08.2012
-	 * @param question the question for which the {@link Value} is created
-	 * @param valueString a String representation of the {@link Value} to be
-	 *        created
+	 *
+	 * @param question      the question for which the {@link Value} is created
+	 * @param valueString   a String representation of the {@link Value} to be
+	 *                      created
 	 * @param existingValue the existing value for the question to be merged in
-	 *        case of a QuestionMC
+	 *                      case of a QuestionMC
+	 * @created 11.08.2012
 	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
-	 *          representation for a Value for the given Question
+	 * representation for a Value for the given Question
 	 */
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString, Value existingValue) {
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
@@ -148,13 +154,13 @@ public final class ValueFactory {
 	 * Creates a {@link Value} for a {@link QuestionChoice}. If the given String
 	 * is no valid representation for a Value for the given Question,
 	 * <tt>null</tt> will be returned.<br/>
-	 * 
-	 * @created 11.08.2012
-	 * @param question the question for which the {@link Value} is created
+	 *
+	 * @param question    the question for which the {@link Value} is created
 	 * @param valueString a String representation of the {@link Value} to be
-	 *        created
+	 *                    created
+	 * @created 11.08.2012
 	 * @returns a {@link Value} or <tt>null</tt> if the given String is no valid
-	 *          representation for a Value for the given Question
+	 * representation for a Value for the given Question
 	 */
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
 		Value value = null;
@@ -199,7 +205,7 @@ public final class ValueFactory {
 	}
 
 	public static String getID_or_Value(Value value) { // NOSONAR this method
-														// name is ok
+		// name is ok
 		if (value instanceof ChoiceValue) {
 			return ((ChoiceValue) value).getChoiceID().getText();
 		}
