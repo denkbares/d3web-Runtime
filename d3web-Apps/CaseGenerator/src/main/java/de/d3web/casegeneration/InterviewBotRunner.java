@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.writer.TestSuiteKnOfficeWriter;
 import de.d3web.empiricaltesting.writer.TestSuiteXMLWriter;
+import de.d3web.utils.Stopwatch;
 
 public final class InterviewBotRunner {
 
@@ -63,9 +64,9 @@ public final class InterviewBotRunner {
 				ratingStrategy(new HeuristicScoreRatingStrategy()).
 				build();
 		List<SequentialTestCase> cases = bot.generate();
-		watch.stop();
+		watch.pause();
 
-		System.out.println(watch);
+		watch.show("Elapsed time");
 		writeCasesXML(filename, cases);
 	}
 
@@ -78,9 +79,9 @@ public final class InterviewBotRunner {
 		watch.start();
 		InterviewBot bot = new InterviewBot.Builder(k).build();
 		List<SequentialTestCase> cases = bot.generate();
-		watch.stop();
+		watch.pause();
 
-		System.out.println(watch);
+		watch.show("Elapsed time");
 
 		writeCasesXML(filename, cases);
 	}
@@ -104,9 +105,9 @@ public final class InterviewBotRunner {
 				// maxAnswerCombinations(kbm.findQuestion("Driving"), 2).
 				build();
 		List<SequentialTestCase> cases = bot.generate();
-		watch.stop();
+		watch.pause();
 
-		System.out.println(watch);
+		watch.show("Elapsed time");
 
 		writeCasesXML(filename, cases);
 	}
