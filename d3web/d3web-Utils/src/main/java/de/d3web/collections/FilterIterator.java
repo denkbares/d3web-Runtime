@@ -30,12 +30,44 @@ import java.util.NoSuchElementException;
  */
 public abstract class FilterIterator<E> implements Iterator<E> {
 
+	public interface EntryFilter<E> {
+		public abstract boolean accept(E item);
+	}
+
 	private final Iterator<E> delegate;
 	private E nextEntry = null;
 	private boolean needsUpdate = true;
 
+	/**
+	 * Creates a new FilterIterator for the specified iterator. The returned iterator contains only
+	 * the elements that passes the {@link #accept(Object)} method.
+	 *
+	 * @param source the iterator to be filtered
+	 */
 	public FilterIterator(Iterator<E> source) {
 		this.delegate = source;
+	}
+
+	/**
+	 * Creates a new FilterIterator for the specified iterator and a filter functional interface.
+	 * The returned iterator contains only the elements that passes the accept function of the
+	 * specified filter with "true".
+	 * <p/>
+	 * This method allows to use this FilterIterator implementations in Java 8+ styled manner,
+	 * without creating a subclass of this abstract class.
+	 *
+	 * @param iterator the iterator to be filtered
+	 * @param filter the filter function to be applied
+	 * @param <E> the type of the elements to be iterated
+	 * @return an iterator only containing the accepted entries
+	 */
+	public static <E> FilterIterator<E> filter(Iterator<E> iterator, final EntryFilter<? super E> filter) {
+		return new FilterIterator<E>(iterator) {
+			@Override
+			public boolean accept(E item) {
+				return filter.accept(item);
+			}
+		};
 	}
 
 	private void moveToNextEntry() {
