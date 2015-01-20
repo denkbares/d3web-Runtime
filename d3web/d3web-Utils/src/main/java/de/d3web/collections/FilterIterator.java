@@ -37,6 +37,7 @@ public abstract class FilterIterator<E> implements Iterator<E> {
 	private final Iterator<E> delegate;
 	private E nextEntry = null;
 	private boolean needsUpdate = true;
+	private boolean endReached = false;
 
 	/**
 	 * Creates a new FilterIterator for the specified iterator. The returned iterator contains only
@@ -73,7 +74,7 @@ public abstract class FilterIterator<E> implements Iterator<E> {
 	private void moveToNextEntry() {
 		this.nextEntry = null;
 		this.needsUpdate = false;
-		while (delegate.hasNext()) {
+		while (!endReached && delegate.hasNext()) {
 			E next = delegate.next();
 			if (accept(next)) {
 				this.nextEntry = next;
@@ -110,5 +111,20 @@ public abstract class FilterIterator<E> implements Iterator<E> {
 		// we can only remove if the cursor have not been updated since last next()
 		if (needsUpdate && nextEntry != null) delegate.remove();
 		else throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * This method can be called by the implementer of this abstract class when the overwritten
+	 * accept-method is sure that all sub-sequential elements of the underlying iterator will not
+	 * been accepted and therefore filtered out. Thus the method signals that this iterator has
+	 * reached its end.
+	 * <p/>
+	 * Note that if this method is called from within the accept method, the filtering of the
+	 * current element is determined only (!) by the return value of the accept method. This method
+	 * only influences further items. So you can detect the end also at the last accepted element by
+	 * calling this method but return true within the accept method.
+	 */
+	protected void signalEnd() {
+		endReached = true;
 	}
 }
