@@ -50,6 +50,7 @@ public class BMITest {
 	public void setUp() throws Exception {
 		// Choose the browser, version, and platform to test
 		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+		capabilities.setCapability("name", this.getClass().getSimpleName());
 		capabilities.setCapability("platform", Platform.WINDOWS);
 		// Create the connection to Sauce Labs to run the tests
 		this.driver = new RemoteWebDriver(
