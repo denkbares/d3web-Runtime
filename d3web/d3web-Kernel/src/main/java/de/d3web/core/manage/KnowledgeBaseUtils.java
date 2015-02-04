@@ -133,7 +133,7 @@ public final class KnowledgeBaseUtils {
 	 * @created 26.02.2013
 	 */
 	public static <T extends TerminologyObject> List<T> getAncestors(TerminologyObject parent, Class<T> typeOf) {
-		List<T> result = new LinkedList<T>();
+		List<T> result = new ArrayList<T>();
 		Set<TerminologyObject> visited = new HashSet<TerminologyObject>();
 		collectAncestors(parent, visited, result, typeOf);
 		return Collections.unmodifiableList(result);
