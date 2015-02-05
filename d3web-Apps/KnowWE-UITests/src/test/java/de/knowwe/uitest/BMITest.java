@@ -63,13 +63,13 @@ public class BMITest {
 		By reset = By.className("reset");
 		driver.findElement(reset).click();
 		awaitRerender(reset);
-		driver.findElement(By.id("input_quicki2")).sendKeys("2" + Keys.ENTER);
+		driver.findElements(By.className("numinput")).get(0).sendKeys("2" + Keys.ENTER);
 		awaitRerender(reset);
-		driver.findElement(By.id("input_quicki3")).sendKeys("100" + Keys.ENTER);
+		driver.findElements(By.className("numinput")).get(1).sendKeys("100" + Keys.ENTER);
 		awaitRerender(reset);
-		assertEquals("25", driver.findElement(By.id("input_quicki4")).getAttribute("value"));
+		assertEquals("25", driver.findElements(By.className("numinput")).get(2).getAttribute("value"));
 		assertEquals("Normal weight", driver.findElement(By.className("SOLUTION-ESTABLISHED")).getText());
-		assertEquals("", driver.findElement(By.id("input_quicki4")).getText());
+		assertEquals("bmi = 25", driver.findElement(By.className("ABSTRACTION")).getText());
 	}
 
 	private void awaitRerender(By by) {
