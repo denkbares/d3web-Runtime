@@ -37,6 +37,25 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<repositories>
+		<repository>
+			<id>infovi-artifactory</id>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/repo/</url>
+		</repository>
+		<repository>
+			<id>knowwe-snapshots</id>
+			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>interval:120</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 	<modules>
 		<module>CaseGenerator</module>
 		<module>DDTreeVisualisation</module>
