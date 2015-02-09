@@ -60,6 +60,5 @@
 		<module>CaseGenerator</module>
 		<module>DDTreeVisualisation</module>
 		<module>ExampleApps</module>
-		<module>KnowWE-UITests</module>
 	</modules>
 </project>
