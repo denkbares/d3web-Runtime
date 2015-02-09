@@ -190,6 +190,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			Path minPath = bestTarget.getMinPath();
 			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			caseObject.activatePath(minPath, this);
+			caseObject.activateNextQContainer();
 		}
 		else {
 			caseObject.setAbortedManuallySetTarget(true);
