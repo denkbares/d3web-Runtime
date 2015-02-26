@@ -110,9 +110,7 @@ public class RunningACase {
 		QASet root = kb.getRootQASet();
 
 		demoQuestions = new QContainer(root, "demoQuestions");
-		pregnant = new QuestionOC(demoQuestions, "pregnant", new String[] {
-				"yes",
-				"no" });
+		pregnant = new QuestionOC(demoQuestions, "pregnant", "yes", "no");
 		yes = new ChoiceValue(KnowledgeBaseUtils.findChoice(pregnant, "yes"));
 		weight = new QuestionNum(demoQuestions, "weight");
 
@@ -125,7 +123,7 @@ public class RunningACase {
 		// (P7)
 		List<Condition> terms = new ArrayList<Condition>();
 		terms.add(new CondEqual(pregnant, yes));
-		terms.add(new CondNumGreater(weight, Double.valueOf(70)));
+		terms.add(new CondNumGreater(weight, (double) 70));
 		RuleFactory.createHeuristicPSRule(dangerousMood, Score.P7, new CondAnd(terms));
 
 		return kb;
