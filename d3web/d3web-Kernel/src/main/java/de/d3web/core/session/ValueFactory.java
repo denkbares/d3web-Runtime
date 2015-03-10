@@ -68,7 +68,8 @@ public final class ValueFactory {
 	 * will be returned.<br/>
 	 * In case of a {@link QuestionMC}, the new Value is merged with the
 	 * existing Value (if possible). The existing value is allowed to be
-	 * <tt>null</tt>!
+	 * <tt>null</tt>!<br/>
+	 * In case the new value equals the existing value, Unkowwn is returned.
 	 *
 	 * @param question      the question for which the {@link Value} is created
 	 * @param valueString   a String representation of the {@link Value} to be
@@ -81,7 +82,7 @@ public final class ValueFactory {
 	 */
 	public static Value createValue(Question question, String valueString, Value existingValue) {
 
-		Value value = null;
+		Value value = Unknown.getInstance();
 
 		if (valueString.equals(Unknown.getInstance().getValue())) {
 			value = Unknown.getInstance();
@@ -118,6 +119,9 @@ public final class ValueFactory {
 				}
 			}
 		}
+
+		if (value.equals(existingValue)) value = Unknown.getInstance();
+
 		return value;
 	}
 
