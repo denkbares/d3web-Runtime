@@ -192,7 +192,6 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	}
 
 	private Flow readFlow(Persistence<KnowledgeBase> persistence, Element flowElem) throws IOException {
-		System.out.println(flowElem.getAttribute(NAME));
 		NodeList nodeList = flowElem.getElementsByTagName(NODE_ELEM);
 		List<Node> nodes = new ArrayList<Node>();
 
