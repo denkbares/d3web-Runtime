@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
+import de.d3web.core.session.values.DateValue;
 import de.d3web.strings.Strings;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
@@ -90,15 +91,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 				Message applyMessage = applyFinding(testCase, session, date, skipValuesOutOfRange);
 				if (applyMessage != null) return applyMessage;
 				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
-					String time = "(time ";
-					if (date.getTime() < TestCaseUtils.YEAR) {
-						time += Strings.getDurationVerbalization(date.getTime()
-								- testCase.getStartDate().getTime());
-					}
-					else {
-						time += date;
-					}
-					time += ")";
+					String time = "(time " + DateValue.getDateOrDurationString(date) + ")";
 					// check if session was terminated due to detected session
 					if (!check.check(session)) {
 						String messageText = "Check '" + check.getCondition().trim() +

@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -61,8 +60,6 @@ import de.d3web.testcase.prefix.PrefixedTestCase;
 public class TestCaseUtils {
 
 	public static final String VALUE_OUT_OF_RANGE = "ValueOutOfRange";
-
-	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
 
 	/**
 	 * Applies the findings of the specified {@link TestCase} at the specified

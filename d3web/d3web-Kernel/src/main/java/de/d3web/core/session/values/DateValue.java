@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
+import de.d3web.strings.Strings;
 
 /**
  * This class stores a date assigned as value to a {@link QuestionDate}.
@@ -74,6 +76,8 @@ public class DateValue implements QuestionValue {
 		// can parse Date.toString()
 		dateFormats.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
 	}
+
+	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
 
 	private final Date value;
 
@@ -154,13 +158,46 @@ public class DateValue implements QuestionValue {
 	 * for humans.
 	 */
 	public String getDateString() {
+		return getDateString(value);
+	}
+
+	/**
+	 * Returns the date as String in a format which can be parsed with
+	 * {@link DateValue#createDateValue(String)} and is also properly readable
+	 * for humans.
+	 */
+	public static String getDateString(Date date) {
 		String dateString;
 		synchronized (DATE_FORMAT) {
-			dateString = DATE_FORMAT.format(value);
+			dateString = DATE_FORMAT.format(date);
 		}
 		dateString = trimTime(dateString);
 
 		return dateString;
+	}
+
+	/**
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
+	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
+	 */
+	public String getDateOrDurationString() {
+		return getDateOrDurationString(value);
+	}
+
+	/**
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
+	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
+	 */
+	public static String getDateOrDurationString(Date date) {
+		long time = date.getTime();
+		if (time < YEAR && time > -YEAR) {
+			return Strings.getDurationVerbalization(time);
+		}
+		else {
+			return getDateString(date);
+		}
 	}
 
 	/**
