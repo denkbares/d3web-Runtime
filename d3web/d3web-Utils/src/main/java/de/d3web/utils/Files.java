@@ -245,7 +245,8 @@ public class Files {
 
 	/**
 	 * Returns true if the specified file has one of the specified file extensions. The extensions
-	 * are tested case insensitive.
+	 * are tested case insensitive. The specified extension must contain only the characters before
+	 * the separating ".", not the "." itself.
 	 *
 	 * @param fileName the abstract path of the file to be tested
 	 * @param extensions the extensions to be tested for
@@ -264,7 +265,8 @@ public class Files {
 
 	/**
 	 * Returns true if the specified file has one of the specified file extensions. The extensions
-	 * are tested case insensitive.
+	 * are tested case insensitive. The specified extension must contain only the characters before
+	 * the separating ".", not the "." itself.
 	 *
 	 * @param file the file to be tested
 	 * @param extensions the extensions to be tested for
