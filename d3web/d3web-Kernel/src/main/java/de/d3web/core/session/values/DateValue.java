@@ -118,6 +118,7 @@ public class DateValue implements QuestionValue {
 	public static DateValue createDateValue(String valueString) throws IllegalArgumentException {
 		for (SimpleDateFormat dateFormat : dateFormats) {
 			try {
+				//noinspection SynchronizationOnLocalVariableOrMethodParameter
 				synchronized (dateFormat) {
 					Date date = dateFormat.parse(valueString);
 					return new DateValue(date);
@@ -133,6 +134,7 @@ public class DateValue implements QuestionValue {
 		String[] result = new String[dateFormats.size()];
 		int index = 0;
 		for (SimpleDateFormat format : dateFormats) {
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (format) {
 				result[index++] = format.toPattern();
 			}
@@ -172,7 +174,6 @@ public class DateValue implements QuestionValue {
 			dateString = DATE_FORMAT.format(date);
 		}
 		dateString = trimTime(dateString);
-
 		return dateString;
 	}
 
@@ -182,7 +183,18 @@ public class DateValue implements QuestionValue {
 	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
 	 */
 	public String getDateOrDurationString() {
-		return getDateOrDurationString(value);
+		return getDateOrDurationString(value, false);
+	}
+
+	/**
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
+	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
+	 *
+	 * @param appendDateString if set to true, the actual date string will be appended in parenthesis
+	 */
+	public String getDateOrDurationString(boolean appendDateString) {
+		return getDateOrDurationString(value, appendDateString);
 	}
 
 	/**
@@ -191,9 +203,24 @@ public class DateValue implements QuestionValue {
 	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
 	 */
 	public static String getDateOrDurationString(Date date) {
+		return getDateOrDurationString(date, false);
+	}
+
+	/**
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
+	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
+	 *
+	 * @param appendDateString if set to true, the actual date string will be appended in parenthesis
+	 */
+	public static String getDateOrDurationString(Date date, boolean appendDateString) {
 		long time = date.getTime();
 		if (time < YEAR && time > -YEAR) {
-			return Strings.getDurationVerbalization(time);
+			String string = Strings.getDurationVerbalization(time);
+			if (appendDateString) {
+				string += " (" + getDateString(date) + ")";
+			}
+			return string;
 		}
 		else {
 			return getDateString(date);

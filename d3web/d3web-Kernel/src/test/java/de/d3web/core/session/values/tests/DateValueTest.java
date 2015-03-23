@@ -19,12 +19,6 @@
 
 package de.d3web.core.session.values.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -33,6 +27,10 @@ import org.junit.Test;
 
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.TextValue;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link DateValue}
