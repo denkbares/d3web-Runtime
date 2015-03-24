@@ -18,8 +18,6 @@
  */
 package de.d3web.core.session.values.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +41,8 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+
+import static org.junit.Assert.assertEquals;
 
 public class ValueFactoryTest {
 
@@ -84,7 +84,9 @@ public class ValueFactoryTest {
 		assertEquals(new NumValue(4), ValueFactory.createValue(qnum, "4"));
 		assertEquals(new TextValue("abc"), ValueFactory.createValue(qtext, "abc"));
 		Date date = new Date();
-		String dateString = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS").format(date);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS");
+		simpleDateFormat.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
+		String dateString = simpleDateFormat.format(date);
 		assertEquals(new DateValue(date), ValueFactory.createValue(qdate, dateString));
 	}
 

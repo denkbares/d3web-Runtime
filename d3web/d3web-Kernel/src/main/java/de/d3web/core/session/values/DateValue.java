@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -54,6 +55,8 @@ public class DateValue implements QuestionValue {
 	 */
 	private static final List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
 
+	public static final TimeZone DATE_FORMAT_TIME_ZONE = TimeZone.getTimeZone("UTC");
+
 	static {
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS"));
 		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
@@ -75,6 +78,10 @@ public class DateValue implements QuestionValue {
 		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy"));
 		// can parse Date.toString()
 		dateFormats.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
+
+		for (SimpleDateFormat dateFormat : dateFormats) {
+			dateFormat.setTimeZone(DATE_FORMAT_TIME_ZONE);
+		}
 	}
 
 	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
@@ -97,18 +104,18 @@ public class DateValue implements QuestionValue {
 	/**
 	 * The format returned here should be used when saving DateValues to be able
 	 * to parse the date with the static method
-	 * {@link DateValue#createDateValue(String)}. Be aware that {
-	 *
-	 * @link SimpleDateFormat}s are not thread safe.
+	 * {@link DateValue#createDateValue(String)}. Be aware that {@link SimpleDateFormat}s are not thread safe.
 	 */
 	public static SimpleDateFormat getDefaultDateFormat() {
-		return new SimpleDateFormat(DATE_FORMAT.toPattern());
+		SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT.toPattern());
+		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return format;
 	}
 
 	/**
 	 * Creates a {@link DateValue} from a given String. To be parseable, the
 	 * String has to come in one of the available {@link DateFormat} from
-	 * {@link DateValue#getAllowedFormatStrings()}
+	 * {@link DateValue#getAllowedFormatStrings()}. The string will be parsed with the UTC time zone.
 	 *
 	 * @param valueString the value to parse
 	 * @return the parsed DateValue

@@ -42,11 +42,14 @@ public class DateValueTest {
 
 	DateValue dateValue;
 	TextValue textValue;
-	final static Date TIME = new GregorianCalendar(2010, 7, 25).getTime();
+	Date TIME;
 
 	@Before
 	public void setUp() throws Exception {
 		// 25.08.2010, 00:00:00
+		GregorianCalendar calendar = new GregorianCalendar(2010, 7, 25);
+		calendar.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
+		TIME = calendar.getTime();
 		dateValue = new DateValue(TIME);
 		textValue = new TextValue("textValue");
 	}
@@ -89,27 +92,33 @@ public class DateValueTest {
 	public void testGetAndParseDateString() {
 		assertThat(dateValue.getDateString(), is("2010-08-25"));
 
-		Date otherDate = new GregorianCalendar(2000, 07, 25, 14, 0, 0).getTime();
+		Date otherDate = getGregorianCalendar(2000, 07, 25, 14, 0, 0).getTime();
 		String dateString = new DateValue(otherDate).getDateString();
 		assertThat(dateString, is("2000-08-25 14:00"));
 		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
 
-		otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 0).getTime();
+		otherDate = getGregorianCalendar(2000, 07, 25, 14, 21, 0).getTime();
 		dateString = new DateValue(otherDate).getDateString();
 		assertThat(dateString, is("2000-08-25 14:21"));
 		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
 
-		otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
+		otherDate = getGregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
 		dateString = new DateValue(otherDate).getDateString();
 		assertThat(dateString, is("2000-08-25 14:21:50"));
 		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
 
-		otherDate = new GregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
+		otherDate = getGregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
 		otherDate = new Date(otherDate.getTime() + 420);
 		dateString = new DateValue(otherDate).getDateString();
 		assertThat(dateString, is("2000-08-25 14:21:50.420"));
 		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
 
+	}
+
+	private GregorianCalendar getGregorianCalendar(int year, int month, int day, int hour, int minute, int second) {
+		GregorianCalendar gregorianCalendar = new GregorianCalendar(year, month, day, hour, minute, second);
+		gregorianCalendar.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
+		return gregorianCalendar;
 	}
 
 	/**
@@ -133,25 +142,25 @@ public class DateValueTest {
 		assertThat(dateValue.equals(null), is(false));
 		assertThat(dateValue.equals(textValue), is(false));
 
-		Date otherDate = new GregorianCalendar(2000, 07, 25, 0, 0, 0).getTime();
+		Date otherDate = getGregorianCalendar(2000, 07, 25, 0, 0, 0).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(false));// other
 																			// YEAR
-		otherDate = new GregorianCalendar(2010, 1, 25, 0, 0, 0).getTime();
+		otherDate = getGregorianCalendar(2010, 1, 25, 0, 0, 0).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(false));// other
 																			// MONTH
-		otherDate = new GregorianCalendar(2010, 7, 2, 0, 0, 0).getTime();
+		otherDate = getGregorianCalendar(2010, 7, 2, 0, 0, 0).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(false));// other
 																			// DAY
-		otherDate = new GregorianCalendar(2010, 7, 25, 17, 0, 0).getTime();
+		otherDate = getGregorianCalendar(2010, 7, 25, 17, 0, 0).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(false));// other
 																			// HOUR
-		otherDate = new GregorianCalendar(2010, 7, 25, 0, 9, 0).getTime();
+		otherDate = getGregorianCalendar(2010, 7, 25, 0, 9, 0).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(false));// other
 																			// MINUTE
-		otherDate = new GregorianCalendar(2010, 7, 25, 0, 0, 55).getTime();
+		otherDate = getGregorianCalendar(2010, 7, 25, 0, 0, 55).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(false));// other
 																			// SECOND
-		otherDate = new GregorianCalendar(2010, 7, 25, 0, 0, 0).getTime();
+		otherDate = getGregorianCalendar(2010, 7, 25, 0, 0, 0).getTime();
 		assertThat(dateValue.equals(new DateValue(otherDate)), is(true));// equal!
 	}
 
@@ -172,11 +181,11 @@ public class DateValueTest {
 	 */
 	@Test
 	public void testCompareTo() {
-		Date otherDate = new GregorianCalendar(2000, 07, 25, 0, 0, 0).getTime();
+		Date otherDate = getGregorianCalendar(2000, 07, 25, 0, 0, 0).getTime();
 		assertThat(dateValue.compareTo(new DateValue(otherDate)) > 0, is(true));
-		otherDate = new GregorianCalendar(2010, 07, 25, 0, 0, 0).getTime();
+		otherDate = getGregorianCalendar(2010, 07, 25, 0, 0, 0).getTime();
 		assertThat(dateValue.compareTo(new DateValue(otherDate)), is(0));
-		otherDate = new GregorianCalendar(2011, 07, 30, 0, 5, 13).getTime();
+		otherDate = getGregorianCalendar(2011, 07, 30, 0, 5, 13).getTime();
 		assertThat(dateValue.compareTo(new DateValue(otherDate)) < 0, is(true));
 	}
 

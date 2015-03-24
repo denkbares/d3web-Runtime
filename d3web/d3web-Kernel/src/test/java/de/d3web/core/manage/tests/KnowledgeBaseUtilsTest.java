@@ -1,12 +1,6 @@
 package de.d3web.core.manage.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -44,10 +38,13 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
 /**
  * Tests the correct behavior of the KnowledgeBaseUtils class and contained
  * methods
- * 
+ *
  * @author Martina Freiberg
  * @created 02.09.2010
  */
@@ -75,7 +72,7 @@ public class KnowledgeBaseUtilsTest {
 
 	/**
 	 * Test findValue: MCValue as single value
-	 * 
+	 *
 	 * @created 09.09.2010
 	 */
 	@Test
@@ -92,7 +89,7 @@ public class KnowledgeBaseUtilsTest {
 
 	/**
 	 * Test findValue: MCValue as "real" MultipleChoiceValue
-	 * 
+	 *
 	 * @created 09.09.2010
 	 */
 	@Test
@@ -112,7 +109,7 @@ public class KnowledgeBaseUtilsTest {
 
 	/**
 	 * Test findValue: ChoiceValue, i.e., question oc or question yn
-	 * 
+	 *
 	 * @created 09.09.2010
 	 */
 	@Test
@@ -144,7 +141,7 @@ public class KnowledgeBaseUtilsTest {
 
 	/**
 	 * Test findValue: NumValue
-	 * 
+	 *
 	 * @created 02.09.2010
 	 */
 	@Test
@@ -158,7 +155,7 @@ public class KnowledgeBaseUtilsTest {
 
 	/**
 	 * Test findValue: TextValue
-	 * 
+	 *
 	 * @created 02.09.2010
 	 */
 	@Test
@@ -172,37 +169,32 @@ public class KnowledgeBaseUtilsTest {
 
 	/**
 	 * Test findValue: DateValue
-	 * 
+	 *
 	 * @created 02.09.2010
 	 */
 	@Test
 	public void findValueDateVal() {
 
 		Value dateToGet = null;
-		final DateFormat format = new
-				SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+		SimpleDateFormat format = DateValue.getDefaultDateFormat();
 		try {
-			Date date =
-					format.parse("2010-09-02-12-13-30");
+			Date date = format.parse("2010-09-02 12:13:30.000");
 			dateToGet = new DateValue(date);
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
-		String dateValInput = "2010-09-02-12-13-30";
-		QuestionDate qd = new
-				QuestionDate(kb, "Please enter: ");
-		assertThat(KnowledgeBaseUtils.findValue(qd,
-				dateValInput), is(dateToGet));
+		String dateValInput = "2010-09-02 12:13:30.000";
+		QuestionDate qd = new QuestionDate(kb, "Please enter: ");
+		assertThat(KnowledgeBaseUtils.findValue(qd, dateValInput), is(dateToGet));
 		dateValInput = "wrong date format";
-		assertNull(KnowledgeBaseUtils.findValue(qd,
-				dateValInput));
+		assertNull(KnowledgeBaseUtils.findValue(qd, dateValInput));
 	}
 
 	/**
 	 * check the logic of the entire findValue Method, i.e., conditions
 	 * undefined and unknown at the beginning
-	 * 
+	 *
 	 * @created 09.09.2010
 	 */
 	@Test
