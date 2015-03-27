@@ -240,7 +240,7 @@ public class DefaultSession implements Session {
 	}
 
 	/**
-	 * Adds a new PSMethod to the used PSMethods of this case and intiliazes it.
+	 * Adds a new PSMethod to the used PSMethods of this case and initializes it.
 	 * 
 	 */
 	private void addUsedPSMethod(PSMethod psmethod) {
@@ -278,7 +278,7 @@ public class DefaultSession implements Session {
 	 * @return the instance of a specified PSMethod class definition, which is
 	 *         used in this Session; null if the PSMethod-class is not used in
 	 *         this case.
-	 * @param psmethodClass java.lang.Class
+	 * @param context java.lang.Class
 	 */
 	@Override
 	public <T extends PSMethod> T getPSMethodInstance(Class<T> context) {
@@ -305,7 +305,7 @@ public class DefaultSession implements Session {
 		return propagationController;
 	}
 
-	// ******************** /event notification ********************
+	// ******************** event notification ********************
 
 	@Override
 	public void touch() {
