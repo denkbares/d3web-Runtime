@@ -222,7 +222,10 @@ public class Files {
 	 * @created 15.02.2014
 	 */
 	public static String getExtension(String filename) {
-		return getExtension(new File(filename));
+		if (filename == null) return null;
+		int index = filename.lastIndexOf('.');
+		if (index == -1) return "";
+		return filename.substring(index + 1);
 	}
 
 	/**
@@ -235,12 +238,7 @@ public class Files {
 	 */
 	public static String getExtension(File file) {
 		if (file == null) return null;
-
-		String name = file.getName();
-		int index = name.lastIndexOf('.');
-		if (index == -1) return "";
-
-		return name.substring(index + 1);
+		return getExtension(file.getName());
 	}
 
 	/**

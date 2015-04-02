@@ -25,9 +25,9 @@ import java.util.Collection;
 
 /**
  * Collected methods which allow easy implementation of <code>hashCode</code>.
- * 
+ * <p/>
  * Example use case:
- * 
+ * <p/>
  * <pre>
  * <!-- --> public int hashCode() {
  * 	int result = HashCodeUtil.SEED;
@@ -39,16 +39,15 @@ import java.util.Collection;
  * 	return result;
  * }
  * </pre>
- * 
+ *
  * @author volker_belli
  * @created 19.10.2010
  */
 public final class HashCodeUtils {
 
 	/**
-	 * An initial value for a <code>hashCode</code>, to which is added
-	 * contributions from fields. Using a non-zero value decreases collisions of
-	 * <code>hashCode</code> values.
+	 * An initial value for a <code>hashCode</code>, to which is added contributions from fields.
+	 * Using a non-zero value decreases collisions of <code>hashCode</code> values.
 	 */
 	public static final int SEED = 23;
 
@@ -100,10 +99,9 @@ public final class HashCodeUtils {
 	}
 
 	/**
-	 * Appends a object value onto the specified seed. <code>aObject</code> is a
-	 * possibly-null object, and possibly an array. If <code>aObject</code> is
-	 * an array, then each element may be a primitive or a (possibly-null)
-	 * object.
+	 * Appends an object's hash onto the specified seed. <code>aObject</code> is a possibly-null
+	 * object, and possibly an array. If <code>aObject</code> is an array, then each element may be
+	 * a primitive or a (possibly-null) object.
 	 */
 	public static int hash(int aSeed, Object aObject) {
 		int result = aSeed;
@@ -124,6 +122,29 @@ public final class HashCodeUtils {
 		return result;
 	}
 
+	/**
+	 * Appends a number of object's hashes onto the specified seed. <code>aObject</code> is a
+	 * possibly-null object, and possibly an array. If <code>aObject</code> is an array, then each
+	 * element may be a primitive or a (possibly-null) object.
+	 */
+	public static int hash(int aSeed, Object... objects) {
+		int hash = aSeed;
+		for (Object object : objects) {
+			hash = hash(hash, object);
+		}
+		return hash;
+	}
+
+	/**
+	 * Creates a new hash out of a number of object's hashes, by appling it to the default seed
+	 * value. <code>aObject</code> is a possibly-null object, and possibly an array. If
+	 * <code>aObject</code> is an array, then each element may be a primitive or a (possibly-null)
+	 * object.
+	 */
+	public static int hash(Object... objects) {
+		return hash(SEED, objects);
+	}
+
 	private static int firstTerm(int aSeed) {
 		return PRIME_MULTIPLIER * aSeed;
 	}
@@ -133,9 +154,9 @@ public final class HashCodeUtils {
 	}
 
 	/**
-	 * Appends an unordered set of objects onto the specified seed. This will
-	 * result on the same hash if the objects are equal, independent of the
-	 * order of the objects in the specified collection.
+	 * Appends an unordered set of objects onto the specified seed. This will result on the same
+	 * hash if the objects are equal, independent of the order of the objects in the specified
+	 * collection.
 	 */
 	public static int hashUnordered(int aSeed, Collection<?> aCollection) {
 		int hash = 0;
@@ -149,9 +170,9 @@ public final class HashCodeUtils {
 	}
 
 	/**
-	 * Appends an ordered collection of objects onto the specified seed. This
-	 * will result on the same hash if the objects are equal, and the object
-	 * have the same order when iterating the specified collection.
+	 * Appends an ordered collection of objects onto the specified seed. This will result on the
+	 * same hash if the objects are equal, and the object have the same order when iterating the
+	 * specified collection.
 	 */
 	public static int hashOrdered(int aSeed, Collection<?> aCollection) {
 		if (aCollection != null) {
