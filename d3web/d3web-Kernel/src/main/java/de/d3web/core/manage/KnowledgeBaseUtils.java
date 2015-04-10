@@ -395,6 +395,16 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
+	 * Sorts a given list of QContainer according to DFS
+	 *
+	 * @param unsorted the unsorted list
+	 */
+	public static void sortQContainers(List<QContainer> unsorted) {
+		sortTerminologyObjects(unsorted);
+	}
+
+
+	/**
 	 * Sorts a given list of TerminologyObjects according to DFS. Use this algorithm method for small knowledge bases or
 	 * lists containing almost all of the knowledge bases objects. Do not mix Solutions and QASets in the same list.
 	 *
