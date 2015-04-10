@@ -30,13 +30,13 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * values, that are restricted to a YES and NO answer. <Br>
  * This class is now immutable (only get() access) Creation date: (28.09.00
  * 16:51:21)
- * 
+ *
  * @author Joachim Baumeister
  */
 public class QuestionYN extends QuestionOC {
 
-	protected final static String YES_STRING = "Yes";
-	protected final static String NO_STRING = "No";
+	public static final String YES_STRING = "Yes";
+	public static final String NO_STRING = "No";
 
 	private Choice answerChoiceYes;
 	private Choice answerChoiceNo;
@@ -44,7 +44,7 @@ public class QuestionYN extends QuestionOC {
 	/**
 	 * Creates a new Yes-No Question, which is a simple QuestionChoice with only
 	 * instance-dependent two alternatives (YES, NO).
-	 * 
+	 *
 	 * @see QuestionOC
 	 * @see Question
 	 */
@@ -55,9 +55,9 @@ public class QuestionYN extends QuestionOC {
 	/**
 	 * Creates a new QuestionYN, adds it to the knowledgebase and to the parent.
 	 * No manual adding of the created object to the kb is needed
-	 * 
+	 *
 	 * @param parent the parent {@link QASet}
-	 * @param name the name of the new QuestionYN
+	 * @param name   the name of the new QuestionYN
 	 */
 	public QuestionYN(QASet parent, String name) {
 		this(parent.getKnowledgeBase(), name);
@@ -68,8 +68,7 @@ public class QuestionYN extends QuestionOC {
 		super(kb, name);
 		answerChoiceYes = new AnswerYes(yesText);
 		answerChoiceNo = new AnswerNo(noText);
-		setAlternatives(Arrays.asList(new Choice[] {
-				answerChoiceYes, answerChoiceNo }));
+		setAlternatives(Arrays.asList(answerChoiceYes, answerChoiceNo));
 	}
 
 	/**
