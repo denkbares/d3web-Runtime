@@ -19,9 +19,15 @@
 
 package de.d3web.strings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Utility methods to deal with locales.
@@ -30,6 +36,15 @@ import java.util.Locale;
  * @created 08.01.2015
  */
 public class Locales {
+
+	public static final Comparator<Locale> ASCENDING = new Comparator<Locale>() {
+		@Override
+		public int compare(Locale o1, Locale o2) {
+			if (o1 == null) o1 = Locale.ROOT;
+			if (o2 == null) o2 = Locale.ROOT;
+			return String.valueOf(o1).compareTo(String.valueOf(o2));
+		}
+	};
 
 	/**
 	 * Parses a locale from a locale string representation. This is the inverse method to {@link
@@ -64,7 +79,7 @@ public class Locales {
 	 * Returns the best matching locale out of a collection of available locales. It returns the
 	 * ROOT locale if no locales matches the available locales, but the root locales is included. It
 	 * returns the first locale of the specified available locales if neither any locale matches the
-	 * preferred locale, not the ROOT locale is included.
+	 * preferred locale, nor the ROOT locale is included.
 	 * <p/>
 	 * If the available locales are null or empty, null is returned. Otherwise the method is
 	 * guaranteed to return a locale instance out of the available ones.
@@ -77,27 +92,67 @@ public class Locales {
 		// if no locales contained, return null (we cannot select one)
 		if (available == null || available.isEmpty()) return null;
 
-		if (preferred != null) {
-			// get locale if available
-			if (available.contains(preferred)) return preferred;
-
-			// otherwise try to find best locale
-			Locale bestLocale = null;
-			int bestScore = 0;
-			for (Locale locale : available) {
-				int score = rateMatch(preferred, locale);
-				if (score > bestScore) {
-					bestScore = score;
-					bestLocale = locale;
-				}
-			}
-			if (bestLocale != null) return bestLocale;
-		}
-
-		// otherwise use first one
-		return available.iterator().next();
+		Locale defaultLocale = available.iterator().next();
+		return (preferred != null)
+				? findBestLocale(preferred, available, 1, defaultLocale)
+				: defaultLocale;
 	}
 
+	private static Locale findBestLocale(Locale preferred, Collection<Locale> available, int minScore, Locale defaultLocale) {
+		// get locale if available
+		if (available.contains(preferred)) return preferred;
+
+		// otherwise try to find best locale
+		Locale bestLocale = null;
+		int bestScore = minScore - 1;
+		for (Locale locale : available) {
+			int score = rateMatch(preferred, locale);
+			if (score > bestScore) {
+				bestScore = score;
+				bestLocale = locale;
+			}
+		}
+		if (bestLocale != null) return bestLocale;
+
+		// otherwise use default value
+		return defaultLocale;
+	}
+
+	/**
+	 * Returns the best matching locale out of a collection of available locales. The best matching
+	 * locale is the first locale of the preferenceList that has at least a language match in the
+	 * available locales; for that locale, the best matching one is selected out of the availables.
+	 * The Method returns the ROOT locale if no locales matches the available locales, but the root
+	 * locales is included. It returns the first locale of the specified available locales if
+	 * neither any locale matches the preferred locale, nor the ROOT locale is included.
+	 * <p/>
+	 * If the available locales are null or empty, null is returned. Otherwise the method is
+	 * guaranteed to return a locale instance out of the available ones. If the preferenceList is
+	 * empty the ROOT locale is matched against the available locales.
+	 *
+	 * @param preferenceList the preferred locales to be used
+	 * @param available the available locales
+	 * @return the best matching locale
+	 */
+	public static Locale findBestLocale(List<Locale> preferenceList, Collection<Locale> available) {
+		// if no locales contained, return null (we cannot select one)
+		if (available == null || available.isEmpty()) return null;
+
+		// search for first locale that has a language match
+		// and use the best match for that locale
+		for (Locale preferred : preferenceList) {
+			Locale match = findBestLocale(preferred, available, 100, null);
+			if (match != null) return match;
+		}
+
+		// otherwise try normal selection of the first preferred locale
+		Locale first = preferenceList.isEmpty() ? Locale.ROOT : preferenceList.get(0);
+		return findBestLocale(first, available);
+	}
+
+	/**
+	 * Rates the similarity between the two specified locales with a number between 0 and 170.
+	 */
 	private static int rateMatch(Locale preferred, Locale available) {
 		int score = 0;
 
@@ -124,4 +179,47 @@ public class Locales {
 		return score;
 	}
 
+	private static String toParsableName(Locale locale) {
+		String name = (locale == null) ? null : String.valueOf(locale);
+		return Strings.isBlank(name) ? "ROOT" : name;
+	}
+
+	/**
+	 * Creates a list of the languages that can later on be parsed by the #parseList method.
+	 *
+	 * @param sorted if the specified languages shall be sorted
+	 * @param languages the languages to represent as a parsable string
+	 * @return the parsable string
+	 */
+	public static String asParsableList(boolean sorted, Collection<Locale> languages) {
+		if (sorted) {
+			languages = new ArrayList<Locale>(languages);
+			Collections.sort((List) languages, ASCENDING);
+		}
+		StringBuilder result = new StringBuilder();
+		for (Locale language : languages) {
+			if (result.length() > 0) result.append(";");
+			result.append(toParsableName(language));
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Reads a representation of a set/list of languages. Each language is separated by ',' or ';'.
+	 * The root language shall be represented by "ROOT". The returned set preserves the order of the
+	 * entries read from the string.
+	 *
+	 * @param languages the string representation ot be read
+	 * @return the languages read from the string representation
+	 */
+	public static Set<Locale> parseList(String languages) {
+		if (Strings.isBlank(languages)) return Collections.emptySet();
+		LinkedHashSet<Locale> result = new LinkedHashSet<Locale>();
+		for (String lang : languages.split("[;,]")) {
+			Locale locale = Strings.equalsIgnoreCase(lang, "ROOT") ? Locale.ROOT : parseLocale(lang);
+			if (locale == null) continue;
+			result.add(locale);
+		}
+		return result;
+	}
 }

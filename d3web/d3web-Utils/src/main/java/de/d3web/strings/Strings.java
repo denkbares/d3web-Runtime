@@ -463,6 +463,20 @@ public class Strings {
 	}
 
 	/**
+	 * Returns whether the specified {@link String} has at least one non-whitespace.
+	 * <p/>
+	 * The method returns as follows: <ul> <li>Strings.isNotBlank(null): false
+	 * <li>Strings.isNotBlank(""): false <li>Strings.isNotBlank(" "): false
+	 * <li>Strings.isNotBlank("\n\r"): false <li>Strings.isNotBlank(" d3web "): true </ul>
+	 *
+	 * @param text the string to be checked
+	 * @return <code>true</code> iff the string has any non-whitespace characters
+	 */
+	public static boolean isNotBlank(String text) {
+		return !isBlank(text);
+	}
+
+	/**
 	 * Returns whether the specified {@link String} is null or only consists of whitespaces.
 	 * <p/>
 	 * The method returns as follows: <ul> <li>Strings.isBlank(null): true <li>Strings.isBlank(""):
