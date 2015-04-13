@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.InfoStore;
 public class Choice implements NamedObject, Comparable<Choice> {
 
 	/**
-	 * The {@link Question} instance this {@link Answer} belongs to
+	 * The {@link Question} instance this {@link Choice} belongs to
 	 */
 	private Question question;
 
@@ -44,7 +44,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	/**
 	 * Creates a new choice with the given name
 	 * 
-	 * @param name
+	 * @param name the name of the choice
 	 * @throws NullPointerException when the name is null
 	 */
 	public Choice(String name) {
