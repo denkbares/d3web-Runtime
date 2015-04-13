@@ -84,7 +84,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	 */
 	@Override
 	public String toString() {
-		return text == null ? "#" + text : text;
+		return text;
 	}
 
 	/**
@@ -156,9 +156,8 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	}
 
 	/**
-	 * Returns the {@link Question} instance corresponding to this
-	 * {@link Answer}.
-	 * 
+	 * Returns the {@link Question} instance corresponding to this Choice.
+	 *
 	 * @return the question related with this answer
 	 */
 	public Question getQuestion() {
@@ -166,9 +165,8 @@ public class Choice implements NamedObject, Comparable<Choice> {
 	}
 
 	/**
-	 * Sets the {@link Question} object, that is corresponding to this
-	 * {@link Answer}.
-	 * 
+	 * Sets the {@link Question} object, that is corresponding to this Choice.
+	 *
 	 * @param question the corresponding {@link Question}
 	 */
 	public void setQuestion(Question question) {
