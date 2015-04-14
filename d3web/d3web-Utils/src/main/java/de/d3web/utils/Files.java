@@ -8,9 +8,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Properties;
 
 import de.d3web.collections.Matrix;
 import de.d3web.strings.StringFragment;
@@ -171,6 +175,65 @@ public class Files {
 		}
 		finally {
 			reader.close();
+		}
+	}
+
+	/**
+	 * Reads and rewrites the manifest as a properties file, adding one entry, overwriting all
+	 * existing entries with the specified key. It preserves all other lines, including comments and
+	 * the order of the lines. Only the lines with the specified key will be modified, where the
+	 * first one is overwritten, and succeeding ones (if there are any) will be deleted. If there is
+	 * no such line contained, the new property will be appended to the end of the file.
+	 *
+	 * @param file the properties file to be updated
+	 * @param key the key to be overwritten or added
+	 * @param value the (new) value for the key
+	 * @throws IOException if the properties file could not been read or written
+	 */
+	public static void updatePropertiesFile(File file, String key, String value) throws IOException {
+		// create a well-encoded line to be added
+		Properties newProperty = new Properties();
+		newProperty.put(key, value);
+		StringWriter newLineBuffer = new StringWriter();
+		newProperty.store(newLineBuffer, null);
+		String newLine = newLineBuffer.toString().replaceAll("(?m)^#.*$[\n\r]*", "").trim();
+
+		// read the manifest file and iterate each line,
+		// preserving comments and order
+		List<String> lines = de.d3web.utils.Files.getLines(file);
+		ListIterator<String> lineIterator = lines.listIterator();
+		boolean replaced = false;
+		while (lineIterator.hasNext()) {
+			String line = lineIterator.next();
+			// parse each line as a property
+			Properties parsedLine = new Properties();
+			parsedLine.load(new StringReader(line));
+
+			// if the lines specifies the key, it will be overwritten
+			if (parsedLine.containsKey(key)) {
+				if (replaced) {
+					// if already replaced one line with the key,
+					// remove duplicate lines with same key
+					lineIterator.remove();
+				}
+				else {
+					// overwrite the first line with the specified key
+					lineIterator.set(newLine);
+					replaced = true;
+				}
+			}
+		}
+
+		// if not replaced any line, we append the new line at the end
+		if (!replaced) lines.add(newLine);
+
+		// and finally write the lines back to disc
+		FileOutputStream out = new FileOutputStream(file);
+		try {
+			out.write(Strings.concat("\n", lines).getBytes());
+		}
+		finally {
+			out.close();
 		}
 	}
 
