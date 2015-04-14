@@ -54,6 +54,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -527,7 +528,7 @@ public final class TestPersistence {
 			f = new Finding(q, new TextValue(answerText));
 		}
 		else if (q instanceof QuestionDate) {
-			f = new Finding(q, DateValue.createDateValue(answerText));
+			f = new Finding(q, ValueUtils.createDateValue((QuestionDate) q, answerText));
 		}
 
 		return f;

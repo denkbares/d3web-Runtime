@@ -47,9 +47,9 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.QuestionValue;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
@@ -360,7 +360,7 @@ public final class KnowledgeBaseUtils {
 		// date questions
 		else if (question instanceof QuestionDate) {
 			try {
-				return DateValue.createDateValue(valueString);
+				return ValueUtils.createDateValue((QuestionDate) question, valueString);
 			}
 			catch (IllegalArgumentException e) {
 				return findSpecialValue(valueString, caseSensitive);

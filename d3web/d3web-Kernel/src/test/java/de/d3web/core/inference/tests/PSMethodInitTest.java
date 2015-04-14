@@ -108,7 +108,6 @@ public class PSMethodInitTest {
 
 	public void checkTime(Date date, int hour, int minute, int second) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
 		calendar.setTime(date);
 		Assert.assertEquals(hour, calendar.get(Calendar.HOUR_OF_DAY));
 		Assert.assertEquals(minute, calendar.get(Calendar.MINUTE));

@@ -30,25 +30,39 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
- * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 21.01.2011
  */
 public class DateHandler implements FragmentHandler<KnowledgeBase> {
 
 	private final static String ELEMENT_NAME = "Date";
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+	private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS Z");
+	private final SimpleDateFormat compatibilityFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
+		String textContent;
 		try {
-			return format.parse(element.getTextContent());
+			textContent = element.getTextContent();
 		}
 		catch (DOMException e) {
 			throw new IOException(e);
 		}
+		try {
+			synchronized (format) {
+				return format.parse(textContent);
+			}
+		}
 		catch (ParseException e) {
-			throw new IOException(e);
+			// check old format without the time zone
+			try {
+				synchronized (compatibilityFormat) {
+					return compatibilityFormat.parse(textContent);
+				}
+			}
+			catch (ParseException e2) {
+				throw new IOException(e2);
+			}
 		}
 	}
 

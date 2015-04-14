@@ -20,73 +20,26 @@
 package de.d3web.core.session.values;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
-import de.d3web.strings.Strings;
+import de.d3web.core.session.ValueUtils;
 
 /**
  * This class stores a date assigned as value to a {@link QuestionDate}.
  *
- * @author joba (denkbares GmbH), Sebastian Furth
+ * @author Joachim Baumeister (denkbares GmbH), Sebastian Furth
  * @created 07.04.2010
  */
 public class DateValue implements QuestionValue {
 
-	/**
-	 * This format should be used when saving DateValues to be able to parse the
-	 * date with the static method {@link DateValue#createDateValue(String)}
-	 */
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss.SSS");
-
-	/**
-	 * The accepted formats for dates. The first format is the one used for
-	 * saving DateValues.
-	 */
-	private static final List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
-
-	public static final TimeZone DATE_FORMAT_TIME_ZONE = TimeZone.getTimeZone("UTC");
-
-	static {
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH-mm"));
-		dateFormats.add(DATE_FORMAT);
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd HH:mm"));
-		dateFormats.add(new SimpleDateFormat("yyyy-MM-dd"));
-		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS"));
-		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"));
-		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy HH:mm"));
-		dateFormats.add(new SimpleDateFormat("dd.MM.yyyy"));
-		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS"));
-		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
-		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy HH:mm"));
-		dateFormats.add(new SimpleDateFormat("dd/MM/yyyy"));
-		// can parse Date.toString()
-		dateFormats.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
-
-		for (SimpleDateFormat dateFormat : dateFormats) {
-			dateFormat.setTimeZone(DATE_FORMAT_TIME_ZONE);
-		}
-	}
-
-	public static final long YEAR = TimeUnit.DAYS.toMillis(365);
-
 	private final Date value;
+
+	private static final SimpleDateFormat DEFAULT_FORMAT = ValueUtils.getDefaultDateFormat();
 
 	/**
 	 * Constructs a new DateValue
@@ -102,52 +55,44 @@ public class DateValue implements QuestionValue {
 	}
 
 	/**
-	 * The format returned here should be used when saving DateValues to be able
-	 * to parse the date with the static method
-	 * {@link DateValue#createDateValue(String)}. Be aware that {@link SimpleDateFormat}s are not thread safe.
+	 * The format returned here should be used when saving DateValues to be able to parse the date with the static
+	 * method {@link DateValue#createDateValue(String)}. Be aware that {@link SimpleDateFormat}s are not thread safe,
+	 * although you will get a new instance of the format every time you call this method.
 	 */
 	public static SimpleDateFormat getDefaultDateFormat() {
-		SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT.toPattern());
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
-		return format;
+		return ValueUtils.getDefaultDateFormat();
 	}
 
 	/**
-	 * Creates a {@link DateValue} from a given String. To be parseable, the
-	 * String has to come in one of the available {@link DateFormat} from
-	 * {@link DateValue#getAllowedFormatStrings()}. The string will be parsed with the UTC time zone.
-	 *
-	 * @param valueString the value to parse
-	 * @return the parsed DateValue
-	 * @throws IllegalArgumentException if the given string cannot be parsed
-	 * @created 23.10.2013
+	 * Returns an array with all the date format patterns, that will be used to try to parse a given date string.
 	 */
-	public static DateValue createDateValue(String valueString) throws IllegalArgumentException {
-		for (SimpleDateFormat dateFormat : dateFormats) {
-			try {
-				//noinspection SynchronizationOnLocalVariableOrMethodParameter
-				synchronized (dateFormat) {
-					Date date = dateFormat.parse(valueString);
-					return new DateValue(date);
-				}
-			}
-			catch (ParseException ignore) {
-			}
-		}
-		throw new IllegalArgumentException("'" + valueString + "' can not be recognized as a date");
+	public static String[] getAllowedFormatStrings() {
+		return ValueUtils.getAllowedDateFormatPatterns();
 	}
 
-	public static String[] getAllowedFormatStrings() {
-		String[] result = new String[dateFormats.size()];
-		int index = 0;
-		for (SimpleDateFormat format : dateFormats) {
-			//noinspection SynchronizationOnLocalVariableOrMethodParameter
-			synchronized (format) {
-				result[index++] = format.toPattern();
-			}
-		}
-		return result;
+
+	/**
+	 * Creates a {@link DateValue} from a given String. If no time zone is given in the String, the time zone of the
+	 * local JVM will be used.
+	 * To be parseable, the String has to come in one of the available {@link DateFormat} from
+	 * {@link DateValue#getAllowedFormatStrings()}.
+	 * <p/>
+	 * <b>Attention:</b> If the corresponding question is available while calling the method, you should instead use
+	 * {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if your String does not contain a TimeZone
+	 * identifier. Having the Question available will use a specified time zone of the questions UNIT property if given
+	 * and if the String does not provide one.
+	 *
+	 * @param dateString the value to parse
+	 * @return the parsed DateValue
+	 * @created 23.10.2013
+	 *
+	 * @deprecated use the methods in {@link ValueUtils} instead, e.g. {@link ValueUtils#createDateValue(QuestionDate, String)}
+	 */
+	@Deprecated
+	public static DateValue createDateValue(String dateString) throws IllegalArgumentException {
+		return ValueUtils.createDateValue((TimeZone) null, dateString);
 	}
+
 
 	/**
 	 * @return the {@link Date} of this date value
@@ -161,106 +106,9 @@ public class DateValue implements QuestionValue {
 		return value;
 	}
 
-	/**
-	 * Returns the date as String in a format which can be parsed with
-	 * {@link DateValue#createDateValue(String)} and is also properly readable
-	 * for humans.
-	 */
-	public String getDateString() {
-		return getDateString(value);
-	}
-
-	/**
-	 * Returns the date as String in a format which can be parsed with
-	 * {@link DateValue#createDateValue(String)} and is also properly readable
-	 * for humans.
-	 */
-	public static String getDateString(Date date) {
-		String dateString;
-		synchronized (DATE_FORMAT) {
-			dateString = DATE_FORMAT.format(date);
-		}
-		dateString = trimTime(dateString);
-		return dateString;
-	}
-
-	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
-	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
-	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
-	 */
-	public String getDateOrDurationString() {
-		return getDateOrDurationString(value, false);
-	}
-
-	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
-	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
-	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
-	 *
-	 * @param appendDateString if set to true, the actual date string will be appended in parenthesis
-	 */
-	public String getDateOrDurationString(boolean appendDateString) {
-		return getDateOrDurationString(value, appendDateString);
-	}
-
-	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
-	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
-	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
-	 */
-	public static String getDateOrDurationString(Date date) {
-		return getDateOrDurationString(date, false);
-	}
-
-	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration
-	 * since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateString()),
-	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
-	 *
-	 * @param appendDateString if set to true, the actual date string will be appended in parenthesis
-	 */
-	public static String getDateOrDurationString(Date date, boolean appendDateString) {
-		long time = date.getTime();
-		if (time < YEAR && time > -YEAR) {
-			String string = Strings.getDurationVerbalization(time);
-			if (appendDateString) {
-				string += " (" + getDateString(date) + ")";
-			}
-			return string;
-		}
-		else {
-			return getDateString(date);
-		}
-	}
-
-	/**
-	 * If the given date string ends with trailing zeros from the time, those zeros will
-	 * be trimmed correctly. Trims milli seconds, seconds, and hours with minutes.<p/>
-	 * Example:
-	 * <ul>
-	 * <li>2000-01-01 15:44:32.000 -> 2000-01-01 15:44:32</li>
-	 * <li>2000-01-01 15:44:00.000 -> 2000-01-01 15:44</li>
-	 * <li>2000-01-01 00:00:00.000 -> 2000-01-01</li>
-	 * </ul>
-	 *
-	 * @param dateString the date verbalization to trim
-	 * @return a trimmed version of the date string
-	 */
-	public static String trimTime(String dateString) {
-		// we remove trailing zero milliseconds, seconds, minutes and hours,
-		// because it does not add any information to the date string and can
-		// still be parsed by the available formats
-		dateString = dateString.replaceAll("[.:]000$", "")
-				.replaceAll("(?<=\\d\\d:\\d\\d):00$", "").replaceAll(" 00:00$", "");
-		return dateString;
-	}
-
 	@Override
 	public String toString() {
-		synchronized (DATE_FORMAT) {
-			return DATE_FORMAT.format(value);
-		}
+		return ValueUtils.getDateVerbalization(TimeZone.getDefault(), getDate(), ValueUtils.TimeZoneDisplayMode.ALWAYS, false);
 	}
 
 	@Override
@@ -293,5 +141,18 @@ public class DateValue implements QuestionValue {
 		}
 		return value.compareTo(((DateValue) o).value);
 	}
+
+	/**
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
+	 *
+	 * @deprecated use the methods in {@link ValueUtils} instead, e.g. {@link ValueUtils#getDateOrDurationVerbalization(QuestionDate, Date)}
+	 */
+	@Deprecated
+	public String getDateString() {
+		return ValueUtils.getDateVerbalization((TimeZone) null, getDate(), ValueUtils.TimeZoneDisplayMode.ALWAYS);
+	}
+
+
 
 }

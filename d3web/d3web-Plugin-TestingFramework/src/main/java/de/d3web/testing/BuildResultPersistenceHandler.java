@@ -64,7 +64,8 @@ public class BuildResultPersistenceHandler {
 	private static final String XML_SCHEM_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
 	private static final String XSI_SCHEMA_LOCATION = "xsi:schemaLocation";
 
-	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss Z");
+	private static final SimpleDateFormat DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
 
 	public static Document toXML(BuildResult build) throws IOException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -82,7 +83,9 @@ public class BuildResultPersistenceHandler {
 
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
-		root.setAttribute(DATE, DATE_FORMAT.format(build.getBuildDate()));
+		synchronized (DATE_FORMAT) {
+			root.setAttribute(DATE, DATE_FORMAT.format(build.getBuildDate()));
+		}
 
 		// add child results for single tests
 		for (TestResult result : build.getResults()) {
@@ -151,7 +154,19 @@ public class BuildResultPersistenceHandler {
 
 		// parse attributes
 		long duration = Long.parseLong(root.getAttribute(DURATION));
-		Date date = DATE_FORMAT.parse(root.getAttribute(DATE));
+
+		String dateAttribute = root.getAttribute(DATE);
+		Date date;
+		try {
+			synchronized (DATE_FORMAT) {
+				date = DATE_FORMAT.parse(dateAttribute);
+			}
+		}
+		catch (ParseException e) {
+			synchronized (DATE_FORMAT_COMPATIBILITY) {
+				date = DATE_FORMAT_COMPATIBILITY.parse(dateAttribute);
+			}
+		}
 		int successfulTests = 0;
 
 		// create test item
@@ -210,7 +225,7 @@ public class BuildResultPersistenceHandler {
 					if ("true".equalsIgnoreCase(messageElement.getAttribute(SUMMARY))) {
 						summary = message;
 					}
-					else if (typeString.equals(Message.Type.SUCCESS.toString())) {
+					else if (Message.Type.SUCCESS.toString().equals(typeString)) {
 						String testObjectName = messageElement.getAttribute(TEST_OBJECT);
 						expectedMessages.put(testObjectName, message);
 						successfulTests++;

@@ -21,10 +21,12 @@ package de.d3web.core.session.values.tests;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.TextValue;
 
@@ -40,6 +42,7 @@ import static org.junit.Assert.assertThat;
  */
 public class DateValueTest {
 
+	public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC");
 	DateValue dateValue;
 	TextValue textValue;
 	Date TIME;
@@ -48,7 +51,7 @@ public class DateValueTest {
 	public void setUp() throws Exception {
 		// 25.08.2010, 00:00:00
 		GregorianCalendar calendar = new GregorianCalendar(2010, 7, 25);
-		calendar.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
+		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		TIME = calendar.getTime();
 		dateValue = new DateValue(TIME);
 		textValue = new TextValue("textValue");
@@ -90,34 +93,38 @@ public class DateValueTest {
 	 */
 	@Test
 	public void testGetAndParseDateString() {
-		assertThat(dateValue.getDateString(), is("2010-08-25"));
+		assertThat(ValueUtils.getDateVerbalization(TIME_ZONE, dateValue.getDate(), ValueUtils.TimeZoneDisplayMode.ALWAYS), is("2010-08-25 UTC"));
 
-		Date otherDate = getGregorianCalendar(2000, 07, 25, 14, 0, 0).getTime();
-		String dateString = new DateValue(otherDate).getDateString();
-		assertThat(dateString, is("2000-08-25 14:00"));
-		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+		Date otherDate = getGregorianCalendar(2000, 7, 25, 14, 0, 0).getTime();
+		String dateString = getDateString(otherDate);
+		assertThat(dateString, is("2000-08-25 14:00 UTC"));
+		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
 
-		otherDate = getGregorianCalendar(2000, 07, 25, 14, 21, 0).getTime();
-		dateString = new DateValue(otherDate).getDateString();
-		assertThat(dateString, is("2000-08-25 14:21"));
-		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+		otherDate = getGregorianCalendar(2000, 7, 25, 14, 21, 0).getTime();
+		dateString = getDateString(otherDate);
+		assertThat(dateString, is("2000-08-25 14:21 UTC"));
+		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
 
-		otherDate = getGregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
-		dateString = new DateValue(otherDate).getDateString();
-		assertThat(dateString, is("2000-08-25 14:21:50"));
-		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+		otherDate = getGregorianCalendar(2000, 7, 25, 14, 21, 50).getTime();
+		dateString = getDateString(otherDate);
+		assertThat(dateString, is("2000-08-25 14:21:50 UTC"));
+		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
 
-		otherDate = getGregorianCalendar(2000, 07, 25, 14, 21, 50).getTime();
+		otherDate = getGregorianCalendar(2000, 7, 25, 14, 21, 50).getTime();
 		otherDate = new Date(otherDate.getTime() + 420);
-		dateString = new DateValue(otherDate).getDateString();
-		assertThat(dateString, is("2000-08-25 14:21:50.420"));
-		assertEquals(otherDate, DateValue.createDateValue(dateString).getDate());
+		dateString = getDateString(otherDate);
+		assertThat(dateString, is("2000-08-25 14:21:50.420 UTC"));
+		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
 
+	}
+
+	private String getDateString(Date otherDate) {
+		return ValueUtils.getDateVerbalization(TIME_ZONE, new DateValue(otherDate).getDate(), ValueUtils.TimeZoneDisplayMode.ALWAYS);
 	}
 
 	private GregorianCalendar getGregorianCalendar(int year, int month, int day, int hour, int minute, int second) {
 		GregorianCalendar gregorianCalendar = new GregorianCalendar(year, month, day, hour, minute, second);
-		gregorianCalendar.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
+		gregorianCalendar.setTimeZone(TIME_ZONE);
 		return gregorianCalendar;
 	}
 

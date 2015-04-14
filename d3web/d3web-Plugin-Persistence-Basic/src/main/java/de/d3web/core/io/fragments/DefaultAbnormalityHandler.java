@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.ValueFactory;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 
@@ -108,7 +108,7 @@ public class DefaultAbnormalityHandler implements FragmentHandler<KnowledgeBase>
 		for (Value answer : answers) {
 			// Value answer = answers.nextElement();
 			Element abnormalityElement = persistence.getDocument().createElement("abnormality");
-			abnormalityElement.setAttribute("ID", ValueFactory.getID_or_Value(answer));
+			abnormalityElement.setAttribute("ID", ValueUtils.getID_or_Value(answer));
 			abnormalityElement.setAttribute(
 					"value",
 					AbnormalityUtils.convertValueToConstantString(abnormality.getValue(answer)));

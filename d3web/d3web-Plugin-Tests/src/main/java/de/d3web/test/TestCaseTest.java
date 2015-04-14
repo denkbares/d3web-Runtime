@@ -30,7 +30,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.values.DateValue;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.strings.Strings;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
@@ -66,7 +66,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	@Override
 	public Message execute(TestCase testCase, String[] args, String[]... ignores) throws InterruptedException {
 		Collection<KnowledgeBase> kbs = getKnowledgeBases(args);
-		if (kbs.size() == 0) {
+		if (kbs == null || kbs.size() == 0) {
 			return new Message(Type.FAILURE, "No Knowledge base found!");
 		}
 
@@ -91,7 +91,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 				Message applyMessage = applyFinding(testCase, session, date, skipValuesOutOfRange);
 				if (applyMessage != null) return applyMessage;
 				for (Check check : testCase.getChecks(date, session.getKnowledgeBase())) {
-					String time = "(time " + DateValue.getDateOrDurationString(date) + ")";
+					String time = "(time " + ValueUtils.getDateOrDurationVerbalization(date) + ")";
 					// check if session was terminated due to detected session
 					if (!check.check(session)) {
 						String messageText = "Check '" + check.getCondition().trim() +

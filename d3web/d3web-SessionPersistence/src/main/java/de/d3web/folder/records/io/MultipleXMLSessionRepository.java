@@ -47,24 +47,23 @@ import de.d3web.core.session.protocol.Protocol;
  * This implementation of the SessionRepositoryPersistenceHandler interface can
  * handle multiple XML files. The SessionRecord in the SessionRepository
  * committed for saving will be saved to separate XML files.
- * 
+ *
  * @author Sebastian Furth & Markus Friedrich (both denkbares GmbH)
- * 
  */
 public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
-	public static final SimpleDateFormat FILE_DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH.mm.ss.SS");
+	public static final SimpleDateFormat FILE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss.SS Z");
+	public static final SimpleDateFormat FILE_DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss.SS");
 
 	/**
 	 * Loads the Session Records from a folder. The files are not parsed
 	 * immediately, they will be parsed when someone accesses them. Files not
 	 * ending on .xml will be ignored.
-	 * 
-	 * @created 20.09.2010
+	 *
 	 * @param folder Folder which represents the SessionRepository
 	 * @throws IOException
 	 * @throws ParseException
+	 * @created 20.09.2010
 	 */
 	public void load(File folder) throws IOException, ParseException {
 		this.load(folder, new DummyProgressListener());
@@ -74,20 +73,24 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * Loads the Session Records from a folder. The files are not parsed
 	 * immediately, they will be parsed when someone accesses them. Files not
 	 * ending on .xml will be ignored.
-	 * 
-	 * @created 20.09.2010
-	 * @param folder Folder which represents the SessionRepository
+	 *
+	 * @param folder   Folder which represents the SessionRepository
 	 * @param listener the progress listener to observe the progress of reading
-	 * @throws IOException if any xml file could not be loaded as a session
-	 *         record
+	 * @throws IOException    if any xml file could not be loaded as a session
+	 *                        record
 	 * @throws ParseException if any xml filename does not have the expected
-	 *         filename layout: "yyyy-MM-dd HH.mm.ss.SS_<ID>.xml"
+	 *                        filename layout: "yyyy-MM-dd HH.mm.ss.SS_<ID>.xml"
+	 * @created 20.09.2010
 	 */
 	public void load(File folder, ProgressListener listener) throws IOException, ParseException {
-		if (folder == null) throw new NullPointerException(
-				"File is null. Unable to load SessionRepository.");
-		if (!folder.isDirectory()) throw new IllegalArgumentException(
-				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
+		if (folder == null) {
+			throw new NullPointerException(
+					"File is null. Unable to load SessionRepository.");
+		}
+		if (!folder.isDirectory()) {
+			throw new IllegalArgumentException(
+					"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
+		}
 		File[] listFiles = folder.listFiles();
 		int counter = 0;
 		for (File file : listFiles) {
@@ -96,7 +99,13 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			listener.updateProgress(percent, name);
 			if (!file.isFile() || !name.endsWith(".xml")) continue;
 			int underscore = name.indexOf('_');
-			Date date = FILE_DATE_FORMAT.parse(name.substring(0, underscore));
+			String potentialName = name.substring(0, underscore);
+			Date date;
+			try {
+				date = FILE_DATE_FORMAT.parse(potentialName);
+			} catch (ParseException e) {
+				date = FILE_DATE_FORMAT_COMPATIBILITY.parse(potentialName);
+			}
 			String id = name.substring(underscore + 1, name.length() - 4);
 			add(new FileRecord(id, date, file));
 		}
@@ -107,10 +116,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * Saves the SessionRepository to a Folder. For each session, an xml File
 	 * will be created (Filename: id.xml). If there is a file with the same
 	 * name, it will be overwritten.
-	 * 
-	 * @created 20.09.2010
+	 *
 	 * @param folder Folder where this Repository should be saved to
 	 * @throws IOException
+	 * @created 20.09.2010
 	 */
 	public void save(File folder) throws IOException {
 		this.save(folder, new DummyProgressListener());
@@ -120,17 +129,21 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * Saves the SessionRepository to a Folder. For each session, an xml File
 	 * will be created (Filename: id.xml). If there is a file with the same
 	 * name, it will be overwritten.
-	 * 
-	 * @created 20.09.2010
-	 * @param folder Folder where this Repository should be saved to
+	 *
+	 * @param folder   Folder where this Repository should be saved to
 	 * @param listener the progress listener to observe the progress of writing
 	 * @throws IOException
+	 * @created 20.09.2010
 	 */
 	public void save(File folder, ProgressListener listener) throws IOException {
-		if (folder == null) throw new NullPointerException(
-				"File is null. Unable to save SessionRepository.");
-		if (folder.exists() && !folder.isDirectory()) throw new IllegalArgumentException(
-				"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
+		if (folder == null) {
+			throw new NullPointerException(
+					"File is null. Unable to save SessionRepository.");
+		}
+		if (folder.exists() && !folder.isDirectory()) {
+			throw new IllegalArgumentException(
+					"This implementation of the SessionRepositoryPersistenceHandler requires a directory.");
+		}
 		folder.mkdirs();
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		Collection<SessionRecord> records = sessionRecords.values();
@@ -164,10 +177,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * Returns the filename of a specific record that will be used when the
 	 * record is stored with this session repository. The filename is relative
 	 * to the folder the files will be stored into.
-	 * 
-	 * @created 27.07.2012
+	 *
 	 * @param record the record to get the filename for
 	 * @return the filename of this record
+	 * @created 27.07.2012
 	 */
 	public String getRecordFilename(SessionRecord record) {
 		return getDefaultFilename(record);
@@ -175,10 +188,10 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 	/**
 	 * Returns the default filename containing the date and the id.
-	 * 
-	 * @created 30.10.2013
+	 *
 	 * @param record Sessionrecord
 	 * @return Filename
+	 * @created 30.10.2013
 	 */
 	public static String getDefaultFilename(SessionRecord record) {
 		String date = FILE_DATE_FORMAT.format(record.getCreationDate());
@@ -190,7 +203,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * to a file, if some information other than the id or the kb is asked, the
 	 * record will be parsed. This Record also remembers, if something could
 	 * have been modified since it was loaded.
-	 * 
+	 *
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 20.09.2010
 	 */
@@ -219,7 +232,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
 		/**
 		 * Parses the file to gain access to all informations
-		 * 
+		 *
 		 * @throws IOException
 		 * @created 20.09.2010
 		 */

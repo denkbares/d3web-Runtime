@@ -18,6 +18,7 @@
  */
 package de.d3web.core.session.values.tests;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,7 +33,7 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.manage.KnowledgeBaseUtils;
-import de.d3web.core.session.ValueFactory;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
@@ -41,10 +42,11 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.plugin.test.InitPluginManager;
 
 import static org.junit.Assert.assertEquals;
 
-public class ValueFactoryTest {
+public class ValueUtilsTest {
 
 	private Choice choice1;
 	private Choice choice2;
@@ -56,7 +58,8 @@ public class ValueFactoryTest {
 	private QuestionDate qdate;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
+		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		choice1 = new Choice("choice1");
 		choice2 = new Choice("choice2");
@@ -73,38 +76,37 @@ public class ValueFactoryTest {
 
 	@Test
 	public void createValue() {
-		assertEquals(new ChoiceValue(choice1), ValueFactory.createValue(qoc, "choice1"));
+		assertEquals(new ChoiceValue(choice1), ValueUtils.createValue(qoc, "choice1"));
 		assertEquals(new MultipleChoiceValue(new ChoiceID(choice1), new ChoiceID(choice2)),
-				ValueFactory.createValue(qmc, "choice1", new ChoiceValue(choice2)));
+				ValueUtils.createValue(qmc, "choice1", new ChoiceValue(choice2)));
 		assertEquals(new MultipleChoiceValue(new ChoiceID(choice2)),
-				ValueFactory.createValue(qmc, "choice1", new MultipleChoiceValue(new ChoiceID(
+				ValueUtils.createValue(qmc, "choice1", new MultipleChoiceValue(new ChoiceID(
 						choice1), new ChoiceID(choice2))));
 		assertEquals(Unknown.getInstance(),
-				ValueFactory.createValue(qoc, Unknown.getInstance().getValue().toString()));
-		assertEquals(new NumValue(4), ValueFactory.createValue(qnum, "4"));
-		assertEquals(new TextValue("abc"), ValueFactory.createValue(qtext, "abc"));
+				ValueUtils.createValue(qoc, Unknown.getInstance().getValue().toString()));
+		assertEquals(new NumValue(4), ValueUtils.createValue(qnum, "4"));
+		assertEquals(new TextValue("abc"), ValueUtils.createValue(qtext, "abc"));
 		Date date = new Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS");
-		simpleDateFormat.setTimeZone(DateValue.DATE_FORMAT_TIME_ZONE);
 		String dateString = simpleDateFormat.format(date);
-		assertEquals(new DateValue(date), ValueFactory.createValue(qdate, dateString));
+		assertEquals(new DateValue(date), ValueUtils.createValue(qdate, dateString));
 	}
 
 	@Test
 	public void createQuestionChoiceValue() {
 		assertEquals(new ChoiceValue(choice1),
-				ValueFactory.createQuestionChoiceValue(qoc, "choice1"));
+				ValueUtils.createQuestionChoiceValue(qoc, "choice1"));
 		assertEquals(new MultipleChoiceValue(new ChoiceID(choice1), new ChoiceID(choice2)),
-				ValueFactory.createQuestionChoiceValue(qmc, "choice1", new ChoiceValue(choice2)));
+				ValueUtils.createQuestionChoiceValue(qmc, "choice1", new ChoiceValue(choice2)));
 	}
 
 	@Test
 	public void getID_or_Value() {
-		assertEquals("choice1", ValueFactory.getID_or_Value(new ChoiceValue(choice1)));
+		assertEquals("choice1", ValueUtils.getID_or_Value(new ChoiceValue(choice1)));
 		assertEquals(Unknown.UNKNOWN_ID,
-				ValueFactory.getID_or_Value(Unknown.getInstance()));
+				ValueUtils.getID_or_Value(Unknown.getInstance()));
 		assertEquals(UndefinedValue.UNDEFINED_ID,
-				ValueFactory.getID_or_Value(UndefinedValue.getInstance()));
-		assertEquals("4.0", ValueFactory.getID_or_Value(new NumValue(4)));
+				ValueUtils.getID_or_Value(UndefinedValue.getInstance()));
+		assertEquals("4.0", ValueUtils.getID_or_Value(new NumValue(4)));
 	}
 }

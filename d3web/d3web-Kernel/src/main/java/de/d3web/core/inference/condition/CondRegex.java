@@ -24,8 +24,11 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueUtils;
+import de.d3web.core.session.values.DateValue;
 
 /**
  * This condition checks, whether a specified regular expression matches the
@@ -79,7 +82,15 @@ public class CondRegex extends CondQuestion {
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		Value value = checkAnswer(session);
-		String valueString = value.toString();
+		String valueString;
+		Question question = getQuestion();
+		if (question instanceof QuestionDate) {
+			valueString = ValueUtils.getDateVerbalization((QuestionDate) question, (DateValue) value,
+					ValueUtils.TimeZoneDisplayMode.NEVER, false);
+		}
+		else {
+			valueString = value.toString();
+		}
 		return getPattern().matcher(valueString).matches();
 	}
 

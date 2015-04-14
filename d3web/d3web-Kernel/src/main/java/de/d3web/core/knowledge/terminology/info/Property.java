@@ -295,7 +295,7 @@ public final class Property<T> {
 		if (Enum.class.isAssignableFrom(clazz)) {
 			Enum value = Strings.parseEnum(string, (Class) clazz);
 			if (value == null) {
-				throw new IllegalArgumentException(string + " is not a valid value for property " + getName());
+				throw new IllegalArgumentException("'" + string + "' is not a valid value for property " + getName());
 			}
 			return castToStoredValue(value);
 		}

@@ -46,7 +46,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.ValueFactory;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
@@ -143,7 +143,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private Element getElement(Persistence<KnowledgeBase> persistence, ConditionalValueSetter cvs) throws IOException {
 		Element element = persistence.getDocument().createElement("ConditionalValueSetter");
-		String id_or_value = ValueFactory.getID_or_Value(cvs.getAnswer());
+		String id_or_value = ValueUtils.getID_or_Value(cvs.getAnswer());
 		element.setAttribute("AID", id_or_value);
 		Condition condition = cvs.getCondition();
 		if (condition != null) {

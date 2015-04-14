@@ -178,13 +178,13 @@ public class KnowledgeBaseUtilsTest {
 		Value dateToGet = null;
 		SimpleDateFormat format = DateValue.getDefaultDateFormat();
 		try {
-			Date date = format.parse("2010-09-02 12:13:30.000");
+			Date date = format.parse("2010-09-02 12:13:30.000 UTC");
 			dateToGet = new DateValue(date);
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
-		String dateValInput = "2010-09-02 12:13:30.000";
+		String dateValInput = "2010-09-02 12:13:30.000 UTC";
 		QuestionDate qd = new QuestionDate(kb, "Please enter: ");
 		assertThat(KnowledgeBaseUtils.findValue(qd, dateValInput), is(dateToGet));
 		dateValInput = "wrong date format";

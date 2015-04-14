@@ -42,11 +42,11 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
@@ -192,7 +192,7 @@ public class PSMethodInit implements PSMethod {
 		}
 		else if (q instanceof QuestionDate) {
 			try {
-				return DateValue.createDateValue(property);
+				return ValueUtils.createDateValue((QuestionDate) q, property);
 			}
 			// throw more detailed error message
 			catch (IllegalArgumentException e) {
