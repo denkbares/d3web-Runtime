@@ -578,6 +578,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 						if (candidate.getTerminalObjects().size() == 1
 								&& Conditions.isTrue(candidate, sessionRepresentingTheActualState)) {
 							TerminologyObject candidateQuestion = candidate.getTerminalObjects().iterator().next();
+							// this is only allowed for the same question
+							if (question != candidateQuestion) continue;
 							Set<Value> coveredValues = coveredValueMap.get(candidateQuestion);
 							Set<Value> coveredCandidateValues = getCoveredValues(candidate).get(
 									candidateQuestion);

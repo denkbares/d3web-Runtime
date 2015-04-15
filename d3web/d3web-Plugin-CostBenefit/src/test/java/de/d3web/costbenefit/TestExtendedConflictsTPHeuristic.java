@@ -274,7 +274,7 @@ public class TestExtendedConflictsTPHeuristic {
 		Assert.assertTrue(terms.contains(condLightSwitchDriving));
 		Assert.assertTrue(terms.contains(condLightSwitchDay));
 		// cond fog on can be used, but is fullfilled anyway
-		Assert.assertTrue(terms.contains(condFogOn));
+		// Assert.assertTrue(terms.contains(condFogOn));
 		// condFogOff must not be used -> state question differs from original
 		// fulfilled condition, recursive adding is blocked
 		Assert.assertFalse(terms.contains(condFogOff));
