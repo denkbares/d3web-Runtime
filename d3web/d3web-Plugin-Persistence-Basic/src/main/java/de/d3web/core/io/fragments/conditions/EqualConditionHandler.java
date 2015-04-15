@@ -19,6 +19,7 @@
 package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,13 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
@@ -72,7 +75,7 @@ public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 			if (idObject instanceof QuestionChoice) {
 				QuestionChoice q = (QuestionChoice) idObject;
 				Value a = null;
-				if (value != null && value.length() > 0) {
+				if (value.length() > 0) {
 					ChoiceID[] choices = ChoiceID.decodeChoiceIDs(value);
 					List<ChoiceValue> conds = new ArrayList<ChoiceValue>();
 					for (ChoiceID s : choices) {
@@ -115,6 +118,13 @@ public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 			}
 			else if (idObject instanceof QuestionText) {
 				return new CondEqual((Question) idObject, new TextValue(value));
+			}
+			else if (idObject instanceof QuestionDate) {
+				try {
+					return new CondEqual((Question) idObject, new DateValue(XMLUtil.DATE_FORMAT.parse(value)));
+				}
+				catch (ParseException ignore) {
+				}
 			}
 			else {
 				throw new IOException("CondEqual for question '" + idObject.getName() +
