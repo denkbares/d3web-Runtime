@@ -25,8 +25,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -78,20 +80,25 @@ public final class ValueUtils {
 	}
 
 	/**
+	 * Date format to validate a time zone parsable by the other formats used in this ValueUtils.
+	 */
+	private static final SimpleDateFormat TIME_ZONE_DATE_FORMAT = new SimpleDateFormat("z", Locale.ENGLISH);
+
+	/**
 	 * This format should be used when saving DateValues to be able to parse the
 	 * date with the static method {@link DateValue#createDateValue(String)}
 	 */
 	private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
 	private static final SimpleDateFormat DATE_FORMAT_WITH_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z", Locale.ENGLISH);
 
-	private static final List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
+	private static final Map<TimeZone, SimpleDateFormat> DATE_FORMAT_WITHOUT_TIME_ZONE_MAP = new HashMap<TimeZone, SimpleDateFormat>();
 
-	private static final List<SimpleDateFormat> dateFormatsWithoutTimeZone = new ArrayList<SimpleDateFormat>();
-
-	private static final List<SimpleDateFormat> dateFormatsWithTimeZone = new ArrayList<SimpleDateFormat>();
+	private static final Map<TimeZone, List<SimpleDateFormat>> DATE_FORMATS_WITHOUT_TIME_ZONE_MAP = new HashMap<TimeZone, List<SimpleDateFormat>>();
+	private static final List<SimpleDateFormat> DATE_FORMATS_WITH_TIME_ZONE = new ArrayList<SimpleDateFormat>();
 
 	static {
+		List<SimpleDateFormat> dateFormatsWithoutTimeZone = new ArrayList<SimpleDateFormat>();
+
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS"));
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm"));
@@ -110,38 +117,97 @@ public final class ValueUtils {
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("dd/MM/yyyy HH:mm"));
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("dd/MM/yyyy"));
+
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd HH-mm z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(DATE_FORMAT_WITH_TIME_ZONE);
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd HH:mm z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("yyyy-MM-dd z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd.MM.yyyy HH:mm z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd.MM.yyyy z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd/MM/yyyy HH:mm z", Locale.ENGLISH));
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("dd/MM/yyyy z", Locale.ENGLISH));
+		// can parse Date.toString()
+		DATE_FORMATS_WITH_TIME_ZONE.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
+
+		DATE_FORMAT_WITHOUT_TIME_ZONE_MAP.put(null, DATE_FORMAT_WITHOUT_TIME_ZONE);
+		DATE_FORMATS_WITHOUT_TIME_ZONE_MAP.put(null, dateFormatsWithoutTimeZone);
+
+		for (SimpleDateFormat simpleDateFormat : dateFormatsWithoutTimeZone) {
+			simpleDateFormat.setLenient(false);
+		}
+		for (SimpleDateFormat simpleDateFormat : DATE_FORMATS_WITH_TIME_ZONE) {
+			simpleDateFormat.setLenient(false);
+		}
 	}
 
-	static {
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd HH-mm z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat(DATE_FORMAT_WITHOUT_TIME_ZONE.toPattern() + " z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd HH:mm z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("yyyy-MM-dd z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd.MM.yyyy HH:mm z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd.MM.yyyy z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd/MM/yyyy HH:mm z"));
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("dd/MM/yyyy z"));
+	private static List<SimpleDateFormat> getDateFormatsWithTimeZone() {
+		return DATE_FORMATS_WITH_TIME_ZONE;
+	}
 
-		// can parse Date.toString()
-		dateFormatsWithTimeZone.add(new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.ROOT));
+	private static SimpleDateFormat getDefaultDateFormatWithTimeZone() {
+		return DATE_FORMAT_WITH_TIME_ZONE;
+	}
 
-		for (int i = 0; i < dateFormatsWithTimeZone.size() || i < dateFormatsWithoutTimeZone.size(); i++) {
-			if (i < dateFormatsWithTimeZone.size()) dateFormats.add(dateFormatsWithTimeZone.get(i));
-			if (i < dateFormatsWithoutTimeZone.size()) dateFormats.add(dateFormatsWithoutTimeZone.get(i));
+	private static synchronized List<SimpleDateFormat> getDateFormatsWithoutTimeZone(TimeZone zone) {
+		List<SimpleDateFormat> simpleDateFormats = DATE_FORMATS_WITHOUT_TIME_ZONE_MAP.get(zone);
+		if (simpleDateFormats == null) {
+			List<SimpleDateFormat> simpleDateFormatsDef = DATE_FORMATS_WITHOUT_TIME_ZONE_MAP.get(null);
+			simpleDateFormats = new ArrayList<SimpleDateFormat>();
+			for (SimpleDateFormat simpleDateFormat : simpleDateFormatsDef) {
+				SimpleDateFormat clone = (SimpleDateFormat) simpleDateFormat.clone();
+				clone.setTimeZone(zone);
+				simpleDateFormats.add(clone);
+			}
+			DATE_FORMATS_WITHOUT_TIME_ZONE_MAP.put(zone, simpleDateFormats);
+		}
+		return simpleDateFormats;
+	}
+
+	private static synchronized SimpleDateFormat getDefaultDateFormatWithoutTimeZone(TimeZone zone) {
+		SimpleDateFormat simpleDateFormat = DATE_FORMAT_WITHOUT_TIME_ZONE_MAP.get(zone);
+		if (simpleDateFormat == null) {
+			simpleDateFormat = DATE_FORMAT_WITHOUT_TIME_ZONE_MAP.get(null);
+			SimpleDateFormat clone = (SimpleDateFormat) simpleDateFormat.clone();
+			clone.setTimeZone(zone);
+			DATE_FORMAT_WITHOUT_TIME_ZONE_MAP.put(zone, clone);
+		}
+		return simpleDateFormat;
+	}
+
+	/**
+	 * Checks whether the given time zone id is valid for the other DateFormats used to parse dates in this util class.
+	 *
+	 * @param timeZoneId the time zone id to check
+	 * @return true if the time zone id is valid, false if not
+	 */
+	public static synchronized boolean isValidTimeZoneId(String timeZoneId) {
+		try {
+			TIME_ZONE_DATE_FORMAT.parse(timeZoneId);
+			return true;
+		}
+		catch (ParseException e) {
+			return false;
 		}
 	}
 
 	public static String[] getAllowedDateFormatPatterns() {
+		List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
+		List<SimpleDateFormat> dateFormatsWithTimeZone = getDateFormatsWithTimeZone();
+		List<SimpleDateFormat> dateFormatsWithoutTimeZone = getDateFormatsWithoutTimeZone(null);
+		for (int i = 0; i < dateFormatsWithTimeZone.size() || i < dateFormatsWithoutTimeZone.size(); i++) {
+			if (i < dateFormatsWithTimeZone.size()) dateFormats.add(dateFormatsWithTimeZone.get(i));
+			if (i < dateFormatsWithoutTimeZone.size()) dateFormats.add(dateFormatsWithoutTimeZone.get(i));
+		}
 		String[] result = new String[dateFormats.size()];
 		int index = 0;
 		for (SimpleDateFormat format : dateFormats) {
@@ -152,11 +218,11 @@ public final class ValueUtils {
 
 	/**
 	 * The format returned here should be used when saving DateValues to be able to parse the date with the static
-	 * method {@link DateValue#createDateValue(String)}. Be aware that {@link SimpleDateFormat}s are not thread safe,
-	 * although you will get a new instance of the format every time you call this method.
+	 * method {@link ValueUtils#createDateValue(QuestionDate, String)}. Be aware that {@link SimpleDateFormat}s are not
+	 * thread safe, although you will get a new instance of the format every time you call this method.
 	 */
 	public static SimpleDateFormat getDefaultDateFormat() {
-		return new SimpleDateFormat(DATE_FORMAT_WITH_TIME_ZONE.toPattern());
+		return (SimpleDateFormat) DATE_FORMAT_WITH_TIME_ZONE.clone();
 	}
 
 	/**
@@ -446,25 +512,24 @@ public final class ValueUtils {
 		String dateString;
 		SimpleDateFormat dateFormat;
 		if (timeZoneMode == TimeZoneDisplayMode.ALWAYS) {
-			dateFormat = DATE_FORMAT_WITH_TIME_ZONE;
+			dateFormat = getDefaultDateFormatWithTimeZone();
 		}
 		else if (timeZoneMode == TimeZoneDisplayMode.NEVER) {
-			dateFormat = DATE_FORMAT_WITHOUT_TIME_ZONE;
+			dateFormat = getDefaultDateFormatWithoutTimeZone(timeZone);
 		}
 		else {
-			dateFormat = !TimeZone.getDefault().equals(timeZone) ?
-					DATE_FORMAT_WITH_TIME_ZONE : DATE_FORMAT_WITHOUT_TIME_ZONE;
+			dateFormat = TimeZone.getDefault().equals(timeZone) || timeZone == null ?
+					getDefaultDateFormatWithoutTimeZone(timeZone) : getDefaultDateFormatWithTimeZone();
 		}
-		//noinspection SynchronizationOnLocalVariableOrMethodParameter
-		synchronized (dateFormat) {
-			TimeZone defaultTimeZone = null;
-			if (timeZone != null) {
-				defaultTimeZone = dateFormat.getTimeZone();
-				dateFormat.setTimeZone(timeZone);
-			}
+		if (timeZone != null) {
+			dateFormat = (SimpleDateFormat) dateFormat.clone();
+			dateFormat.setTimeZone(timeZone);
 			dateString = dateFormat.format(date);
-			if (timeZone != null) {
-				dateFormat.setTimeZone(defaultTimeZone);
+		}
+		else {
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (dateFormat) {
+				dateString = dateFormat.format(date);
 			}
 		}
 		if (trim) dateString = trimTime(dateString);
@@ -525,7 +590,7 @@ public final class ValueUtils {
 	 */
 	public static DateValue createDateValue(TimeZone timeZone, String dateString) {
 		// First, try the formats with TimeZone. If the String provides a TimeZone, we want to use it of course.
-		for (SimpleDateFormat dateFormat : dateFormatsWithTimeZone) {
+		for (SimpleDateFormat dateFormat : getDateFormatsWithTimeZone()) {
 			try {
 				//noinspection SynchronizationOnLocalVariableOrMethodParameter
 				synchronized (dateFormat) {
@@ -535,29 +600,34 @@ public final class ValueUtils {
 			}
 			catch (ParseException ignore) {
 			}
+		}
+		// SimpleDateFormat does not parse strict at the end of the string. If it can match a format to the
+		// start of the string, it will do it, disregarding any appended invalid time zones or other characters.
+		// Because of this, we would not get any warning, if the user appended a time zone which cannot be recognized
+		// by the z pattern, the format would just return a date parsed without the time zone.
+		// To fix this, we check at this point, if the date String contains any characters that could belong to
+		// a time zone. If it does, the time zone was obviously not properly recognized in the loop aboive and we abort
+		// with an exception. If it does not contain any such characters, we just try the formats without time zones.
+		if (dateString.matches("^.+?[a-zA-Z]+.*")) {
+			throw new IllegalArgumentException("'" + dateString + "' contains and unreadable time zone");
 		}
 		// The String does not seem to contain a TimeZone. If we have a time zone we use it. If not, we will use the
 		// time zone of JVM.
-		for (SimpleDateFormat dateFormat : dateFormatsWithoutTimeZone) {
+		for (SimpleDateFormat dateFormat : getDateFormatsWithoutTimeZone(timeZone)) {
 			try {
 				//noinspection SynchronizationOnLocalVariableOrMethodParameter
 				synchronized (dateFormat) {
-					TimeZone currentTimeZone = null;
-					if (timeZone != null) {
-						currentTimeZone = dateFormat.getTimeZone();
-						dateFormat.setTimeZone(timeZone);
-					}
 					Date date = dateFormat.parse(dateString);
-					if (timeZone != null) {
-						dateFormat.setTimeZone(currentTimeZone);
-					}
 					return new DateValue(date);
 				}
+
 			}
 			catch (ParseException ignore) {
 			}
 		}
+
 		throw new IllegalArgumentException("'" + dateString + "' can not be recognized as a date");
+
 	}
 
 	public static TimeZone getTimeZone(QuestionDate question) {
