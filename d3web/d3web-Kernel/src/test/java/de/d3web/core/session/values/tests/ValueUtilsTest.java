@@ -48,6 +48,7 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ValueUtilsTest {
 
@@ -217,5 +218,101 @@ public class ValueUtilsTest {
 		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-02 9:00");
 		assertEquals(date, dateValue.getDate());
 
+	}
+
+	@Test
+	public void getDateVerbalization() {
+		Date date = ValueUtils.createDateValue("2015-04-15 14:00").getDate();
+
+		String dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.NEVER, false);
+		assertEquals("2015-04-15 14:00:00.000", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT, false);
+		assertEquals("2015-04-15 14:00:00.000", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT, true);
+		assertEquals("2015-04-15 14:00", dateVerbalization);
+
+		date = ValueUtils.createDateValue("2015-04-15 14:01:14").getDate();
+
+		dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT, false);
+		assertEquals("2015-04-15 14:01:14.000", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT, true);
+		assertEquals("2015-04-15 14:01:14", dateVerbalization);
+
+		date = ValueUtils.createDateValue("2015-04-15 14:01:14").getDate();
+
+		dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT, false);
+		assertEquals("2015-04-15 14:01:14.000", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT, true);
+		assertEquals("2015-04-15 14:01:14", dateVerbalization);
+
+		date = ValueUtils.createDateValue("2015-04-15 14:01:14 UTC").getDate();
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("UTC"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-15 14:01:14 UTC", dateVerbalization);
+
+		TimeZone defTimeZone = TimeZone.getDefault();
+		TimeZone.setDefault(ValueUtils.getTimeZone("CET"));
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("UTC"), date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT);
+		assertEquals("2015-04-15 14:01:14 UTC", dateVerbalization);
+
+		TimeZone.setDefault(ValueUtils.getTimeZone("UTC"));
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("UTC"), date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT);
+		assertEquals("2015-04-15 14:01:14", dateVerbalization);
+		TimeZone.setDefault(null);
+		assertEquals(defTimeZone, TimeZone.getDefault());
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("UTC"), date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-15 14:01:14", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization((TimeZone) null, date, ValueUtils.TimeZoneDisplayMode.IF_NOT_DEFAULT);
+		assertTrue(dateVerbalization.matches("^2015-04-1\\d \\d\\d:01:14$"));
+
+		dateVerbalization = ValueUtils.getDateVerbalization((TimeZone) null, date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertTrue(dateVerbalization.matches("^2015-04-1\\d \\d\\d:01:14 .+$"));
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CET"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-15 16:01:14 CEST", dateVerbalization); // CET will be CEST in summer time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CEST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-15 16:01:14 CEST", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-16 02:01:14 NZST", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZDT"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-16 02:01:14 NZST", dateVerbalization);  // NZDT will be NZST in winter time
+
+
+		date = ValueUtils.createDateValue("2015-01-01 14:01:14 UTC").getDate();
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CET"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-01 15:01:14 CET", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CEST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-01 15:01:14 CET", dateVerbalization); // CEST will be CET in winter time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization); // NZST will be NZDT in summer time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZDT"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization);
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZST");
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, new DateValue(date), ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, new DateValue(date), ValueUtils.TimeZoneDisplayMode.ALWAYS, false);
+		assertEquals("2015-01-02 03:01:14.000 NZDT", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization);
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization);
 	}
 }
