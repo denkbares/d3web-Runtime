@@ -79,18 +79,15 @@ public class DateValue implements QuestionValue {
 	 * <p/>
 	 * <b>Attention:</b> If the corresponding question is available while calling the method, you should instead use
 	 * {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if your String does not contain a TimeZone
-	 * identifier. Having the Question available will use a specified time zone of the questions UNIT property if given
+	 * identifier. Having the Question available will use a specified time zone of the question's UNIT property if given
 	 * and if the String does not provide one.
 	 *
 	 * @param dateString the value to parse
 	 * @return the parsed DateValue
 	 * @created 23.10.2013
-	 *
-	 * @deprecated use the methods in {@link ValueUtils} instead, e.g. {@link ValueUtils#createDateValue(QuestionDate, String)}
 	 */
-	@Deprecated
 	public static DateValue createDateValue(String dateString) throws IllegalArgumentException {
-		return ValueUtils.createDateValue((TimeZone) null, dateString);
+		return ValueUtils.createDateValue(dateString);
 	}
 
 

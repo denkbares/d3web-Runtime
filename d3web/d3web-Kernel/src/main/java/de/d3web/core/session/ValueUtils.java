@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -84,10 +85,8 @@ public final class ValueUtils {
 	 */
 	private static final SimpleDateFormat TIME_ZONE_DATE_FORMAT = new SimpleDateFormat("z", Locale.ENGLISH);
 
-	/**
-	 * This format should be used when saving DateValues to be able to parse the
-	 * date with the static method {@link DateValue#createDateValue(String)}
-	 */
+	private static final String UNIX_TIME_ZERO_STRING = "1970-01-01 00:00:00.000";
+
 	private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final SimpleDateFormat DATE_FORMAT_WITH_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z", Locale.ENGLISH);
 
@@ -572,57 +571,65 @@ public final class ValueUtils {
 	 * @created 13.04.2015
 	 */
 	public static DateValue createDateValue(QuestionDate question, String dateString) throws IllegalArgumentException {
-		return createDateValue(getTimeZone(question), dateString);
+		String timeZoneId = getTimeZoneId(question);
+		if (timeZoneId != null) {
+			// if we have a time zone id, attach it to the  date string, if there isn't one present already
+			if (!timeZoneDateStringPattern.matcher(dateString).find()) {
+				dateString += " " + timeZoneId;
+			}
+		}
+		return createDateValue(dateString);
 
 	}
 
+	private static final Pattern timeZoneDateStringPattern = Pattern.compile("[a-zA-Z]");
+
 	/**
 	 * Creates a {@link DateValue} from a given String. If the String comes with a time zone, that time zone will be
-	 * used to parse the date. If no time zone is given in the String, we use the attribute <tt>timeZone</tt>. If that
-	 * isn't given either, the default time zone of the JVM is used.
+	 * used to parse the date. If no time zone is given in the String, the default time zone of the JVM is used.
 	 * To be parseable, the String has to come in one of the available {@link DateFormat} from
 	 * {@link DateValue#getAllowedFormatStrings()}.
 	 *
-	 * @param timeZone   the time zone to be used if the string does not contain a time zone
 	 * @param dateString the value to parse
 	 * @return the parsed DateValue
 	 * @created 13.04.2015
 	 */
-	public static DateValue createDateValue(TimeZone timeZone, String dateString) {
-		// First, try the formats with TimeZone. If the String provides a TimeZone, we want to use it of course.
-		for (SimpleDateFormat dateFormat : getDateFormatsWithTimeZone()) {
-			try {
-				//noinspection SynchronizationOnLocalVariableOrMethodParameter
-				synchronized (dateFormat) {
-					Date date = dateFormat.parse(dateString);
-					return new DateValue(date);
-				}
-			}
-			catch (ParseException ignore) {
-			}
-		}
+	public static DateValue createDateValue(String dateString) {
 		// SimpleDateFormat does not parse strict at the end of the string. If it can match a format to the
 		// start of the string, it will do it, disregarding any appended invalid time zones or other characters.
-		// Because of this, we would not get any warning, if the user appended a time zone which cannot be recognized
-		// by the z pattern, the format would just return a date parsed without the time zone.
-		// To fix this, we check at this point, if the date String contains any characters that could belong to
-		// a time zone. If it does, the time zone was obviously not properly recognized in the loop aboive and we abort
-		// with an exception. If it does not contain any such characters, we just try the formats without time zones.
-		if (dateString.matches("^.+?[a-zA-Z]+.*")) {
-			throw new IllegalArgumentException("'" + dateString + "' contains and unreadable time zone");
-		}
-		// The String does not seem to contain a TimeZone. If we have a time zone we use it. If not, we will use the
-		// time zone of JVM.
-		for (SimpleDateFormat dateFormat : getDateFormatsWithoutTimeZone(timeZone)) {
-			try {
-				//noinspection SynchronizationOnLocalVariableOrMethodParameter
-				synchronized (dateFormat) {
-					Date date = dateFormat.parse(dateString);
-					return new DateValue(date);
+		// If we would just check with the formats with the time zone pattern z and than with the formats without,
+		// the dates would be parsed by the formats without, disregarding any invalid time zones.
+		// To fix this, we check if the date String contains any characters that could belong to a time zone. If it
+		// does, we use our time zone formats and try to parse. If we are not successful, do not try again with the
+		// formats without time zone, because they would parse even with invalid time zone.
+		if (timeZoneDateStringPattern.matcher(dateString).find()) {
+			// Try the formats with TimeZone. If the String provides a TimeZone, we want to use it of course.
+			for (SimpleDateFormat dateFormat : getDateFormatsWithTimeZone()) {
+				try {
+					//noinspection SynchronizationOnLocalVariableOrMethodParameter
+					synchronized (dateFormat) {
+						Date date = dateFormat.parse(dateString);
+						return new DateValue(date);
+					}
 				}
-
+				catch (ParseException ignore) {
+				}
 			}
-			catch (ParseException ignore) {
+		}
+		else {
+			// The String does not seem to contain a TimeZone. If we have a time zone we use it. If not, we will use the
+			// time zone of JVM.
+			for (SimpleDateFormat dateFormat : getDateFormatsWithoutTimeZone(null)) {
+				try {
+					//noinspection SynchronizationOnLocalVariableOrMethodParameter
+					synchronized (dateFormat) {
+						Date date = dateFormat.parse(dateString);
+						return new DateValue(date);
+					}
+
+				}
+				catch (ParseException ignore) {
+				}
 			}
 		}
 
@@ -630,13 +637,53 @@ public final class ValueUtils {
 
 	}
 
+	/**
+	 * Returns the TimeZone object based on the time zone id specified for the given question using the MMInfo.UNIT
+	 * property.
+	 */
 	public static TimeZone getTimeZone(QuestionDate question) {
 		TimeZone timeZone = null;
 		if (question != null) {
 			String timeZoneId = question.getInfoStore().getValue(MMInfo.UNIT);
-			if (timeZoneId != null) timeZone = TimeZone.getTimeZone(timeZoneId);
+			if (timeZoneId != null) {
+				timeZone = getTimeZone(timeZoneId);
+			}
 		}
 		return timeZone;
+	}
+
+	/**
+	 * Returns the timeZoneId specified for the given question using the MMInfo.UNIT property.
+	 */
+	public static String getTimeZoneId(QuestionDate question) {
+		if (question != null) {
+			return question.getInfoStore().getValue(MMInfo.UNIT);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns a time zone for a timeZoneId, which is compatible with the z pattern of the SimpleDateFormat. Every
+	 * timeZoneId that can be understood by the z pattern can also be understood by this method.
+	 *
+	 * @param timeZoneId the id of the wanted time zone
+	 * @return the wanted time zone object or null, if the id is invalid
+	 */
+	public static TimeZone getTimeZone(String timeZoneId) {
+		if (timeZoneId == null) return null;
+		// not sure why, but the SDT returns false time zones for UTC and GMT...
+		if (timeZoneId.equalsIgnoreCase("UTC") || timeZoneId.equalsIgnoreCase("GMT")) {
+			return TimeZone.getTimeZone(timeZoneId);
+		}
+		try {
+			synchronized (TIME_ZONE_DATE_FORMAT) {
+				TIME_ZONE_DATE_FORMAT.parse(timeZoneId);
+				return TIME_ZONE_DATE_FORMAT.getTimeZone();
+			}
+		}
+		catch (ParseException ignore) {
+			return null;
+		}
 	}
 
 }

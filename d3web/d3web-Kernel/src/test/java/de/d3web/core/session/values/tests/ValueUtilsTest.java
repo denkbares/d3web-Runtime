@@ -21,6 +21,8 @@ package de.d3web.core.session.values.tests;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
@@ -56,6 +59,7 @@ public class ValueUtilsTest {
 	private QuestionNum qnum;
 	private QuestionText qtext;
 	private QuestionDate qdate;
+	private QuestionDate qdate2;
 
 	@Before
 	public void setUp() throws IOException {
@@ -72,6 +76,7 @@ public class ValueUtilsTest {
 		qnum = new QuestionNum(kb.getRootQASet(), "qnum");
 		qtext = new QuestionText(kb.getRootQASet(), "qtext");
 		qdate = new QuestionDate(kb.getRootQASet(), "qdate");
+		qdate2 = new QuestionDate(kb.getRootQASet(), "qdate2");
 	}
 
 	@Test
@@ -108,5 +113,109 @@ public class ValueUtilsTest {
 		assertEquals(UndefinedValue.UNDEFINED_ID,
 				ValueUtils.getID_or_Value(UndefinedValue.getInstance()));
 		assertEquals("4.0", ValueUtils.getID_or_Value(new NumValue(4)));
+	}
+
+	@Test
+	public void getTimeZone() {
+		TimeZone utc = TimeZone.getTimeZone("UTC");
+		TimeZone utc1 = ValueUtils.getTimeZone("UTC");
+		System.out.println(utc.getDisplayName());
+		System.out.println(utc1.getDisplayName());
+		assertEquals(utc, utc1);
+	}
+
+	@Test
+	public void createDateValue() {
+		GregorianCalendar calendar = new GregorianCalendar(2015, 3, 15, 20, 0); // april is month 3
+		Date date = calendar.getTime();
+		DateValue dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 20:00");
+		assertEquals(date, dateValue.getDate());
+
+		calendar = new GregorianCalendar(2015, 3, 15, 20, 0); // april is month 3
+		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+		date = calendar.getTime();
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 20:00 UTC");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "UTC");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-15 20:00");
+		assertEquals(date, dateValue.getDate());
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 22:00 CEST");
+		assertEquals(date, dateValue.getDate());
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 21:00 CET");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CEST");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-15 22:00");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CET");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-15 21:00");
+		assertEquals(date, dateValue.getDate());
+
+		// try some not summer/day-light-saving dates
+
+		calendar = new GregorianCalendar(2015, 0, 1, 20, 0); // april is month 3
+		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+		date = calendar.getTime();
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-01-01 20:00 UTC");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "UTC");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-01 20:00");
+		assertEquals(date, dateValue.getDate());
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-01-01 22:00 CEST");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CEST");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-01 22:00");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CET");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-01 21:00");
+		assertEquals(date, dateValue.getDate());
+
+
+		// try some time zones on the southern hemisphere
+
+		calendar = new GregorianCalendar(2015, 3, 15, 20, 0);
+		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+		date = calendar.getTime();
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-04-16 8:00 NZST");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZST");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-16 8:00");
+		assertEquals(date, dateValue.getDate());
+
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-16 9:00");
+		assertEquals(date, dateValue.getDate());
+
+		// try summer / daylight-saving-time
+
+		calendar = new GregorianCalendar(2015, 0, 1, 20, 0);
+		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+		date = calendar.getTime();
+
+		dateValue = ValueUtils.createDateValue(qdate, "2015-01-02 8:00 NZST");
+		assertEquals(date, dateValue.getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZST");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-02 8:00");
+		assertEquals(date, dateValue.getDate());
+
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
+		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-02 9:00");
+		assertEquals(date, dateValue.getDate());
+
 	}
 }

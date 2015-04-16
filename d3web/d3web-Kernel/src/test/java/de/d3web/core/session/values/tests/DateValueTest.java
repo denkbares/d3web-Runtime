@@ -98,23 +98,23 @@ public class DateValueTest {
 		Date otherDate = getGregorianCalendar(2000, 7, 25, 14, 0, 0).getTime();
 		String dateString = getDateString(otherDate);
 		assertThat(dateString, is("2000-08-25 14:00 UTC"));
-		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
+		assertEquals(otherDate, ValueUtils.createDateValue(dateString).getDate());
 
 		otherDate = getGregorianCalendar(2000, 7, 25, 14, 21, 0).getTime();
 		dateString = getDateString(otherDate);
 		assertThat(dateString, is("2000-08-25 14:21 UTC"));
-		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
+		assertEquals(otherDate, ValueUtils.createDateValue(dateString).getDate());
 
 		otherDate = getGregorianCalendar(2000, 7, 25, 14, 21, 50).getTime();
 		dateString = getDateString(otherDate);
 		assertThat(dateString, is("2000-08-25 14:21:50 UTC"));
-		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
+		assertEquals(otherDate, ValueUtils.createDateValue(dateString).getDate());
 
 		otherDate = getGregorianCalendar(2000, 7, 25, 14, 21, 50).getTime();
 		otherDate = new Date(otherDate.getTime() + 420);
 		dateString = getDateString(otherDate);
 		assertThat(dateString, is("2000-08-25 14:21:50.420 UTC"));
-		assertEquals(otherDate, ValueUtils.createDateValue(TIME_ZONE, dateString).getDate());
+		assertEquals(otherDate, ValueUtils.createDateValue(dateString).getDate());
 
 	}
 
