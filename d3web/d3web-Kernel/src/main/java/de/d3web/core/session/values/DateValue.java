@@ -142,12 +142,9 @@ public class DateValue implements QuestionValue {
 	/**
 	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
 	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
-	 *
-	 * @deprecated use the methods in {@link ValueUtils} instead, e.g. {@link ValueUtils#getDateOrDurationVerbalization(QuestionDate, Date)}
 	 */
-	@Deprecated
 	public String getDateString() {
-		return ValueUtils.getDateVerbalization((TimeZone) null, getDate(), ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		return ValueUtils.getDateVerbalization(this);
 	}
 
 

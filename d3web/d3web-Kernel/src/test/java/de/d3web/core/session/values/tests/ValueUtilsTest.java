@@ -54,7 +54,6 @@ public class ValueUtilsTest {
 
 	private Choice choice1;
 	private Choice choice2;
-	private KnowledgeBase kb;
 	private QuestionMC qmc;
 	private QuestionOC qoc;
 	private QuestionNum qnum;
@@ -65,7 +64,7 @@ public class ValueUtilsTest {
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
-		kb = KnowledgeBaseUtils.createKnowledgeBase();
+		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		choice1 = new Choice("choice1");
 		choice2 = new Choice("choice2");
 		qmc = new QuestionMC(kb.getRootQASet(), "qmc");
@@ -118,44 +117,103 @@ public class ValueUtilsTest {
 
 	@Test
 	public void getTimeZone() {
-		TimeZone utc = TimeZone.getTimeZone("UTC");
-		TimeZone utc1 = ValueUtils.getTimeZone("UTC");
-		System.out.println(utc.getDisplayName());
-		System.out.println(utc1.getDisplayName());
-		assertEquals(utc, utc1);
+		compareTimeZones("UTC", "UTC");
+
+		compareTimeZones("UTC", "Utc");
+
+		compareTimeZones("GMT", "GMT");
+
+		compareTimeZones("GMT", "gmt");
+
+		compareTimeZones("Europe/Berlin", "CET");
+
+		compareTimeZones("Europe/Berlin", "CEST");
+
+		compareTimeZones("Europe/Berlin", "cest");
+
+		compareTimeZones("America/Los_Angeles", "PST");
+
+		compareTimeZones("America/Los_Angeles", "PDT");
+
+		compareTimeZones("America/Los_Angeles", "PDT");
+
+		compareTimeZones("America/Los_Angeles", "pdT");
+
+		compareTimeZones("America/Los_Angeles", "Pacific Standard Time");
+
+		compareTimeZones("Europe/Berlin", "Central European Time");
+
+		compareTimeZones("Europe/Berlin", "Central European Summer Time");
+
+		compareTimeZones("GMT-08:00", "GMT-08:00");
+
+		compareTimeZones("GMT-08:00", "GMT-8:00");
+
+		compareTimeZones("GMT+08:00", "GMT+08:00");
+
+		compareTimeZones("GMT+08:00", "GMT+8:00");
+	}
+
+	private void compareTimeZones(String s1, String s2) {
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, s2);
+		assertEquals(TimeZone.getTimeZone(s1), ValueUtils.getTimeZone(qdate2));
 	}
 
 	@Test
 	public void createDateValue() {
 		GregorianCalendar calendar = new GregorianCalendar(2015, 3, 15, 20, 0); // april is month 3
 		Date date = calendar.getTime();
-		DateValue dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 20:00");
-		assertEquals(date, dateValue.getDate());
+		DateValue dateValue;
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 20:00").getDate());
 
 		calendar = new GregorianCalendar(2015, 3, 15, 20, 0); // april is month 3
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 20:00 UTC");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 20:00 UTC").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "UTC");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-15 20:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-15 20:00").getDate());
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 22:00 CEST");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 22:00 CEST").getDate());
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-04-15 21:00 CET");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 22:00 CET").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CEST");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-15 22:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-15 22:00").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CET");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-15 21:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-15 22:00").getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "PDT");
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-15 13:00").getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "PST");
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-15 13:00").getDate());
+
+		// test GMT+-X format
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 22:00 GMT+2:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 22:00 GMT+02:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 1:00 GMT+5:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 1:00 GMT+05:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 07:00 GMT+11:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 6:00 GMT+10:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 09:00 GMT-11:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 10:00 GMT-10:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 19:00 GMT-1:00").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 19:00 GMT-01:00").getDate());
+
+
 
 		// try some not summer/day-light-saving dates
 
@@ -163,24 +221,27 @@ public class ValueUtilsTest {
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-01-01 20:00 UTC");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-01-01 20:00 UTC").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "UTC");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-01 20:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-01 20:00").getDate());
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-01-01 22:00 CEST");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-01-01 21:00 CEST").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CEST");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-01 22:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-01 21:00").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CET");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-01 21:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-01 21:00").getDate());
 
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "PST");
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-01 12:00").getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "pst");
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-01 12:00").getDate());
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "PDT");
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-01 12:00").getDate());
 
 		// try some time zones on the southern hemisphere
 
@@ -188,17 +249,17 @@ public class ValueUtilsTest {
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-04-16 8:00 NZST");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 8:00 NZST").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 8:00 New Zealand Daylight Time").getDate());
+
+		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-16 8:00 new zealand daylight time").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZST");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-16 8:00");
-		assertEquals(date, dateValue.getDate());
-
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-16 8:00").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-04-16 9:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-04-16 8:00").getDate());
 
 		// try summer / daylight-saving-time
 
@@ -206,18 +267,30 @@ public class ValueUtilsTest {
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
-		dateValue = ValueUtils.createDateValue(qdate, "2015-01-02 8:00 NZST");
+		dateValue = ValueUtils.createDateValue(qdate, "2015-01-02 9:00 NZST");
 		assertEquals(date, dateValue.getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZST");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-02 8:00");
-		assertEquals(date, dateValue.getDate());
-
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-02 9:00").getDate());
 
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
-		dateValue = ValueUtils.createDateValue(qdate2, "2015-01-02 9:00");
-		assertEquals(date, dateValue.getDate());
+		assertEquals(date, ValueUtils.createDateValue(qdate2, "2015-01-02 9:00").getDate());
 
+		// compare time zone given in string and given as attribute
+		compareStringAndAttributeTimeZone("2015-04-15 16:01:14", "CEST");
+
+		compareStringAndAttributeTimeZone("2015-04-15 16:01:14", "CET");
+
+		compareStringAndAttributeTimeZone("2015-04-16 8:01:14", "NZST");
+
+		compareStringAndAttributeTimeZone("2015-04-16 8:01:14", "NZDT");
+	}
+
+	private void compareStringAndAttributeTimeZone(String date, String timeZone) {
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, timeZone);
+		Date date1 = ValueUtils.createDateValue(date + " " + timeZone).getDate();
+		Date date2 = ValueUtils.createDateValue(qdate2, date).getDate();
+		assertEquals(date1, date2);
 	}
 
 	@Test
@@ -274,18 +347,32 @@ public class ValueUtilsTest {
 		dateVerbalization = ValueUtils.getDateVerbalization((TimeZone) null, date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertTrue(dateVerbalization.matches("^2015-04-1\\d \\d\\d:01:14 .+$"));
 
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("Central European Time"), date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-15 16:01:14", dateVerbalization); // CET will be CEST in summer time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CET"), date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-15 16:01:14", dateVerbalization); // CET will be CEST in summer time
+
 		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CET"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-15 16:01:14 CEST", dateVerbalization); // CET will be CEST in summer time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("Central European Time"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-04-15 16:01:14 CEST", dateVerbalization); // CET will be CEST in summer time
 
 		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CEST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-04-15 16:01:14 CEST", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("PST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-15 07:01:14 PDT", dateVerbalization); // PST will be PDT in summer time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("PDT"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-04-15 07:01:14 PDT", dateVerbalization);
 
 		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-04-16 02:01:14 NZST", dateVerbalization);
 
 		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZDT"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-04-16 02:01:14 NZST", dateVerbalization);  // NZDT will be NZST in winter time
-
 
 		date = ValueUtils.createDateValue("2015-01-01 14:01:14 UTC").getDate();
 
@@ -294,6 +381,18 @@ public class ValueUtilsTest {
 
 		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("CEST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-01-01 15:01:14 CET", dateVerbalization); // CEST will be CET in winter time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("PST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-01 06:01:14 PST", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("Pacific Standard Time"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-01 06:01:14 PST", dateVerbalization);
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("PDT"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-01 06:01:14 PST", dateVerbalization); // PDT will be PST in summer time
+
+		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("Pacific Daylight Time"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
+		assertEquals("2015-01-01 06:01:14 PST", dateVerbalization);
 
 		dateVerbalization = ValueUtils.getDateVerbalization(ValueUtils.getTimeZone("NZST"), date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization); // NZST will be NZDT in summer time
@@ -314,5 +413,36 @@ public class ValueUtilsTest {
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
 		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization);
+
 	}
+
+	@Test
+	public void roundTrip() {
+		Date date = ValueUtils.createDateValue("2015-04-15 14:01:14 UTC").getDate();
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CET");
+		String dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-15 16:01:14", dateVerbalization);
+		Date date2 = ValueUtils.createDateValue(qdate2, dateVerbalization).getDate();
+		assertEquals(date, date2);
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "CEST");
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-15 16:01:14", dateVerbalization);
+		date2 = ValueUtils.createDateValue(qdate2, dateVerbalization).getDate();
+		assertEquals(date, date2);
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZST");
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-16 02:01:14", dateVerbalization);
+		date2 = ValueUtils.createDateValue(qdate2, dateVerbalization).getDate();
+		assertEquals(date, date2);
+
+		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
+		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.NEVER);
+		assertEquals("2015-04-16 02:01:14", dateVerbalization);
+		date2 = ValueUtils.createDateValue(qdate2, dateVerbalization).getDate();
+		assertEquals(date, date2);
+	}
+
 }
