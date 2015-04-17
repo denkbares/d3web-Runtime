@@ -578,8 +578,18 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 						if (candidate.getTerminalObjects().size() == 1
 								&& Conditions.isTrue(candidate, sessionRepresentingTheActualState)) {
 							TerminologyObject candidateQuestion = candidate.getTerminalObjects().iterator().next();
-							// this is only allowed for the same question
-							if (question != candidateQuestion) continue;
+							if (question != candidateQuestion) {
+								// actually all candidateQuestions not being
+								// identically to the question should be
+								// skipped, but only those get skipped
+								// conflicting to original unfullfilled
+								// conditions => CAUTION: the optimistic of the
+								// heuristic can be harmed by having this
+								// condition
+								if (originalUnFullfilledConditions.get(candidateQuestion) != null) {
+									continue;
+								}
+							}
 							Set<Value> coveredValues = coveredValueMap.get(candidateQuestion);
 							Set<Value> coveredCandidateValues = getCoveredValues(candidate).get(
 									candidateQuestion);
