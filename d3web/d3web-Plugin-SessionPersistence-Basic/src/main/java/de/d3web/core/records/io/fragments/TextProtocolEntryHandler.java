@@ -47,7 +47,7 @@ public class TextProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		try {
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = SessionPersistenceManager.parseDate(dateString);
+			Date date = XMLUtil.readDate(dateString);
 			String text = element.getTextContent();
 
 			// and return the fact
@@ -62,7 +62,7 @@ public class TextProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		// prepare information
 		TextProtocolEntry entry = (TextProtocolEntry) object;
-		String dateString = SessionPersistenceManager.formatDate(entry.getDate());
+		String dateString = XMLUtil.writeDate(entry.getDate());
 
 		// create element
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);

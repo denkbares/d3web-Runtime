@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -62,9 +61,6 @@ public final class SessionPersistenceManager {
 	private static final String REPOSITORY_TAG = "repository";
 	private static final String SESSION_TAG = "session";
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS Z");
-	private static final SimpleDateFormat DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
-
 	private SessionPersistenceManager() {
 	}
 
@@ -73,25 +69,6 @@ public final class SessionPersistenceManager {
 			manager = new SessionPersistenceManager();
 		}
 		return manager;
-	}
-
-	public static Date parseDate(String dateString) throws ParseException {
-		try {
-			synchronized (DATE_FORMAT) {
-				return DATE_FORMAT.parse(dateString);
-			}
-		}
-		catch (ParseException e) {
-			synchronized (DATE_FORMAT_COMPATIBILITY) {
-				return DATE_FORMAT_COMPATIBILITY.parse(dateString);
-			}
-		}
-	}
-
-	public static String formatDate(Date date) {
-		synchronized (DATE_FORMAT) {
-			return DATE_FORMAT.format(date);
-		}
 	}
 
 	FragmentManager<SessionRecord> getFragmentManager() {
@@ -179,8 +156,8 @@ public final class SessionPersistenceManager {
 
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
-			sessionElement.setAttribute("created", formatDate(co.getCreationDate()));
-			sessionElement.setAttribute("changed", formatDate(co.getLastChangeDate()));
+			sessionElement.setAttribute("created", XMLUtil.writeDate(co.getCreationDate()));
+			sessionElement.setAttribute("changed", XMLUtil.writeDate(co.getLastChangeDate()));
 			for (Extension extension : handler) {
 				SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
 				SessionPersistence persistence = new SessionPersistence(this, co, sessionElement);
@@ -276,8 +253,8 @@ public final class SessionPersistenceManager {
 				String created = e.getAttribute("created");
 				String changed = e.getAttribute("changed");
 				try {
-					Date creationDate = parseDate(created);
-					Date dateOfLastEdit = parseDate(changed);
+					Date creationDate = XMLUtil.readDate(created);
+					Date dateOfLastEdit = XMLUtil.readDate(changed);
 					DefaultSessionRecord sr =
 							new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
 					for (Extension extension : handler) {
@@ -296,4 +273,5 @@ public final class SessionPersistenceManager {
 		listener.updateProgress(1f, "parsing done");
 		return sessionRecords;
 	}
+
 }

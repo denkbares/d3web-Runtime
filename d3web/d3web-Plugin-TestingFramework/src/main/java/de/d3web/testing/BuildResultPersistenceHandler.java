@@ -20,7 +20,6 @@ package de.d3web.testing;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.utils.Log;
 
 /**
@@ -64,9 +64,6 @@ public class BuildResultPersistenceHandler {
 	private static final String XML_SCHEM_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
 	private static final String XSI_SCHEMA_LOCATION = "xsi:schemaLocation";
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss Z");
-	private static final SimpleDateFormat DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
-
 	public static Document toXML(BuildResult build) throws IOException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -83,9 +80,7 @@ public class BuildResultPersistenceHandler {
 
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
-		synchronized (DATE_FORMAT) {
-			root.setAttribute(DATE, DATE_FORMAT.format(build.getBuildDate()));
-		}
+		root.setAttribute(DATE, XMLUtil.writeDate(build.getBuildDate()));
 
 		// add child results for single tests
 		for (TestResult result : build.getResults()) {
@@ -156,17 +151,7 @@ public class BuildResultPersistenceHandler {
 		long duration = Long.parseLong(root.getAttribute(DURATION));
 
 		String dateAttribute = root.getAttribute(DATE);
-		Date date;
-		try {
-			synchronized (DATE_FORMAT) {
-				date = DATE_FORMAT.parse(dateAttribute);
-			}
-		}
-		catch (ParseException e) {
-			synchronized (DATE_FORMAT_COMPATIBILITY) {
-				date = DATE_FORMAT_COMPATIBILITY.parse(dateAttribute);
-			}
-		}
+		Date date = XMLUtil.readDate(dateAttribute);
 		int successfulTests = 0;
 
 		// create test item

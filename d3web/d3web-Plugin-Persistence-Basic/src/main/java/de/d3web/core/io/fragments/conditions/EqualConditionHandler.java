@@ -121,7 +121,7 @@ public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 			}
 			else if (idObject instanceof QuestionDate) {
 				try {
-					return new CondEqual((Question) idObject, new DateValue(XMLUtil.DATE_FORMAT.parse(value)));
+					return new CondEqual((Question) idObject, new DateValue(XMLUtil.readDate(value)));
 				}
 				catch (ParseException ignore) {
 				}

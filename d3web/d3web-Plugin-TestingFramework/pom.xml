@@ -1,17 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>d3web</artifactId>
-    <groupId>de.uniwue.d3web</groupId>
-    <version>0.2-SNAPSHOT</version>
-  </parent>
-  <groupId>de.uniwue.d3web</groupId>
-  <artifactId>d3web-Plugin-TestingFramework</artifactId>
-  <version>0.2-SNAPSHOT</version>
-  <name>d3web-Plugin-TestingFramework</name>
-  <description>Defines essential classes/interfaces for testing (e.g., of knowledge bases)</description>
-  
-  	<build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>d3web</artifactId>
+		<groupId>de.uniwue.d3web</groupId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+	<groupId>de.uniwue.d3web</groupId>
+	<artifactId>d3web-Plugin-TestingFramework</artifactId>
+	<version>0.2-SNAPSHOT</version>
+	<name>d3web-Plugin-TestingFramework</name>
+	<description>Defines essential classes/interfaces for testing (e.g., of knowledge bases)</description>
+
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -36,26 +37,31 @@
 			</plugin>
 		</plugins>
 	</build>
-  
-  <dependencies>
-  	<dependency>
-  		<groupId>de.uniwue.d3web</groupId>
-  		<artifactId>d3web-PluginManager</artifactId>
-  		<version>0.2-SNAPSHOT</version>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>de.uniwue.d3web</groupId>
-  		<artifactId>d3web-Utils</artifactId>
-  		<version>0.2-SNAPSHOT</version>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-PluginManager</artifactId>
+			<version>0.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Utils</artifactId>
+			<version>0.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Persistence</artifactId>
+			<version>0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
-  </dependencies>
+	</dependencies>
 </project>

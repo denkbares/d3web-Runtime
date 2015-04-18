@@ -52,6 +52,7 @@ import de.d3web.core.session.protocol.Protocol;
  */
 public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 
+	// to allow broader support in file systems, we don't use colons but dots in the date pattern
 	public static final SimpleDateFormat FILE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss.SS Z");
 	public static final SimpleDateFormat FILE_DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss.SS");
 

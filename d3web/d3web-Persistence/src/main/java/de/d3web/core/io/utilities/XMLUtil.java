@@ -25,11 +25,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -89,7 +91,47 @@ public final class XMLUtil {
 
 	public static final String INFO_STORE = "infoStore";
 
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS Z");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+	private static final SimpleDateFormat DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+
+	/**
+	 * Turns a date into a date string, that can late be turned into the same date again using {@link
+	 * XMLUtil#readDate(String)}.
+	 * This should be used to write dates for persistence.
+	 */
+	public static String writeDate(Date date) {
+		synchronized (DATE_FORMAT) {
+			return DATE_FORMAT.format(date);
+		}
+	}
+
+	/**
+	 * Turns a date string into a date. This should be used to load persistent dates.
+	 *
+	 * @param compatibilityFormat allows to provide an additional format which will be applied, if the default one
+	 *                            fails. This allows to support persistence files that were written before the date
+	 *                            verbalization was standardized.
+	 */
+	public static Date readDate(String dateString, SimpleDateFormat compatibilityFormat) throws ParseException {
+		try {
+			synchronized (DATE_FORMAT) {
+				return DATE_FORMAT.parse(dateString);
+			}
+		}
+		catch (ParseException e) {
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (compatibilityFormat) {
+				return compatibilityFormat.parse(dateString);
+			}
+		}
+	}
+
+	/**
+	 * Turns a date string into a date. This should be used to load persistent dates.
+	 */
+	public static Date readDate(String dateString) throws ParseException {
+		return readDate(dateString, DATE_FORMAT_COMPATIBILITY);
+	}
 
 	/**
 	 * Appends a question element to a parent element. Appends no element, if
@@ -315,9 +357,7 @@ public final class XMLUtil {
 			return ((TextValue) answer).getValue().toString();
 		}
 		else if (answer instanceof DateValue) {
-			synchronized (DATE_FORMAT) {
-				return DATE_FORMAT.format(((DateValue) answer).getDate());
-			}
+			return writeDate(((DateValue) answer).getDate());
 		}
 		else {
 			throw new IOException(

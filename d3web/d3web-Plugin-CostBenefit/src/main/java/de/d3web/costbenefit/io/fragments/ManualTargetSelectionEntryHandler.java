@@ -30,7 +30,6 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
 
 /**
@@ -51,7 +50,7 @@ public class ManualTargetSelectionEntryHandler implements FragmentHandler<Knowle
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		try {
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = SessionPersistenceManager.parseDate(dateString);
+			Date date = XMLUtil.readDate(dateString);
 			List<String> targets = new LinkedList<String>();
 			List<Element> elementList = XMLUtil.getElementList(element.getChildNodes());
 			if (elementList.size() != 1 || !elementList.get(0).getNodeName().equals(TARGETS)) {
@@ -70,7 +69,7 @@ public class ManualTargetSelectionEntryHandler implements FragmentHandler<Knowle
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ManualTargetSelectionEntry entry = (ManualTargetSelectionEntry) object;
-		String dateString = SessionPersistenceManager.formatDate(entry.getDate());
+		String dateString = XMLUtil.writeDate(entry.getDate());
 		Element e = persistence.getDocument().createElement(ELEMENT_NAME);
 		e.setAttribute("type", ELEMENT_TYPE);
 		e.setAttribute(ATTR_DATE, dateString);

@@ -44,6 +44,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -401,10 +402,6 @@ public final class TestPersistence {
 		}
 	}
 
-	/**
-	 * @param sr
-	 * @param kb
-	 */
 	private void parseStartElement(XMLStreamReader sr, KnowledgeBase kb) {
 
 		String elName = sr.getLocalName();
@@ -418,9 +415,10 @@ public final class TestPersistence {
 			String dateString = sr.getAttributeValue(null, STARTDATE);
 			if (dateString != null) {
 				try {
-					stc.setStartDate(DateValue.getDefaultDateFormat().parse(dateString));
+					stc.setStartDate(XMLUtil.readDate(dateString));
 				}
 				catch (ParseException e) {
+					Log.severe("Unable to parse date");
 					e.printStackTrace();
 				}
 			}
@@ -432,7 +430,7 @@ public final class TestPersistence {
 			String time = sr.getAttributeValue(null, TIMESTAMP);
 			if (time != null) {
 				try {
-					rtc.setTimeStamp(DateValue.getDefaultDateFormat().parse(time));
+					rtc.setTimeStamp(XMLUtil.readDate(time));
 				}
 				catch (ParseException e) {
 					e.printStackTrace();

@@ -20,13 +20,13 @@ package de.d3web.core.io.fragments;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
+import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
@@ -36,8 +36,6 @@ import de.d3web.core.knowledge.KnowledgeBase;
 public class DateHandler implements FragmentHandler<KnowledgeBase> {
 
 	private final static String ELEMENT_NAME = "Date";
-	private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS Z");
-	private final SimpleDateFormat compatibilityFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
@@ -49,27 +47,17 @@ public class DateHandler implements FragmentHandler<KnowledgeBase> {
 			throw new IOException(e);
 		}
 		try {
-			synchronized (format) {
-				return format.parse(textContent);
-			}
+			return XMLUtil.readDate(textContent);
 		}
 		catch (ParseException e) {
-			// check old format without the time zone
-			try {
-				synchronized (compatibilityFormat) {
-					return compatibilityFormat.parse(textContent);
-				}
-			}
-			catch (ParseException e2) {
-				throw new IOException(e2);
-			}
+			throw new IOException(e);
 		}
 	}
 
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
-		element.setTextContent(format.format(object));
+		element.setTextContent(XMLUtil.writeDate((Date) object));
 		return element;
 	}
 
