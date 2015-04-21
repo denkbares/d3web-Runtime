@@ -43,18 +43,28 @@ public class TestManager {
 	 * @return the test singleton
 	 */
 	public static Test<?> findTest(String testName) {
+		Test<?> test = findTestByParameter(testName, "name");
+		// we didn't find a test with the name, lets try deprecated names
+		// (which might not by unique, we just use the first...)
+		if (test == null) test = findTestByParameter(testName, "alternativeName");
+		return test;
+	}
+
+	private static Test<?> findTestByParameter(String testName, String parameterName) {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			Object singleton = extension.getSingleton();
-			if (singleton instanceof Test) {
-				if (extension.getName().equals(testName)) {
-					return (Test<?>) singleton;
+			Object test = extension.getSingleton();
+			if (test instanceof Test) {
+				List<String> parameters = extension.getParameters(parameterName);
+				if (parameters == null) continue;
+				if (parameters.contains(testName)) {
+					return (Test<?>) test;
 				}
 			}
 			else {
 				Log.warning("extension of class '" + extension.getClass().getName() +
-								"' is not of the expected type " + Test.class.getName());
+						"' is not of the expected type " + Test.class.getName());
 			}
 		}
 		return null;
