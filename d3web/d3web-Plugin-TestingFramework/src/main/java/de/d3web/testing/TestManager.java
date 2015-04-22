@@ -19,7 +19,7 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 import de.d3web.plugin.Extension;
@@ -28,7 +28,7 @@ import de.d3web.utils.Log;
 
 /**
  * Utility class for plugins of the type Test.
- * 
+ *
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 30.05.2012
  */
@@ -37,10 +37,10 @@ public class TestManager {
 	/**
 	 * Searches within the plugged tests for a test with a specific name.
 	 * Returns null if the test is not found.
-	 * 
-	 * @created 04.05.2012
+	 *
 	 * @param testName the test to be searched
 	 * @return the test singleton
+	 * @created 04.05.2012
 	 */
 	public static Test<?> findTest(String testName) {
 		Test<?> test = findTestByParameter(testName, "name");
@@ -76,10 +76,10 @@ public class TestManager {
 	 * may only occur if the specified test instance is not the singleton
 	 * specified through an extension declaration and if it if also not "equals"
 	 * to such a singleton.
-	 * 
-	 * @created 15.09.2012
+	 *
 	 * @param test the test to get the name for
 	 * @return the name of the test as specified in the extension
+	 * @created 15.09.2012
 	 */
 	public static String getTestName(Test<?> test) {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
@@ -93,9 +93,9 @@ public class TestManager {
 
 	/**
 	 * Searches and returns all test plugged into the current installation.
-	 * 
-	 * @created 31.07.2012
+	 *
 	 * @return the plugged test extensions
+	 * @created 31.07.2012
 	 */
 	public static List<Test<?>> findAllTests() {
 		List<Test<?>> result = new ArrayList<Test<?>>();
@@ -108,7 +108,7 @@ public class TestManager {
 			}
 			else {
 				Log.warning("extension of class '" + extension.getClass().getName() +
-								"' is not of the expected type " + Test.class.getName());
+						"' is not of the expected type " + Test.class.getName());
 			}
 		}
 		return result;
@@ -116,17 +116,18 @@ public class TestManager {
 
 	/**
 	 * Searches and returns the name of all plugged tests.
-	 * 
-	 * @created 07.08.2012
+	 *
 	 * @return the test names
+	 * @created 07.08.2012
 	 */
 	public static List<String> findAllTestNames() {
-		List<String> result = new LinkedList<String>();
+		List<String> result = new ArrayList<String>();
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
 			result.add(extension.getName());
 		}
+		Collections.sort(result);
 		return result;
 	}
 
