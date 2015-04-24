@@ -26,11 +26,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.strings.LowerCaseNormalizer;
+import de.d3web.strings.TokenNormalizer;
 import de.d3web.strings.Tokenizer;
 
+/**
+ * Class that represents an inverted index. It stores elements of a specified generic type E by text
+ * phrases. the text phrases are tokenized. It allows to retrieve the stored elements by other text
+ * phrases that shares one / multiple tokens.
+ *
+ * @param <E>
+ */
 public class InvertedIndex<E> {
 
 	private final Map<String, Set<E>> index = new HashMap<String, Set<E>>();
+	private final TokenNormalizer normalizer;
+
+	/**
+	 * Creates a new case insensitive inverted index
+	 */
+	public InvertedIndex() {
+		this(new LowerCaseNormalizer());
+	}
+
+	/**
+	 * Creates a new inverted index that uses the specified token normalizer to unify the tokens to
+	 * be compared. E.g. if you specify some stemming method, the inverted index will work in
+	 * stemmed tokens instead of case-insensitive matching of identical tokens.
+	 *
+	 * @param normalizer the token normalizer to be used
+	 */
+	public InvertedIndex(TokenNormalizer normalizer) {
+		this.normalizer = normalizer;
+	}
 
 	/**
 	 * Adds the specified element to all tokens that can be extracted in the specified text. Returns
@@ -89,7 +117,7 @@ public class InvertedIndex<E> {
 	 * @created 06.11.2013
 	 */
 	private boolean addElement(String token, E element) {
-		String key = token.toLowerCase();
+		String key = normalizer.normalize(token);
 		Set<E> set = index.get(key);
 		if (set == null) {
 			set = new HashSet<E>();
@@ -127,7 +155,7 @@ public class InvertedIndex<E> {
 	 * @created 06.11.2013
 	 */
 	private boolean removeElement(String token, E element) {
-		String key = token.toLowerCase();
+		String key = normalizer.normalize(token);
 		Set<E> set = index.get(key);
 
 		// if there is no such set, we no not require to change the index
@@ -197,7 +225,7 @@ public class InvertedIndex<E> {
 	 * @created 06.11.2013
 	 */
 	private Set<E> get(String token) {
-		String key = token.toLowerCase();
+		String key = normalizer.normalize(token);
 		Set<E> result = index.get(key);
 		return (result == null)
 				? Collections.<E>emptySet()

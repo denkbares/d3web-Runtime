@@ -334,7 +334,35 @@ public class Files {
 	 * @return if the file has any of the specified extensions
 	 */
 	public static boolean hasExtension(File file, String... extensions) {
-		return hasExtension(file.getName(), extensions);
+		return file != null && hasExtension(file.getName(), extensions);
+	}
+
+	/**
+	 * Returns the file path without its extension and without the "." before the extension. If the
+	 * file has no ".", the original file path is returned. if the file is null, null is returned.
+	 *
+	 * @param filename the file to remove the extension from
+	 * @return the path of the specified file without the extension
+	 * @created 15.02.2014
+	 */
+	public static String stripExtension(String filename) {
+		if (filename == null) return null;
+		int index = filename.lastIndexOf('.');
+		if (index == -1) return filename;
+		return filename.substring(0, index);
+	}
+
+	/**
+	 * Returns the file path without its extension and without the "." before the extension. If the
+	 * file has no ".", the original file path is returned. if the file is null, null is returned.
+	 *
+	 * @param file the file to remove the extension from
+	 * @return the path of the specified file without the extension
+	 * @created 15.02.2014
+	 */
+	public static String stripExtension(File file) {
+		if (file == null) return null;
+		return stripExtension(file.getPath());
 	}
 
 	/**

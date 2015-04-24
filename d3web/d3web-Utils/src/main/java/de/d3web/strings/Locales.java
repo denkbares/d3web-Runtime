@@ -179,29 +179,74 @@ public class Locales {
 		return score;
 	}
 
-	private static String toParsableName(Locale locale) {
-		String name = (locale == null) ? null : String.valueOf(locale);
+	/**
+	 * Creates a String representation for a specified locale that can later on be parsed by the
+	 * #parseLocale method.
+	 * <p/>
+	 * It is very similar to the {@link Locale#toString()} method, but does not produce an empty
+	 * string for the default locale, instead "ROOT" is returned. Additionally, null is returned as
+	 * "null".
+	 *
+	 * @param locale if the specified languages shall be sorted
+	 * @return the parsable string
+	 */
+	public static String toParsableLocale(Locale locale) {
+		String name = (locale == null) ? "null" : String.valueOf(locale);
 		return Strings.isBlank(name) ? "ROOT" : name;
 	}
 
 	/**
 	 * Creates a list of the languages that can later on be parsed by the #parseList method.
+	 * <p/>
+	 * It is very similar to the {@link Locale#toString()} method, but does not produce an empty
+	 * string for the default locale, instead "ROOT" is returned. Additionally, null locales in the
+	 * collection are returned as "null".
+	 *
+	 * @param languages the languages to represent as a parsable string
+	 * @return the parsable string
+	 */
+	public static String toParsableList(Locale... languages) {
+		return toParsableList(Arrays.asList(languages));
+	}
+
+	/**
+	 * Creates a list of the languages that can later on be parsed by the #parseList method.
+	 * <p/>
+	 * It is very similar to the {@link Locale#toString()} method, but does not produce an empty
+	 * string for the default locale, instead "ROOT" is returned. Additionally, null locales in the
+	 * collection are returned as "null".
+	 *
+	 * @param languages the languages to represent as a parsable string
+	 * @return the parsable string
+	 */
+	public static String toParsableList(Collection<Locale> languages) {
+		if (languages == null) return "";
+		StringBuilder result = new StringBuilder();
+		for (Locale language : languages) {
+			if (result.length() > 0) result.append(";");
+			result.append(toParsableLocale(language));
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Creates a list of the languages that can later on be parsed by the #parseList method.
+	 * <p/>
+	 * It is very similar to the {@link Locale#toString()} method, but does not produce an empty
+	 * string for the default locale, instead "ROOT" is returned. Additionally, null locales in the
+	 * collection are returned as "null".
 	 *
 	 * @param sorted if the specified languages shall be sorted
 	 * @param languages the languages to represent as a parsable string
 	 * @return the parsable string
 	 */
-	public static String asParsableList(boolean sorted, Collection<Locale> languages) {
+	public static String toParsableList(boolean sorted, Collection<Locale> languages) {
+		if (languages == null) return "";
 		if (sorted) {
 			languages = new ArrayList<Locale>(languages);
 			Collections.sort((List) languages, ASCENDING);
 		}
-		StringBuilder result = new StringBuilder();
-		for (Locale language : languages) {
-			if (result.length() > 0) result.append(";");
-			result.append(toParsableName(language));
-		}
-		return result.toString();
+		return toParsableList(languages);
 	}
 
 	/**
@@ -216,8 +261,7 @@ public class Locales {
 		if (Strings.isBlank(languages)) return Collections.emptySet();
 		LinkedHashSet<Locale> result = new LinkedHashSet<Locale>();
 		for (String lang : languages.split("[;,]")) {
-			Locale locale = Strings.equalsIgnoreCase(lang, "ROOT") ? Locale.ROOT : parseLocale(lang);
-			if (locale == null) continue;
+			Locale locale = parseLocale(lang);
 			result.add(locale);
 		}
 		return result;

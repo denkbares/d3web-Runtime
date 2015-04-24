@@ -1453,12 +1453,12 @@ public class Strings {
 		return trimTrailingZero(String.valueOf(d));
 	}
 
-	public static enum Encoding {
+	public enum Encoding {
 		UTF8("UTF-8"), ISO_8859_1("ISO-8859-1");
 
 		private final String encoding;
 
-		private Encoding(String encoding) {
+		Encoding(String encoding) {
 			this.encoding = encoding;
 		}
 
@@ -1565,9 +1565,9 @@ public class Strings {
 
 	/**
 	 * Parses a locale from a locale string representation. This is the inverse method to {@link
-	 * java.util.Locale#toString()}. If the specified text is null or cannot be parsed, null is
-	 * returned. If the specified text is empty, the root locale is returned. Leading or trailing
-	 * whitespaces will be ignored by this method.
+	 * java.util.Locale#toString()}. If the specified text is null or "null" or cannot be parsed,
+	 * null is returned. If the specified text is empty or "ROOT", the root locale is returned.
+	 * Leading or trailing whitespaces will be ignored by this method.
 	 *
 	 * @param text the locale's text representation to be parsed
 	 * @return the parsed locale
@@ -1576,6 +1576,8 @@ public class Strings {
 		if (text == null) return null;
 		text = text.trim();
 		if (text.isEmpty()) return Locale.ROOT;
+		if (equalsIgnoreCase(text, "ROOT")) return Locale.ROOT;
+		if (equalsIgnoreCase(text, "null")) return null;
 		Matcher matcher = LOCALE_PATTERN.matcher(text);
 		if (matcher.matches()) {
 			String lang = matcher.group(1);
@@ -1593,7 +1595,7 @@ public class Strings {
 
 	/**
 	 * Returns the enum constant referenced by the specified enum name. This method is very similar
-	 * to T.value(name), desprite that it is case insensitive. If the specified name cannot be
+	 * to T.value(name), despite that it is case insensitive. If the specified name cannot be
 	 * matched to a enum constant of the specified enum type, null is returned. This method never
 	 * throws an exception.
 	 *
