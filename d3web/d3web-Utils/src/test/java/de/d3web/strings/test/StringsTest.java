@@ -260,4 +260,23 @@ public class StringsTest {
 		assertEquals(14, Strings.lastIndexOf("atests//test\ndas\"testatest\"", both, "test", "a"));
 		assertEquals(14, Strings.lastIndexOf("atests//test\ndas//testatest", both, "test", "a"));
 	}
+
+	@Test
+	public void htmlToPlain() {
+		String source = "<!DOCTYPE html>\n" +
+				"<html>\n" +
+				"<head>\n" +
+				"</head>\n" +
+				"<body>\n" +
+				"\n" +
+				"<p>This is a paragraph.</p>\n" +
+				"\n" +
+				"<ul>\n" +
+				"<li>item1<li>item2\n" +
+				"</ul>\n" +
+				"\n" +
+				"</body>\n" +
+				"</html>\n";
+		assertEquals("This is a paragraph.  \nitem1\nitem2", Strings.htmlToPlain(source).trim());
+	}
 }

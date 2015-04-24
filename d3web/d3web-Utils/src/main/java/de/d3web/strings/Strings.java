@@ -1453,6 +1453,110 @@ public class Strings {
 		return trimTrailingZero(String.valueOf(d));
 	}
 
+	/**
+	 * Returns a plain text representation of a html source code. It preserves some basic formatting
+	 * of html, e.g. unordered lists or paragraphs. May be improved in the future, e.g. for tables
+	 * and similar.
+	 *
+	 * @param source the html source code
+	 * @return the converted plain text.
+	 */
+	public static String htmlToPlain(String source) {
+		String result = source;
+
+		// Remove HTML Development formatting
+		// Replace line breaks with space
+		// because browsers inserts space
+		result = result.replaceAll("\r", " ");
+		// Replace line breaks with space
+		// because browsers inserts space
+		result = result.replaceAll("\n", " ");
+		// Remove step-formatting
+		result = result.replaceAll("\t", " ");
+		// Remove repeating spaces because browsers ignore them
+		result = result.replaceAll("( )+", " ");
+
+		// Remove the header (prepare first by clearing attributes)
+		result = result.replaceAll("(?i)<( )*head([^>])*>", "<head>");
+		result = result.replaceAll("(?i)(<( )*(/)( )*head( )*>)", "</head>");
+		result = result.replaceAll("(?i)(<head>).*(</head>)", "");
+
+		// remove all scripts (prepare first by clearing attributes)
+		result = result.replaceAll("(?i)<( )*script([^>])*>", "<script>");
+		result = result.replaceAll("(?i)(<( )*(/)( )*script( )*>)", "</script>");
+		result = result.replaceAll("(?i)(<script>).*(</script>)", "");
+
+		// remove all styles (prepare first by clearing attributes)
+		result = result.replaceAll("(?i)<( )*style([^>])*>", "<style>");
+		result = result.replaceAll("(?i)(<( )*(/)( )*style( )*>)", "</style>");
+		result = result.replaceAll("(?i)(<style>).*(</style>)", "");
+
+		// insert tabs in spaces of <td> tags
+		result = result.replaceAll("(?i)<( )*td([^>])*>", "\t");
+
+		// insert line breaks in places of <BR> and <LI> tags
+		result = result.replaceAll("(?i)<( )*br( )*>", "\n");
+		result = result.replaceAll("(?i)<( )*li( )*>", "\n");
+
+		// insert line paragraphs (double line breaks) in place
+		// if <P>, <DIV> and <TR> tags
+		result = result.replaceAll("(?i)<( )*div([^>])*>", "\n\n");
+		result = result.replaceAll("(?i)<( )*tr([^>])*>", "\n\n");
+		result = result.replaceAll("(?i)<( )*p([^>])*>", "\n\n");
+
+		// Remove remaining tags like <a>, links, images,
+		// comments etc - anything that's enclosed inside < >
+		result = result.replaceAll("(?i)<[^>]*>", "");
+
+		// replace special characters:
+		result = result.replaceAll("(?i) ", " ");
+
+		result = result.replaceAll("(?i)•", " * ");
+		result = result.replaceAll("(?i)‹", "<");
+		result = result.replaceAll("(?i)›", ">");
+		result = result.replaceAll("(?i)™", "(tm)");
+		result = result.replaceAll("(?i)⁄", "/");
+		result = result.replaceAll("(?i)<", "<");
+		result = result.replaceAll("(?i)>", ">");
+		result = result.replaceAll("(?i)©", "(c)");
+		result = result.replaceAll("(?i)®", "(r)");
+		// Remove all others. More can be added, see
+		// http://hotwired.lycos.com/webmonkey/reference/special_characters/
+		result = result.replaceAll("(?i)&(.{2,6});", "");
+
+		// make line breaking consistent
+		result = result.replaceAll("\n", "\n");
+
+		// Remove extra line breaks and tabs:
+		// replace over 2 breaks with 2 and over 4 tabs with 4.
+		// Prepare first to remove any whitespaces in between
+		// the escaped characters and remove redundant tabs in between line breaks
+		result = result.replaceAll("(?i)(\n)( )+(\n)", "\n\n");
+		result = result.replaceAll("(?i)(\t)( )+(\t)", "\t\t");
+		result = result.replaceAll("(?i)(\t)( )+(\n)", "\t\n");
+		result = result.replaceAll("(?i)(\n)( )+(\t)", "\n\t");
+
+		// Remove redundant tabs
+		result = result.replaceAll("(?i)(\n)(\t)+(\n)", "\n\n");
+		// Remove multiple tabs following a line break with just one tab
+		result = result.replaceAll("(?i)(\n)(\t)+", "\n\t");
+
+//			// Initial replacement target string for line breaks
+//			String breaks = "\n\n\n";
+//			// Initial replacement target string for tabs
+//			String tabs = "\t\t\t\t\t";
+//			for (int index=0; index<result.le; index++)
+//			{
+//				result = result.replaceAll(breaks, "\n\n");
+//				result = result.replaceAll(tabs, "\t\t\t\t");
+//				breaks = breaks + "\n";
+//				tabs = tabs + "\t";
+//			}
+
+		// That's it.
+		return result;
+	}
+
 	public enum Encoding {
 		UTF8("UTF-8"), ISO_8859_1("ISO-8859-1");
 
