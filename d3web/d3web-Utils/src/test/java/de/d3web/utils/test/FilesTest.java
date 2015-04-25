@@ -30,10 +30,12 @@ import org.junit.Test;
 import de.d3web.utils.Files;
 import de.d3web.utils.Streams;
 
+import static org.junit.Assert.*;
+
 /**
- * This test does only test methods which are not used very frequently and are
- * therefore not tested by other tests already (like Headless-App-Tests).
- * 
+ * This test does only test methods which are not used very frequently and are therefore not tested
+ * by other tests already (like Headless-App-Tests).
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 18.10.2013
  */
@@ -47,7 +49,7 @@ public class FilesTest {
 		checkBinarySize(JPG_FILE);
 		checkBinarySize(TXT_FILE);
 
-		Assert.assertEquals(
+		assertEquals(
 				"check text length of '" + TXT_FILE + "'",
 				219369,
 				Files.getText(new File(TXT_FILE)).length());
@@ -55,7 +57,7 @@ public class FilesTest {
 
 	public void checkBinarySize(String filename) throws IOException, FileNotFoundException {
 		File file = new File(filename);
-		Assert.assertEquals(
+		assertEquals(
 				"check file lenght of '" + file + "'",
 				file.length(),
 				Files.getBytes(file).length);
@@ -79,5 +81,31 @@ public class FilesTest {
 		Assert.assertFalse(file.exists());
 		Assert.assertFalse(sub.exists());
 		Assert.assertFalse(folder.exists());
+	}
+
+	@Test
+	public void extensions() {
+		// test with null
+		assertEquals(null, Files.getExtension((String) null));
+		assertEquals(null, Files.getExtension((File) null));
+		assertEquals(null, Files.stripExtension((String) null));
+		assertEquals(null, Files.stripExtension((File) null));
+		assertFalse(Files.hasExtension((String) null, "jpg", "txt"));
+		assertFalse(Files.hasExtension((File) null, "jpg", "txt"));
+		assertFalse(Files.hasExtension((String) null, (String) null));
+		assertFalse(Files.hasExtension((File) null, (String[]) null));
+
+		String txtFileName = "hello world..foo.txt";
+		File txtFile = new File(txtFileName);
+		assertEquals("txt", Files.getExtension(txtFileName));
+		assertEquals("txt", Files.getExtension(txtFile));
+		assertEquals("hello world..foo", Files.stripExtension(txtFileName));
+		assertEquals("hello world..foo", Files.stripExtension(txtFile));
+		assertTrue(Files.hasExtension(txtFileName, "jpg", "txt"));
+		assertTrue(Files.hasExtension(txtFile, "jpg", "txt"));
+		assertFalse(Files.hasExtension(txtFileName, "foo", "bla"));
+		assertFalse(Files.hasExtension(txtFile, "foo", "bla"));
+		assertFalse(Files.hasExtension(txtFileName, (String) null));
+		assertFalse(Files.hasExtension(txtFile, (String[]) null));
 	}
 }

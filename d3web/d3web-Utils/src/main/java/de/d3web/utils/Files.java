@@ -314,7 +314,10 @@ public class Files {
 	 * @return if the file has any of the specified extensions
 	 */
 	public static boolean hasExtension(String fileName, String... extensions) {
+		if (fileName == null) return false;
+		if (extensions == null) return false;
 		for (String extension : extensions) {
+			if (extension == null) continue;
 			if (fileName.length() <= extension.length()) continue;
 			if (Strings.endsWithIgnoreCase(fileName, extension)
 					&& fileName.charAt(fileName.length() - extension.length() - 1) == '.') {
@@ -332,6 +335,7 @@ public class Files {
 	 * @param file the file to be tested
 	 * @param extensions the extensions to be tested for
 	 * @return if the file has any of the specified extensions
+	 * @throws NullPointerException if the array of extensions is null or if any of the contained extension is null
 	 */
 	public static boolean hasExtension(File file, String... extensions) {
 		return file != null && hasExtension(file.getName(), extensions);
