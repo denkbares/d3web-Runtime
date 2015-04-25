@@ -40,8 +40,9 @@ public class Locales {
 	public static final Comparator<Locale> ASCENDING = new Comparator<Locale>() {
 		@Override
 		public int compare(Locale o1, Locale o2) {
-			if (o1 == null) o1 = Locale.ROOT;
-			if (o2 == null) o2 = Locale.ROOT;
+			if (o1 == o2) return 0;
+			if (o1 == null) return -1;
+			if (o2 == null) return 1;
 			return String.valueOf(o1).compareTo(String.valueOf(o2));
 		}
 	};
@@ -247,6 +248,21 @@ public class Locales {
 			Collections.sort((List) languages, ASCENDING);
 		}
 		return toParsableList(languages);
+	}
+
+	/**
+	 * Creates a list of the languages that can later on be parsed by the #parseList method.
+	 * <p/>
+	 * It is very similar to the {@link Locale#toString()} method, but does not produce an empty
+	 * string for the default locale, instead "ROOT" is returned. Additionally, null locales in the
+	 * collection are returned as "null".
+	 *
+	 * @param sorted if the specified languages shall be sorted
+	 * @param languages the languages to represent as a parsable string
+	 * @return the parsable string
+	 */
+	public static String toParsableList(boolean sorted, Locale... languages) {
+		return toParsableList(sorted, Arrays.asList(languages));
 	}
 
 	/**

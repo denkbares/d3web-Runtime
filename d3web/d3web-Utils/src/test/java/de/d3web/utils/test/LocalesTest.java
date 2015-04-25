@@ -19,6 +19,7 @@
 
 package de.d3web.utils.test;
 
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.junit.Assert;
@@ -27,6 +28,7 @@ import org.junit.Test;
 import de.d3web.strings.Locales;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * @author Volker Belli (denkbares GmbH)
@@ -70,6 +72,35 @@ public class LocalesTest {
 			// TODO: java 6 does not support scripts, so Strings also does not. Remove this skip operation when migrate to java 7
 			if (locale.toString().contains("#")) continue;
 			assertEquals(locale, Locales.parseLocale(locale.toString()));
+			assertEquals(locale, Locales.parseLocale(Locales.toParsableLocale(locale)));
 		}
+	}
+
+	@Test
+	public void parseLocaleList() {
+		Locale[] locales = { Locale.GERMANY, Locale.CHINESE, Locale.ROOT, null,
+				Locale.GERMAN, Locale.GERMANY, Locale.ENGLISH };
+
+		// try coding / encoding cycle
+		String coded = Locales.toParsableList(locales);
+		Iterator<Locale> iterator = Locales.parseList(coded).iterator();
+		assertEquals(Locale.GERMANY, iterator.next());
+		assertEquals(Locale.CHINESE, iterator.next());
+		assertEquals(Locale.ROOT, iterator.next());
+		assertEquals(null, iterator.next());
+		assertEquals(Locale.GERMAN, iterator.next());
+		assertEquals(Locale.ENGLISH, iterator.next());
+		assertFalse(iterator.hasNext());
+
+		// try coding / encoding cycle with sorting
+		coded = Locales.toParsableList(true, locales);
+		iterator = Locales.parseList(coded).iterator();
+		assertEquals(null, iterator.next());
+		assertEquals(Locale.ROOT, iterator.next());
+		assertEquals(Locale.GERMAN, iterator.next());
+		assertEquals(Locale.GERMANY, iterator.next());
+		assertEquals(Locale.ENGLISH, iterator.next());
+		assertEquals(Locale.CHINESE, iterator.next());
+		assertFalse(iterator.hasNext());
 	}
 }
