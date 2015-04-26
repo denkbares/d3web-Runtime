@@ -1473,8 +1473,6 @@ public class Strings {
 		result = result.replaceAll("\n", " ");
 		// Remove step-formatting
 		result = result.replaceAll("\t", " ");
-		// Remove repeating spaces because browsers ignore them
-		result = result.replaceAll("( )+", " ");
 
 		// Remove the header (prepare first by clearing attributes)
 		result = result.replaceAll("(?i)<( )*head([^>])*>", "<head>");
@@ -1495,8 +1493,8 @@ public class Strings {
 		result = result.replaceAll("(?i)<( )*td([^>])*>", "\t");
 
 		// insert line breaks in places of <BR> and <LI> tags
-		result = result.replaceAll("(?i)<( )*br( )*>", "\n");
-		result = result.replaceAll("(?i)<( )*li( )*>", "\n");
+		result = result.replaceAll("(?i)<( )*br([^>])*>", "\n");
+		result = result.replaceAll("(?i)<( )*li([^>])*>", "\n* ");
 
 		// insert line paragraphs (double line breaks) in place
 		// if <P>, <DIV> and <TR> tags
@@ -1536,10 +1534,15 @@ public class Strings {
 		result = result.replaceAll("(?i)(\t)( )+(\n)", "\t\n");
 		result = result.replaceAll("(?i)(\n)( )+(\t)", "\n\t");
 
-		// Remove redundant tabs
-		result = result.replaceAll("(?i)(\n)(\t)+(\n)", "\n\n");
-		// Remove multiple tabs following a line break with just one tab
-		result = result.replaceAll("(?i)(\n)(\t)+", "\n\t");
+		// Remove redundant tabs or spaces
+		result = result.replaceAll("(?i)(\n)[\t ]+(\n)", "\n\n");
+		// Remove multiple tabs or spaces following a line break with just one tab
+		result = result.replaceAll("(?i)(\n)(\t )+", "\n\t");
+
+		// remove multiple line-breaks
+		result = result.replaceAll("\n\n\n+", "\n\n");
+		// Remove multiple spaces
+		result = result.replaceAll("( )+", " ");
 
 //			// Initial replacement target string for line breaks
 //			String breaks = "\n\n\n";
