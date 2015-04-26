@@ -1490,17 +1490,18 @@ public class Strings {
 		result = result.replaceAll("(?i)(<style>).*(</style>)", "");
 
 		// insert tabs in spaces of <td> tags
-		result = result.replaceAll("(?i)<( )*td([^>])*>", "\t");
+		result = result.replaceAll("(?i)<( )*td([^>])*>( )*", "\t");
 
 		// insert line breaks in places of <BR> and <LI> tags
-		result = result.replaceAll("(?i)<( )*br([^>])*>", "\n");
-		result = result.replaceAll("(?i)<( )*li([^>])*>", "\n* ");
+		result = result.replaceAll("(?i)<( )*br([^>])*>( )*", "\n");
+		result = result.replaceAll("(?i)<( )*li([^>])*>( )*", "\n* ");
 
 		// insert line paragraphs (double line breaks) in place
-		// if <P>, <DIV> and <TR> tags
-		result = result.replaceAll("(?i)<( )*div([^>])*>", "\n\n");
-		result = result.replaceAll("(?i)<( )*tr([^>])*>", "\n\n");
-		result = result.replaceAll("(?i)<( )*p([^>])*>", "\n\n");
+		// if <P>, <DIV> and <TR> tags, and after end of bullet-lists
+		result = result.replaceAll("(?i)<( )*div([^>])*>( )*", "\n\n");
+		result = result.replaceAll("(?i)<( )*tr([^>])*>( )*", "\n\n");
+		result = result.replaceAll("(?i)<( )*p([^>])*>( )*", "\n\n");
+		result = result.replaceAll("(?i)<( )*/(ol|ul)([^>])*> *", "\n\n");
 
 		// Remove remaining tags like <a>, links, images,
 		// comments etc - anything that's enclosed inside < >
@@ -1534,30 +1535,19 @@ public class Strings {
 		result = result.replaceAll("(?i)(\t)( )+(\n)", "\t\n");
 		result = result.replaceAll("(?i)(\n)( )+(\t)", "\n\t");
 
-		// Remove redundant tabs or spaces
-		result = result.replaceAll("(?i)(\n)[\t ]+(\n)", "\n\n");
+		// Remove multiple spaces and redundant start-of-line / end-of-line spaces
+		result = result.replaceAll("( )( )+", " ");
+		result = result.replaceAll("[\t ]\n", "\n");
+		result = result.replaceAll("\n( )+", "\n");
+
 		// Remove multiple tabs or spaces following a line break with just one tab
 		result = result.replaceAll("(?i)(\n)(\t )+", "\n\t");
 
 		// remove multiple line-breaks
 		result = result.replaceAll("\n\n\n+", "\n\n");
-		// Remove multiple spaces
-		result = result.replaceAll("( )+", " ");
 
-//			// Initial replacement target string for line breaks
-//			String breaks = "\n\n\n";
-//			// Initial replacement target string for tabs
-//			String tabs = "\t\t\t\t\t";
-//			for (int index=0; index<result.le; index++)
-//			{
-//				result = result.replaceAll(breaks, "\n\n");
-//				result = result.replaceAll(tabs, "\t\t\t\t");
-//				breaks = breaks + "\n";
-//				tabs = tabs + "\t";
-//			}
-
-		// That's it.
-		return result;
+		// That's it. Trim finally and done.
+		return trim(result);
 	}
 
 	public enum Encoding {

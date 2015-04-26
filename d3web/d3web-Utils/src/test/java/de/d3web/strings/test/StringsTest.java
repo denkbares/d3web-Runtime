@@ -86,6 +86,7 @@ public class StringsTest {
 		assertTrue(Strings.isBlank(""));
 		assertTrue(Strings.isBlank(" "));
 		assertTrue(Strings.isBlank(" \n \r\n  \n"));
+		assertFalse(Strings.isNotBlank(" \n \r\n  \n"));
 	}
 
 	@Test
@@ -274,9 +275,11 @@ public class StringsTest {
 				"<ul>\n" +
 				"<li>item1<li>item2\n" +
 				"</ul>\n" +
+				"  And some text after."+
 				"\n" +
 				"</body>\n" +
 				"</html>\n";
-		assertEquals("This is a paragraph.  \nitem1\nitem2", Strings.htmlToPlain(source).trim());
+		assertEquals("This is a paragraph.\n* item1\n* item2\n\nAnd some text after.",
+				Strings.htmlToPlain(source));
 	}
 }
