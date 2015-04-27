@@ -105,8 +105,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 
 	private Set<TerminologyObject> getSourceObjects(TerminologyObject derivedObject, Session session) {
 		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
-		RuleSet rules = derivedObject.getKnowledgeStore().getKnowledge(
-				getBackwardKind(this.getClass()));
+		RuleSet rules = derivedObject.getKnowledgeStore().getKnowledge(getBackwardKind(this.getClass()));
 		if (rules == null) return Collections.emptySet();
 		for (Rule rule : rules.getRules()) {
 			// if the rule is known not to be fired, ignore the rule

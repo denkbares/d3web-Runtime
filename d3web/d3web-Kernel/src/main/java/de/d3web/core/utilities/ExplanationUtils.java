@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.d3web.core.inference.PSMethod;
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
@@ -14,6 +15,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 /**
  * Provides utility methods to conveniently track down the facts involved in deriving other facts.
  * <p/>
+ *
  * @author Albrecht Striffler (denkbares GmbH) on 24.08.2014.
  */
 public class ExplanationUtils {
@@ -76,6 +78,7 @@ public class ExplanationUtils {
 		// a source fact can either be a fact where the PSM has Type.source or a
 		// heuristic fact without predecessors, in case the fact was added externally to be added to derived scores
 		if (psMethod.hasType(PSMethod.Type.source) ||
+				(psMethod instanceof PSMethodInit) ||
 				(psMethod instanceof PSMethodHeuristic && predecessors.isEmpty())) {
 			sources.add(fact);
 			return;
