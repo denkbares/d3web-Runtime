@@ -1652,8 +1652,8 @@ public class Strings {
 	}
 
 	public static void writeFile(String path, String content) throws IOException {
-		FileWriter fstream = new FileWriter(path);
-		BufferedWriter out = new BufferedWriter(fstream);
+		FileWriter stream = new FileWriter(path);
+		BufferedWriter out = new BufferedWriter(stream);
 		out.write(content);
 		out.close();
 	}
