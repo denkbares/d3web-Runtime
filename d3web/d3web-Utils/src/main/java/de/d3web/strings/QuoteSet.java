@@ -18,39 +18,46 @@
  */
 package de.d3web.strings;
 
-
 /**
  * Captures a pair of 'quoting' characters - open char and close char. Those
  * might be equals, considering normal quotes such as ' or ". For brackets for
  * instance they differ.
- * 
+ *
  * @author Jochen Reutelshoefer
  * @created 29.11.2013
  */
-public class QuoteCharSet {
+public class QuoteSet {
 
 	private final char open;
 	private final char close;
-	private boolean hidesOtherQuotes = false;
+	private final boolean hidesOtherQuotes;
 
-	public boolean hidesOtherQuotes() {
-		return hidesOtherQuotes;
+	public static final QuoteSet TRIPLE_QUOTES = new QuoteSet((char) 0);
+
+	/**
+	 * Creates a quote set with an opening and a closing char. By default, they do not hide other quote sets inside, so
+	 * they can be nested.
+	 */
+	public QuoteSet(char open, char close) {
+		this(open, close, false);
 	}
 
-	public QuoteCharSet(char open, char close) {
-		this.open = open;
-		this.close = close;
-	}
-
-	public QuoteCharSet(char open, char close, boolean hidesOther) {
+	public QuoteSet(char open, char close, boolean hidesOther) {
 		this.open = open;
 		this.close = close;
 		this.hidesOtherQuotes = hidesOther;
 	}
 
-	public static QuoteCharSet createUnaryHidingQuote(char c) {
-		QuoteCharSet charSet = new QuoteCharSet(c, c, true);
-		return charSet;
+	/**
+	 * Creates an unary quote set (opening and closing chars are the same). By default, these quote sets hide other
+	 * quote sets, so they can not be nested!
+	 */
+	public QuoteSet(char unaryQuote) {
+		this(unaryQuote, unaryQuote, true);
+	}
+
+	public QuoteSet(char unaryQuote, boolean hidesOther) {
+		this(unaryQuote, unaryQuote, hidesOther);
 	}
 
 	public char open() {
@@ -63,6 +70,14 @@ public class QuoteCharSet {
 
 	public boolean isUnary() {
 		return open == close;
+	}
+
+	/**
+	 * Specifies whether this quote set hides/prevents other quote sets from being opened or closed inside. In other
+	 * words, specifies whether there are are quotes nested inside.
+	 */
+	public boolean hidesOtherQuotes() {
+		return hidesOtherQuotes;
 	}
 
 }

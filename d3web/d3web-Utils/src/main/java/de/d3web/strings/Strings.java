@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class Strings {
 
 	private static final Pattern PATTERN_BLANK = Pattern.compile("[\\s\\xA0]*");
 	public static final char QUOTE_DOUBLE = '"';
+	public static final String TRIPLE_QUOTES = "\"\"\"";
 	public static final char QUOTE_SINGLE = '\'';
 	private static final long[] TIME_FACTORS = {
 			TimeUnit.MILLISECONDS.toMillis(1),
@@ -89,7 +91,7 @@ public class Strings {
 	 * printed as {@link String#valueOf(Object)} would do.
 	 *
 	 * @param separator the separating text in between the concatenated strings
-	 * @param strings the strings to be concatenated
+	 * @param strings   the strings to be concatenated
 	 * @return the resulting concatenation
 	 */
 	public static String concat(String separator, Collection<?> strings) {
@@ -103,7 +105,7 @@ public class Strings {
 	 * printed as {@link String#valueOf(Object)} would do.
 	 *
 	 * @param separator the separating text in between the concatenated strings
-	 * @param strings the strings to be concatenated
+	 * @param strings   the strings to be concatenated
 	 * @return the resulting concatenation
 	 */
 	public static String concat(String separator, Object[] strings) {
@@ -124,7 +126,7 @@ public class Strings {
 	/**
 	 * Tests if the specified text string ends with the specified prefix.
 	 *
-	 * @param text the text string to be checked
+	 * @param text   the text string to be checked
 	 * @param suffix the suffix to be looked for
 	 * @return <code>true</code> if the character sequence represented by the argument is a suffix
 	 * of the character sequence represented by the specified text string; <code>false</code>
@@ -153,10 +155,10 @@ public class Strings {
 	 * corresponding closing bracket/symbol -1 is returned. If there is no open bracket at the
 	 * specified position -1 is also returned.
 	 *
-	 * @param text the text to be searched
+	 * @param text             the text to be searched
 	 * @param openBracketIndex the index of zje bracket
-	 * @param open the open bracket character
-	 * @param close the closing bracket character
+	 * @param open             the open bracket character
+	 * @param close            the closing bracket character
 	 * @return the index of the corresponding closing bracket character
 	 */
 	public static int indexOfClosingBracket(String text, int openBracketIndex, char open, char close) {
@@ -194,10 +196,10 @@ public class Strings {
 	 * (opening bracket 'open' and closing bracket 'close') Here the kind of bracket can be passed
 	 * as char, however it will also work with char that are not brackets.. ;-)
 	 *
-	 * @param text the text to be searched
+	 * @param text   the text to be searched
 	 * @param symbol the symbol to be matched
-	 * @param open the opening bracket character
-	 * @param close the closing bracket character
+	 * @param open   the opening bracket character
+	 * @param close  the closing bracket character
 	 * @return the index of the first un-embraced character
 	 */
 	public static List<Integer> indicesOfUnbraced(String text, String symbol, char open, char close) {
@@ -272,7 +274,7 @@ public class Strings {
 	 * Returns true if one of the given strings is contained in the given text. The case of the text
 	 * and the strings are ignored. If text is null it is treated as an empty string.
 	 *
-	 * @param text the text to search in
+	 * @param text    the text to search in
 	 * @param strings the strings to be searched
 	 * @return weather there is an occurrence of any of the strings in the text
 	 */
@@ -285,7 +287,7 @@ public class Strings {
 	 * case of the text and the strings are ignored. If text is null it is treated as an empty
 	 * string.
 	 *
-	 * @param text the text to search in
+	 * @param text    the text to search in
 	 * @param strings the strings to be searched
 	 * @return the index of the first occurrence of the strings
 	 */
@@ -297,7 +299,7 @@ public class Strings {
 	 * Finds the index of the first occurrence of one of the given strings in the given text.
 	 * Occurrences between quotes are ignored. If text is null it is treated as an empty string.
 	 *
-	 * @param text the text to search in
+	 * @param text    the text to search in
 	 * @param strings the strings to be searched
 	 * @return the index of the first unquoted occurrence of the strings
 	 */
@@ -309,7 +311,7 @@ public class Strings {
 	 * Finds the index of the first occurrence of one of the given strings in the given text. If
 	 * text is null it is treated as an empty string.
 	 *
-	 * @param text the text where we search for the strings
+	 * @param text    the text where we search for the strings
 	 * @param strings the strings for which you want the index in the text
 	 * @return the first index of any of the strings in the text or -1 if none of the strings is
 	 * found
@@ -322,8 +324,8 @@ public class Strings {
 	 * Finds the index of the first occurrence of one of the given strings in the given text. Use
 	 * the flags for more options. If text is null it is treated as an empty string.
 	 *
-	 * @param text the text where we search for the strings
-	 * @param flags the settings flags to influence the behavior of the method
+	 * @param text    the text where we search for the strings
+	 * @param flags   the settings flags to influence the behavior of the method
 	 * @param strings the strings for which you want the index in the text
 	 * @return the first index of any of the strings in the text or -1 if none of the strings is
 	 * found
@@ -375,10 +377,10 @@ public class Strings {
 	 * the given offset. Use the flags for more options. If text is null it is treated as an empty
 	 * string.
 	 *
-	 * @param text the text where we search for the strings
-	 * @param offset the offset from where we start to look for the strings (flags like UNQUOTED or
-	 * FIRST_IN_LINE also consider the text before the offset!)
-	 * @param flags the settings flags to influence the behavior of the method
+	 * @param text    the text where we search for the strings
+	 * @param offset  the offset from where we start to look for the strings (flags like UNQUOTED or
+	 *                FIRST_IN_LINE also consider the text before the offset!)
+	 * @param flags   the settings flags to influence the behavior of the method
 	 * @param strings the strings for which you want the index in the text
 	 * @return the first index of any of the strings in the text or -1 if none of the strings is
 	 * found
@@ -509,7 +511,7 @@ public class Strings {
 	 * If a index is given which does not fit inside the given text, an {@link
 	 * IllegalArgumentException} is thrown.
 	 *
-	 * @param text the text which may contain quotes
+	 * @param text  the text which may contain quotes
 	 * @param index the index or position in the text which will be check if it is in quotes or not
 	 */
 	public static boolean isQuoted(String text, int index) {
@@ -595,7 +597,7 @@ public class Strings {
 	 * Scans the 'text' for the last occurrence of any of the strings, which are not embraced in
 	 * quotes ('"') and returns the start index of the strings.
 	 *
-	 * @param text the text to be searched
+	 * @param text    the text to be searched
 	 * @param strings the strings to be matched
 	 * @return the last start index of the strings in unquoted text
 	 */
@@ -607,8 +609,8 @@ public class Strings {
 	 * Finds the index of the last occurrence of any of the given strings in the given text. Use the
 	 * flags for more settings.
 	 *
-	 * @param text the text where we search for the strings
-	 * @param flags the settings flags to influence the behavior of the method
+	 * @param text    the text where we search for the strings
+	 * @param flags   the settings flags to influence the behavior of the method
 	 * @param strings the strings for which you want the index in the text
 	 * @return the last index of any of the strings in the text or -1 if none of the strings is
 	 * found
@@ -630,21 +632,21 @@ public class Strings {
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol) {
-		return splitUnquoted(text, splitSymbol, true, QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE));
+		return splitUnquoted(text, splitSymbol, true, new QuoteSet(QUOTE_DOUBLE));
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlankFragments) {
-		return splitUnquoted(text, splitSymbol, includeBlankFragments, QuoteCharSet.createUnaryHidingQuote(QUOTE_DOUBLE));
+		return splitUnquoted(text, splitSymbol, includeBlankFragments, new QuoteSet(QUOTE_DOUBLE));
 	}
 
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteCharSet... quoteChars) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, QuoteSet... quoteChars) {
 		return splitUnquoted(text, splitSymbol, true, quoteChars);
 	}
 
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, char... quoteChars) {
-		QuoteCharSet[] quotes = new QuoteCharSet[quoteChars.length];
+		QuoteSet[] quotes = new QuoteSet[quoteChars.length];
 		for (int i = 0; i < quotes.length; i++) {
-			quotes[i] = QuoteCharSet.createUnaryHidingQuote(quoteChars[i]);
+			quotes[i] = new QuoteSet(quoteChars[i]);
 		}
 		return splitUnquoted(text, splitSymbol, true, quotes);
 	}
@@ -652,13 +654,24 @@ public class Strings {
 	/**
 	 * Splits the text by the <tt>splitSymbol</tt> disregarding splitSymbols which are quoted.
 	 *
-	 * @param text the text to be split
+	 * @param text        the text to be split
 	 * @param splitSymbol the symbol to split by
 	 * @return the fragments of the text
 	 */
-	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlankFragments, QuoteCharSet... quotes) {
+	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlankFragments, QuoteSet... quotes) {
 		List<StringFragment> parts = new ArrayList<StringFragment>();
 		if (text == null) return parts;
+
+		quotes = Arrays.copyOf(quotes, quotes.length);
+		// make sure triple quotes are first
+		Arrays.sort(quotes, new Comparator<QuoteSet>() {
+			@Override
+			public int compare(QuoteSet o1, QuoteSet o2) {
+				if (o1 == QuoteSet.TRIPLE_QUOTES && o2 != QuoteSet.TRIPLE_QUOTES) return -1;
+				if (o1 != QuoteSet.TRIPLE_QUOTES && o2 == QuoteSet.TRIPLE_QUOTES) return 1;
+				return 0;
+			}
+		});
 
 		// init quote state for each quote
 		int[] quoteStates = new int[quotes.length];
@@ -666,41 +679,49 @@ public class Strings {
 		StringBuffer actualPart = new StringBuffer();
 		// scanning the text
 		int startOfNewPart = 0;
+		int skipQuoteDetectionUntil = -1;
 		for (int i = 0; i < text.length(); i++) {
-			// toggle quote state
 
 			// tracking multiple quote states
 			for (int q = 0; q < quotes.length; q++) {
+
+				if (i <= skipQuoteDetectionUntil) continue;
+
+				QuoteSet quoteSet = quotes[q];
 
 				// check whether the quote is hidden by another quote, e.g. a
 				// bracket in a literal-quote
 				if (!isHiddenByOtherQuote(quoteStates, quotes, q)) {
 
 					// first handle unary quotes
-					if (quotes[q].isUnary()) {
-						// open() == close() for this case
-						if (isUnEscapedQuote(text, i, quotes[q].open())) {
-							// just toggle 0/1 value
-							if (quoteStates[q] == 0) {
-								quoteStates[q] = 1;
-							}
-							else {
-								if (quoteStates[q] == 1) {
-									quoteStates[q] = 0;
-								}
-							}
+					if (quoteSet.isUnary()) {
+						// handle special case for triple quotes (""")
+						if (quoteSet == QuoteSet.TRIPLE_QUOTES
+								// triple quotes cannot be escaped, so just try a match
+								&& text.length() >= i + 3
+								&& text.substring(i, i + 3).equals(TRIPLE_QUOTES)) {
+
+							toggleQuoteState(quoteStates, q);
+
+							// triple quotes might also match other quote set, so we skip
+							skipQuoteDetectionUntil = i + TRIPLE_QUOTES.length();
+							break;
+						}
+						// just ordinary unary quotes, open() == close()
+						else if (isUnEscapedQuote(text, i, quoteSet.open())) {
+							toggleQuoteState(quoteStates, q);
 						}
 					}
 					// then handle binary (potentially nested) quotes
 					else {
 
 						// check for opening char
-						if (isUnEscapedQuote(text, i, quotes[q].open())) {
+						if (isUnEscapedQuote(text, i, quoteSet.open())) {
 							// this one is just being opened (once more)
 							quoteStates[q]++;
 						}
 						// check for closing char
-						if (isUnEscapedQuote(text, i, quotes[q].close())) {
+						if (isUnEscapedQuote(text, i, quoteSet.close())) {
 							// this one is just being closed (once)
 							quoteStates[q]--;
 						}
@@ -731,7 +752,17 @@ public class Strings {
 		return parts;
 	}
 
-	private static boolean isHiddenByOtherQuote(int[] quoteStates, QuoteCharSet[] quotes, int q) {
+	private static void toggleQuoteState(int[] quoteStates, int q) {
+		if (quoteStates[q] == 0) {
+			quoteStates[q] = 1;
+		}
+		else if (quoteStates[q] == 1) {
+			quoteStates[q] = 0;
+		}
+
+	}
+
+	private static boolean isHiddenByOtherQuote(int[] quoteStates, QuoteSet[] quotes, int q) {
 		for (int i = 0; i < quotes.length; i++) {
 			if (quoteStates[i] > 0 && quotes[i].hidesOtherQuotes() && q != i) {
 				return true;
@@ -770,7 +801,7 @@ public class Strings {
 	/**
 	 * Tests if the specified text string starts with the specified prefix.
 	 *
-	 * @param text the text string to be checked
+	 * @param text   the text string to be checked
 	 * @param prefix the prefix to be looked for
 	 * @return <code>true</code> if the character sequence represented by the argument is a prefix
 	 * of the character sequence represented by the specified text string; <code>false</code>
@@ -1012,7 +1043,7 @@ public class Strings {
 	 * Quotes the given String with a given quote char. If the String contains the quote char, it
 	 * will be escaped with the escape char \. Don't use \ as the quote char for this reason.
 	 *
-	 * @param text the string to be quoted
+	 * @param text      the string to be quoted
 	 * @param quoteChar the char used to quote
 	 */
 	public static String quote(String text, char quoteChar) {
@@ -1043,7 +1074,7 @@ public class Strings {
 	 * Unquotes the given String from the given quote char. If the String contains an escaped quote
 	 * char (escaped with \), it will be unescaped.
 	 *
-	 * @param text the text to be unquoted
+	 * @param text      the text to be unquoted
 	 * @param quoteChar the char the string was quoted with
 	 */
 	public static String unquote(String text, char quoteChar) {
@@ -1569,7 +1600,7 @@ public class Strings {
 	 * {@link URLEncoder#encode(String, String)}. The encoding can be specified by this function. In
 	 * most cases UTF-8 encoding works best, see method {@link #decodeURL(String)} for this.
 	 *
-	 * @param text the text to be encoded
+	 * @param text     the text to be encoded
 	 * @param encoding the encoding to be used for decode
 	 * @return the encoded string
 	 * @created 03.05.2012
@@ -1607,7 +1638,7 @@ public class Strings {
 	 *
 	 * @param filePath the file to be loaded
 	 * @return the contents of the file
-	 * @throws IOException if there was any problem reading the file
+	 * @throws IOException          if there was any problem reading the file
 	 * @throws NullPointerException if the argument is null.
 	 * @created 16.09.2012
 	 */
@@ -1621,7 +1652,7 @@ public class Strings {
 	 *
 	 * @param file the file to be loaded
 	 * @return the contents of the file
-	 * @throws IOException if there was any problem reading the file
+	 * @throws IOException          if there was any problem reading the file
 	 * @throws NullPointerException if the argument is null.
 	 * @created 16.09.2012
 	 */
@@ -1696,7 +1727,7 @@ public class Strings {
 	 * matched to a enum constant of the specified enum type, null is returned. This method never
 	 * throws an exception.
 	 *
-	 * @param name the name of the enum constant
+	 * @param name     the name of the enum constant
 	 * @param enumType the type of the enum
 	 * @return the enum constant found case insensitive
 	 * @created 26.01.2014
@@ -1712,7 +1743,7 @@ public class Strings {
 	 *
 	 * @param percentage string contains a floating point number or a percentage string
 	 * @return the value of the floating point number, including % interpretation
-	 * @throws NumberFormatException if it is not a valid number format
+	 * @throws NumberFormatException          if it is not a valid number format
 	 * @throws java.lang.NullPointerException if the specified argument is null
 	 * @see Double#parseDouble(String)
 	 */
@@ -1736,9 +1767,9 @@ public class Strings {
 	 * Please not that null as a default value is not allowed. In this case use the method {@link
 	 * #parseEnum(String, Class)}, because this method is not capable to handle null.
 	 *
-	 * @param name the name of the enum constant
+	 * @param name         the name of the enum constant
 	 * @param defaultValue the default enum constant to be used if the name does not match a
-	 * specific enum constant
+	 *                     specific enum constant
 	 * @return the enum constant found case insensitive
 	 * @throws NullPointerException if the default value is null
 	 * @created 26.01.2014
@@ -1788,7 +1819,7 @@ public class Strings {
 	 * backslash.
 	 *
 	 * @param text the text to be checked
-	 * @param end the expected end character
+	 * @param end  the expected end character
 	 * @return if the expected end character is there and is being escaped
 	 * @created 02.12.2013
 	 */

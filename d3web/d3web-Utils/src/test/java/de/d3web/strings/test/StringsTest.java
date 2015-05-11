@@ -21,11 +21,12 @@ package de.d3web.strings.test;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 import org.junit.Test;
 
-import de.d3web.strings.QuoteCharSet;
+import de.d3web.strings.QuoteSet;
 import de.d3web.strings.Strings;
 
 import static org.junit.Assert.*;
@@ -72,12 +73,52 @@ public class StringsTest {
 
 	@Test
 	public void splitUnquotedMulti() {
-		QuoteCharSet[] quotes = {
-				QuoteCharSet.createUnaryHidingQuote('"'), new QuoteCharSet('(', ')') };
+		QuoteSet[] quotes = {
+				new QuoteSet('"'), new QuoteSet('(', ')') };
 		assertEquals(
 				Arrays.asList("a", "\"literal mit Klammer. (xy\"", "(A.2)").toString(),
 				Strings.splitUnquoted("a.\"literal mit Klammer. (xy\".(A.2)", ".",
 						quotes).toString());
+	}
+
+	@Test
+	public void splitUnquotedTripleQuotes() {
+		QuoteSet[] quotes = { QuoteSet.TRIPLE_QUOTES };
+		assertEquals(Collections.singletonList("sometext \"\"\"moretext; even more\"\"\" what, there is still more?")
+						.toString(),
+				Strings.splitUnquoted("sometext \"\"\"moretext; even more\"\"\" what, there is still more?", ";", quotes)
+						.toString());
+
+		assertEquals(Collections.singletonList("\"\"\"sometext moretext; even more, what, there is still more?\"\"\"")
+						.toString(),
+				Strings.splitUnquoted("\"\"\"sometext moretext; even more, what, there is still more?\"\"\"", ";", quotes)
+						.toString());
+
+		assertEquals(Arrays.asList("sometext \"\"moretext", " even more\"\"\" what, there is still more?")
+						.toString(),
+				Strings.splitUnquoted("sometext \"\"moretext; even more\"\"\" what, there is still more?", ";", quotes)
+						.toString());
+
+		assertEquals(Arrays.asList("sometext \"\"\"moretext; even more\"\"\" what", "there is still more?")
+						.toString(),
+				Strings.splitUnquoted("sometext \"\"\"moretext; even more\"\"\" what; there is still more?", "; ", quotes)
+						.toString());
+
+		quotes = new QuoteSet[] {new QuoteSet('"'),  QuoteSet.TRIPLE_QUOTES,  };
+		assertEquals(Arrays.asList("sometext \"\"\"moretext; even more\"\"\" what", "there is still more?")
+						.toString(),
+				Strings.splitUnquoted("sometext \"\"\"moretext; even more\"\"\" what; there is still more?", "; ", quotes)
+						.toString());
+
+		assertEquals(Arrays.asList("sometext \"\"\"moretext; even\" more\"\"\" what", "there is still more?")
+						.toString(),
+				Strings.splitUnquoted("sometext \"\"\"moretext; even\" more\"\"\" what; there is still more?", "; ", quotes)
+						.toString());
+
+		assertEquals(Arrays.asList("sometext \"\"\"moretext; even\" more\"\"\" what\"; \"there is still more?")
+						.toString(),
+				Strings.splitUnquoted("sometext \"\"\"moretext; even\" more\"\"\" what\"; \"there is still more?", "; ", quotes)
+						.toString());
 	}
 
 	@Test
@@ -275,7 +316,7 @@ public class StringsTest {
 				"<ul>\n" +
 				"<li>item1<li>item2\n" +
 				"</ul>\n" +
-				"  And some text after."+
+				"  And some text after." +
 				"\n" +
 				"</body>\n" +
 				"</html>\n";
