@@ -33,10 +33,13 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +69,13 @@ public class Strings {
 
 	private static final String[] TIME_UNITS_LONG = {
 			"millisecond", "second", "minute", "hour", "day" };
+
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+
+	/**
+	 * TODO: Make private again when d3web-Persistence:XMLUtil.writeDate/readDate are removed
+	 */
+	public static final SimpleDateFormat DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
 
 	/**
 	 * A Comparator that orders <code>String</code> objects as by <code>compareToIgnoreCase</code>.
@@ -1863,6 +1873,48 @@ public class Strings {
 			}
 		}
 		return t;
+	}
+
+	/**
+	 * Serializes a date object into a string using a standardized format.
+	 * Can be un-serialized using {@link #readDate(String)}.
+	 * <p>
+	 * This should be used to write dates for persistence.
+	 *
+	 * @param date date to serialize
+	 */
+	public static String writeDate(Date date) {
+		synchronized (DATE_FORMAT) {
+			return DATE_FORMAT.format(date);
+		}
+	}
+
+	/**
+	 * Un-serializes a date string created by {@link #writeDate(Date)}.
+	 *
+	 * @param compatibilityFormat allows to provide an additional format which will be applied, if the default one
+	 *                            fails. This allows to support persistence files that were written before the date
+	 *                            verbalization was standardized.
+	 */
+	public static Date readDate(String dateString, SimpleDateFormat compatibilityFormat) throws ParseException {
+		try {
+			synchronized (DATE_FORMAT) {
+				return DATE_FORMAT.parse(dateString);
+			}
+		}
+		catch (ParseException e) {
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (compatibilityFormat) {
+				return compatibilityFormat.parse(dateString);
+			}
+		}
+	}
+
+	/**
+	 * Serializes a date object into a string using a standardized format.
+	 */
+	public static Date readDate(String dateString) throws ParseException {
+		return readDate(dateString, DATE_FORMAT_COMPATIBILITY);
 	}
 
 	private static String getTimeUnit(int i, boolean longVersion, boolean plural) {

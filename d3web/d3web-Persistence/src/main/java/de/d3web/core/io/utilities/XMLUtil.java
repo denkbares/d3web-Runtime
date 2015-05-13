@@ -79,6 +79,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.scoring.Score;
+import de.d3web.strings.Strings;
 import de.d3web.utils.Log;
 import de.d3web.utils.Triple;
 
@@ -91,46 +92,28 @@ public final class XMLUtil {
 
 	public static final String INFO_STORE = "infoStore";
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
-	private static final SimpleDateFormat DATE_FORMAT_COMPATIBILITY = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
-
 	/**
-	 * Turns a date into a date string, that can late be turned into the same date again using {@link
-	 * XMLUtil#readDate(String)}.
-	 * This should be used to write dates for persistence.
+	 * @deprecated Use {@link de.d3web.strings.Strings#writeDate(Date)} instead
 	 */
+	@Deprecated
 	public static String writeDate(Date date) {
-		synchronized (DATE_FORMAT) {
-			return DATE_FORMAT.format(date);
-		}
+		return Strings.writeDate(date);
 	}
 
 	/**
-	 * Turns a date string into a date. This should be used to load persistent dates.
-	 *
-	 * @param compatibilityFormat allows to provide an additional format which will be applied, if the default one
-	 *                            fails. This allows to support persistence files that were written before the date
-	 *                            verbalization was standardized.
+	 * @deprecated Use {@link de.d3web.strings.Strings#readDate(String, SimpleDateFormat)} instead
 	 */
 	public static Date readDate(String dateString, SimpleDateFormat compatibilityFormat) throws ParseException {
-		try {
-			synchronized (DATE_FORMAT) {
-				return DATE_FORMAT.parse(dateString);
-			}
-		}
-		catch (ParseException e) {
-			//noinspection SynchronizationOnLocalVariableOrMethodParameter
-			synchronized (compatibilityFormat) {
-				return compatibilityFormat.parse(dateString);
-			}
-		}
+		return Strings.readDate(dateString, compatibilityFormat);
 	}
 
 	/**
-	 * Turns a date string into a date. This should be used to load persistent dates.
+	 * @deprecated Use {@link de.d3web.strings.Strings#readDate(String)} instead
+	 *
+	 * TODO: Refactor {@link Strings#DATE_FORMAT_COMPATIBILITY} when removing this method.
 	 */
 	public static Date readDate(String dateString) throws ParseException {
-		return readDate(dateString, DATE_FORMAT_COMPATIBILITY);
+		return Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY);
 	}
 
 	/**
