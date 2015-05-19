@@ -28,6 +28,7 @@ package de.d3web.strings;
  */
 public class MultiWordNormalizer implements TokenNormalizer {
 	private final TokenNormalizer wordNormalizer;
+	private final String separator;
 
 	/**
 	 * Creates a new multi-word normalizer by lowering the case of each particular word.
@@ -43,7 +44,19 @@ public class MultiWordNormalizer implements TokenNormalizer {
 	 * @param wordNormalizer the normalizer to be used for the particular words
 	 */
 	public MultiWordNormalizer(TokenNormalizer wordNormalizer) {
+		this(wordNormalizer, " ");
+	}
+
+	/**
+	 * Creates a new multi-word normalizer that uses the specified normalizer for each particular
+	 * word. You may also manually specify what separation string is used between the particular words.
+	 *
+	 * @param wordNormalizer the normalizer to be used for the particular words
+	 * @param separator the char sequence to separate the particular words
+	 */
+	public MultiWordNormalizer(TokenNormalizer wordNormalizer, String separator) {
 		this.wordNormalizer = wordNormalizer;
+		this.separator = separator;
 	}
 
 	@Override
@@ -52,7 +65,9 @@ public class MultiWordNormalizer implements TokenNormalizer {
 		// build result be iterating each word, normalize the words and separate them by one space
 		StringBuilder result = new StringBuilder(term.length());
 		for (String word : Tokenizer.tokenize(term)) {
-			if (result.length() > 0) result.append(" ");
+			if (result.length() > 0) {
+				result.append(separator);
+			}
 			result.append(wordNormalizer.normalize(word));
 		}
 		return result.toString();
