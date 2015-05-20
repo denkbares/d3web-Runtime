@@ -31,7 +31,7 @@ import java.util.NoSuchElementException;
 public abstract class FilterIterator<E> implements Iterator<E> {
 
 	public interface EntryFilter<E> {
-		public abstract boolean accept(E item);
+		boolean accept(E item);
 	}
 
 	private final Iterator<E> delegate;
