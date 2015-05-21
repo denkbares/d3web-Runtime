@@ -38,9 +38,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -665,10 +667,21 @@ public class Strings {
 	 * Splits the text by the <tt>splitSymbol</tt> disregarding splitSymbols which are quoted.
 	 *
 	 * @param text        the text to be split
-	 * @param splitSymbol the symbol to split by
+	 * @param splitSymbol the regex to split by
 	 * @return the fragments of the text
 	 */
 	public static List<StringFragment> splitUnquoted(String text, String splitSymbol, boolean includeBlankFragments, QuoteSet... quotes) {
+		return splitUnquoted(text, Pattern.compile(Pattern.quote(splitSymbol)), includeBlankFragments, quotes);
+	}
+
+	/**
+	 * Splits the text by the <tt>splitRegex</tt> disregarding splitSymbols which are quoted.
+	 *
+	 * @param text        the text to be split
+	 * @param splitPattern the regex to split by
+	 * @return the fragments of the text
+	 */
+	public static List<StringFragment> splitUnquoted(String text, Pattern splitPattern, boolean includeBlankFragments, QuoteSet... quotes) {
 		List<StringFragment> parts = new ArrayList<StringFragment>();
 		if (text == null) return parts;
 
@@ -687,10 +700,35 @@ public class Strings {
 		int[] quoteStates = new int[quotes.length];
 
 		StringBuffer actualPart = new StringBuffer();
+
+		Matcher matcher = splitPattern.matcher(text);
+		List<Group> candidates = new ArrayList<Group>();
+		while (matcher.find()) {
+			candidates.add(new Group(matcher.start(), matcher.end()));
+		}
+		if (candidates.isEmpty()) {
+			// not splitting in this text
+			return Collections.singletonList(new StringFragment(text, 0, text));
+		}
+		Iterator<Group> candidateIterator = candidates.iterator();
+
 		// scanning the text
+		Group nextCandidate = candidateIterator.next();
 		int startOfNewPart = 0;
 		int skipQuoteDetectionUntil = -1;
 		for (int i = 0; i < text.length(); i++) {
+
+			// go to next split candidate if possible
+			if (i > nextCandidate.start) {
+				if (candidateIterator.hasNext()) {
+					nextCandidate = candidateIterator.next();
+				}
+				else {
+					// no more candidates, rest of the string is one fragment
+					actualPart.append(text.substring(i, text.length()));
+					break;
+				}
+			}
 
 			// tracking multiple quote states
 			for (int q = 0; q < quotes.length; q++) {
@@ -742,14 +780,15 @@ public class Strings {
 				actualPart.append(text.charAt(i));
 				continue;
 			}
-			if (foundSplitSymbol(text, splitSymbol, i)) {
+
+			if (nextCandidate.start == i) {
 				String actualPartString = actualPart.toString();
 				if (includeBlankFragments || !isBlank(actualPartString)) {
 					parts.add(new StringFragment(actualPartString, startOfNewPart, text));
 				}
 				actualPart = new StringBuffer();
-				i += splitSymbol.length() - 1;
-				startOfNewPart = i + 1;
+				i = nextCandidate.end - 1;
+				startOfNewPart = nextCandidate.end;
 				continue;
 			}
 			actualPart.append(text.charAt(i));
@@ -786,12 +825,6 @@ public class Strings {
 			if (b > 0) return true;
 		}
 		return false;
-	}
-
-	private static boolean foundSplitSymbol(String text, String splitSymbol, int i) {
-		return i + splitSymbol.length() <= text.length()
-				&& text.regionMatches(i, splitSymbol, 0, splitSymbol.length());
-		// && text.subSequence(i, i + splitSymbol.length()).equals(splitSymbol);
 	}
 
 	/**
@@ -1921,4 +1954,13 @@ public class Strings {
 		return longVersion ? " " + TIME_UNITS_LONG[i] + (plural ? "s" : "") : TIME_UNITS[i];
 	}
 
+	private static class Group {
+		int start;
+		int end;
+
+		public Group(int start, int end) {
+			this.start = start;
+			this.end = end;
+		}
+	}
 }
