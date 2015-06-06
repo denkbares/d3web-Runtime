@@ -43,7 +43,21 @@ public class Streams {
 	 * @throws IOException if any of the streams has an error
 	 */
 	public static void stream(InputStream inputStream, OutputStream outputStream) throws IOException {
-		byte[] buffer = new byte[1024];
+		stream(inputStream, outputStream, 1024);
+	}
+
+	/**
+	 * Streams the specified inputStream to the specified outputStream and
+	 * returns after the stream has completely been written.
+	 *
+	 * @created 09.09.2013
+	 * @param inputStream the source stream to read the data from
+	 * @param outputStream the target stream to write the data to
+	 * @param chunkSize the size of the particular chunks to be copied
+	 * @throws IOException if any of the streams has an error
+	 */
+	public static void stream(InputStream inputStream, OutputStream outputStream, int chunkSize) throws IOException {
+		byte[] buffer = new byte[chunkSize];
 		int bytesRead;
 		while ((bytesRead = inputStream.read(buffer)) != -1) {
 			outputStream.write(buffer, 0, bytesRead);
