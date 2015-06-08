@@ -82,41 +82,47 @@ public class Instantiation {
 		Class<?>[] argTypes = new Class[0];
 		int argIndex = constructorCall.indexOf('(');
 		if (argIndex > 0) {
+
 			// parse constructor call
 			className = constructorCall.substring(0, argIndex).trim();
 			String argsString = constructorCall.substring(argIndex + 1, constructorCall.lastIndexOf(')'));
-			String[] arguments = argsString.trim().split("\\s*,\\s*");
 
-			// init arguments and argument types
-			argValues = new Object[arguments.length];
-			argTypes = new Class[arguments.length];
-			for (int i = 0; i < arguments.length; i++) {
-				String argument = arguments[i];
-				// accept string types
-				if (argument.matches("'.*'|\".*\"")) {
-					argTypes[i] = String.class;
-					argValues[i] = Strings.unquote(argument.substring(1, argument.length() - 1),
-							argument.charAt(0));
+			if (!argsString.isEmpty()) {
+
+				String[] arguments = argsString.trim().split("\\s*,\\s*");
+
+				// init arguments and argument types
+				argValues = new Object[arguments.length];
+				argTypes = new Class[arguments.length];
+				for (int i = 0; i < arguments.length; i++) {
+					String argument = arguments[i];
+					// accept string types
+					if (argument.matches("'.*'|\".*\"")) {
+						argTypes[i] = String.class;
+						argValues[i] = Strings.unquote(argument.substring(1, argument.length() - 1),
+								argument.charAt(0));
+					}
+					// accept integer arguments
+					else if (argument.matches("\\d+")) {
+						argTypes[i] = Integer.class;
+						argValues[i] = new Integer(argument);
+					}
+					// accept double arguments
+					else if (argument.matches("\\d+\\.\\d+")) {
+						argTypes[i] = Double.class;
+						argValues[i] = new Double(argument);
+					}
+					// allow other types as required
+					// if not, an exception if thrown
+					else {
+						String message = "The constructor '" + constructorCall +
+								"' has an unsupported argument type. " +
+								(context != null ? "Please check: '" + context.getOrigin() + "'. " : "");
+						Log.severe(message);
+						throw new IllegalArgumentException(message);
+					}
 				}
-				// accept integer arguments
-				else if (argument.matches("\\d+")) {
-					argTypes[i] = Integer.class;
-					argValues[i] = new Integer(argument);
-				}
-				// accept double arguments
-				else if (argument.matches("\\d+\\.\\d+")) {
-					argTypes[i] = Double.class;
-					argValues[i] = new Double(argument);
-				}
-				// allow other types as required
-				// if not, an exception if thrown
-				else {
-					String message = "The constructor '" + constructorCall +
-							"' has an unsupported argument type. " +
-							context != null ? "Pleas check: '" + context.getOrigin() + "'. " : "";
-					Log.severe(message);
-					throw new IllegalArgumentException(message);
-				}
+
 			}
 		}
 
