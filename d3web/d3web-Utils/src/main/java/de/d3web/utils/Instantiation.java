@@ -23,11 +23,11 @@ import java.lang.reflect.InvocationTargetException;
 import de.d3web.strings.Strings;
 
 /**
- * Utility class for instantiating textual constructor calls using a specific @Link{ClassLoader}.
- * The @Link{ClassLoader} that shall has to be specified in the constructor.
- * The @link{newInstance} method does the actual instantiation of constructor calls.
+ * Utility class for instantiating textual constructor calls using a specific {@link ClassLoader}.
+ * The {@link ClassLoader} that shall has to be specified in the constructor.
+ * The {@link #newInstance} method does the actual instantiation of constructor calls.
  * The instantiation supports the definition of primitive arguments
- * @link{String}, double, int.
+ * {@link String}, double, int.
  *
  * @author Sebastian Furth (denkbares GmbH)
  * @created 08.06.15
