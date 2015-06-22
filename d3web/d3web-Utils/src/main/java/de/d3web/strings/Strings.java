@@ -20,14 +20,12 @@
 
 package de.d3web.strings;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -46,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1704,25 +1703,18 @@ public class Strings {
 	}
 
 	/**
-	 * Reads the contents of a stream into a String and return the string.
+	 * Reads the contents of a stream into a String and return the string. The InputStream is not closed!
 	 *
 	 * @param inputStream the stream to load from
 	 * @return the contents of the file
-	 * @throws IOException if there was any problem reading the file
-	 * @created 16.09.2012
+	 * @created 20.06.2015
 	 */
-	public static String readStream(InputStream inputStream) throws IOException {
-		StringBuilder result = new StringBuilder();
-
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(inputStream, "UTF-8"));
-		char[] buf = new char[1024];
-		int readCount;
-		while ((readCount = bufferedReader.read(buf)) != -1) {
-			result.append(new String(buf, 0, readCount));
-		}
-
-		return result.toString();
+	public static String readStream(InputStream inputStream) {
+		// The reason it works is because Scanner iterates over tokens in the stream,
+		// and in this case we separate tokens using "beginning of the input boundary"
+		// (\A) thus giving us only one token for the entire contents of the stream.
+		Scanner scanner = new Scanner(inputStream, "UTF-8").useDelimiter("\\A");
+		return scanner.hasNext() ? scanner.next() : "";
 	}
 
 	public static void writeFile(String path, String content) throws IOException {
