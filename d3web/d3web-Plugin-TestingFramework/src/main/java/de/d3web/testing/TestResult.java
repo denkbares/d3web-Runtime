@@ -201,7 +201,6 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	public void handleAutoDelete() {
-		Collection<File> files = new LinkedList<File>();
 		for (Message message : new ConcatenateIterable<Message>(
 				expectedMessages.values(), unexpectedMessages.values())) {
 			message.handleAutoDelete();

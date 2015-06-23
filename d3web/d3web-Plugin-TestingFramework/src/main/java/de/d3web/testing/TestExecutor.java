@@ -323,7 +323,7 @@ public class TestExecutor {
 	 *
 	 * @created 21.09.2012
 	 */
-	public void terminate() {
+	public void shutDownNow() {
 		// aborted, so discard build
 		setTerminateStatus();
 		// System.out.println("Terminating executor");
