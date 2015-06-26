@@ -36,7 +36,7 @@ public class CachedIterable<E> implements Iterable<E> {
 	private final List<E> cache = new ArrayList<E>();
 
 	/**
-	 * Creates a new instance for the remaining elements of the specified iterator. Please not that
+	 * Creates a new instance for the remaining elements of the specified iterator. Please note that
 	 * the iterator shall no longer be used outside this instance after the instance has been
 	 * created.
 	 *
