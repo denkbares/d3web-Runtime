@@ -214,6 +214,16 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="DefinedConditionHandler">
+		<parameter id="class"
+			value="de.d3web.core.io.fragments.conditions.DefinedConditionHandler" />
+		<parameter id="name" value="DefinedConditionHandler" />
+		<parameter id="description" value="FragementHandler for CondDefined" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 		
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="EqualConditionHandler">

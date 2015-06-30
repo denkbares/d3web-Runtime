@@ -22,6 +22,7 @@ package de.d3web.core.inference.condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import de.d3web.core.knowledge.TerminologyObject;
 
@@ -29,31 +30,31 @@ import de.d3web.core.knowledge.TerminologyObject;
  * Abstract condition for all terminal conditions. A terminal condition contains
  * no sub-conditions, but represents a single proposition. The composite pattern
  * is used for this. This class is the abstract class for a "leaf".
- * 
+ *
  * @author Michael Wolber, joba
  */
 public abstract class TerminalCondition implements Condition {
 
-	private final Collection<TerminologyObject> terminals = new ArrayList<TerminologyObject>(1);
+	private final ArrayList<TerminologyObject> terminals = new ArrayList<TerminologyObject>();
 
 	/**
 	 * Creates a new terminal condition with the specified depending objects.
-	 * 
+	 *
 	 * @param terminals the object(s) the condition depends on.
 	 */
 	public TerminalCondition(TerminologyObject... terminals) {
-		for (TerminologyObject object : terminals) {
-			if (object != null) this.terminals.add(object);
-		}
+		Collections.addAll(this.terminals, terminals);
+		this.terminals.trimToSize();
 	}
 
 	/**
 	 * Creates a new terminal condition with the specified depending objects.
-	 * 
+	 *
 	 * @param terminals the object(s) the condition depends on.
 	 */
 	public TerminalCondition(Collection<? extends TerminologyObject> terminals) {
 		this.terminals.addAll(terminals);
+		this.terminals.trimToSize();
 	}
 
 	/**
