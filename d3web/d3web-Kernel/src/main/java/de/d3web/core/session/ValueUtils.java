@@ -251,7 +251,6 @@ public final class ValueUtils {
 	 * In case of a {@link QuestionMC}, the new Value is merged with the
 	 * existing Value (if possible). The existing value is allowed to be
 	 * <tt>null</tt>!<br/>
-	 * In case the new value equals the existing value, Unkowwn is returned.
 	 *
 	 * @param question      the question for which the {@link Value} is created
 	 * @param valueString   a String representation of the {@link Value} to be
@@ -271,8 +270,7 @@ public final class ValueUtils {
 		}
 
 		else if (question instanceof QuestionChoice) {
-			value = createQuestionChoiceValue((QuestionChoice) question, valueString,
-					existingValue);
+			value = createQuestionChoiceValue((QuestionChoice) question, valueString, existingValue);
 		}
 
 		else if (question instanceof QuestionNum) {
@@ -301,8 +299,6 @@ public final class ValueUtils {
 				}
 			}
 		}
-
-		if (value.equals(existingValue)) value = Unknown.getInstance();
 
 		return value;
 	}
@@ -472,7 +468,7 @@ public final class ValueUtils {
 	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
 	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
 	 *
-	 * @param date        the date for which we want the string
+	 * @param date         the date for which we want the string
 	 * @param timeZoneMode decides whether the used TimeZone should be appended to the string
 	 */
 	public static String getDateVerbalization(Date date, TimeZoneDisplayMode timeZoneMode) {
