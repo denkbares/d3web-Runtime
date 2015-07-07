@@ -269,6 +269,10 @@ public final class ValueUtils {
 			value = Unknown.getInstance();
 		}
 
+		else if (valueString.equals(UndefinedValue.getInstance().toString())) {
+			value = UndefinedValue.getInstance();
+		}
+
 		else if (question instanceof QuestionChoice) {
 			value = createQuestionChoiceValue((QuestionChoice) question, valueString, existingValue);
 		}
