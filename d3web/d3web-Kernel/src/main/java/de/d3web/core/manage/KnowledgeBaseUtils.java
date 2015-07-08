@@ -55,6 +55,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.strings.Strings;
 import de.d3web.utils.Triple;
 
 /**
@@ -403,9 +404,9 @@ public final class KnowledgeBaseUtils {
 		sortTerminologyObjects(unsorted);
 	}
 
-
 	/**
-	 * Sorts a given list of TerminologyObjects according to DFS. Use this algorithm method for small knowledge bases or
+	 * Sorts a given list of TerminologyObjects according to DFS. Use this algorithm method for small knowledge bases
+	 * or
 	 * lists containing almost all of the knowledge bases objects. Do not mix Solutions and QASets in the same list.
 	 *
 	 * @param unsorted the unsorted list
@@ -493,5 +494,57 @@ public final class KnowledgeBaseUtils {
 				locales.add(locale);
 			}
 		}
+	}
+
+	public static String getUniqueId(Choice choice) {
+		QuestionChoice question = (QuestionChoice) choice.getQuestion();
+		return getUniqueId(question) + question.getAllAlternatives().indexOf(choice);
+	}
+
+	/**
+	 * Generates a unique id of the given object, based on its position in the object tree. The id only contains digits
+	 * and -, e.g. 0-1-5-12-2. It can for example be easily used in HTML element attributes. Uniqueness is only given,
+	 * if all objects of the knowledge base are successors of the root elements (QASet or Solution).
+	 *
+	 * @param object the object for which we want the id
+	 * @return the uniqe id
+	 */
+	public static String getUniqueId(TerminologyObject object) {
+		return Strings.concat("-", getPositionInTree(object));
+	}
+
+	/**
+	 * Generates the position of the object in the object tree as a List of ints. The first int specifies, whether the
+	 * object is successor of the RootQASet (0) or the RootSolution (1). Following ints are the positions in the list of
+	 * children in the respective parent.
+	 *
+	 * @param object the object for which we want the position
+	 * @return the position of the object in the tree
+	 */
+	public static List<Integer> getPositionInTree(TerminologyObject object) {
+		List<Integer> position = new ArrayList<Integer>();
+		getPositionInTree(object, position);
+		return position;
+	}
+
+	private static void getPositionInTree(TerminologyObject object, List<Integer> position) {
+		TerminologyObject[] parents = object.getParents();
+		if (parents.length > 0) {
+			getPositionInTree(parents[0], position);
+			position.add(indexOf(parents[0].getChildren(), object));
+		}
+		else if (object instanceof QASet) {
+			position.add(0);
+		}
+		else if (object instanceof Solution) {
+			position.add(1);
+		}
+	}
+
+	private static int indexOf(TerminologyObject[] children, TerminologyObject child) {
+		for (int i = 0; i < children.length; i++) {
+			if (children[i] == child) return i;
+		}
+		return -1;
 	}
 }
