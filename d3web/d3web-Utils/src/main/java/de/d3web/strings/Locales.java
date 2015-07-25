@@ -277,10 +277,7 @@ public class Locales {
 		if (Strings.isBlank(languages)) return Collections.emptySet();
 		LinkedHashSet<Locale> result = new LinkedHashSet<Locale>();
 		for (String lang : languages.split("[;,]")) {
-			Locale locale = parseLocale(lang);
-			if(locale != null) {
-				result.add(locale);
-			}
+			result.add(parseLocale(lang));
 		}
 		return result;
 	}
