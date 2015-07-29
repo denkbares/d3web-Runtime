@@ -205,8 +205,6 @@ public class TerminologyManager {
 	 * @param name the specified name
 	 * @return the terminology object with the specified identifier;
 	 *         <code>null</code> if none found
-	 * @author joba
-	 * @date 15.04.2010
 	 */
 	public TerminologyObject search(String name) {
 		return objectNameMap.get(name);
@@ -254,8 +252,6 @@ public class TerminologyManager {
 	 * 
 	 * @param name the specified name of the searched terminology object
 	 * @return the search terminology object; <code>null</code> if none found
-	 * @author joba
-	 * @date 15.04.2010
 	 * @deprecated use {@link #search(String)} instead
 	 */
 	@Deprecated
@@ -269,8 +265,6 @@ public class TerminologyManager {
 	 * 
 	 * @param name the unique identifier of the search {@link Question}
 	 * @return the searched question; <code>null</code> if none found
-	 * @author joba
-	 * @date 15.04.2010
 	 */
 	public Question searchQuestion(String name) {
 		if (objectNameMap.containsKey(name)) {
@@ -287,8 +281,6 @@ public class TerminologyManager {
 	 * instance.
 	 * 
 	 * @return all question/questionnaires contained in this knowledge base
-	 * @author joba
-	 * @date 15.04.2010
 	 */
 	public List<QASet> getQASets() {
 		List<QASet> qASets = new ArrayList<QASet>();

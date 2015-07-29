@@ -59,7 +59,7 @@ import de.d3web.strings.Strings;
 import de.d3web.utils.Triple;
 
 /**
- * Provides utilitymethods for {@link KnowledgeBase}
+ * Provides utility methods for {@link KnowledgeBase}
  *
  * @author baumeister
  */
