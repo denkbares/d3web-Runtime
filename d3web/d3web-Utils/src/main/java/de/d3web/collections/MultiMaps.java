@@ -635,4 +635,103 @@ public class MultiMaps {
 		}
 	}
 
+
+	public static final MultiMap EMPTY_MULTI_MAP = new EmptyMultiMap();
+
+	public static <K, V> MultiMap<K, V> emptyMultiMap() {
+		//noinspection unchecked
+		return (MultiMap<K, V>) EMPTY_MULTI_MAP;
+	}
+
+	private static class EmptyMultiMap<K, V> implements MultiMap<K, V> {
+
+		@Override
+		public int size() {
+			return 0;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return true;
+		}
+
+		@Override
+		public boolean containsKey(Object key) {
+			return false;
+		}
+
+		@Override
+		public boolean containsValue(Object value) {
+			return false;
+		}
+
+		@Override
+		public boolean contains(Object key, Object value) {
+			return false;
+		}
+
+		@Override
+		public Set<V> getValues(Object key) {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public Set<K> getKeys(Object value) {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public boolean put(K key, V value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<V> removeKey(Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<K> removeValue(Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean remove(Object key, Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean putAll(Map<? extends K, ? extends V> m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean putAll(MultiMap<? extends K, ? extends V> m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void clear() {
+		}
+
+		@Override
+		public Set<K> keySet() {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public Set<V> valueSet() {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public Set<Entry<K, V>> entrySet() {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public Map<K, Set<V>> toMap() {
+			return Collections.emptyMap();
+		}
+	}
 }
