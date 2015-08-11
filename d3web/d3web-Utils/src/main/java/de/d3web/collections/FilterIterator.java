@@ -31,7 +31,15 @@ import java.util.NoSuchElementException;
 public abstract class FilterIterator<E> implements Iterator<E> {
 
 	public interface EntryFilter<E> {
-		boolean accept(E item);
+		boolean accept(E item) throws Stop;
+	}
+
+	public static class Stop extends Exception {
+		@SuppressWarnings("ThrowableInstanceNeverThrown")
+		public static final Stop INSTANCE = new Stop();
+
+		private Stop() {
+		}
 	}
 
 	private final Iterator<E> delegate;
@@ -65,8 +73,14 @@ public abstract class FilterIterator<E> implements Iterator<E> {
 	public static <E> FilterIterator<E> filter(Iterator<E> iterator, final EntryFilter<? super E> filter) {
 		return new FilterIterator<E>(iterator) {
 			@Override
-			public boolean accept(E item) {
-				return filter.accept(item);
+			public boolean accept(E item)  {
+				try {
+					return filter.accept(item);
+				}
+				catch (Stop e) {
+					signalEnd();
+					return false;
+				}
 			}
 		};
 	}
