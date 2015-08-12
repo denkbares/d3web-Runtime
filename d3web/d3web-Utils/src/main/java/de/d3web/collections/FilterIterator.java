@@ -30,15 +30,48 @@ import java.util.NoSuchElementException;
  */
 public abstract class FilterIterator<E> implements Iterator<E> {
 
+	/**
+	 * Functional interface to check a particular item to be included in the filtered iteration or
+	 * not. For more details see {@link #accept(Object)}.
+	 *
+	 * @param <E> the type of the items to be checked
+	 */
 	public interface EntryFilter<E> {
+		/**
+		 * Method to be overwritten. The method should check if the specified item should be
+		 * included in the iteration. if the method returns false, the item is skipped.
+		 * <p/>
+		 * The method may (instead of returning a boolean value) throw the Stop.EXCLUDE or
+		 * Stop.INCLUDE exception. In this case the iteration assumes that all succeeding items will
+		 * not been accepted. The iteration stops immediately at the current item. Depending on the
+		 * thrown exception instance, the currently specified item will be included or excluded
+		 * before the iteration terminates.
+		 *
+		 * @param item the current item to be checked
+		 * @return if the specified item should be included
+		 * @throws Stop if the subsequent items are all not accepted (all skipped)
+		 */
 		boolean accept(E item) throws Stop;
 	}
 
 	public static class Stop extends Exception {
+		/**
+		 * Exception to be thrown by the accept method to signal that none of the succeeding items
+		 * will be accepted, but the current item should be included in the filtered iteration.
+		 */
 		@SuppressWarnings("ThrowableInstanceNeverThrown")
-		public static final Stop INSTANCE = new Stop();
+		public static final Stop INCLUDE = new Stop("include");
 
-		private Stop() {
+		/**
+		 * Exception to be thrown by the accept method to signal that none of the succeeding items
+		 * will be accepted. The current item should also not been included in the filtered
+		 * iteration.
+		 */
+		@SuppressWarnings("ThrowableInstanceNeverThrown")
+		public static final Stop EXCLUDE = new Stop("exclude");
+
+		private Stop(String message) {
+			super(message);
 		}
 	}
 
@@ -73,13 +106,13 @@ public abstract class FilterIterator<E> implements Iterator<E> {
 	public static <E> FilterIterator<E> filter(Iterator<E> iterator, final EntryFilter<? super E> filter) {
 		return new FilterIterator<E>(iterator) {
 			@Override
-			public boolean accept(E item)  {
+			public boolean accept(E item) {
 				try {
 					return filter.accept(item);
 				}
 				catch (Stop e) {
 					signalEnd();
-					return false;
+					return e.equals(Stop.INCLUDE);
 				}
 			}
 		};
