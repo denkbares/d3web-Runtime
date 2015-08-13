@@ -30,6 +30,12 @@ import java.util.Iterator;
  */
 public class MappingIterator<S, E> implements Iterator<E> {
 
+	/**
+	 * Functional interface to map a source value of type S to a mapped value of type E
+	 *
+	 * @param <S> the source type
+	 * @param <E> the mapped type
+	 */
 	public interface MappingFunction<S, E> {
 		E apply(S sourceItem);
 	}
