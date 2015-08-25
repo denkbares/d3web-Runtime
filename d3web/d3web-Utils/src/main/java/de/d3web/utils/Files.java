@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -198,34 +199,41 @@ public class Files {
 		newProperty.store(newLineBuffer, null);
 		String newLine = newLineBuffer.toString().replaceAll("(?m)^#.*$[\n\r]*", "").trim();
 
-		// read the manifest file and iterate each line,
-		// preserving comments and order
-		List<String> lines = de.d3web.utils.Files.getLines(file);
-		ListIterator<String> lineIterator = lines.listIterator();
-		boolean replaced = false;
-		while (lineIterator.hasNext()) {
-			String line = lineIterator.next();
-			// parse each line as a property
-			Properties parsedLine = new Properties();
-			parsedLine.load(new StringReader(line));
+		List<String> lines;
+		if (file.exists()) {
+			// read the properties file and iterate each line,
+			// preserving comments and order
+			lines = de.d3web.utils.Files.getLines(file);
+			ListIterator<String> lineIterator = lines.listIterator();
+			boolean replaced = false;
+			while (lineIterator.hasNext()) {
+				String line = lineIterator.next();
+				// parse each line as a property
+				Properties parsedLine = new Properties();
+				parsedLine.load(new StringReader(line));
 
-			// if the lines specifies the key, it will be overwritten
-			if (parsedLine.containsKey(key)) {
-				if (replaced) {
-					// if already replaced one line with the key,
-					// remove duplicate lines with same key
-					lineIterator.remove();
-				}
-				else {
-					// overwrite the first line with the specified key
-					lineIterator.set(newLine);
-					replaced = true;
+				// if the lines specifies the key, it will be overwritten
+				if (parsedLine.containsKey(key)) {
+					if (replaced) {
+						// if already replaced one line with the key,
+						// remove duplicate lines with same key
+						lineIterator.remove();
+					}
+					else {
+						// overwrite the first line with the specified key
+						lineIterator.set(newLine);
+						replaced = true;
+					}
 				}
 			}
-		}
 
-		// if not replaced any line, we append the new line at the end
-		if (!replaced) lines.add(newLine);
+			// if not replaced any line, we append the new line at the end
+			if (!replaced) lines.add(newLine);
+		}
+		else {
+			// Create a new "list" of lines, consisting only of the line to be added
+			lines = Collections.singletonList(newLine);
+		}
 
 		// and finally write the lines back to disc
 		FileOutputStream out = new FileOutputStream(file);
@@ -306,7 +314,7 @@ public class Files {
 
 	/**
 	 * Returns true if the specified file has one of the specified file extensions. The extensions
-	 * are tested case insensitive. The specified extension must contain only the characters before
+	 * are tested case insensitive. The specified extension must contain only the characters after
 	 * the separating ".", not the "." itself. The characters are compared case insensitive.
 	 *
 	 * @param fileName the abstract path of the file to be tested
@@ -329,13 +337,14 @@ public class Files {
 
 	/**
 	 * Returns true if the specified file has one of the specified file extensions. The extensions
-	 * are tested case insensitive. The specified extension must contain only the characters before
+	 * are tested case insensitive. The specified extension must contain only the characters after
 	 * the separating ".", not the "." itself. The characters are compared case insensitive.
 	 *
 	 * @param file the file to be tested
 	 * @param extensions the extensions to be tested for
 	 * @return if the file has any of the specified extensions
-	 * @throws NullPointerException if the array of extensions is null or if any of the contained extension is null
+	 * @throws NullPointerException if the array of extensions is null or if any of the contained
+	 * extension is null
 	 */
 	public static boolean hasExtension(File file, String... extensions) {
 		return file != null && hasExtension(file.getName(), extensions);
