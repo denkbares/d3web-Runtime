@@ -52,13 +52,24 @@ public abstract class InitPluginManager {
 	 * @throws IOException
 	 */
 	public static void init() throws IOException {
-		File classpath = new File("target/dependencies/output.txt");
-		StringBuffer fileData = new StringBuffer();
-		BufferedReader reader = new BufferedReader(
-				new FileReader(classpath));
+		init(new File("target/dependencies/output.txt"));
+	}
+
+	/**
+	 * Initializes the JPF-Pluginmanager with the information stored in
+	 * "target/dependencies/output.txt" This file can be generated with the
+	 * maven dependency plugin <BR>
+	 * Important: Tests using this function must run maven install after each
+	 * dependency update
+	 *
+	 * @throws IOException
+	 */
+	public static void init(File classpathFile) throws IOException {
+		StringBuilder fileData = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(classpathFile));
 		try {
 			char[] buf = new char[1024];
-			int numRead = 0;
+			int numRead;
 			while ((numRead = reader.read(buf)) != -1) {
 				String readData = String.valueOf(buf, 0, numRead);
 				fileData.append(readData);
