@@ -281,4 +281,15 @@ public class Locales {
 		}
 		return result;
 	}
+
+	/**
+	 * Returns if the specified locale null or the empty ROOT locale. If the locale specifies a
+	 * well-defined language (with optional country/variant), false is returned.
+	 *
+	 * @param locale the locale to be checked
+	 * @return if the locale does not denote a specific language
+	 */
+	public static boolean isEmpty(Locale locale) {
+		return locale == null || Strings.isBlank(locale.getLanguage());
+	}
 }
