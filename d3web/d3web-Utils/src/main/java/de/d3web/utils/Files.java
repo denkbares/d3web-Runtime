@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -180,11 +181,31 @@ public class Files {
 	}
 
 	/**
-	 * Reads and rewrites the manifest as a properties file, adding one entry, overwriting all
-	 * existing entries with the specified key. It preserves all other lines, including comments and
-	 * the order of the lines. Only the lines with the specified key will be modified, where the
-	 * first one is overwritten, and succeeding ones (if there are any) will be deleted. If there is
-	 * no such line contained, the new property will be appended to the end of the file.
+	 * Reads a properties file into a newly created Properties objects and returns the Properties
+	 * objects.
+	 *
+	 * @param file the properties file to be read
+	 * @return the loaded file content
+	 * @throws IOException if the file cannot be loaded or the file's content cannot be parsed
+	 */
+	public static Properties getProperties(File file) throws IOException {
+		Properties properties = new Properties();
+		InputStream in = new FileInputStream(file);
+		try {
+			properties.load(in);
+		}
+		finally {
+			in.close();
+		}
+		return properties;
+	}
+
+	/**
+	 * Reads and rewrites the a properties file, adding one entry, overwriting all existing entries
+	 * with the specified key. It preserves all other lines, including comments and the order of the
+	 * lines. Only the lines with the specified key will be modified, where the first one is
+	 * overwritten, and succeeding ones (if there are any) will be deleted. If there is no such line
+	 * contained, the new property will be appended to the end of the file.
 	 *
 	 * @param file the properties file to be updated
 	 * @param key the key to be overwritten or added
