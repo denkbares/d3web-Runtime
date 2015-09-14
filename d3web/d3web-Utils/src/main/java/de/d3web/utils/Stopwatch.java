@@ -36,53 +36,63 @@ public class Stopwatch {
 	/**
 	 * Creates a new Stopwatch. The created stopwatch will be automatically started. If you do not
 	 * want to start it manually later on, ignore that, calling start() will automatically stop and
-	 * reset it.
+	 * reset it. Alternatively you can use <code>Stopwatch timer = new Stopwatch().reset()</code> to
+	 * create a not started watch.
 	 */
 	public Stopwatch() {
 	}
 
 	/**
-	 * Resets the stopwatch to 0. The stopwatch is also automatically stopped (paused).
+	 * Resets the stopwatch to 0. The stopwatch is also automatically stopped (paused). The method
+	 * returns this stopwatch afterwards to allow cascading calls.
 	 */
-	public void reset() {
+	public Stopwatch reset() {
 		this.startTime = -1;
 		this.pausedTime = 0;
+		return this;
 	}
 
 	/**
-	 * Starts time measurement. Before starting the watch is automatically stopped and resetted.
+	 * Starts time measurement. Before starting the watch is automatically stopped and resetted. The
+	 * method returns this stopwatch afterwards to allow cascading calls.
 	 */
-	public void start() {
+	public Stopwatch start() {
 		this.startTime = System.currentTimeMillis();
 		this.pausedTime = 0;
+		return this;
 	}
 
 	/**
-	 * Pauses the time measurement, remembering the yet elapsed time.
+	 * Pauses the time measurement, remembering the yet elapsed time. The method returns this
+	 * stopwatch afterwards to allow cascading calls.
 	 */
-	public void pause() {
+	public Stopwatch pause() {
 		long elapsed = (startTime == -1) ? 0 : (System.currentTimeMillis() - startTime);
 		this.pausedTime += elapsed;
 		this.startTime = -1;
+		return this;
 	}
 
 	/**
 	 * Resumes the previously paused time measurement. If it was not paused or stopped before, the
-	 * method does nothing.
+	 * method does nothing. The method returns this stopwatch afterwards to allow cascading calls.
 	 */
-	public void resume() {
+	public Stopwatch resume() {
 		if (this.startTime == -1) {
 			this.startTime = System.currentTimeMillis();
 		}
+		return this;
 	}
 
 	/**
-	 * Shows the currently measured time with some message.
+	 * Shows the currently measured time with some message. The method returns this stopwatch
+	 * afterwards to allow cascading calls.
 	 *
 	 * @param message the message to be printed before the time
 	 */
-	public void show(String message) {
+	public Stopwatch show(String message) {
 		System.out.println(message + ": " + getDisplay());
+		return this;
 	}
 
 	/**
