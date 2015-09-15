@@ -79,7 +79,7 @@ public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 
 		// create element
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
-		element.setAttribute("type", ELEMENT_TYPE);
+		element.setAttribute("type", getElementType());
 		element.setAttribute(ATTR_DATE, dateString);
 		element.setAttribute(ATTR_OBJECT_NAME, entry.getTerminologyObjectName());
 		element.setAttribute(ATTR_SOLVER, entry.getSolvingMethodClassName());
@@ -89,14 +89,18 @@ public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 		return element;
 	}
 
+	protected String getElementType() {
+		return ELEMENT_TYPE;
+	}
+
 	@Override
 	public boolean canRead(Element element) {
-		return XMLUtil.checkNameAndType(element, ELEMENT_NAME, ELEMENT_TYPE);
+		return XMLUtil.checkNameAndType(element, ELEMENT_NAME, getElementType());
 	}
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object instanceof FactProtocolEntry;
+		return object.getClass().equals(FactProtocolEntry.class);
 	}
 
 }
