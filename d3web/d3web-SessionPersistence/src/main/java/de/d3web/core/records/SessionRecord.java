@@ -38,7 +38,7 @@ public interface SessionRecord extends SessionHeader {
 	 * Adds a value {@link Fact}
 	 * 
 	 * @created 05.08.2011
-	 * @param fact
+	 * @param fact the fact to add
 	 */
 	void addValueFact(FactRecord fact);
 
@@ -46,7 +46,7 @@ public interface SessionRecord extends SessionHeader {
 	 * Adds an interview {@link Fact}
 	 * 
 	 * @created 05.08.2011
-	 * @param fact
+	 * @param fact the fact to add
 	 */
 	void addInterviewFact(FactRecord fact);
 
@@ -70,7 +70,7 @@ public interface SessionRecord extends SessionHeader {
 	 * Sets the name of the SessionRecord
 	 * 
 	 * @created 05.08.2011
-	 * @param name
+	 * @param name the name of the record
 	 */
 	void setName(String name);
 
@@ -78,11 +78,11 @@ public interface SessionRecord extends SessionHeader {
 	 * Returns all {@link Solution} instances, that hold one of the specified
 	 * states
 	 * 
-	 * @param statea the States the diagnoses must have to be returned
+	 * @param states the States the diagnoses must have to be returned
 	 * @param kb {@link KnowledgeBase}
 	 * @return a list of diagnoses in this case that have one of the specified
 	 *         states
 	 */
-	public List<Solution> getSolutions(KnowledgeBase kb, State... states);
+	List<Solution> getSolutions(KnowledgeBase kb, State... states);
 
 }
