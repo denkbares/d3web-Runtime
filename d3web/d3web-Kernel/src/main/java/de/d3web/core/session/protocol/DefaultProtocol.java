@@ -56,7 +56,7 @@ public class DefaultProtocol implements Protocol {
 
 	@Override
 	public <T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass) {
-		List<T> result = new LinkedList<T>();
+		ArrayList<T> result = new ArrayList<T>(this.entries.size());
 		for (ProtocolEntry entry : this.entries) {
 			if (filterClass.isInstance(entry)) {
 				result.add(filterClass.cast(entry));
