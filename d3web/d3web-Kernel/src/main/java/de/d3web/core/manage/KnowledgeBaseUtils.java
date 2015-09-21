@@ -55,6 +55,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.core.utilities.TerminologyHierarchyComparator;
 import de.d3web.strings.Strings;
 import de.d3web.utils.Triple;
 
@@ -405,25 +406,13 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Sorts a given list of TerminologyObjects according to DFS. Use this algorithm method for small knowledge bases
-	 * or lists containing almost all of the knowledge bases objects. Do not mix Solutions and QASets in the same list!
+	 * Sorts a given list of TerminologyObjects according to DFS.
 	 *
+	 * @see TerminologyHierarchyComparator
 	 * @param unsorted the unsorted list
 	 */
 	public static void sortTerminologyObjects(List<? extends TerminologyObject> unsorted) {
-		if (unsorted.isEmpty()) return;
-		TerminologyObject terminologyObject = unsorted.get(0);
-		KnowledgeBase knowledgeBase = terminologyObject.getKnowledgeBase();
-		TerminologyObject root;
-		if (terminologyObject instanceof QASet) {
-			root = knowledgeBase.getRootQASet();
-		}
-		else {
-			root = knowledgeBase.getRootSolution();
-		}
-		HashMap<TerminologyObject, Integer> index = new HashMap<TerminologyObject, Integer>();
-		createIndex(root, index);
-		Collections.sort(unsorted, new DFSTreeSortingComparator(index));
+		Collections.sort(unsorted, new TerminologyHierarchyComparator());
 	}
 
 	/**
