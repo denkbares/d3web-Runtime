@@ -414,21 +414,22 @@ public final class KnowledgeBaseUtils {
 	public static void sortTerminologyObjects(List<? extends TerminologyObject> unsorted) {
 		if (unsorted.isEmpty()) return;
 		KnowledgeBase knowledgeBase = unsorted.get(0).getKnowledgeBase();
-		HashMap<TerminologyObject, Integer> qcontainerIndex = new HashMap<TerminologyObject, Integer>();
-		reindex(knowledgeBase.getRootQASet(), qcontainerIndex);
-		Collections.sort(unsorted, new DFSTreeSortingComparator(qcontainerIndex));
+		HashMap<TerminologyObject, Integer> index = new HashMap<TerminologyObject, Integer>();
+		reindex(knowledgeBase.getRootQASet(), index);
+		reindex(knowledgeBase.getRootSolution(), index);
+		Collections.sort(unsorted, new DFSTreeSortingComparator(index));
 	}
 
 	/**
 	 * Traverses the QASet hierarchy using a depth-first search and attaches an
 	 * ordering number to each visited {@link QASet}.
 	 */
-	private static void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> qcontainerIndex) {
-		qcontainerIndex.put(qaset, qcontainerIndex.size());
+	private static void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> index) {
+		index.put(qaset, index.size());
 
 		for (TerminologyObject child : qaset.getChildren()) {
-			if (!qcontainerIndex.containsKey(child)) {
-				reindex(child, qcontainerIndex);
+			if (!index.containsKey(child)) {
+				reindex(child, index);
 			}
 		}
 	}
