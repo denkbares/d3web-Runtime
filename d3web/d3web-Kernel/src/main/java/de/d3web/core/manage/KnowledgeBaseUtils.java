@@ -261,7 +261,7 @@ public final class KnowledgeBaseUtils {
 	 * that question, null is returned. This may happen e.g. if the denoted
 	 * choice is not available or for a numeric question if the string is not a
 	 * valid double representation.
-	 * <p/>
+	 * <p>
 	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED"
 	 * (if there is no such choice). The method created the unknown for "MaU",
 	 * "-?-" or "UNKNOWN" (if there is no such choice).
@@ -282,7 +282,7 @@ public final class KnowledgeBaseUtils {
 	 * is returned. This may happen e.g. if the denoted choice is not available
 	 * or for a numeric question if the string is not a valid double
 	 * representation.
-	 * <p/>
+	 * <p>
 	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED"
 	 * (if there is no such choice). The method created the unknown for "MaU",
 	 * "-?-" or "UNKNOWN" (if there is no such choice).
@@ -406,17 +406,23 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Sorts a given list of TerminologyObjects according to DFS. Use this algorithm method for small knowledge bases
-	 * or
-	 * lists containing almost all of the knowledge bases objects. Do not mix Solutions and QASets in the same list.
+	 * or lists containing almost all of the knowledge bases objects. Do not mix Solutions and QASets in the same list!
 	 *
 	 * @param unsorted the unsorted list
 	 */
 	public static void sortTerminologyObjects(List<? extends TerminologyObject> unsorted) {
 		if (unsorted.isEmpty()) return;
-		KnowledgeBase knowledgeBase = unsorted.get(0).getKnowledgeBase();
+		TerminologyObject terminologyObject = unsorted.get(0);
+		KnowledgeBase knowledgeBase = terminologyObject.getKnowledgeBase();
+		TerminologyObject root;
+		if (terminologyObject instanceof QASet) {
+			root = knowledgeBase.getRootQASet();
+		}
+		else {
+			root = knowledgeBase.getRootSolution();
+		}
 		HashMap<TerminologyObject, Integer> index = new HashMap<TerminologyObject, Integer>();
-		reindex(knowledgeBase.getRootQASet(), index);
-		reindex(knowledgeBase.getRootSolution(), index);
+		createIndex(root, index);
 		Collections.sort(unsorted, new DFSTreeSortingComparator(index));
 	}
 
@@ -424,12 +430,12 @@ public final class KnowledgeBaseUtils {
 	 * Traverses the QASet hierarchy using a depth-first search and attaches an
 	 * ordering number to each visited {@link QASet}.
 	 */
-	private static void reindex(TerminologyObject qaset, Map<TerminologyObject, Integer> index) {
+	private static void createIndex(TerminologyObject qaset, Map<TerminologyObject, Integer> index) {
 		index.put(qaset, index.size());
 
 		for (TerminologyObject child : qaset.getChildren()) {
 			if (!index.containsKey(child)) {
-				reindex(child, index);
+				createIndex(child, index);
 			}
 		}
 	}
@@ -461,7 +467,7 @@ public final class KnowledgeBaseUtils {
 	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its
 	 * containing {@link NamedObject}s). It will return every {@link Locale}
 	 * that is used for at least one property within the knowledge base.
-	 * <p/>
+	 * <p>
 	 * Implementation note: <br>
 	 * Because of searching every property within the whole knowledge base it is
 	 * a good idea to store and reused the result of this operation instead of
@@ -516,7 +522,8 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Generates the position of the object in the object tree as a List of ints. The first int specifies, whether the
-	 * object is successor of the RootQASet (0) or the RootSolution (1). Following ints are the positions in the list of
+	 * object is successor of the RootQASet (0) or the RootSolution (1). Following ints are the positions in the list
+	 * of
 	 * children in the respective parent.
 	 *
 	 * @param object the object for which we want the position
