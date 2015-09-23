@@ -44,7 +44,7 @@ import de.d3web.core.session.Copyable;
  * This class is for internal purpose only. Until you do not provide an own
  * blackboard implementation, do not use this class directly! </b>
  * 
- * @author volker_belli
+ * @author Volker Belli (denkbares GmbH)
  */
 final class FactAggregator implements Copyable<FactAggregator> {
 
@@ -59,7 +59,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	/**
 	 * Copy constructor to create a deep copy of this instance.
 	 * 
-	 * @param factAggregator the source instance to be copied
+	 * @param source the source instance to be copied
 	 */
 	private FactAggregator(FactAggregator source) {
 		this.facts = new ArrayList<Fact>(source.facts);
@@ -97,8 +97,6 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Removes all facts from this aggregator.
-	 * 
-	 * @param fact the fact to be removed
 	 */
 	public void clear() {
 		this.facts.clear();

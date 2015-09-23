@@ -44,9 +44,8 @@ import de.d3web.core.session.values.UndefinedValue;
 /**
  * The Blackboard manages all dynamic values created within the case and
  * propagated throughout the inference system.
- * 
+ *
  * @author volker_belli
- * 
  */
 public class DefaultBlackboard implements Blackboard {
 
@@ -68,7 +67,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	/**
 	 * Creates a new Blackboard for the specified xps session.
-	 * 
+	 *
 	 * @param session the session the blackboard is created for
 	 */
 	public DefaultBlackboard(Session session) {
@@ -80,14 +79,14 @@ public class DefaultBlackboard implements Blackboard {
 	/**
 	 * Creates a new default blackboard by an existing one, sharing the fact
 	 * storages.
-	 * 
-	 * @param session the session to construct this blackboard for
-	 * @param factStoragesSource the blackboard to share the fact storages
+	 *
+	 * @param session             the session to construct this blackboard for
+	 * @param factStoragesToShare the blackboard to share the fact storages
 	 */
-	protected DefaultBlackboard(Session session, DefaultBlackboard factStoragestoShare) {
+	protected DefaultBlackboard(Session session, DefaultBlackboard factStoragesToShare) {
 		this.session = session;
-		this.valueStorage = factStoragestoShare.valueStorage;
-		this.interviewStorage = factStoragestoShare.interviewStorage;
+		this.valueStorage = factStoragesToShare.valueStorage;
+		this.interviewStorage = factStoragesToShare.interviewStorage;
 	}
 
 	@Override
@@ -99,35 +98,40 @@ public class DefaultBlackboard implements Blackboard {
 	public void addValueFact(Fact fact) {
 
 		TerminologyObject terminologyObject = fact.getTerminologyObject();
+		PSMethod psMethod = fact.getPSMethod();
+
+		// We never add a Fact with value Undefined. Instead, if we get an fact with Undefined,
+		// we retract the existing fact for that PSMethod and source (if one exists).
+		if (UndefinedValue.isUndefinedValue(fact.getValue())) {
+			Fact oldFact = this.getValueStorage().getFact(terminologyObject, psMethod, fact.getSource());
+			if (oldFact != null) {
+				removeValueFact(oldFact);
+			}
+			return;
+		}
+
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().add(fact);
-		propergate(terminologyObject, oldValue, fact.getPSMethod().hasType(Type.source));
+		propagate(terminologyObject, oldValue, fact.getPSMethod().hasType(Type.source));
 		// add the arriving fact to the protocol
 		// if it was entered by a source psmethod
-		PSMethod psMethod = fact.getPSMethod();
 		if (isSourceRecording() && psMethod != null && psMethod.hasType(Type.source)) {
-			getSession().getProtocol().addEntry(
-					new FactProtocolEntry(session.getPropagationManager().getPropagationTime(),
-							fact));
+			FactProtocolEntry protocolEntry = new FactProtocolEntry(session.getPropagationManager()
+					.getPropagationTime(), fact);
+			getSession().getProtocol().addEntry(protocolEntry);
 		}
 	}
 
 	/**
-	 * Propergates if the value of the terminology object has changed
-	 * 
-	 * @param terminologyObject
-	 * @param oldValue
+	 * Propagates if the value of the terminology object has changed
 	 */
-	private void propergate(TerminologyObject terminologyObject,
-			Value oldValue, boolean force) {
-		PropagationManager propagationContoller = session.getPropagationManager();
+	private void propagate(TerminologyObject terminologyObject, Value oldValue, boolean force) {
+		PropagationManager propagationManager = session.getPropagationManager();
 		if (force) {
-			propagationContoller.forcePropagate((ValueObject) terminologyObject,
-					oldValue);
+			propagationManager.forcePropagate((ValueObject) terminologyObject, oldValue);
 		}
 		else {
-			propagationContoller.propagate((ValueObject) terminologyObject,
-					oldValue);
+			propagationManager.propagate((ValueObject) terminologyObject, oldValue);
 		}
 		for (BlackboardListener listener : listeners) {
 			listener.factsChanged(terminologyObject);
@@ -148,22 +152,22 @@ public class DefaultBlackboard implements Blackboard {
 	public void removeValueFact(Fact fact) {
 		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
 		this.getValueStorage().remove(fact);
-		propergate(fact.getTerminologyObject(), oldValue, false);
+		propagate(fact.getTerminologyObject(), oldValue, false);
 	}
 
 	/**
 	 * Removes all value facts with the specified source from this blackboard
 	 * for the specified terminology object. If no such fact exists in the
 	 * blackboard, this method has no effect.
-	 * 
-	 * @param termObject the terminology object to remove the value facts from
-	 * @param source the fact source to be removed
+	 *
+	 * @param terminologyObject the terminology object to remove the value facts from
+	 * @param source            the fact source to be removed
 	 */
 	@Override
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().remove(terminologyObject, source);
-		propergate(terminologyObject, oldValue, false);
+		propagate(terminologyObject, oldValue, false);
 	}
 
 	@Override
