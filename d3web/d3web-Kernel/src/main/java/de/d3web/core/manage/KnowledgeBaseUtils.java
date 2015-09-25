@@ -22,13 +22,10 @@ package de.d3web.core.manage;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.knowledge.InfoStore;
@@ -415,42 +412,6 @@ public final class KnowledgeBaseUtils {
 		Collections.sort(unsorted, new TerminologyHierarchyComparator());
 	}
 
-	/**
-	 * Traverses the QASet hierarchy using a depth-first search and attaches an
-	 * ordering number to each visited {@link QASet}.
-	 */
-	private static void createIndex(TerminologyObject qaset, Map<TerminologyObject, Integer> index) {
-		index.put(qaset, index.size());
-
-		for (TerminologyObject child : qaset.getChildren()) {
-			if (!index.containsKey(child)) {
-				createIndex(child, index);
-			}
-		}
-	}
-
-	/**
-	 * Private Comparator class that sorts a given QContaier map, where the
-	 * QContainers have previously been traversed DFS and given the according
-	 * index number
-	 */
-
-	private static class DFSTreeSortingComparator implements Comparator<TerminologyObject> {
-
-		private final Map<TerminologyObject, Integer> index;
-
-		public DFSTreeSortingComparator(
-				Map<TerminologyObject, Integer> qasetIndex) {
-			this.index = qasetIndex;
-		}
-
-		@Override
-		public int compare(TerminologyObject entry1, TerminologyObject entry2) {
-			int order1 = this.index.get(entry1);
-			int order2 = this.index.get(entry2);
-			return order1 - order2;
-		}
-	}
 
 	/**
 	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its
