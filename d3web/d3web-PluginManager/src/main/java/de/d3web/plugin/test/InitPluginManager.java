@@ -29,9 +29,9 @@ import java.util.List;
 import de.d3web.plugin.JPFPluginManager;
 
 /**
- * Provides a static method to initialize the JPF-Pluginmanager by using a
- * classpath file generated from the Maven dependency plugin
- * 
+ * Provides a static method to initialize the JPF-Pluginmanager by using a classpath file generated
+ * from the Maven dependency plugin
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public abstract class InitPluginManager {
@@ -44,11 +44,11 @@ public abstract class InitPluginManager {
 
 	/**
 	 * Initializes the JPF-Pluginmanager with the information stored in
-	 * "target/dependencies/output.txt" This file can be generated with the
-	 * maven dependency plugin <BR>
-	 * Important: Tests using this function must run maven install after each
-	 * dependency update
-	 * 
+	 * "target/dependencies/output.txt". This file can be generated with the maven dependency
+	 * plugin.
+	 * <p/>
+	 * Important: Tests using this function must run maven install after each dependency update
+	 *
 	 * @throws IOException
 	 */
 	public static void init() throws IOException {
@@ -57,10 +57,9 @@ public abstract class InitPluginManager {
 
 	/**
 	 * Initializes the JPF-Pluginmanager with the information stored in
-	 * "target/dependencies/output.txt" This file can be generated with the
-	 * maven dependency plugin <BR>
-	 * Important: Tests using this function must run maven install after each
-	 * dependency update
+	 * "target/dependencies/output.txt" This file can be generated with the maven dependency plugin
+	 * <BR> Important: Tests using this function must run maven install after each dependency
+	 * update
 	 *
 	 * @throws IOException
 	 */
@@ -79,14 +78,27 @@ public abstract class InitPluginManager {
 		finally {
 			reader.close();
 		}
+
 		String[] jars = fileData.toString().split(";");
+		init(jars);
+	}
+
+	/**
+	 * Initializes the JPF-Pluginmanager with a list of plugin files. This file can be generated
+	 * with the maven dependency plugin
+	 * <p/>
+	 * Important: Tests using this function must run maven install after each dependency update
+	 *
+	 * @throws IOException
+	 */
+	public static void init(String[] jarFiles) {
 		List<File> filteredJars = new ArrayList<File>();
 		// adding the plugin itself
 		File ownSources = new File("target/classes");
 		if (checkIfPlugin(ownSources)) {
 			filteredJars.add(ownSources);
 		}
-		for (String s : jars) {
+		for (String s : jarFiles) {
 			File jarFile = new File(s);
 			if (checkIfPlugin(jarFile)) {
 				filteredJars.add(jarFile);
