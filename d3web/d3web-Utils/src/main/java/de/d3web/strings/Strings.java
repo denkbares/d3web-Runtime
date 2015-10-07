@@ -1830,7 +1830,7 @@ public class Strings {
 		}
 
 		// otherwise use default value
-		Log.warning("cannot parse value '" + name + "' of enumeration " + defaultValue.getClass());
+		Log.warning("cannot parse value '" + name + "' of enumeration " + enumType);
 		return defaultValue;
 	}
 
