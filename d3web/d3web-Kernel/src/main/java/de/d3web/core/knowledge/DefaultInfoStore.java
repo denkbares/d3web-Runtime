@@ -39,13 +39,23 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public Collection<Triple<Property<?>, Locale, Object>> entries() {
-		Collection<Triple<Property<?>, Locale, Object>> result =
-				new LinkedList<Triple<Property<?>, Locale, Object>>();
+		Collection<Triple<Property<?>, Locale, Object>> result = new LinkedList<Triple<Property<?>, Locale, Object>>();
 		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
 			result.add(new Triple<Property<?>, Locale, Object>(
 					entry.getKey().getA(),
 					entry.getKey().getB(),
 					entry.getValue()));
+		}
+		return result;
+	}
+
+	@Override
+	public <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key) {
+		Map<Locale, StoredType> result = new HashMap<Locale, StoredType>();
+		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
+			if (entry.getKey().getA() == key) {
+				result.put(entry.getKey().getB(), key.castToStoredValue(entry.getValue()));
+			}
 		}
 		return result;
 	}

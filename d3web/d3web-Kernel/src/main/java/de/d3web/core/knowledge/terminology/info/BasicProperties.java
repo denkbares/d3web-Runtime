@@ -24,6 +24,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 
@@ -36,9 +37,7 @@ import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 public class BasicProperties {
 
 	/**
-	 * used for: QASet doc: specifies what amount of costs is needed to 'perform' the qaset
-	 *
-	 * @return Double
+	 * used for QASet. Specifies what amount of costs is needed to 'perform' the qaset
 	 */
 	public static final Property<Double> COST = Property.getProperty("cost", Double.class);
 
@@ -57,26 +56,20 @@ public class BasicProperties {
 	}
 
 	/**
-	 * Used for: Questions doc: Marks a Question as abstraction question (derived) or not.
-	 * Boolean.TRUE means, it is a abstraction question, all other values means, it is not.
-	 *
-	 * @return Boolean
+	 * Used for Questions. Marks a Question as abstraction question (derived) or not. Boolean.TRUE
+	 * means, it is a abstraction question, all other values means, it is not.
 	 */
 	public static final Property<Boolean> ABSTRACTION_QUESTION = Property.getProperty(
 			"abstractionQuestion", Boolean.class);
 
 	/**
-	 * used for Diagnosis Saves the apriori probability of a diagnosis
-	 *
-	 * @return Float
+	 * Used for Diagnosis. Saves the apriori probability of a diagnosis
 	 */
 	public static final Property<Float> APRIORI = Property.getProperty(
 			"apriori", Float.class);
 
 	/**
 	 * used for: QuestionNum doc: valid range of numerical answers of QuestionNum
-	 *
-	 * @return NumericalInterval
 	 */
 	public static final Property<NumericalInterval> QUESTION_NUM_RANGE =
 			Property.getProperty(
@@ -85,18 +78,12 @@ public class BasicProperties {
 	/**
 	 * used for question doc: the ids or names of the answers(seperated by ";"), which is set in
 	 * PSMethodInit
-	 *
-	 * @return String
 	 */
 	public static final Property<String> INIT = Property.getProperty("init", String.class);
 
 	/**
-	 * TODO: Remove when UnknownChoice is implemented
-	 * <p/>
 	 * used for: Question, Knowledgebase doc: should UNKNOWN be invisible in questions, If it is set
 	 * to the kb it represents the default.
-	 *
-	 * @return Boolean
 	 */
 	public static final Property<Boolean> UNKNOWN_VISIBLE = Property.getProperty(
 			"unknownVisible", Boolean.class);
@@ -156,17 +143,20 @@ public class BasicProperties {
 
 	/**
 	 * Allows to specify the desired display type of date questions.
-	 *
-	 * @return DateDisplay
 	 */
 	public static final Property<DateDisplay> DATE_DISPLAY = Property.getProperty("dateDisplay", DateDisplay.class);
 
 	/**
-	 * Return the desired display type for the specified date question.
-	 * The date display type is defined by the property "dateDisplay" for the date question.
-	 * If there is no such property, the "dateDisplay" of the questions
-	 * knowledge base object will be used as the default value. If there is no
-	 * such knowledge base specific default value, the type DATE is used.
+	 * Used for Diagnosis. Specified how the solution should be displayed to the user
+	 */
+	public static final Property<SolutionDisplay> SOLUTION_DISPLAY = Property.getProperty(
+			"solutionDisplay", SolutionDisplay.class);
+
+	/**
+	 * Return the desired display type for the specified date question. The date display type is
+	 * defined by the property "dateDisplay" for the date question. If there is no such property,
+	 * the "dateDisplay" of the questions knowledge base object will be used as the default value.
+	 * If there is no such knowledge base specific default value, the type DATE is used.
 	 *
 	 * @param question the question to get the date format for
 	 * @return the questions date format
@@ -181,6 +171,24 @@ public class BasicProperties {
 			prompt = DateDisplay.date;
 		}
 		return prompt;
+	}
+
+	/**
+	 * Return the desired display type for the specified solution. The solution display type is
+	 * defined by the property "solutionDisplay" for the solution. If there is no such property,
+	 * the "solutionDisplay" of the questions knowledge base object will be used as the default value.
+	 * If there is no such knowledge base specific default value, the type NORMAL is used.
+	 *
+	 * @param solution the solution to get the display type for
+	 * @return the solution display type
+	 * @created 11.10.2015
+	 */
+	public static SolutionDisplay getSolutionDisplay(Solution solution) {
+		SolutionDisplay displayType = solution.getInfoStore().getValue(SOLUTION_DISPLAY);
+		if (displayType == null) {
+			displayType = solution.getKnowledgeBase().getInfoStore().getValue(SOLUTION_DISPLAY);
+		}
+		return (displayType == null) ? SolutionDisplay.normal : displayType;
 	}
 
 	public static boolean isAbstract(Question question) {
