@@ -296,7 +296,7 @@ public interface Blackboard {
 	 * method never returns null, it returns an {@link Indication.State#NEUTRAL}
 	 * indication if the object is not indicated yet.
 	 * 
-	 * @param question the question to take the rating from
+	 * @param interviewElement the question to take the rating from
 	 * @return the indication of the interview element
 	 */
 	public Indication getIndication(InterviewObject interviewElement);
