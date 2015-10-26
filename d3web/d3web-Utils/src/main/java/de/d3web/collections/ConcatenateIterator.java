@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 /**
  * Concatenates the items of multiple {@link Iterator}s into one Iterator.
- * 
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 14.01.2013
  */

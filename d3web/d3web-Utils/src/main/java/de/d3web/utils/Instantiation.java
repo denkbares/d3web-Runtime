@@ -35,7 +35,12 @@ import de.d3web.strings.Strings;
 public class Instantiation {
 
 	private final ClassLoader classLoader;
-	private InstantiationContext context;
+	private InstantiationContext context = new InstantiationContext() {
+		@Override
+		public String getOrigin() {
+			return "--unknown--";
+		}
+	};
 
 	public Instantiation(ClassLoader classLoader) {
 		if (classLoader == null) {
