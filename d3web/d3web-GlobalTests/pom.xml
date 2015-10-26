@@ -8,7 +8,6 @@
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-GlobalTests</artifactId>
 	<name>d3web-GlobalTests</name>
 	<version>0.2-SNAPSHOT</version>
@@ -64,6 +63,11 @@
 			<artifactId>d3web-Plugin-CostBenefit</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-TestCase</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -23,10 +23,13 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -35,18 +38,24 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.empiricaltesting.Rating;
+import de.d3web.empiricaltesting.ScoreRating;
+import de.d3web.empiricaltesting.StateRating;
+import de.d3web.scoring.HeuristicRating;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testcase.prefix.PrefixedTestCase;
@@ -89,21 +98,21 @@ public class TestCaseUtils {
 	public static void applyFindings(Session session, TestCase testCase, Date date, boolean skipValueOutOfRange) {
 		Blackboard blackboard = session.getBlackboard();
 		session.getPropagationManager().openPropagation(date.getTime());
-		for (Finding f : testCase.getFindings(date, session.getKnowledgeBase())) {
+		for (Finding finding : testCase.getFindings(date, session.getKnowledgeBase())) {
 			List<String> errors = new LinkedList<String>();
-			checkValues(errors, f.getTerminologyObject(), f.getValue());
+			checkValues(errors, finding.getTerminologyObject(), finding.getValue());
 			if (errors.isEmpty()) {
 				if (skipValueOutOfRange) {
-					NumericalInterval numericalInterval = f.getTerminologyObject()
+					NumericalInterval numericalInterval = finding.getTerminologyObject()
 							.getInfoStore()
 							.getValue(BasicProperties.QUESTION_NUM_RANGE);
-					if (numericalInterval != null && f.getValue() instanceof NumValue) {
-						if (!numericalInterval.contains(((NumValue) f.getValue()).getDouble())) continue;
+					if (numericalInterval != null && finding.getValue() instanceof NumValue) {
+						if (!numericalInterval.contains(((NumValue) finding.getValue()).getDouble())) continue;
 					}
 				}
-				Fact fact = FactFactory.createUserEnteredFact(f.getTerminologyObject(),
-						f.getValue());
-				if (f.getValue() instanceof Indication) {
+				Fact fact = FactFactory.createUserEnteredFact(finding.getTerminologyObject(),
+						finding.getValue());
+				if (finding.getValue() instanceof Indication) {
 					synchronized (session) {
 						blackboard.addInterviewFact(fact);
 						session.touch(date);
@@ -210,5 +219,49 @@ public class TestCaseUtils {
 						+ "\" needs a date value instead of \"" + value.toString() + "\".");
 			}
 		}
+	}
+
+	/**
+	 * Returns a state corresponding to the committed score.
+	 *
+	 * @param empiricalTestingRating Rating representing the score of a RatedSolution.
+	 * @return DiagnosisState corresponding to the committed scored.
+	 */
+	public static de.d3web.core.knowledge.terminology.Rating toRating(Rating empiricalTestingRating) {
+
+		if (empiricalTestingRating instanceof ScoreRating) {
+			return new HeuristicRating(((ScoreRating) empiricalTestingRating).getRating());
+		}
+		else if (empiricalTestingRating instanceof StateRating) {
+			return ((StateRating) empiricalTestingRating).getRating();
+		}
+
+		return null;
+	}
+
+	public static String getPrompt(TerminologyObject object, Value value) {
+		if (value instanceof ChoiceValue && object instanceof QuestionChoice) {
+			Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) object);
+			return getPrompt(choice);
+		}
+		if (value instanceof MultipleChoiceValue && object instanceof QuestionChoice) {
+			StringBuilder result = new StringBuilder();
+			Collection<ChoiceID> choiceIDs = ((MultipleChoiceValue) value).getChoiceIDs();
+			if (choiceIDs.isEmpty()) return "--";
+			for (ChoiceID choiceID : choiceIDs) {
+				Choice choice = choiceID.getChoice((QuestionChoice) object);
+				result.append(", ").append(getPrompt(choice));
+			}
+			return result.toString().substring(2);
+		}
+		return value.toString();
+	}
+
+	public static String getPrompt(NamedObject object) {
+		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, Locale.getDefault());
+		if (prompt == null) {
+			prompt = object.getName();
+		}
+		return prompt;
 	}
 }

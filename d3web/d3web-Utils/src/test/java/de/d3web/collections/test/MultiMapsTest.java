@@ -18,6 +18,7 @@
  */
 package de.d3web.collections.test;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class MultiMapsTest {
 
 	@Before
 	public void initBase() {
-		baseMap = new N2MMap<String, String>();
+		baseMap = new N2MMap<>();
 		baseMap.put("a", "1");
 		baseMap.put("a", "2");
 		baseMap.put("b", "2");
@@ -46,10 +47,11 @@ public class MultiMapsTest {
 
 	@Test
 	public void factories() {
-		checkFactory(MultiMaps.<String> hashFactory());
-		checkFactory(MultiMaps.<String> hashMinimizedFactory());
-		checkFactory(MultiMaps.<String> treeFactory());
-		checkFactory(MultiMaps.<String> linkedFactory());
+		checkFactory(MultiMaps.hashFactory());
+		checkFactory(MultiMaps.hashMinimizedFactory());
+		checkFactory(MultiMaps.treeFactory());
+		checkFactory(MultiMaps.treeFactory(Comparator.<String>reverseOrder()));
+		checkFactory(MultiMaps.linkedFactory());
 	}
 
 	@Test
@@ -140,8 +142,16 @@ public class MultiMapsTest {
 	}
 
 	private void checkFactory(CollectionFactory<String> factory) {
-		N2MMap<String, String> map = new N2MMap<String, String>(factory, factory);
+		N2MMap<String, String> map = new N2MMap<>(factory, factory);
 		map.putAll(baseMap);
 		assertEquals(baseMap, map);
+	}
+
+	@Test
+	public void treeFactoryComparator() {
+		N2MMap<String, String> map = new N2MMap<>(MultiMaps.treeFactory(Comparator.<String>reverseOrder()), MultiMaps.treeFactory(Comparator.<String>reverseOrder()));
+		map.putAll(baseMap);
+		assertEquals("[b, a]", map.keySet().toString());
+		assertEquals("[3, 2, 1]", map.valueSet().toString());
 	}
 }

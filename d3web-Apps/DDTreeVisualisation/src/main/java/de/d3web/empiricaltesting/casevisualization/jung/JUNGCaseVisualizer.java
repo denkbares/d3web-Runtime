@@ -41,7 +41,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.empiricaltesting.CaseUtils;
-import de.d3web.empiricaltesting.ConfigLoader;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;

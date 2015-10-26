@@ -6,7 +6,6 @@
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
-	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-Plugin-Tests</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<name>d3web-Plugin-Tests</name>
@@ -63,6 +62,12 @@
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-DiaFlux</artifactId>
 			<version>0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Plugin-XCL</artifactId>
+			<version>0.2-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

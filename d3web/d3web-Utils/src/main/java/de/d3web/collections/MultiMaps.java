@@ -21,6 +21,7 @@ package de.d3web.collections;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,7 +52,7 @@ public class MultiMaps {
 	 * @author Volker Belli (denkbares GmbH)
 	 * @created 09.01.2014
 	 */
-	public static interface CollectionFactory<T> {
+	public interface CollectionFactory<T> {
 
 		/**
 		 * Creates a new set used for storing the elements.
@@ -72,14 +73,24 @@ public class MultiMaps {
 
 	private static final class TreeFactory<T> implements CollectionFactory<T> {
 
+		private Comparator<T> comparator;
+
+		public TreeFactory() {
+			this(null);
+		}
+
+		public TreeFactory(Comparator<T> comparator) {
+			this.comparator = comparator;
+		}
+
 		@Override
 		public Set<T> createSet() {
-			return new TreeSet<T>();
+			return new TreeSet<T>(comparator);
 		}
 
 		@Override
 		public <E> Map<T, E> createMap() {
-			return new TreeMap<T, E>();
+			return new TreeMap<T, E>(comparator);
 		}
 	}
 
@@ -285,6 +296,17 @@ public class MultiMaps {
 	@SuppressWarnings("unchecked")
 	public static <T extends Comparable<? super T>> CollectionFactory<T> treeFactory() {
 		return (CollectionFactory<T>) TREE;
+	}
+
+	/**
+	 * Returns a collection factory for handling the entries as a tree, using {@link Comparator} to sort.
+	 *
+	 * @return the collection factory
+	 * @created 09.01.2014
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> CollectionFactory<T> treeFactory(Comparator<T> comparator) {
+		return new TreeFactory<>(comparator);
 	}
 
 	/**

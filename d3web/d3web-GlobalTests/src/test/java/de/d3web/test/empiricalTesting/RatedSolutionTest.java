@@ -1,47 +1,43 @@
 /*
- * Copyright (C) 2012 denkbares GmbH
- * 
+ * Copyright (C) 2015 denkbares GmbH, Germany
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
-package de.d3web.testcase.stc;
+package de.d3web.test.empiricalTesting;
 
-import java.util.Date;
+import org.junit.Test;
 
-import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.testcase.model.TestCase;
+import de.d3web.empiricaltesting.RatedSolution;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Wraps an {@link SequentialTestCase} to a {@link TestCase}
- *
- * @author Markus Friedrich, Albrecht Striffler (denkbares GmbH)
- * @created 24.01.2012
+ * 
+ * @author Jochen Reutelshöfer
+ * @created 22.07.2013
  */
-public class STCWrapper extends SequentialTestCase implements CommentedTestCase {
+public class RatedSolutionTest {
 
-
-	@Override
-	public String getComment(Date date) {
-		return getCase(date).getName();
+	@Test
+	public void testEquals() {
+		RatedSolution sol1 = new RatedSolution(null, null);
+		assertFalse(sol1.equals(null));
+		assertFalse(sol1.equals(Boolean.FALSE));
+		assertTrue(sol1.equals(sol1));
 	}
-
-
-	@Override
-	public String toString() {
-		return "SequentialTestCase(" + getName() + ")";
-	}
-
 
 }

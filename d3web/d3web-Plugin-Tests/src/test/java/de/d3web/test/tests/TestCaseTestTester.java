@@ -18,9 +18,6 @@
  */
 package de.d3web.test.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -39,9 +36,11 @@ import de.d3web.empiricaltesting.TestPersistence;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.test.TestCaseTest;
 import de.d3web.testcase.model.TestCase;
-import de.d3web.testcase.stc.STCWrapper;
 import de.d3web.testing.Message;
 import de.d3web.testing.TestObjectProviderManager;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the behavior of the class TestCaseTest
@@ -150,8 +149,7 @@ public class TestCaseTestTester {
 		List<SequentialTestCase> stcaList = readSTC(file);
 		List<TestCase> result = new ArrayList<TestCase>();
 		for (SequentialTestCase sequentialTestCase : stcaList) {
-			TestCase tc = new STCWrapper(sequentialTestCase);
-			result.add(tc);
+			result.add(sequentialTestCase);
 		}
 		return result;
 	}

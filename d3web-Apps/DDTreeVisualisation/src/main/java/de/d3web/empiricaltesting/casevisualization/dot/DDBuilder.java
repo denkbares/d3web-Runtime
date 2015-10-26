@@ -45,8 +45,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.empiricaltesting.CaseUtils;
-import de.d3web.empiricaltesting.ConfigLoader;
-import de.d3web.empiricaltesting.ConfigLoader.EdgeShowAnswers;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader.EdgeShowAnswers;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -87,7 +87,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * Streams the graph to an OutputStream (useful for web requests!)
 	 * 
 	 * @param cases List<SequentialTestCase> cases
-	 * @param out OutputStream
+	 * @param outStream OutputStream
 	 */
 	@Override
 	public void writeToStream(List<SequentialTestCase> cases, OutputStream outStream) throws IOException {
@@ -126,7 +126,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @param testSuite TestSuite which's cases will be visualized by this
 	 *        class.
-	 * @param file String which specifies where the created <b>DOT file</b> will
+	 * @param dotFile String which specifies where the created <b>DOT file</b> will
 	 *        be stored.
 	 */
 	@Override
@@ -420,7 +420,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 * 
 	 * @created 02.05.2011
 	 * @param question the question to be checked
-	 * @param outgoingNode the node where the different paths starts
+	 * @param sourceNode the node where the different paths starts
 	 * @return if there are multiple different values for this question
 	 */
 	static boolean hasMultipleOutgoingValues(Question question, DDNode sourceNode) {

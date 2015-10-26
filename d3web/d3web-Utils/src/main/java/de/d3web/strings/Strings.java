@@ -83,17 +83,14 @@ public class Strings {
 	 * The comparator behaves identical to {@link String#CASE_INSENSITIVE_ORDER}, but handles
 	 * <code>null</code> as the lowest string.
 	 */
-	public static final Comparator<String> CASE_INSENSITIVE_ORDER = new Comparator<String>() {
-		@Override
-		public int compare(String o1, String o2) {
-			//noinspection StringEquality
-			if (o1 == o2) return 0;
-			if (o1 == null) return -1;
-			if (o2 == null) return 1;
+	public static final Comparator<String> CASE_INSENSITIVE_ORDER = (o1, o2) -> {
+		//noinspection StringEquality
+		if (o1 == o2) return 0;
+		if (o1 == null) return -1;
+		if (o2 == null) return 1;
 
-			// both are != null, use String.CASE_INSENSITIVE_ORDER
-			return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
-		}
+		// both are != null, use String.CASE_INSENSITIVE_ORDER
+		return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
 	};
 
 	/**
@@ -214,7 +211,7 @@ public class Strings {
 	 * @return the index of the first un-embraced character
 	 */
 	public static List<Integer> indicesOfUnbraced(String text, String symbol, char open, char close) {
-		List<Integer> result = new ArrayList<Integer>();
+		List<Integer> result = new ArrayList<>();
 		boolean quoted = false;
 		int openBrackets = 0;
 		// scanning the text
@@ -250,7 +247,7 @@ public class Strings {
 		String content = text.trim();
 		String[] entries = content.split(" ");
 
-		List<String> nonEmpty = new ArrayList<String>();
+		List<String> nonEmpty = new ArrayList<>();
 		for (String string : entries) {
 			if (!string.equals("")) {
 				nonEmpty.add(string);
@@ -269,7 +266,7 @@ public class Strings {
 	}
 
 	public static List<StringFragment> getLineFragmentation(String text) {
-		List<StringFragment> result = new ArrayList<StringFragment>();
+		List<StringFragment> result = new ArrayList<>();
 		Pattern pattern = Pattern.compile("\\r?\\n");
 		Matcher m = pattern.matcher(text);
 		int lastIndex = 0;
@@ -681,18 +678,15 @@ public class Strings {
 	 * @return the fragments of the text
 	 */
 	public static List<StringFragment> splitUnquoted(String text, Pattern splitPattern, boolean includeBlankFragments, QuoteSet... quotes) {
-		List<StringFragment> parts = new ArrayList<StringFragment>();
+		List<StringFragment> parts = new ArrayList<>();
 		if (text == null) return parts;
 
 		quotes = Arrays.copyOf(quotes, quotes.length);
 		// make sure triple quotes are first
-		Arrays.sort(quotes, new Comparator<QuoteSet>() {
-			@Override
-			public int compare(QuoteSet o1, QuoteSet o2) {
-				if (o1 == QuoteSet.TRIPLE_QUOTES && o2 != QuoteSet.TRIPLE_QUOTES) return -1;
-				if (o1 != QuoteSet.TRIPLE_QUOTES && o2 == QuoteSet.TRIPLE_QUOTES) return 1;
-				return 0;
-			}
+		Arrays.sort(quotes, (o1, o2) -> {
+			if (o1 == QuoteSet.TRIPLE_QUOTES && o2 != QuoteSet.TRIPLE_QUOTES) return -1;
+			if (o1 != QuoteSet.TRIPLE_QUOTES && o2 == QuoteSet.TRIPLE_QUOTES) return 1;
+			return 0;
 		});
 
 		// init quote state for each quote
@@ -701,7 +695,7 @@ public class Strings {
 		StringBuffer actualPart = new StringBuffer();
 
 		Matcher matcher = splitPattern.matcher(text);
-		List<Group> candidates = new ArrayList<Group>();
+		List<Group> candidates = new ArrayList<>();
 		while (matcher.find()) {
 			candidates.add(new Group(matcher.start(), matcher.end()));
 		}
@@ -958,7 +952,7 @@ public class Strings {
 	 * @created 20.11.2013
 	 */
 	public static List<String> trim(Collection<String> strings) {
-		List<String> result = new ArrayList<String>(strings.size());
+		List<String> result = new ArrayList<>(strings.size());
 		for (String string : strings) {
 			result.add(trim(string));
 		}
@@ -1204,7 +1198,7 @@ public class Strings {
 		if (ENTITY_PATTERN == null) {
 			ENTITY_PATTERN = Pattern.compile("&(?:#(\\d{1,5})|(\\w{1,8}));");
 
-			NAMED_ENTITIES = new HashMap<String, String>(340);
+			NAMED_ENTITIES = new HashMap<>(340);
 			NAMED_ENTITIES.put("apos", "'");
 
 			// all entities according to w3c
@@ -1795,7 +1789,7 @@ public class Strings {
 
 	/**
 	 * Returns the enum constant referenced by the specified enum name. This method is very similar
-	 * to T.value(name), despite that it is case insensitive and provides the capability to specify
+	 * to T.value(name), except that it is case insensitive and provides the capability to specify
 	 * a default value. The default value is used every time the specified name cannot be matched to
 	 * a enum constant of the specified enum type. Therefore this method always returns a valid enum
 	 * constant, even if the name is null.
@@ -1812,17 +1806,18 @@ public class Strings {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Enum<T>> T parseEnum(String name, T defaultValue) {
-		return (T) parseEnum(name, (Class<Enum>) defaultValue.getClass(), defaultValue);
+		return parseEnum(name, defaultValue.getClass(), defaultValue);
 	}
 
-	private static <T extends Enum<T>> T parseEnum(String name, Class<T> enumType, T defaultValue) {
+	@SuppressWarnings("unchecked")
+	private static <T extends Enum<T>> T parseEnum(String name, Class enumType, T defaultValue) {
 		if (isBlank(name)) return defaultValue;
 		try {
-			return Enum.valueOf(enumType, name);
+			return (T) Enum.valueOf(enumType, name);
 		}
 		catch (Exception e) {
 			// as a fallback, try to find name case insensitive
-			for (T t : enumType.getEnumConstants()) {
+			for (T t : ((T[]) enumType.getEnumConstants())) {
 				if (t.name().equalsIgnoreCase(name)) {
 					return t;
 				}

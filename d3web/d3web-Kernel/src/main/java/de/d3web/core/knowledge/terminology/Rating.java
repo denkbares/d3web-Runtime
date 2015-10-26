@@ -28,9 +28,8 @@ import de.d3web.core.session.values.UndefinedValue;
 /**
  * Stores the rating of a {@link Solution} instance.
  * 
- * @author joba, Christian Betz
+ * @author Joachim Baumeister, Christian Betz
  * @see Solution
- * @see ScoreRating
  */
 public class Rating implements Value {
 
@@ -48,7 +47,7 @@ public class Rating implements Value {
 	 * @created 15.04.2010
 	 */
 	public enum State {
-		EXCLUDED, UNCLEAR, SUGGESTED, ESTABLISHED;
+		EXCLUDED, UNCLEAR, SUGGESTED, ESTABLISHED
 	}
 
 	private final State state;
@@ -124,7 +123,7 @@ public class Rating implements Value {
 	 * such as like heuristic score of the rating. Therefore two ratings with
 	 * the same state may be considered to be unequal (!).
 	 * <p>
-	 * This method uses the {@link #compareTo(Rating)} method to check for
+	 * This method uses the {@link #compareTo(Value)} method to check for
 	 * equality, therefore subclasses usually have no need to overwrite this
 	 * method.
 	 * 

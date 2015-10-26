@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.empiricaltesting.CaseUtils;
-import de.d3web.empiricaltesting.ConfigLoader;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;

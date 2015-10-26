@@ -25,7 +25,7 @@ import java.awt.Stroke;
 
 import org.apache.commons.collections15.Transformer;
 
-import de.d3web.empiricaltesting.ConfigLoader;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
 import de.d3web.empiricaltesting.RatedTestCase;
 
 /**
