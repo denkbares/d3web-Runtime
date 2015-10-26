@@ -51,11 +51,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3-uniwue</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.6.1</version>
 			</plugin>
@@ -125,43 +120,8 @@
 		</pluginManagement>
 	</build>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<reportSets>
-					<reportSet>
-						<id>JavaDocHTML</id>
-						<reports>
-							<report>javadoc</report>
-						</reports>
-						<configuration>
-							<name>JavaDoc</name>
-							<description>HTML documentation.</description>
-							<show>public</show>
-							<destDir>apidocs_html</destDir>
-						</configuration>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-		</plugins>
-	</reporting>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.clover.encoding>UTF-8</maven.clover.encoding>
-		<sonar.core.codeCoveragePlugin>clover</sonar.core.codeCoveragePlugin>
-		<sonar.clover.version>3.0.2</sonar.clover.version>
-		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<sonar.surefire.reportsPath>target/surefire-reports</sonar.surefire.reportsPath>
-		<sonar.clover.reportPath>target/site/clover/clover.xml</sonar.clover.reportPath>
 		<versionatorVersion>1.7</versionatorVersion>
 	</properties>
 
@@ -232,12 +192,6 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<scm>
-		<connection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</connection>
-		<developerConnection>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</developerConnection>
-		<url>scm:svn:https://isci.informatik.uni-wuerzburg.de/svn/d3web-core/trunk/d3web</url>
-	</scm>
 
 	<organization>
 		<name>Universität Würzburg</name>
