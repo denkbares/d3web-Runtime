@@ -55,13 +55,30 @@ import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
+import de.d3web.testcase.stc.CommentedTestCase;
 import de.d3web.testcase.stc.DerivedQuestionCheck;
 import de.d3web.testcase.stc.DerivedSolutionCheck;
 
 @SuppressWarnings("deprecation")
-public class SequentialTestCase implements TestCase {
+public class SequentialTestCase implements TestCase, CommentedTestCase {
 
 	private final Map<RatedTestCase, List<Check>> additionalChecks = new IdentityHashMap<>();
+
+	private String name = "";
+	private final LinkedHashMap<Date, RatedTestCase> ratedTestCases = new LinkedHashMap<>();
+
+	private Date startDate = null;
+	private Date lastAddedDate = null;
+
+	public SequentialTestCase() {
+		this(Collections.<RatedTestCase>emptyList());
+	}
+
+	public SequentialTestCase(Collection<RatedTestCase> ratedTestCases) {
+		for (RatedTestCase ratedTestCase : ratedTestCases) {
+			addCase(ratedTestCase);
+		}
+	}
 
 	@Override
 	public Collection<Date> chronology() {
@@ -161,7 +178,6 @@ public class SequentialTestCase implements TestCase {
 		return checks;
 	}
 
-
 	/**
 	 * With this method it is possible to add additional checks to a
 	 * {@link RatedTestCase}, that can not be attached to the
@@ -173,8 +189,8 @@ public class SequentialTestCase implements TestCase {
 	 *
 	 * @param rtc    the {@link RatedTestCase} to add the {@link Check}s to
 	 * @param checks the {@link Check}s to add
-	 * @deprecated add the checks directly to the {@link RatedTestCase}s
 	 * @created 01.11.2013
+	 * @deprecated add the checks directly to the {@link RatedTestCase}s
 	 */
 	@Deprecated
 	public void addChecks(RatedTestCase rtc, Check... checks) {
@@ -187,31 +203,28 @@ public class SequentialTestCase implements TestCase {
 		Collections.addAll(checksOfRTC, checks);
 	}
 
-
-
-
-	private String name = "";
-	private final LinkedHashMap<Date, RatedTestCase> ratedTestCases = new LinkedHashMap<>();
-
-	private Date startDate = null;
-	private Date lastAddedDate = null;
-
-	/**
-	 * Default Constructor
-	 */
-	public SequentialTestCase() {
-		this(Collections.<RatedTestCase> emptyList());
-	}
-
-	public SequentialTestCase(Collection<RatedTestCase> rtcs) {
-		for (RatedTestCase ratedTestCase : rtcs) {
-			addCase(ratedTestCase);
+	@Override
+	public String getComment(Date date) {
+		RatedTestCase ratedTestCase = getCase(date);
+		String name = ratedTestCase.getName();
+		String comment = ratedTestCase.getComment();
+		if (name != null && comment != null) {
+			return name + "\n" + comment;
+		} else if (name == null && comment == null) {
+			return null;
+		} else if (comment != null) {
+			return comment;
+		} else {
+			return name;
 		}
+
 	}
 
 	public void setStartDate(Date startDate) {
-		if (this.startDate != null) throw new UnsupportedOperationException(
-				"Start date can only be set once");
+		if (this.startDate != null) {
+			throw new UnsupportedOperationException(
+					"Start date can only be set once");
+		}
 		this.startDate = startDate;
 	}
 
@@ -286,7 +299,7 @@ public class SequentialTestCase implements TestCase {
 
 	/**
 	 * Adds RatedTestCase to this SequentialTestCase.
-	 * 
+	 *
 	 * @param ratedTestCase The RatedTestCase which will be added
 	 * @return true if the RatedTestCase was added to this SequntialTestCase
 	 * @deprecated use {@link #addCase(RatedTestCase)} instead
@@ -295,7 +308,6 @@ public class SequentialTestCase implements TestCase {
 	public boolean add(RatedTestCase ratedTestCase) {
 		return addCase(ratedTestCase);
 	}
-
 
 	/**
 	 * Inverses the rating comparator of all RatedSolutions in all
@@ -311,7 +323,7 @@ public class SequentialTestCase implements TestCase {
 	 * Here, the name is copied and new instances of the contained test cases
 	 * are created. The objects within the test cases are not created again but
 	 * taken from the original one.
-	 * 
+	 *
 	 * @return a flat copy of the instance
 	 */
 	public SequentialTestCase flatClone() {
@@ -325,7 +337,7 @@ public class SequentialTestCase implements TestCase {
 
 	/**
 	 * Shows String Representation of this SequentialTestCase
-	 * 
+	 * <p>
 	 * name: ratedTestCase, RatedTestCase, ...
 	 */
 	@Override
@@ -341,7 +353,7 @@ public class SequentialTestCase implements TestCase {
 
 	/**
 	 * Returns the name of this SequentialTestCase.
-	 * 
+	 *
 	 * @return name of this SequentialTestCase
 	 */
 	public synchronized String getName() {
@@ -350,7 +362,7 @@ public class SequentialTestCase implements TestCase {
 
 	/**
 	 * Sets the name of this SequentialTestCase.
-	 * 
+	 *
 	 * @param name desired name of this SequentialTestCase
 	 */
 	public synchronized void setName(String name) {
@@ -386,7 +398,7 @@ public class SequentialTestCase implements TestCase {
 
 	/**
 	 * Returns the SequentialTestCase's RatedTestCases
-	 * 
+	 *
 	 * @return List of RatedTestCases
 	 */
 	public List<RatedTestCase> getCases() {
@@ -396,10 +408,10 @@ public class SequentialTestCase implements TestCase {
 	/**
 	 * Returns the {@link RatedTestCase} for a given timeStamp. If there is no
 	 * case, null is returned.
-	 * 
-	 * @created 31.10.2013
+	 *
 	 * @param timeStamp the Date of the case to return
 	 * @return the case of the given timeStamp
+	 * @created 31.10.2013
 	 */
 	public RatedTestCase getCase(Date timeStamp) {
 		return ratedTestCases.get(timeStamp);
@@ -408,10 +420,10 @@ public class SequentialTestCase implements TestCase {
 	/**
 	 * Tests if this SequentialTestCase contains the same RatedTestCase as
 	 * another SequentialTestCase
-	 * 
+	 *
 	 * @param obj Other SequentialTestCase
 	 * @return true, if RatedTestCases are equal false, if RatedTestCases aren't
-	 *         equal
+	 * equal
 	 */
 	public boolean testTo(Object obj) {
 		if (this == obj) return true;

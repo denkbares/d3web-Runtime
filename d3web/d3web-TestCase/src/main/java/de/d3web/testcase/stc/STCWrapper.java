@@ -18,30 +18,18 @@
  */
 package de.d3web.testcase.stc;
 
-import java.util.Date;
-
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.testcase.model.TestCase;
 
 /**
  * Wraps an {@link SequentialTestCase} to a {@link TestCase}
  *
+ * @deprecated this class now longer has a purpose, use {@link SequentialTestCase instead}
+ *
  * @author Markus Friedrich, Albrecht Striffler (denkbares GmbH)
  * @created 24.01.2012
  */
-public class STCWrapper extends SequentialTestCase implements CommentedTestCase {
-
-
-	@Override
-	public String getComment(Date date) {
-		return getCase(date).getName();
-	}
-
-
-	@Override
-	public String toString() {
-		return "SequentialTestCase(" + getName() + ")";
-	}
-
+@Deprecated
+public class STCWrapper extends SequentialTestCase {
 
 }

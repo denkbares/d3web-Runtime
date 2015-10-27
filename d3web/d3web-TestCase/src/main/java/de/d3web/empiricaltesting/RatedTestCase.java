@@ -40,7 +40,7 @@ public class RatedTestCase {
 	 * A note related to this Rated Test Case. The note may be used if some
 	 * additional description is required for that case.
 	 */
-	private String note = null;
+	private String comment = null;
 
 	/**
 	 * Propagation time
@@ -87,12 +87,13 @@ public class RatedTestCase {
 		this.timeStamp = timeStamp;
 	}
 
-	public void setNote(String note) {
-		this.note = note;
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public String getNote() {
-		return note;
+	public String getComment() {
+		return this.comment;
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class RatedTestCase {
 		RatedTestCase that = (RatedTestCase) o;
 
 		if (name != null ? !name.equals(that.name) : that.name != null) return false;
-		if (note != null ? !note.equals(that.note) : that.note != null) return false;
+		if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
 		if (!findingsMap.equals(that.findingsMap)) return false;
 		if (!checksMap.equals(that.checksMap)) return false;
 		return !(timeStamp != null ? !timeStamp.equals(that.timeStamp) : that.timeStamp != null);
@@ -113,7 +114,7 @@ public class RatedTestCase {
 	@Override
 	public int hashCode() {
 		int result = name != null ? name.hashCode() : 0;
-		result = 31 * result + (note != null ? note.hashCode() : 0);
+		result = 31 * result + (comment != null ? comment.hashCode() : 0);
 		result = 31 * result + findingsMap.hashCode();
 		result = 31 * result + checksMap.hashCode();
 		result = 31 * result + (timeStamp != null ? timeStamp.hashCode() : 0);
@@ -140,7 +141,7 @@ public class RatedTestCase {
 	public RatedTestCase flatClone() {
 		RatedTestCase newRTC = new RatedTestCase();
 		newRTC.name = this.name;
-		newRTC.note = this.note;
+		newRTC.comment = this.comment;
 		newRTC.timeStamp = this.timeStamp;
 		newRTC.findingsMap = this.findingsMap;
 		newRTC.checksMap = this.checksMap;
@@ -214,6 +215,22 @@ public class RatedTestCase {
 	@Deprecated
 	public void inverseSortSolutions() {
 
+	}
+
+	/**
+	 * @deprecated use {@link #setComment(String)} instead
+	 */
+	@Deprecated
+	public void setNote(String comment) {
+		this.comment = comment;
+	}
+
+	/**
+	 * @deprecated use {@link #getComment()} instead
+	 */
+	@Deprecated
+	public String getNote() {
+		return comment;
 	}
 
 	/**
