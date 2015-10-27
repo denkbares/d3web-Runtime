@@ -52,10 +52,8 @@ public final class Score implements Comparable<Object> {
 	public static final Score N3 = new Score(-10, -10, "N3");
 	public static final Score N2 = new Score(-5, -5, "N2");
 	public static final Score N1 = new Score(-2, 0, "N1");
-	public static final List<Score> APRIORI = Arrays.asList(new Score[] {
-			P5, P4, P3, P2, N2, N3, N4, N5 });
-	private static final List<Score> allScores = Arrays.asList(new Score[] {
-			P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7 });
+	public static final List<Score> APRIORI = Arrays.asList(P5, P4, P3, P2, N2, N3, N4, N5);
+	private static final List<Score> allScores = Arrays.asList(P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7);
 
 	private String symbol;
 	private double score;

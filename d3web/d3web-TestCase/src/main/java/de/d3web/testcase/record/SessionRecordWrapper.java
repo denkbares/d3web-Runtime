@@ -66,7 +66,7 @@ public class SessionRecordWrapper implements TestCase {
 
 	@Override
 	public Collection<Finding> getFindings(Date date, KnowledgeBase kb) {
-		List<Finding> findings = new LinkedList<Finding>();
+		List<Finding> findings = new LinkedList<>();
 		for (ProtocolEntry entry : record.getProtocol().getProtocolHistory()) {
 			if (entry instanceof FactProtocolEntry && entry.getDate().equals(date)) {
 				FactProtocolEntry fpe = (FactProtocolEntry) entry;

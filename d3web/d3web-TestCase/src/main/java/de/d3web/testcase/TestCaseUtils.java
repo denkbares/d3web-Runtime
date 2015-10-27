@@ -138,7 +138,7 @@ public class TestCaseUtils {
 	 * @created 24.01.2012
 	 */
 	public static Collection<Question> getUsedQuestions(TestCase testCase, KnowledgeBase kb) {
-		Collection<Question> questions = new LinkedHashSet<Question>();
+		Collection<Question> questions = new LinkedHashSet<>();
 		if (testCase instanceof PrefixedTestCase) {
 			questions.addAll(getUsedQuestions(((PrefixedTestCase) testCase).getTestCase(), kb));
 			questions.addAll(getUsedQuestions(((PrefixedTestCase) testCase).getPrefix(), kb));

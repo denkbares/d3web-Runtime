@@ -83,9 +83,9 @@ public class ValueUtilsTest {
 	public void createValue() {
 		assertEquals(new ChoiceValue(choice1), ValueUtils.createValue(qoc, "choice1"));
 		assertEquals(new MultipleChoiceValue(new ChoiceID(choice1), new ChoiceID(choice2)),
-				ValueUtils.createValue(qmc, "choice1", new ChoiceValue(choice2)));
+				ValueUtils.createQuestionValue(qmc, "choice1", new ChoiceValue(choice2)));
 		assertEquals(new MultipleChoiceValue(new ChoiceID(choice2)),
-				ValueUtils.createValue(qmc, "choice1", new MultipleChoiceValue(new ChoiceID(
+				ValueUtils.createQuestionValue(qmc, "choice1", new MultipleChoiceValue(new ChoiceID(
 						choice1), new ChoiceID(choice2))));
 		assertEquals(Unknown.getInstance(),
 				ValueUtils.createValue(qoc, Unknown.getInstance().getValue().toString()));

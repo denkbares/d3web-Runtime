@@ -24,11 +24,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import de.d3web.core.inference.condition.CondRegex;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -61,8 +59,6 @@ import de.d3web.testcase.stc.DerivedSolutionCheck;
 
 @SuppressWarnings("deprecation")
 public class SequentialTestCase implements TestCase, CommentedTestCase {
-
-	private final Map<RatedTestCase, List<Check>> additionalChecks = new IdentityHashMap<>();
 
 	private String name = "";
 	private final LinkedHashMap<Date, RatedTestCase> ratedTestCases = new LinkedHashMap<>();
@@ -170,11 +166,6 @@ public class SequentialTestCase implements TestCase, CommentedTestCase {
 			checks.add(new ConditionCheck(new CondRegex(question, regexFinding.getRegex())));
 		}
 
-		// also add additional checks if available
-		List<Check> addedChecks = additionalChecks.get(rtc);
-		if (addedChecks != null) checks.addAll(addedChecks);
-
-		// retrun the common list of checks
 		return checks;
 	}
 
@@ -194,13 +185,7 @@ public class SequentialTestCase implements TestCase, CommentedTestCase {
 	 */
 	@Deprecated
 	public void addChecks(RatedTestCase rtc, Check... checks) {
-		if (checks.length == 0) return;
-		List<Check> checksOfRTC = additionalChecks.get(rtc);
-		if (checksOfRTC == null) {
-			checksOfRTC = new ArrayList<>();
-			additionalChecks.put(rtc, checksOfRTC);
-		}
-		Collections.addAll(checksOfRTC, checks);
+		rtc.addCheck(checks);
 	}
 
 	@Override

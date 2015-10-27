@@ -50,7 +50,7 @@ public class FragmentManager<Artifact> {
 	 *                                        {@link FragmentHandler} is available for the specified object
 	 * @throws IOException                    if an error occurs during saving the specified object
 	 */
-	public Element writeFragment(Object object, Persistence<Artifact> persistence) throws NoSuchFragmentHandlerException, IOException {
+	public Element writeFragment(Object object, Persistence<Artifact> persistence) throws IOException {
 		for (Extension plugin : fragmentPlugins) {
 			@SuppressWarnings("unchecked")
 			FragmentHandler<Artifact> handler = (FragmentHandler<Artifact>) plugin.getSingleton();
@@ -59,7 +59,7 @@ public class FragmentManager<Artifact> {
 			}
 		}
 		throw new NoSuchFragmentHandlerException("No fragment handler found for: '" + object + "' ."
-				+ " Very likely a plugin is missing which was used to while creating this knowledge base.");
+				+ " Very likely a plugin is missing which was used while creating this knowledge base.");
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class FragmentManager<Artifact> {
 	 *                                        {@link FragmentHandler} is available
 	 * @throws IOException                    if an IO error occurs during the read operation
 	 */
-	public Object readFragment(Element child, Persistence<Artifact> persistence) throws NoSuchFragmentHandlerException, IOException {
+	public Object readFragment(Element child, Persistence<Artifact> persistence) throws IOException {
 		for (Extension plugin : fragmentPlugins) {
 			@SuppressWarnings("unchecked")
 			FragmentHandler<Artifact> handler = (FragmentHandler<Artifact>) plugin.getSingleton();

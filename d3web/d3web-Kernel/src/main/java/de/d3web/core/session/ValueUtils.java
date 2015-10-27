@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -41,6 +42,9 @@ import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Rating.State;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
@@ -50,6 +54,8 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.scoring.HeuristicRating;
+import de.d3web.scoring.Score;
 import de.d3web.strings.Strings;
 import de.d3web.utils.Log;
 
@@ -89,16 +95,16 @@ public final class ValueUtils {
 	private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final SimpleDateFormat DATE_FORMAT_WITH_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z", Locale.ENGLISH);
 
-	private static final Map<TimeZone, SimpleDateFormat> DATE_FORMAT_WITHOUT_TIME_ZONE_MAP = new HashMap<TimeZone, SimpleDateFormat>();
+	private static final Map<TimeZone, SimpleDateFormat> DATE_FORMAT_WITHOUT_TIME_ZONE_MAP = new HashMap<>();
 
-	private static final Map<TimeZone, List<SimpleDateFormat>> DATE_FORMATS_WITHOUT_TIME_ZONE_MAP = new HashMap<TimeZone, List<SimpleDateFormat>>();
-	private static final List<SimpleDateFormat> DATE_FORMATS_WITH_TIME_ZONE = new ArrayList<SimpleDateFormat>();
+	private static final Map<TimeZone, List<SimpleDateFormat>> DATE_FORMATS_WITHOUT_TIME_ZONE_MAP = new HashMap<>();
+	private static final List<SimpleDateFormat> DATE_FORMATS_WITH_TIME_ZONE = new ArrayList<>();
 
 	private static final Pattern DATE_STRING_TIME_ZONE_PATTERN
 			= Pattern.compile("\\s((?:[a-zA-Z]\\s*)+|GMT[+-]\\d?\\d:\\d\\d)\\s*$", Pattern.CASE_INSENSITIVE);
 
 	static {
-		List<SimpleDateFormat> dateFormatsWithoutTimeZone = new ArrayList<SimpleDateFormat>();
+		List<SimpleDateFormat> dateFormatsWithoutTimeZone = new ArrayList<>();
 
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS"));
 		dateFormatsWithoutTimeZone.add(new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
@@ -163,7 +169,7 @@ public final class ValueUtils {
 		List<SimpleDateFormat> simpleDateFormats = DATE_FORMATS_WITHOUT_TIME_ZONE_MAP.get(zone);
 		if (simpleDateFormats == null) {
 			List<SimpleDateFormat> simpleDateFormatsDef = DATE_FORMATS_WITHOUT_TIME_ZONE_MAP.get(null);
-			simpleDateFormats = new ArrayList<SimpleDateFormat>();
+			simpleDateFormats = new ArrayList<>();
 			for (SimpleDateFormat simpleDateFormat : simpleDateFormatsDef) {
 				SimpleDateFormat clone = (SimpleDateFormat) simpleDateFormat.clone();
 				clone.setTimeZone(zone);
@@ -204,7 +210,7 @@ public final class ValueUtils {
 	}
 
 	public static String[] getAllowedDateFormatPatterns() {
-		List<SimpleDateFormat> dateFormats = new ArrayList<SimpleDateFormat>();
+		List<SimpleDateFormat> dateFormats = new ArrayList<>();
 		List<SimpleDateFormat> dateFormatsWithTimeZone = getDateFormatsWithTimeZone();
 		List<SimpleDateFormat> dateFormatsWithoutTimeZone = getDateFormatsWithoutTimeZone(null);
 		for (int i = 0; i < dateFormatsWithTimeZone.size() || i < dateFormatsWithoutTimeZone.size(); i++) {
@@ -233,15 +239,53 @@ public final class ValueUtils {
 	 * valid representation for a Value for the given Question, <tt>null</tt>
 	 * will be returned.
 	 *
-	 * @param question    the question for which the {@link Value} is created
-	 * @param valueString a String representation of the {@link Value} to be
-	 *                    created
+	 * @param terminologyObject the terminologyObject for which the {@link Value} is created
+	 * @param valueString       a String representation of the {@link Value} to be
+	 *                          created
 	 * @return a {@link Value} or <tt>null</tt> if the given String is no valid
 	 * representation for a Value for the given Question
 	 * @created 11.08.2012
 	 */
-	public static Value createValue(Question question, String valueString) {
-		return createValue(question, valueString, null);
+	public static Value createValue(TerminologyObject terminologyObject, String valueString) {
+		if (terminologyObject instanceof Question) {
+			return createQuestionValue((Question) terminologyObject, valueString, null);
+		}
+		else if (terminologyObject instanceof Solution) {
+			return createSolutionValue(valueString);
+		}
+		else {
+			throw new IllegalArgumentException("Creating values for " + terminologyObject.getClass() + " currently not supported");
+		}
+	}
+
+	/**
+	 * Creates an appropriate Solution value for the given String.<br/>
+	 * If the String is parsable as a double, a {@link HeuristicRating} with that score is returned.<br/>
+	 * If the String matches one of the {@link Score} symbols (e.g. P7, N7...) a {@link HeuristicRating} with that
+	 * score
+	 * is returned.<br>
+	 * If the String matches any of the solutions states (like established, suggested...), a Rating for the given {@link
+	 * State} is returned.
+	 *
+	 * @param valueString the String representation of the solution value
+	 * @return the solution value for the given String
+	 */
+	public static Value createSolutionValue(String valueString) {
+		double doubleValue = parseDouble(valueString);
+		if (!Double.isNaN(doubleValue)) {
+			return new HeuristicRating(doubleValue);
+		}
+		for (Score score : Score.getAllScores()) {
+			if (score.getSymbol().toLowerCase().equals(valueString.toLowerCase())) {
+				return new HeuristicRating(score);
+			}
+		}
+		try {
+			return new Rating(valueString);
+		}
+		catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -261,7 +305,7 @@ public final class ValueUtils {
 	 * representation for a Value for the given Question
 	 * @created 11.08.2012
 	 */
-	public static Value createValue(Question question, String valueString, Value existingValue) {
+	public static Value createQuestionValue(Question question, String valueString, Value existingValue) {
 
 		Value value = Unknown.getInstance();
 
@@ -278,11 +322,9 @@ public final class ValueUtils {
 		}
 
 		else if (question instanceof QuestionNum) {
-			try {
-				value = new NumValue(Double.parseDouble(valueString.replace(',', '.')));
-			}
-			catch (IllegalArgumentException e) {
-				// null will be returned
+			double doubleValue = parseDouble(valueString);
+			if (!Double.isNaN(doubleValue)) {
+				value = new NumValue(doubleValue);
 			}
 		}
 
@@ -305,6 +347,17 @@ public final class ValueUtils {
 		}
 
 		return value;
+	}
+
+	private static double parseDouble(String valueString) {
+		double doubleValue;
+		try {
+			doubleValue = Double.parseDouble(valueString.replace(',', '.'));
+		}
+		catch (IllegalArgumentException e) {
+			doubleValue = Double.NaN;
+		}
+		return doubleValue;
 	}
 
 	/**
@@ -362,7 +415,7 @@ public final class ValueUtils {
 
 	private static Value createQuestionMCValue(QuestionMC question, Choice choice, Value existingValue) {
 		Value value;
-		List<Choice> choices = new ArrayList<Choice>();
+		List<Choice> choices = new ArrayList<>();
 		if (existingValue instanceof ChoiceValue) {
 			Choice existingChoice = ((ChoiceValue) existingValue)
 					.getChoice(question);
@@ -625,7 +678,7 @@ public final class ValueUtils {
 	 * local JVM will be used.
 	 * To be parseable, the String has to come in one of the available {@link DateFormat} from
 	 * {@link DateValue#getAllowedFormatStrings()}.
-	 * <p/>
+	 * <p>
 	 * <b>Attention:</b> If the corresponding question is available while calling the method, you should instead use
 	 * {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if your String does not contain a TimeZone
 	 * identifier. Having the Question available will use a specified time zone of the question's UNIT property if

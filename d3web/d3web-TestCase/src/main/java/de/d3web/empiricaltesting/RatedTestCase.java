@@ -71,6 +71,14 @@ public class RatedTestCase {
 		}
 	}
 
+	public Collection<Finding> getAllFindings() {
+		return findingsMap.valueSet();
+	}
+
+	public Collection<Check> getAllChecks() {
+		return checksMap.valueSet();
+	}
+
 	public String getName() {
 		return name;
 	}

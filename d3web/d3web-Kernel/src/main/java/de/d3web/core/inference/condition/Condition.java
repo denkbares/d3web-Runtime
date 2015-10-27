@@ -27,10 +27,11 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * Abstract superclass to represent conditions, to be used for example in rules
- * ({@link Rule}) and set-covering relations ({@link XCLRelation}). Every
+ * ({@link Rule}) and set-covering relations. Every
  * condition holds a collection of objects, that are constrained in this
  * condition, and an eval method to evaluate this condition with respect to a
  * given {@link Session}.
@@ -55,9 +56,9 @@ public interface Condition {
 	 * @throws NoAnswerException when a required sub-condition of this condition
 	 *         has a question with no answer currently set
 	 * @throws UnknownAnswerException when a required sub-conditions contains a
-	 *         question having an {@link AnswerUnknown} assigned
+	 *         question having an {@link Unknown} assigned
 	 */
-	public boolean eval(Session session)
+	boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException;
 
 	/**
@@ -66,7 +67,7 @@ public interface Condition {
 	 * 
 	 * @return all used questions and diagnoses used in this condition
 	 */
-	public Collection<? extends TerminologyObject> getTerminalObjects();
+	Collection<? extends TerminologyObject> getTerminalObjects();
 
 	/**
 	 * Compares this condition with another condition.
@@ -75,13 +76,11 @@ public interface Condition {
 	 * @param obj another condition to compare
 	 */
 	@Override
-	public boolean equals(Object obj);
+	boolean equals(Object obj);
 
 	/**
 	 * Returns the hash code of this condition.
-	 * 
-	 * @param the hash code of this condition
 	 */
 	@Override
-	public int hashCode();
+	int hashCode();
 }

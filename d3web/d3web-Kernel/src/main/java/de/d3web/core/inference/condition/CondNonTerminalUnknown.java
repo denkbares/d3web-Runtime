@@ -6,6 +6,8 @@ import de.d3web.core.session.Session;
 import de.d3web.strings.Strings;
 
 /**
+ * This Condition evaluates to true, if any of the nested {@link Condition}s throws the {@link UnknownAnswerException}.
+ *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 03.03.2014
  */
