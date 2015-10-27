@@ -36,55 +36,42 @@ import de.d3web.empiricaltesting.TestPersistence;
 import de.d3web.plugin.test.InitPluginManager;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
  * @author Jochen Reutelshöfer
  * @created 22.07.2013
  */
 public class TestPersistenceTest {
 
 	@Test
-	public void testPersistenceReadWrite() {
-		try {
-			InitPluginManager.init();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void testPersistenceReadWrite() throws IOException, XMLStreamException {
+		InitPluginManager.init();
 		KnowledgeBase kb;
-		try {
-			kb = PersistenceManager.getInstance().load(
-					new File("./src/test/resources/Car faults diagnosis.d3web"));
-			List<SequentialTestCase> loadedCases = TestPersistence.getInstance().loadCases(
-					new FileInputStream(new File(
-							"./src/test/resources/Demo_-_Test_Cases_testcase-2.xml")), kb);
+		kb = PersistenceManager.getInstance().load(
+				new File("./src/test/resources/Car faults diagnosis.d3web"));
+		List<SequentialTestCase> loadedCases = TestPersistence.getInstance().loadCases(
+				new FileInputStream(new File(
+						"./src/test/resources/Demo_-_Test_Cases_testcase-2.xml")), kb);
 
-			File tmpFile = new File(
-					"./target/Demo_-_Test_Cases_testcase-tmp.xml");
+		File tmpFile = new File(
+				"./target/Demo_-_Test_Cases_testcase-tmp.xml");
 
-			FileOutputStream outputStream = new FileOutputStream(tmpFile);
-			TestPersistence.getInstance().writeCases(outputStream, loadedCases,
-					false);
-			outputStream.flush();
-			outputStream.close();
+		FileOutputStream outputStream = new FileOutputStream(tmpFile);
+		TestPersistence.getInstance().writeCases(outputStream, loadedCases,
+				false);
+		outputStream.flush();
+		outputStream.close();
 
-			List<SequentialTestCase> loadedCases2 = TestPersistence.getInstance().loadCases(
-					new FileInputStream(tmpFile), kb);
+		List<SequentialTestCase> loadedCases2 = TestPersistence.getInstance().loadCases(
+				new FileInputStream(tmpFile), kb);
 
-			assertEquals(loadedCases, loadedCases2);
+		assertEquals(loadedCases, loadedCases2);
 
-			TestCase testCase = new TestCase();
-			testCase.setKb(kb);
-			testCase.setRepository(loadedCases);
-			assertTrue(testCase.isConsistent());
+		TestCase testCase = new TestCase();
+		testCase.setKb(kb);
+		testCase.setRepository(loadedCases);
+		assertTrue(testCase.isConsistent());
 
-		}
-		catch (XMLStreamException | IOException e) {
-			e.printStackTrace();
-			assertFalse(true);
-		}
 	}
 }

@@ -66,12 +66,14 @@ import de.d3web.utils.Log;
 
 public final class TestPersistence {
 
-	private static final String S_TEST_CASES = "SeqTestCaseRepository";
-	private static final String S_TEST_CASE = "STestCase";
+	private static final String SEQUENTIAL_TEST_CASES_OLD = "SeqTestCaseRepository"; // compatibility
+	private static final String SEQUENTIAL_TEST_CASE_OLD = "STestCase"; // compatibility
+	private static final String SEQUENTIAL_TEST_CASES = "SequentialTestCaseRepository";
+	private static final String SEQUENTIAL_TEST_CASE = "SequentialTestCase";
 	private static final String RATED_TEST_CASE = "RatedTestCase";
 	private static final String FINDINGS = "Findings";
 	private static final String FINDING = "Finding";
-	private static final String EXPECTEDFINDING = "ExpectedFinding";
+	private static final String EXPECTED_FINDING = "ExpectedFinding";
 
 	private static final String MATCHES = "Matches";
 
@@ -82,21 +84,22 @@ public final class TestPersistence {
 
 	// The Parameters
 	private static final String NAME = "Name";
-	private static final String STARTDATE = "StartDate";
+	private static final String START_DATE = "StartDate";
 	private static final String NOTE = "Note";
-	private static final String TIMESTAMP = "time";
+	private static final String TIMESTAMP_OLD = "time"; // compatibility
+	private static final String TIMESTAMP = "Time";
 
 	private static final String QUESTION = "Question";
 	private static final String ANSWER = "Answer";
 	private static final String RATING = "Rating";
 
-	private static final String NUMOFCASES = "NumberOfCases";
-	private static final String USEDSOLUTIONS = "UsedSolutions";
-	private static final String USEDFINDINGS = "UsedFindings";
-	private static final String LASTTESTED = "LastTested";
-	private static final String EXPECTEDFINDINGS = "ExpectedFindings";
+	private static final String NUMBER_OF_CASES = "NumberOfCases";
+	private static final String USED_SOLUTIONS = "UsedSolutions";
+	private static final String USED_FINDINGS = "UsedFindings";
+	private static final String LAST_TESTED = "LastTested";
+	private static final String EXPECTED_FINDINGS = "ExpectedFindings";
 
-	private List<SequentialTestCase> imported = new ArrayList<SequentialTestCase>();
+	private List<SequentialTestCase> imported = new ArrayList<>();
 
 	private SequentialTestCase stc = null;
 	private RatedTestCase rtc = null;
@@ -208,16 +211,13 @@ public final class TestPersistence {
 			writeTheCases(out, cases, bWriteDerivedSolutions);
 		}
 		catch (XMLStreamException e) {
-			System.err.println("Error while writing XML!");
-			e.printStackTrace();
+			Log.severe("Error while writing XML!", e);
 		}
 		catch (FileNotFoundException e) {
-			System.err.println("Error in casesUrl: Path not correct!");
-			e.printStackTrace();
+			Log.severe("Error in casesUrl: Path not correct!", e);
 		}
 		catch (URISyntaxException e) {
-			System.err.println("Error in casesUrl: URL has wrong syntax!");
-			e.printStackTrace();
+			Log.severe("Error in casesUrl: URL has wrong syntax!", e);
 		}
 	}
 
@@ -240,12 +240,12 @@ public final class TestPersistence {
 
 		xmlsw.writeStartDocument("utf-8", "1.0");
 		xmlsw.writeCharacters("\n");
-		xmlsw.writeStartElement(S_TEST_CASES);
+		xmlsw.writeStartElement(SEQUENTIAL_TEST_CASES);
 
-		xmlsw.writeAttribute(NUMOFCASES, "" + cases.size());
-		xmlsw.writeAttribute(USEDSOLUTIONS, ""
+		xmlsw.writeAttribute(NUMBER_OF_CASES, "" + cases.size());
+		xmlsw.writeAttribute(USED_SOLUTIONS, ""
 				+ computeUsedSolutions(cases).size() + "");
-		xmlsw.writeAttribute(USEDFINDINGS, ""
+		xmlsw.writeAttribute(USED_FINDINGS, ""
 				+ computeUsedFindings(cases).size() + "");
 
 		for (SequentialTestCase stcases : cases) {
@@ -264,11 +264,11 @@ public final class TestPersistence {
 
 		xmlsw.writeCharacters("\n\t");
 
-		xmlsw.writeStartElement(S_TEST_CASE);
+		xmlsw.writeStartElement(SEQUENTIAL_TEST_CASE);
 		xmlsw.writeAttribute(NAME, stc.getName());
 		Date startDate = stc.getStartDate();
 		if (startDate != null) {
-			xmlsw.writeAttribute(STARTDATE, DateValue.getDefaultDateFormat().format(startDate));
+			xmlsw.writeAttribute(START_DATE, DateValue.getDefaultDateFormat().format(startDate));
 		}
 		for (RatedTestCase rtcases : stc.getCases()) {
 			write(rtcases, xmlsw);
@@ -295,7 +295,7 @@ public final class TestPersistence {
 
 		String lastTested = rtc.getLastTested();
 		if (!lastTested.isEmpty()) {
-			xmlsw.writeAttribute(LASTTESTED, lastTested);
+			xmlsw.writeAttribute(LAST_TESTED, lastTested);
 		}
 
 		// write Findings
@@ -309,7 +309,7 @@ public final class TestPersistence {
 
 		// write Findings
 		xmlsw.writeCharacters("\n\t\t\t");
-		xmlsw.writeStartElement(EXPECTEDFINDINGS);
+		xmlsw.writeStartElement(EXPECTED_FINDINGS);
 		for (Finding f : rtc.getExpectedFindings()) {
 			write(f, xmlsw, true);
 		}
@@ -346,7 +346,7 @@ public final class TestPersistence {
 
 		xmlsw.writeCharacters("\n\t\t\t\t");
 		if (expected) {
-			xmlsw.writeEmptyElement(EXPECTEDFINDING);
+			xmlsw.writeEmptyElement(EXPECTED_FINDING);
 		}
 		else {
 			xmlsw.writeEmptyElement(FINDING);
@@ -380,7 +380,7 @@ public final class TestPersistence {
 			throws XMLStreamException {
 
 		xmlsw.writeCharacters("\n\t\t\t\t");
-		xmlsw.writeEmptyElement(EXPECTEDFINDING);
+		xmlsw.writeEmptyElement(EXPECTED_FINDING);
 		xmlsw.writeAttribute(QUESTION, f.getQuestion().getName());
 		xmlsw.writeAttribute(MATCHES, f.getRegex());
 	}
@@ -405,13 +405,13 @@ public final class TestPersistence {
 
 		String elName = sr.getLocalName();
 
-		if (elName.equals(S_TEST_CASES)) {
-			imported = new ArrayList<SequentialTestCase>();
+		if (elName.equals(SEQUENTIAL_TEST_CASES) || elName.equals(SEQUENTIAL_TEST_CASES_OLD)) {
+			imported = new ArrayList<>();
 		}
-		else if (elName.equals(S_TEST_CASE)) {
+		else if (elName.equals(SEQUENTIAL_TEST_CASE) || elName.equals(SEQUENTIAL_TEST_CASE_OLD)) {
 			stc = new SequentialTestCase();
 			stc.setName(sr.getAttributeValue(null, NAME));
-			String dateString = sr.getAttributeValue(null, STARTDATE);
+			String dateString = sr.getAttributeValue(null, START_DATE);
 			if (dateString != null) {
 				try {
 					stc.setStartDate(XMLUtil.readDate(dateString));
@@ -427,6 +427,7 @@ public final class TestPersistence {
 			rtc.setName(sr.getAttributeValue(null, NAME));
 			rtc.setNote(sr.getAttributeValue(null, NOTE));
 			String time = sr.getAttributeValue(null, TIMESTAMP);
+			if (time == null) time = sr.getAttributeValue(null, TIMESTAMP_OLD);
 			if (time != null) {
 				try {
 					rtc.setTimeStamp(XMLUtil.readDate(time));
@@ -435,7 +436,7 @@ public final class TestPersistence {
 					e.printStackTrace();
 				}
 			}
-			String lastTestedDate = sr.getAttributeValue(null, LASTTESTED);
+			String lastTestedDate = sr.getAttributeValue(null, LAST_TESTED);
 			if (lastTestedDate != null && (!lastTestedDate.equals(""))) {
 				rtc.setTestingDate(lastTestedDate);
 				rtc.setWasTestedBefore(true);
@@ -446,7 +447,7 @@ public final class TestPersistence {
 			Finding f = getFinding(sr, kb);
 			if (f != null) rtc.add(f);
 		}
-		else if (elName.equals(EXPECTEDFINDING)) {
+		else if (elName.equals(EXPECTED_FINDING)) {
 			String matches = sr.getAttributeValue(null, MATCHES);
 			if (matches == null) {
 				Finding f = getFinding(sr, kb);
@@ -558,8 +559,7 @@ public final class TestPersistence {
 		if (elName.equals(RATED_TEST_CASE)) {
 			stc.addCase(rtc);
 		}
-		else if (elName.equals(S_TEST_CASE)) {
-			stc.inverseSortSolutions();
+		else if (elName.equals(SEQUENTIAL_TEST_CASE) || elName.equals(SEQUENTIAL_TEST_CASE_OLD)) {
 			imported.add(stc);
 		}
 	}
