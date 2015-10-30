@@ -103,12 +103,8 @@ public final class SessionPersistenceManager {
 	 * @created 19.05.2011
 	 */
 	public void saveSessions(File file, Collection<SessionRecord> sessionRecords, ProgressListener listener) throws IOException {
-		OutputStream stream = new FileOutputStream(file);
-		try {
+		try (OutputStream stream = new FileOutputStream(file)) {
 			saveSessions(stream, sessionRecords, listener);
-		}
-		finally {
-			stream.close();
 		}
 		// find the latest change date to adapt the file to
 		Date latestChange = new Date(0);

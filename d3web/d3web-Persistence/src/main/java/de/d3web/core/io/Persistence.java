@@ -35,7 +35,7 @@ public interface Persistence<Artifact> {
 	 * content is written.
 	 * 
 	 * @created 26.11.2013
-	 * @return
+	 * @return the xml document
 	 */
 	Document getDocument();
 
@@ -52,7 +52,7 @@ public interface Persistence<Artifact> {
 	 *         {@link FragmentHandler} is available for the specified object
 	 * @throws IOException if an error occurs during saving the specified object
 	 */
-	Element writeFragment(Object object) throws NoSuchFragmentHandlerException, IOException;
+	Element writeFragment(Object object) throws IOException;
 
 	/**
 	 * Reads the specified XML {@link Element} and creates its corresponding
@@ -66,5 +66,5 @@ public interface Persistence<Artifact> {
 	 *         {@link FragmentHandler} is available
 	 * @throws IOException if an IO error occurs during the read operation
 	 */
-	Object readFragment(Element element) throws NoSuchFragmentHandlerException, IOException;
+	Object readFragment(Element element) throws IOException;
 }

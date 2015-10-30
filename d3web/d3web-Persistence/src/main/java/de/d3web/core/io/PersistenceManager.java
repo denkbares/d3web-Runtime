@@ -83,7 +83,7 @@ public final class PersistenceManager {
 
 	private Extension[] readerPlugins;
 	private Extension[] writerPlugins;
-	private final FragmentManager<KnowledgeBase> fragmentManager = new FragmentManager<KnowledgeBase>();
+	private final FragmentManager<KnowledgeBase> fragmentManager = new FragmentManager<>();
 	private final Cipher cipher;
 
 	public final class KnowledgeBaseInfo {
@@ -187,16 +187,12 @@ public final class PersistenceManager {
 
 		private Resource createFavIconResource(File kbFile) {
 			try {
-				ZipFile zipfile = new ZipFile(kbFile);
-				try {
+				try (ZipFile zipfile = new ZipFile(kbFile)) {
 					String path = MULTIMEDIA_PATH_PREFIX + "favicon.png";
 					ZipEntry entry = zipfile.getEntry(path);
 					if (entry != null) {
 						return createResource(kbFile, entry);
 					}
-				}
-				finally {
-					zipfile.close();
 				}
 			}
 			catch (IOException e) {
@@ -282,8 +278,7 @@ public final class PersistenceManager {
 	 *         file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
-		ZipFile zipfile = new ZipFile(file);
-		try {
+		try (ZipFile zipfile = new ZipFile(file)) {
 			KnowledgeBase kb = new KnowledgeBase();
 			List<ZipEntry> files = new LinkedList<ZipEntry>();
 			// pre-calculate the size of the files to be parsed
@@ -358,17 +353,14 @@ public final class PersistenceManager {
 					cpl.updateProgress(0, "reading file " + name);
 					if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
 						Log.warning("No parser for entry " + name +
-										" available. This file will be lost" +
-										" when saving the KnowledgeBase.");
+								" available. This file will be lost" +
+								" when saving the KnowledgeBase.");
 					}
 				}
 			}
 			// knowledge base loaded successfully
 			listener.updateProgress(1, "knowledge base loaded successfully");
 			return kb;
-		}
-		finally {
-			zipfile.close();
 		}
 	}
 
@@ -395,7 +387,7 @@ public final class PersistenceManager {
 	 * returned.
 	 * 
 	 * @created 27.11.2013
-	 * @param zipfile the zip file to read from
+	 * @param file the zip file to read from
 	 * @param entry the entry to be read
 	 * @return the decrypted resource
 	 * @throws IOException if there is any io issue
@@ -437,13 +429,9 @@ public final class PersistenceManager {
 	}
 
 	public KnowledgeBaseInfo loadKnowledgeBaseInfo(File file) throws IOException {
-		JarFile jarfile = new JarFile(file);
-		try {
+		try (JarFile jarfile = new JarFile(file)) {
 			Manifest manifest = jarfile.getManifest();
 			return new KnowledgeBaseInfo(file, manifest);
-		}
-		finally {
-			jarfile.close();
 		}
 	}
 
@@ -478,8 +466,6 @@ public final class PersistenceManager {
 
 		tempfile.getAbsoluteFile().getParentFile().mkdirs();
 
-		JarOutputStream jarOutputStream = new JarOutputStream(
-				new FileOutputStream(tempfile), manifest);
 		int size = 0;
 		for (Extension plugin : writerPlugins) {
 			KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
@@ -507,7 +493,8 @@ public final class PersistenceManager {
 				}
 			}
 		}
-		try {
+		try (JarOutputStream jarOutputStream = new JarOutputStream(
+				new FileOutputStream(tempfile), manifest)) {
 
 			for (Extension plugin : writerPlugins) {
 				// if autodetect is available, the file is only written when the
@@ -544,8 +531,7 @@ public final class PersistenceManager {
 			for (Resource resource : knowledgeBase.getResources()) {
 				ZipEntry entry = new ZipEntry(MULTIMEDIA_PATH_PREFIX + resource.getPathName());
 				jarOutputStream.putNextEntry(entry);
-				InputStream inputStream = resource.getInputStream();
-				try {
+				try (InputStream inputStream = resource.getInputStream()) {
 					// unfortunately we corrupt the jar stream if we directly
 					// connect the cipher stream to the entry stream
 					if (cipher == null) {
@@ -562,16 +548,10 @@ public final class PersistenceManager {
 						bytes.writeTo(jarOutputStream);
 					}
 				}
-				finally {
-					inputStream.close();
-				}
 				i++;
 				float percent = i / (float) knowledgeBase.getResources().size();
 				cpl.updateProgress(percent, "Saving binary resources");
 			}
-		}
-		finally {
-			jarOutputStream.close();
 		}
 		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", "UTF-8"));
 		// delete old backup file

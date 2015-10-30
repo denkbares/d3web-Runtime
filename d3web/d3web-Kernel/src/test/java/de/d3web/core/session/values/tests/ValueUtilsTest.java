@@ -36,6 +36,7 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
@@ -82,13 +83,14 @@ public class ValueUtilsTest {
 	@Test
 	public void createValue() {
 		assertEquals(new ChoiceValue(choice1), ValueUtils.createValue(qoc, "choice1"));
-		assertEquals(new MultipleChoiceValue(new ChoiceID(choice1), new ChoiceID(choice2)),
-				ValueUtils.createQuestionValue(qmc, "choice1", new ChoiceValue(choice2)));
-		assertEquals(new MultipleChoiceValue(new ChoiceID(choice2)),
-				ValueUtils.createQuestionValue(qmc, "choice1", new MultipleChoiceValue(new ChoiceID(
-						choice1), new ChoiceID(choice2))));
-		assertEquals(Unknown.getInstance(),
-				ValueUtils.createValue(qoc, Unknown.getInstance().getValue().toString()));
+
+		Value choice1 = ValueUtils.createQuestionValue(qmc, "choice1");
+		ChoiceValue choice2 = new ChoiceValue(this.choice2);
+		MultipleChoiceValue mcValue = new MultipleChoiceValue(new ChoiceID(this.choice1), new ChoiceID(this.choice2));
+		assertEquals(mcValue, ValueUtils.handleExistingValue(qmc, choice1, choice2));
+
+		assertEquals(new MultipleChoiceValue(new ChoiceID(this.choice2)), ValueUtils.handleExistingValue(qmc, choice1, mcValue));
+		assertEquals(Unknown.getInstance(), ValueUtils.createValue(qoc, Unknown.getInstance().getValue().toString()));
 		assertEquals(new NumValue(4), ValueUtils.createValue(qnum, "4"));
 		assertEquals(new TextValue("abc"), ValueUtils.createValue(qtext, "abc"));
 		Date date = new Date();
@@ -99,10 +101,10 @@ public class ValueUtilsTest {
 
 	@Test
 	public void createQuestionChoiceValue() {
-		assertEquals(new ChoiceValue(choice1),
-				ValueUtils.createQuestionChoiceValue(qoc, "choice1"));
-		assertEquals(new MultipleChoiceValue(new ChoiceID(choice1), new ChoiceID(choice2)),
-				ValueUtils.createQuestionChoiceValue(qmc, "choice1", new ChoiceValue(choice2)));
+		assertEquals(new ChoiceValue(choice1), ValueUtils.createQuestionChoiceValue(qoc, "choice1"));
+		ChoiceValue choice2 = new ChoiceValue(this.choice2);
+		Value choice1 = ValueUtils.createQuestionChoiceValue(qmc, "choice1");
+		assertEquals(new MultipleChoiceValue(new ChoiceID(this.choice1), new ChoiceID(this.choice2)), ValueUtils.handleExistingValue(qmc, choice1, choice2));
 	}
 
 	@Test
@@ -212,8 +214,6 @@ public class ValueUtilsTest {
 		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 19:00 GMT-1:00").getDate());
 
 		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 19:00 GMT-01:00").getDate());
-
-
 
 		// try some not summer/day-light-saving dates
 

@@ -43,7 +43,6 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
@@ -57,7 +56,6 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
 import de.d3web.strings.Strings;
-import de.d3web.utils.Log;
 
 public final class ValueUtils {
 
@@ -235,20 +233,19 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link Value} for a {@link Question}. If the given String is no
-	 * valid representation for a Value for the given Question, <tt>null</tt>
-	 * will be returned.
+	 * Creates a {@link Value} for a {@link Question}. If the given String
+	 * is no valid representation for a Value for the given Question, an IllegalArgumentException is thrown.
 	 *
 	 * @param terminologyObject the terminologyObject for which the {@link Value} is created
 	 * @param valueString       a String representation of the {@link Value} to be
 	 *                          created
-	 * @return a {@link Value} or <tt>null</tt> if the given String is no valid
-	 * representation for a Value for the given Question
+	 * @return a {@link Value} representing the given valueString, cannot be <tt>null</tt>!
+	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 * @created 11.08.2012
 	 */
 	public static Value createValue(TerminologyObject terminologyObject, String valueString) {
 		if (terminologyObject instanceof Question) {
-			return createQuestionValue((Question) terminologyObject, valueString, null);
+			return createQuestionValue((Question) terminologyObject, valueString);
 		}
 		else if (terminologyObject instanceof Solution) {
 			return createSolutionValue(valueString);
@@ -262,15 +259,15 @@ public final class ValueUtils {
 	 * Creates an appropriate Solution value for the given String.<br/>
 	 * If the String is parsable as a double, a {@link HeuristicRating} with that score is returned.<br/>
 	 * If the String matches one of the {@link Score} symbols (e.g. P7, N7...) a {@link HeuristicRating} with that
-	 * score
-	 * is returned.<br>
-	 * If the String matches any of the solutions states (like established, suggested...), a Rating for the given {@link
-	 * State} is returned.
+	 * score is returned.<br>
+	 * If the String matches any of the solutions states (like established, suggested...), a Rating for the given
+	 * {@link Rating.State} is returned.
 	 *
 	 * @param valueString the String representation of the solution value
-	 * @return the solution value for the given String
+	 * @return a {@link Rating} representing the given valueString, cannot be <tt>null</tt>!
+	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 */
-	public static Value createSolutionValue(String valueString) {
+	public static Rating createSolutionValue(String valueString) {
 		double doubleValue = parseDouble(valueString);
 		if (!Double.isNaN(doubleValue)) {
 			return new HeuristicRating(doubleValue);
@@ -280,34 +277,23 @@ public final class ValueUtils {
 				return new HeuristicRating(score);
 			}
 		}
-		try {
-			return new Rating(valueString);
-		}
-		catch (IllegalArgumentException e) {
-			return null;
-		}
+		return new Rating(valueString);
 	}
 
 	/**
-	 * Creates a {@link Value} for a {@link Question}. If the given String is no
-	 * valid representation for a Value for the given Question, <tt>null</tt>
-	 * will be returned.<br/>
-	 * In case of a {@link QuestionMC}, the new Value is merged with the
-	 * existing Value (if possible). The existing value is allowed to be
-	 * <tt>null</tt>!<br/>
+	 * Creates a {@link Value} for a {@link Question}. If the given String
+	 * is no valid representation for a Value for the given Question, an IllegalArgumentException is thrown.
 	 *
-	 * @param question      the question for which the {@link Value} is created
-	 * @param valueString   a String representation of the {@link Value} to be
-	 *                      created
-	 * @param existingValue the existing value for the question to be merged in
-	 *                      case of a QuestionMC
-	 * @return a {@link Value} or <tt>null</tt> if the given String is no valid
-	 * representation for a Value for the given Question
+	 * @param question    the question for which the {@link Value} is created
+	 * @param valueString a String representation of the {@link Value} to be
+	 *                    created
+	 * @return a {@link Value} representing the given valueString, cannot be <tt>null</tt>!
+	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 * @created 11.08.2012
 	 */
-	public static Value createQuestionValue(Question question, String valueString, Value existingValue) {
+	public static Value createQuestionValue(Question question, String valueString) {
 
-		Value value = Unknown.getInstance();
+		Value value = null;
 
 		if (valueString.equals(Unknown.getInstance().getValue())) {
 			value = Unknown.getInstance();
@@ -318,7 +304,7 @@ public final class ValueUtils {
 		}
 
 		else if (question instanceof QuestionChoice) {
-			value = createQuestionChoiceValue((QuestionChoice) question, valueString, existingValue);
+			value = createQuestionChoiceValue((QuestionChoice) question, valueString);
 		}
 
 		else if (question instanceof QuestionNum) {
@@ -336,14 +322,19 @@ public final class ValueUtils {
 			try {
 				value = createDateValue((QuestionDate) question, valueString);
 			}
-			catch (IllegalArgumentException ignore) {
+			catch (IllegalArgumentException ignore1) {
 				try {
 					value = new DateValue(new Date(Long.parseLong(valueString)));
 				}
-				catch (NumberFormatException e) {
-					// null will be returned
+				catch (NumberFormatException ignore2) {
+					// will be handled below when value == null.
 				}
 			}
+		}
+
+		if (value == null) {
+			throw new IllegalArgumentException("Unable to create value from String '"
+					+ valueString + "' for question '" + question.getName() + "'");
 		}
 
 		return value;
@@ -361,38 +352,11 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link Value} for a {@link QuestionChoice}. If the given String
-	 * is no valid representation for a Value for the given Question,
-	 * <tt>null</tt> will be returned.<br/>
-	 * In case of a {@link QuestionMC}, the new Value is merged with the
-	 * existing Value (if possible). The existing value is allowed to be
-	 * <tt>null</tt>!
-	 *
-	 * @param question      the question for which the {@link Value} is created
-	 * @param valueString   a String representation of the {@link Value} to be
-	 *                      created
-	 * @param existingValue the existing value for the question to be merged in
-	 *                      case of a QuestionMC
-	 * @return a {@link Value} or <tt>null</tt> if the given String is no valid
-	 * representation for a Value for the given Question
-	 * @created 11.08.2012
-	 */
-	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString, Value existingValue) {
-		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
-		Value value = null;
-		if (question instanceof QuestionMC) {
-			value = createQuestionMCValue((QuestionMC) question, choice, existingValue);
-		}
-		else if (choice != null) {
-			value = new ChoiceValue(choice);
-		}
-		return value;
-	}
-
-	/**
-	 * Creates a {@link Value} for a {@link QuestionChoice}. If the given String
-	 * is no valid representation for a Value for the given Question,
-	 * <tt>null</tt> will be returned.<br/>
+	 * Creates a {@link ChoiceValue} for a {@link QuestionChoice}. If the given String
+	 * is no valid representation for a Value for the given Question, an IllegalArgumentException is thrown.
+	 * This method also creates {@link ChoiceValue}s for {@link QuestionMC}s. To get a {@link MultipleChoiceValue}, use
+	 * the method {@link #handleExistingValue(TerminologyObject, Value, Value)}, which will merge a {@link ChoiceValue}
+	 * with an existing {@link ChoiceValue} or {@link MultipleChoiceValue} to a new {@link MultipleChoiceValue}.
 	 *
 	 * @param question    the question for which the {@link Value} is created
 	 * @param valueString a String representation of the {@link Value} to be
@@ -402,43 +366,52 @@ public final class ValueUtils {
 	 * @created 11.08.2012
 	 */
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
-		Value value = null;
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
-		if (question instanceof QuestionMC) {
-			value = createQuestionMCValue((QuestionMC) question, choice, null);
+		if (choice == null) {
+			throw new IllegalArgumentException("'" + valueString + "' is not a valid choice for question '" + question.getName() + "'");
 		}
-		else if (choice != null) {
-			value = new ChoiceValue(choice);
-		}
-		return value;
+		return new ChoiceValue(choice);
 	}
 
-	private static Value createQuestionMCValue(QuestionMC question, Choice choice, Value existingValue) {
-		Value value;
-		List<Choice> choices = new ArrayList<>();
-		if (existingValue instanceof ChoiceValue) {
-			Choice existingChoice = ((ChoiceValue) existingValue)
-					.getChoice(question);
-			choices.add(existingChoice);
-		}
-		else if (existingValue instanceof MultipleChoiceValue) {
-			try {
-				List<Choice> temp = ((MultipleChoiceValue) existingValue)
-						.asChoiceList(question);
-				choices.addAll(temp);
+	/**
+	 * Handles the value for normal interview behavior depending on the existing value. If <tt>value</tt> and
+	 * <tt>existingValue</tt> are equal, Unknown is returned. In case of {@link QuestionMC}, <tt>value</tt> and
+	 * <tt>existingValue</tt> are merged into a {@link MultipleChoiceValue}. If the existing {@link Value} already
+	 * contains the new <tt>value</tt>, the new value will be removed from the {@link MultipleChoiceValue}. <p/>
+	 * In all the other cases, the value is just returned without changing it.
+	 *
+	 * @param object        the {@link TerminologyObject} belonging to <tt>value</tt> and
+	 *                      <tt>existingValue</tt>
+	 * @param value         the value to handel in context to the existingValue
+	 * @param existingValue the existingValue to handle in context to the value
+	 * @return a value taking into account the given <tt>value</tt> and <tt>existingValue</tt>
+	 */
+	public static Value handleExistingValue(TerminologyObject object, Value value, Value existingValue) {
+		if (value.equals(existingValue)) return Unknown.getInstance();
+		if (object instanceof QuestionChoice && value instanceof ChoiceValue) {
+			QuestionChoice questionChoice = (QuestionChoice) object;
+			Choice choice = ((ChoiceValue) value).getChoice(questionChoice);
+			List<Choice> choices = new ArrayList<>();
+			if (existingValue instanceof ChoiceValue) {
+				Choice existingChoice = ((ChoiceValue) existingValue)
+						.getChoice(questionChoice);
+				choices.add(existingChoice);
 			}
-			catch (IllegalArgumentException e) {
-				Log.warning(e.getMessage());
+			else if (existingValue instanceof MultipleChoiceValue) {
+				choices.addAll(((MultipleChoiceValue) existingValue)
+						.asChoiceList(questionChoice));
 			}
-		}
-		if (choice != null && !choices.remove(choice)) {
-			choices.add(choice);
-		}
-		if (choices.isEmpty()) {
-			value = Unknown.getInstance();
-		}
-		else {
-			value = MultipleChoiceValue.fromChoices(choices);
+			// if new choice already exists, remove it
+			// if not, add it
+			if (!choices.remove(choice)) {
+				choices.add(choice);
+			}
+			if (choices.isEmpty()) {
+				value = Unknown.getInstance();
+			}
+			else {
+				value = MultipleChoiceValue.fromChoices(choices);
+			}
 		}
 		return value;
 	}
@@ -666,7 +639,8 @@ public final class ValueUtils {
 	 *
 	 * @param question   the question for which the DateValue should be used
 	 * @param dateString the date string to parse
-	 * @return the parsed DateValue
+	 * @return the parsed DateValue, cannot be <tt>null</tt>!
+	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 * @created 13.04.2015
 	 */
 	public static DateValue createDateValue(QuestionDate question, String dateString) throws IllegalArgumentException {
@@ -687,7 +661,8 @@ public final class ValueUtils {
 	 * difference.
 	 *
 	 * @param dateString the value to parse
-	 * @return the parsed DateValue
+	 * @return the parsed DateValue, cannot be <tt>null</tt>!
+	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 * @created 23.10.2013
 	 */
 	public static DateValue createDateValue(String dateString) {

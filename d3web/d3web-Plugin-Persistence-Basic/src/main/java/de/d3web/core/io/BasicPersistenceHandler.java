@@ -115,18 +115,18 @@ public class BasicPersistenceHandler implements
 		List<Element> kbchildren = XMLUtil.getElementList(father.getChildNodes());
 		// splitting the kb children and calculating the absolute time to load
 		int abstime = 0;
-		List<Element> knowledgeslicesNodes = null;
-		List<Element> qASetNodes = new ArrayList<Element>();
+		List<Element> knowledgeSliceNodes = Collections.emptyList();
+		List<Element> qASetNodes = new ArrayList<>();
 		List<Element> diagnosisNodes = null;
-		List<Element> initquestionnodes = null;
+		List<Element> initQuestionnodes = Collections.emptyList();
 		String rootQASetID = null;
 		String rootSolutionID = null;
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : kbchildren) {
 			String name = child.getNodeName();
 			if (name.equalsIgnoreCase("knowledgeslices")) {
-				knowledgeslicesNodes = XMLUtil.getElementList(child.getChildNodes());
-				abstime += knowledgeslicesNodes.size();
+				knowledgeSliceNodes = XMLUtil.getElementList(child.getChildNodes());
+				abstime += knowledgeSliceNodes.size();
 			}
 			// former way of saving Questions
 			else if (name.equalsIgnoreCase("Questions")) {
@@ -146,8 +146,8 @@ public class BasicPersistenceHandler implements
 			else if (name.equalsIgnoreCase("InitQuestions")
 					// former name in previous versions
 					|| name.equalsIgnoreCase("InitQASets")) {
-				initquestionnodes = XMLUtil.getElementList(child.getChildNodes());
-				abstime += initquestionnodes.size();
+				initQuestionnodes = XMLUtil.getElementList(child.getChildNodes());
+				abstime += initQuestionnodes.size();
 			}
 			else if (name.equals("rootQASet")) {
 				rootQASetID = child.getTextContent();
@@ -166,7 +166,7 @@ public class BasicPersistenceHandler implements
 		abstime += qASetNodes.size();
 		float time = 0;
 
-		Map<Element, TerminologyObject> hierarchiemap = new HashMap<Element, TerminologyObject>();
+		Map<Element, TerminologyObject> hierarchiemap = new HashMap<>();
 
 		for (Element child : qASetNodes) {
 			listener.updateProgress(time++ / abstime, "Building qasets");
@@ -207,8 +207,8 @@ public class BasicPersistenceHandler implements
 			XMLUtil.appendChildren(kb, hierarchiemap.get(e), e);
 		}
 
-		List<QASet> qaSets = new LinkedList<QASet>();
-		for (Element child : initquestionnodes) {
+		List<QASet> qaSets = new LinkedList<>();
+		for (Element child : initQuestionnodes) {
 			listener.updateProgress(time++ / abstime, "Loading knowledge base: init QA sets");
 			if (child.getNodeName().equalsIgnoreCase("QContainer")
 					|| child.getNodeName().equalsIgnoreCase("Question")
@@ -222,10 +222,10 @@ public class BasicPersistenceHandler implements
 			}
 		}
 		kb.setInitQuestions(qaSets);
-		List<Object> readFragments = new LinkedList<Object>();
+		List<Object> readFragments = new LinkedList<>();
 		// creating rules and schemas (rules are written into basic.xml in
 		// former persistence versions
-		for (Element child : knowledgeslicesNodes) {
+		for (Element child : knowledgeSliceNodes) {
 			listener.updateProgress(time++ / abstime, "Loading knowledge base: knowledge slices");
 			readFragments.add(persistence.readFragment(child));
 		}
@@ -278,7 +278,7 @@ public class BasicPersistenceHandler implements
 		}
 
 		Element qContainersElement = doc.createElement("QASets");
-		Map<TerminologyObject, Element> possibleParents = new HashMap<TerminologyObject, Element>();
+		Map<TerminologyObject, Element> possibleParents = new HashMap<>();
 		List<QASet> qASets = kb.getManager().getQASets();
 		Collections.sort(qASets, new NamedObjectComparator());
 		for (QASet qASet : qASets) {
@@ -300,7 +300,7 @@ public class BasicPersistenceHandler implements
 		// father.appendChild(questionsElement);
 
 		Element diagnosisElement = doc.createElement("Diagnoses");
-		List<Solution> solutions = new ArrayList<Solution>(kb.getManager().getSolutions());
+		List<Solution> solutions = new ArrayList<>(kb.getManager().getSolutions());
 		Collections.sort(solutions, new NamedObjectComparator());
 		for (Solution diag : solutions) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: diagnosis");
@@ -333,10 +333,8 @@ public class BasicPersistenceHandler implements
 	}
 
 	private static QASet getRootQASet(KnowledgeBase kb) {
-		List<QASet> noParents = new ArrayList<QASet>();
-		Iterator<QASet> iter = kb.getManager().getQASets().iterator();
-		while (iter.hasNext()) {
-			QASet fk = iter.next();
+		List<QASet> noParents = new ArrayList<>();
+		for (QASet fk : kb.getManager().getQASets()) {
 			if (fk.getParents() == null || fk.getParents().length == 0) {
 				noParents.add(fk);
 			}
@@ -345,9 +343,7 @@ public class BasicPersistenceHandler implements
 			Log.warning("more than one root node in qaset tree!");
 			// [HOTFIX]:aha:multiple root / orphan handling
 			QASet root = null;
-			iter = noParents.iterator();
-			while (iter.hasNext()) {
-				QASet q = iter.next();
+			for (QASet q : noParents) {
 				if (q.getName().equals("Q000")) root = q;
 			}
 			return root;
@@ -361,10 +357,8 @@ public class BasicPersistenceHandler implements
 	}
 
 	private static Solution getRootSolution(KnowledgeBase kb) {
-		List<Solution> result = new ArrayList<Solution>();
-		Iterator<Solution> iter = kb.getManager().getSolutions().iterator();
-		while (iter.hasNext()) {
-			Solution d = iter.next();
+		List<Solution> result = new ArrayList<>();
+		for (Solution d : kb.getManager().getSolutions()) {
 			if (d.getParents() == null || d.getParents().length == 0) {
 				result.add(d);
 			}
@@ -374,9 +368,7 @@ public class BasicPersistenceHandler implements
 
 			// [HOTFIX]:aha:multiple root / orphan handling
 			Solution root = null;
-			iter = result.iterator();
-			while (iter.hasNext()) {
-				Solution d = iter.next();
+			for (Solution d : result) {
 				if (d.getName().equals("P000")) root = d;
 			}
 			return root;

@@ -54,6 +54,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -91,6 +93,7 @@ import de.d3web.utils.Triple;
 public final class XMLUtil {
 
 	public static final String INFO_STORE = "infoStore";
+	public static final String TYPE = "type";
 
 	/**
 	 * @deprecated Use {@link de.d3web.strings.Strings#writeDate(Date)} instead
@@ -109,7 +112,7 @@ public final class XMLUtil {
 
 	/**
 	 * @deprecated Use {@link de.d3web.strings.Strings#readDate(String)} instead
-	 *
+	 * <p>
 	 * TODO: Refactor {@link Strings#DATE_FORMAT_COMPATIBILITY} when removing this method.
 	 */
 	public static Date readDate(String dateString) throws ParseException {
@@ -148,7 +151,7 @@ public final class XMLUtil {
 	 */
 	public static boolean checkNameAndType(Element element, String elementname, String typeToCheck) {
 		String nodeName = element.getNodeName();
-		String type = element.getAttribute("type");
+		String type = element.getAttribute(TYPE);
 		return nodeName != null && nodeName.equals(elementname) && type != null
 				&& type.equals(typeToCheck);
 	}
@@ -506,10 +509,31 @@ public final class XMLUtil {
 	}
 
 	/**
+	 * Get the children of a document element as a normal {@link java.util.List}, filtered by the given
+	 * <tt>tagName</tt>.
+	 *
+	 * @param element the element to get the children from
+	 * @return the children of the given element with the given <tt>tagName</tt> as a normal {@link java.util.List}
+	 */
+	public static List<Element> getChildren(Element element, String... tagName) {
+		return getElementList(element.getChildNodes(), tagName);
+	}
+
+	/**
+	 * Get the children of a document element as a normal  {@link java.util.List}.
+	 *
+	 * @param element the element to get the children from
+	 * @return the children of the given element as a normal {@link java.util.List}
+	 */
+	public static List<Element> getChildren(Element element) {
+		return getElementList(element.getChildNodes());
+	}
+
+	/**
 	 * Filters all elements of a NodeList and returns them in a collection.
 	 *
 	 * @param list Nodelist containing all types of nodes (text nodes etc.)
-	 * @return a list containing all elements from nodelist, but not containing
+	 * @return a list containing all elements from nodeist, but not containing
 	 * other nodes such as text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list) {
@@ -527,20 +551,26 @@ public final class XMLUtil {
 	 * list will only contain that elements of the NodeList that match the
 	 * specified node name. The name selection is case insensitive.
 	 *
-	 * @param list     Nodelist containing all types of nodes (text nodes etc.)
-	 * @param nodeName the name of the elements to be selected (case
-	 *                 insensitive)
+	 * @param list      Nodelist containing all types of nodes (text nodes etc.)
+	 * @param nodeNames the name of the elements to be selected (case
+	 *                  insensitive)
 	 * @return a list containing all elements from nodelist, but not containing
 	 * other nodes such as text nodes etc.
 	 */
-	public static List<Element> getElementList(NodeList list, String nodeName) {
+	public static List<Element> getElementList(NodeList list, String... nodeNames) {
 		List<Element> col = new ArrayList<Element>();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node item = list.item(i);
-			if (item instanceof Element && item.getNodeName().equalsIgnoreCase(nodeName)) {
-				col.add((Element) item);
+			if (item instanceof Element) {
+				for (String nodeName : nodeNames) {
+					if (item.getNodeName().equalsIgnoreCase(nodeName)) {
+						col.add((Element) item);
+						break;
+					}
+				}
 			}
 		}
+
 		return col;
 	}
 
@@ -644,7 +674,7 @@ public final class XMLUtil {
 	 * @throws IOException
 	 * @created 08.11.2010
 	 */
-	public static void fillInfoStore(Persistence<?> persistance, InfoStore infoStore, Element father) throws IOException {
+	public static void fillInfoStore(Persistence<?> persistence, InfoStore infoStore, Element father) throws IOException {
 		for (Element child : getElementList(father.getChildNodes())) {
 			Property<Object> property;
 			try {
@@ -660,7 +690,7 @@ public final class XMLUtil {
 			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
 			Object value;
 			if (childNodes.size() > 0) {
-				value = persistance.readFragment(childNodes.get(0));
+				value = persistence.readFragment(childNodes.get(0));
 			}
 			else {
 				String s = child.getTextContent();
@@ -723,10 +753,7 @@ public final class XMLUtil {
 			if (resolver != null) parser.setEntityResolver(resolver);
 			return parser.parse(new InputSource(stream));
 		}
-		catch (ParserConfigurationException e) {
-			throw new IOException(e);
-		}
-		catch (SAXException e) {
+		catch (ParserConfigurationException | SAXException e) {
 			throw new IOException(e);
 		}
 	}
@@ -960,5 +987,12 @@ public final class XMLUtil {
 			values[i] = Enum.valueOf(clazz, names[i]);
 		}
 		return values;
+	}
+
+	public static String getElementAsString(Element element) {
+		DOMImplementationLS implementation = (DOMImplementationLS) element.getOwnerDocument().getImplementation();
+		LSSerializer lsSerializer = implementation.createLSSerializer();
+		lsSerializer.getDomConfig().setParameter("xml-declaration", false);
+		return lsSerializer.writeToString(element);
 	}
 }

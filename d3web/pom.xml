@@ -213,7 +213,7 @@
 		<module>d3web-SessionPersistence</module>
 		<module>d3web-Plugin-SessionPersistence-ExtensionPoints</module>
 		<module>d3web-Plugin-SessionPersistence-Basic</module>
-		<module>d3web-TestCase</module>
+		<module>d3web-Plugin-TestCase</module>
 		<module>d3web-Plugin-TestingFramework</module>
 		<module>d3web-Utils</module>
 		<module>d3web-Plugin-Tests</module>

@@ -26,9 +26,7 @@ public class KnowledgeBasePersistence implements Persistence<KnowledgeBase> {
 	 *         stream
 	 */
 	public KnowledgeBasePersistence(PersistenceManager manager, KnowledgeBase knowledgeBase, InputStream stream) throws IOException {
-		this.manager = manager;
-		this.knowledgeBase = knowledgeBase;
-		this.document = XMLUtil.streamToDocument(stream);
+		this(manager, knowledgeBase, XMLUtil.streamToDocument(stream));
 	}
 
 	/**
@@ -39,10 +37,16 @@ public class KnowledgeBasePersistence implements Persistence<KnowledgeBase> {
 	 * @param knowledgeBase the knowledge base
 	 */
 	public KnowledgeBasePersistence(PersistenceManager manager, KnowledgeBase knowledgeBase) throws IOException {
+		this(manager, knowledgeBase, XMLUtil.createEmptyDocument());
+	}
+
+	public KnowledgeBasePersistence(PersistenceManager manager, KnowledgeBase knowledgeBase, Document document) throws IOException {
 		this.manager = manager;
 		this.knowledgeBase = knowledgeBase;
-		this.document = XMLUtil.createEmptyDocument();
+		this.document = document;
 	}
+
+
 
 	@Override
 	public KnowledgeBase getArtifact() {
@@ -55,12 +59,12 @@ public class KnowledgeBasePersistence implements Persistence<KnowledgeBase> {
 	}
 
 	@Override
-	public Object readFragment(Element element) throws NoSuchFragmentHandlerException, IOException {
+	public Object readFragment(Element element) throws IOException {
 		return this.manager.getFragmentManager().readFragment(element, this);
 	}
 
 	@Override
-	public Element writeFragment(Object object) throws NoSuchFragmentHandlerException, IOException {
+	public Element writeFragment(Object object) throws IOException {
 		return this.manager.getFragmentManager().writeFragment(object, this);
 	}
 }

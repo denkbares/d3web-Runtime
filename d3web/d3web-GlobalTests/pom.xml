@@ -25,7 +25,6 @@
 							<goal>build-classpath</goal>
 						</goals>
 						<configuration>
-
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
@@ -66,7 +65,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-TestCase</artifactId>
+			<artifactId>d3web-Plugin-TestCase</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

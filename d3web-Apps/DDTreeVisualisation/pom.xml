@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-TestCase</artifactId>
+			<artifactId>d3web-Plugin-TestCase</artifactId>
 			<version>0.2-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>

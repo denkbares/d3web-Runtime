@@ -53,7 +53,7 @@ public abstract class TerminalConditionHandler implements FragmentHandler<Knowle
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Element> kbchildren = XMLUtil.getElementList(element.getChildNodes(), "object");
-		List<TerminologyObject> objects = new ArrayList<TerminologyObject>();
+		List<TerminologyObject> objects = new ArrayList<>();
 		for (Element child : kbchildren) {
 			String name = child.getTextContent();
 			TerminologyObject object = persistence.getArtifact().getManager().search(name);
@@ -75,7 +75,7 @@ public abstract class TerminalConditionHandler implements FragmentHandler<Knowle
 	public Element write(Object condition, Persistence<KnowledgeBase> persistence) throws IOException {
 		TerminalCondition cond = (TerminalCondition) condition;
 		Element element = XMLUtil.writeCondition(persistence.getDocument(), saveKey);
-		List<NamedObject> terminalObjects = new ArrayList<NamedObject>(cond.getTerminalObjects());
+		List<NamedObject> terminalObjects = new ArrayList<>(cond.getTerminalObjects());
 		Collections.sort(terminalObjects, new NamedObjectComparator());
 		for (NamedObject object : terminalObjects) {
 			Element objectElement = persistence.getDocument().createElement("object");
