@@ -388,7 +388,7 @@ public final class ValueUtils {
 	 */
 	public static Value handleExistingValue(TerminologyObject object, Value value, Value existingValue) {
 		if (value.equals(existingValue)) return Unknown.getInstance();
-		if (object instanceof QuestionChoice && value instanceof ChoiceValue) {
+		if (object instanceof QuestionMC && value instanceof ChoiceValue) {
 			QuestionChoice questionChoice = (QuestionChoice) object;
 			Choice choice = ((ChoiceValue) value).getChoice(questionChoice);
 			List<Choice> choices = new ArrayList<>();
