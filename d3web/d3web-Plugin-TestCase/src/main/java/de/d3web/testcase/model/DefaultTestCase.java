@@ -22,13 +22,16 @@ package de.d3web.testcase.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import de.d3web.collections.DefaultMultiMap;
 import de.d3web.collections.MultiMap;
 import de.d3web.collections.MultiMaps;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.testcase.stc.CommentedTestCase;
 
 /**
  * Default implementation of the TestCase interface.
@@ -36,11 +39,15 @@ import de.d3web.core.knowledge.KnowledgeBase;
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 27.10.15
  */
-public class DefaultTestCase implements TestCase {
+public class DefaultTestCase implements TestCase, CommentedTestCase {
 
+	@SuppressWarnings("Convert2Diamond") // type inference not working properly, seems to be needed here
 	private MultiMap<Date, FindingTemplate> findingTemplates = new DefaultMultiMap<Date, FindingTemplate>(MultiMaps.treeFactory(), MultiMaps.linkedFactory());
 
+	@SuppressWarnings("Convert2Diamond")
 	private MultiMap<Date, CheckTemplate> checkTemplates = new DefaultMultiMap<Date, CheckTemplate>(MultiMaps.treeFactory(), MultiMaps.linkedFactory());
+
+	private Map<Date, String> commentMap = new HashMap<>();
 
 	private Date startDate = new Date(0);
 
@@ -58,6 +65,10 @@ public class DefaultTestCase implements TestCase {
 		for (CheckTemplate template : checkTemplate) {
 			checkTemplates.put(date, template);
 		}
+	}
+
+	public void addComment(Date date, String comment) {
+		this.commentMap.put(date, comment);
 	}
 
 	public Collection<FindingTemplate> getFindingTemplates(Date date) {
@@ -131,6 +142,8 @@ public class DefaultTestCase implements TestCase {
 		return startDate;
 	}
 
-
-
+	@Override
+	public String getComment(Date date) {
+		return commentMap.get(date);
+	}
 }

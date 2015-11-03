@@ -62,7 +62,6 @@ public class ConditionPersistenceCheckTemplateTest {
 	@Test
 	public void toCheck() throws IOException, TransformationException {
 
-
 		String conditionXml = "<Condition type=\"and\">\n" +
 				"<Condition name=\"solution\" type=\"DState\" value=\"EXCLUDED\"/>\n" +
 				"<Condition name=\"questionYN\" type=\"equal\" value=\"Yes\"/>\n" +

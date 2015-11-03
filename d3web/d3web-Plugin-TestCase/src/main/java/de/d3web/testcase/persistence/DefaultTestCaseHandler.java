@@ -50,8 +50,7 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 	private static final String DEFAULT = "Default";
 	private static final String START_DATE = "startDate";
 	private static final String DATE = "date";
-
-
+	private static final String COMMENT = "date";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
@@ -69,10 +68,30 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 			((TestCasePersistence) persistence).setTestCase(testCase);
 		}
 
-		for (Element entryElements : XMLUtil.getChildren(element, TEST_CASE_ENTRY)) {
-			for (Element entryChildElements : XMLUtil.getChildren(entryElements, FINDINGS, CHECKS)) {
-				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
-					persistence.readFragment(findingOrCheckElement);
+		for (Element entryElement : XMLUtil.getChildren(element, TEST_CASE_ENTRY)) {
+			String dateString = entryElement.getAttribute(DATE);
+			Date date;
+			try {
+				date = Strings.readDate(dateString);
+			}
+			catch (ParseException e) {
+				throw new IOException(e);
+			}
+
+			String comment = entryElement.getAttribute(COMMENT);
+			if (!Strings.isBlank(comment)) {
+				testCase.addComment(date, comment);
+			}
+			for (Element findingsElement : XMLUtil.getChildren(entryElement, FINDINGS)) {
+				for (Element findingElement : XMLUtil.getChildren(findingsElement)) {
+					FindingTemplate finding = (FindingTemplate) persistence.readFragment(findingElement);
+					testCase.addFinding(date, finding);
+				}
+			}
+			for (Element checksElement : XMLUtil.getChildren(entryElement, CHECKS)) {
+				for (Element checkElement : XMLUtil.getChildren(checksElement)) {
+					CheckTemplate check = (CheckTemplate) persistence.readFragment(checkElement);
+					testCase.addCheck(date, check);
 				}
 			}
 		}
@@ -96,6 +115,10 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 			Element entryElement = persistence.getDocument().createElement(TEST_CASE_ENTRY);
 			testCaseElement.appendChild(entryElement);
 			entryElement.setAttribute(DATE, Strings.writeDate(date));
+			String comment = testCase.getComment(date);
+			if (comment != null) {
+				entryElement.setAttribute(COMMENT, comment);
+			}
 
 			if (!findingTemplates.isEmpty()) {
 				Element findingsElement = persistence.getDocument().createElement(FINDINGS);
