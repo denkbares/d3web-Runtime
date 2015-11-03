@@ -19,17 +19,18 @@
 
 package de.d3web.testcase.persistence.test;
 
-import java.io.File;
 import java.io.IOException;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
-import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
-import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.TransformationException;
@@ -48,32 +49,34 @@ import static org.junit.Assert.assertTrue;
  */
 public class ConditionPersistenceCheckTemplateTest {
 
+	private static KnowledgeBase knowledgeBase;
+
+	@BeforeClass
+	public static void init() throws IOException {
+		InitPluginManager.init();
+		knowledgeBase = new KnowledgeBase();
+		knowledgeBase.getManager().putTerminologyObject(new Solution(knowledgeBase, "solution"));
+		knowledgeBase.getManager().putTerminologyObject(new QuestionYN(knowledgeBase, "questionYN"));
+	}
+
 	@Test
 	public void toCheck() throws IOException, TransformationException {
-//		InitPluginManager.init();
-//		KnowledgeBase kb = PersistenceManager.getInstance().load(new File("/Users/Albrecht/Downloads/s428.d3web"));
-//		String conditionXml = "<Condition type=\"or\">\n" +
-//				"<Condition name=\"infection\" type=\"numEqual\" value=\"-1.0\"/>\n" +
-//				"<Condition name=\"infection_update\" type=\"equal\" value=\"No\"/>\n" +
-//				"<Condition type=\"and\">\n" +
-//				"<Condition name=\"infection_update\" type=\"equal\" value=\"Yes\"/>\n" +
-//				"<Condition type=\"or\">\n" +
-//				"<Condition name=\"infection\" type=\"numEqual\" value=\"1.0\"/>\n" +
-//				"<Condition type=\"TimeDBCondition\">(now - latestChange(filter(infection[], '=', 0))) / 1h  &lt;= negative_infection_time_range_max</Condition>\n" +
-//				"</Condition>\n" +
-//				"</Condition>\n" +
-//				"</Condition>";
-//		ConditionPersistenceCheckTemplate conditionCheckTemplate = new ConditionPersistenceCheckTemplate(conditionXml);
-//
-//		ConditionCheck conditionCheck = (ConditionCheck) conditionCheckTemplate.toCheck(kb);
-//		Condition condition = conditionCheck.getConditionObject();
-//		assertTrue("Wrong type of Condition, expected " + CondOr.class.getSimpleName(), condition instanceof CondOr);
-//
-//		ConditionPersistenceCheckHandler handler = new ConditionPersistenceCheckHandler();
-//
-//		Element conditionElement = handler.write(conditionCheckTemplate, new TestCasePersistence());
-//
-//		assertEquals("<Check type=\"Condition\">" + conditionXml + "</Check>", XMLUtil.getElementAsString(conditionElement));
+
+
+		String conditionXml = "<Condition type=\"and\">\n" +
+				"<Condition name=\"solution\" type=\"DState\" value=\"EXCLUDED\"/>\n" +
+				"<Condition name=\"questionYN\" type=\"equal\" value=\"Yes\"/>\n" +
+				"</Condition>";
+		ConditionPersistenceCheckTemplate conditionCheckTemplate = new ConditionPersistenceCheckTemplate(conditionXml);
+
+		ConditionCheck conditionCheck = (ConditionCheck) conditionCheckTemplate.toCheck(knowledgeBase);
+		Condition condition = conditionCheck.getConditionObject();
+		assertTrue("Wrong type of Condition, expected " + CondAnd.class.getSimpleName(), condition instanceof CondAnd);
+
+		ConditionPersistenceCheckHandler handler = new ConditionPersistenceCheckHandler();
+		Element conditionElement = handler.write(conditionCheckTemplate, new TestCasePersistence());
+
+		assertEquals("<Check type=\"Condition\">" + conditionXml + "</Check>", XMLUtil.getElementAsString(conditionElement));
 
 	}
 
