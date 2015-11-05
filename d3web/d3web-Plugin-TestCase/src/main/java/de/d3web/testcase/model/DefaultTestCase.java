@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,11 @@ import de.d3web.collections.DefaultMultiMap;
 import de.d3web.collections.MultiMap;
 import de.d3web.collections.MultiMaps;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QuestionMC;
+import de.d3web.core.session.ValueUtils;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.testcase.stc.DescribedTestCase;
 
 /**
@@ -44,10 +50,12 @@ import de.d3web.testcase.stc.DescribedTestCase;
 public class DefaultTestCase implements DescribedTestCase {
 
 	@SuppressWarnings("Convert2Diamond") // type inference not working properly here, seems to be needed...
-	private MultiMap<Date, FindingTemplate> findingTemplates = new DefaultMultiMap<Date, FindingTemplate>(MultiMaps.treeFactory(), MultiMaps.linkedFactory());
+	private MultiMap<Date, FindingTemplate> findingTemplates = new DefaultMultiMap<Date, FindingTemplate>(MultiMaps.treeFactory(), MultiMaps
+			.linkedFactory());
 
 	@SuppressWarnings("Convert2Diamond")
-	private MultiMap<Date, CheckTemplate> checkTemplates = new DefaultMultiMap<Date, CheckTemplate>(MultiMaps.treeFactory(), MultiMaps.linkedFactory());
+	private MultiMap<Date, CheckTemplate> checkTemplates = new DefaultMultiMap<Date, CheckTemplate>(MultiMaps.treeFactory(), MultiMaps
+			.linkedFactory());
 
 	private Map<Date, String> descriptionMap = new HashMap<>();
 
@@ -104,16 +112,30 @@ public class DefaultTestCase implements DescribedTestCase {
 
 	@Override
 	public Collection<Finding> getFindings(Date date, KnowledgeBase knowledgeBase) {
-		List<Finding> findings = new ArrayList<>();
+		LinkedHashMap<TerminologyObject, Finding> findingMap = new LinkedHashMap<>();
 		for (FindingTemplate findingTemplate : getFindingTemplates(date)) {
 			try {
-				findings.add(findingTemplate.toFinding(knowledgeBase));
+				Finding finding = findingTemplate.toFinding(knowledgeBase);
+				TerminologyObject object = finding.getTerminologyObject();
+				Finding existingFinding = findingMap.get(object);
+				if (object instanceof QuestionMC
+						&& existingFinding != null
+						&& (existingFinding.getValue() instanceof MultipleChoiceValue
+						|| existingFinding.getValue() instanceof ChoiceValue)) {
+					MultipleChoiceValue mergedValues = ValueUtils.mergeChoiceValuesOR((QuestionMC) object,
+							existingFinding.getValue(), finding.getValue());
+					DefaultFinding mergedFinding = new DefaultFinding(object, mergedValues);
+					findingMap.replace(object, mergedFinding);
+				}
+				else {
+					findingMap.put(object, finding);
+				}
 			}
 			catch (TransformationException ignore) {
 				// use {@link #check(KnowledgeBase)} to catch this...
 			}
 		}
-		return findings;
+		return findingMap.values();
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -414,39 +415,37 @@ public final class ValueUtils {
 	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using XOR (exclusive disjunction),
 	 * meaning that return value will contain all choices from the given values, except those that were in both given
 	 * values. If you also want those choices present in both given values, use method {@link
-	 * #mergeChoiceValuesOR(QuestionMC, Value, Value)}.
+	 * #mergeChoiceValuesOR(QuestionMC, Value...)}.
 	 * <p>
 	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the are of another
 	 * type, an IllegalArgumentException is thrown.
 	 *
 	 * @param questionMC the question to which the values belong
-	 * @param value1     one of the values to be merged
-	 * @param value2     one of the values to be merged
+	 * @param values     the values to merge
 	 * @return a {@link MultipleChoiceValue} with the xor merged choices from value1 and value2
 	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue} or
 	 *                                  {@link MultipleChoiceValue}
 	 */
-	public static MultipleChoiceValue mergeChoiceValuesXOR(QuestionMC questionMC, Value value1, Value value2) {
-		return mergeChoiceValues(questionMC, value1, value2, ValueUtils::xorMerge);
+	public static MultipleChoiceValue mergeChoiceValuesXOR(QuestionMC questionMC, Value... values) {
+		return mergeChoiceValues(questionMC, ValueUtils::xorMerge, values);
 	}
 
 	/**
 	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using OR (disjunction),
 	 * meaning that return value will contain all choices from the given values. If you don't want those choices
-	 * present in both given values, use method {@link #mergeChoiceValuesXOR(QuestionMC, Value, Value)}.
+	 * present in both given values, use method {@link #mergeChoiceValuesXOR(QuestionMC, Value...)}.
 	 * <p>
 	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the are of another
 	 * type, an IllegalArgumentException is thrown.
 	 *
 	 * @param questionMC the question to which the values belong
-	 * @param value1     one of the values to be merged
-	 * @param value2     one of the values to be merged
+	 * @param values     the values to merge
 	 * @return a {@link MultipleChoiceValue} with the merged choices from value1 and value2
 	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue} or
 	 *                                  {@link MultipleChoiceValue}
 	 */
-	public static MultipleChoiceValue mergeChoiceValuesOR(QuestionMC questionMC, Value value1, Value value2) {
-		return mergeChoiceValues(questionMC, value1, value2, ValueUtils::orMerge);
+	public static MultipleChoiceValue mergeChoiceValuesOR(QuestionMC questionMC, Value... values) {
+		return mergeChoiceValues(questionMC, ValueUtils::orMerge, values);
 	}
 
 	private static List<Choice> xorMerge(List<Choice> choices1, List<Choice> choices2) {
@@ -460,11 +459,26 @@ public final class ValueUtils {
 		return xorMerged;
 	}
 
-	private static MultipleChoiceValue mergeChoiceValues(QuestionMC questionMC, Value value1, Value value2, BiFunction<List<Choice>, List<Choice>, List<Choice>> mergeFunction) {
-		List<Choice> choices1 = getChoices(questionMC, value1);
-		List<Choice> choices2 = getChoices(questionMC, value2);
-		List<Choice> orMerged = mergeFunction.apply(choices1, choices2);
-		return MultipleChoiceValue.fromChoices(orMerged);
+	private static MultipleChoiceValue mergeChoiceValues(QuestionMC questionMC, BiFunction<List<Choice>, List<Choice>, List<Choice>> mergeFunction, Value... values) {
+		if (values.length == 0) {
+			return MultipleChoiceValue.fromChoices();
+		}
+		else if (values.length == 1) {
+			List<Choice> choices = getChoices(questionMC, values[0]);
+			return MultipleChoiceValue.fromChoices(choices);
+		}
+		else if (values.length == 2) {
+			List<Choice> choices1 = getChoices(questionMC, values[0]);
+			List<Choice> choices2 = getChoices(questionMC, values[1]);
+			List<Choice> orMerged = mergeFunction.apply(choices1, choices2);
+			return MultipleChoiceValue.fromChoices(orMerged);
+		}
+		else {
+			Value value1 = values[0];
+			Value[] valuesRest = Arrays.copyOfRange(values, 1, values.length);
+			MultipleChoiceValue mergedRest = mergeChoiceValues(questionMC, mergeFunction, valuesRest);
+			return mergeChoiceValues(questionMC, mergeFunction, value1, mergedRest);
+		}
 	}
 
 	private static List<Choice> orMerge(List<Choice> choices1, List<Choice> choices2) {

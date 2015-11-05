@@ -56,6 +56,7 @@ public class ValueUtilsTest {
 
 	private Choice choice1;
 	private Choice choice2;
+	private Choice choice3;
 	private QuestionMC qmc;
 	private QuestionOC qoc;
 	private QuestionYN qyn;
@@ -70,9 +71,11 @@ public class ValueUtilsTest {
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		choice1 = new Choice("choice1");
 		choice2 = new Choice("choice2");
+		choice3 = new Choice("choice3");
 		qmc = new QuestionMC(kb.getRootQASet(), "qmc");
 		qmc.addAlternative(choice1);
 		qmc.addAlternative(choice2);
+		qmc.addAlternative(choice3);
 		qoc = new QuestionOC(kb.getRootQASet(), "qoc");
 		qoc.addAlternative(choice1);
 		qoc.addAlternative(choice2);
@@ -89,7 +92,7 @@ public class ValueUtilsTest {
 
 		Value choice1 = ValueUtils.createQuestionValue(qmc, "choice1");
 		ChoiceValue choice2 = new ChoiceValue(this.choice2);
-		MultipleChoiceValue mcValue = new MultipleChoiceValue(new ChoiceID(this.choice1), new ChoiceID(this.choice2));
+		MultipleChoiceValue mcValue =  MultipleChoiceValue.fromChoices(this.choice1, this.choice2);
 		Value actualMcValue = ValueUtils.handleExistingValue(qmc, choice1, choice2);
 		assertEquals(mcValue, actualMcValue);
 
@@ -111,6 +114,29 @@ public class ValueUtilsTest {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS");
 		String dateString = simpleDateFormat.format(date);
 		assertEquals(new DateValue(date), ValueUtils.createValue(qdate, dateString));
+	}
+
+	@Test
+	public void mergeValue() {
+		MultipleChoiceValue mcValue12 = MultipleChoiceValue.fromChoices(this.choice1, this.choice2);
+		MultipleChoiceValue mcValue23 = MultipleChoiceValue.fromChoices(this.choice2, this.choice3);
+		MultipleChoiceValue mcValue31 = MultipleChoiceValue.fromChoices(this.choice3, this.choice1);
+
+		// two occurrences of each, cancels out all
+		MultipleChoiceValue merged1 = ValueUtils.mergeChoiceValuesXOR(qmc, mcValue12, mcValue23, mcValue31);
+		assertEquals(MultipleChoiceValue.fromChoices(), merged1);
+
+		// all canceled out except 1 and 2
+		MultipleChoiceValue merged2 = ValueUtils.mergeChoiceValuesXOR(qmc, mcValue12, mcValue23, mcValue31, mcValue12);
+		assertEquals(mcValue12, merged2);
+
+		// first 3 values and following 2 each cancel out each other
+		MultipleChoiceValue merged3 = ValueUtils.mergeChoiceValuesXOR(qmc, mcValue12, mcValue23, mcValue31, mcValue12, mcValue12);
+		assertEquals(MultipleChoiceValue.fromChoices(), merged3);
+
+		// normal OR merge...
+		MultipleChoiceValue mergedOR = ValueUtils.mergeChoiceValuesOR(qmc, mcValue12, mcValue23, mcValue31, mcValue12, mcValue12);
+		assertEquals(MultipleChoiceValue.fromChoices(choice1, choice2, choice3), mergedOR);
 	}
 
 	@Test
