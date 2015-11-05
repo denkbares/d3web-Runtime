@@ -53,16 +53,29 @@ public class ConditionPersistenceCheckHandler implements FragmentHandler<TestCas
 	@Override
 	public Element write(Object object, Persistence<TestCase> persistence) throws IOException {
 		ConditionPersistenceCheckTemplate checkTemplate = (ConditionPersistenceCheckTemplate) object;
-		Element checkElement = persistence.getDocument().createElement(CHECK);
-		checkElement.setAttribute(XMLUtil.TYPE, CONDITION);
+		Element conditionElement;
 		try {
-			Element conditionElement = checkTemplate.getDocument().getDocumentElement();
-			// we deep-copy the element from the template in our new document
-			checkElement.appendChild(checkElement.getOwnerDocument().importNode(conditionElement, true));
+			conditionElement = checkTemplate.getDocument().getDocumentElement();
 		}
 		catch (ParserConfigurationException | SAXException e) {
 			throw new IOException(e);
 		}
+		return createCheckElement(persistence, conditionElement);
+	}
+
+	/**
+	 * Creates the check element for the document of the given persistence and the conditionElement, which can be part
+	 * of another document.
+	 *
+	 * @param persistence the persistence for which the the element should be created
+	 * @param conditionElement the conditionElement to be used in the check element to create
+	 * @return the completed check element.
+	 */
+	public static Element createCheckElement(Persistence<TestCase> persistence, Element conditionElement) {
+		Element checkElement = persistence.getDocument().createElement(CHECK);
+		checkElement.setAttribute(XMLUtil.TYPE, CONDITION);
+		// we deep-copy the element from the template in our new document
+		checkElement.appendChild(checkElement.getOwnerDocument().importNode(conditionElement, true));
 		return checkElement;
 	}
 

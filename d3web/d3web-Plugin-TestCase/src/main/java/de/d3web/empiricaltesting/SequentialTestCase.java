@@ -52,14 +52,17 @@ import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.DefaultTestCase;
 import de.d3web.testcase.model.Finding;
-import de.d3web.testcase.stc.CommentedTestCase;
+import de.d3web.testcase.stc.DescribedTestCase;
 import de.d3web.testcase.stc.DerivedQuestionCheck;
 import de.d3web.testcase.stc.DerivedSolutionCheck;
 
+/**
+ * @deprecated use {@link DefaultTestCase} instead
+ */
 @SuppressWarnings("deprecation")
-public class SequentialTestCase extends DefaultTestCase implements CommentedTestCase {
+@Deprecated
+public class SequentialTestCase extends DefaultTestCase implements DescribedTestCase {
 
-	private String name = "";
 	private final LinkedHashMap<Date, RatedTestCase> ratedTestCases = new LinkedHashMap<>();
 
 	private Date startDate = null;
@@ -177,7 +180,7 @@ public class SequentialTestCase extends DefaultTestCase implements CommentedTest
 	}
 
 	@Override
-	public String getComment(Date date) {
+	public String getDescription(Date date) {
 		RatedTestCase ratedTestCase = getCase(date);
 		String name = ratedTestCase.getName();
 		String comment = ratedTestCase.getComment();
@@ -330,7 +333,7 @@ public class SequentialTestCase extends DefaultTestCase implements CommentedTest
 	 * @return name of this SequentialTestCase
 	 */
 	public synchronized String getName() {
-		return name;
+		return getDescription();
 	}
 
 	/**
@@ -339,14 +342,14 @@ public class SequentialTestCase extends DefaultTestCase implements CommentedTest
 	 * @param name desired name of this SequentialTestCase
 	 */
 	public synchronized void setName(String name) {
-		this.name = name;
+		setDescription(name);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
 		result = prime * result
 				+ ((ratedTestCases == null) ? 0 : ratedTestCases.hashCode());
 		return result;
@@ -358,10 +361,10 @@ public class SequentialTestCase extends DefaultTestCase implements CommentedTest
 		if (obj == null) return false;
 		if (!(obj instanceof SequentialTestCase)) return false;
 		SequentialTestCase other = (SequentialTestCase) obj;
-		if (name == null) {
-			if (other.name != null) return false;
+		if (getDescription() == null) {
+			if (other.getDescription() != null) return false;
 		}
-		else if (!name.equals(other.name)) return false;
+		else if (!getDescription().equals(other.getDescription())) return false;
 		if (ratedTestCases == null) {
 			if (other.ratedTestCases != null) return false;
 		}

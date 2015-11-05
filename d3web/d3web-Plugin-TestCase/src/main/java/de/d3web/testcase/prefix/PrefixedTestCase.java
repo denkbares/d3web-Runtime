@@ -15,7 +15,7 @@ import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
-import de.d3web.testcase.stc.CommentedTestCase;
+import de.d3web.testcase.stc.DescribedTestCase;
 
 /**
  * This class allows to add a {@link TestCase} as a prefix to another
@@ -25,7 +25,7 @@ import de.d3web.testcase.stc.CommentedTestCase;
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 15.02.2013
  */
-public class PrefixedTestCase implements CommentedTestCase {
+public class PrefixedTestCase implements DescribedTestCase {
 
 	private boolean initialized = false;
 	private final TestCase prefix;
@@ -37,6 +37,14 @@ public class PrefixedTestCase implements CommentedTestCase {
 	public PrefixedTestCase(TestCase prefix, TestCase testCase) {
 		this.prefix = prefix;
 		this.testCase = testCase;
+	}
+
+	@Override
+	public String getDescription() {
+		if (testCase instanceof DescribedTestCase) {
+			return ((DescribedTestCase) testCase).getDescription();
+		}
+		return null;
 	}
 
 	/**
@@ -133,21 +141,21 @@ public class PrefixedTestCase implements CommentedTestCase {
 	}
 
 	@Override
-	public String getComment(Date date) {
+	public String getDescription(Date date) {
 		if (!chronology().contains(date)) return null;
-		if (date.before(mergedDate) && prefix instanceof CommentedTestCase) {
-			return ((CommentedTestCase) prefix).getComment(date);
+		if (date.before(mergedDate) && prefix instanceof DescribedTestCase) {
+			return ((DescribedTestCase) prefix).getDescription(date);
 		}
-		else if (date.after(mergedDate) && testCase instanceof CommentedTestCase) {
-			return ((CommentedTestCase) testCase).getComment(toTestCaseDate(date));
+		else if (date.after(mergedDate) && testCase instanceof DescribedTestCase) {
+			return ((DescribedTestCase) testCase).getDescription(toTestCaseDate(date));
 		}
 		else {
 			String comment = null;
-			if (prefix instanceof CommentedTestCase) {
-				comment = ((CommentedTestCase) prefix).getComment(date);
+			if (prefix instanceof DescribedTestCase) {
+				comment = ((DescribedTestCase) prefix).getDescription(date);
 			}
-			if (testCase instanceof CommentedTestCase) {
-				String tcComment = ((CommentedTestCase) testCase).getComment(toTestCaseDate(date));
+			if (testCase instanceof DescribedTestCase) {
+				String tcComment = ((DescribedTestCase) testCase).getDescription(toTestCaseDate(date));
 				if (comment == null) {
 					comment = tcComment;
 				}
@@ -158,7 +166,6 @@ public class PrefixedTestCase implements CommentedTestCase {
 			return comment;
 		}
 	}
-
 
 	@Override
 	public Collection<Check> getChecks(Date date, KnowledgeBase knowledgeBase) {

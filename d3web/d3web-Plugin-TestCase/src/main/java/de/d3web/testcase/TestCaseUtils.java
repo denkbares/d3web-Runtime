@@ -40,6 +40,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -86,6 +87,8 @@ public class TestCaseUtils {
 	/**
 	 * Applies the findings of the specified {@link TestCase} at the specified
 	 * {@link Date} to the {@link Session}
+	 * <p>
+	 * TODO: Merge Multiple MC-Question Findings!!!
 	 *
 	 * @param session             Session on which the Findings should be applied
 	 * @param testCase            specified TestCase
@@ -193,6 +196,15 @@ public class TestCaseUtils {
 				if (mcv.asChoiceList((QuestionChoice) object).contains(null)) {
 					errors.add("The question \"" + object.getName()
 							+ "\" does not contain all choices of " + mcv.toString() + ".");
+				}
+			}
+			else if (value instanceof ChoiceValue) {
+				String answerText = ((ChoiceValue) value).getChoiceID()
+						.getText();
+				Choice choice = KnowledgeBaseUtils.findChoice((QuestionChoice) object, answerText);
+				if (choice == null) {
+					errors.add("The question \"" + object.getName()
+							+ "\" does not contain the choice " + answerText + ".");
 				}
 			}
 			else {

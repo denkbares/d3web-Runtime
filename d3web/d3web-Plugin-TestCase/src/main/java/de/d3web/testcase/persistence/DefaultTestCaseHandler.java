@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
@@ -50,7 +51,7 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 	private static final String DEFAULT = "Default";
 	private static final String START_DATE = "startDate";
 	private static final String DATE = "date";
-	private static final String COMMENT = "date";
+	private static final String DESCRIPTION = "description";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
@@ -64,6 +65,10 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 		}
 		DefaultTestCase testCase = new DefaultTestCase();
 		testCase.setStartDate(startDate);
+		String description = element.getAttribute(DESCRIPTION);
+		if (!Strings.isBlank(description)) {
+			testCase.setDescription(description);
+		}
 		if (persistence instanceof TestCasePersistence) {
 			((TestCasePersistence) persistence).setTestCase(testCase);
 		}
@@ -78,9 +83,12 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 				throw new IOException(e);
 			}
 
-			String comment = entryElement.getAttribute(COMMENT);
+			// make sure the entry appears in the chronology, even if it is empty otherwise
+			testCase.addFinding(date);
+
+			String comment = entryElement.getAttribute(DESCRIPTION);
 			if (!Strings.isBlank(comment)) {
-				testCase.addComment(date, comment);
+				testCase.addDescription(date, comment);
 			}
 			for (Element findingsElement : XMLUtil.getChildren(entryElement, FINDINGS)) {
 				for (Element findingElement : XMLUtil.getChildren(findingsElement)) {
@@ -102,33 +110,37 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 	@Override
 	public Element write(Object object, Persistence<TestCase> persistence) throws IOException {
 		DefaultTestCase testCase = (DefaultTestCase) object;
+		Document document = persistence.getDocument();
 
-		Element testCaseElement = persistence.getDocument().createElement(TEST_CASE);
+		Element testCaseElement = document.createElement(TEST_CASE);
 		testCaseElement.setAttribute(XMLUtil.TYPE, DEFAULT);
 		testCaseElement.setAttribute(START_DATE, Strings.writeDate(testCase.getStartDate()));
+		String testCaseDescription = testCase.getDescription();
+		if (testCaseDescription != null) {
+			testCaseElement.setAttribute(DESCRIPTION, testCaseDescription);
+		}
 
 		for (Date date : testCase.chronology()) {
 			Collection<FindingTemplate> findingTemplates = testCase.getFindingTemplates(date);
 			Collection<CheckTemplate> checkTemplates = testCase.getCheckTemplates(date);
-			if (findingTemplates.isEmpty() && checkTemplates.isEmpty()) continue;
 
-			Element entryElement = persistence.getDocument().createElement(TEST_CASE_ENTRY);
+			Element entryElement = document.createElement(TEST_CASE_ENTRY);
 			testCaseElement.appendChild(entryElement);
 			entryElement.setAttribute(DATE, Strings.writeDate(date));
-			String comment = testCase.getComment(date);
-			if (comment != null) {
-				entryElement.setAttribute(COMMENT, comment);
+			String description = testCase.getDescription(date);
+			if (description != null) {
+				entryElement.setAttribute(DESCRIPTION, description);
 			}
 
 			if (!findingTemplates.isEmpty()) {
-				Element findingsElement = persistence.getDocument().createElement(FINDINGS);
+				Element findingsElement = document.createElement(FINDINGS);
 				entryElement.appendChild(findingsElement);
 				for (FindingTemplate findingTemplate : findingTemplates) {
 					findingsElement.appendChild(persistence.writeFragment(findingTemplate));
 				}
 			}
 			if (!checkTemplates.isEmpty()) {
-				Element checksElement = persistence.getDocument().createElement(CHECKS);
+				Element checksElement = document.createElement(CHECKS);
 				entryElement.appendChild(checksElement);
 				for (CheckTemplate checkTemplate : checkTemplates) {
 					checksElement.appendChild(persistence.writeFragment(checkTemplate));

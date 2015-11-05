@@ -38,7 +38,7 @@ import de.d3web.testcase.model.TestCase;
 public class TestCasePersistence implements Persistence<TestCase> {
 
 
-	public static final String EXTENDED_PLUGIN_ID = "d3web-TestCase";
+	public static final String EXTENDED_PLUGIN_ID = "d3web-Plugin-TestCase";
 	public static final String EXTENDED_POINT_FRAGMENT = "FragmentHandler";
 
 	private final Document document;

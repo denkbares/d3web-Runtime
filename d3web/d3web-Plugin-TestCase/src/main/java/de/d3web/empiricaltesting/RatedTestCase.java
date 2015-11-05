@@ -26,9 +26,13 @@ import java.util.List;
 
 import de.d3web.collections.DefaultMultiMap;
 import de.d3web.collections.MultiMaps;
-import de.d3web.testcase.model.Check;
+import de.d3web.testcase.model.*;
 import de.d3web.testcase.model.Finding;
 
+/**
+ * @deprecated use {@link de.d3web.testcase.model.TestCase} instead, it does not need an analog for {@link RatedTestCase}.
+ */
+@Deprecated
 public class RatedTestCase {
 
 	/**

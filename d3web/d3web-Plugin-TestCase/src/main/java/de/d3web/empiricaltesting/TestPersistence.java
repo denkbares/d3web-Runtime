@@ -62,8 +62,15 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.testcase.persistence.TestCasePersistenceManager;
 import de.d3web.utils.Log;
 
+/**
+ * Legacy persistence class for legacy {@link SequentialTestCase}s.
+ *
+ * @deprecated Use {@link TestCasePersistenceManager} instead.
+ */
+@Deprecated
 public final class TestPersistence {
 
 	private static final String SEQUENTIAL_TEST_CASES_OLD = "SeqTestCaseRepository"; // compatibility

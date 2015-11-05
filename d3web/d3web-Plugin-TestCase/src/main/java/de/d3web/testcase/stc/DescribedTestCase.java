@@ -24,17 +24,22 @@ import java.util.Date;
 import de.d3web.testcase.model.TestCase;
 
 /**
- * This is a interface for TestCases also providing comments for their checks.
+ * This is a interface for TestCases also providing descriptions for entries and overall.
  * <p/>
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 10.06.2014
  */
-public interface CommentedTestCase extends TestCase {
+public interface DescribedTestCase extends TestCase {
 
 	/**
-	 * Returns a comment for the checks of the given date or null, if there is no comment.
+	 * Returns a description for the checks of the given date or null, if there is no description.
 	 *
-	 * @param date the date of the checks for which we want the comment
+	 * @param date the date of the checks for which we want the description
 	 */
-	String getComment(Date date);
+	String getDescription(Date date);
+
+	/**
+	 * Returns the description or name of the overall test case.
+	 */
+	String getDescription();
 }

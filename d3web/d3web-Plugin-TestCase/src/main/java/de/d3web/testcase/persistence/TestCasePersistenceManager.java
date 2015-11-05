@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.testcase.model.TestCase;
@@ -48,8 +49,12 @@ public class TestCasePersistenceManager {
 		// singleton...
 	}
 
-	public void saveTestCase(OutputStream outputStream, TestCase testCase) {
-
+	public void saveTestCase(OutputStream outputStream, TestCase testCase) throws IOException {
+		TestCasePersistence testCasePersistence = new TestCasePersistence();
+		Document document = testCasePersistence.getDocument();
+		Element topLvlElement = testCasePersistence.writeFragment(testCase);
+		document.appendChild(topLvlElement);
+		XMLUtil.writeDocumentToOutputStream(document, outputStream);
 	}
 
 	public TestCase loadTestCase(InputStream inputStream) throws IOException {

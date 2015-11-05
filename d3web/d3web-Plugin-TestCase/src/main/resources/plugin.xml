@@ -18,7 +18,7 @@
   -->
 
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="d3web-TestCase" version="0.0.1">
+<plugin id="d3web-Plugin-TestCase" version="0.0.1">
 	<!-- This plugin only defines extension points for session persistence handler and fragment handler. -->
 
 	<extension-point id="FragmentHandler">
@@ -29,7 +29,7 @@
 		<parameter-def id="priority" type="number" />
 	</extension-point>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler"
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler"
 		id="DefaultTestCaseHandler">
 		<parameter id="class"
 			value="de.d3web.testcase.persistence.DefaultTestCaseHandler" />
@@ -39,7 +39,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler" id="DefaultFindingHandler">
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="DefaultFindingHandler">
 		<parameter id="class" value="de.d3web.testcase.persistence.DefaultFindingHandler" />
 		<parameter id="name" value="DefaultFindingHandler" />
 		<parameter id="description" value="Handler for DefaultFindingHandler" />
@@ -47,7 +47,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler" id="DefaultCheckHandler">
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="DefaultCheckHandler">
 		<parameter id="class" value="de.d3web.testcase.persistence.DefaultCheckHandler" />
 		<parameter id="name" value="DefaultCheckHandler" />
 		<parameter id="description" value="Handler for DefaultCheckHandler" />
@@ -55,7 +55,15 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler" id="ConditionPersistenceCheckTemplates">
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="PrefixedTestCaseHandler">
+		<parameter id="class" value="de.d3web.testcase.persistence.PrefixedTestCaseHandler" />
+		<parameter id="name" value="PrefixedTestCaseHandler" />
+		<parameter id="description" value="Handler for PrefixedTestCaseHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="ConditionPersistenceCheckTemplates">
 		<parameter id="class" value="de.d3web.testcase.persistence.ConditionPersistenceCheckHandler" />
 		<parameter id="name" value="ConditionPersistenceCheckHandler" />
 		<parameter id="description" value="Handler for ConditionPersistenceCheckTemplates" />
@@ -63,7 +71,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler" id="SequentialTestCaseHandler">
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="SequentialTestCaseHandler">
 		<parameter id="class" value="de.d3web.empiricaltesting.SequentialTestCaseHandler" />
 		<parameter id="name" value="SequentialTestCaseHandler" />
 		<parameter id="description" value="Handler for SequentialTestCaseHandler" />
@@ -71,7 +79,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler" id="STCFindingHandler">
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="STCFindingHandler">
 		<parameter id="class" value="de.d3web.empiricaltesting.STCFindingHandler" />
 		<parameter id="name" value="STCFindingHandler" />
 		<parameter id="description" value="Handler for STCFindingHandler" />
@@ -79,7 +87,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-TestCase" point-id="FragmentHandler" id="STCCheckHandler">
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="STCCheckHandler">
 		<parameter id="class" value="de.d3web.empiricaltesting.STCCheckHandler" />
 		<parameter id="name" value="STCCheckHandler" />
 		<parameter id="description" value="Handler for STCCheckHandler" />

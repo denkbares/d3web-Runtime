@@ -46,8 +46,6 @@ public class KnowledgeBasePersistence implements Persistence<KnowledgeBase> {
 		this.document = document;
 	}
 
-
-
 	@Override
 	public KnowledgeBase getArtifact() {
 		return knowledgeBase;

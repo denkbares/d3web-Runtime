@@ -31,12 +31,17 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.strings.Strings;
+import de.d3web.testcase.model.CheckTemplate;
 import de.d3web.testcase.model.DefaultTestCase;
+import de.d3web.testcase.model.FindingTemplate;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testcase.persistence.TestCasePersistence;
 import de.d3web.utils.Log;
 
 /**
+ * Reads legacy xml persistence for {@link SequentialTestCase}s, but creates {@link DefaultTestCase}s. Writing is not
+ * done here, because there are other handlers for {@link DefaultTestCase}s.
+ *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 30.10.15
  */
@@ -46,11 +51,13 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 	private static final String SEQUENTIAL_TEST_CASE_OLD = "STestCase"; // compatibility
 	private static final String SEQUENTIAL_TEST_CASES = "SequentialTestCaseRepository";
 	private static final String SEQUENTIAL_TEST_CASE = "SequentialTestCase";
+	private static final String NAME = "Name";
 	private static final String RATED_TEST_CASE = "RatedTestCase";
 	public static final String EXPECTED_FINDINGS = "ExpectedFindings";
 	private static final String SOLUTIONS = "Solutions";
 	private static final String FINDINGS = "Findings";
 	private static final String START_DATE = "startDate";
+	private static final String TIMESTAMP = "Time";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
@@ -77,16 +84,39 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 		catch (ParseException e) {
 			throw new IOException("Unable to parse start date of test case: " + startDateString);
 		}
+		String name = stcElement.getAttribute(NAME);
+
 		DefaultTestCase testCase = new DefaultTestCase();
 		testCase.setStartDate(startDate);
+		testCase.setDescription(name);
+
 		if (persistence instanceof TestCasePersistence) {
 			((TestCasePersistence) persistence).setTestCase(testCase);
 		}
 
-		for (Element entryElements : XMLUtil.getChildren(stcElement, RATED_TEST_CASE)) {
-			for (Element entryChildElements : XMLUtil.getChildren(entryElements, FINDINGS, EXPECTED_FINDINGS, SOLUTIONS)) {
+		for (Element rtcElement : XMLUtil.getChildren(stcElement, RATED_TEST_CASE)) {
+			Date date;
+			try {
+				String time = rtcElement.getAttribute(TIMESTAMP);
+				date = Strings.readDate(time);
+			}
+			catch (ParseException e) {
+				throw new IOException(e);
+			}
+			String rtcName = rtcElement.getAttribute(NAME);
+			testCase.addDescription(date, rtcName);
+
+			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, FINDINGS)) {
 				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
-					persistence.readFragment(findingOrCheckElement);
+					FindingTemplate findingTemplate = (FindingTemplate) persistence.readFragment(findingOrCheckElement);
+					testCase.addFinding(date, findingTemplate);
+				}
+			}
+
+			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, EXPECTED_FINDINGS, SOLUTIONS)) {
+				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
+					CheckTemplate checkTemplate = (CheckTemplate) persistence.readFragment(findingOrCheckElement);
+					testCase.addCheck(date, checkTemplate);
 				}
 			}
 		}

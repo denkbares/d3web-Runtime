@@ -43,7 +43,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -838,13 +837,7 @@ public final class XMLUtil {
 			xformer.setOutputProperty("indent", "yes");
 			xformer.transform(source, result);
 		}
-		catch (TransformerConfigurationException e) {
-			throw new IOException(e.getMessage());
-		}
-		catch (TransformerFactoryConfigurationError e) {
-			throw new IOException(e.getMessage());
-		}
-		catch (TransformerException e) {
+		catch (TransformerFactoryConfigurationError | TransformerException e) {
 			throw new IOException(e.getMessage());
 		}
 

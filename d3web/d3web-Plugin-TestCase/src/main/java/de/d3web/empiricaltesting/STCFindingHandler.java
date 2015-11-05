@@ -45,7 +45,6 @@ public class STCFindingHandler implements FragmentHandler<TestCase> {
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
 		String objectName = element.getAttribute(QUESTION);
 		String value = element.getAttribute(ANSWER);
-
 		return new DefaultFindingTemplate(objectName, value);
 	}
 
