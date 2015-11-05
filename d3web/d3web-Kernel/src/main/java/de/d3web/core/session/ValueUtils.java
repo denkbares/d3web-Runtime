@@ -26,11 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +48,7 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -273,7 +276,7 @@ public final class ValueUtils {
 			return new HeuristicRating(doubleValue);
 		}
 		for (Score score : Score.getAllScores()) {
-			if (score.getSymbol().toLowerCase().equals(valueString.toLowerCase())) {
+			if (score.getSymbol().equalsIgnoreCase(valueString)) {
 				return new HeuristicRating(score);
 			}
 		}
@@ -295,11 +298,11 @@ public final class ValueUtils {
 
 		Value value = null;
 
-		if (valueString.equals(Unknown.getInstance().getValue())) {
+		if (valueString.equalsIgnoreCase(Unknown.getInstance().getValue().toString())) {
 			value = Unknown.getInstance();
 		}
 
-		else if (valueString.equals(UndefinedValue.getInstance().toString())) {
+		else if (valueString.equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
 			value = UndefinedValue.getInstance();
 		}
 
@@ -370,7 +373,12 @@ public final class ValueUtils {
 		if (choice == null) {
 			throw new IllegalArgumentException("'" + valueString + "' is not a valid choice for question '" + question.getName() + "'");
 		}
-		return new ChoiceValue(choice);
+		if (question instanceof QuestionMC) {
+			return new MultipleChoiceValue(new ChoiceID(choice));
+		}
+		else {
+			return new ChoiceValue(choice);
+		}
 	}
 
 	/**
@@ -388,32 +396,99 @@ public final class ValueUtils {
 	 */
 	public static Value handleExistingValue(TerminologyObject object, Value value, Value existingValue) {
 		if (value.equals(existingValue)) return Unknown.getInstance();
-		if (object instanceof QuestionMC && value instanceof ChoiceValue) {
-			QuestionChoice questionChoice = (QuestionChoice) object;
-			Choice choice = ((ChoiceValue) value).getChoice(questionChoice);
-			List<Choice> choices = new ArrayList<>();
-			if (existingValue instanceof ChoiceValue) {
-				Choice existingChoice = ((ChoiceValue) existingValue)
-						.getChoice(questionChoice);
-				choices.add(existingChoice);
-			}
-			else if (existingValue instanceof MultipleChoiceValue) {
-				choices.addAll(((MultipleChoiceValue) existingValue)
-						.asChoiceList(questionChoice));
-			}
-			// if new choice already exists, remove it
-			// if not, add it
-			if (!choices.remove(choice)) {
-				choices.add(choice);
-			}
-			if (choices.isEmpty()) {
+		if (object instanceof QuestionMC
+				&& (value instanceof ChoiceValue || value instanceof MultipleChoiceValue)
+				&& (existingValue instanceof ChoiceValue || existingValue instanceof MultipleChoiceValue)) {
+			MultipleChoiceValue multipleChoiceValue = mergeChoiceValuesXOR((QuestionMC) object, value, existingValue);
+			if (multipleChoiceValue.getChoiceIDs().isEmpty()) {
 				value = Unknown.getInstance();
 			}
 			else {
-				value = MultipleChoiceValue.fromChoices(choices);
+				value = multipleChoiceValue;
 			}
 		}
 		return value;
+	}
+
+	/**
+	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using XOR (exclusive disjunction),
+	 * meaning that return value will contain all choices from the given values, except those that were in both given
+	 * values. If you also want those choices present in both given values, use method {@link
+	 * #mergeChoiceValuesOR(QuestionMC, Value, Value)}.
+	 * <p>
+	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the are of another
+	 * type, an IllegalArgumentException is thrown.
+	 *
+	 * @param questionMC the question to which the values belong
+	 * @param value1     one of the values to be merged
+	 * @param value2     one of the values to be merged
+	 * @return a {@link MultipleChoiceValue} with the xor merged choices from value1 and value2
+	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue} or
+	 *                                  {@link MultipleChoiceValue}
+	 */
+	public static MultipleChoiceValue mergeChoiceValuesXOR(QuestionMC questionMC, Value value1, Value value2) {
+		return mergeChoiceValues(questionMC, value1, value2, ValueUtils::xorMerge);
+	}
+
+	/**
+	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using OR (disjunction),
+	 * meaning that return value will contain all choices from the given values. If you don't want those choices
+	 * present in both given values, use method {@link #mergeChoiceValuesXOR(QuestionMC, Value, Value)}.
+	 * <p>
+	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the are of another
+	 * type, an IllegalArgumentException is thrown.
+	 *
+	 * @param questionMC the question to which the values belong
+	 * @param value1     one of the values to be merged
+	 * @param value2     one of the values to be merged
+	 * @return a {@link MultipleChoiceValue} with the merged choices from value1 and value2
+	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue} or
+	 *                                  {@link MultipleChoiceValue}
+	 */
+	public static MultipleChoiceValue mergeChoiceValuesOR(QuestionMC questionMC, Value value1, Value value2) {
+		return mergeChoiceValues(questionMC, value1, value2, ValueUtils::orMerge);
+	}
+
+	private static List<Choice> xorMerge(List<Choice> choices1, List<Choice> choices2) {
+		List<Choice> xorMerged = new ArrayList<>();
+		for (Choice choice1 : choices1) {
+			if (!choices2.remove(choice1)) {
+				xorMerged.add(choice1);
+			}
+		}
+		xorMerged.addAll(choices2);
+		return xorMerged;
+	}
+
+	private static MultipleChoiceValue mergeChoiceValues(QuestionMC questionMC, Value value1, Value value2, BiFunction<List<Choice>, List<Choice>, List<Choice>> mergeFunction) {
+		List<Choice> choices1 = getChoices(questionMC, value1);
+		List<Choice> choices2 = getChoices(questionMC, value2);
+		List<Choice> orMerged = mergeFunction.apply(choices1, choices2);
+		return MultipleChoiceValue.fromChoices(orMerged);
+	}
+
+	private static List<Choice> orMerge(List<Choice> choices1, List<Choice> choices2) {
+		LinkedHashSet<Choice> orMergedSet = new LinkedHashSet<>();
+		orMergedSet.addAll(choices1);
+		orMergedSet.addAll(choices2);
+		return new ArrayList<>(orMergedSet);
+	}
+
+	private static List<Choice> getChoices(QuestionMC questionMC, Value value) {
+		List<Choice> choices = new ArrayList<>();
+		if (value instanceof ChoiceValue) {
+			choices.add(((ChoiceValue) value).getChoice(questionMC));
+		}
+		else if (value instanceof MultipleChoiceValue) {
+			choices.addAll(((MultipleChoiceValue) value)
+					.asChoiceList(questionMC));
+		}
+		else {
+			throw new IllegalArgumentException("Invalid value type of merging. Expected "
+					+ ChoiceValue.class.getSimpleName() + " or " + MultipleChoiceValue.class
+					.getSimpleName() + ", but was " + value.getClass().getSimpleName());
+		}
+		return choices;
 	}
 
 	public static String getID_or_Value(Value value) { // NOSONAR this method

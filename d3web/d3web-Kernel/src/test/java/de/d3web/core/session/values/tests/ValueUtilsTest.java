@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Value;
@@ -57,6 +58,7 @@ public class ValueUtilsTest {
 	private Choice choice2;
 	private QuestionMC qmc;
 	private QuestionOC qoc;
+	private QuestionYN qyn;
 	private QuestionNum qnum;
 	private QuestionText qtext;
 	private QuestionDate qdate;
@@ -74,6 +76,7 @@ public class ValueUtilsTest {
 		qoc = new QuestionOC(kb.getRootQASet(), "qoc");
 		qoc.addAlternative(choice1);
 		qoc.addAlternative(choice2);
+		qyn = new QuestionYN(kb.getRootQASet(), "qyn");
 		qnum = new QuestionNum(kb.getRootQASet(), "qnum");
 		qtext = new QuestionText(kb.getRootQASet(), "qtext");
 		qdate = new QuestionDate(kb.getRootQASet(), "qdate");
@@ -87,12 +90,23 @@ public class ValueUtilsTest {
 		Value choice1 = ValueUtils.createQuestionValue(qmc, "choice1");
 		ChoiceValue choice2 = new ChoiceValue(this.choice2);
 		MultipleChoiceValue mcValue = new MultipleChoiceValue(new ChoiceID(this.choice1), new ChoiceID(this.choice2));
-		assertEquals(mcValue, ValueUtils.handleExistingValue(qmc, choice1, choice2));
+		Value actualMcValue = ValueUtils.handleExistingValue(qmc, choice1, choice2);
+		assertEquals(mcValue, actualMcValue);
+
+		Value actualMcValue2 = ValueUtils.handleExistingValue(qmc, mcValue, mcValue);
+		assertEquals(Unknown.getInstance(), actualMcValue2);
+
+		assertEquals(new ChoiceValue(qyn.getAnswerChoiceYes()), ValueUtils.createValue(qyn, QuestionYN.YES_STRING));
+		assertEquals(new ChoiceValue(qyn.getAnswerChoiceNo()), ValueUtils.createValue(qyn, QuestionYN.NO_STRING));
 
 		assertEquals(new MultipleChoiceValue(new ChoiceID(this.choice2)), ValueUtils.handleExistingValue(qmc, choice1, mcValue));
+
 		assertEquals(Unknown.getInstance(), ValueUtils.createValue(qoc, Unknown.getInstance().getValue().toString()));
+
 		assertEquals(new NumValue(4), ValueUtils.createValue(qnum, "4"));
+
 		assertEquals(new TextValue("abc"), ValueUtils.createValue(qtext, "abc"));
+
 		Date date = new Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SS");
 		String dateString = simpleDateFormat.format(date);
