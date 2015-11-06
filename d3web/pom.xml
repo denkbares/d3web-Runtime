@@ -86,7 +86,7 @@
 				<plugin>
 					<groupId>de.uniwue.maven.plugins</groupId>
 					<artifactId>knowwe-versionator</artifactId>
-					<version>1.8-SNAPSHOT</version>
+					<version>1.8</version>
 					<executions>
 						<execution>
 							<id>versionate-plugin</id>
@@ -226,7 +226,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<versionatorVersion>1.8-SNAPSHOT</versionatorVersion>
 	</properties>
 
 	<repositories>
