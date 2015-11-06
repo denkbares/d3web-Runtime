@@ -33,5 +33,9 @@
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-SessionPersistence</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 </project>

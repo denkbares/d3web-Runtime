@@ -69,6 +69,10 @@
 			<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 	<properties>
 		<license>LGPL</license>
