@@ -122,7 +122,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<versionatorVersion>1.7</versionatorVersion>
+		<versionatorVersion>1.8-SNAPSHOT</versionatorVersion>
 	</properties>
 
 	<repositories>
