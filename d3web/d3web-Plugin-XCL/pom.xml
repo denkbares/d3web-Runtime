@@ -14,38 +14,18 @@
 	
 	<build>
 		<plugins>
+			<!-- Generate JPF dependency lists; configuration is done in parent pom -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>build-classpath</goal>
-						</goals>
-						<configuration>
-
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<pathSeparator>;</pathSeparator>
-							<outputFile>target/dependencies/output.txt</outputFile>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>de.uniwue.maven.plugins</groupId>
 				<artifactId>knowwe-versionator</artifactId>
-				<version>${versionatorVersion}</version>
 				<executions>
 					<execution>
 						<id>versionate-plugin</id>
 						<phase>prepare-package</phase>
-						<goals>
-							<goal>versionate-plugin</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -56,32 +36,26 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Interview</artifactId>
-			<version>0.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 </project>

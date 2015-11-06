@@ -6,6 +6,7 @@
 		<groupId>de.uniwue.d3web</groupId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>d3web-Plugin-Tests</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<name>d3web-Plugin-Tests</name>
@@ -13,60 +14,34 @@
 
 	<build>
 		<plugins>
+			<!-- Generate JPF dependency lists; configuration is done in parent pom -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>build-classpath</goal>
-						</goals>
-						<configuration>
-
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<pathSeparator>;</pathSeparator>
-							<outputFile>target/dependencies/output.txt</outputFile>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-TestingFramework</artifactId>
-			<version>0.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>0.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-TestCase</artifactId>
-			<version>0.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-DiaFlux</artifactId>
-			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-XCL</artifactId>
-			<version>0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

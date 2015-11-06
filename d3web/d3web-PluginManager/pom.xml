@@ -8,7 +8,6 @@
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-PluginManager</artifactId>
 	<name>d3web-PluginManager</name>
 	<description>The d3web plugin manager</description>
@@ -19,20 +18,14 @@
 			<groupId>net.sf.jpf</groupId>
 			<artifactId>jpf</artifactId>
 			<version>1.5</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<type>jar</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Utils</artifactId>
-			<version>0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

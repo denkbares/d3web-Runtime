@@ -8,16 +8,16 @@
 	<packaging>pom</packaging>
 	<name>d3web</name>
 	<version>0.2-SNAPSHOT</version>
-	<url>http://www.d3web.de/</url>
+	<url>https://www.d3web.de/</url>
 
 	<issueManagement>
-		<system>Bugzilla</system>
-		<url>https://tickets.denkbares.com</url>
+		<system>Phabricator</system>
+		<url>https://dev.denkbares.com/</url>
 	</issueManagement>
 
 	<ciManagement>
-		<system>Hudson</system>
-		<url>https://isci.informatik.uni-wuerzburg.de/hudson/</url>
+		<system>Jenkins</system>
+		<url>https://ci.denkbares.com/</url>
 	</ciManagement>
 
 	<licenses>
@@ -30,7 +30,6 @@
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<plugins>
-			<!-- Set Java 1.8 as source and target -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -40,7 +39,6 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!-- Ignore test failures -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -84,41 +82,147 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				<!-- Set Versionator Version -->
 				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-dependency-plugin
-										</artifactId>
-										<versionRange>
-											[2.1,)
-										</versionRange>
-										<goals>
-											<goal>build-classpath</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
+					<groupId>de.uniwue.maven.plugins</groupId>
+					<artifactId>knowwe-versionator</artifactId>
+					<version>1.8-SNAPSHOT</version>
+					<executions>
+						<execution>
+							<id>versionate-plugin</id>
+							<phase>none</phase>
+							<goals>
+								<goal>versionate-plugin</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- Generate Dependency List for JPF -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+					<executions>
+						<execution>
+							<id>copy-dependencies</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>build-classpath</goal>
+							</goals>
+							<configuration>
+								<overWriteReleases>false</overWriteReleases>
+								<overWriteSnapshots>false</overWriteSnapshots>
+								<overWriteIfNewer>true</overWriteIfNewer>
+								<pathSeparator>;</pathSeparator>
+								<outputFile>target/dependencies/output.txt</outputFile>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-GlobalTests</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Kernel</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Persistence</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-BasicProperties</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-CostBenefit</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-DiaFlux</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-Interview</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-Persistence-ExtensionPoints</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-SessionPersistence-Basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-TestCase</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-TestingFramework</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Plugin-XCL</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-PluginManager</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-SessionPersistence</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.uniwue.d3web</groupId>
+				<artifactId>d3web-Utils</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -130,23 +234,12 @@
 			<id>infovi-artifactory</id>
 			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/repo/</url>
 		</repository>
-		<repository>
-			<id>knowwe-snapshots</id>
-			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>interval:120</updatePolicy>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>contrib</id>
-			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/infovi-contrib/</url>
+			<id>des-plugins-public</id>
+			<url>https://repo.denkbares.com/plugins-public</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -162,36 +255,6 @@
 			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-	<profiles>
-		<profile>
-			<id>m2e</id>
-			<activation>
-				<property>
-					<name>m2e.version</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.maven.ide.eclipse</groupId>
-						<artifactId>lifecycle-mapping</artifactId>
-						<version>0.10.0</version>
-						<configuration>
-							<mappingId>customizable</mappingId>
-							<configurators>
-								<!-- remove javaConfigurator in EAR pom.xml -->
-								<configurator id='org.maven.ide.eclipse.jdt.javaConfigurator' />
-							</configurators>
-							<mojoExecutions>
-								<mojoExecution>org.apache.maven.plugins:maven-resources-plugin::resources,testResources</mojoExecution>
-							</mojoExecutions>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 	<organization>
 		<name>Universität Würzburg</name>

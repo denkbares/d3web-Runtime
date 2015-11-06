@@ -1,69 +1,49 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>d3web</artifactId>
-    <groupId>de.uniwue.d3web</groupId>
-    <version>0.2-SNAPSHOT</version>
-  </parent>
-  <groupId>de.uniwue.d3web</groupId>
-  <artifactId>d3web-SessionPersistence</artifactId>
-  <name>d3web-SessionPersistence</name>
-  <version>0.2-SNAPSHOT</version>
-  <build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>d3web</artifactId>
+		<groupId>de.uniwue.d3web</groupId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>d3web-SessionPersistence</artifactId>
+	<name>d3web-SessionPersistence</name>
+	<version>0.2-SNAPSHOT</version>
+
+	<build>
 		<plugins>
+			<!-- Generate JPF dependency lists; configuration is done in parent pom -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>build-classpath</goal>
-						</goals>
-						<configuration>
-
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<pathSeparator>;</pathSeparator>
-							<outputFile>target/dependencies/output.txt</outputFile>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
-  <developers>
-  	<developer>
-  		<id>mfr</id>
-  		<name>Markus Friedrich</name>
-  		<email>markus.friedrich@denkbares.com</email>
-  		<organization>denkbares GmbH</organization>
-  		<organizationUrl>www.denkbares.com</organizationUrl>
-  	</developer>
-  </developers>
-  <dependencies>
-  	<dependency>
-  		<groupId>de.uniwue.d3web</groupId>
-  		<artifactId>d3web-Persistence</artifactId>
-  		<version>${project.version}</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>de.uniwue.d3web</groupId>
-  		<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
-  		<version>${project.version}</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.8.2</version>
-  		<type>jar</type>
-  		<scope>test</scope>
-  	</dependency>
-  </dependencies>
+
+	<developers>
+		<developer>
+			<id>mfr</id>
+			<name>Markus Friedrich</name>
+			<email>markus.friedrich@denkbares.com</email>
+			<organization>denkbares GmbH</organization>
+			<organizationUrl>https://www.denkbares.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Persistence</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
 </project>

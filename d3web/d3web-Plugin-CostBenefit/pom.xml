@@ -13,49 +13,28 @@
 	<version>0.2-SNAPSHOT</version>
 	
 	<description>This project provides the possibility to add preconditions and post transitions to QContainers. Post transitions are executed in a session, when all questions, defined as children of the specified QContainer are answered. In order to be able to execute a QContainer it can be necessary to calculate a sequence of QContainers, establishing its precondition. The cost benefit problemsolver tries to find a sequence to the best cost benefit QContainer. The costs are defined as the costs for the preparing QContainers and the costs of the QContainer itself. The benefit is calculated by the stratigic solvers, being present in the actual session.</description>
-	<issueManagement>
-	</issueManagement>
-	<ciManagement>
-	</ciManagement>
+
 	<organization>
 		<name>denkbares GmbH</name>
-		<url>www.denkbares.com</url>
+		<url>https://www.denkbares.com</url>
 	</organization>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>de.uniwue.maven.plugins</groupId>
 				<artifactId>knowwe-versionator</artifactId>
-				<version>${versionatorVersion}</version>
 				<executions>
 					<execution>
 						<id>versionate-plugin</id>
 						<phase>prepare-package</phase>
-						<goals>
-							<goal>versionate-plugin</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Generate JPF dependency lists; configuration is done in parent pom -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>build-classpath</goal>
-						</goals>
-						<configuration>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<pathSeparator>;</pathSeparator>
-							<outputFile>target/dependencies/output.txt</outputFile>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -63,43 +42,31 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-XCL</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-SessionPersistence</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-SessionPersistence-Basic</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
