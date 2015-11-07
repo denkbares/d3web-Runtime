@@ -88,7 +88,6 @@ public class TestCaseUtils {
 	 * Applies the findings of the specified {@link TestCase} at the specified
 	 * {@link Date} to the {@link Session}
 	 * <p>
-	 * TODO: Merge Multiple MC-Question Findings!!!
 	 *
 	 * @param session             Session on which the Findings should be applied
 	 * @param testCase            specified TestCase
@@ -99,10 +98,27 @@ public class TestCaseUtils {
 	 */
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
 	public static void applyFindings(Session session, TestCase testCase, Date date, boolean skipValueOutOfRange) {
+		Collection<Finding> findings = testCase.getFindings(date, session.getKnowledgeBase());
+		applyFindings(session, findings, date, skipValueOutOfRange);
+	}
+
+	/**
+	 * Applies the given findings at the specified {@link Date} to the specified {@link Session}
+	 * <p>
+	 *
+	 * @param session             Session on which the Findings should be applied
+	 * @param findings            specified Findings to apply
+	 * @param date                specified Date
+	 * @param skipValueOutOfRange if this is set to true, findings that try to set values outside the defined
+	 *                            range of a question are ignored
+	 * @created 26.11.2014
+	 */
+	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
+	public static void applyFindings(Session session, Collection<Finding> findings, Date date, boolean skipValueOutOfRange) {
 		Blackboard blackboard = session.getBlackboard();
 		session.getPropagationManager().openPropagation(date.getTime());
-		for (Finding finding : testCase.getFindings(date, session.getKnowledgeBase())) {
-			List<String> errors = new LinkedList<String>();
+		for (Finding finding : findings) {
+			List<String> errors = new LinkedList<>();
 			checkValues(errors, finding.getTerminologyObject(), finding.getValue());
 			if (errors.isEmpty()) {
 				if (skipValueOutOfRange) {
