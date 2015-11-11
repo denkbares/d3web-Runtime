@@ -1,20 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>de.uniwue</groupId>
 	<artifactId>d3web-Apps</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>d3web-Apps</name>
+
 	<issueManagement>
-		<system>Trac</system>
-		<url>https://isci.informatik.uni-wuerzburg.de/trac/</url>
+		<system>Phabricator</system>
+		<url>https://dev.denkbares.com/</url>
 	</issueManagement>
 
 	<ciManagement>
-		<system>Hudson</system>
-		<url>https://isci.informatik.uni-wuerzburg.de/hudson/</url>
+		<system>Jenkins</system>
+		<url>https://ci.denkbares.com/</url>
 	</ciManagement>
+
 
 	<licenses>
 		<license>
@@ -26,36 +29,99 @@
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<plugins>
-			<!-- Set Java 1.6 as source and target -->
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.1</version>
+				<executions>
+					<execution>
+						<id>sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.3</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+					<configuration>
+						<testFailureIgnore>true</testFailureIgnore>
+					</configuration>
+				</plugin>
+				<!-- Set Versionator Version -->
+				<plugin>
+					<groupId>de.uniwue.maven.plugins</groupId>
+					<artifactId>knowwe-versionator</artifactId>
+					<version>1.9</version>
+					<executions>
+						<execution>
+							<id>versionate-plugin</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>versionate-plugin</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- Generate Dependency List for JPF -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+					<executions>
+						<execution>
+							<id>copy-dependencies</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>build-classpath</goal>
+							</goals>
+							<configuration>
+								<overWriteReleases>false</overWriteReleases>
+								<overWriteSnapshots>false</overWriteSnapshots>
+								<overWriteIfNewer>true</overWriteIfNewer>
+								<pathSeparator>;</pathSeparator>
+								<outputFile>target/dependencies/output.txt</outputFile>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
-	
+
 	<repositories>
 		<repository>
-			<id>infovi-artifactory</id>
-			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/repo/</url>
-		</repository>
-		<repository>
-			<id>knowwe-snapshots</id>
-			<url>http://isci.informatik.uni-wuerzburg.de:8080/artifactory/knowwe-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
 			<snapshots>
-				<updatePolicy>interval:120</updatePolicy>
+				<enabled>true</enabled>
+				<updatePolicy>interval:60</updatePolicy>
 				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>interval:60</updatePolicy>
+			</releases>
+			<id>des-repo-des</id>
+			<name>Denkbares Public Repository</name>
+			<url>https://repo.denkbares.com/repo-public/</url>
 		</repository>
 	</repositories>
-	
+
+
 	<modules>
 		<module>DDTreeVisualisation</module>
 		<module>ExampleApps</module>
