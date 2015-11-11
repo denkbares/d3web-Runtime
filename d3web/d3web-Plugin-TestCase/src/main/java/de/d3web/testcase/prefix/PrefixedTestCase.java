@@ -61,6 +61,15 @@ public class PrefixedTestCase implements DescribedTestCase {
 		return testCase;
 	}
 
+	@Override
+	public boolean hasDescriptions() {
+		if (prefix instanceof DescribedTestCase && testCase instanceof DescribedTestCase) {
+			return ((DescribedTestCase) prefix).hasDescriptions() || ((DescribedTestCase) testCase).hasDescriptions();
+		} else {
+			return DescribedTestCase.super.hasDescriptions();
+		}
+	}
+
 	private void lazyInit() {
 		if (!initialized) {
 			init();

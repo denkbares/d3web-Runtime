@@ -20,13 +20,11 @@ package de.d3web.testcase;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -59,7 +57,6 @@ import de.d3web.empiricaltesting.StateRating;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
-import de.d3web.testcase.prefix.PrefixedTestCase;
 
 /**
  * Provides basic static functions
@@ -146,32 +143,6 @@ public class TestCaseUtils {
 			}
 		}
 		session.getPropagationManager().commitPropagation();
-	}
-
-	/**
-	 * Returns all questions used in Findings
-	 *
-	 * @param testCase {@link TestCase} to examine
-	 * @param kb       {@link KnowledgeBase}
-	 * @return Collection of questions used in the specified {@link TestCase}
-	 * @created 24.01.2012
-	 */
-	public static Collection<Question> getUsedQuestions(TestCase testCase, KnowledgeBase kb) {
-		Collection<Question> questions = new LinkedHashSet<>();
-		if (testCase instanceof PrefixedTestCase) {
-			questions.addAll(getUsedQuestions(((PrefixedTestCase) testCase).getTestCase(), kb));
-			questions.addAll(getUsedQuestions(((PrefixedTestCase) testCase).getPrefix(), kb));
-		}
-		else {
-			for (Date date : testCase.chronology()) {
-				for (Finding f : testCase.getFindings(date, kb)) {
-					if (f.getTerminologyObject() instanceof Question) {
-						questions.add((Question) f.getTerminologyObject());
-					}
-				}
-			}
-		}
-		return questions;
 	}
 
 	/**

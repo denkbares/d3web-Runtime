@@ -42,4 +42,19 @@ public interface DescribedTestCase extends TestCase {
 	 * Returns the description or name of the overall test case.
 	 */
 	String getDescription();
+
+	/**
+	 * Returns whether there are any descriptions given in this test case.
+	 */
+	default boolean hasDescriptions() {
+		boolean hasDescriptions = false;
+		for (Date date : this.chronology()) {
+			if (getDescription(date) != null) {
+				hasDescriptions = true;
+				break;
+			}
+		}
+		return hasDescriptions;
+	}
+
 }

@@ -185,6 +185,11 @@ public class DefaultTestCase implements DescribedTestCase {
 	}
 
 	@Override
+	public boolean hasDescriptions() {
+		return !descriptionMap.isEmpty();
+	}
+
+	@Override
 	public String toString() {
 		return getDescription();
 	}
