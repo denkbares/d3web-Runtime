@@ -22,12 +22,14 @@ package de.d3web.plugin;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.java.plugin.JpfException;
 import org.java.plugin.ObjectFactory;
@@ -151,14 +153,25 @@ public final class JPFPluginManager extends PluginManager {
 			}
 			result.add(extension);
 		}
-		Extension[] ret = result.toArray(new Extension[result.size()]);
-		Arrays.sort(ret, new PluginCollectionComparatorByPriority());
-		return ret;
+		return toSortedAndFilteredArray(result);
+	}
+
+	public Extension[] toSortedAndFilteredArray(List<Extension> result) {
+		Collections.sort(result, new PluginCollectionComparatorByPriority());
+		Set<String> ids = new HashSet<>();
+		// lets filter duplicate IDs... higher priority wins.
+		List<Extension> filtered = new ArrayList<>(result.size());
+		for (Extension extension : result) {
+			if (ids.add(extension.getID())) {
+				filtered.add(extension);
+			}
+		}
+		return filtered.toArray(new Extension[filtered.size()]);
 	}
 
 	@Override
 	public synchronized Extension[] getExtensions() {
-		List<Extension> result = new ArrayList<Extension>();
+		List<Extension> result = new ArrayList<>();
 		Collection<PluginDescriptor> pluginDescriptors = manager.getRegistry().getPluginDescriptors();
 		for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
 			for (org.java.plugin.registry.Extension e : pluginDescriptor.getExtensions()) {
@@ -170,9 +183,7 @@ public final class JPFPluginManager extends PluginManager {
 				result.add(extension);
 			}
 		}
-		Extension[] ret = result.toArray(new Extension[result.size()]);
-		Arrays.sort(ret, new PluginCollectionComparatorByPriority());
-		return ret;
+		return toSortedAndFilteredArray(result);
 	}
 
 	@Override
