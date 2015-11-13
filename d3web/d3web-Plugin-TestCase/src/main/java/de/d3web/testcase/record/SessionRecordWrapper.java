@@ -30,7 +30,6 @@ import java.util.TreeSet;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.records.SessionRecord;
-import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.Protocol;
@@ -116,8 +115,4 @@ public class SessionRecordWrapper implements TestCase {
 		return errors;
 	}
 
-	@Override
-	public void applyFindings(Date date, Session session) {
-
-	}
 }

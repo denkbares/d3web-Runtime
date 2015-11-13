@@ -13,9 +13,9 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Session;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.DefaultFinding;
+import de.d3web.testcase.model.DescribedTestCase;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
-import de.d3web.testcase.model.DescribedTestCase;
 
 /**
  * This class allows to add a {@link TestCase} as a prefix to another
@@ -65,7 +65,8 @@ public class PrefixedTestCase implements DescribedTestCase {
 	public boolean hasDescriptions() {
 		if (prefix instanceof DescribedTestCase && testCase instanceof DescribedTestCase) {
 			return ((DescribedTestCase) prefix).hasDescriptions() || ((DescribedTestCase) testCase).hasDescriptions();
-		} else {
+		}
+		else {
 			return DescribedTestCase.super.hasDescriptions();
 		}
 	}
@@ -216,9 +217,22 @@ public class PrefixedTestCase implements DescribedTestCase {
 	}
 
 	@Override
-	public void applyFindings(Date date, Session session) {
-		prefix.applyFindings(date, session);
-		testCase.applyFindings(date, session);
+	public void applyFindings(Date date, Session session, Settings settings) {
+		lazyInit();
+		if (!chronology().contains(date)) return;
+		if (date.before(mergedDate)) {
+			prefix.applyFindings(date, session, settings);
+		}
+		else {
+			Settings newSettings = new Settings(settings.isSkipNumValueOutOfRange(), settings.getTimeShift() - dateDiff);
+			if (date.after(mergedDate)) {
+				testCase.applyFindings(toTestCaseDate(date), session, newSettings);
+			}
+			else {
+				prefix.applyFindings(date, session, settings);
+				testCase.applyFindings(toTestCaseDate(date), session, newSettings);
+			}
+		}
 	}
 
 }

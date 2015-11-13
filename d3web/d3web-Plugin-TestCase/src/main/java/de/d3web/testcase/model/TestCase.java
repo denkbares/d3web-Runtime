@@ -28,7 +28,7 @@ import de.d3web.testcase.TestCaseUtils;
 /**
  * Interface describing a repeatable and testable case for knowledge base
  * evaluation. Its intended to be implemented for various case formats.
- * 
+ *
  * @author Volker Belli & Markus Friedrich (denkbares GmbH)
  * @created 23.01.2012
  */
@@ -37,11 +37,11 @@ public interface TestCase {
 	/**
 	 * Collection of Dates to iterate through the entries of this
 	 * {@link TestCase}'s entries.
-	 * <P>
+	 * <p>
 	 * The iteration is ordered by the time of the entries. Therefore, the
 	 * iteration starts at the time of the oldest entry and proceeds to the
 	 * newer values.
-	 * 
+	 *
 	 * @return Collection of Dates chronological ordered
 	 */
 	Collection<Date> chronology();
@@ -50,50 +50,89 @@ public interface TestCase {
 	 * Returns all findings of this TestCase associated to the specified Date.
 	 * If there is no such finding in this TestCase, an empty Collection is
 	 * returned.
-	 * 
-	 * @created 23.01.2012
-	 * @param date the Date to get the Findings for
+	 *
+	 * @param date          the Date to get the Findings for
 	 * @param knowledgeBase {@link KnowledgeBase}
 	 * @return Findings at the specified Date
+	 * @created 23.01.2012
 	 */
 	Collection<Finding> getFindings(Date date, KnowledgeBase knowledgeBase);
 
 	/**
 	 * Returns all checks of this TestCase associated to the specified Date. If
 	 * there is no such check in this TestCase, an empty Collection is returned.
-	 * 
-	 * @created 23.01.2012
-	 * @param date the Date to get the Checks for
+	 *
+	 * @param date          the Date to get the Checks for
 	 * @param knowledgeBase {@link KnowledgeBase}
 	 * @return Checks at the specified date
+	 * @created 23.01.2012
 	 */
 	Collection<Check> getChecks(Date date, KnowledgeBase knowledgeBase);
 
 	/**
 	 * Returns the Date when the TestCase was originally started
-	 * 
-	 * @created 24.01.2012
+	 *
 	 * @return Date when the TestCase was started
+	 * @created 24.01.2012
 	 */
 	Date getStartDate();
 
 	/**
 	 * Checks if the kb fits to the TestCase and returns errors as a collections
 	 * of Strings
-	 * 
-	 * @created 14.03.2012
+	 *
 	 * @param knowledgeBase the knowledge base we check against.
 	 * @return Collections of Errors
+	 * @created 14.03.2012
 	 */
 	Collection<String> check(KnowledgeBase knowledgeBase);
+
+	default void applyFindings(Date date, Session session) {
+		TestCaseUtils.applyFindings(session, this, date, new Settings());
+	}
 
 	/**
 	 * Applies all the finding from the given date to the given session.
 	 *
-	 * @param session the session to apply the finding to
+	 * @param session  the session to apply the finding to
+	 * @param settings the settings to be used while applying the findings to the session
 	 */
-	default void applyFindings(Date date, Session session) {
-		TestCaseUtils.applyFindings(session, this, date);
+	default void applyFindings(Date date, Session session, Settings settings) {
+		TestCaseUtils.applyFindings(session, this, date, settings);
+	}
+
+	class Settings {
+
+		private final boolean skipNumValueOutOfRange;
+		private final long timeShift;
+
+		public Settings(boolean skipNumValueOutOfRange, long timeShift) {
+			this.skipNumValueOutOfRange = skipNumValueOutOfRange;
+			this.timeShift = timeShift;
+		}
+
+		public Settings() {
+			this(false, 0);
+		}
+
+		public Settings(boolean skipNumValueOutOfRange) {
+			this(skipNumValueOutOfRange, 0);
+		}
+
+		/**
+		 * The time shift to be applied to date at which the findings should be applied to the session.
+		 */
+		public long getTimeShift() {
+			return timeShift;
+		}
+
+		/**
+		 * If this is returns true, findings that try to set values outside the defined
+		 * range of a question are ignored
+		 */
+		public boolean isSkipNumValueOutOfRange() {
+			return skipNumValueOutOfRange;
+		}
 	}
 
 }

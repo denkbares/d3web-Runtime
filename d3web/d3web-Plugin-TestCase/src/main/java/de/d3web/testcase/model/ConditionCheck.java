@@ -55,4 +55,19 @@ public class ConditionCheck implements Check {
 		return condition;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ConditionCheck that = (ConditionCheck) o;
+
+		return condition.equals(that.condition);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return condition.hashCode();
+	}
 }

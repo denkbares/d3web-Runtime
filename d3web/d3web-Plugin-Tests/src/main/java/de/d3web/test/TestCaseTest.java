@@ -44,6 +44,8 @@ import de.d3web.testing.TestObjectProviderManager;
 import de.d3web.testing.TestParameter;
 import de.d3web.testing.TestingUtils;
 
+import static de.d3web.testcase.model.TestCase.*;
+
 /**
  * A simple test to execute test cases.
  *
@@ -119,7 +121,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 	private Message applyFinding(TestCase testCase, Session session, Date date, boolean ignoreNumValuesOutOfRange) {
 		try {
-			TestCaseUtils.applyFindings(session, testCase, date, ignoreNumValuesOutOfRange);
+			TestCaseUtils.applyFindings(session, testCase, date, new Settings(ignoreNumValuesOutOfRange));
 		}
 		catch (SessionTerminatedException e) {
 			LoopStatus loopStatus = LoopTerminator.getInstance().getLoopStatus(session);

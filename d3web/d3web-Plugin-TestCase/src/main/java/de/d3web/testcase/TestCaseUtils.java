@@ -58,6 +58,8 @@ import de.d3web.scoring.HeuristicRating;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
 
+import static de.d3web.testcase.model.TestCase.*;
+
 /**
  * Provides basic static functions
  *
@@ -78,7 +80,7 @@ public class TestCaseUtils {
 	 * @created 24.01.2012
 	 */
 	public static void applyFindings(Session session, TestCase testCase, Date date) {
-		applyFindings(session, testCase, date, false);
+		applyFindings(session, testCase, date, new Settings());
 	}
 
 	/**
@@ -89,14 +91,13 @@ public class TestCaseUtils {
 	 * @param session             Session on which the Findings should be applied
 	 * @param testCase            specified TestCase
 	 * @param date                specified Date
-	 * @param skipValueOutOfRange if this is set to true, findings that try to set values outside the defined
-	 *                            range of a question are ignored
+	 * @param settings  the settings to be used while applying the findings to the session
 	 * @created 26.11.2014
 	 */
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public static void applyFindings(Session session, TestCase testCase, Date date, boolean skipValueOutOfRange) {
+	public static void applyFindings(Session session, TestCase testCase, Date date,  Settings settings) {
 		Collection<Finding> findings = testCase.getFindings(date, session.getKnowledgeBase());
-		applyFindings(session, findings, date, skipValueOutOfRange);
+		applyFindings(session, findings, date, settings);
 	}
 
 	/**
@@ -106,26 +107,18 @@ public class TestCaseUtils {
 	 * @param session             Session on which the Findings should be applied
 	 * @param findings            specified Findings to apply
 	 * @param date                specified Date
-	 * @param skipValueOutOfRange if this is set to true, findings that try to set values outside the defined
-	 *                            range of a question are ignored
+	 * @param settings  the settings to be used while applying the findings to the session
 	 * @created 26.11.2014
 	 */
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public static void applyFindings(Session session, Collection<Finding> findings, Date date, boolean skipValueOutOfRange) {
+	public static void applyFindings(Session session, Collection<Finding> findings, Date date, Settings settings) {
 		Blackboard blackboard = session.getBlackboard();
-		session.getPropagationManager().openPropagation(date.getTime());
+		session.getPropagationManager().openPropagation(date.getTime() + settings.getTimeShift());
 		for (Finding finding : findings) {
 			List<String> errors = new LinkedList<>();
 			checkValues(errors, finding.getTerminologyObject(), finding.getValue());
 			if (errors.isEmpty()) {
-				if (skipValueOutOfRange) {
-					NumericalInterval numericalInterval = finding.getTerminologyObject()
-							.getInfoStore()
-							.getValue(BasicProperties.QUESTION_NUM_RANGE);
-					if (numericalInterval != null && finding.getValue() instanceof NumValue) {
-						if (!numericalInterval.contains(((NumValue) finding.getValue()).getDouble())) continue;
-					}
-				}
+				if (isSkipFinding(settings.isSkipNumValueOutOfRange(), finding)) continue;
 				Fact fact = FactFactory.createUserEnteredFact(finding.getTerminologyObject(),
 						finding.getValue());
 				if (finding.getValue() instanceof Indication) {
@@ -143,6 +136,21 @@ public class TestCaseUtils {
 			}
 		}
 		session.getPropagationManager().commitPropagation();
+	}
+
+	public static boolean isSkipFinding(boolean skipNumValueOutOfRange, Finding finding) {
+		boolean skipFinding = false;
+		if (skipNumValueOutOfRange) {
+			NumericalInterval numericalInterval = finding.getTerminologyObject()
+					.getInfoStore()
+					.getValue(BasicProperties.QUESTION_NUM_RANGE);
+			if (numericalInterval != null && finding.getValue() instanceof NumValue) {
+				if (!numericalInterval.contains(((NumValue) finding.getValue()).getDouble())) {
+					skipFinding = true;
+				}
+			}
+		}
+		return skipFinding;
 	}
 
 	/**

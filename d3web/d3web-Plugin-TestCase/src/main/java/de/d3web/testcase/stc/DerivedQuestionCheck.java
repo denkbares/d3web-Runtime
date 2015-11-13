@@ -35,7 +35,7 @@ import de.d3web.testcase.model.Check;
 /**
  * Checks if a {@link Question} has the specified {@link QuestionValue} in a
  * {@link Session}
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 24.01.2012
  */
@@ -90,6 +90,25 @@ public class DerivedQuestionCheck implements Check {
 
 	public QuestionValue getValue() {
 		return value;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DerivedQuestionCheck that = (DerivedQuestionCheck) o;
+
+		if (!question.equals(that.question)) return false;
+		return value.equals(that.value);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = question.hashCode();
+		result = 31 * result + value.hashCode();
+		return result;
 	}
 
 }

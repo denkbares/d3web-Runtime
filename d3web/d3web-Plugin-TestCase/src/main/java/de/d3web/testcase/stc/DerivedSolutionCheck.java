@@ -56,4 +56,23 @@ public class DerivedSolutionCheck implements Check {
 	public Rating getRating() {
 		return rating;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DerivedSolutionCheck that = (DerivedSolutionCheck) o;
+
+		if (!solution.equals(that.solution)) return false;
+		return rating.equals(that.rating);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = solution.hashCode();
+		result = 31 * result + rating.hashCode();
+		return result;
+	}
 }

@@ -53,4 +53,22 @@ public class DefaultFinding implements Finding {
 		return getClass().getSimpleName() + "[" + object.getName() + " = " + value.toString() + "]";
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DefaultFinding that = (DefaultFinding) o;
+
+		if (!object.equals(that.object)) return false;
+		return value.equals(that.value);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = object.hashCode();
+		result = 31 * result + value.hashCode();
+		return result;
+	}
 }
