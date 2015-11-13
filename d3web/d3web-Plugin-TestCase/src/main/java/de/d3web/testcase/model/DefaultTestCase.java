@@ -19,13 +19,10 @@
 
 package de.d3web.testcase.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,13 +30,6 @@ import java.util.TreeSet;
 import de.d3web.collections.DefaultMultiMap;
 import de.d3web.collections.MultiMap;
 import de.d3web.collections.MultiMaps;
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.QuestionMC;
-import de.d3web.core.session.ValueUtils;
-import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.MultipleChoiceValue;
-import de.d3web.testcase.stc.DescribedTestCase;
 
 /**
  * Default implementation of the TestCase interface.
@@ -47,7 +37,7 @@ import de.d3web.testcase.stc.DescribedTestCase;
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 27.10.15
  */
-public class DefaultTestCase implements DescribedTestCase {
+public class DefaultTestCase implements TemplateTestCase, DescribedTestCase {
 
 	@SuppressWarnings("Convert2Diamond") // type inference not working properly here, seems to be needed...
 	private MultiMap<Date, FindingTemplate> findingTemplates = new DefaultMultiMap<Date, FindingTemplate>(MultiMaps.treeFactory(), MultiMaps
@@ -59,11 +49,10 @@ public class DefaultTestCase implements DescribedTestCase {
 
 	private Map<Date, String> descriptionMap = new HashMap<>();
 
-	private Set<Date> chronology = new TreeSet<>();
-
-	private Date startDate = new Date(0);
+	private TreeSet<Date> chronology = new TreeSet<>();
 
 	private String description;
+	private Date startDate;
 
 	public void setDescription(String description) {
 		this.description = description;
@@ -72,10 +61,6 @@ public class DefaultTestCase implements DescribedTestCase {
 	@Override
 	public String getDescription() {
 		return this.description;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
 	}
 
 	public void addFinding(Date date, FindingTemplate... findingTemplate) {
@@ -97,12 +82,14 @@ public class DefaultTestCase implements DescribedTestCase {
 		this.descriptionMap.put(date, comment);
 	}
 
+	@Override
 	public Collection<FindingTemplate> getFindingTemplates(Date date) {
-		return findingTemplates.getValues(date);
+		return Collections.unmodifiableCollection(findingTemplates.getValues(date));
 	}
 
+	@Override
 	public Collection<CheckTemplate> getCheckTemplates(Date date) {
-		return checkTemplates.getValues(date);
+		return Collections.unmodifiableCollection(checkTemplates.getValues(date));
 	}
 
 	@Override
@@ -111,72 +98,13 @@ public class DefaultTestCase implements DescribedTestCase {
 	}
 
 	@Override
-	public Collection<Finding> getFindings(Date date, KnowledgeBase knowledgeBase) {
-		LinkedHashMap<TerminologyObject, Finding> findingMap = new LinkedHashMap<>();
-		for (FindingTemplate findingTemplate : getFindingTemplates(date)) {
-			try {
-				Finding finding = findingTemplate.toFinding(knowledgeBase);
-				TerminologyObject object = finding.getTerminologyObject();
-				Finding existingFinding = findingMap.get(object);
-				if (object instanceof QuestionMC
-						&& existingFinding != null
-						&& (existingFinding.getValue() instanceof MultipleChoiceValue
-						|| existingFinding.getValue() instanceof ChoiceValue)) {
-					MultipleChoiceValue mergedValues = ValueUtils.mergeChoiceValuesOR((QuestionMC) object,
-							existingFinding.getValue(), finding.getValue());
-					DefaultFinding mergedFinding = new DefaultFinding(object, mergedValues);
-					findingMap.replace(object, mergedFinding);
-				}
-				else {
-					findingMap.put(object, finding);
-				}
-			}
-			catch (TransformationException ignore) {
-				// use {@link #check(KnowledgeBase)} to catch this...
-			}
-		}
-		return findingMap.values();
-	}
-
-	@Override
-	public Collection<Check> getChecks(Date date, KnowledgeBase knowledgeBase) {
-		List<Check> checks = new ArrayList<>();
-		for (CheckTemplate checkTemplate : getCheckTemplates(date)) {
-			try {
-				checks.add(checkTemplate.toCheck(knowledgeBase));
-			}
-			catch (TransformationException ignore) {
-				// use {@link #check(KnowledgeBase)} to catch this...
-			}
-		}
-		return checks;
-	}
-
-	@Override
-	public Collection<String> check(KnowledgeBase knowledgeBase) {
-		List<String> messages = new ArrayList<>();
-		for (FindingTemplate findingTemplate : findingTemplates.valueSet()) {
-			try {
-				findingTemplate.toFinding(knowledgeBase);
-			}
-			catch (TransformationException e) {
-				messages.add(e.getMessage());
-			}
-		}
-		for (CheckTemplate checkTemplate : checkTemplates.valueSet()) {
-			try {
-				checkTemplate.toCheck(knowledgeBase);
-			}
-			catch (TransformationException e) {
-				messages.add(e.getMessage());
-			}
-		}
-		return messages;
-	}
-
-	@Override
 	public Date getStartDate() {
-		return startDate;
+		if (this.startDate != null) {
+			return this.startDate;
+		}
+		else {
+			return chronology.first();
+		}
 	}
 
 	@Override
@@ -192,5 +120,9 @@ public class DefaultTestCase implements DescribedTestCase {
 	@Override
 	public String toString() {
 		return getDescription();
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 }

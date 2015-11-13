@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 denkbares GmbH, Germany
+ * Copyright (C) 2015 denkbares GmbH, Germany
  *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -17,11 +17,9 @@
  * site: http://www.fsf.org.
  */
 
-package de.d3web.testcase.stc;
+package de.d3web.testcase.model;
 
 import java.util.Date;
-
-import de.d3web.testcase.model.TestCase;
 
 /**
  * This is a interface for TestCases also providing descriptions for entries and overall.

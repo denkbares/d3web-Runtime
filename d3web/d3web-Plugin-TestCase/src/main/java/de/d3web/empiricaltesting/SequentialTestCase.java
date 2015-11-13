@@ -52,7 +52,7 @@ import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.DefaultTestCase;
 import de.d3web.testcase.model.Finding;
-import de.d3web.testcase.stc.DescribedTestCase;
+import de.d3web.testcase.model.DescribedTestCase;
 import de.d3web.testcase.stc.DerivedQuestionCheck;
 import de.d3web.testcase.stc.DerivedSolutionCheck;
 

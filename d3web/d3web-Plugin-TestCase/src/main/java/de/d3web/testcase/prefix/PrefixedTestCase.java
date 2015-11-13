@@ -15,7 +15,7 @@ import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.DefaultFinding;
 import de.d3web.testcase.model.Finding;
 import de.d3web.testcase.model.TestCase;
-import de.d3web.testcase.stc.DescribedTestCase;
+import de.d3web.testcase.model.DescribedTestCase;
 
 /**
  * This class allows to add a {@link TestCase} as a prefix to another

@@ -47,4 +47,5 @@ public interface Check {
 	 * @return String representation of the condition
 	 */
 	String getCondition();
+
 }
