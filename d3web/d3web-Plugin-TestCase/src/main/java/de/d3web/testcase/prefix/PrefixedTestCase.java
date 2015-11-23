@@ -39,6 +39,24 @@ public class PrefixedTestCase implements DescribedTestCase {
 		this.testCase = testCase;
 	}
 
+	/**
+	 * Returns the difference or offset to be applied to the dates of the actual test case so they fit behind the dates
+	 * of the prefix test case
+	 */
+	public long getDateDiff() {
+		lazyInit();
+		return dateDiff;
+	}
+
+	/**
+	 * Returns the date at which both test cases (prefix and actual) are merged. At this date, both testcase can have
+	 * findings and checks.
+	 */
+	public Date getMergeDate() {
+		lazyInit();
+		return mergedDate;
+	}
+
 	@Override
 	public String getDescription() {
 		if (testCase instanceof DescribedTestCase) {
