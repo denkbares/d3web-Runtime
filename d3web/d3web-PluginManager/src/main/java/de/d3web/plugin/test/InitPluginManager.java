@@ -19,14 +19,13 @@
 
 package de.d3web.plugin.test;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.plugin.JPFPluginManager;
+import de.d3web.strings.Strings;
 
 /**
  * Provides a static method to initialize the JPF-Pluginmanager by using a classpath file generated
@@ -64,23 +63,7 @@ public abstract class InitPluginManager {
 	 * @throws IOException
 	 */
 	public static void init(File classpathFile) throws IOException {
-		StringBuilder fileData = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new FileReader(classpathFile));
-		try {
-			char[] buf = new char[1024];
-			int numRead;
-			while ((numRead = reader.read(buf)) != -1) {
-				String readData = String.valueOf(buf, 0, numRead);
-				fileData.append(readData);
-				buf = new char[1024];
-			}
-		}
-		finally {
-			reader.close();
-		}
-
-		String[] jars = fileData.toString().split(";");
-		init(jars);
+		init(Strings.readFile(classpathFile).toString().split(";"));
 	}
 
 	/**
