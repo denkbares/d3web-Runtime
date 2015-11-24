@@ -63,7 +63,7 @@ public abstract class InitPluginManager {
 	 * @throws IOException
 	 */
 	public static void init(File classpathFile) throws IOException {
-		init(Strings.readFile(classpathFile).toString().split(";"));
+		init(Strings.readFile(classpathFile).split(";"));
 	}
 
 	/**
@@ -71,8 +71,6 @@ public abstract class InitPluginManager {
 	 * with the maven dependency plugin
 	 * <p/>
 	 * Important: Tests using this function must run maven install after each dependency update
-	 *
-	 * @throws IOException
 	 */
 	public static void init(String[] jarFiles) {
 		List<File> filteredJars = new ArrayList<File>();
@@ -100,7 +98,8 @@ public abstract class InitPluginManager {
 			project = f.getParentFile().getAbsoluteFile();
 			project = project.getParentFile();
 		}
-		return (project.getName().startsWith("d3web-Plugin-") || project.getName().startsWith(
-				"KnowWE-Plugin-"));
+		return (project.getName().startsWith("d3web-Plugin-")
+				|| project.getName().startsWith("KnowWE-Plugin-")
+				|| project.getName().startsWith("KnowWE-Headless-Plugin-"));
 	}
 }
