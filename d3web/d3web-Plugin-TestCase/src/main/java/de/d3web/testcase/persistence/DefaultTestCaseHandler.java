@@ -141,7 +141,7 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 	}
 
 	protected Element writeTestCase(DescribedTestCase testCase, Persistence<TestCase> persistence) throws IOException {
-		Element testCaseElement = createTestCaseElement(testCase, persistence);
+		Element testCaseElement = createTestCaseElement(testCase, persistence, DEFAULT);
 		writeTestCaseDescription(testCase, testCaseElement);
 
 		for (Date date : testCase.chronology()) {
@@ -173,10 +173,10 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 		return entryElement;
 	}
 
-	protected Element createTestCaseElement(TestCase testCase, Persistence<TestCase> persistence) {
+	protected Element createTestCaseElement(TestCase testCase, Persistence<TestCase> persistence, String type) {
 		Document document = persistence.getDocument();
 		Element testCaseElement = document.createElement(TEST_CASE);
-		testCaseElement.setAttribute(XMLUtil.TYPE, DEFAULT);
+		testCaseElement.setAttribute(XMLUtil.TYPE, type);
 		testCaseElement.setAttribute(START_DATE, Strings.writeDate(testCase.getStartDate()));
 		return testCaseElement;
 	}
