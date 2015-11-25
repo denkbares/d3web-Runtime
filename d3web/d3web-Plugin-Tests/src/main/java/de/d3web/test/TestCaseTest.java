@@ -44,7 +44,7 @@ import de.d3web.testing.TestObjectProviderManager;
 import de.d3web.testing.TestParameter;
 import de.d3web.testing.TestingUtils;
 
-import static de.d3web.testcase.model.TestCase.*;
+import static de.d3web.testcase.model.TestCase.Settings;
 
 /**
  * A simple test to execute test cases.
@@ -151,22 +151,16 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	private String renderFailureMessage(List<String> inconsistentKBs, List<String> failedKBs, List<String> passedKBs) {
 		String message = "";
 		if (inconsistentKBs.size() > 0) {
-			message += "Knowledge base(s) inconsistent with test: ";
-			for (String inconsistentKB : inconsistentKBs) {
-				// enumerate inconsistent KBs in one line
-				message += " " + inconsistentKB + ";";
-			}
-			// add line break afterwards
-			if (message.endsWith(";")) {
-				message = message.substring(0, message.length() - 1) + "\n";
-			}
+			message += "Knowledge base" + (inconsistentKBs.size() > 1 ? "s" : "") + " inconsistent with test: ";
+			message += Strings.concat(" ;", inconsistentKBs);
+			message += "\n";
 		}
 		// enumerate failed KBs one per line
 		for (String failedMessage : failedKBs) {
 			message += failedMessage + "\n";
 		}
 		if (passedKBs.size() > 0) {
-			message += "Knowledge base(s) passed test: ";
+			message += "Knowledge base" + (passedKBs.size() > 1 ? "s" : "") + " passed test: ";
 			message += Strings.concat(" ;", passedKBs);
 			message += "\n";
 		}

@@ -55,12 +55,13 @@ public class STCCheckHandler implements FragmentHandler<TestCase> {
 			String question = element.getAttribute(QUESTION);
 			String answer = element.getAttribute(ANSWER);
 			String matches = element.getAttribute(MATCHES);
-			if (Strings.isBlank(answer) && !Strings.isBlank(matches)) {
+			if (!Strings.isBlank(answer) && Strings.isBlank(matches)) {
 				return new DefaultCheckTemplate(question, answer);
 			}
-			else if (!Strings.isBlank(answer) && Strings.isBlank(matches)) {
+			else if (Strings.isBlank(answer) && !Strings.isBlank(matches)) {
 				return new ConditionPersistenceCheckTemplate(
-						"<Condition type=\"matches\" name=\"" + question + "\" regex=\"" + matches + "\"></Condition>");
+						"<Condition type=\"matches\" name=\"" + Strings.encodeHtml(question)
+								+ "\" regex=\"" +  Strings.encodeHtml(matches) + "\"></Condition>");
 			}
 		}
 

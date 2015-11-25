@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.strings.Strings;
 import de.d3web.testcase.model.*;
 import de.d3web.testcase.model.TestCase;
 
@@ -57,7 +58,7 @@ public class STCFindingHandler implements FragmentHandler<TestCase> {
 	public boolean canRead(Element element) {
 		String tagName = element.getTagName();
 		String type = element.getAttribute(XMLUtil.TYPE);
-		return tagName.equals(FINDING) && type == null;
+		return tagName.equals(FINDING) && Strings.isBlank(type);
 	}
 
 	@Override

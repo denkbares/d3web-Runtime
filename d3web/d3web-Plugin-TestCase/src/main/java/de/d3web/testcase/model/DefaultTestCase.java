@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 import de.d3web.collections.DefaultMultiMap;
@@ -102,8 +101,11 @@ public class DefaultTestCase implements TemplateTestCase, DescribedTestCase {
 		if (this.startDate != null) {
 			return this.startDate;
 		}
-		else {
+		else if (!chronology.isEmpty()) {
 			return chronology.first();
+		}
+		else {
+			return new Date();
 		}
 	}
 

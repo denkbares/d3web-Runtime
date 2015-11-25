@@ -21,7 +21,9 @@ package de.d3web.empiricaltesting;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -75,20 +77,24 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 		else {
 			stcElement = element;
 		}
+		DefaultTestCase testCase = new DefaultTestCase();
 
 		String startDateString = stcElement.getAttribute(START_DATE);
 		Date startDate;
-		try {
-			startDate = Strings.readDate(startDateString);
+		if (!Strings.isBlank(startDateString)) {
+			try {
+				startDate = Strings.readDate(startDateString);
+			}
+			catch (ParseException e) {
+				throw new IOException("Unable to parse start date of test case: " + startDateString);
+			}
+			testCase.setStartDate(startDate);
 		}
-		catch (ParseException e) {
-			throw new IOException("Unable to parse start date of test case: " + startDateString);
-		}
-		String name = stcElement.getAttribute(NAME);
 
-		DefaultTestCase testCase = new DefaultTestCase();
-		testCase.setStartDate(startDate);
-		testCase.setDescription(name);
+		String name = stcElement.getAttribute(NAME);
+		if (!Strings.isBlank(name)) {
+			testCase.setDescription(name);
+		}
 
 		if (persistence instanceof TestCasePersistence) {
 			((TestCasePersistence) persistence).setTestCase(testCase);
@@ -96,15 +102,30 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 
 		for (Element rtcElement : XMLUtil.getChildren(stcElement, RATED_TEST_CASE)) {
 			Date date;
-			try {
-				String time = rtcElement.getAttribute(TIMESTAMP);
-				date = Strings.readDate(time);
+			String time = rtcElement.getAttribute(TIMESTAMP);
+			if (Strings.isBlank(time)) {
+				Collection<Date> chronology = testCase.chronology();
+				if (!chronology.isEmpty()) {
+					List<Date> chronologyList = new ArrayList<>(chronology);
+					date = new Date(chronologyList.get(chronologyList.size() - 1).getTime() + 1);
+				}
+				else {
+					date = testCase.getStartDate();
+				}
 			}
-			catch (ParseException e) {
-				throw new IOException(e);
+			else {
+				try {
+					date = Strings.readDate(time);
+				}
+				catch (ParseException e) {
+					throw new IOException(e);
+				}
+
 			}
 			String rtcName = rtcElement.getAttribute(NAME);
-			testCase.addDescription(date, rtcName);
+			if (!Strings.isBlank(rtcName)) {
+				testCase.addDescription(date, rtcName);
+			}
 
 			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, FINDINGS)) {
 				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
