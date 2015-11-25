@@ -121,7 +121,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 	private Message applyFinding(TestCase testCase, Session session, Date date, boolean ignoreNumValuesOutOfRange) {
 		try {
-			TestCaseUtils.applyFindings(session, testCase, date, new Settings(ignoreNumValuesOutOfRange));
+			testCase.applyFindings(date, session, new Settings(ignoreNumValuesOutOfRange));
 		}
 		catch (SessionTerminatedException e) {
 			LoopStatus loopStatus = LoopTerminator.getInstance().getLoopStatus(session);
