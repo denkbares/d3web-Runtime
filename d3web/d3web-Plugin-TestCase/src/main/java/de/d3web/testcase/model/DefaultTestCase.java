@@ -39,16 +39,16 @@ import de.d3web.collections.MultiMaps;
 public class DefaultTestCase implements TemplateTestCase, DescribedTestCase {
 
 	@SuppressWarnings("Convert2Diamond") // type inference not working properly here, seems to be needed...
-	private MultiMap<Date, FindingTemplate> findingTemplates = new DefaultMultiMap<Date, FindingTemplate>(MultiMaps.treeFactory(), MultiMaps
+	private final MultiMap<Date, FindingTemplate> findingTemplates = new DefaultMultiMap<Date, FindingTemplate>(MultiMaps.treeFactory(), MultiMaps
 			.linkedFactory());
 
 	@SuppressWarnings("Convert2Diamond")
-	private MultiMap<Date, CheckTemplate> checkTemplates = new DefaultMultiMap<Date, CheckTemplate>(MultiMaps.treeFactory(), MultiMaps
+	private final MultiMap<Date, CheckTemplate> checkTemplates = new DefaultMultiMap<Date, CheckTemplate>(MultiMaps.treeFactory(), MultiMaps
 			.linkedFactory());
 
-	private Map<Date, String> descriptionMap = new HashMap<>();
+	private final Map<Date, String> descriptionMap = new HashMap<>();
 
-	private TreeSet<Date> chronology = new TreeSet<>();
+	private final TreeSet<Date> chronology = new TreeSet<>();
 
 	private String description;
 	private Date startDate;
@@ -126,5 +126,32 @@ public class DefaultTestCase implements TemplateTestCase, DescribedTestCase {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DefaultTestCase that = (DefaultTestCase) o;
+
+		if (!findingTemplates.equals(that.findingTemplates)) return false;
+		if (!checkTemplates.equals(that.checkTemplates)) return false;
+		if (!descriptionMap.equals(that.descriptionMap)) return false;
+		if (!chronology.equals(that.chronology)) return false;
+		if (description != null ? !description.equals(that.description) : that.description != null) return false;
+		return getStartDate().equals(that.getStartDate());
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = findingTemplates.hashCode();
+		result = 31 * result + checkTemplates.hashCode();
+		result = 31 * result + descriptionMap.hashCode();
+		result = 31 * result + chronology.hashCode();
+		result = 31 * result + getStartDate().hashCode();
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		return result;
 	}
 }

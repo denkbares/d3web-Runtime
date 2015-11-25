@@ -63,4 +63,23 @@ public class DefaultFindingTemplate implements FindingTemplate {
 		}
 		return new DefaultFinding(object, value);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DefaultFindingTemplate that = (DefaultFindingTemplate) o;
+
+		if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
+		return !(value != null ? !value.equals(that.value) : that.value != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = objectName != null ? objectName.hashCode() : 0;
+		result = 31 * result + (value != null ? value.hashCode() : 0);
+		return result;
+	}
 }

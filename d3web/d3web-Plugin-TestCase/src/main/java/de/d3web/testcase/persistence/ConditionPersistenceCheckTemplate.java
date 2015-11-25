@@ -21,6 +21,7 @@ package de.d3web.testcase.persistence;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -52,7 +53,7 @@ public class ConditionPersistenceCheckTemplate implements CheckTemplate {
 	private Document document = null;
 
 	public ConditionPersistenceCheckTemplate(String conditionXml) {
-		this.conditionXml = conditionXml;
+		this.conditionXml = Objects.requireNonNull(conditionXml);
 	}
 
 	@Override
@@ -86,5 +87,19 @@ public class ConditionPersistenceCheckTemplate implements CheckTemplate {
 
 	public String getConditionXml() {
 		return conditionXml;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ConditionPersistenceCheckTemplate that = (ConditionPersistenceCheckTemplate) o;
+		return conditionXml.equals(that.conditionXml);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return conditionXml.hashCode();
 	}
 }

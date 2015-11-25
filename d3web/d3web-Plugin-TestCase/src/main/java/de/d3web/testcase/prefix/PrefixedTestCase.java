@@ -253,4 +253,22 @@ public class PrefixedTestCase implements DescribedTestCase {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PrefixedTestCase that = (PrefixedTestCase) o;
+
+		if (!prefix.equals(that.prefix)) return false;
+		return testCase.equals(that.testCase);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = prefix.hashCode();
+		result = 31 * result + testCase.hashCode();
+		return result;
+	}
 }
