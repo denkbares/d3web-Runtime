@@ -39,6 +39,7 @@ import de.d3web.testcase.model.DescribedTestCase;
 import de.d3web.testcase.model.FindingTemplate;
 import de.d3web.testcase.model.TemplateTestCase;
 import de.d3web.testcase.model.TestCase;
+import de.d3web.testcase.record.SessionRecordWrapper;
 
 /**
  * Reads and writes {@link DefaultTestCase}s.
@@ -137,12 +138,14 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 
 	@Override
 	public Element write(Object object, Persistence<TestCase> persistence) throws IOException {
-		return writeTestCase((DescribedTestCase) object, persistence);
+		return writeTestCase((TestCase) object, persistence);
 	}
 
-	protected Element writeTestCase(DescribedTestCase testCase, Persistence<TestCase> persistence) throws IOException {
+	protected Element writeTestCase(TestCase testCase, Persistence<TestCase> persistence) throws IOException {
 		Element testCaseElement = createTestCaseElement(testCase, persistence, DEFAULT);
-		writeTestCaseDescription(testCase, testCaseElement);
+		if (testCase instanceof DescribedTestCase) {
+			writeTestCaseDescription((DescribedTestCase) testCase, testCaseElement);
+		}
 
 		for (Date date : testCase.chronology()) {
 			writeEntry(persistence, testCase, date, testCaseElement);
@@ -152,11 +155,13 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 	}
 
 	protected void writeEntry(Persistence<TestCase> persistence, TestCase testCase, Date date, Element testCaseElement) throws IOException {
-		DescribedTestCase describedTestCase = (DescribedTestCase) testCase;
 		TemplateTestCase templateTestCase = (TemplateTestCase) testCase;
 		Element entryElement = createEntryElement(testCaseElement);
 		writeEntryDate(entryElement, date);
-		writeEntryDescription(describedTestCase.getDescription(date), entryElement);
+		if (testCase instanceof DescribedTestCase) {
+			DescribedTestCase describedTestCase = (DescribedTestCase) testCase;
+			writeEntryDescription(describedTestCase.getDescription(date), entryElement);
+		}
 		writeFindings(persistence, templateTestCase.getFindingTemplates(date), entryElement);
 		writeChecks(persistence, templateTestCase.getCheckTemplates(date), entryElement);
 	}
@@ -221,6 +226,6 @@ public class DefaultTestCaseHandler implements FragmentHandler<TestCase> {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object instanceof DefaultTestCase;
+		return object instanceof DefaultTestCase || object instanceof SessionRecordWrapper;
 	}
 }

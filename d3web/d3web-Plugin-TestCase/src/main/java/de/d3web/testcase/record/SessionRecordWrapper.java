@@ -37,8 +37,12 @@ import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
+import de.d3web.testcase.model.CheckTemplate;
 import de.d3web.testcase.model.DefaultFinding;
+import de.d3web.testcase.model.DefaultFindingTemplate;
 import de.d3web.testcase.model.Finding;
+import de.d3web.testcase.model.FindingTemplate;
+import de.d3web.testcase.model.TemplateTestCase;
 import de.d3web.testcase.model.TestCase;
 
 /**
@@ -47,7 +51,7 @@ import de.d3web.testcase.model.TestCase;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 26.01.2012
  */
-public class SessionRecordWrapper implements TestCase {
+public class SessionRecordWrapper implements TemplateTestCase {
 
 	private final SessionRecord record;
 
@@ -90,6 +94,25 @@ public class SessionRecordWrapper implements TestCase {
 	@Override
 	public Date getStartDate() {
 		return record.getCreationDate();
+	}
+
+	@Override
+	public Collection<FindingTemplate> getFindingTemplates(Date date) {
+		List<FindingTemplate> findings = new LinkedList<>();
+		for (ProtocolEntry entry : record.getProtocol().getProtocolHistory()) {
+			if (entry instanceof FactProtocolEntry && entry.getDate().equals(date)) {
+				FactProtocolEntry fpe = (FactProtocolEntry) entry;
+				if (fpe.getSolvingMethodClassName().equals(PSMethodUserSelected.class.getName())) {
+					findings.add(new DefaultFindingTemplate(fpe.getTerminologyObjectName(), fpe.getValue().getValue().toString()));
+				}
+			}
+		}
+		return findings;
+	}
+
+	@Override
+	public Collection<CheckTemplate> getCheckTemplates(Date date) {
+		return Collections.emptyList();
 	}
 
 	@Override
