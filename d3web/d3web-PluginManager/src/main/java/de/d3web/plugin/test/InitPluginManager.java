@@ -45,13 +45,16 @@ public abstract class InitPluginManager {
 	 * Initializes the JPF-Pluginmanager with the information stored in
 	 * "target/dependencies/output.txt". This file can be generated with the maven dependency
 	 * plugin.
-	 * <p/>
+	 * <p>
 	 * Important: Tests using this function must run maven install after each dependency update
 	 *
+	 * @param additionalPluginPatterns specifies additional possible regex patterns of the files that are to be loaded
+	 *                                 by the plugin manager. By default, only files with prefixes "d3web-Plugin" or
+	 *                                 "KnowWE-Plugin" are loaded.
 	 * @throws IOException
 	 */
-	public static void init() throws IOException {
-		init(new File("target/dependencies/output.txt"));
+	public static void init(String... additionalPluginPatterns) throws IOException {
+		init(new File("target/dependencies/output.txt"), additionalPluginPatterns);
 	}
 
 	/**
@@ -60,46 +63,53 @@ public abstract class InitPluginManager {
 	 * <BR> Important: Tests using this function must run maven install after each dependency
 	 * update
 	 *
+	 * @param pluginFilterPattern specifies patterns to filter plugins to be loaded by the plugin manager. If no
+	 *                            specific patterns are given, we exclusively load d3web-Plugins and KnowWE-Plugins.
 	 * @throws IOException
 	 */
-	public static void init(File classpathFile) throws IOException {
-		init(Strings.readFile(classpathFile).split(";"));
+	public static void init(File classpathFile, String... pluginFilterPattern) throws IOException {
+		init(Strings.readFile(classpathFile).split(";"), pluginFilterPattern);
 	}
 
 	/**
 	 * Initializes the JPF-Pluginmanager with a list of plugin files. This file can be generated
 	 * with the maven dependency plugin
-	 * <p/>
+	 * <p>
 	 * Important: Tests using this function must run maven install after each dependency update
+	 *
+	 * @param pluginFilterPattern specifies patterns to filter plugins to be loaded by the plugin manager. If no
+	 *                            specific patterns are given, we exclusively load d3web-Plugins and KnowWE-Plugins.
 	 */
-	public static void init(String[] jarFiles) {
-		List<File> filteredJars = new ArrayList<File>();
+	public static void init(String[] jarFiles, String... pluginFilterPattern) {
+		if (pluginFilterPattern == null || pluginFilterPattern.length == 0) {
+			pluginFilterPattern = new String[] { "^d3web-Plugin.*", "^KnowWE-Plugin.*" };
+		}
+		List<File> filteredJars = new ArrayList<>();
 		// adding the plugin itself
 		File ownSources = new File("target/classes");
-		if (checkIfPlugin(ownSources)) {
+		if (checkIfPlugin(ownSources, pluginFilterPattern)) {
 			filteredJars.add(ownSources);
 		}
 		for (String s : jarFiles) {
 			File jarFile = new File(s);
-			if (checkIfPlugin(jarFile)) {
+			if (checkIfPlugin(jarFile, pluginFilterPattern)) {
 				filteredJars.add(jarFile);
 			}
 		}
 		JPFPluginManager.init(filteredJars.toArray(new File[filteredJars.size()]));
 	}
 
-	private static boolean checkIfPlugin(File f) {
-		File project = f;
-		if (f.getName().equals("classes")) {
+	private static boolean checkIfPlugin(File file, String... pluginFilterPattern) {
+		File project = file;
+		if (file.getName().equals("classes")) {
 			// jump two levels higher because dependencies to eclipse
 			// projects are named: projectname/target/classes
 			// the absolute file is needed to prevent a nullpointer in the own
 			// project
-			project = f.getParentFile().getAbsoluteFile();
+			project = file.getParentFile().getAbsoluteFile();
 			project = project.getParentFile();
 		}
-		return (project.getName().startsWith("d3web-Plugin-")
-				|| project.getName().startsWith("KnowWE-Plugin-")
-				|| project.getName().startsWith("KnowWE-Headless-Plugin-"));
+		String projectName = project.getName();
+		return JPFPluginManager.isPlugin(projectName, pluginFilterPattern);
 	}
 }

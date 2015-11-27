@@ -22,6 +22,7 @@ package de.d3web.plugin;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ import de.d3web.utils.Log;
 
 /**
  * An implementation of the PluginManager for the Java Plugin Framework (JPF)
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class JPFPluginManager extends PluginManager {
@@ -64,6 +65,8 @@ public final class JPFPluginManager extends PluginManager {
 
 		List<PluginLocation> locations = new ArrayList<PluginLocation>();
 		for (File pluginFile : pluginFiles) {
+			String pluginName = pluginFile.getName();
+
 			try {
 				PluginLocation location = StandardPluginLocation.create(pluginFile);
 				if (location != null) {
@@ -71,7 +74,7 @@ public final class JPFPluginManager extends PluginManager {
 				}
 				else {
 					Log.warning("File '" + pluginFile
-									+ "' is not a plugin. It will be ignored.");
+							+ "' is not a plugin. It will be ignored.");
 				}
 			}
 			catch (MalformedURLException e) {
@@ -88,25 +91,51 @@ public final class JPFPluginManager extends PluginManager {
 	}
 
 	/**
+	 * Checks whether the given pluginName matches any of the given pluginFilterPatterns. If no patterns are given, we
+	 * always return true.
+	 *
+	 * @param pluginName           the name of the plugin to be checked
+	 * @param pluginFilterPatterns a set of regex pattern to either accept or decline a plugin name
+	 */
+	public static boolean isPlugin(String pluginName, String... pluginFilterPatterns) {
+		if (pluginFilterPatterns == null || pluginFilterPatterns.length == 0) return true;
+		boolean matches = false;
+		for (String additionalPluginPattern : pluginFilterPatterns) {
+			if (pluginName.matches(additionalPluginPattern)) {
+				matches = true;
+				break;
+			}
+		}
+		return matches;
+	}
+
+	/**
 	 * This method initializes the JPFPluginmanager as PluginManager (which can
 	 * be accessed via PluginManager.getInstance()) with the directory of the
 	 * plugins as a String.
 	 * <p>
 	 * If the manager could not be initialized with the specified directory (for
 	 * any reason), an IllegalArgumentException is thrown.
-	 * 
-	 * @param directory directory of the plugins
+	 *
+	 * @param directory           directory of the plugins
+	 * @param pluginFilterPattern specifies patterns to filter plugins to be loaded by the plugin manager. If no
+	 *                            patterns are given, we try to load every file.
 	 * @throws IllegalArgumentException the directory could not be used for
-	 *         initialization
+	 *                                  initialization
 	 */
-	public static void init(String directory) {
+	public static void init(String directory, String... pluginFilterPattern) {
 		if (instance != null) {
 			Log.warning("PluginManager already initialised.");
 			return;
 		}
 		File pluginsDir = new File(directory);
-		File[] listFiles = pluginsDir.listFiles();
-		init(listFiles);
+		File[] pluginFiles = pluginsDir.listFiles();
+		if (pluginFiles != null) {
+			pluginFiles = Arrays.stream(pluginFiles)
+					.filter(file -> isPlugin(file.getName(), pluginFilterPattern))
+					.toArray(File[]::new);
+		}
+		init(pluginFiles);
 	}
 
 	/**
@@ -116,13 +145,13 @@ public final class JPFPluginManager extends PluginManager {
 	 * <p>
 	 * If the manager could not be initialized with the specified directory (for
 	 * any reason), an IllegalArgumentException is thrown.
-	 * 
+	 *
 	 * @param pluginFiles list of plugin files
 	 * @throws IllegalArgumentException the files could not be used for
-	 *         initialization
+	 *                                  initialization
 	 */
 	public static void init(File[] pluginFiles) { // NOSONAR false-positive
-													// warning
+		// warning
 		if (pluginFiles == null) {
 			// throw new IllegalArgumentException("invalid plugin files");
 			Log.severe("invalid plugin files");
@@ -188,7 +217,7 @@ public final class JPFPluginManager extends PluginManager {
 
 	@Override
 	public Extension getExtension(String extendetPluginID,
-			String extendetPointID, String pluginID, String extensionID) {
+								  String extendetPointID, String pluginID, String extensionID) {
 		Extension[] extensions = getExtensions(extendetPluginID, extendetPointID);
 		for (Extension e : extensions) {
 			if (e.getID().equals(extensionID) && e.getPluginID().equals(pluginID)) return e;
