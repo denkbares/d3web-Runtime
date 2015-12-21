@@ -1752,21 +1752,6 @@ public class Strings {
 	}
 
 	/**
-	 * Returns the enum constant referenced by the specified enum name. This method is very similar
-	 * to T.value(name), despite that it is case insensitive. If the specified name cannot be
-	 * matched to a enum constant of the specified enum type, null is returned. This method never
-	 * throws an exception.
-	 *
-	 * @param name     the name of the enum constant
-	 * @param enumType the type of the enum
-	 * @return the enum constant found case insensitive
-	 * @created 26.01.2014
-	 */
-	public static <T extends Enum<T>> T parseEnum(String name, Class<T> enumType) {
-		return parseEnum(name, enumType, null);
-	}
-
-	/**
 	 * Parses a percentage or a fraction value. It returns the parsed value. If the specified text
 	 * ends with a % sign, the parsed value before the % sign is divided by 100, so "95%" will
 	 * return as 0.95.
@@ -1785,6 +1770,21 @@ public class Strings {
 			divisor = 100.0;
 		}
 		return Double.parseDouble(number) / divisor;
+	}
+
+	/**
+	 * Returns the enum constant referenced by the specified enum name. This method is very similar
+	 * to T.value(name), despite that it is case insensitive. If the specified name cannot be
+	 * matched to a enum constant of the specified enum type, null is returned. This method never
+	 * throws an exception.
+	 *
+	 * @param name     the name of the enum constant
+	 * @param enumType the type of the enum
+	 * @return the enum constant found case insensitive
+	 * @created 26.01.2014
+	 */
+	public static <T extends Enum<T>> T parseEnum(String name, Class<T> enumType) {
+		return parseEnum(name, enumType, null);
 	}
 
 	/**
