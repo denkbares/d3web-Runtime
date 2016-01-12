@@ -110,7 +110,7 @@ public class PartialHierarchyTree<T> {
 	 * @param term
 	 * @return whether t has been found and removed
 	 */
-	public boolean removeNodeFromTree(T term) {
+	public synchronized boolean removeNodeFromTree(T term) {
 		return removeNodeFromTree(term, root);
 	}
 
@@ -128,7 +128,7 @@ public class PartialHierarchyTree<T> {
 	}
 
 
-	private Node<T> findRecursiveNode(T externalNode, Node<T> treeNode) {
+	private synchronized Node<T> findRecursiveNode(T externalNode, Node<T> treeNode) {
 		if (externalNode.equals(treeNode.data)) return treeNode;
 
 		// descending tree for search only makes sense for sub-node
@@ -157,7 +157,7 @@ public class PartialHierarchyTree<T> {
 	public Set<Node<T>> getNodes() {
 		Set<Node<T>> result = new HashSet<Node<T>>();
 		collectNodes(root, result);
-		return result;
+		return Collections.unmodifiableSet(result);
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class PartialHierarchyTree<T> {
 	public List<T> getNodesDFSOrder() {
 		List<T> result = new ArrayList<T>();
 		addDFS(root, result);
-		return result;
+		return Collections.unmodifiableList(result);
 	}
 
 	private void addDFS(Node<T> n, List<T> result) {
@@ -194,7 +194,7 @@ public class PartialHierarchyTree<T> {
 		for (Node<T> node : nodes) {
 			result.add(node.data);
 		}
-		return result;
+		return Collections.unmodifiableSet(result);
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class PartialHierarchyTree<T> {
 	public Collection<T> getLeafNodes() {
 		Collection<T> result = new HashSet<T>();
 		addLeafNodes(root, result);
-		return result;
+		return Collections.unmodifiableCollection(result);
 	}
 
 	private void addLeafNodes(Node<T> node, Collection<T> result) {
@@ -286,7 +286,7 @@ public class PartialHierarchyTree<T> {
 	 * @param t
 	 * @param parent
 	 */
-	private void insertNodeUnder(T t, Node<T> parent) {
+	private synchronized void insertNodeUnder(T t, Node<T> parent) {
 
 		List<Node<T>> children = parent.getChildren();
 		Iterator<Node<T>> descentIterator = children.iterator();
@@ -301,6 +301,7 @@ public class PartialHierarchyTree<T> {
 				break;
 			}
 		}
+		// if no super concept for descent is found, insert at this level
 		if (!descent) {
 			Node<T> newNode = new Node<T>(t);
 			parent.addChild(newNode);
@@ -377,6 +378,9 @@ public class PartialHierarchyTree<T> {
 
 		@Override
 		public String toString() {
+			if(data == null) {
+				return super.toString()+" data=null";
+			}
 			return data.toString();
 		}
 
