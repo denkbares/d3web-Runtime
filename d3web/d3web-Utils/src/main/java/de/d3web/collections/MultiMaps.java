@@ -30,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -754,6 +755,112 @@ public class MultiMaps {
 		@Override
 		public Map<K, Set<V>> toMap() {
 			return Collections.emptyMap();
+		}
+	}
+
+
+	public static <K, V> MultiMap<K, V> singletonMultiMap(K key, V value) {
+		return new SingletonMultiMap<>(key, value);
+	}
+
+	private static class SingletonMultiMap<K, V> implements MultiMap<K, V> {
+
+		private final K key;
+		private final V value;
+
+		public SingletonMultiMap(K key, V value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		@Override
+		public int size() {
+			return 1;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return false;
+		}
+
+		@Override
+		public boolean containsKey(Object key) {
+			return Objects.equals(key, this.key);
+		}
+
+		@Override
+		public boolean containsValue(Object value) {
+			return Objects.equals(value, this.value);
+		}
+
+		@Override
+		public boolean contains(Object key, Object value) {
+			return containsKey(key) && containsValue(value);
+		}
+
+		@Override
+		public Set<V> getValues(Object key) {
+			return containsKey(key) ? valueSet() : Collections.emptySet();
+		}
+
+		@Override
+		public Set<K> getKeys(Object value) {
+			return containsValue(value) ? keySet() : Collections.emptySet();
+		}
+
+		@Override
+		public boolean put(K key, V value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<V> removeKey(Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<K> removeValue(Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean remove(Object key, Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean putAll(Map<? extends K, ? extends V> m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean putAll(MultiMap<? extends K, ? extends V> m) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<K> keySet() {
+			return Collections.singleton(key);
+		}
+
+		@Override
+		public Set<V> valueSet() {
+			return Collections.singleton(value);
+		}
+
+		@Override
+		public Set<Entry<K, V>> entrySet() {
+			return Collections.singleton(new AbstractMap.SimpleImmutableEntry<>(key, value));
+		}
+
+		@Override
+		public Map<K, Set<V>> toMap() {
+			return Collections.singletonMap(key, valueSet());
 		}
 	}
 }
