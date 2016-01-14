@@ -18,6 +18,7 @@
  */
 package de.d3web.collections.test;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -26,6 +27,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.collections.DefaultMultiMap;
+import de.d3web.collections.MultiMap;
 import de.d3web.collections.MultiMaps;
 import de.d3web.collections.MultiMaps.CollectionFactory;
 import de.d3web.collections.N2MMap;
@@ -153,5 +156,47 @@ public class MultiMapsTest {
 		map.putAll(baseMap);
 		assertEquals("[b, a]", map.keySet().toString());
 		assertEquals("[3, 2, 1]", map.valueSet().toString());
+	}
+
+	@Test
+	public void singletonMultiMap() {
+		MultiMap<String, String> map = MultiMaps.singletonMultiMap("a", "b");
+
+		assertTrue(map.containsKey("a"));
+		assertFalse(map.containsValue("a"));
+		assertFalse(map.containsKey("b"));
+		assertTrue(map.containsValue("b"));
+
+		assertTrue(map.contains("a", "b"));
+		assertFalse(map.contains("a", "a"));
+		assertFalse(map.contains("b", "b"));
+		assertFalse(map.contains("b", "a"));
+
+		assertFalse(map.isEmpty());
+		assertEquals(1, map.size());
+
+		assertEquals(Collections.singleton("a"), map.keySet());
+		assertEquals(Collections.singleton("b"), map.valueSet());
+
+		assertEquals(Collections.singleton("a"), map.getKeys("b"));
+		assertEquals(Collections.singleton("b"), map.getValues("a"));
+		assertTrue(map.getKeys("a").isEmpty());
+		assertTrue(map.getValues("b").isEmpty());
+
+		assertEquals("b", map.toMap().get("a").iterator().next());
+		assertNull(map.toMap().get("b"));
+
+		MultiMap<Object, Object> other = new DefaultMultiMap<>();
+		assertNotEquals(other, map);
+		assertNotEquals(other.hashCode(), map.hashCode());
+		assertNotEquals(other.toString(), map.toString());
+		other.put("a", "b");
+		assertEquals(other, map);
+		assertEquals(other.hashCode(), map.hashCode());
+		assertEquals(other.toString(), map.toString());
+		other.put("b", "a");
+		assertNotEquals(other, map);
+		assertNotEquals(other.hashCode(), map.hashCode());
+		assertNotEquals(other.toString(), map.toString());
 	}
 }

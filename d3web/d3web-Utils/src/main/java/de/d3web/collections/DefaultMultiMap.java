@@ -18,10 +18,7 @@
  */
 package de.d3web.collections;
 
-import java.util.AbstractMap;
-import java.util.AbstractSet;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -29,18 +26,14 @@ import java.util.Set;
 import de.d3web.collections.MultiMaps.CollectionFactory;
 
 /**
- * This class provides an implementation for a {@link MultiMap} that only uses a
- * single hash map for the underlying representation. Therefore accessing the
- * values by the keys is efficient (O(1)), but accessing the keys for values or
- * the set of values or removing a value for all keys is O(n) in the worst case:
- * 
- * <ul>
- * <li>{@link #containsValue(Object)}
- * <li>{@link #removeValue(Object)}
- * <li>{@link #getKeys(Object)}
- * <li> {@link #valueSet()}
- * </ul>
- * 
+ * This class provides an implementation for a {@link MultiMap} that only uses a single hash map for
+ * the underlying representation. Therefore accessing the values by the keys is efficient (O(1)),
+ * but accessing the keys for values or the set of values or removing a value for all keys is O(n)
+ * in the worst case:
+ * <p/>
+ * <ul> <li>{@link #containsValue(Object)} <li>{@link #removeValue(Object)} <li>{@link
+ * #getKeys(Object)} <li> {@link #valueSet()} </ul>
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 07.01.2014
  */
@@ -48,7 +41,7 @@ import de.d3web.collections.MultiMaps.CollectionFactory;
 // They are used when accessing entries, because java.util.Map also does it this way.
 // only methods that adds items are forcing to have the correct parameter types.
 @SuppressWarnings("SuspiciousMethodCalls")
-public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
+public class DefaultMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
 	private int size = 0;
 	final Map<K, Set<V>> k2v;
@@ -57,19 +50,17 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	private final CollectionFactory<V> valueFactory;
 
 	/**
-	 * Creates a new N2MMap using HashSets and HashMaps for the contained
-	 * objects.
+	 * Creates a new N2MMap using HashSets and HashMaps for the contained objects.
 	 */
 	public DefaultMultiMap() {
-		this(MultiMaps.<K> hashFactory(), MultiMaps.<V> hashFactory());
+		this(MultiMaps.<K>hashFactory(), MultiMaps.<V>hashFactory());
 	}
 
 	/**
-	 * Creates a new N2MMap using the specified collection factories to manage
-	 * the keys and values to be added. The {@link CollectionFactory} can be
-	 * accessed by the {@link MultiMaps} class through some utility methods
-	 * provided.
-	 * 
+	 * Creates a new N2MMap using the specified collection factories to manage the keys and values
+	 * to be added. The {@link CollectionFactory} can be accessed by the {@link MultiMaps} class
+	 * through some utility methods provided.
+	 *
 	 * @param keyFactory the collection factory used to manage the keys
 	 * @param valueFactory the collection factory used to manage the values
 	 */
@@ -93,32 +84,9 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	}
 
 	@Override
-	public boolean putAll(Map<? extends K, ? extends V> map) {
-		boolean hasChanged = false;
-		for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-			hasChanged |= put(entry.getKey(), entry.getValue());
-		}
-		return hasChanged;
-	}
-
-	@Override
-	public boolean putAll(MultiMap<? extends K, ? extends V> map) {
-		boolean hasChanged = false;
-		for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-			hasChanged |= put(entry.getKey(), entry.getValue());
-		}
-		return hasChanged;
-	}
-
-	@Override
 	public void clear() {
 		k2v.clear();
 		size = 0;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return size == 0;
 	}
 
 	@Override
@@ -175,7 +143,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	@Override
 	public Set<V> getValues(Object key) {
 		Set<V> values = k2v.get(key);
-		return (values == null) ? Collections.<V> emptySet() : Collections.unmodifiableSet(values);
+		return (values == null) ? Collections.<V>emptySet() : Collections.unmodifiableSet(values);
 	}
 
 	@Override
@@ -212,97 +180,7 @@ public class DefaultMultiMap<K, V> implements MultiMap<K, V> {
 	}
 
 	@Override
-	public Set<Entry<K, V>> entrySet() {
-		return new AbstractSet<Entry<K, V>>() {
-
-			@Override
-			public Iterator<Entry<K, V>> iterator() {
-				return new Iterator<Map.Entry<K, V>>() {
-
-					Iterator<K> keyIter = keySet().iterator();
-					Iterator<V> valIter = Collections.<V> emptySet().iterator();
-					K currentKey = null;
-					V currentVal = null;
-
-					@Override
-					public boolean hasNext() {
-						return keyIter.hasNext() || valIter.hasNext();
-					}
-
-					@Override
-					public Entry<K, V> next() {
-						// if no next value available, proceed to next key
-						if (!valIter.hasNext()) {
-							currentKey = keyIter.next();
-							valIter = getValues(currentKey).iterator();
-						}
-						currentVal = valIter.next();
-						return new AbstractMap.SimpleImmutableEntry<K, V>(currentKey, currentVal);
-					}
-
-					@Override
-					public void remove() {
-						DefaultMultiMap.this.remove(currentKey, currentVal);
-					}
-				};
-			}
-
-			@Override
-			public int size() {
-				return size;
-			}
-
-			@Override
-			public boolean contains(Object entry) {
-				if (entry instanceof Entry) {
-					Entry<?, ?> e = (Entry<?, ?>) entry;
-					return DefaultMultiMap.this.contains(e.getKey(), e.getValue());
-				}
-				return false;
-			}
-
-			@Override
-			public boolean remove(Object entry) {
-				if (entry instanceof Entry) {
-					Entry<?, ?> e = (Entry<?, ?>) entry;
-					return DefaultMultiMap.this.remove(e.getKey(), e.getValue());
-				}
-				return false;
-			}
-
-			@Override
-			public void clear() {
-				DefaultMultiMap.this.clear();
-			}
-		};
-	}
-
-	@Override
 	public int size() {
 		return size;
-	}
-
-	@Override
-	public int hashCode() {
-		return entrySet().hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof MultiMap) {
-			MultiMap<?, ?> multiMap = (MultiMap<?, ?>) obj;
-			return entrySet().equals(multiMap.entrySet());
-		}
-		return false;
-	}
-
-	@Override
-	public String toString() {
-		return MultiMaps.toString(this);
-	}
-
-	@Override
-	public Map<K, Set<V>> toMap() {
-		return MultiMaps.asMap(this);
 	}
 }

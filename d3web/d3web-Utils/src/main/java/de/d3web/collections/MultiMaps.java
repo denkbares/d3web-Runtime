@@ -86,12 +86,12 @@ public class MultiMaps {
 
 		@Override
 		public Set<T> createSet() {
-			return new TreeSet<T>(comparator);
+			return new TreeSet<>(comparator);
 		}
 
 		@Override
 		public <E> Map<T, E> createMap() {
-			return new TreeMap<T, E>(comparator);
+			return new TreeMap<>(comparator);
 		}
 	}
 
@@ -99,12 +99,12 @@ public class MultiMaps {
 
 		@Override
 		public Set<T> createSet() {
-			return new LinkedHashSet<T>();
+			return new LinkedHashSet<>();
 		}
 
 		@Override
 		public <E> Map<T, E> createMap() {
-			return new LinkedHashMap<T, E>();
+			return new LinkedHashMap<>();
 		}
 	}
 
@@ -118,12 +118,12 @@ public class MultiMaps {
 
 		@Override
 		public Set<T> createSet() {
-			return new HashSet<T>(capacity);
+			return new HashSet<>(capacity);
 		}
 
 		@Override
 		public <E> Map<T, E> createMap() {
-			return new HashMap<T, E>();
+			return new HashMap<>();
 		}
 	}
 
@@ -131,12 +131,12 @@ public class MultiMaps {
 
 		@Override
 		public Set<T> createSet() {
-			return new MinimizedHashSet<T>();
+			return new MinimizedHashSet<>();
 		}
 
 		@Override
 		public <E> Map<T, E> createMap() {
-			return new HashMap<T, E>();
+			return new HashMap<>();
 		}
 	}
 
@@ -215,7 +215,7 @@ public class MultiMaps {
 				return false;
 			}
 			if (element != EMPTY && !EqualsUtils.equals(element, t)) {
-				backUpSet = new HashSet<T>(4);
+				backUpSet = new HashSet<>(4);
 				//noinspection unchecked
 				backUpSet.add((T) element);
 				backUpSet.add(t);
@@ -323,80 +323,11 @@ public class MultiMaps {
 		return (CollectionFactory<T>) LINKED;
 	}
 
-	/**
-	 * Returns a string representation of this map. The string representation consists of a list of
-	 * key-value mappings in the order returned by the map's <tt>entrySet</tt> view's iterator,
-	 * enclosed in braces ( <tt>"{}"</tt>). Adjacent mappings are separated by the characters <tt>",
-	 * "</tt> (comma and space). Each key-value mapping is rendered as the key followed by an equals
-	 * sign (<tt>"="</tt>) followed by the associated value. Keys and values are converted to
-	 * strings as by {@link String#valueOf(Object)}.
-	 *
-	 * @return a string representation of this map
-	 */
-	static <K, V> String toString(final MultiMap<K, V> map) {
-		Iterator<Entry<K, V>> i = map.entrySet().iterator();
-		if (!i.hasNext()) return "{}";
-
-		StringBuilder sb = new StringBuilder();
-		sb.append('{');
-		for (; ; ) {
-			Entry<K, V> e = i.next();
-			K key = e.getKey();
-			V value = e.getValue();
-			sb.append(key == map ? "(this Map)" : key);
-			sb.append('=');
-			sb.append(value == map ? "(this Map)" : value);
-			if (!i.hasNext()) return sb.append('}').toString();
-			sb.append(", ");
-		}
-	}
-
-	static <K, V> Map<K, Set<V>> asMap(final MultiMap<K, V> map) {
-		return new AbstractMap<K, Set<V>>() {
-
-			@Override
-			public Set<Entry<K, Set<V>>> entrySet() {
-
-				return new AbstractSet<Entry<K, Set<V>>>() {
-
-					@Override
-					public Iterator<Entry<K, Set<V>>> iterator() {
-						final Iterator<K> keyIter = map.keySet().iterator();
-						return new Iterator<Entry<K, Set<V>>>() {
-
-							@Override
-							public boolean hasNext() {
-								return keyIter.hasNext();
-							}
-
-							@Override
-							public Entry<K, Set<V>> next() {
-								K key = keyIter.next();
-								Set<V> values = map.getValues(key);
-								return new SimpleImmutableEntry<K, Set<V>>(key, values);
-							}
-
-							@Override
-							public void remove() {
-								throw new UnsupportedOperationException();
-							}
-						};
-					}
-
-					@Override
-					public int size() {
-						return map.keySet().size();
-					}
-				};
-			}
-		};
-	}
-
 	public static <K, V> MultiMap<K, V> synchronizedMultiMap(MultiMap<K, V> map) {
-		return new SynchronizedMultiMap<K, V>(map);
+		return new SynchronizedMultiMap<>(map);
 	}
 
-	private static class SynchronizedMultiMap<K, V> implements MultiMap<K, V> {
+	private static class SynchronizedMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
 		private final MultiMap<K, V> map;     // Backing Map
 		final Object mutex;        // Object on which to synchronize
@@ -540,10 +471,10 @@ public class MultiMaps {
 	}
 
 	public static <K, V> MultiMap<K, V> unmodifiableMultiMap(MultiMap<K, V> map) {
-		return new UnmodifiableMultiMap<K, V>(map);
+		return new UnmodifiableMultiMap<>(map);
 	}
 
-	private static class UnmodifiableMultiMap<K, V> implements MultiMap<K, V> {
+	private static class UnmodifiableMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
 		private final MultiMap<K, V> map;
 
@@ -554,11 +485,6 @@ public class MultiMaps {
 		@Override
 		public int size() {
 			return map.size();
-		}
-
-		@Override
-		public boolean isEmpty() {
-			return map.isEmpty();
 		}
 
 		@Override
@@ -643,16 +569,6 @@ public class MultiMaps {
 		}
 
 		@Override
-		public int hashCode() {
-			return map.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return map.toString();
-		}
-
-		@Override
 		public Map<K, Set<V>> toMap() {
 			return Collections.unmodifiableMap(map.toMap());
 		}
@@ -666,16 +582,11 @@ public class MultiMaps {
 		return (MultiMap<K, V>) EMPTY_MULTI_MAP;
 	}
 
-	private static class EmptyMultiMap<K, V> implements MultiMap<K, V> {
+	private static class EmptyMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
 		@Override
 		public int size() {
 			return 0;
-		}
-
-		@Override
-		public boolean isEmpty() {
-			return true;
 		}
 
 		@Override
@@ -763,7 +674,7 @@ public class MultiMaps {
 		return new SingletonMultiMap<>(key, value);
 	}
 
-	private static class SingletonMultiMap<K, V> implements MultiMap<K, V> {
+	private static class SingletonMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
 		private final K key;
 		private final V value;
@@ -776,11 +687,6 @@ public class MultiMaps {
 		@Override
 		public int size() {
 			return 1;
-		}
-
-		@Override
-		public boolean isEmpty() {
-			return false;
 		}
 
 		@Override

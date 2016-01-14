@@ -18,12 +18,8 @@
  */
 package de.d3web.collections;
 
-import java.util.AbstractMap;
-import java.util.AbstractSet;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import de.d3web.collections.MultiMaps.CollectionFactory;
@@ -40,7 +36,7 @@ import de.d3web.collections.MultiMaps.CollectionFactory;
 // They are used when accessing entries, because java.util.Map also does it this way.
 // only methods that adds items are forcing to have the correct parameter types.
 @SuppressWarnings("SuspiciousMethodCalls")
-public class N2MMap<K, V> implements MultiMap<K, V> {
+public class N2MMap<K, V> extends AbstractMultiMap<K, V> {
 
 	private int size = 0;
 	private final Map<K, Set<V>> k2v;
@@ -97,23 +93,6 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 		return true;
 	}
 
-	@Override
-	public boolean putAll(Map<? extends K, ? extends V> map) {
-		boolean hasChanged = false;
-		for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-			hasChanged |= put(entry.getKey(), entry.getValue());
-		}
-		return hasChanged;
-	}
-
-	@Override
-	public boolean putAll(MultiMap<? extends K, ? extends V> map) {
-		boolean hasChanged = false;
-		for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-			hasChanged |= put(entry.getKey(), entry.getValue());
-		}
-		return hasChanged;
-	}
 
 	@Override
 	public void clear() {
@@ -122,9 +101,6 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 		size = 0;
 	}
 
-	public boolean isEmpty() {
-		return size == 0;
-	}
 
 	@Override
 	public Set<K> removeValue(Object value) {
@@ -225,97 +201,7 @@ public class N2MMap<K, V> implements MultiMap<K, V> {
 	}
 
 	@Override
-	public Set<Entry<K, V>> entrySet() {
-		return new AbstractSet<Entry<K, V>>() {
-
-			@Override
-			public Iterator<Entry<K, V>> iterator() {
-				return new Iterator<Map.Entry<K, V>>() {
-
-					Iterator<K> keyIter = keySet().iterator();
-					Iterator<V> valIter = Collections.<V> emptySet().iterator();
-					K currentKey = null;
-					V currentVal = null;
-
-					@Override
-					public boolean hasNext() {
-						return keyIter.hasNext() || valIter.hasNext();
-					}
-
-					@Override
-					public Entry<K, V> next() {
-						// if no next value available, proceed to next key
-						if (!valIter.hasNext()) {
-							currentKey = keyIter.next();
-							valIter = getValues(currentKey).iterator();
-						}
-						currentVal = valIter.next();
-						return new AbstractMap.SimpleImmutableEntry<K, V>(currentKey, currentVal);
-					}
-
-					@Override
-					public void remove() {
-						N2MMap.this.remove(currentKey, currentVal);
-					}
-				};
-			}
-
-			@Override
-			public int size() {
-				return size;
-			}
-
-			@Override
-			public boolean contains(Object entry) {
-				if (entry instanceof Entry) {
-					Entry<?, ?> e = (Entry<?, ?>) entry;
-					return N2MMap.this.contains(e.getKey(), e.getValue());
-				}
-				return false;
-			}
-
-			@Override
-			public boolean remove(Object entry) {
-				if (entry instanceof Entry) {
-					Entry<?, ?> e = (Entry<?, ?>) entry;
-					return N2MMap.this.remove(e.getKey(), e.getValue());
-				}
-				return false;
-			}
-
-			@Override
-			public void clear() {
-				N2MMap.this.clear();
-			}
-		};
-	}
-
-	@Override
 	public int size() {
 		return size;
-	}
-
-	@Override
-	public int hashCode() {
-		return entrySet().hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof MultiMap) {
-			MultiMap<?, ?> multiMap = (MultiMap<?, ?>) obj;
-			return entrySet().equals(multiMap.entrySet());
-		}
-		return false;
-	}
-
-	@Override
-	public String toString() {
-		return MultiMaps.toString(this);
-	}
-
-	@Override
-	public Map<K, Set<V>> toMap() {
-		return MultiMaps.asMap(this);
 	}
 }
