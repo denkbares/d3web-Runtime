@@ -24,10 +24,9 @@ import de.d3web.strings.Strings;
 
 /**
  * Utility class for instantiating textual constructor calls using a specific {@link ClassLoader}.
- * The {@link ClassLoader} that shall has to be specified in the constructor.
- * The {@link #newInstance} method does the actual instantiation of constructor calls.
- * The instantiation supports the definition of primitive arguments
- * {@link String}, double, int.
+ * The {@link ClassLoader} that shall has to be specified in the constructor. The {@link
+ * #newInstance} method does the actual instantiation of constructor calls. The instantiation
+ * supports the definition of primitive arguments {@link String}, double, int.
  *
  * @author Sebastian Furth (denkbares GmbH)
  * @created 08.06.15
@@ -62,16 +61,12 @@ public class Instantiation {
 	 * from the constructor call expression. If there is no such constructor or if the constructor
 	 * cannot be accessed, null is returned. If the constructor can be called, but fails with an
 	 * exception, an InvocationTargetException is thrown.
-	 *
-	 * Example constructor calls are:
-	 * <ul>
-	 *     <li>java.util.ArrayList</li>
-	 *     <li>java.util.ArrayList(5)</li>
-	 * </ul>
+	 * <p/>
+	 * Example constructor calls are: <ul> <li>java.util.ArrayList</li>
+	 * <li>java.util.ArrayList(5)</li> </ul>
 	 *
 	 * @param constructorCall A constructor call that may contain primitive arguments.
 	 * @return the created instance
-	 *
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchMethodException
 	 * @throws IllegalAccessException
@@ -106,26 +101,53 @@ public class Instantiation {
 						argTypes[i] = String.class;
 						argValues[i] = Strings.unquote(argument.substring(1, argument.length() - 1),
 								argument.charAt(0));
+						continue;
 					}
+
+					// accept enum arguments
+					if (argument.matches("\\w+([.$]\\w+)*(\\.\\w+)")) {
+						int split = argument.lastIndexOf('.');
+						String enumClassName = argument.substring(0, split);
+						try {
+							argTypes[i] = Class.forName(enumClassName);
+							if (argTypes[i].isEnum()) {
+								//noinspection unchecked
+								argValues[i] = Strings.parseEnum(argument.substring(split + 1), (Class<Enum>) argTypes[i]);
+								if (argValues[i] == null) {
+									String message = "The enum'" + argument +
+											"' references a unknown enum constant. " +
+											(context != null ? "Please check: '" + context.getOrigin() + "'. " : "");
+									Log.severe(message);
+									throw new IllegalArgumentException(message);
+								}
+								continue;
+							}
+						}
+						catch (ClassNotFoundException ignore) {
+						}
+					}
+
 					// accept integer arguments
-					else if (argument.matches("\\d+")) {
+					if (argument.matches("\\d+")) {
 						argTypes[i] = Integer.class;
 						argValues[i] = new Integer(argument);
+						continue;
 					}
+
 					// accept double arguments
-					else if (argument.matches("\\d+\\.\\d+")) {
+					if (argument.matches("\\d+\\.\\d+")) {
 						argTypes[i] = Double.class;
 						argValues[i] = new Double(argument);
+						continue;
 					}
+
 					// allow other types as required
 					// if not, an exception if thrown
-					else {
-						String message = "The constructor '" + constructorCall +
-								"' has an unsupported argument type. " +
-								(context != null ? "Please check: '" + context.getOrigin() + "'. " : "");
-						Log.severe(message);
-						throw new IllegalArgumentException(message);
-					}
+					String message = "The constructor '" + constructorCall +
+							"' has an unsupported argument type. " +
+							(context != null ? "Please check: '" + context.getOrigin() + "'. " : "");
+					Log.severe(message);
+					throw new IllegalArgumentException(message);
 				}
 
 			}
