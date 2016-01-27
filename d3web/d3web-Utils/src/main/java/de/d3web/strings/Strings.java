@@ -1960,4 +1960,18 @@ public class Strings {
 			this.end = end;
 		}
 	}
+
+	/**
+	 * Converts an array of (Unicode) integer codepoints to a corresponding String representation
+	 * @param codePoints integer codepoints (Unicode)
+	 * @return a String derived from the codepoints
+	 */
+	public static String fromCharCode(int... codePoints) {
+		StringBuilder builder = new StringBuilder(codePoints.length);
+		for (int codePoint : codePoints) {
+			builder.append(Character.toChars(codePoint));
+		}
+		return builder.toString();
+	}
+
 }
