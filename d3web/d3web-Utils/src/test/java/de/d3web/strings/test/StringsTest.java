@@ -323,4 +323,11 @@ public class StringsTest {
 		assertEquals("This is a paragraph.\n* item1\n* item2\n\nAnd some text after.",
 				Strings.htmlToPlain(source));
 	}
+
+	@Test
+	public void fromCodePoint() {
+		int charCode = 45;
+		String stringFromCharCode = Strings.fromCharCode(charCode);
+		assertEquals("-", stringFromCharCode);
+	}
 }
