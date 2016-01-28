@@ -11,11 +11,16 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 
 import de.d3web.collections.Matrix;
@@ -91,7 +96,7 @@ public class Files {
 	 * they have the same content, without fully reading the files contents! This method is much
 	 * quicker that {#hasEqualContent} but you cannot be sure if the content really differs if the
 	 * method return true.
-	 * <p/>
+	 * <p>
 	 * Returns true if both files exists, both denote a file (not a directory), and the file seems
 	 * to be identical.
 	 *
@@ -213,20 +218,46 @@ public class Files {
 	 * @throws IOException if the properties file could not been read or written
 	 */
 	public static void updatePropertiesFile(File file, String key, String value) throws IOException {
-		// create a well-encoded line to be added
-		Properties newProperty = new Properties();
-		newProperty.put(key, value);
-		StringWriter newLineBuffer = new StringWriter();
-		newProperty.store(newLineBuffer, null);
-		String newLine = newLineBuffer.toString().replaceAll("(?m)^#.*$[\n\r]*", "").trim();
+		updatePropertiesFile(file, Collections.singletonMap(key, value));
+	}
+
+	/**
+	 * Reads and rewrites the a properties file, adding the specified entries, overwriting all
+	 * existing entries that have one of the specified keys. It preserves all other lines, including
+	 * comments and the order of the lines. Only the lines with the specified key will be modified
+	 * (preserving their order), where the first one is overwritten, and succeeding ones (if there
+	 * are any) will be deleted. If there are no such lines contained for some of the specified
+	 * entries, the remaining entries will be appended to the end of the file.
+	 * <p>
+	 * The method is also capable to delete entries, if the key occurs in the specified entries with
+	 * value null.
+	 *
+	 * @param file the properties file to be updated
+	 * @param entries the keys to be overwritten with their (new) values
+	 * @throws IOException if the properties file could not been read or written
+	 */
+	public static void updatePropertiesFile(File file, Map<String, String> entries) throws IOException {
+		// create well-encoded lines to be added;
+		// preserve null to mark lines to be deleted
+		Map<String, String> linesToAdd = new HashMap<>();
+		for (Entry<String, String> entry : entries.entrySet()) {
+			String newLine = null;
+			if (entry.getValue() != null) {
+				Properties newProperty = new Properties();
+				newProperty.put(entry.getKey(), entry.getValue());
+				StringWriter newLineBuffer = new StringWriter();
+				newProperty.store(newLineBuffer, null);
+				newLine = newLineBuffer.toString().replaceAll("(?m)^#.*$[\n\r]*", "").trim();
+			}
+			linesToAdd.put(entry.getKey(), newLine);
+		}
 
 		List<String> lines;
 		if (file.exists()) {
 			// read the properties file and iterate each line,
 			// preserving comments and order
-			lines = de.d3web.utils.Files.getLines(file);
+			lines = getLines(file);
 			ListIterator<String> lineIterator = lines.listIterator();
-			boolean replaced = false;
 			while (lineIterator.hasNext()) {
 				String line = lineIterator.next();
 				// parse each line as a property
@@ -234,35 +265,36 @@ public class Files {
 				parsedLine.load(new StringReader(line));
 
 				// if the lines specifies the key, it will be overwritten
-				if (parsedLine.containsKey(key)) {
-					if (replaced) {
-						// if already replaced one line with the key,
-						// remove duplicate lines with same key
-						lineIterator.remove();
-					}
-					else {
-						// overwrite the first line with the specified key
-						lineIterator.set(newLine);
-						replaced = true;
+				if (!parsedLine.isEmpty()) {
+					String key = (String) parsedLine.keySet().iterator().next();
+					if (linesToAdd.containsKey(key)) {
+						String newLine = linesToAdd.get(key);
+						if (newLine == null) {
+							// if already replaced one line with the key,
+							// remove duplicate lines with same key
+							lineIterator.remove();
+						}
+						else {
+							// overwrite the first line with the specified key
+							lineIterator.set(newLine);
+							// and remove the line to mark it as added
+							linesToAdd.remove(key);
+						}
 					}
 				}
 			}
 
-			// if not replaced any line, we append the new line at the end
-			if (!replaced) lines.add(newLine);
+			// we append the new lines at the end, for all not inserted lines to add
+			linesToAdd.values().stream().filter(Objects::nonNull).forEach(lines::add);
 		}
 		else {
-			// Create a new "list" of lines, consisting only of the line to be added
-			lines = Collections.singletonList(newLine);
+			// Create a new empty list of lines
+			lines = new ArrayList<>(linesToAdd.values());
 		}
 
 		// and finally write the lines back to disc
-		FileOutputStream out = new FileOutputStream(file);
-		try {
+		try (FileOutputStream out = new FileOutputStream(file)) {
 			out.write(Strings.concat("\n", lines).getBytes());
-		}
-		finally {
-			out.close();
 		}
 	}
 
