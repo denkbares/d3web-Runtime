@@ -96,6 +96,17 @@ public class Stopwatch {
 	}
 
 	/**
+	 * Shows the currently measured time with some message in the default log with log level info.
+	 * The method returns this stopwatch afterwards to allow cascading calls.
+	 *
+	 * @param message the message to be printed before the time
+	 */
+	public Stopwatch log(String message) {
+		Log.info(message + ": " + getDisplay());
+		return this;
+	}
+
+	/**
 	 * Returns the currently measured time in milliseconds
 	 *
 	 * @return the measure time
