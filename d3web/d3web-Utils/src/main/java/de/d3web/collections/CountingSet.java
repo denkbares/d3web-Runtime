@@ -23,12 +23,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Utility class to count occurrences of particular objects. For each object a counter is created.
  * It will be counted how often the particular objects has been added.
- * <p/>
+ * <p>
  * In contrast to an ordinary set, if an object has been added multiple times, it remains in the set
  * even on removal, until if has been removed as often as it has been added.
  *
@@ -205,7 +206,7 @@ public class CountingSet<E> implements Set<E> {
 	 * or decrease its counter by 1. The only difference is that the method returns the number of
 	 * occurrences of the specified object after it has been removed (instead of a flag if the set
 	 * has been changed).
-	 * <p/>
+	 * <p>
 	 * The method return '0' if the object has been removed from the set by this method call. It
 	 * return '-1' if the object has not been present in the set before.
 	 *
@@ -223,7 +224,7 @@ public class CountingSet<E> implements Set<E> {
 	 * it has been removed (instead of a flag if the set has been changed). But this method removes
 	 * the object multiple times, specified by the amount parameter. The object will be removed if
 	 * the returned counter is equal or below zero.
-	 * <p/>
+	 * <p>
 	 * The method returns a number between '0' (inclusively) above '-amount' (exclusively) if the
 	 * object has been removed from the set by this method call. It return '-amount' if the object
 	 * has not been present in the set before.
@@ -243,6 +244,17 @@ public class CountingSet<E> implements Set<E> {
 			return count.count;
 		}
 		return -amount;
+	}
+
+	/**
+	 * Returns a map that represents the elements of the set and their current count as integer. The
+	 * map does only contains those elements with a positive count. The returned map is
+	 * unmodifiable.
+	 *
+	 * @return the map representation of this counting set
+	 */
+	public Map<E, Integer> toMap() {
+		return new MappingMap<>(counters, c -> c.count);
 	}
 
 	@Override
