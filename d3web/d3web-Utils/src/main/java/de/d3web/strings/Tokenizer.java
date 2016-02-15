@@ -39,7 +39,7 @@ public class Tokenizer {
 	 * @return the first index after a word has ended
 	 * @created 09.11.2013
 	 */
-	public static int nextSpaceIndex(String text, int start) {
+	public static int nextSpaceIndex(CharSequence text, int start) {
 		int len = text.length();
 		// set cursor behind this word
 		while (start < len && isWordChar(text.charAt(start)))
@@ -57,7 +57,7 @@ public class Tokenizer {
 	 * @return the first index a new word starts
 	 * @created 09.11.2013
 	 */
-	public static int nextWordIndex(String text, int start) {
+	public static int nextWordIndex(CharSequence text, int start) {
 		int len = text.length();
 		// set cursor behind the spacing before the next word
 		while (start < len && !Tokenizer.isWordChar(text.charAt(start)))
