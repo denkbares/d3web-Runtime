@@ -21,6 +21,7 @@
 package de.d3web.indication;
 
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * ActionIndication represents the general indication of a QASet. Creation date:
@@ -30,7 +31,11 @@ import de.d3web.core.knowledge.Indication.State;
  */
 public class ActionIndication extends ActionNextQASet {
 
-	@Override
+    public ActionIndication(QASet... qaSet) {
+        setQASets(qaSet);
+    }
+
+    @Override
 	public State getState() {
 		return State.INDICATED;
 	}
