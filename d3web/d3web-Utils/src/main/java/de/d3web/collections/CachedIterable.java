@@ -63,8 +63,16 @@ public class CachedIterable<E> implements Iterable<E> {
 	 * @param count the minimum number of elements to be contained, if possible
 	 */
 	private void fillCache(int count) {
-		while (cache.size() < count && futures.hasNext()) {
-			cache.add(futures.next());
+		synchronized (cache) {
+			while (cache.size() < count && futures.hasNext()) {
+				cache.add(futures.next());
+			}
+		}
+	}
+
+	private E get(int index) {
+		synchronized (cache) {
+			return cache.get(index);
 		}
 	}
 
@@ -77,7 +85,7 @@ public class CachedIterable<E> implements Iterable<E> {
 	 * Returns an iterator over a subset of the elements of type {@code T}, starting from the
 	 * element at startIndex (inclusively; where 0 is the first element) and stopping before the
 	 * element at endIndex (exclusively).
-	 * <p/>
+	 * <p>
 	 * If startIndex is below 0, the iteration start from the first element. If endIndex is ≤ 0 or ≤
 	 * startIndex the iterator will be empty. If endIndex is larger than the number of elements
 	 * contained in this iterator the iteration will stop before endIndex is reached.
@@ -91,6 +99,7 @@ public class CachedIterable<E> implements Iterable<E> {
 			@Override
 			public boolean hasNext() {
 				if (index >= endIndex) return false;
+				if (index < cache.size()) return true;
 				fillCache(index + 1);
 				return index < cache.size();
 			}
@@ -98,7 +107,7 @@ public class CachedIterable<E> implements Iterable<E> {
 			@Override
 			public E next() {
 				if (!hasNext()) throw new NoSuchElementException();
-				return cache.get(index++);
+				return get(index++);
 			}
 
 			@Override
