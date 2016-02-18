@@ -127,6 +127,20 @@ public class PartialHierarchyTree<T> {
 		return findRecursiveNode(t, root);
 	}
 
+	/**
+	 * Returns the depth level of this node in the tree
+	 *
+	 * @param node
+	 * @return
+	 */
+	public int getDepthLevel(Node<T> node) {
+		int depth = 0;
+		while(node.getParent() != null) {
+			node = node.getParent();
+			depth++;
+		}
+		return depth;
+	}
 
 	private synchronized Node<T> findRecursiveNode(T externalNode, Node<T> treeNode) {
 		if (externalNode.equals(treeNode.data)) return treeNode;
