@@ -325,7 +325,7 @@ public interface MultiMap<K, V> {
 	boolean putAll(MultiMap<? extends K, ? extends V> m);
 
 	/**
-	 * Add each of the specified values for the specified key to this multi map. The effect of this
+	 * Adds each of the specified values for the specified key to this multi map. The effect of this
 	 * call is equivalent to that of calling {@link #put(Object, Object) put(k, v)} on this map once
 	 * for the specified <tt>key</tt> and each value of the specified <tt>values</tt>. The behavior
 	 * of this operation is undefined if the specified map is modified while the operation is in
