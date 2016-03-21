@@ -129,14 +129,14 @@ public class Instantiation {
 
 					// accept integer arguments
 					if (argument.matches("\\d+")) {
-						argTypes[i] = Integer.class;
+						argTypes[i] = Integer.TYPE;
 						argValues[i] = new Integer(argument);
 						continue;
 					}
 
 					// accept double arguments
 					if (argument.matches("\\d+\\.\\d+")) {
-						argTypes[i] = Double.class;
+						argTypes[i] = Double.TYPE;
 						argValues[i] = new Double(argument);
 						continue;
 					}
