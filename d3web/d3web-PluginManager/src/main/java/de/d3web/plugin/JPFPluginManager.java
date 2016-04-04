@@ -88,6 +88,18 @@ public final class JPFPluginManager extends PluginManager {
 			manager.activatePlugin(id);
 			Log.info("Plugin '" + id + "' installed and activated.");
 		}
+		// check duplicate ids
+		Set<String> extensionIds = new HashSet<>();
+		Collection<PluginDescriptor> pluginDescriptors = manager.getRegistry().getPluginDescriptors();
+		for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
+			for (org.java.plugin.registry.Extension e : pluginDescriptor.getExtensions()) {
+				if (!extensionIds.add(e.getId())) {
+					Log.severe("Tried to load two extensions with the same ID. " +
+							"This is a plugin configuration error and only one will be active. " +
+							"Duplicate plugin id: " + e.getId());
+				}
+			}
+		}
 	}
 
 	/**
