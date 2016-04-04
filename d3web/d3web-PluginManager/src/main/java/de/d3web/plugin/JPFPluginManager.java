@@ -41,6 +41,7 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 
 import de.d3web.plugin.util.PluginCollectionComparatorByPriority;
+import de.d3web.utils.EqualsUtils;
 import de.d3web.utils.Log;
 
 /**
@@ -89,14 +90,20 @@ public final class JPFPluginManager extends PluginManager {
 			Log.info("Plugin '" + id + "' installed and activated.");
 		}
 		// check duplicate ids
-		Set<String> extensionIds = new HashSet<>();
+		Map<String, org.java.plugin.registry.Extension> extensions = new HashMap<>();
 		Collection<PluginDescriptor> pluginDescriptors = manager.getRegistry().getPluginDescriptors();
 		for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
-			for (org.java.plugin.registry.Extension e : pluginDescriptor.getExtensions()) {
-				if (!extensionIds.add(e.getId())) {
-					Log.severe("Tried to load two extensions with the same ID. " +
-							"This is a plugin configuration error and only one will be active. " +
-							"Duplicate plugin id: " + e.getId());
+			for (org.java.plugin.registry.Extension current : pluginDescriptor.getExtensions()) {
+				org.java.plugin.registry.Extension previous = extensions.put(current.getId(), current);
+				if (previous != null) {
+					String currentName = current.getParameter("name").rawValue();
+					String previousName = previous.getParameter("name").rawValue();
+					if (EqualsUtils.equals(previousName, currentName)) {
+						Log.severe("Tried to load two extensions with the same ID and name. " +
+								"Extensions can have the same ID (to allow to override a extension), but they then need to have different names.\n" +
+								"This is a plugin configuration error and only one will be active. " +
+								"Duplicate id: " + current.getId() + ", duplicate name: " + currentName);
+					}
 				}
 			}
 		}
