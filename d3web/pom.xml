@@ -222,12 +222,10 @@
 		<repository>
 			<snapshots>
 				<enabled>true</enabled>
-				<updatePolicy>interval:60</updatePolicy>
 				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
 			<releases>
 				<enabled>true</enabled>
-				<updatePolicy>interval:60</updatePolicy>
 			</releases>
 			<id>des-repo-des</id>
 			<name>Denkbares Public Repository</name>
