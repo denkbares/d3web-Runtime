@@ -1,7 +1,0 @@
-Manifest-Version: 2.0
-ID: Car-Diagnosis..Car-Diagnosis_KB
-Author: 
-Name: 
-Date: Thu Feb 18 15:54:52 CET 2010
-User: Markus Friedrich
-

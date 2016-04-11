@@ -1,0 +1,228 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="d3web-BasicProperties" version="0.0.1">
+	
+	<requires>
+		<import plugin-id="d3web-Kernel-ExtensionPoints" />
+	</requires>
+	
+	<runtime>
+		<library id="de.d3web" path="." type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="cost">
+		<parameter id="name" value="cost" />
+		<parameter id="description" value="Specifies what amount of costs is needed to perform a specific question or questionnaire." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Double" />
+		<parameter id="default" value="1.0" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="unit">
+		<parameter id="name" value="unit" />
+		<parameter id="description" value="Specifies the unit of the value of a numerical question." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="abstractionQuestion">
+		<parameter id="name" value="abstractionQuestion" />
+		<parameter id="description" value="Marks a question as abstraction question (if 'true') or not (if 'false'). Abstraction questions are going to be derived by the knowledge base itself, instead of answered by the user or any other external source." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="apriori">
+		<parameter id="name" value="apriori" />
+		<parameter id="description" value="Specifies the apriori probability of a diagnosis. It defines how likely this solution will occur." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Float" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="range">
+		<parameter id="name" value="range" />
+		<parameter id="description" value="Specifies the valid range (minimum and maximum value) of numeric question." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.NumericalInterval" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="INIT">
+		<parameter id="name" value="INIT" />
+		<parameter id="description" value="Specifies the initial value of a question, which is automatically set as a new session is created. You may specify the name of a choice for choice questions (multiple choices may be seperated by ;), or a numerical value for numerical questions, or any text for text questions, or a date for date questions. Dates should be formated as following 'yyyy-MM-dd [HH-mm-ss[-SS]]'." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="unknownVisible">
+		<parameter id="name" value="unknownVisible" />
+		<parameter id="description" value="Specifies if the answer 'unknown' should be invisible in questions. If this property is specified for the knowledge base it represents the default value for all questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="unknownPrompt">
+		<parameter id="name" value="unknownPrompt" />
+		<parameter id="deprecated" value="unknown_verbalisation" />
+		<parameter id="description" value="Specifies how the answer 'unknown' should be displayed to the user. If this property is specified for the knowledge base it represents the default value for all questions. See also 'unknownVisible' to specify if 'unknown' is available to the user at all." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="version">
+		<parameter id="name" value="version" />
+		<parameter id="description" value="Specifies the version of a knowledge base." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="status">
+		<parameter id="name" value="status" />
+		<parameter id="description" value="Specifies the status indicator of a knowledge base, e.g. PREVIEW, FINAL, ..." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="affiliation">
+		<parameter id="name" value="affiliation" />
+		<parameter id="description" value="Specifies the affiliation of the knowledge base or session, for example of the author of the knowledge base" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="author">
+		<parameter id="name" value="author" />
+		<parameter id="description" value="Specifies the version of a knowledge base." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="filename">
+		<parameter id="name" value="filename" />
+		<parameter id="description" value="Specifies the desired filename of a knowledge base to be downloaded." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="created">
+		<parameter id="name" value="created" />
+		<parameter id="description" value="Specifies the download date of a knowledge base (is persistently created when downloaded)" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.util.Date" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="description">
+		<parameter id="name" value="description" />
+		<parameter id="description" value="Specifies the description text of any object within the knowledge base." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="prompt">
+		<parameter id="name" value="prompt" />
+		<parameter id="description" value="Specifies the full text which should be prompted (e.g., in a dialog). This property might be applied to any object within the knowledge base." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="link">
+		<parameter id="name" value="link" />
+		<parameter id="description" value="A String representing an external description of any object within the knowledge base. A link may contain an URL or a relative path to a resource of the knowledge base." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="abnormality">
+		<parameter id="name" value="abnormality" />
+		<parameter id="description" value="Specifies the abnormality of different values of a question. They can be parsed from strings like [choice:abnormality;]+" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality" />
+	</extension>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="abnormalityNum">
+		<parameter id="name" value="abnormalityNum" />
+		<parameter id="description" value="Represents the abnormality for num values." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="dateDisplay">
+		<parameter id="name" value="dateDisplay" />
+		<parameter id="description" value="Represents the display type of date questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.DateDisplay" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="solutionDisplay">
+		<parameter id="name" value="solutionDisplay" />
+		<parameter id="description" value="Represents the display type of solutions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.SolutionDisplay" />
+	</extension>
+
+</plugin>

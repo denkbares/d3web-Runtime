@@ -1,0 +1,169 @@
+﻿
+
+Startend beim SSN erstelle Snapshot rückwärts entlang aktiver Pfade.
+
+Snapshot an einem Knoten n nehmen:
+(Vorbedingung: hat keine aktiven ausgehenden Verbindungen zu Knoten, die 
+noch gesnapshotted werden müssen.)
+
+1. Erzeuge Liste A_IN = alle aktiven eingehenden Kanten
+2. Erzeuge Liste A_OUT = alle aktiven ausgehenden Kanten
+3. Für jede Kante e_in in A_IN
+	3a. Setze e_in auf inaktiv
+4. Führe knotentypspezifische Snapshot-Aktion von n aus und entferne alle Supports von n (Reset)
+5. Für jede Kante e_in in A_IN
+	5a. Nimm Snapshot am Startknoten n' von e_in (Rekursion)
+6. Für jede Kante e_out in A_OUT
+	6a. Gib dem Endknoten n' von e_out ValidSupport
+	6b. Setze e_out auf inaktiv
+
+	
+	
+Erläuterungen:
+
+Vorgehen:
+Schritt 3: setzt die eingehenden Kanten auf inaktiv, damit bei Snapshot von n'
+festgestellt werden kann welche Pfade an n' verzweigen, die NICHT auf dem Pfad 
+des Snapshots liegen. Dies sind nach Ausführung von Schritt 3 (für n) die 
+aktiven ausgehenden Kanten von n'. Die Endknoten aller dieser Kanten erhalten ValidSupport.
+
+Schritt 4: es wäre schön, die knotentypspezifische Aktion und den Reset von n in verschiedene Schritte aufzutrennen
+Aber: Reset kann nicht vor KTS-Aktion geschehen, da diese meist vom Zustand des Support beeinflußt wird.
+KTS-Aktion muss aber evtl teilweise nach Reset ausgeführt werden.
+
+Schritt 5: Alle aktiven eingehenden Kanten in n liegen auf dem Pfad zum SSN. An 
+deren Startknoten wird mit dem Snapshot fortgefahren.
+
+
+
+
+Reihenfolge: 
+* 1. und 2. muss zuerst durchgeführt werden, da nach 4. wegen 
+Entfernen des Supports von n die Liste A_OUT leer ist. 
+* 3. muss vor 5. ausgeführt werden, sonst ist Vorbedingung verletzt. 
+Beim Snapshotten von n' wäre Kante zu n noch aktiv und würde 
+fälschlicherweise ValidSupport erhalten.
+
+
+Snapshot-Erzeugung:
+Wird ein SSN erreicht, wird der Fluss durch den Flowchart abgebrochen und nach dem Erstellen 
+des Snapshots ab dem SSN fortgesetzt.
+
+SS muss auf stabilem Zustand durchgeführt werden. (d.h.: Pfad zum SSN bricht  NICHT
+noch während der aktuellen Propagierung wieder zusammen)
+
+Aber wann ist der Zustand stabil?
+
+	Nur DiaFlux als Problemlöser:
+		* Snapshots könnten wohl am Ende der aktuellen Propagierung durchgeführt werden
+	
+	Mehrere Problemlöser:
+		* Ein anderer PSM könnte in dieser Propagierung etwas herleiten, was einen aufgebauten Pfad zu 
+		einem SSN zusammenbrechen läßt. Daher war angedacht, den SS erst zu Beginn der nächsten Propagierung
+		zu erstellen, da dann der Zustand stabil sein sollte. 
+		ABER: Die Fakten, die den Pfad zum SSN zusammenbrechen lassen, kommen ja auch erst 
+		mit neuer Propagierung, zu deren Beginn als erstes der Snapshot erstellt wird.
+		Macht dies also überhaupt einen Unterschied?????
+		
+Problem der SS-Erstellung in neuer Propagierung:
+	* Aus oben genannten Gründen muss der Fluss am SSN (für die aktuelle Propagierung) abbrechen
+	=> Aktionen nach dem SSN, die durchgeführt werden können, erfolgen erst in nächster Propagierung
+	ABER: Was, wenn nächste Propagierung erst sehr viel später?
+	Lösung?: Abschicken eines "Pseudo-Fakts", um sofort nächste Propagierung anzustoßen??
+		
+
+		
+Bei Erstellung mehrerer Snapshots auf einmal:
+ * Sollten alle Snapshots nacheinander genommen werden und dann von jedem weitergeflossen werden
+ * oder kann man für jeden zuerst den SS erstellen und dann weiterfließen??
+ Können beim weiterfließen Aktionen ausgeführt werden, die die Erstellung des Snapshots beeinflussen?? 
+ Außerdem (und evtl sogar schlimmer): beim weiterfließen wird eine Verbindung zu einem Pfad hergestellt, 
+ der anschließend noch gesnapshotted wird.
+ Besser: 1. Variante 
+ 
+ 
+ Zyklen bei SS erkennen notwendig?? Oder können keine entstehen durch zurücksetzen der Kanten???
+ Evtl Erkennung notwendig, da an aktiven SSNs takeSnapshot mehrfach aufgerufen wird...
+ 
+
+
+Knotenspezifische SS-Aktionen:
+ComposeNode:
+
+Ein CN für den Snapshot für den aufgerufenen Flow durch: 
+Dafür werden alle aktiven ExitKnoten des aufgerufenen FCs gesucht. Für diese wird der SS durchgeführt.
+Anschließend fährt der Snapshot an den aktiven eingehenden Kanten des CN durch.
+
+Wird ein Snapshot an einem ComposedNode cn genommen, sind 3 Fälle möglich:
+1. Der SS wurde im aufgerufenen Flowchart f an Knoten n ausgelöst:
+	Snapshot wurde bereits bis zum aufgerufenen Startknoten ausgeführt. 
+	(Parallele aktive Pfade zum SSN könnten wegen Depth-First noch nicht gesnapshotted worden sein. 
+	Ist das ein Problem?)
+	Dieser startet nun Snapshot am cn. 
+	2 Fälle:
+		A) f ist abgearbeitet: d.h. es existiert paralleler aktiver Pfad (neben n) in f, 
+		   der einen Endknoten erreicht hat. Wird nun der SS-Prozess für cn aufgerufen, 
+		   so  besitzt dieser aktive ausgehende Kanten. (Problem: Diese würden aktuell ValidSupport 
+		   erhalten, s. SS-Algo Vorbedingung)
+		B) f ist nicht abgearbeitet: cn besitzt keine aktiven ausgehenden Kanten. SS kann an 
+		   cn genommen werden (und von dort aus rückwärts weiter.)
+
+2. Der SS wurde ausgelöst auf Pfad p hinter cn an SS-Knoten n:
+	beim Erstellen des Snapshots in cn wird der Snapshot für den aufgerufenen FC f ausgeführt:
+	SS-Algo wird aufgerufen für alle aktiven ExitKnoten von f, die in einer Bedingung von Kanten 
+	vorkommen, die an cn starten. (Problem: paralleler aktiver Pfad p', startend an cn, der neben n herläuft.
+	SS würde am Exitknoten ek genommen, der p' aktiviert, obwohl ek nicht auf Pfad zu n liegt. Könnte gefixt werden, 
+	indem geprüft wird, dass der Endknoten der Kante von cn zu p' in der Liste der bereits gesnapshotteten Knoten liegt.)
+	Vom Problemfall mit p' abgesehen, funktioniert dieser Fall.
+	
+
+3. Zwei CNs cn1 und cn2 rufen ein FC f auf( und gleichen Startknoten), f ist abgearbeitet und die Pfade 
+	hinter cn1 und cn2 sind fortgesetzt. 
+	hinter cn1 wird ein SS-Knoten erreicht. für cn1 gilt zunächst Fall 2, dies macht keine Probleme.
+	cn1 löst SS in f aus. Wird in f der von cn1 und cn2 aufgerufene Startknoten erreicht, so wird ein SS für cn2 durchgeführt.
+	Poblem: Startet das Erzeugen des Snapshots an cn2, so ist für diesen Knoten die Vorbedingung verletzt. 
+	Alle aktiven von cn2ausgehenden Kanten erhalten ValidSupport.
+	
+
+Startknoten:
+Startknoten kennt die ihn aufrufenden CNs. 
+
+Der Startknoten n in FC f führt SS für die ihn aufrufenden CNs durch:
+Ist CN in der Liste der gesnapshotteten Knoten: Tue nichts, sonst:
+Erstelle SS ab CN
+Wenn der FC f aktiv ist (=mind. 1 aktive Knoten enthält), so erhält der CN ValidSupport:
+3 Fälle:
+* f enthält aktiven SSN (KeinProblem), 
+* f enthält nicht zusammenhängende Pfade und der nicht gesnapshottete ist aktiv 
+  (sollte man ohne Einschränkungen der Modellierung verbieten können)
+* f enthält mehrere aktive Startknoten, deren Pfade sich treffen. Die k zuerst gesnapshotteten Pfad 
+(gemäß Depth-First) erhalten ValidSupport (da der k. Pfad noch aktiv ist), der k. erhält keinen ValidSupprt, 
+da f keinen aktiven Knoten mehr besitzt. Voraussetzung für diesen Fall ist natürlich, dass f keinen aktiven SSN 
+enthält. Dann würden alle Pfade (auch der k.) _berechtigterweise_ ValidSupport erhalten.
+
+
+
+	
+
+SnapshotNode:
+
+Früher: fügt sich selbst ValidSupport hinzu (nach resetten der NodeData), um Supported zu bleiben.
+Problem: Zyklus mit 1 SSN. SSN gibt sich nach Snapshot ValidSupport. 
+Wird der SSN später wiederholt aktiviert, so wird ein neuer SS registriert. 
+Diese Aktion kann aber nicht mehr rückgängig gemacht werden, da der SSN ValidSupport hat. 
+Workaround: SSN gibt seinen folgenden Knoten ValidSupport? er selbst wird deaktiviert.
+
+
+
+"Sonderfälle":
+
+2 parallele aktiven Pfade p1, p2 von einem Knoten K_Split bis zu einem Knoten K_Join:
+	einer der beiden Pfade (p1) wird zuerst gesnappshotted. 
+	K_Split besitzt eine aktive ausgehende Kante zum Anfang des anderen Pfades p2 (Knoten A2). 
+	Diese wird beim snapshotten von K_Split deaktiviert und der Anfangsknoten (A2) des noch aktiven Pfades (p2) erhält (fälschlich) ValidSupport
+	Dies Problem wird beim snapshotten von p2 behoben:
+	Nachdem das Snapshotten von p1 abgeschlossen ist, wird der 2. Pfad ab K_Join geSSt.
+	Dabei wird auch der Knoten A2 geSSt und verliert seinen Support (auch den VS).
+	
+
+

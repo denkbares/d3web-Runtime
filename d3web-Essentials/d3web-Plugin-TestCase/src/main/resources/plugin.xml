@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><!--
+  ~ Copyright (C) 2015 denkbares GmbH, Germany
+  ~
+  ~ This is free software; you can redistribute it and/or modify it under the
+  ~ terms of the GNU Lesser General Public License as published by the Free
+  ~ Software Foundation; either version 3 of the License, or (at your option) any
+  ~ later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+  ~ details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with this software; if not, write to the Free Software Foundation,
+  ~ Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+  ~ site: http://www.fsf.org.
+  -->
+
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="d3web-Plugin-TestCase" version="0.0.1">
+	<!-- This plugin only defines extension points for session persistence handler and fragment handler. -->
+
+	<extension-point id="FragmentHandler">
+		<parameter-def id="class" />
+		<parameter-def id="name" />
+		<parameter-def id="description" />
+		<parameter-def id="version" />
+		<parameter-def id="priority" type="number" />
+	</extension-point>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler"
+		id="DefaultTestCaseHandler">
+		<parameter id="class"
+			value="de.d3web.testcase.persistence.DefaultTestCaseHandler" />
+		<parameter id="name" value="DefaultTestCaseHandler" />
+		<parameter id="description" value="Handler for DefaultTestCaseHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="DefaultFindingHandler">
+		<parameter id="class" value="de.d3web.testcase.persistence.DefaultFindingHandler" />
+		<parameter id="name" value="DefaultFindingHandler" />
+		<parameter id="description" value="Handler for DefaultFindingHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="DefaultCheckHandler">
+		<parameter id="class" value="de.d3web.testcase.persistence.DefaultCheckHandler" />
+		<parameter id="name" value="DefaultCheckHandler" />
+		<parameter id="description" value="Handler for DefaultCheckHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="PrefixedTestCaseHandler">
+		<parameter id="class" value="de.d3web.testcase.persistence.PrefixedTestCaseHandler" />
+		<parameter id="name" value="PrefixedTestCaseHandler" />
+		<parameter id="description" value="Handler for PrefixedTestCaseHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="ConditionPersistenceCheckTemplates">
+		<parameter id="class" value="de.d3web.testcase.persistence.ConditionPersistenceCheckHandler" />
+		<parameter id="name" value="ConditionPersistenceCheckHandler" />
+		<parameter id="description" value="Handler for ConditionPersistenceCheckTemplates" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="SequentialTestCaseHandler">
+		<parameter id="class" value="de.d3web.empiricaltesting.SequentialTestCaseHandler" />
+		<parameter id="name" value="SequentialTestCaseHandler" />
+		<parameter id="description" value="Handler for SequentialTestCaseHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="STCFindingHandler">
+		<parameter id="class" value="de.d3web.empiricaltesting.STCFindingHandler" />
+		<parameter id="name" value="STCFindingHandler" />
+		<parameter id="description" value="Handler for STCFindingHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestCase" point-id="FragmentHandler" id="STCCheckHandler">
+		<parameter id="class" value="de.d3web.empiricaltesting.STCCheckHandler" />
+		<parameter id="name" value="STCCheckHandler" />
+		<parameter id="description" value="Handler for STCCheckHandler" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+</plugin>

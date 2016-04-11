@@ -1,0 +1,237 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="d3web-SessionPersistence-Basic" version="0.0.1">
+	
+	<requires>
+		<import plugin-id="d3web-SessionPersistence-ExtensionPoints" />
+	</requires>
+	
+	<runtime>
+		<library id="de.d3web" path="." type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="ChoiceValueHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.ChoiceValueHandler" />
+		<parameter id="name" value="ChoiceValueHandler" />
+		<parameter id="description" value="Handler for ChoiceValues" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="DateValueHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.DateValueHandler" />
+		<parameter id="name" value="DateValueHandler" />
+		<parameter id="description" value="Handler for DateValues" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="HeuristicRatingHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.HeuristicRatingHandler" />
+		<parameter id="name" value="HeuristicRatingHandler" />
+		<parameter id="description" value="Handler for HeuristicRating" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="4" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="IndicationHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.IndicationHandler" />
+		<parameter id="name" value="IndicationHandler" />
+		<parameter id="description" value="Handler for Indications" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="MultipleChoiceValueHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.MultipleChoiceValueHandler" />
+		<parameter id="name" value="MultipleChoiceValueHandler" />
+		<parameter id="description" value="Handler for MultipleChoiceValues" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="NumValueHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.NumValueHandler" />
+		<parameter id="name" value="NumValueHandler" />
+		<parameter id="description" value="Handler for NumValues" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="RatingHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.RatingHandler" />
+		<parameter id="name" value="RatingHandler" />
+		<parameter id="description" value="Handler for Ratings" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="TextValueHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.TextValueHandler" />
+		<parameter id="name" value="TextValueHandler" />
+		<parameter id="description" value="Handler for TextValues" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="UndefinedHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.UndefinedHandler" />
+		<parameter id="name" value="UndefinedHandler" />
+		<parameter id="description" value="Handler for Undefined" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="UnknownHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.UnknownHandler" />
+		<parameter id="name" value="UnknownHandler" />
+		<parameter id="description" value="Handler for Unknown" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="FactProtocolEntryHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.FactProtocolEntryHandler" />
+		<parameter id="name" value="FactProtocolEntryHandler" />
+		<parameter id="description" value="Handler to read/write FactProtocolEntry" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="ActualQActualQContainerEntries">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.ActualQContainerEntryHandler" />
+		<parameter id="name" value="ActualQContainerEntryHandler" />
+		<parameter id="description" value="Handler to read/write ActualQActualQContainerEntries" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="TextProtocolEntryHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.TextProtocolEntryHandler" />
+		<parameter id="name" value="TextProtocolEntryHandler" />
+		<parameter id="description" value="Handler to read/write TextProtocolEntry" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<!-- 
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="NumberHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.NumberHandler" />
+		<parameter id="name" value="NumberHandler" />
+		<parameter id="description" value="Handler to read/write primitive numbers" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="StringHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.StringHandler" />
+		<parameter id="name" value="StringHandler" />
+		<parameter id="description" value="Handler to read/write primitive strings" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="DateHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.DateHandler" />
+		<parameter id="name" value="DateHandler" />
+		<parameter id="description" value="Handler to read/write primitive dates" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="RatingStateHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.RatingStateHandler" />
+		<parameter id="name" value="RatingStateHandler" />
+		<parameter id="description" value="Handler to read/write primitive numbers" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
+		id="IndicationStateHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.fragments.IndicationStateHandler" />
+		<parameter id="name" value="IndicationStateHandler" />
+		<parameter id="description" value="Handler to read/write primitive numbers" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	-->
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="SessionPersistenceHandler"
+		id="FactHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.FactHandler" />
+		<parameter id="name" value="FactHandler" />
+		<parameter id="description" value="Handler for the FactsSection" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="6" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="SessionPersistenceHandler"
+		id="HeadHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.HeadHandler" />
+		<parameter id="name" value="HeadHandler" />
+		<parameter id="description" value="Handler for the HeadSection" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="4" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="SessionPersistenceHandler"
+		id="NameHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.NameHandler" />
+		<parameter id="name" value="NameHandler" />
+		<parameter id="description" value="Handler for the NameSection" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="2" />
+	</extension>
+	
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="SessionPersistenceHandler"
+		id="ProtocolHandler">
+		<parameter id="class"
+			value="de.d3web.core.records.io.ProtocolHandler" />
+		<parameter id="name" value="ProtocolHandler" />
+		<parameter id="description" value="Handler for the protocol of a case." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="8" />
+	</extension>
+
+</plugin>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<artifactId>d3web-Essentials</artifactId>
+		<groupId>de.uniwue.d3web</groupId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>d3web-Plugin-CostBenefit</artifactId>
+	<name>d3web-Plugin-CostBenefit</name>
+	<version>0.2-SNAPSHOT</version>
+	
+	<description>This project provides the possibility to add preconditions and post transitions to QContainers. Post transitions are executed in a session, when all questions, defined as children of the specified QContainer are answered. In order to be able to execute a QContainer it can be necessary to calculate a sequence of QContainers, establishing its precondition. The cost benefit problemsolver tries to find a sequence to the best cost benefit QContainer. The costs are defined as the costs for the preparing QContainers and the costs of the QContainer itself. The benefit is calculated by the stratigic solvers, being present in the actual session.</description>
+
+	<organization>
+		<name>denkbares GmbH</name>
+		<url>https://www.denkbares.com</url>
+	</organization>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>de.uniwue.maven.plugins</groupId>
+				<artifactId>knowwe-versionator</artifactId>
+				<executions>
+					<execution>
+						<id>versionate-plugin</id>
+						<phase>prepare-package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Generate JPF dependency lists; configuration is done in parent pom -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Kernel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Persistence</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Plugin-XCL</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-SessionPersistence</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Plugin-SessionPersistence-Basic</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.uniwue.d3web</groupId>
+			<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+	<properties>
+		<license>LGPL</license>
+		<quality>release</quality>
+	</properties>
+</project>

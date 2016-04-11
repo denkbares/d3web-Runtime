@@ -1,0 +1,119 @@
+The cycle can be taken multiple times.
+
+----
+[{KnowWEPlugin quickinterview}]
+
+
+%%DiaFluxState %
+
+%%DiaFlux
+
+<flowchart fcid="sh001" name="Flow1" icon="sanduhr.gif" width="750" height="250" autostart="true" idCounter="34">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="start1">
+		<position left="41" top="57"></position>
+		<start>start1</start>
+	</node>
+
+	<node fcid="nodeQ1">
+		<position left="180" top="46"></position>
+		<action markup="KnOffice">QuestOC1</action>
+	</node>
+
+	<node fcid="nodeQ2">
+		<position left="372" top="46"></position>
+		<action markup="KnOffice">ALWAYS[QuestOC2]</action>
+	</node>
+
+	<node fcid="snapshot1">
+		<position left="382" top="139"></position>
+		<snapshot>snapshot1</snapshot>
+	</node>
+
+	<node fcid="nodeQ3">
+		<position left="180" top="128"></position>
+		<action markup="KnOffice">ALWAYS[QuestOC3]</action>
+	</node>
+
+	<node fcid="#node_32">
+		<position left="191" top="13"></position>
+		<comment>nodeQ1</comment>
+	</node>
+
+	<node fcid="#node_33">
+		<position left="383" top="13"></position>
+		<comment>nodeQ2</comment>
+	</node>
+
+	<node fcid="#node_34">
+		<position left="191" top="184"></position>
+		<comment>nodeQ3</comment>
+	</node>
+
+
+	<!-- rules of the flowchart -->
+	<edge fcid="#rule_24">
+		<origin>start1</origin>
+		<target>nodeQ1</target>
+	</edge>
+
+	<edge fcid="#rule_26">
+		<origin>nodeQ1</origin>
+		<target>nodeQ2</target>
+		<guard markup="KnOffice">"QuestOC1" = "Answ1"</guard>
+	</edge>
+
+	<edge fcid="#rule_28">
+		<origin>nodeQ2</origin>
+		<target>snapshot1</target>
+		<guard markup="KnOffice">"QuestOC2" = "Answ1"</guard>
+	</edge>
+
+	<edge fcid="#rule_30">
+		<origin>snapshot1</origin>
+		<target>nodeQ3</target>
+	</edge>
+
+	<edge fcid="#rule_31">
+		<origin>nodeQ3</origin>
+		<target>nodeQ1</target>
+		<guard markup="KnOffice">"QuestOC3" = "Answ1"</guard>
+	</edge>
+
+	<preview mimetype="text/html">
+		<![CDATA[
+<DIV class="Flowchart" style=" width: 751px; height: 251px;"><DIV class="Node" id="start1" style="left: 41px;top: 57px; width: 72px; height: 20px;"><DIV class="start" style=" width: 62px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 60px; height: 16px;">start1</DIV></DIV></DIV><DIV class="Node" id="nodeQ1" style="left: 180px;top: 46px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC1</DIV><DIV class="value" style=" width: 80px; height: 20px;">ask</DIV></DIV></DIV></DIV><DIV class="Node" id="nodeQ2" style="left: 372px;top: 46px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC2</DIV><DIV class="value" style=" width: 80px; height: 20px;">always ask</DIV></DIV></DIV></DIV><DIV class="Node" id="snapshot1" style="left: 382px;top: 139px; width: 90px; height: 20px;"><DIV class="snapshot" style=" width: 78px; height: 20px;"><DIV class="decorator" style=" width: 25px; height: 25px;"></DIV><DIV class="title" style=" width: 76px; height: 16px;">snapshot1</DIV></DIV></DIV><DIV class="Node" id="nodeQ3" style="left: 180px;top: 128px; width: 96px; height: 42px;"><DIV class="question" style=" width: 82px; height: 42px;"><DIV class="decorator" style=" width: 15px; height: 18px;"></DIV><DIV class="ActionPane" style=" width: 80px; height: 39px;"><DIV class="object" style=" width: 80px; height: 19px;"><SPAN class="icon" style=" width: 16px; height: 16px;"><IMG src="cc/image/kbinfo/single.gif" style=" width: 16px; height: 16px;"></IMG></SPAN>QuestOC3</DIV><DIV class="value" style=" width: 80px; height: 20px;">always ask</DIV></DIV></DIV></DIV><DIV class="Node" id="#node_32" style="left: 191px;top: 13px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ1</DIV></DIV></DIV><DIV class="Node" id="#node_33" style="left: 383px;top: 13px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ2</DIV></DIV></DIV><DIV class="Node" id="#node_34" style="left: 191px;top: 184px; width: 74px; height: 20px;"><DIV class="comment" style=" width: 64px; height: 20px;"><DIV class="decorator" style=" width: 24px; height: 24px;"></DIV><DIV class="title" style=" width: 62px; height: 16px;">nodeQ3</DIV></DIV></DIV><DIV class="Rule" id="#rule_24" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 113px;top: 67px;overflow: visible; width: 67px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 113px;top: 67px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 110px;top: 64px;overflow: hidden; width: 73px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_26" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 276px;top: 67px;overflow: visible; width: 96px; height: 1px;"><DIV class="arrow_right" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 276px;top: 67px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 3px; width: 36px; height: 14px;"><DIV class="GuardPane" style=" width: 36px; height: 14px;"><DIV style=" width: 36px; height: 14px;">Answ1 </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 273px;top: 64px;overflow: hidden; width: 102px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_28" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 420px;top: 88px;overflow: visible; width: 1px; height: 51px;"><DIV class="arrow_down" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 420px;top: 88px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;top: 3px; width: 36px; height: 14px;"><DIV class="GuardPane" style=" width: 36px; height: 14px;"><DIV style=" width: 36px; height: 14px;">Answ1 </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 417px;top: 85px;overflow: hidden; width: 7px; height: 57px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_30" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="h_line" style="position: absolute;left: 276px;top: 149px;overflow: visible; width: 106px; height: 1px;"><DIV class="arrow_left" style=" width: 6px; height: 5px;"></DIV></DIV><DIV style="position: absolute;left: 381px;top: 149px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;right: 3px; width: 0px; height: 0px;"><DIV class="GuardPane" style=" width: 0px; height: 0px;"><DIV style=" width: 0px; height: 0px;">  </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 273px;top: 146px;overflow: hidden; width: 112px; height: 7px;"></DIV></DIV></DIV><DIV class="Rule" id="#rule_31" style="position: absolute;left: 0px;top: 0px;overflow: visible; width: 0px; height: 0px;"><DIV class="v_line" style="position: absolute;left: 228px;top: 88px;overflow: visible; width: 1px; height: 40px;"><DIV class="arrow_up" style=" width: 5px; height: 6px;"></DIV></DIV><DIV style="position: absolute;left: 228px;top: 127px;overflow: visible; width: 0px; height: 0px;"><DIV class="guard" style="position: absolute;left: 2px;bottom: 3px; width: 36px; height: 14px;"><DIV class="GuardPane" style=" width: 36px; height: 14px;"><DIV style=" width: 36px; height: 14px;">Answ1 </DIV></DIV></DIV></DIV><DIV style="position: absolute;visibility: visible; width: 0px; height: 0px;"><DIV style="position: absolute;left: 225px;top: 85px;overflow: hidden; width: 7px; height: 46px;"></DIV></DIV></DIV></DIV>
+		]]>
+	</preview>
+</flowchart>	
+
+
+
+%
+
+%%KnowledgeBase 
+  @uses: this
+%
+
+
+
+%%Question
+QuestionnaireOC #1
+- QuestOC1 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC2 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC3 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+
+
+%
+
+

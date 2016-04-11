@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin id="d3web-Interview" version="0.0.1">
+
+	<requires>
+		<import plugin-id="d3web-Kernel-ExtensionPoints" />
+		<import plugin-id="KnowledgePersistenceExtensionPoints" />
+	</requires>
+	
+	<runtime>
+		<library id="de.d3web" path="." type="code">
+			<export prefix="*" />
+		</library>
+	</runtime>
+	
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="PSMethod"
+		id="PSMethodInterview">
+		<parameter id="class"
+			value="de.d3web.interview.inference.PSMethodInterview" />
+		<parameter id="name" value="PSMethodInterview" />
+		<parameter id="description" value="Adapter for propagation and interview" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="3" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="InterviewPSConfigHandler">
+		<parameter id="class"
+			value="de.d3web.interview.io.InterviewPSConfigHandler" />
+		<parameter id="name" value="InterviewPSConfigHandler" />
+		<parameter id="description" value="Handler for PSConfigs of PSMethodInterview" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="NextUnansweredQuestionFormStrategyHandler">
+		<parameter id="class"
+			value="de.d3web.interview.io.NextUnansweredQuestionFormStrategyHandler" />
+		<parameter id="name" value="NextUnansweredQuestionFormStrategyHandler" />
+		<parameter id="description" value="Handler for NextUnansweredQuestionFormStrategy" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="CurrentQContainerFormStrategyHandler">
+		<parameter id="class"
+			value="de.d3web.interview.io.CurrentQContainerFormStrategyHandler" />
+		<parameter id="name" value="CurrentQContainerFormStrategyHandler" />
+		<parameter id="description" value="Handler for CurrentQContainerFormStrategy" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+	
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
+		id="ActionRepeatedIndicationHandler">
+		<parameter id="class"
+			value="de.d3web.interview.io.ActionRepeatedIndicationHandler" />
+		<parameter id="name" value="ActionRepeatedIndicationHandler" />
+		<parameter id="description" value="Handler for ActionRepeatedIndication" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="4" />
+	</extension>
+	
+	
+</plugin>

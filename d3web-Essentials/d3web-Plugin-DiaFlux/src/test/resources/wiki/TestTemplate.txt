@@ -1,0 +1,173 @@
+!!TestTemplate
+
+Description goes here...
+
+NB: Change the package, just look for "INSERTHERE"
+
+----
+
+%%ShowSolutions
+@master: @package INSERTHERE
+%
+
+[{KnowWEPlugin quickinterview}]
+
+%%DiaFlux
+<flowchart fcid="mainID" name="Flow1" icon="sanduhr.gif" width="750" height="500" autostart="true" idCounter="24">
+
+	<!-- nodes of the flowchart -->
+	<node fcid="start1">
+		<position left="41" top="88"></position>
+		<start>start1</start>
+	</node>
+
+	<node fcid="nodeQ1">
+		<position left="48" top="317"></position>
+		<action markup="KnOffice">QuestOC1</action>
+	</node>
+
+	<node fcid="exit1">
+		<position left="596" top="88"></position>
+		<exit>exit1</exit>
+	</node>
+
+	<node fcid="#node_6">
+		<position left="66" top="283"></position>
+		<comment>nodeQ1</comment>
+	</node>
+
+	<node fcid="nodeQ2">
+		<position left="193" top="317"></position>
+		<action markup="KnOffice">QuestOC2</action>
+	</node>
+
+	<node fcid="#node_8">
+		<position left="204" top="290"></position>
+		<comment>nodeQ2</comment>
+	</node>
+
+	<node fcid="nodeQ3">
+		<position left="333" top="317"></position>
+		<action markup="KnOffice">QuestOC3</action>
+	</node>
+
+	<node fcid="snapshot1">
+		<position left="588" top="185"></position>
+		<snapshot>snapshot1</snapshot>
+	</node>
+
+	<node fcid="snapshot2">
+		<position left="588" top="133"></position>
+		<snapshot>snapshot2</snapshot>
+	</node>
+
+	<node fcid="#node_12">
+		<position left="344" top="290"></position>
+		<comment>nodeQ3</comment>
+	</node>
+
+	<node fcid="nodeQ4">
+		<position left="460" top="317"></position>
+		<action markup="KnOffice">QuestOC4</action>
+	</node>
+
+	<node fcid="#node_14">
+		<position left="479" top="290"></position>
+		<comment>nodeQ4</comment>
+	</node>
+
+	<node fcid="exit2">
+		<position left="596" top="35"></position>
+		<exit>exit2</exit>
+	</node>
+
+	<node fcid="snapshot3">
+		<position left="588" top="230"></position>
+		<snapshot>snapshot3</snapshot>
+	</node>
+
+	<node fcid="nodeQ5">
+		<position left="578" top="317"></position>
+		<action markup="KnOffice">QuestOC5</action>
+	</node>
+
+	<node fcid="#node_18">
+		<position left="589" top="290"></position>
+		<comment>nodeQ5</comment>
+	</node>
+
+	<node fcid="nodeQ6">
+		<position left="57" top="404"></position>
+		<action markup="KnOffice">QuestNum6</action>
+	</node>
+
+	<node fcid="nodeQ7">
+		<position left="189" top="404"></position>
+		<action markup="KnOffice">QuestNum7</action>
+	</node>
+
+	<node fcid="nodeQ8">
+		<position left="329" top="404"></position>
+		<action markup="KnOffice">QuestNum8</action>
+	</node>
+
+	<node fcid="nodeQ9">
+		<position left="464" top="404"></position>
+		<action markup="KnOffice">QuestNum9</action>
+	</node>
+
+	<node fcid="nodeQ10">
+		<position left="584" top="404"></position>
+		<action markup="KnOffice">QuestNum10</action>
+	</node>
+
+</flowchart>
+@package INSERTHERE
+
+%
+
+
+%%KnowledgeBase 
+  @uses: INSERTHERE
+%
+
+
+
+%%Question
+QuestionnaireOC #1
+- QuestOC1 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC2 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC3 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC4 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+- QuestOC5 [oc]
+-- Answ1
+-- Answ2
+-- Answ3
+QuestionaireNum #2
+- QuestNum6 [num]
+- QuestNum7 [num]
+- QuestNum8 [num]
+- QuestNum9 [num]
+- QuestNum10 [num]
+@package INSERTHERE
+%
+
+%%Solution
+Solution1
+Solution2
+Solution3
+Solution4
+@package INSERTHERE
+%
