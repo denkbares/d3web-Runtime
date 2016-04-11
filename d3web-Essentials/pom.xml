@@ -9,6 +9,7 @@
 	<name>d3web</name>
 	<version>0.2-SNAPSHOT</version>
 	<url>https://www.d3web.de/</url>
+	<description>Essential open source d3web maven modules</description>
 
 	<issueManagement>
 		<system>Phabricator</system>

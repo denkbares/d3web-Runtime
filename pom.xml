@@ -6,7 +6,7 @@
 	<artifactId>d3web-Essentials</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<description>Closed source denkbares d3web parent</description>
+	<description>Open source d3web parent</description>
 
 	<modules>
 		<module>d3web-Essentials</module>

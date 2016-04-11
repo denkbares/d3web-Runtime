@@ -6,7 +6,7 @@
 	<artifactId>d3web-Apps</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>d3web-Apps</name>
+	<description>Open source d3web applications</description>
 
 	<issueManagement>
 		<system>Phabricator</system>
