@@ -6,7 +6,7 @@
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-Essentials</artifactId>
 	<packaging>pom</packaging>
-	<version>0.2-SNAPSHOT</version>
+	<version>0-SNAPSHOT</version>
 	<url>https://www.d3web.de/</url>
 	<description>Essential open source d3web maven modules</description>
 
@@ -197,8 +197,8 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.uniwue.d3web</groupId>
-				<artifactId>d3web-PluginManager</artifactId>
+				<groupId>com.denkbares</groupId>
+				<artifactId>denkbares-PluginManager</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

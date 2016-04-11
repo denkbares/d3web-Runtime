@@ -4,11 +4,9 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>d3web-Plugin-BasicProperties</artifactId>
-	<name>d3web-Plugin-BasicProperties</name>
 	<description>Basic Properties</description>
-	<version>0.2-SNAPSHOT</version>
 </project>

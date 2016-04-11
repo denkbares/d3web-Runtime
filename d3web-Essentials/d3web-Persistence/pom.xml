@@ -5,12 +5,10 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>d3web-Persistence</artifactId>
-	<name>d3web-Persistence</name>
-	<version>0.2-SNAPSHOT</version>
 
 	<build>
 		<plugins>
@@ -33,8 +31,8 @@
 			<version>1.3</version>
 		</dependency>
 		<dependency>
-			<groupId>de.uniwue.d3web</groupId>
-			<artifactId>d3web-PluginManager</artifactId>
+			<groupId>com.denkbares</groupId>
+			<artifactId>denkbares-PluginManager</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
