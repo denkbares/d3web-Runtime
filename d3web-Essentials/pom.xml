@@ -6,7 +6,6 @@
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web-Essentials</artifactId>
 	<packaging>pom</packaging>
-	<name>d3web</name>
 	<version>0.2-SNAPSHOT</version>
 	<url>https://www.d3web.de/</url>
 	<description>Essential open source d3web maven modules</description>

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.uniwue.d3web</groupId>
-	<artifactId>d3web-Essentials</artifactId>
+	<artifactId>d3web</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Open source d3web parent</description>
