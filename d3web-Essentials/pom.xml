@@ -207,8 +207,13 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.uniwue.d3web</groupId>
+				<groupId>com.denkbares</groupId>
 				<artifactId>denkbares-Utils</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.denkbares</groupId>
+				<artifactId>denkbares-Progress</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

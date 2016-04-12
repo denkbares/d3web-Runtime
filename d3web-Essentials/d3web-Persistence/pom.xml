@@ -43,8 +43,12 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.uniwue.d3web</groupId>
+			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-Utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.denkbares</groupId>
+			<artifactId>denkbares-Progress</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -26,7 +26,7 @@
 			<artifactId>denkbares-PluginManager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.uniwue.d3web</groupId>
+			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-Utils</artifactId>
 		</dependency>
 		<dependency>
