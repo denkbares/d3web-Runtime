@@ -10,18 +10,4 @@
 	
 	<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>de.uniwue.maven.plugins</groupId>
-				<artifactId>knowwe-versionator</artifactId>
-				<executions>
-					<execution>
-						<id>versionate-plugin</id>
-						<phase>prepare-package</phase>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

@@ -18,7 +18,7 @@
   -->
 
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="d3web-Plugin-TestCase" version="0.0.1">
+<plugin id="d3web-Plugin-TestCase" version="1.0">
 	<!-- This plugin only defines extension points for session persistence handler and fragment handler. -->
 
 	<extension-point id="FragmentHandler">

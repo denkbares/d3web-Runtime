@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <!-- This plugin only defines extension points for the core structure of d3web. -->
-<plugin id="d3web-Kernel-ExtensionPoints" version="0.0.1">
+<plugin id="d3web-Kernel-ExtensionPoints" version="1.0">
 
 	<extension-point id="PSMethod">
 		<parameter-def id="class" />

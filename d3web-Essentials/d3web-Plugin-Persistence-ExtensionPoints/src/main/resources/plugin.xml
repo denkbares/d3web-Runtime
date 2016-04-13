@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="KnowledgePersistenceExtensionPoints" version="0.0.1">
+<plugin id="KnowledgePersistenceExtensionPoints" version="1.0">
 	<!-- This plugin only defines extension points for knowledge reader, knowledge writer and fragment handler. -->
 	
 	<extension-point id="KnowledgeReader">
