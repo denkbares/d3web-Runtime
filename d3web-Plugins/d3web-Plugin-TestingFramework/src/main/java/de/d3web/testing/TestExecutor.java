@@ -283,6 +283,7 @@ public class TestExecutor {
 					// it is possible that the executor is shut down during or
 					// before adding the tests to the executor... we just catch
 					// it
+					Log.warning("Rejected execution of " + callableTest.testObjectName);
 				}
 
 				try {
