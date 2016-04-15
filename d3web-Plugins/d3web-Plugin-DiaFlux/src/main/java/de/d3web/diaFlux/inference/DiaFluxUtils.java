@@ -45,7 +45,7 @@ import de.d3web.utils.Log;
 
 /**
  * @author Reinhard Hatko
- *         <p/>
+ *         <p>
  *         Created: 07.08.2010
  */
 public final class DiaFluxUtils {
@@ -95,10 +95,9 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * checks if there is a connecting Path from the {@link Node} fromNode to
-	 * the {@link Node} toNode. This method does NOT do a "deep" search, it only
-	 * works for Nodes in the same flow.
-	 * <p/>
+	 * checks if there is a connecting Path from the {@link Node} fromNode to the {@link Node}
+	 * toNode. This method does NOT do a "deep" search, it only works for Nodes in the same flow.
+	 * <p>
 	 * if fromNode and toNode are equal, this method checks for a cycle.
 	 *
 	 * @created 04.04.2012
@@ -222,8 +221,8 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * Returns the startnode that is called by the composed node. May return
-	 * null, if no such flow exists.
+	 * Returns the startnode that is called by the composed node. May return null, if no such flow
+	 * exists.
 	 *
 	 * @return s the start node, or null, if the called startnode does not exist
 	 */
@@ -236,8 +235,8 @@ public final class DiaFluxUtils {
 	/**
 	 * Returns the {@link Flow} that is called by composedNode
 	 *
-	 * @return s the flow containing the called start node, or null, if the
-	 * start node does not exist
+	 * @return s the flow containing the called start node, or null, if the start node does not
+	 * exist
 	 * @created 08.02.2012
 	 */
 	public static Flow getCalledFlow(ComposedNode composedNode) {
@@ -261,8 +260,7 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * Returns all {@link ComposedNode}s, that call the supplied
-	 * {@link StartNode}.
+	 * Returns all {@link ComposedNode}s, that call the supplied {@link StartNode}.
 	 *
 	 * @return a List containing all the ComposedNodes
 	 * @created 15.03.2012
@@ -270,7 +268,8 @@ public final class DiaFluxUtils {
 	public static List<ComposedNode> getCallingNodes(KnowledgeBase kb, StartNode startNode) {
 		List<ComposedNode> result = new ArrayList<ComposedNode>();
 
-		for (ComposedNode composedNode : getFlowSet(kb).getNodesCalling(startNode.getFlow().getName())) {
+		for (ComposedNode composedNode : getFlowSet(kb).getNodesCalling(startNode.getFlow()
+				.getName())) {
 			if (composedNode.getCalledStartNodeName().equals(startNode.getName())) {
 				result.add(composedNode);
 			}
@@ -279,9 +278,8 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * Returns a DFS mapping of Flow -> contained ComposedNodes. If a flow is called
-	 * from multiple flows, the only first one according to a DF search is
-	 * contained.
+	 * Returns a DFS mapping of Flow -> contained ComposedNodes. If a flow is called from multiple
+	 * flows, the only first one according to a DF search is contained.
 	 *
 	 * @created 14.03.2013
 	 */
