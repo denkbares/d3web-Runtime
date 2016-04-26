@@ -26,6 +26,7 @@ import de.d3web.core.session.Session;
 
 public interface ScoreAlgorithm {
 
+
 	/**
 	 * Creates and returns an empty InferenceTrace capable to be used with this
 	 * scoring algorithm.
@@ -80,4 +81,46 @@ public interface ScoreAlgorithm {
 	 * @return suggested threshold
 	 */
 	double getSuggestedThreshold(XCLModel model);
+
+	/**
+	 * Set the default established threshold
+	 *
+	 * @param defaultEstablishedThreshold Default established threshold to set
+	 */
+	void setDefaultEstablishedThreshold(double defaultEstablishedThreshold);
+
+	/**
+	 * Sets the default suggested threshold
+	 *
+	 * @param defaultSuggestedThreshold Default suggested threshold to set
+	 */
+	void setDefaultSuggestedThreshold(double defaultSuggestedThreshold);
+
+	/**
+	 * Sets the default minimal threshold
+	 *
+	 * @param defaultMinSupport Default minimal threshold to set
+	 */
+	void setDefaultMinSupport(double defaultMinSupport);
+
+	/**
+	 * Returns the default minimal threshold
+	 *
+	 * @return Default minimal threshold
+	 */
+	double getDefaultMinSupport();
+
+	/**
+	 * Returns the default established threshold
+	 *
+	 * @return Default established threshold
+	 */
+	double getDefaultEstablishedThreshold();
+
+	/**
+	 * Returns the default suggested threshold
+	 *
+	 * @return Default suggested threshold
+	 */
+	double getDefaultSuggestedThreshold();
 }

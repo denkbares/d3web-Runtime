@@ -33,26 +33,32 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 	private double defaultSuggestedThreshold = 0.3;
 	private double defaultMinSupport = 0.01;
 
+	@Override
 	public void setDefaultEstablishedThreshold(double defaultEstablishedThreshold) {
 		this.defaultEstablishedThreshold = defaultEstablishedThreshold;
 	}
 
+	@Override
 	public void setDefaultSuggestedThreshold(double defaultSuggestedThreshold) {
 		this.defaultSuggestedThreshold = defaultSuggestedThreshold;
 	}
 
+	@Override
 	public void setDefaultMinSupport(double defaultMinSupport) {
 		this.defaultMinSupport = defaultMinSupport;
 	}
 
+	@Override
 	public double getDefaultEstablishedThreshold() {
 		return defaultEstablishedThreshold;
 	}
 
+	@Override
 	public double getDefaultSuggestedThreshold() {
 		return defaultSuggestedThreshold;
 	}
 
+	@Override
 	public double getDefaultMinSupport() {
 		return defaultMinSupport;
 	}
