@@ -76,7 +76,7 @@ public class BasicProperties {
 					"range", NumericalInterval.class);
 
 	/**
-	 * used for question doc: the ids or names of the answers(seperated by ";"), which is set in
+	 * used for question doc: the ids or names of the answers(separated by ";"), which is set in
 	 * PSMethodInit
 	 */
 	public static final Property<String> INIT = Property.getProperty("init", String.class);
@@ -175,8 +175,8 @@ public class BasicProperties {
 
 	/**
 	 * Return the desired display type for the specified solution. The solution display type is
-	 * defined by the property "solutionDisplay" for the solution. If there is no such property,
-	 * the "solutionDisplay" of the questions knowledge base object will be used as the default value.
+	 * defined by the property "solutionDisplay" for the solution. If there is no such property, the
+	 * "solutionDisplay" of the questions knowledge base object will be used as the default value.
 	 * If there is no such knowledge base specific default value, the type NORMAL is used.
 	 *
 	 * @param solution the solution to get the display type for
@@ -199,7 +199,7 @@ public class BasicProperties {
 	/**
 	 * Returns if the "unknown" alternative of a specific question should be offered to the user or
 	 * not. This is defined by the property "unknownVisible" for the question. If there is no such
-	 * property, the "unknownVisbible" property of the question's knowledge base object will be used
+	 * property, the "unknownVisible" property of the question's knowledge base object will be used
 	 * as the default value. If there is no such knowledge base specific default value, false is
 	 * returned.
 	 *

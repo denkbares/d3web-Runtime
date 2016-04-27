@@ -64,17 +64,7 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
-	
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="SprintGroupScoreAlgorithmHandler">
-		<parameter id="class"
-			value="de.d3web.xcl.io.fragments.SprintGroupScoreAlgorithmHandler" />
-		<parameter id="name" value="SprintGroupScoreAlgorithmHandler" />
-		<parameter id="description" value="Handler for SprintGroupScoreAlgorithmHandler" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-	
+
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultScoreAlgorithmHandler">
 		<parameter id="class"
@@ -84,5 +74,4 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
-	
 </plugin>
