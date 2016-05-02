@@ -20,13 +20,17 @@ package de.d3web.core.io;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
+import de.d3web.strings.Strings;
 
 /**
  * This is a utility class to write and read fragments to/from xml documents
@@ -83,8 +87,25 @@ public class FragmentManager<Artifact> {
 				return handler.read(child, persistence);
 			}
 		}
-		throw new NoSuchFragmentHandlerException("No fragment handler found for: '" + child.getTextContent()
+		throw new NoSuchFragmentHandlerException("No fragment handler found for element: '" + getElementVerbalization(child)
 				.trim() + "'. Very likely a plugin is missing which was used to while creating this knowledge base.");
+	}
+
+	@NotNull
+	private String getElementVerbalization(Element child) {
+		String textContent = child.getTextContent();
+		if (Strings.isBlank(textContent)) {
+			StringBuilder builder = new StringBuilder(child.getTagName());
+			NamedNodeMap attributes = child.getAttributes();
+			if (attributes.getLength() > 0) builder.append(": ");
+			for (int i = 0; i < attributes.getLength(); i++) {
+				Node item = attributes.item(i);
+				builder.append(item.getNodeName()).append("=").append(item.getNodeValue());
+				if (i < attributes.getLength() - 1) builder.append(", ");
+			}
+			textContent = builder.toString();
+		}
+		return textContent;
 	}
 
 	/**
