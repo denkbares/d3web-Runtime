@@ -64,8 +64,26 @@ import de.d3web.utils.Log;
  */
 public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<DiaFluxCaseObject> {
 
-	public static enum SuggestMode {
-		ignore, suggest, precise
+	public enum SuggestMode {
+		/**
+		 * If 'ignore' is specified, the DiaFlux problem solver will not rate any
+		 * solution until a node is reached that explicitly rates the particular solution.
+		 * For most circumstances the 'precise' method is the best choice.
+		 * The default value is 'ignore'."
+		 */
+		ignore,
+		/**
+		 * If 'suggest' is specified, the DiaFlux problem solver will suggest all remaining
+		 * potential solutions of the processed flowcharts, until it is known if the solutions
+		 * will be established or not.
+		 */
+		suggest,
+		/**
+		 * If 'precise' is specified the potential solution will also
+		 * be suggested, but a more precise (and slower) algorithm is used to detect these
+		 * solutions.
+		 */
+		precise
 	}
 
 	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
@@ -179,7 +197,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * Adds support to a node. If the node is triggered, ie, was not active before, it gets
 	 * activated.
 	 *
-	 * @param node the node to add support to
+	 * @param node    the node to add support to
 	 * @param support a node or edge supporting the node
 	 * @created 03.09.2013
 	 */
@@ -201,7 +219,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	/**
 	 * Removes support from a node.
 	 *
-	 * @param node the node to remove the support from
+	 * @param node    the node to remove the support from
 	 * @param support a node or edge supporting the node
 	 * @created 03.09.2013
 	 */
@@ -264,7 +282,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * note that a node previously being active and then fixed by a snapshot is not considered to be
 	 * active any longer, even if its derived facts still persists.
 	 *
-	 * @param node the node to be checked
+	 * @param node    the node to be checked
 	 * @param session the session to check the node for
 	 * @return if the node is active in the session
 	 * @created 11.03.2013
@@ -278,7 +296,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * note that a edge previously being active and then fixed by a snapshot is not considered to be
 	 * active any longer, even if its derived facts still persists.
 	 *
-	 * @param edge the Edge to be checked
+	 * @param edge    the Edge to be checked
 	 * @param session the session to check the node for
 	 * @return if the edge is active in the session
 	 * @created 11.03.2013
@@ -419,8 +437,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// composite node... go down, find exit node
 		else if (node instanceof ComposedNode && edge != null) {
 			for (EndNode endNode : flowRun.getActiveNodesOfClass(EndNode.class)) {
-				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName()))
+				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName())) {
 					continue;
+				}
 				if (edge.getCondition() instanceof FlowchartProcessedCondition
 						|| endNode.getName()
 						.equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
