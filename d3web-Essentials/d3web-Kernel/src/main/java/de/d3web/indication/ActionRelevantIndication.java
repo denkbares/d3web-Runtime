@@ -20,6 +20,7 @@
 package de.d3web.indication;
 
 import de.d3web.core.knowledge.Indication.State;
+import de.d3web.core.knowledge.terminology.QASet;
 
 /**
  * ActionIndication represents the relevant indication of a QASet.
@@ -28,6 +29,10 @@ import de.d3web.core.knowledge.Indication.State;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class ActionRelevantIndication extends ActionNextQASet {
+
+	public ActionRelevantIndication(QASet... qaSets) {
+		setQASets(qaSets);
+	}
 
 	@Override
 	public State getState() {

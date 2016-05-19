@@ -16,4 +16,13 @@
 		<module>DDTreeVisualisation</module>
 		<module>ExampleApps</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>d3web-LibBuilder</id>
+			<modules>
+				<module>d3web-LibBuilder</module>
+			</modules>
+		</profile>
+	</profiles>
 </project>
