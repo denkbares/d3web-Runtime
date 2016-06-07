@@ -9,7 +9,8 @@
             <xs:sequence>
               <xs:element name="message" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
-                  <xs:attribute name="testObject" type="xs:string" use="required" />
+					<xs:attribute name="testObject" type="xs:string" />
+					<xs:attribute name="summary" type="xs:string" />
                   <xs:attribute name="text" type="xs:string" />
                   <xs:attribute name="type" type="resultCategory" use="required" />
                 </xs:complexType>
