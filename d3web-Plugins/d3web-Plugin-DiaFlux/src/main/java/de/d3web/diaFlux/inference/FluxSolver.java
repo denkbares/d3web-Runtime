@@ -370,7 +370,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		}
 
 		// finally simply rebuild the undefined edges
-		// which is for more efficient (!) and reliant
+		// which is far more efficient (!) and reliant
 		// that incrementally updating them during snapshot creation
 		caseObject.rebuildUndefinedEdges();
 	}
