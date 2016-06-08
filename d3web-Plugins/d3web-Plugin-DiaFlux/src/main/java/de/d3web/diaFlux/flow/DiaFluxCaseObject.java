@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.d3web.collections.ConcatenateIterable;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
@@ -41,6 +42,7 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.FluxSolver.SuggestMode;
+import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 
@@ -83,7 +85,8 @@ public class DiaFluxCaseObject implements SessionObject {
 		// check all outgoing edges whether they are "undefined" or not
 		for (Edge edge : node.getOutgoingEdges()) {
 			Condition condition = edge.getCondition();
-			if (condition != null && Conditions.isUndefined(condition, session)) {
+			if ((condition != null && Conditions.isUndefined(condition, session)) ||
+					(node instanceof ActionNode && ((ActionNode) node).getAction() instanceof ActionRepeatedIndication)) {
 				undefinedEdges.add(edge);
 			}
 			else {
@@ -265,6 +268,7 @@ public class DiaFluxCaseObject implements SessionObject {
 		Set<Node> closedNodes = new HashSet<Node>();
 		boolean preciseMode = (fluxSolver.getSuggestMode() == SuggestMode.precise);
 
+		loopOpenNodes:
 		while (!openNodes.isEmpty()) {
 			// select node to process
 			Node node = openNodes.iterator().next();
@@ -278,6 +282,19 @@ public class DiaFluxCaseObject implements SessionObject {
 				if (!closedNodes.contains(calledNode) &&
 						!FluxSolver.isActiveNode(calledNode, session)) {
 					openNodes.add(calledNode);
+				}
+			}
+
+			if (node instanceof EndNode) {
+				for (FlowRun run : runs) {
+					for (Node startNode : new ConcatenateIterable<>(run.getStartNodes(), run.getActiveNodes())) {
+						if (closedNodes.contains(startNode)) continue;
+						if (!(startNode instanceof ComposedNode)) continue;
+						if (((ComposedNode) startNode).getCalledFlowName().equals(node.getFlow().getName())) {
+							openNodes.add(startNode);
+							continue loopOpenNodes;
+						}
+					}
 				}
 			}
 
