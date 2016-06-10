@@ -20,7 +20,6 @@
 
 package de.d3web.diaFlux.inference;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -149,7 +148,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 		List<FlowRun> runs = caseObject.getRuns();
-		List<Node> changedNodes = new ArrayList<Node>();
+		Set<Node> changedNodes = new LinkedHashSet<>();
 		for (PropagationEntry propagationEntry : changes) {
 
 			// strategic entries do not matter so far...
