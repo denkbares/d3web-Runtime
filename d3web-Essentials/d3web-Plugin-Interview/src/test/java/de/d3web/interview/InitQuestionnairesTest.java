@@ -18,11 +18,8 @@
  */
 package de.d3web.interview;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -31,9 +28,12 @@ import org.junit.Test;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * This test class checks the correct management of init questionnaires as done
@@ -44,21 +44,20 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
  */
 public class InitQuestionnairesTest {
 
-	QContainer qcontainer1, qcontainer2, qcontainer3;
-	Question question1, question2, question3;
-	KnowledgeBase kb;
+	private QContainer qcontainer1, qcontainer2, qcontainer3;
+	private KnowledgeBase kb;
 
 	@Before
 	public void setUp() throws Exception {
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		qcontainer1 = new QContainer(kb.getRootQASet(), "qcontainer1");
-		question1 = new QuestionNum(qcontainer1, "question1");
+		new QuestionNum(qcontainer1, "question1");
 
 		qcontainer2 = new QContainer(kb.getRootQASet(), "qcontainer2");
-		question2 = new QuestionNum(qcontainer2, "question2");
+		new QuestionNum(qcontainer2, "question2");
 
 		qcontainer3 = new QContainer(kb.getRootQASet(), "qcontainer3");
-		question3 = new QuestionNum(qcontainer3, "question3");
+		new QuestionNum(qcontainer3, "question3");
 	}
 
 	@Test
@@ -102,7 +101,7 @@ public class InitQuestionnairesTest {
 		assertEquals(expectedQuestions, storedContainers);
 
 		knowledge.removeInitQuestion(qcontainer3);
-		expectedQuestions = Arrays.asList(qcontainer1);
+		expectedQuestions = Collections.singletonList(qcontainer1);
 		storedContainers = knowledge.getInitQuestions();
 		assertEquals(expectedQuestions, storedContainers);
 

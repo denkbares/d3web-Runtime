@@ -21,8 +21,6 @@ package de.d3web.interview;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +34,8 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for init-indications.
@@ -68,8 +68,8 @@ public class InitQuestionnairesOrderTest {
 		List<InterviewObject> agenda = session.getSessionObject(
 				session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().getCurrentlyActiveObjects();
 		List<QASet> initQuestions = kb.getInitQuestions();
-		Assert.assertEquals(
-				"order of init questions must be stable",
+		assertEquals(
+				"Order of init questions must be stable",
 				initQuestions, agenda);
 	}
 }
