@@ -42,6 +42,10 @@ import de.d3web.interview.inference.PSMethodInterview;
  */
 public class ActionRepeatedIndication extends ActionNextQASet {
 
+	public ActionRepeatedIndication(QASet... qaSets) {
+		setQASets(qaSets);
+	}
+
 	@Override
 	public State getState() {
 		return State.REPEATED_INDICATED;
