@@ -19,16 +19,9 @@
 
 package de.d3web.core.inference.condition.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.util.Date;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondDateAfter;
@@ -48,6 +41,10 @@ import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
 /**
  * Purpose of this test: Check the different types of date-conditions of
  * questions whether they act as expected
@@ -57,16 +54,14 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class ConditionDateTest {
 
-	KnowledgeBase kb;
-	Session session;
-	QContainer init;
-	QuestionDate dateQuestion;
+	private static KnowledgeBase kb;
+	private static QuestionDate dateQuestion;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
-		init = new QContainer(kb.getRootQASet(), "init");
+		QContainer init = new QContainer(kb.getRootQASet(), "init");
 		dateQuestion = new QuestionDate(init, "dateQuestion");
 	}
 
@@ -148,8 +143,8 @@ public class ConditionDateTest {
 		try {
 			// the first condition should evaluate to true and
 			// the second condition to false
-			assertThat(conditionEqual.eval(session), is(true));
-			assertThat(conditionNotEqual.eval(session), is(false));
+			assertTrue(conditionEqual.eval(session));
+			assertFalse(conditionNotEqual.eval(session));
 		}
 		catch (NoAnswerException e) {
 			fail("Unexpected exception thrown: NoAnswerException");
@@ -194,11 +189,11 @@ public class ConditionDateTest {
 						new DateValue(new Date(now))));
 		try {
 			// now, the first condition should evaluate to true,
-			assertThat(conditionBeforeValue.eval(session), is(true));
+			assertTrue(conditionBeforeValue.eval(session));
 			// but the second one to false
-			assertThat(conditionSimultaneouslyValue.eval(session), is(false));
+			assertFalse(conditionSimultaneouslyValue.eval(session));
 			// and the third one to false also
-			assertThat(conditionAfterValue.eval(session), is(false));
+			assertFalse(conditionAfterValue.eval(session));
 		}
 		catch (NoAnswerException e) {
 			fail("Unexpected exception thrown: NoAnswerException");
@@ -243,11 +238,11 @@ public class ConditionDateTest {
 						new DateValue(new Date(now))));
 		try {
 			// now, the first condition should evaluate to false
-			assertThat(conditionBeforeValue.eval(session), is(false));
+			assertFalse(conditionBeforeValue.eval(session));
 			// the second one to false,
-			assertThat(conditionSimultaneouslyValue.eval(session), is(false));
+			assertFalse(conditionSimultaneouslyValue.eval(session));
 			// but the third one to true
-			assertThat(conditionAfterValue.eval(session), is(true));
+			assertTrue(conditionAfterValue.eval(session));
 		}
 		catch (NoAnswerException e) {
 			fail("Unexpected exception thrown: NoAnswerException");

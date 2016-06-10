@@ -18,14 +18,6 @@
  */
 package de.d3web.core.inference.condition.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -57,6 +49,9 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
 /**
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
@@ -64,24 +59,22 @@ import de.d3web.scoring.Score;
  */
 public class ConditionMiscellaneousTest {
 
-	KnowledgeBase kb;
-	QContainer init;
-	QuestionOC choiceQuestion1, choiceQuestion2, choiceQuestion3;
-	Condition conditionQ1Yes, conditionQ2Yes, conditionQ3No;
-	ChoiceValue choiceValueYes, choiceValueNo;
-	Condition[] conditions;
-	Solution solution;
+	private KnowledgeBase kb;
+	private QuestionOC choiceQuestion1, choiceQuestion2, choiceQuestion3;
+	private Condition conditionQ1Yes;
+	private ChoiceValue choiceValueYes, choiceValueNo;
+	private Condition[] conditions;
 
 	@Before
 	public void setUp() throws Exception {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
-		init = new QContainer(kb.getRootQASet(), "init");
+		QContainer init = new QContainer(kb.getRootQASet(), "init");
 		choiceQuestion1 = new QuestionOC(init, "choiceQuestion1", "yes", "no");
 		choiceQuestion2 = new QuestionOC(init, "choiceQuestion2", "yes", "no");
 		choiceQuestion3 = new QuestionOC(init, "choiceQuestion3", "yes", "no");
 
-		solution = new Solution(kb, "Solutionname");
+		new Solution(kb, "Solutionname");
 
 		// two ChoiceValues, representing to two possible answers "yes" and "no"
 		// for the above questions
@@ -90,8 +83,8 @@ public class ConditionMiscellaneousTest {
 
 		// these two conditions should both be answered with "yes"
 		conditionQ1Yes = new CondEqual(choiceQuestion1, choiceValueYes);
-		conditionQ2Yes = new CondEqual(choiceQuestion2, choiceValueYes);
-		conditionQ3No = new CondEqual(choiceQuestion3, choiceValueNo);
+		Condition conditionQ2Yes = new CondEqual(choiceQuestion2, choiceValueYes);
+		Condition conditionQ3No = new CondEqual(choiceQuestion3, choiceValueNo);
 
 		conditions = new Condition[] {
 				conditionQ1Yes, conditionQ2Yes, conditionQ3No };
