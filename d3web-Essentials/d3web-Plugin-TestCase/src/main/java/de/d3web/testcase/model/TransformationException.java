@@ -32,4 +32,7 @@ public class TransformationException extends Exception {
 		super(message);
 	}
 
+	public TransformationException(String message, Throwable e) {
+		super(message, e);
+	}
 }
