@@ -39,6 +39,22 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 		this(objectName, property, null, propertyStringRepresentation);
 	}
 
+	public String getObjectName() {
+		return objectName;
+	}
+
+	public Property<T> getProperty() {
+		return property;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public String getPropertyStringRepresentation() {
+		return propertyStringRepresentation;
+	}
+
 	@Override
 	public Check toCheck(KnowledgeBase knowledgeBase) throws TransformationException {
 		T propertyValue;

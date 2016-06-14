@@ -20,42 +20,57 @@
 package de.d3web.testcase.persistence;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.testcase.model.DefaultCheckTemplate;
+import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.testcase.model.PropertyCheckTemplate;
 import de.d3web.testcase.model.TestCase;
 
 /**
- * FragmentHandler to read and write default checks.
+ * FragmentHandler to read and write PropertyChecks.
  *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 30.10.15
  */
-public class DefaultCheckHandler implements FragmentHandler<TestCase> {
+public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 
 	private static final String CHECK = "Check";
-	private static final String TYPE = "Default";
+	private static final String TYPE = "Property";
 	private static final String OBJECT_NAME = "objectName";
+	private static final String PROPERTY = "property";
 	private static final String VALUE = "value";
+	private static final String LOCALE = "locale";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
 		String objectName = element.getAttribute(OBJECT_NAME);
-		String value = element.getAttribute(VALUE);
-		return new DefaultCheckTemplate(objectName, value);
+		Property<?> property = Property.getUntypedProperty(element.getAttribute(PROPERTY));
+		String propertyStringRepresentation = element.getAttribute(VALUE);
+		Locale locale = null;
+		if (element.hasAttribute(LOCALE)) {
+			String localeString = element.getAttribute(LOCALE);
+			locale = Locale.forLanguageTag(localeString);
+		}
+		return new PropertyCheckTemplate<>(objectName, property, locale, propertyStringRepresentation);
 	}
 
 	@Override
 	public Element write(Object object, Persistence<TestCase> persistence) throws IOException {
-		DefaultCheckTemplate checkTemplate = (DefaultCheckTemplate) object;
+		PropertyCheckTemplate checkTemplate = (PropertyCheckTemplate) object;
 		Element element = persistence.getDocument().createElement(CHECK);
 		element.setAttribute(XMLUtil.TYPE, TYPE);
 		element.setAttribute(OBJECT_NAME, checkTemplate.getObjectName());
-		element.setAttribute(VALUE, checkTemplate.getValue());
+		element.setAttribute(PROPERTY, checkTemplate.getProperty().getName());
+		Locale locale = checkTemplate.getLocale();
+		if (locale != null) {
+			element.setAttribute(LOCALE, locale.toLanguageTag());
+		}
+		element.setAttribute(VALUE, checkTemplate.getPropertyStringRepresentation());
 		return element;
 	}
 
@@ -66,6 +81,10 @@ public class DefaultCheckHandler implements FragmentHandler<TestCase> {
 
 	@Override
 	public boolean canWrite(Object object) {
-		return object instanceof DefaultCheckTemplate;
+		return object instanceof PropertyCheckTemplate;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(Locale.GERMANY.toLanguageTag());
 	}
 }

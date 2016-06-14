@@ -46,7 +46,7 @@ public class PropertyCheck<T> implements Check {
 	@Override
 	public String getCondition() {
 		return "Property " + property.getName() +
-				(property.isMultilingual() ? "(locale: " + (locale == null ? "none" : locale.toString()) + ")" : "") +
+				(property.isMultilingual() ? "(locale: " + (locale == null ? "none" : locale.toLanguageTag()) + ")" : "") +
 				" of object '" + terminologyObject.getName() + "' is '" + propertyValue.toString() + "'";
 	}
 
