@@ -21,13 +21,13 @@ package de.d3web.interview;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.interview.indication.IndicationComparator;
 
@@ -130,8 +130,8 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 		}
 
 		@Override
-		public int compareTo(AgendaEntry o) {
-			return comparator.compare(indication, o.indication);
+		public int compareTo(@NotNull AgendaEntry other) {
+			return comparator.compare(indication, other.indication);
 		}
 
 		public Indication getIndication() {
@@ -140,16 +140,10 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	/**
-	 * A new {@link InterviewAgenda} instance is created to be used with the
-	 * specified {@link KnowledgeBase} and the
-	 * {@link DFSTreeAgendaSortingStrategy} is used for ordering the
-	 * {@link AgendaEntry} instances on the agenda. The initial questions are
-	 * put on the agenda as the first action.
-	 * 
-	 * @param knowledgeBase the specified {@link KnowledgeBase}.
+	 * A new {@link InterviewAgenda} instance is created.
 	 */
 	public InterviewAgenda() {
-		agenda = new ArrayList<AgendaEntry>();
+		agenda = new ArrayList<>();
 	}
 
 	/**
@@ -180,7 +174,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	 * Deactivates all entries of the interviewObject
 	 * 
 	 * @created 14.05.2013
-	 * @param interviewObject
+	 * @param interviewObject the object to deactivate
 	 */
 	public void deactivate(InterviewObject interviewObject) {
 		for (AgendaEntry entry : this.agenda) {
@@ -194,7 +188,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	 * Deactivates the first active entry of the {@link InterviewObject}
 	 * 
 	 * @created 15.05.2013
-	 * @param interviewObject
+	 * @param interviewObject the object to deactivate
 	 */
 	public void deactivateFirst(InterviewObject interviewObject) {
 		for (AgendaEntry entry : this.agenda) {
@@ -217,7 +211,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	public void delete(InterviewObject interviewObject, Indication indication) {
-		List<AgendaEntry> toDelete = new LinkedList<InterviewAgenda.AgendaEntry>();
+		List<AgendaEntry> toDelete = new ArrayList<>();
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.equalsInterviewObject(interviewObject)
 					&& entry.getIndication().equals(indication)) {
@@ -330,7 +324,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	public List<InterviewObject> getCurrentlyActiveObjects() {
 		Collections.sort(this.agenda);
 		// organize if required
-		List<InterviewObject> objects = new ArrayList<InterviewObject>();
+		List<InterviewObject> objects = new ArrayList<>();
 		for (AgendaEntry entry : this.agenda) {
 			if (entry.hasState(InterviewState.ACTIVE)) {
 				objects.add(entry.getInterviewObject());
