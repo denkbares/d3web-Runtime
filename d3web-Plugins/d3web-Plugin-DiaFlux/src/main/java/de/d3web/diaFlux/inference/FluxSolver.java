@@ -322,7 +322,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// for all n in SnappyNodes
 		// ...snapshot n
 		// ...deactivate n
-		// for all shotshot nodes s in ES
+		// for all snapshot nodes s in ES
 		// ...create new flow with s and parents as start node
 		// remove all flows f in SF from the active flows
 
