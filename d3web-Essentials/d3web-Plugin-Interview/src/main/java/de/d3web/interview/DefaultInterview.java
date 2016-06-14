@@ -45,12 +45,12 @@ import de.d3web.utils.Log;
  * {@link InterviewAgenda} managing the activation/deactivation of
  * {@link Question}/{@link QContainer} instances, that are indicated due to
  * values entered in the specified {@link Session}.
- * 
+ * <p>
  * By the default--the {@link QASet} to be answered next by a dialog-- is
  * wrapped in a {@link Form}, that can be retrieved by nextForm(). A
  * {@link FormStrategy} decides about the nature of the next {@link QASet} to be
  * presented in the dialog.
- * 
+ *
  * @author joba
  */
 public class DefaultInterview implements Interview {
@@ -65,9 +65,8 @@ public class DefaultInterview implements Interview {
 	/**
 	 * Initializes an interview for a specified session based on a specified
 	 * knowledge base.
-	 * 
+	 *
 	 * @param session the specified session
-	 * @param knowledgeBase the specified knowledge base
 	 */
 	public DefaultInterview(Session session) {
 		this.session = session;
@@ -89,12 +88,12 @@ public class DefaultInterview implements Interview {
 			notifyIndicationChange(changedFact, oldValue, newValue);
 		}
 		else if (newValue instanceof QuestionValue) {
-			notfiyQuestionValueChange(changedFact, oldValue, newValue);
+			notifyQuestionValueChange(changedFact, oldValue, newValue);
 		}
 
 	}
 
-	private void notfiyQuestionValueChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
+	private void notifyQuestionValueChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
 		// need to check, whether the agenda needs an update due to an
 		// answered question
 		InterviewObject indicatedObject = (InterviewObject) changedFact
@@ -102,27 +101,24 @@ public class DefaultInterview implements Interview {
 		if (this.agenda.onAgenda(indicatedObject)) {
 			// Check: the VALUE has changed from DEFINED to UNDEFINED =>
 			// activate
-			if (newValue instanceof UndefinedValue
-					&& !(oldValue instanceof UndefinedValue)) {
+			if (UndefinedValue.isUndefinedValue(newValue)
+					&& UndefinedValue.isNotUndefinedValue(oldValue)) {
 				this.agenda.activate(indicatedObject);
-				checkParentalQContainer(indicatedObject);
 			}
 			// Check: the VALUE has changed from UNDEFINED to DEFINED =>
 			// de-activate
-			else if (!(newValue instanceof UndefinedValue)
-					&& oldValue instanceof UndefinedValue) {
+			else if (UndefinedValue.isNotUndefinedValue(newValue)
+					&& UndefinedValue.isUndefinedValue(oldValue)) {
 				this.agenda.deactivateFirst(indicatedObject);
-				checkParentalQContainer(indicatedObject);
 			}
 			// Check: VALUE changed from DEFINED to DEFINED =>
 			// de-activate
-			else if (!(newValue instanceof UndefinedValue)
-					&& !(oldValue instanceof UndefinedValue)) {
+			else if (UndefinedValue.isNotUndefinedValue(newValue)
+					&& UndefinedValue.isNotUndefinedValue(oldValue)) {
 				this.agenda.deactivateFirst(indicatedObject);
-				checkParentalQContainer(indicatedObject);
 			}
 			else {
-				Log.warning("UNKNOWN VALUE CHANGE: old=(" + oldValue + ") new=(" + newValue + ")");
+				Log.warning("UNKNOWN VALUE CHANGE: old: " + oldValue + ", new: " + newValue);
 			}
 		}
 		// Need to update indicated QContainers:
@@ -133,6 +129,7 @@ public class DefaultInterview implements Interview {
 		checkParentalQContainer(indicatedObject);
 	}
 
+	@SuppressWarnings("StatementWithEmptyBody")
 	private void notifyIndicationChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
 		InterviewObject indicatedObject = (InterviewObject) changedFact
 				.getObject();
@@ -199,7 +196,8 @@ public class DefaultInterview implements Interview {
 			this.agenda.activate(indicatedObject, newIndication);
 			checkParentalQContainer(indicatedObject);
 		}
-		else if ((oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.RELEVANT) || (oldIndication.hasState(State.RELEVANT) && newIndication.hasState(State.NEUTRAL)))) { // NOSONAR
+		else if ((oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.RELEVANT))
+				|| (oldIndication.hasState(State.RELEVANT) && newIndication.hasState(State.NEUTRAL))) { // NOSONAR
 			// nothing to do because RELEVANT is treated as NEUTRAL
 		}
 		else if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
@@ -221,8 +219,8 @@ public class DefaultInterview implements Interview {
 			}
 		}
 		else if (!oldIndication.getState().equals(newIndication.getState())) {
-			Log.warning("unknown indication state: old=(" + oldIndication + ") new=("
-					+ newIndication + "), ignoring it");
+			Log.warning("Unknown indication state: old: " + oldIndication + ", new: "
+					+ newIndication + ", ignoring it...");
 		}
 	}
 
@@ -232,21 +230,21 @@ public class DefaultInterview implements Interview {
 	 * need to be activated/deactivated due to the value change. For instance,
 	 * if every {@link Question} of a {@link QContainer} is inactive, then the
 	 * parental {@link QContainer} should be deactivated, too.
-	 * 
-	 * @param interviewObject
+	 *
+	 * @param interviewObject object for which to check parent
 	 */
 	private void checkParentalQContainer(InterviewObject interviewObject) {
 		List<QContainer> containersOnAgenda = computeParentalContainersOnAgenda(interviewObject);
 		for (QContainer qContainer : containersOnAgenda) {
 			InterviewState state = checkChildrenState(qContainer);
 			switch (state) {
-			case ACTIVE:
-				getInterviewAgenda().activate(qContainer);
-				break;
-			case INACTIVE:
-				getInterviewAgenda().deactivateFirst(qContainer);
-			default:
-				break;
+				case ACTIVE:
+					getInterviewAgenda().activate(qContainer);
+					break;
+				case INACTIVE:
+					getInterviewAgenda().deactivateFirst(qContainer);
+				default:
+					break;
 			}
 		}
 	}
@@ -275,7 +273,7 @@ public class DefaultInterview implements Interview {
 						else if (session.getBlackboard().getIndication(
 								(InterviewObject) followUpQuestion).isRelevant()
 								&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
-										(ValueObject) followUpQuestion))) {
+								(ValueObject) followUpQuestion))) {
 							return InterviewState.ACTIVE;
 						}
 					}
@@ -295,13 +293,13 @@ public class DefaultInterview implements Interview {
 
 	private static List<TerminologyObject> getAllFollowUpChildrenOf(
 			TerminologyObject[] objects) {
-		Collection<TerminologyObject> followers = new HashSet<TerminologyObject>();
+		Collection<TerminologyObject> followers = new HashSet<>();
 		return getAllFollowUpChildrenOf(objects, followers);
 	}
 
 	private static List<TerminologyObject> getAllFollowUpChildrenOf(
 			TerminologyObject[] objects, Collection<TerminologyObject> followers) {
-		List<TerminologyObject> children = new ArrayList<TerminologyObject>();
+		List<TerminologyObject> children = new ArrayList<>();
 		for (TerminologyObject object : objects) {
 			for (TerminologyObject child : object.getChildren()) {
 				if (!followers.contains(child)) {
@@ -322,15 +320,15 @@ public class DefaultInterview implements Interview {
 	/**
 	 * For a specified {@link InterviewObject} instance all parental QContainers
 	 * are computed, that are included in the current {@link InterviewAgenda}.
-	 * 
+	 *
 	 * @param interviewObject the specified {@link InterviewObject} instance
 	 * @return all (recursively) parental {@link QContainer} instances that are
-	 *         on the agenda
+	 * on the agenda
 	 */
 	private List<QContainer> computeParentalContainersOnAgenda(
 			InterviewObject interviewObject) {
-		List<QContainer> parentsOnAgenda = new ArrayList<QContainer>();
-		List<InterviewObject> visitedContainers = new ArrayList<InterviewObject>();
+		List<QContainer> parentsOnAgenda = new ArrayList<>();
+		List<InterviewObject> visitedContainers = new ArrayList<>();
 		computeParentalContainersOnAgenda(interviewObject, parentsOnAgenda, visitedContainers);
 		return parentsOnAgenda;
 	}
@@ -338,11 +336,12 @@ public class DefaultInterview implements Interview {
 	private void computeParentalContainersOnAgenda(
 			InterviewObject interviewObject, List<QContainer> parentsOnAgenda, List<InterviewObject> visitedContainers) {
 		for (TerminologyObject parent : interviewObject.getParents()) {
+			//noinspection SuspiciousMethodCalls
 			if (!visitedContainers.contains(parent)) {
 				visitedContainers.add((InterviewObject) parent);
 				if (parent instanceof QContainer
 						&& getInterviewAgenda().onAgenda(
-								(InterviewObject) parent)) {
+						(InterviewObject) parent)) {
 					parentsOnAgenda.add((QContainer) parent);
 				}
 				if (parent.getParents().length > 0) {
