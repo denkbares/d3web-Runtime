@@ -74,16 +74,17 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 		// we have to check each test against (potentially) multiple KBs
 		// that makes message generate a bit more complicated
-		List<String> inconsistentKBs = new ArrayList<String>();
-		List<String> failedKBs = new ArrayList<String>();
-		List<String> passedKBs = new ArrayList<String>();
+		List<String> inconsistentKBs = new ArrayList<>();
+		List<String> failedKBs = new ArrayList<>();
+		List<String> passedKBs = new ArrayList<>();
 
 		boolean skipValuesOutOfRange = args.length >= 2 && "skip".equalsIgnoreCase(args[1]);
 
 		for (KnowledgeBase kb : kbs) {
 
-			if (!testCase.check(kb).isEmpty()) {
-				inconsistentKBs.add(kb.getId());
+			Collection<String> kbCheckResult = testCase.check(kb);
+			if (!kbCheckResult.isEmpty()) {
+				inconsistentKBs.add("Knowledge base '" + kb.getId() + "' inconsistent with test: " + kbCheckResult);
 				continue;
 			}
 
@@ -150,10 +151,8 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 	private String renderFailureMessage(List<String> inconsistentKBs, List<String> failedKBs, List<String> passedKBs) {
 		String message = "";
-		if (inconsistentKBs.size() > 0) {
-			message += "Knowledge base" + (inconsistentKBs.size() > 1 ? "s" : "") + " inconsistent with test: ";
-			message += Strings.concat(" ;", inconsistentKBs);
-			message += "\n";
+		for (String inconsistentKB : inconsistentKBs) {
+			message += inconsistentKB + "\n";
 		}
 		// enumerate failed KBs one per line
 		for (String failedMessage : failedKBs) {
@@ -169,7 +168,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 
 	private Collection<KnowledgeBase> getKnowledgeBases(String[] args) {
 		if (args.length == 0) return null;
-		Collection<KnowledgeBase> result = new ArrayList<KnowledgeBase>();
+		Collection<KnowledgeBase> result = new ArrayList<>();
 		for (TestObjectProvider testObjectProvider : TestObjectProviderManager.getTestObjectProviders()) {
 			List<TestObjectContainer<KnowledgeBase>> testObjects = testObjectProvider.getTestObjects(
 					KnowledgeBase.class, args[0]);
