@@ -28,6 +28,7 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.terminology.info.Property;
+import de.d3web.strings.Identifier;
 import de.d3web.testcase.model.PropertyCheckTemplate;
 import de.d3web.testcase.model.TestCase;
 
@@ -41,22 +42,25 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 
 	private static final String CHECK = "Check";
 	private static final String TYPE = "Property";
-	private static final String OBJECT_NAME = "objectName";
+	private static final String OBJECT_IDENTIFIER = "objectName";
 	private static final String PROPERTY = "property";
-	private static final String VALUE = "value";
 	private static final String LOCALE = "locale";
+	private static final String HAVE_VALUE = "haveValue";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
-		String objectName = element.getAttribute(OBJECT_NAME);
+		Identifier objectIdentifier = Identifier.fromExternalForm(element.getAttribute(OBJECT_IDENTIFIER));
 		Property<?> property = Property.getUntypedProperty(element.getAttribute(PROPERTY));
-		String propertyStringRepresentation = element.getAttribute(VALUE);
+		String propertyValue = null;
+		if (!element.hasAttribute(HAVE_VALUE) || !"false".equals(element.getAttribute(HAVE_VALUE))) {
+			propertyValue = element.getTextContent();
+		}
 		Locale locale = null;
 		if (element.hasAttribute(LOCALE)) {
 			String localeString = element.getAttribute(LOCALE);
 			locale = Locale.forLanguageTag(localeString);
 		}
-		return new PropertyCheckTemplate<>(objectName, property, locale, propertyStringRepresentation);
+		return new PropertyCheckTemplate<>(objectIdentifier, property, locale, propertyValue);
 	}
 
 	@Override
@@ -64,13 +68,19 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 		PropertyCheckTemplate checkTemplate = (PropertyCheckTemplate) object;
 		Element element = persistence.getDocument().createElement(CHECK);
 		element.setAttribute(XMLUtil.TYPE, TYPE);
-		element.setAttribute(OBJECT_NAME, checkTemplate.getObjectName());
+		element.setAttribute(OBJECT_IDENTIFIER, checkTemplate.getObjectIdentifier().toExternalForm());
 		element.setAttribute(PROPERTY, checkTemplate.getProperty().getName());
+		String propertyValue = checkTemplate.getPropertyValue();
+		if (propertyValue == null) {
+			element.setAttribute(HAVE_VALUE, "false");
+		}
+		else {
+			element.setTextContent(propertyValue);
+		}
 		Locale locale = checkTemplate.getLocale();
 		if (locale != null) {
 			element.setAttribute(LOCALE, locale.toLanguageTag());
 		}
-		element.setAttribute(VALUE, checkTemplate.getPropertyStringRepresentation());
 		return element;
 	}
 
