@@ -45,14 +45,14 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 	private static final String OBJECT_IDENTIFIER = "objectName";
 	private static final String PROPERTY = "property";
 	private static final String LOCALE = "locale";
-	private static final String HAVE_VALUE = "haveValue";
+	private static final String HAS_VALUE = "hasValue";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
 		Identifier objectIdentifier = Identifier.fromExternalForm(element.getAttribute(OBJECT_IDENTIFIER));
 		Property<?> property = Property.getUntypedProperty(element.getAttribute(PROPERTY));
 		String propertyValue = null;
-		if (!element.hasAttribute(HAVE_VALUE) || !"false".equals(element.getAttribute(HAVE_VALUE))) {
+		if (!element.hasAttribute(HAS_VALUE) || !"false".equals(element.getAttribute(HAS_VALUE))) {
 			propertyValue = element.getTextContent();
 		}
 		Locale locale = null;
@@ -72,7 +72,7 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 		element.setAttribute(PROPERTY, checkTemplate.getProperty().getName());
 		String propertyValue = checkTemplate.getPropertyValue();
 		if (propertyValue == null) {
-			element.setAttribute(HAVE_VALUE, "false");
+			element.setAttribute(HAS_VALUE, "false");
 		}
 		else {
 			element.setTextContent(propertyValue);
