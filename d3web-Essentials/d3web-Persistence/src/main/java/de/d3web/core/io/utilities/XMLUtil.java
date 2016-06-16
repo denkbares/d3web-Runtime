@@ -93,6 +93,9 @@ public final class XMLUtil {
 
 	public static final String INFO_STORE = "infoStore";
 	public static final String TYPE = "type";
+	public static final String NAME = "name";
+	public static final String TARGET_QA_SETS = "TargetQASets";
+	public static final String QA_SET = "QASet";
 
 	/**
 	 * @deprecated Use {@link de.d3web.strings.Strings#writeDate(Date)} instead
@@ -132,7 +135,7 @@ public final class XMLUtil {
 		if (q != null) {
 			Element e = doc.createElement("Question");
 			if (q.getName() != null) {
-				e.setAttribute("name", q.getName());
+				e.setAttribute(NAME, q.getName());
 				parent.appendChild(e);
 			}
 		}
@@ -195,10 +198,10 @@ public final class XMLUtil {
 		Element element = doc.createElement("Condition");
 		element.setAttribute("type", type);
 		if (nob != null) {
-			element.setAttribute("name", nob.getName());
+			element.setAttribute(NAME, nob.getName());
 		}
 		else {
-			element.setAttribute("name", "");
+			element.setAttribute(NAME, "");
 		}
 		return element;
 	}
@@ -384,10 +387,10 @@ public final class XMLUtil {
 	public static void appendTargetQASets(Element element, List<QASet> qaSets) {
 		Document doc = element.getOwnerDocument();
 		if (!qaSets.isEmpty()) {
-			Element targetQASets = doc.createElement("TargetQASets");
+			Element targetQASets = doc.createElement(TARGET_QA_SETS);
 			for (QASet qaset : qaSets) {
-				Element qasetElement = doc.createElement("QASet");
-				qasetElement.setAttribute("name", qaset.getName());
+				Element qasetElement = doc.createElement(QA_SET);
+				qasetElement.setAttribute(NAME, qaset.getName());
 				targetQASets.appendChild(qasetElement);
 			}
 			element.appendChild(targetQASets);
@@ -403,12 +406,12 @@ public final class XMLUtil {
 	 */
 	public static List<QASet> getTargetQASets(Element element, KnowledgeBase kb) {
 		List<QASet> ret = new LinkedList<QASet>();
-		if (element.getNodeName().equalsIgnoreCase("targetQASets")) {
-			NodeList qasets = element.getChildNodes();
-			for (int k = 0; k < qasets.getLength(); ++k) {
-				Node q = qasets.item(k);
-				if (q.getNodeName().equalsIgnoreCase("QASet")) {
-					String id = q.getAttributes().getNamedItem("name").getNodeValue();
+		if (element.getNodeName().equalsIgnoreCase(TARGET_QA_SETS)) {
+			NodeList qaSets = element.getChildNodes();
+			for (int k = 0; k < qaSets.getLength(); ++k) {
+				Node q = qaSets.item(k);
+				if (q.getNodeName().equalsIgnoreCase(QA_SET)) {
+					String id = q.getAttributes().getNamedItem(NAME).getNodeValue();
 					QASet qset = (QASet) kb.getManager().search(id);
 					ret.add(qset);
 				}
@@ -432,7 +435,7 @@ public final class XMLUtil {
 			Element childrenElement = doc.createElement("Children");
 			for (TerminologyObject child : children) {
 				Element childElement = doc.createElement("Child");
-				childElement.setAttribute("name", child.getName());
+				childElement.setAttribute(NAME, child.getName());
 				childrenElement.appendChild(childElement);
 			}
 			element.appendChild(childrenElement);
@@ -458,7 +461,7 @@ public final class XMLUtil {
 		}
 		if (children != null) {
 			for (Element child : children) {
-				String id = child.getAttribute("name");
+				String id = child.getAttribute(NAME);
 				TerminologyObject no = kb.getManager().search(
 						id);
 				if (namedObject instanceof QASet && no instanceof QASet) {
