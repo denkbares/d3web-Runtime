@@ -20,7 +20,6 @@
 
 package de.d3web.core.inference.condition;
 
-import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -41,13 +40,13 @@ public abstract class CondQuestion extends TerminalCondition {
 
 	/**
 	 * Creates a new CondQuestion instance with the specified
-	 * {@link NamedObject}.
-	 * 
-	 * @param idobject the specified {@link NamedObject}
+	 * {@link Question}.
+	 *
+	 * @param question the specified {@link Question}
 	 */
-	protected CondQuestion(Question idobject) {
-		super(idobject);
-		question = idobject;
+	protected CondQuestion(Question question) {
+		super(question);
+		this.question = question;
 	}
 
 	/**
@@ -59,7 +58,7 @@ public abstract class CondQuestion extends TerminalCondition {
 	 * @return return the value if there is a "normal" value set
 	 * @throws NoAnswerException if the question has currently no answer
 	 * @throws UnknownAnswerException if the question is answered with
-	 *         {@link AnswerUnknown}
+	 *         {@link Unknown}
 	 */
 	protected Value checkAnswer(Session session)
 			throws NoAnswerException, UnknownAnswerException {
