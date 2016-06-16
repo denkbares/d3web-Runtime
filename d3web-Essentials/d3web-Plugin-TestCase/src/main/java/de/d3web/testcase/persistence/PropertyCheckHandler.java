@@ -94,7 +94,4 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 		return object instanceof PropertyCheckTemplate;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(Locale.GERMANY.toLanguageTag());
-	}
 }
