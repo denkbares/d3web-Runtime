@@ -1,6 +1,9 @@
 package de.d3web.interview.io;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.w3c.dom.Element;
 
@@ -8,7 +11,7 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.interview.inference.condition.CondActive;
 
 /**
@@ -19,7 +22,8 @@ import de.d3web.interview.inference.condition.CondActive;
  */
 public class CondActiveHandler implements FragmentHandler<KnowledgeBase> {
 
-	public static final String TYPE = "active";
+	private static final String TYPE = "active";
+	private static final String EXCLUSIVE = "exclusive";
 
 	@Override
 	public boolean canRead(Element element) {
@@ -33,22 +37,35 @@ public class CondActiveHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
-		String questionName = element.getAttribute("name");
-		if (questionName != null) {
-			Question question = persistence.getArtifact().getManager().searchQuestion(questionName);
-			if (question != null) {
-				return new CondActive(question);
-			}
+		List<QASet> qaSets;
+		if (element.hasAttribute(XMLUtil.NAME)) {
+			String qaSetName = element.getAttribute("name");
+			qaSets = new ArrayList<>();
+			qaSets.add(persistence.getArtifact().getManager().searchQASet(qaSetName));
 		}
 		else {
-			throw new IOException("No name defined for condition active.");
+			qaSets = XMLUtil.getTargetQASets(element, persistence.getArtifact());
 		}
-		return null;
+		boolean exclusive = false;
+		if (element.hasAttribute(EXCLUSIVE)) {
+			exclusive = Boolean.valueOf(element.getAttribute(EXCLUSIVE));
+		}
+		return new CondActive(exclusive, qaSets.toArray(new QASet[0]));
 	}
 
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CondActive cond = (CondActive) object;
-		return XMLUtil.writeCondition(persistence.getDocument(), cond.getQuestion(), TYPE);
+		QASet[] qaSets = cond.getQaSets();
+		Element element;
+		if (qaSets.length == 1) {
+			element = XMLUtil.writeCondition(persistence.getDocument(), qaSets[0], TYPE);
+		}
+		else {
+			element = XMLUtil.writeCondition(persistence.getDocument(), TYPE);
+			XMLUtil.appendTargetQASets(element, Arrays.asList(qaSets));
+		}
+		element.setAttribute(EXCLUSIVE, String.valueOf(cond.isExclusive()));
+		return element;
 	}
 }
