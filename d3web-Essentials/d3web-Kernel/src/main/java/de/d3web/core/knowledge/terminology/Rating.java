@@ -22,6 +22,8 @@ package de.d3web.core.knowledge.terminology;
 
 import java.util.Comparator;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -136,6 +138,7 @@ public class Rating implements Value {
 		if (other == null) {
 			return false;
 		}
+		//noinspection SimplifiableIfStatement
 		if (!(other instanceof Rating)) {
 			return false;
 		}
@@ -159,7 +162,7 @@ public class Rating implements Value {
 	 * <p>
 	 * If a subclass overwrites this method it must (!) call this method if the
 	 * state is compared to a instance with its class being identical to {@link
-	 * DiagnosisState#class}. An overwriting method shall call this method if
+	 * State}. An overwriting method shall call this method if
 	 * the state is compared to an instance of a different subclass.
 	 * 
 	 * @param other another {@link Rating}
@@ -167,7 +170,7 @@ public class Rating implements Value {
 	 *         definition
 	 */
 	@Override
-	public int compareTo(Value other) {
+	public int compareTo(@NotNull Value other) {
 		if (other instanceof Rating) {
 			return this.state.ordinal() - ((Rating) other).state.ordinal();
 		}
