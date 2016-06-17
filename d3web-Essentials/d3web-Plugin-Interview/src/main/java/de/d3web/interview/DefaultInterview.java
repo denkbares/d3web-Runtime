@@ -90,7 +90,6 @@ public class DefaultInterview implements Interview {
 		else if (newValue instanceof QuestionValue) {
 			notifyQuestionValueChange(changedFact, oldValue, newValue);
 		}
-
 	}
 
 	private void notifyQuestionValueChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
@@ -129,81 +128,16 @@ public class DefaultInterview implements Interview {
 		checkParentalQContainer(indicatedObject);
 	}
 
-	@SuppressWarnings("StatementWithEmptyBody")
 	private void notifyIndicationChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
 		InterviewObject indicatedObject = (InterviewObject) changedFact
 				.getObject();
 		Indication oldIndication = (Indication) oldValue;
 		Indication newIndication = (Indication) newValue;
 
-		// NEUTRAL/RELEVANT => INDICATED : 1) append to agenda 2) activate
-		if ((oldIndication.hasState(State.NEUTRAL) || oldIndication.hasState(State.RELEVANT))
-				&& newIndication.hasState(State.INDICATED)) {
-			this.agenda.append(indicatedObject, newIndication);
-			checkParentalQContainer(indicatedObject);
-		}
-		// ANY => INSTANT_INDICATED : 1) append to agenda 2) activate
-		// TODO: finish the work on instance indication, currently
-		// INSTANCE_INDICATION is handled like
-		// standard indication
-		else if (newIndication.hasState(State.INSTANT_INDICATED)) {
-			this.agenda.append(indicatedObject, newIndication);
-			checkParentalQContainer(indicatedObject);
-		}
-		// INDICATED => NEUTRAL/RELEVANT : deactivate
-		else if (oldIndication.hasState(State.INDICATED)
-				&& (newIndication.hasState(State.NEUTRAL) || newIndication.hasState(State.RELEVANT))) {
-			this.agenda.deactivate(indicatedObject);
-			checkParentalQContainer(indicatedObject);
-		}
-		// INDICATED => CONTRA_INDICATED : deactivate
-		else if (oldIndication.hasState(State.INDICATED)
-				&& newIndication.hasState(State.CONTRA_INDICATED)) {
-			this.agenda.deactivate(indicatedObject);
-			checkParentalQContainer(indicatedObject);
-		}
-		// CONTRA_INDICATED => INDICATED : 1) append to agenda if not
-		// included 2) activate
-		else if (oldIndication.hasState(State.CONTRA_INDICATED)
-				&& newIndication.hasState(State.INDICATED)) {
-			this.agenda.activate(indicatedObject, newIndication);
-			checkParentalQContainer(indicatedObject);
-		}
-		else if (oldIndication.hasState(State.INDICATED)
-				&& newIndication.hasState(State.INDICATED)) { // NOSONAR
-			// INDICATED => INDICATED : noop
-		}
-		else if (oldIndication.hasState(State.CONTRA_INDICATED)
-				&& newIndication.hasState(State.NEUTRAL)) { // NOSONAR
-			// CONTRA_INDICATED => NEUTRAL : noop
-			checkParentalQContainer(indicatedObject);
-		}
-		else if (oldIndication.hasState(State.REPEATED_INDICATED)
-				&& (newIndication.hasState(State.NEUTRAL) || newIndication.hasState(State.RELEVANT))) {
-			// old=(REPEATED_INDICATED) => new=(NEUTRAL): deactivate
-			this.agenda.deactivate(indicatedObject);
-			checkParentalQContainer(indicatedObject);
-		}
-		else if ((oldIndication.hasState(State.NEUTRAL) || oldIndication.hasState(State.RELEVANT))
-				&& newIndication.hasState(State.CONTRA_INDICATED)) { // NOSONAR
-			// NEUTRAL => CONTRA_INDICATED : noop
-			checkParentalQContainer(indicatedObject);
-		}
-		else if (newIndication.hasState(State.REPEATED_INDICATED)) {
-			// remove old entries
-			this.agenda.deactivate(indicatedObject);
-			// ANY => REPEATED_INDICATION : put it as active on the agenda
-			this.agenda.activate(indicatedObject, newIndication);
-			checkParentalQContainer(indicatedObject);
-		}
-		else if ((oldIndication.hasState(State.NEUTRAL) && newIndication.hasState(State.RELEVANT))
-				|| (oldIndication.hasState(State.RELEVANT) && newIndication.hasState(State.NEUTRAL))) { // NOSONAR
-			// nothing to do because RELEVANT is treated as NEUTRAL
-		}
-		else if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
+		// #### MULTIPLE_INDICATED ####
+		if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
 			agenda.delete(indicatedObject, oldIndication);
-			Collection<Fact> interviewFacts = session.getBlackboard().getInterviewFacts(
-					indicatedObject);
+			Collection<Fact> interviewFacts = session.getBlackboard().getInterviewFacts(indicatedObject);
 			for (Fact fact : interviewFacts) {
 				Indication factIndication = (Indication) fact.getValue();
 				if (factIndication.hasState(State.MULTIPLE_INDICATED)) {
@@ -218,6 +152,59 @@ public class DefaultInterview implements Interview {
 				notifyIndicationChange(changedFact, new Indication(State.NEUTRAL, 0), newValue);
 			}
 		}
+
+		// #### INDICATED ####
+		else if (newIndication.hasState(State.INDICATED)) {
+			if (!oldIndication.equals(newIndication)) {
+				this.agenda.append(indicatedObject, newIndication);
+				checkParentalQContainer(indicatedObject);
+			}
+		}
+
+		// #### INSTANT_INDICATED ####
+		else if (newIndication.hasState(State.INSTANT_INDICATED)) {
+			if (!oldIndication.equals(newIndication)) {
+				this.agenda.append(indicatedObject, newIndication);
+				checkParentalQContainer(indicatedObject);
+			}
+		}
+
+		// #### REPEATED_INDICATED ####
+		else if (newIndication.hasState(State.REPEATED_INDICATED)) {
+			this.agenda.deactivate(indicatedObject);
+			this.agenda.activate(indicatedObject, newIndication);
+			checkParentalQContainer(indicatedObject);
+		}
+
+		// #### NEUTRAL / RELEVANT ####
+		else if (newIndication.hasState(State.NEUTRAL)
+				|| newIndication.hasState(State.RELEVANT)) {
+
+			if (oldIndication.hasState(State.REPEATED_INDICATED)
+					|| oldIndication.hasState(State.INDICATED)
+					|| oldIndication.hasState(State.INSTANT_INDICATED)) {
+				this.agenda.deactivate(indicatedObject);
+				checkParentalQContainer(indicatedObject);
+			}
+			else if (oldIndication.hasState(State.CONTRA_INDICATED)) {
+				checkParentalQContainer(indicatedObject);
+			}
+		}
+
+		// #### CONTRA_INDICATED ####
+		else if (newIndication.hasState(State.CONTRA_INDICATED)) {
+			if (oldIndication.hasState(State.INDICATED)
+					|| oldIndication.hasState(State.REPEATED_INDICATED)
+					|| oldIndication.hasState(State.INSTANT_INDICATED)) {
+				this.agenda.deactivate(indicatedObject);
+				checkParentalQContainer(indicatedObject);
+			}
+			else if (oldIndication.hasState(State.NEUTRAL)
+					|| oldIndication.hasState(State.RELEVANT)) {
+				checkParentalQContainer(indicatedObject);
+			}
+		}
+
 		else if (!oldIndication.getState().equals(newIndication.getState())) {
 			Log.warning("Unknown indication state: old: " + oldIndication + ", new: "
 					+ newIndication + ", ignoring it...");
