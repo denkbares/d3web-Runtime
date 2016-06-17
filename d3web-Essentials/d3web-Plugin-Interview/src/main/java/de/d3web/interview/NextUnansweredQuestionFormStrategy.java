@@ -46,18 +46,18 @@ import de.d3web.core.session.values.UndefinedValue;
 public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 
 	@Override
-	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
-		if (agendaEnties.isEmpty()) {
+	public Form nextForm(List<InterviewObject> agendaEntries, Session session) {
+		if (agendaEntries.isEmpty()) {
 			return EmptyForm.getInstance();
 		}
 		else {
-			for (InterviewObject object : agendaEnties) {
+			for (InterviewObject object : agendaEntries) {
 				if (object instanceof Question) {
 					if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
 							(ValueObject) object))
 							|| session.getBlackboard().getIndication(object).hasState(
 									State.REPEATED_INDICATED)) {
-						return new DefaultForm(((Question) object).getName(), object, session);
+						return new DefaultForm(object.getName(), object, session);
 					}
 					else {
 						for (TerminologyObject child : object.getChildren()) {
@@ -66,7 +66,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 											(InterviewObject) child).isRelevant()
 									&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
 											(ValueObject) child))) {
-								return new DefaultForm(((Question) child).getName(),
+								return new DefaultForm(child.getName(),
 										(InterviewObject) child,
 										session);
 							}
@@ -96,7 +96,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 * 
 	 * @param qaset the specified {@link QASet}
 	 * @param session the specified session
-	 * @param traversedObjects
+	 * @param traversedObjects objects traversed already to avoid loops
 	 * @return the first {@link Question} instance, that is a child of the
 	 *         specified {@link QASet} and is not answered; null otherwise
 	 */
@@ -177,9 +177,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	}
 
 	/**
-	 * @see 
-	 *      NextUnansweredQuestionFormStrategy.isDirectQContainerQuestion(question
-	 *      )
+	 * @see NextUnansweredQuestionFormStrategy#isDirectQContainerQuestion(Question)
 	 */
 	private boolean isNotDirectQContainerQuestion(Question question) {
 		return !isDirectQContainerQuestion(question);
