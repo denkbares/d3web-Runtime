@@ -53,7 +53,7 @@ public class IndicationTest {
 		relevantIndicationQuestion = new QuestionOC(init, "RelevantIndicationQuestion");
 		indicationChooser = new QuestionOC(init, "IndicationChooser",
 				indicationQuestion1.getName(), indicationQuestion2.getName(), relevantIndicationQuestion.getName(),
-				repeatedIndicationQuestion.getName(), relevantIndicationQuestion.getName());
+				instantIndicationQuestion.getName(), repeatedIndicationQuestion.getName());
 
 		RuleFactory.createIndicationRule(this.indicationQuestion1, new CondEqual(indicationChooser, new ChoiceValue(indicationQuestion1
 				.getName())));

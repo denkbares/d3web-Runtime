@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -22,6 +21,9 @@ import de.d3web.strings.Strings;
  * Checks whether the given QASets are currently active or not.
  * Active Questions or QContainer are shown to the user because they are indicated in any way (either normally,
  * repeatedly, instantly or any other indication type...)
+ * <p/>
+ * <b>ATTENTION: This Condition can not be used in Rules, because Rules are not notified about indication changes (only
+ * fact changes).</b>
  *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 09.06.16
@@ -185,12 +187,6 @@ public class CondActive extends TerminalCondition {
 	public String toString() {
 		return Strings.concat(", ", getQaSets()) + (getQaSets().length == 1 ? " is " : " are ")
 				+ (exclusive ? "exclusively " : "") + "active";
-	}
-
-	public static void main(String[] args) {
-		CondActive condActive = new CondActive(true, new QContainer(new KnowledgeBase(), "sf"));
-		System.out.println(condActive.getRootQContainer());
-		System.out.println(condActive.getActiveQuestions());
 	}
 
 }
