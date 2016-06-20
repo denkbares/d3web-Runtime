@@ -56,7 +56,7 @@ public class Indication implements Value {
 		 * An InterviewObject with this state should be presented to the user,
 		 * even if the user has already processed that element
 		 */
-		REPEATED_INDICATED;
+		REPEATED_INDICATED
 
 	}
 
