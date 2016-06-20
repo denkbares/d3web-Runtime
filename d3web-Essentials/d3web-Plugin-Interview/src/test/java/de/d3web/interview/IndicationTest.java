@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
@@ -31,9 +32,7 @@ import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.plugin.test.InitPluginManager;
 
-import static de.d3web.core.knowledge.Indication.State.INDICATED;
-import static de.d3web.core.knowledge.Indication.State.INSTANT_INDICATED;
-import static de.d3web.core.knowledge.Indication.State.RELEVANT;
+import static de.d3web.core.knowledge.Indication.State.*;
 import static de.d3web.core.manage.RuleFactory.setRuleParams;
 import static org.junit.Assert.assertEquals;
 
@@ -49,7 +48,7 @@ public class IndicationTest {
 	protected QuestionMC indicationChooser;
 	protected QContainer indicationContainer;
 	protected QuestionOC indicationQuestion1, indicationQuestion2,
-			relevantIndicationQuestion, repeatedIndicationQuestion, instantIndicationQuestion;
+			relevantIndicationQuestion, relevantIndicationChildQuestion, repeatedIndicationQuestion, instantIndicationQuestion;
 
 	@Before
 	public void setUp() throws Exception {
@@ -62,6 +61,7 @@ public class IndicationTest {
 		repeatedIndicationQuestion = new QuestionOC(init, "RepeatedIndicationQuestion");
 		instantIndicationQuestion = new QuestionOC(init, "InstantIndicationQuestion");
 		relevantIndicationQuestion = new QuestionOC(init, "RelevantIndicationQuestion");
+		relevantIndicationChildQuestion = new QuestionOC(relevantIndicationQuestion, "RelevantIndicationChildQuestion");
 		indicationChooser = new QuestionMC(init, "IndicationChooser",
 				indicationQuestion1.getName(), indicationQuestion2.getName(), relevantIndicationQuestion.getName(),
 				instantIndicationQuestion.getName(), repeatedIndicationQuestion.getName(), indicationContainer.getName());
@@ -102,6 +102,10 @@ public class IndicationTest {
 
 		session = SessionFactory.createSession(kb);
 		indicate(session, indicationContainer, INDICATED);
+
+		assertActiveQuestions(session, indicationQuestion1);
+		answer(session, indicationQuestion1, Unknown.getInstance());
+		assertActiveQuestions(session, indicationQuestion2);
 	}
 
 	@Test
@@ -109,15 +113,19 @@ public class IndicationTest {
 
 		Session session = SessionFactory.createSession(kb);
 
-		indicate(session, relevantIndicationQuestion, RELEVANT);
-		// without its parent being indicated, relevantQuestion should not be active
+		Fact indicationFact = indicate(session, relevantIndicationChildQuestion, RELEVANT);
+		// without its parent being indicated, relevantChild should not be active
 		assertActiveQuestions(session);
-		indicate(session, indicationQuestion1, RELEVANT);
-		// same here, still no active questions
+		indicate(session, relevantIndicationQuestion, INDICATED);
+		// with the parent question being indicated, both parent and child are now active
+		// TODO: Is this correct for NextUnansweredQuestionFormStrategy?? Two questions active?
+		assertActiveQuestions(session, relevantIndicationQuestion, relevantIndicationChildQuestion);
+
+		session.getBlackboard().removeInterviewFact(indicationFact);
+		assertActiveQuestions(session, relevantIndicationQuestion);
+
+		answer(session, relevantIndicationQuestion, Unknown.getInstance());
 		assertActiveQuestions(session);
-		indicate(session, indicationContainer, INDICATED);
-		// with its parent indicated, question1 should now be active
-		assertActiveQuestions(session, indicationQuestion1);
 
 	}
 
@@ -142,11 +150,15 @@ public class IndicationTest {
 		session.getBlackboard().addValueFact(valueFact);
 	}
 
-	private void indicate(Session session, QASet qaSet, Indication.State state) {
+	private Fact indicate(Session session, QASet qaSet, Indication.State state) {
+		return indicate(session, qaSet, state, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
+	}
+
+	private Fact indicate(Session session, QASet qaSet, Indication.State state, Object source, PSMethod psMethod) {
 		Fact indicationFact = FactFactory.createIndicationFact(qaSet, new Indication(state, kb.getManager()
-						.getTreeIndex(qaSet)),
-				PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
+				.getTreeIndex(qaSet)), source, psMethod);
 		session.getBlackboard().addInterviewFact(indicationFact);
+		return indicationFact;
 	}
 
 	@Test
@@ -180,6 +192,42 @@ public class IndicationTest {
 
 		session.getBlackboard().removeValueFact(userEnteredFact);
 
+		assertActiveQuestions(session);
+	}
+
+	@Test
+	public void testContraIndication() {
+		Session session = SessionFactory.createSession(kb);
+		indicate(session, indicationQuestion1, INDICATED);
+		assertActiveQuestions(session, indicationQuestion1);
+		Fact contraIndicationFact = indicate(session, indicationQuestion1, CONTRA_INDICATED);
+		assertActiveQuestions(session);
+		session.getBlackboard().removeInterviewFact(contraIndicationFact);
+		// we used same source for both facts, so the first indication is no longer present
+		assertActiveQuestions(session);
+
+		// do same test, but with different fact sources
+		Fact indicationFact = indicate(session, indicationQuestion1, INDICATED, "IndicationSource", PSMethodStrategic.getInstance());
+		assertActiveQuestions(session, indicationQuestion1);
+		contraIndicationFact = indicate(session, indicationQuestion1, CONTRA_INDICATED, "ContraIndicationSource", PSMethodStrategic
+				.getInstance());
+		assertActiveQuestions(session);
+		session.getBlackboard().removeInterviewFact(contraIndicationFact);
+		// using different sources, the indicationFact should still be present and activate the question
+		assertActiveQuestions(session, indicationQuestion1);
+		session.getBlackboard().removeInterviewFact(indicationFact);
+		assertActiveQuestions(session);
+
+		// do same test, but with different order of adding the facts
+		contraIndicationFact = indicate(session, indicationQuestion1, CONTRA_INDICATED, "ContraIndicationSource", PSMethodStrategic
+				.getInstance());
+		assertActiveQuestions(session);
+		indicationFact = indicate(session, indicationQuestion1, INDICATED, "IndicationSource", PSMethodStrategic.getInstance());
+		assertActiveQuestions(session);
+		session.getBlackboard().removeInterviewFact(contraIndicationFact);
+		// using different sources, the indicationFact should still be present and activate the question
+		assertActiveQuestions(session, indicationQuestion1);
+		session.getBlackboard().removeInterviewFact(indicationFact);
 		assertActiveQuestions(session);
 	}
 
