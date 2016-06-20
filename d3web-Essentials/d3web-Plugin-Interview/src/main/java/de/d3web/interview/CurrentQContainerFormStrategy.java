@@ -47,14 +47,14 @@ import de.d3web.utils.Log;
 public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 
 	@Override
-	public Form nextForm(List<InterviewObject> agendaEnties, Session session) {
-		if (agendaEnties.isEmpty()) {
+	public Form nextForm(List<InterviewObject> agendaEntries, Session session) {
+		if (agendaEntries.isEmpty()) {
 			return EmptyForm.getInstance();
 		}
 		else {
-			for (InterviewObject object : agendaEnties) {
+			for (InterviewObject object : agendaEntries) {
 				if (object instanceof Question) {
-					return new DefaultForm(((Question) object).getName(), object, session);
+					return new DefaultForm(object.getName(), object, session);
 				}
 				else if (object instanceof QContainer) {
 					QContainer nextQContainer = retrieveNextUnfinishedQContainer(
