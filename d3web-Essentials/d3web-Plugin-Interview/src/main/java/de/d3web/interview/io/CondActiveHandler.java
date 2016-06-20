@@ -44,7 +44,8 @@ public class CondActiveHandler implements FragmentHandler<KnowledgeBase> {
 			qaSets.add(persistence.getArtifact().getManager().searchQASet(qaSetName));
 		}
 		else {
-			qaSets = XMLUtil.getTargetQASets(element, persistence.getArtifact());
+			qaSets = XMLUtil.getTargetQASets(XMLUtil.getElementList(element.getChildNodes(),
+					XMLUtil.TARGET_QA_SETS).get(0), persistence.getArtifact());
 		}
 		boolean exclusive = false;
 		if (element.hasAttribute(EXCLUSIVE)) {

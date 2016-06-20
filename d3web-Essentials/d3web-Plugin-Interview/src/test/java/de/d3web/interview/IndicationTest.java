@@ -12,6 +12,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
@@ -38,7 +39,9 @@ import static org.junit.Assert.assertEquals;
 public class IndicationTest {
 
 	protected KnowledgeBase kb;
-	protected QuestionOC indicationChooser, indicationQuestion1, indicationQuestion2,
+	protected QuestionMC indicationChooser;
+	protected QContainer indicationContainer;
+	protected QuestionOC indicationQuestion1, indicationQuestion2,
 			relevantIndicationQuestion, repeatedIndicationQuestion, instantIndicationQuestion;
 
 	@Before
@@ -46,18 +49,21 @@ public class IndicationTest {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		QContainer init = new QContainer(kb.getRootQASet(), "init");
-		indicationQuestion1 = new QuestionOC(init, "IndicationQuestion1");
-		indicationQuestion2 = new QuestionOC(init, "IndicationQuestion2");
+		indicationContainer = new QContainer(init, "indicationContainer");
+		indicationQuestion1 = new QuestionOC(indicationContainer, "IndicationQuestion1");
+		indicationQuestion2 = new QuestionOC(indicationContainer, "IndicationQuestion2");
 		repeatedIndicationQuestion = new QuestionOC(init, "RepeatedIndicationQuestion");
 		instantIndicationQuestion = new QuestionOC(init, "InstantIndicationQuestion");
 		relevantIndicationQuestion = new QuestionOC(init, "RelevantIndicationQuestion");
-		indicationChooser = new QuestionOC(init, "IndicationChooser",
+		indicationChooser = new QuestionMC(init, "IndicationChooser",
 				indicationQuestion1.getName(), indicationQuestion2.getName(), relevantIndicationQuestion.getName(),
-				instantIndicationQuestion.getName(), repeatedIndicationQuestion.getName());
+				instantIndicationQuestion.getName(), repeatedIndicationQuestion.getName(), indicationContainer.getName());
 
 		RuleFactory.createIndicationRule(this.indicationQuestion1, new CondEqual(indicationChooser, new ChoiceValue(indicationQuestion1
 				.getName())));
 		RuleFactory.createIndicationRule(this.indicationQuestion2, new CondEqual(indicationChooser, new ChoiceValue(indicationQuestion2
+				.getName())));
+		RuleFactory.createIndicationRule(indicationContainer, new CondEqual(indicationChooser, new ChoiceValue(indicationContainer
 				.getName())));
 		RuleFactory.createInstantIndicationRule(instantIndicationQuestion, new CondEqual(indicationChooser, new ChoiceValue(instantIndicationQuestion
 				.getName())));

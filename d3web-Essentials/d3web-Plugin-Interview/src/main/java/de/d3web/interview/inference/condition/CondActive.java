@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -31,8 +34,8 @@ import de.d3web.strings.Strings;
 public class CondActive extends TerminalCondition {
 
 	private boolean exclusive;
-	private QContainer rootQContainer;
-	private Question[] activeQuestions;
+	private @Nullable QContainer rootQContainer;
+	private @NotNull Question[] activeQuestions;
 
 	/**
 	 * Creates a new CondActive, checking whether the given QASets are active or not. The QASets can either be a single
@@ -119,6 +122,7 @@ public class CondActive extends TerminalCondition {
 	private void init(boolean exclusive, QContainer rootQContainer, Question... activeQuestions) {
 		this.exclusive = exclusive;
 		this.rootQContainer = rootQContainer;
+		if (activeQuestions == null) activeQuestions = new Question[0];
 		this.activeQuestions = activeQuestions;
 	}
 
@@ -128,6 +132,7 @@ public class CondActive extends TerminalCondition {
 	 *
 	 * @return the QASets of this condition
 	 */
+	@NotNull
 	public QASet[] getQaSets() {
 		return collectQASets(rootQContainer, activeQuestions);
 	}
@@ -137,6 +142,7 @@ public class CondActive extends TerminalCondition {
 	 *
 	 * @return the root QContainer expected in this condition
 	 */
+	@Nullable
 	public QContainer getRootQContainer() {
 		return rootQContainer;
 	}
@@ -146,6 +152,7 @@ public class CondActive extends TerminalCondition {
 	 *
 	 * @return the active questions to be checked in this condition
 	 */
+	@NotNull
 	public Question[] getActiveQuestions() {
 		return activeQuestions;
 	}
@@ -170,16 +177,12 @@ public class CondActive extends TerminalCondition {
 			// if there is a root defined, it has to be equal!
 			return false;
 		}
-		if (rootQContainer != null && getActiveQuestions() == null) {
-			// there is a root and it was equal... if no active questions are given
-			return true;
-		}
-		// activeQuestions can not be null here, because rootQContainer and activeQuestion cannot both be null
+		// activeQuestions can not be null
 		if (exclusive) {
 			return activeQuestionsOfForm.equals(Arrays.asList(getActiveQuestions()));
 		}
 		else {
-			return activeQuestionsOfForm.containsAll(Arrays.asList(getQaSets()));
+			return activeQuestionsOfForm.containsAll(Arrays.asList(getActiveQuestions()));
 		}
 	}
 
