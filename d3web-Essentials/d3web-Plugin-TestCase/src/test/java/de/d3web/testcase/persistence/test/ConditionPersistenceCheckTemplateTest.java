@@ -70,7 +70,8 @@ public class ConditionPersistenceCheckTemplateTest {
 
 		ConditionCheck conditionCheck = (ConditionCheck) conditionCheckTemplate.toCheck(knowledgeBase);
 		Condition condition = conditionCheck.getConditionObject();
-		assertTrue("Wrong type of Condition, expected " + CondAnd.class.getSimpleName(), condition instanceof CondAnd);
+		assertTrue("Wrong type of Condition, expected " + CondAnd.class.getSimpleName() + ", but was " + condition.getClass()
+				.getSimpleName(), condition instanceof CondAnd);
 
 		ConditionPersistenceCheckHandler handler = new ConditionPersistenceCheckHandler();
 		Element conditionElement = handler.write(conditionCheckTemplate, new TestCasePersistence());
@@ -78,6 +79,5 @@ public class ConditionPersistenceCheckTemplateTest {
 		assertEquals("<Check type=\"Condition\">" + conditionXml + "</Check>", XMLUtil.getElementAsString(conditionElement));
 
 	}
-
 
 }

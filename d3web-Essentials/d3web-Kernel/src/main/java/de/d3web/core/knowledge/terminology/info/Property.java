@@ -131,12 +131,7 @@ public final class Property<T> {
 			try {
 				this.defaultValue = parseValue(this.defaultValueString);
 			}
-			catch (IllegalArgumentException e) {
-				Log.severe("cannot parse/initialize property default value: " +
-								this.name + " = " + this.defaultValueString, e);
-				// do noting here, leave defaultValue on null
-			}
-			catch (NoSuchMethodException e) {
+			catch (IllegalArgumentException | NoSuchMethodException e) {
 				Log.severe("cannot parse/initialize property default value: " +
 								this.name + " = " + this.defaultValueString, e);
 				// do noting here, leave defaultValue on null

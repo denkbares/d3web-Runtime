@@ -26,8 +26,8 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.strings.Strings;
 
 /**
  * @author Markus Friedrich (denkbares GmbH)
@@ -47,7 +47,7 @@ public class DateHandler implements FragmentHandler<KnowledgeBase> {
 			throw new IOException(e);
 		}
 		try {
-			return XMLUtil.readDate(textContent);
+			return Strings.readDate(textContent);
 		}
 		catch (ParseException e) {
 			throw new IOException(e);
@@ -57,7 +57,7 @@ public class DateHandler implements FragmentHandler<KnowledgeBase> {
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
-		element.setTextContent(XMLUtil.writeDate((Date) object));
+		element.setTextContent(Strings.writeDate((Date) object));
 		return element;
 	}
 
