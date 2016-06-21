@@ -24,7 +24,7 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 	private final @NotNull Identifier objectIdentifier;
 	private final @NotNull Property<T> property;
 	private final @Nullable Locale locale;
-	private final @Nullable String propertyValue;
+	private final @Nullable T propertyValue;
 
 	/**
 	 * Creates a new check template for properties. <tt>Locale</tt> and <tt>propertyValue</tt> are allowed to be
@@ -41,7 +41,7 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 	 * @param propertyValue    the value of the property we want to check in its string representation, can be null to
 	 *                         check non-existence of property
 	 */
-	public PropertyCheckTemplate(@NotNull Identifier objectIdentifier, @NotNull Property<T> property, @Nullable Locale locale, @Nullable String propertyValue) {
+	public PropertyCheckTemplate(@NotNull Identifier objectIdentifier, @NotNull Property<T> property, @Nullable Locale locale, @Nullable T propertyValue) {
 		Objects.requireNonNull(objectIdentifier);
 		Objects.requireNonNull(property);
 		if (locale != null && !property.isMultilingual()) {
@@ -64,7 +64,7 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 	 * @param propertyValue    the value of the property we want to check in its string representation, can be null to
 	 *                         check non-existence of property
 	 */
-	public PropertyCheckTemplate(Identifier objectIdentifier, Property<T> property, String propertyValue) {
+	public PropertyCheckTemplate(Identifier objectIdentifier, Property<T> property, T propertyValue) {
 		this(objectIdentifier, property, null, propertyValue);
 	}
 
@@ -80,19 +80,12 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 		return locale;
 	}
 
-	public String getPropertyValue() {
+	public T getPropertyValue() {
 		return propertyValue;
 	}
 
 	@Override
 	public Check toCheck(KnowledgeBase knowledgeBase) throws TransformationException {
-		T propertyValue;
-		try {
-			propertyValue = this.property.parseValue(this.propertyValue);
-		}
-		catch (Exception e) {
-			throw new TransformationException("Unable to create PropertyCheck: " + e.getMessage(), e);
-		}
 		String[] pathElements = objectIdentifier.getPathElements();
 		NamedObject object = knowledgeBase.getManager().search(pathElements[0]);
 		if (pathElements.length == 2) {
@@ -108,6 +101,9 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 		if (pathElements.length > 2) {
 			throw new TransformationException("To many path elements in object identifier, " +
 					"expecting 1 or 2 elements, but was " + pathElements.length);
+		}
+		if (object == null && pathElements.length == 1 && pathElements[0].equals(knowledgeBase.getId())) {
+			object = knowledgeBase;
 		}
 		if (object == null) {
 			throw new TransformationException("No knowledge base object found for object identifier " +
