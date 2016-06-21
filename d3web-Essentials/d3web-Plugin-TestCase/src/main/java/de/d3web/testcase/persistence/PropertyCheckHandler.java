@@ -51,16 +51,27 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
 		Identifier objectIdentifier = Identifier.fromExternalForm(element.getAttribute(OBJECT_IDENTIFIER));
 		Property<?> property = Property.getUntypedProperty(element.getAttribute(PROPERTY));
-		String propertyValue = null;
+		Object propertyValue = null;
 		if (!element.hasAttribute(HAS_VALUE) || !"false".equals(element.getAttribute(HAS_VALUE))) {
-			propertyValue = element.getTextContent();
+			if (property.canParseValue()) {
+				try {
+					propertyValue = property.parseValue(element.getTextContent());
+				}
+				catch (NoSuchMethodException e) {
+					throw new IOException("Property value unexpectedly not parsable.", e);
+				}
+			}
+			else {
+				propertyValue = persistence.readFragment(XMLUtil.getElementList(element.getChildNodes()).get(0));
+			}
 		}
 		Locale locale = null;
 		if (element.hasAttribute(LOCALE)) {
 			String localeString = element.getAttribute(LOCALE);
 			locale = Locale.forLanguageTag(localeString);
 		}
-		return new PropertyCheckTemplate<>(objectIdentifier, property, locale, propertyValue);
+		//noinspection unchecked
+		return new PropertyCheckTemplate(objectIdentifier, property, locale, propertyValue);
 	}
 
 	@Override
@@ -70,12 +81,16 @@ public class PropertyCheckHandler implements FragmentHandler<TestCase> {
 		element.setAttribute(XMLUtil.TYPE, TYPE);
 		element.setAttribute(OBJECT_IDENTIFIER, checkTemplate.getObjectIdentifier().toExternalForm());
 		element.setAttribute(PROPERTY, checkTemplate.getProperty().getName());
-		String propertyValue = checkTemplate.getPropertyValue();
+		Object propertyValue = checkTemplate.getPropertyValue();
 		if (propertyValue == null) {
 			element.setAttribute(HAS_VALUE, "false");
 		}
+		else if (checkTemplate.getProperty().canParseValue()) {
+			element.setTextContent(propertyValue.toString());
+		}
 		else {
-			element.setTextContent(propertyValue);
+			element.appendChild(persistence.writeFragment(propertyValue));
+
 		}
 		Locale locale = checkTemplate.getLocale();
 		if (locale != null) {
