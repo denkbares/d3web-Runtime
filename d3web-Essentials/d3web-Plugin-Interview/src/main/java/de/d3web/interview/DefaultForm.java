@@ -19,7 +19,6 @@
  */
 package de.d3web.interview;
 
-import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -80,7 +79,7 @@ public class DefaultForm implements Form {
 			activeQuestions.add((Question) interviewObject);
 			for (TerminologyObject to : interviewObject.getChildren()) {
 				if (to instanceof InterviewObject
-						&& session.getBlackboard().getIndication((InterviewObject) to).hasState(State.RELEVANT)) {
+						&& session.getBlackboard().getIndication((InterviewObject) to).isRelevant()) {
 					collectActiveQuestions((InterviewObject) to, activeQuestions);
 				}
 			}
