@@ -122,8 +122,7 @@ public class IndicationTest {
 		assertActiveQuestions(session, relevantIndicationQuestion, relevantIndicationChildQuestion);
 
 		session.getBlackboard().removeInterviewFact(indicationFact);
-		// TODO: Comment back in, as soon as DefaultForm is fixed again.
-//		assertActiveQuestions(session, relevantIndicationQuestion);
+		assertActiveQuestions(session, relevantIndicationQuestion);
 
 		answer(session, relevantIndicationQuestion, Unknown.getInstance());
 		assertActiveQuestions(session);
