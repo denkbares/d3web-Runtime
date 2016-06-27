@@ -131,16 +131,13 @@ public final class TestPersistence {
 			ret = loadTheCases(casesUrl, kb);
 		}
 		catch (FileNotFoundException e) {
-			System.err.println("Invalid case URL: " + casesUrl);
-			e.printStackTrace();
+			Log.severe("Invalid case URL: " + casesUrl, e);
 		}
 		catch (XMLStreamException e) {
-			System.err.println("Error while reading XML at: " + casesUrl);
-			e.printStackTrace();
+			Log.severe("Error while reading XML at: " + casesUrl, e);
 		}
 		catch (URISyntaxException e) {
-			System.err.println("URL has wrong syntax: " + casesUrl);
-			e.printStackTrace();
+			Log.severe("URL has wrong syntax: " + casesUrl, e);
 		}
 
 		return ret;
@@ -197,12 +194,10 @@ public final class TestPersistence {
 					bWriteDerivedSolutions);
 		}
 		catch (FileNotFoundException e) {
-			System.err.println("Error in casesUrl: Path not correct!");
-			e.printStackTrace();
+			Log.severe("Error in casesUrl: Path not correct!", e);
 		}
 		catch (URISyntaxException e) {
-			System.err.println("Error in casesUrl: URL has wrong syntax!");
-			e.printStackTrace();
+			Log.severe("Error in casesUrl: URL has wrong syntax!", e);
 		}
 
 	}
@@ -418,8 +413,7 @@ public final class TestPersistence {
 					stc.setStartDate(XMLUtil.readDate(dateString));
 				}
 				catch (ParseException e) {
-					Log.severe("Unable to parse date");
-					e.printStackTrace();
+					Log.severe("Unable to parse date", e);
 				}
 			}
 		}
@@ -434,7 +428,7 @@ public final class TestPersistence {
 					rtc.setTimeStamp(XMLUtil.readDate(time));
 				}
 				catch (ParseException e) {
-					e.printStackTrace();
+					Log.severe("Unable to parse timestamp " + time, e);
 				}
 			}
 			String lastTestedDate = sr.getAttributeValue(null, LAST_TESTED);
