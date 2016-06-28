@@ -37,7 +37,6 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
-import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;

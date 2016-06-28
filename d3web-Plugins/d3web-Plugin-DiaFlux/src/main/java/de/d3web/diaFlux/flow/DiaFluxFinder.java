@@ -18,7 +18,6 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 

@@ -18,7 +18,6 @@
  */
 package de.d3web.core.manage;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 

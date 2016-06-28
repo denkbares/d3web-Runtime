@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.records.SessionRecord;
 
