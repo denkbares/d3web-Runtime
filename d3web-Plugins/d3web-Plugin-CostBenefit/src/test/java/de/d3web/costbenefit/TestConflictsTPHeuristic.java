@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,13 +34,11 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
@@ -197,7 +194,7 @@ public class TestConflictsTPHeuristic {
 		// calculate the heuristic with CondOr Condition and question
 		// conflicting
 		double hMeasurement = calculateHeuristic(kb, qCMeasure);
-		Assert.assertEquals(5.0, hMeasurement);
+		Assert.assertEquals(5.0, hMeasurement, 0);
 
 		// min(1,1) + 1 + 1 + 1 + 1 = 5
 		// min cost(conflicting state=ignition on; state=engine running) +
@@ -221,7 +218,7 @@ public class TestConflictsTPHeuristic {
 		// calculate Heuristic with CondNot Condition and question conflicting
 		hMeasurement = calculateHeuristic(kb, qCMeasure);
 
-		Assert.assertEquals(5.0, hMeasurement);
+		Assert.assertEquals(5.0, hMeasurement, 0);
 	}
 	
 	private double calculateHeuristic(KnowledgeBase kb, QContainer qCMeasure) {

@@ -24,6 +24,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -201,24 +203,35 @@ public class XMLTag {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
 
-		XMLTag xmlTag = (XMLTag) o;
+		if (o instanceof XMLTag) {
+			XMLTag other = (XMLTag) o;
 
-		if (name != null ? !name.equals(xmlTag.name) : xmlTag.name != null) return false;
-		if (attributes != null ? !attributes.equals(xmlTag.attributes) : xmlTag.attributes != null) return false;
-		if (children != null ? !children.equals(xmlTag.children) : xmlTag.children != null) return false;
-		return content != null ? content.equals(xmlTag.content) : xmlTag.content == null;
+			boolean nameok = name.equals(other.getName());
+			// System.out.println(name + " = " + other.getName());
 
-	}
+			Set<Map.Entry<String, String>> attrSet = attributes.entrySet();
+			Set<Map.Entry<String, String>> otherAttrSet = other.getAttributes().entrySet();
 
-	@Override
-	public int hashCode() {
-		int result = name != null ? name.hashCode() : 0;
-		result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
-		result = 31 * result + (children != null ? children.hashCode() : 0);
-		result = 31 * result + (content != null ? content.hashCode() : 0);
-		return result;
+			boolean attrok = attrSet.containsAll(otherAttrSet) && otherAttrSet.containsAll(attrSet);
+			// System.out.println("Attributes ok? " + attrok);
+
+			List<XMLTag> otherChildren = other.getChildren();
+
+			boolean childrenok = children.containsAll(otherChildren)
+					&& otherChildren.containsAll(children);
+			// System.out.println("children: " + children);
+			// System.out.println("other children: " + other.getChildren());
+			// System.out.println("childrenok? " + childrenok);
+
+			boolean contentok = content.equals(other.getContent());
+			// System.out.println(content + " = " + other.getContent());
+
+			return nameok && attrok && childrenok && contentok;
+
+		}
+
+		return false;
+
 	}
 }

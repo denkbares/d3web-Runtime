@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,12 +32,10 @@ import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -50,7 +47,6 @@ import de.d3web.core.records.SessionConversionFactory;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.AbortException;
@@ -250,8 +246,8 @@ public class PropertiesTest {
 		AStarPath emptyPath = new AStarPath(null, null, 0);
 		State startState = new State(session, Collections.emptyMap());
 		// heuristic ignores targetOnly as intermediate step
-		Assert.assertEquals(2.0, tpHeuristic.getDistance(model, emptyPath, startState, target));
-		Assert.assertEquals(0.0, tpHeuristic.getDistance(model, emptyPath, startState, targetOnly));
+		Assert.assertEquals(2.0, tpHeuristic.getDistance(model, emptyPath, startState, target), 0);
+		Assert.assertEquals(0.0, tpHeuristic.getDistance(model, emptyPath, startState, targetOnly), 0);
 
 		ExpertMode em = ExpertMode.getExpertMode(session);
 		// calculate path to target

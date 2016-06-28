@@ -162,10 +162,10 @@ public class TestTargetProtocolEntries {
 				calculatedTargetEntries.get(1).getSprintGroup().iterator().next()));
 		// 10000000000.0 is the benefit the cb uses for manual targets
 		Assert.assertEquals(10000000000.0,
-				calculatedTargetEntries.get(0).getCalculatedTarget().getBenefit());
+				calculatedTargetEntries.get(0).getCalculatedTarget().getBenefit(), 0);
 		// cost is 1
 		Assert.assertEquals(1 / 10000000000.0,
-				calculatedTargetEntries.get(0).getCalculatedTarget().getCostbenefit());
+				calculatedTargetEntries.get(0).getCalculatedTarget().getCostbenefit(), 0);
 		if (containsMultitarget) {
 			Assert.assertEquals(
 					2,

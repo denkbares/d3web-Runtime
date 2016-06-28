@@ -20,8 +20,6 @@
 
 package de.d3web.persistence.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +37,8 @@ import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author merz
@@ -113,7 +113,7 @@ public class QuestionChoiceTest {
 
 	@Test
 	public void testQuestionWithProperties() throws Exception {
-		q1.getInfoStore().addValue(BasicProperties.COST, new Double(20));
+		q1.getInfoStore().addValue(BasicProperties.COST, 20d);
 
 		// Set propertyKeys = q1.getPropertyKeys();
 		// MockPropertyDescriptor mpd = new

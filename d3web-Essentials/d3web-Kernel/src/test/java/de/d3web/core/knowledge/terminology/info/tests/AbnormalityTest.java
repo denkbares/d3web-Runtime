@@ -19,7 +19,6 @@
 package de.d3web.core.knowledge.terminology.info.tests;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.Choice;
@@ -29,7 +28,7 @@ import de.d3web.core.session.values.ChoiceValue;
 
 /**
  * Tests {@link DefaultAbnormality}
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 23.03.2012
  */
@@ -40,24 +39,23 @@ public class AbnormalityTest {
 		String s = "Choice1:0.5; Choice2 : 0.6";
 		DefaultAbnormality abnormality = DefaultAbnormality.valueOf(s);
 		double value = abnormality.getValue(new ChoiceValue(new ChoiceID("Choice1")));
-		Assert.assertEquals(0.5, value);
+		Assert.assertEquals(0.5, value, 0);
 		value = abnormality.getValue(new ChoiceValue(new ChoiceID("Choice2")));
-		Assert.assertEquals(0.6, value);
+		Assert.assertEquals(0.6, value, 0);
 		DefaultAbnormality reParsed = DefaultAbnormality.valueOf(abnormality.toString());
 		value = reParsed.getValue(new ChoiceValue(new ChoiceID("Choice1")));
-		Assert.assertEquals(0.5, value);
+		Assert.assertEquals(0.5, value, 0);
 		value = reParsed.getValue(new ChoiceValue(new ChoiceID("Choice2")));
-		Assert.assertEquals(0.6, value);
+		Assert.assertEquals(0.6, value, 0);
 		// Choice containing ":", value in German format, last pair empty
 		String s2 = "Choice:A:0,7; ";
 		Assert.assertEquals(0.7,
-				DefaultAbnormality.valueOf(s2).getValue(new ChoiceValue(new ChoiceID("Choice:A"))));
+				DefaultAbnormality.valueOf(s2).getValue(new ChoiceValue(new ChoiceID("Choice:A"))), 0);
 		// testing with "real" choice and only one item
 		Choice choice = new Choice("Choice");
-		Assert.assertEquals(
-				0.8,
+		Assert.assertEquals(0.8,
 				DefaultAbnormality.valueOf(choice + ":0.8").getValue(
-						new ChoiceValue(choice)));
+						new ChoiceValue(choice)), 0);
 
 	}
 

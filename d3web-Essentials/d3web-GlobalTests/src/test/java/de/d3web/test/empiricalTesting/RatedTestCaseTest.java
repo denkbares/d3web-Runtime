@@ -19,7 +19,6 @@
 package de.d3web.test.empiricalTesting;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
@@ -45,6 +44,7 @@ import static org.junit.Assert.assertTrue;
  * @author Jochen Reutelshöfer
  * @created 22.07.2013
  */
+@SuppressWarnings("deprecation")
 public class RatedTestCaseTest {
 
 	@Test

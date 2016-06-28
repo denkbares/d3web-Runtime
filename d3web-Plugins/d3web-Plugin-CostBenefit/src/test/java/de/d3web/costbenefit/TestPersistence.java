@@ -44,7 +44,7 @@ public class TestPersistence {
 	public void testStrategicBenefit() throws IOException {
 		InitPluginManager.init();
 		PSMethodCostBenefit cb = new PSMethodCostBenefit();
-		Assert.assertEquals(0.0, cb.getStrategicBenefitFactor());
+		Assert.assertEquals(0.0, cb.getStrategicBenefitFactor(), 0);
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		kb.addPSConfig(new PSConfig(PSConfig.PSState.active, cb, "PSMethodCostBenefit",
 				"d3web-CostBenefit", 6));
@@ -54,12 +54,12 @@ public class TestPersistence {
 		PersistenceManager.getInstance().save(kb, file);
 		KnowledgeBase kb2 = PersistenceManager.getInstance().load(file);
 		PSMethodCostBenefit cb2 = getPSM(kb2);
-		Assert.assertEquals(0.0, cb2.getStrategicBenefitFactor());
+		Assert.assertEquals(0.0, cb2.getStrategicBenefitFactor(), 0);
 		cb.setStrategicBenefitFactor(5.4);
 		PersistenceManager.getInstance().save(kb, file);
 		KnowledgeBase kb3 = PersistenceManager.getInstance().load(file);
 		PSMethodCostBenefit cb3 = getPSM(kb3);
-		Assert.assertEquals(5.4, cb3.getStrategicBenefitFactor());
+		Assert.assertEquals(5.4, cb3.getStrategicBenefitFactor(), 0);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class TestPersistence {
 		InitPluginManager.init();
 		PSMethodCostBenefit cb = new PSMethodCostBenefit();
 		Assert.assertFalse(cb.isManualMode());
-		Assert.assertEquals(0.0, cb.getStrategicBenefitFactor());
+		Assert.assertEquals(0.0, cb.getStrategicBenefitFactor(), 0);
 		KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
 		kb.addPSConfig(new PSConfig(PSConfig.PSState.active, cb, "PSMethodCostBenefit",
 				"d3web-CostBenefit", 6));

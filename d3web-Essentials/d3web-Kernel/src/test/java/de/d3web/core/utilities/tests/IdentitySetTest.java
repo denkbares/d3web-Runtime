@@ -19,14 +19,13 @@
 package de.d3web.core.utilities.tests;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 import de.d3web.collections.IdentitySet;
 
 /**
  * Tests the special features of the IdentityTest
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.03.2011
  */
@@ -37,8 +36,10 @@ public class IdentitySetTest {
 	@Test
 	public void test() {
 		Assert.assertTrue(set.isEmpty());
-		String s1 = "test";
-		String s2 = "test";
+		// Attention: don't remove use of constructor,
+		// we need it here to get different objects regardless of underlying JVM
+		String s1 = new String("test");
+		String s2 = new String("test");
 		Assert.assertTrue(set.add(s1));
 		Assert.assertFalse(set.add(s1));
 		set.add(s2);

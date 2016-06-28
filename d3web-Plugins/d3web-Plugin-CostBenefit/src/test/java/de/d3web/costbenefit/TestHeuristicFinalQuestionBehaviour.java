@@ -99,13 +99,13 @@ public class TestHeuristicFinalQuestionBehaviour {
 		heuristic.init(model);
 		double distance = heuristic.getDistance(model, emptyPath,
 				new State(session, Collections.emptyMap()), target);
-		Assert.assertEquals(1.0, distance);
+		Assert.assertEquals(1.0, distance, 0);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(finalQuestion, value));
 		heuristic.init(model);
 		distance = heuristic.getDistance(model, emptyPath,
 				new State(session, Collections.emptyMap()), target);
-		Assert.assertEquals(1.0, distance);
+		Assert.assertEquals(1.0, distance, 0);
 	}
 
 }

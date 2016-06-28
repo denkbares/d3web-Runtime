@@ -26,11 +26,12 @@ import java.util.List;
 
 import de.d3web.collections.DefaultMultiMap;
 import de.d3web.collections.MultiMaps;
-import de.d3web.testcase.model.*;
+import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.Finding;
 
 /**
- * @deprecated use {@link de.d3web.testcase.model.TestCase} instead, it does not need an analog for {@link RatedTestCase}.
+ * @deprecated use {@link de.d3web.testcase.model.TestCase} instead, it does not need an analog for {@link
+ * RatedTestCase}.
  */
 @SuppressWarnings("deprecation")
 @Deprecated
@@ -59,7 +60,6 @@ public class RatedTestCase {
 	private DefaultMultiMap<Class<? extends Check>, Check> checksMap = new DefaultMultiMap<>(
 			MultiMaps.linkedFactory(),
 			MultiMaps.linkedFactory());
-
 
 	public RatedTestCase() {
 	}
@@ -99,7 +99,6 @@ public class RatedTestCase {
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-
 
 	public void setComment(String comment) {
 		this.comment = comment;
@@ -325,7 +324,7 @@ public class RatedTestCase {
 
 	@Deprecated
 	public boolean addExpectedFindings(Collection<de.d3web.empiricaltesting.Finding> expectedFindings) {
-		return addExpectedFinding((de.d3web.empiricaltesting.Finding[]) expectedFindings.toArray());
+		return addExpectedFinding(expectedFindings.toArray(new de.d3web.empiricaltesting.Finding[0]));
 	}
 
 	/**
