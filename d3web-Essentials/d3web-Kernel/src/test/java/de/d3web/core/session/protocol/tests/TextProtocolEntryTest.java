@@ -35,7 +35,7 @@ import de.d3web.core.session.protocol.TextProtocolEntry;
  */
 public class TextProtocolEntryTest {
 
-	TextProtocolEntry entry = new TextProtocolEntry(new Date(), "testentry");
+	final TextProtocolEntry entry = new TextProtocolEntry(new Date(), "testentry");
 
 	/**
 	 * Test method for

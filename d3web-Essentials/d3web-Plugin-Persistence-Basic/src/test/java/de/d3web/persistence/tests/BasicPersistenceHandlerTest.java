@@ -98,7 +98,7 @@ public class BasicPersistenceHandlerTest {
 		basicPersistenceHandler = new BasicPersistenceHandler();
 		OutputStream stream = new OutputStream() {
 
-			StringBuffer sb = new StringBuffer();
+			final StringBuffer sb = new StringBuffer();
 
 			@Override
 			public void write(int b) throws IOException {

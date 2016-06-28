@@ -27,8 +27,8 @@ package de.d3web.testing;
  */
 public class MessageObject {
 
-	String objectName;
-	Class<?> clazz;
+	final String objectName;
+	final Class<?> clazz;
 
 	public MessageObject(String objectName, Class<?> clazz) {
 		this.objectName = objectName;

@@ -32,7 +32,7 @@ import de.d3web.collections.IdentitySet;
  */
 public class IdentitySetTest {
 
-	IdentitySet<String> set = new IdentitySet<String>();
+	final IdentitySet<String> set = new IdentitySet<String>();
 
 	@Test
 	public void test() {

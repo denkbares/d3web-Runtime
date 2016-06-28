@@ -71,7 +71,7 @@ public class ProgressListenerTest {
 
 	private static class TestListener implements ProgressListener {
 
-		List<String> messages = new LinkedList<String>();
+		final List<String> messages = new LinkedList<String>();
 
 		@Override
 		public void updateProgress(float percent, String message) {

@@ -35,7 +35,7 @@ import de.d3web.plugin.PluginManager;
  */
 public class NamedObjectFinderManager {
 
-	NamedObjectFinder[] finders;
+	final NamedObjectFinder[] finders;
 
 	public static final NamedObjectFinderManager INSTANCE;
 

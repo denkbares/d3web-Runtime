@@ -48,10 +48,10 @@ import de.d3web.plugin.test.InitPluginManager;
  */
 public class PersistenceTest extends XMLTestCase {
 
-	String _originalFolder = "src/test/resources/kbs/original/";
-	String _reloadedFolder = "target/reloadedKBs/";
-	ArrayList<String> _excludedFolders;
-	ArrayList<String> _excludedFileTypes;
+	final String _originalFolder = "src/test/resources/kbs/original/";
+	final String _reloadedFolder = "target/reloadedKBs/";
+	final ArrayList<String> _excludedFolders;
+	final ArrayList<String> _excludedFileTypes;
 
 	public PersistenceTest(String name) throws Exception {
 		super(name);

@@ -41,7 +41,7 @@ import de.d3web.utils.Log;
  */
 public class DefaultSessionRepository implements SessionRepository {
 
-	protected Map<String, SessionRecord> sessionRecords = new HashMap<>();
+	protected final Map<String, SessionRecord> sessionRecords = new HashMap<>();
 
 	@Override
 	public boolean add(SessionRecord sessionRecord) {

@@ -50,18 +50,18 @@ import de.d3web.xcl.io.XCLModelPersistenceHandler;
 public class XCLModelTest extends TestCase {
 
 	XCLModel model;
-	KnowledgeBase k = KnowledgeBaseUtils.createKnowledgeBase();
+	final KnowledgeBase k = KnowledgeBaseUtils.createKnowledgeBase();
 	Solution terminator = new Solution(k, "D1");
 
-	QuestionOC genre = new QuestionOC(k, "GENRE");
+	final QuestionOC genre = new QuestionOC(k, "GENRE");
 	Choice action;
 	Choice love;
 
-	QuestionOC player = new QuestionOC(k, "PLAYER");
+	final QuestionOC player = new QuestionOC(k, "PLAYER");
 	Choice arnold;
 	Choice will;
 
-	QuestionOC rated = new QuestionOC(k, "RATED");
+	final QuestionOC rated = new QuestionOC(k, "RATED");
 	Choice plus18;
 	Choice baby;
 

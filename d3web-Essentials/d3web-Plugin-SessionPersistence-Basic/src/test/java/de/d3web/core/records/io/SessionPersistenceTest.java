@@ -412,7 +412,7 @@ public class SessionPersistenceTest {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	private void markXMLFile(File f) throws IOException, FileNotFoundException {
+	private void markXMLFile(File f) throws IOException {
 		FileInputStream istream = new FileInputStream(f);
 		try {
 			Document doc = XMLUtil.streamToDocument(istream);

@@ -32,7 +32,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
  */
 public class SessionInfoStore extends DefaultInfoStore {
 
-	public SessionHeader session;
+	public final SessionHeader session;
 
 	public SessionInfoStore(SessionHeader session) {
 		this.session = session;
