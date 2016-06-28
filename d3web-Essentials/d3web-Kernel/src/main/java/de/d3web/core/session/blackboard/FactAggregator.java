@@ -149,7 +149,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	private void mergeFacts() {
 		// do nothing if we do not have any facts
-		if (facts.size() == 0) {
+		if (facts.isEmpty()) {
 			return;
 		}
 

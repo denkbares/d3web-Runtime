@@ -75,7 +75,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 		else if (qName.equalsIgnoreCase("entry")) {
 			this.currentProperty = attributes.getValue("property");
 			String language = attributes.getValue("lang");
-			if (language != null && language.length() > 0) {
+			if (language != null && !language.isEmpty()) {
 				String[] split = language.split("_", 3);
 				if (split.length < 2) {
 					this.currentLocale = new Locale(language);

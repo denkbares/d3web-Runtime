@@ -69,7 +69,7 @@ import de.d3web.plugin.test.InitPluginManager;
 public class TestKfz {
 
 	private static KnowledgeBase kb = null;
-	private static URL kbURL = TestKfz.class.getClassLoader().getResource("Kfz2K.xml");
+	private static final URL kbURL = TestKfz.class.getClassLoader().getResource("Kfz2K.xml");
 
 	/**
 	 * Method for instantiating necessary objects Creation date: (08.09.2000
@@ -239,7 +239,7 @@ public class TestKfz {
 
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		while (interview.nextForm().isNotEmpty()) {
-			assertTrue(interview.nextForm().getActiveQuestions().size() > 0);
+			assertTrue(!interview.nextForm().getActiveQuestions().isEmpty());
 			QASet qaSet = interview.nextForm().getActiveQuestions().get(0);
 			assertNotNull(qaSet);
 			assertTrue(

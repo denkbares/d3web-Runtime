@@ -135,7 +135,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			XMLUtil.appendInfoStoreEntries(
 					persistence, idObjectElement, object.getInfoStore(), Autosave.mminfo);
 		}
-		if (XMLUtil.getElementList(idObjectElement.getChildNodes()).size() > 0) {
+		if (!XMLUtil.getElementList(idObjectElement.getChildNodes()).isEmpty()) {
 			mminfosElement.appendChild(idObjectElement);
 		}
 	}

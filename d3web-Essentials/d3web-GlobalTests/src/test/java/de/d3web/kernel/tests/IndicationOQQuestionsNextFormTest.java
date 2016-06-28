@@ -382,7 +382,7 @@ public class IndicationOQQuestionsNextFormTest {
 		assertTrue("Interview.nextFrom() should provide a DefaultForm.",
 				nextForm instanceof DefaultForm);
 		assertTrue("The Default Form should contain no active quesitons.",
-				nextForm.getActiveQuestions().size() == 0);
+				nextForm.getActiveQuestions().isEmpty());
 
 		// EXPECTED: Headache == CONTRA_INDICATED
 		assertEquals("Question Headache has wrong indication state ",

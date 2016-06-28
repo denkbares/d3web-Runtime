@@ -70,7 +70,7 @@ public class FactHandler implements SessionPersistenceHandler {
 		for (Element factElement : XMLUtil.getElementList(factCategorieElement.getChildNodes())) {
 			String idObjectName = factElement.getAttribute("objectName");
 			String psmName = factElement.getAttribute("psm");
-			if (psmName.length() == 0) psmName = null;
+			if (psmName.isEmpty()) psmName = null;
 			// preserve backward compatibility
 			// (used class.toString instead of class.getName)
 			if (psmName != null && psmName.startsWith("class ")) psmName = psmName.substring(6);

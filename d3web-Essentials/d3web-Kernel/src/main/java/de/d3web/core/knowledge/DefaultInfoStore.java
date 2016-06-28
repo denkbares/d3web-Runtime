@@ -86,14 +86,14 @@ public class DefaultInfoStore implements InfoStore {
 			// Try to find the locale without variant
 			String variant = language.getVariant();
 			String country = language.getCountry();
-			if (variant != null && variant.length() > 0) {
+			if (variant != null && !variant.isEmpty()) {
 				value = getEntry(key, new Locale(language.getLanguage(), country));
 				if (value != null) {
 					return value;
 				}
 			}
 			// Try to find the locale without the country
-			if (country != null && country.length() > 0) {
+			if (country != null && !country.isEmpty()) {
 				value = getEntry(key, new Locale(language.getLanguage()));
 				if (value != null) {
 					return value;

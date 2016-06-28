@@ -92,8 +92,8 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 
 	private Rating computeState(XCLModel model, InferenceTrace trace, double score, double support) {
 
-		boolean hasContradiction = trace.getContrRelations().size() > 0;
-		boolean hasSufficient = trace.getSuffRelations().size() > 0;
+		boolean hasContradiction = !trace.getContrRelations().isEmpty();
+		boolean hasSufficient = !trace.getSuffRelations().isEmpty();
 		boolean hasAllNecessary = trace.getReqPosRelations().size() == model.getNecessaryRelations().size();
 
 		if (hasContradiction) {

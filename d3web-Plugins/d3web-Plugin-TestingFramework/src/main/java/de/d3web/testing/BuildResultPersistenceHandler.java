@@ -172,7 +172,7 @@ public class BuildResultPersistenceHandler {
 
 			// read number of successful test object runs
 			String numberOfSuccessfulRuns = test.getAttribute(SUCCESSES);
-			if (numberOfSuccessfulRuns != null && numberOfSuccessfulRuns.length() != 0) {
+			if (numberOfSuccessfulRuns != null && !numberOfSuccessfulRuns.isEmpty()) {
 				// when reading old build report this value does not exist
 				try {
 					successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
@@ -197,11 +197,11 @@ public class BuildResultPersistenceHandler {
 				if (messageElement != null) {
 					String typeString = messageElement.getAttribute(TYPE);
 					Message.Type type = null;
-					if (typeString != null && typeString.trim().length() > 0) {
+					if (typeString != null && !typeString.trim().isEmpty()) {
 						type = Message.Type.valueOf(typeString);
 					}
 					String text = messageElement.getAttribute(TEXT);
-					if (text.length() == 0) {
+					if (text.isEmpty()) {
 						text = null;
 					}
 					Message message = new Message(type, text);

@@ -204,7 +204,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
 		Collection<Question> questions = getRelevantQuestions(qasets, session);
-		if (questions.size() == 0) return 0;
+		if (questions.isEmpty()) return 0;
 
 		InformationPots<Condition> pots = new InformationPots<>();
 

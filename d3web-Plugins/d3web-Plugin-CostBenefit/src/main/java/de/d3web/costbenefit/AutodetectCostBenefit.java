@@ -34,7 +34,7 @@ public class AutodetectCostBenefit implements Autodetect {
 	@Override
 	public boolean check(KnowledgeBase kb) {
 		Collection<StateTransition> ks = kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
-		return (ks.size() != 0);
+		return (!ks.isEmpty());
 	}
 
 }

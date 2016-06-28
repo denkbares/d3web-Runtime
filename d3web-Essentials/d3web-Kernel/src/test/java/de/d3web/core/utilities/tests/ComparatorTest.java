@@ -88,7 +88,7 @@ public class ComparatorTest {
 
 	private static class TestResource implements Resource {
 
-		private String path;
+		private final String path;
 
 		public TestResource(String path) {
 			this.path = path;

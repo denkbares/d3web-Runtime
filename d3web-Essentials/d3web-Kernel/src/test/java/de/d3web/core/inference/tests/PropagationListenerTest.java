@@ -87,7 +87,7 @@ public class PropagationListenerTest {
 
 		@Override
 		public void propagating(Session session, PSMethod psMethod, Collection<PropagationEntry> entries) {
-		};
+		}
 
 		@Override
 		public void postPropagationStarted(Session session, Collection<PropagationEntry> entries) {

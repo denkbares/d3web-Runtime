@@ -72,7 +72,7 @@ public class QuestionZC extends QuestionOC {
 
 	@Override
 	public void setAlternatives(List<Choice> l) {
-		if (l.size() > 0) {
+		if (!l.isEmpty()) {
 			Log.severe("Tried to set AnswerAlternatives for QuestionZC");
 		}
 	}

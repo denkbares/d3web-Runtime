@@ -93,7 +93,7 @@ public class DefaultPSConfigHandler implements FragmentHandler<KnowledgeBase> {
 		double priority = extension.getPriority();
 		// if the priority is set in the xml file, this priority will be used
 		String priorityString = element.getAttribute("priority");
-		if (priorityString.length() > 0) {
+		if (!priorityString.isEmpty()) {
 			priority = Double.parseDouble(priorityString);
 		}
 		return new PSConfig(psState, psMethod, auto, extensionID, pluginID, priority);

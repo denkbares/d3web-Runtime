@@ -259,11 +259,11 @@ public class StrategicSupportXCL implements StrategicSupport {
 	@Override
 	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
-		if (solutions.size() > 0) {
+		if (!solutions.isEmpty()) {
 			return new HashSet<>(solutions);
 		}
 		solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
-		if (solutions.size() > 0) {
+		if (!solutions.isEmpty()) {
 			return new HashSet<>(solutions);
 		}
 		solutions = session.getBlackboard().getSolutions(State.UNCLEAR);

@@ -246,7 +246,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 					throw new IOException("The file " + file.getCanonicalPath()
 							+ " contains more than one sessionrecord.");
 				}
-				else if (loadedSessions.size() == 0) {
+				else if (loadedSessions.isEmpty()) {
 					throw new IOException("The file " + file.getCanonicalPath()
 							+ " contains no sessionrecord.");
 				}

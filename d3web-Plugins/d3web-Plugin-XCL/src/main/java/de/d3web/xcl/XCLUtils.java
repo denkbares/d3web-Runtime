@@ -64,7 +64,7 @@ public class XCLUtils {
 	 */
 	public static Value getFittingValue(Solution solution, QuestionOC question) {
 		Collection<Value> fittingValues = getFittingValues(solution, question);
-		if (fittingValues.size() > 0) {
+		if (!fittingValues.isEmpty()) {
 			return fittingValues.iterator().next();
 		}
 		else {
@@ -118,7 +118,7 @@ public class XCLUtils {
 						values.add(value);
 					}
 				}
-				if (values.size() > 0) {
+				if (!values.isEmpty()) {
 					return values;
 				}
 				// do not abort, normal answer is taken
@@ -128,7 +128,7 @@ public class XCLUtils {
 			else {
 				Set<Value> allowedValues =
 						getValues(relation.getConditionedFinding(), question, session);
-				if (allowedValues.size() > 0) {
+				if (!allowedValues.isEmpty()) {
 					values.addAll(allowedValues);
 					return values;
 				}
@@ -249,13 +249,13 @@ public class XCLUtils {
 						subSets.add(getValues(c, question, session));
 					}
 				}
-				if (subSets.size() > 0) {
+				if (!subSets.isEmpty()) {
 					result = subSets.get(0);
 					for (int i = 1; i < subSets.size(); i++) {
 						result.retainAll(subSets.get(i));
 					}
 				}
-				if (result.size() == 0) {
+				if (result.isEmpty()) {
 					Log.warning("Cannot find value for " + question + " in " + condition);
 				}
 			}

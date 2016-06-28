@@ -119,7 +119,7 @@ public class NumericalIntervalHandler implements FragmentHandler<KnowledgeBase> 
 		if (element.getNodeName().equals(TAG) && lower != null && upper != null && type != null) {
 			try {
 				boolean[] borders = string2booleanTypes(type);
-				if (value == null || value.length() == 0) {
+				if (value == null || value.isEmpty()) {
 					NumericalInterval interval = new NumericalInterval(string2double(lower),
 							string2double(upper),
 							borders[0], borders[1]);
@@ -165,7 +165,7 @@ public class NumericalIntervalHandler implements FragmentHandler<KnowledgeBase> 
 		}
 		else if (object instanceof List<?>) {
 			List<?> list = (List<?>) object;
-			if (list.size() == 0) {
+			if (list.isEmpty()) {
 				return false;
 			}
 			boolean checker = true;

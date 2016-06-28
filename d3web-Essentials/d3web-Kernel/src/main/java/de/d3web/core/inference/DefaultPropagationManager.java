@@ -99,7 +99,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		}
 
 		public boolean hasPropagationEntries() {
-			return interviewPropagationEntries.size() > 0 || propagationEntries.size() > 0;
+			return !interviewPropagationEntries.isEmpty() || !propagationEntries.isEmpty();
 		}
 
 		public void propagate() {

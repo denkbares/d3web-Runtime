@@ -68,14 +68,14 @@ public class PropertiesHandler {
 				}
 				String textContent = prop.getTextContent();
 				List<Element> elementList = XMLUtil.getElementList(prop.getChildNodes());
-				if (elementList.size() == 0 && !textContent.trim().equals("")) {
+				if (elementList.isEmpty() && !textContent.trim().equals("")) {
 					Object o = XMLUtil.getPrimitiveValue(textContent,
 							prop.getAttribute("class"));
 					infoStore.addValue(property, property.castToStoredValue(o));
 				}
 				else {
 					List<Element> childNodes = elementList;
-					if (childNodes.size() == 0) {
+					if (childNodes.isEmpty()) {
 						infoStore.addValue(property, "");
 					}
 					else if (childNodes.size() == 1) {

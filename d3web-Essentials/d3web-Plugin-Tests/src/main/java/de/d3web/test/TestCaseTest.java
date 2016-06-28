@@ -68,7 +68,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	@Override
 	public Message execute(TestCase testCase, String[] args, String[]... ignores) throws InterruptedException {
 		Collection<KnowledgeBase> kbs = getKnowledgeBases(args);
-		if (kbs == null || kbs.size() == 0) {
+		if (kbs == null || kbs.isEmpty()) {
 			return new Message(Type.FAILURE, "No Knowledge base found!");
 		}
 
@@ -112,7 +112,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 			}
 		}
 
-		if (inconsistentKBs.size() > 0 || failedKBs.size() > 0) {
+		if (!inconsistentKBs.isEmpty() || !failedKBs.isEmpty()) {
 			String message = renderFailureMessage(inconsistentKBs, failedKBs, passedKBs);
 			return new Message(Type.FAILURE, message);
 		}
@@ -158,7 +158,7 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		for (String failedMessage : failedKBs) {
 			message += failedMessage + "\n";
 		}
-		if (passedKBs.size() > 0) {
+		if (!passedKBs.isEmpty()) {
 			message += "Knowledge base" + (passedKBs.size() > 1 ? "s" : "") + " passed test: ";
 			message += Strings.concat(" ;", passedKBs);
 			message += "\n";
