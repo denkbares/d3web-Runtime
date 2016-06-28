@@ -108,14 +108,14 @@ public class ChoiceID implements Comparable<ChoiceID> {
 	}
 
 	public static String encodeChoiceIDs(ChoiceID[] chocieIDs) {
-		String id = "";
+		StringBuilder id = new StringBuilder();
 		for (ChoiceID choiceID : chocieIDs) {
-			id += choiceID.getText() + ID_SEPARATOR;
+			id.append(choiceID.getText()).append(ID_SEPARATOR);
 		}
 		if (id.length() > ID_SEPARATOR.length()) {
-			id = id.substring(0, id.length() - ID_SEPARATOR.length());
+			id = new StringBuilder(id.substring(0, id.length() - ID_SEPARATOR.length()));
 		}
-		return id;
+		return id.toString();
 	}
 
 	public static ChoiceID[] decodeChoiceIDs(String encodedString) {

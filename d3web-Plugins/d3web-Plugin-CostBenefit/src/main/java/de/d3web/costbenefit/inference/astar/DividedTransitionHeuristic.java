@@ -272,12 +272,10 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				if (!conflicting) {
 					return 0.0;
 				}
-				// if the condition is conflicting, the costs have to be added
-				// even
-				// if the value is equal to the actual value
 				else {
 					return costs;
 				}
+
 			}
 			return costs;
 		}
@@ -314,11 +312,11 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		public double eval(ArrayList<Value> values) {
 			Value value = values.get(index);
 			if (!this.value.equals(value)) {
-				if (!conflicting) {
-					return 0.0;
+				if (conflicting) {
+					return costs;
 				}
 				else {
-					return costs;
+					return 0.0;
 				}
 			}
 			return costs;

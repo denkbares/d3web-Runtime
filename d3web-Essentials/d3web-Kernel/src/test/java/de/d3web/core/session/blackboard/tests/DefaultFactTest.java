@@ -19,25 +19,21 @@
 
 package de.d3web.core.session.blackboard.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseUtils;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit test for {@link DefaultFact}
@@ -97,9 +93,9 @@ public class DefaultFactTest {
 	public void testGetters() {
 		assertThat(material_is_wood.getPSMethod() instanceof PSMethodUserSelected, is(true));
 		assertThat(material_is_wood.getSource() instanceof PSMethodUserSelected, is(true));
-		assertThat(material_is_wood.getValue(), is(equalTo((Value) wood)));
+		assertThat(material_is_wood.getValue(), is(equalTo(wood)));
 		assertThat(material_is_wood.getTerminologyObject(),
-				is(equalTo((TerminologyObject) materialQuestion)));
+				is(equalTo(materialQuestion)));
 	}
 
 	/**

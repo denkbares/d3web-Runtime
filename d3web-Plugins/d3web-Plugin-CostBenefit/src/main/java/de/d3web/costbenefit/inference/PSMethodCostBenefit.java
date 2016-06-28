@@ -186,15 +186,15 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
-		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
+		if (bestTarget == null || bestTarget.getMinPath() == null) {
+			caseObject.setAbortedManuallySetTarget(true);
+			throw new AbortException();
+		}
+		else {
 			Path minPath = bestTarget.getMinPath();
 			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			caseObject.activatePath(minPath, this);
 			caseObject.activateNextQContainer();
-		}
-		else {
-			caseObject.setAbortedManuallySetTarget(true);
-			throw new AbortException();
 		}
 	}
 

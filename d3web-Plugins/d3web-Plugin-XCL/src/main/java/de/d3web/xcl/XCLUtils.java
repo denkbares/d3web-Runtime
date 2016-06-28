@@ -307,11 +307,11 @@ public class XCLUtils {
 	 */
 	public static List<Solution> getSprintGroup(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
-		if (!solutions.isEmpty()) {
-			return solutions;
+		if (solutions.isEmpty()) {
+			return session.getBlackboard().getSolutions(State.SUGGESTED);
 		}
 		else {
-			return session.getBlackboard().getSolutions(State.SUGGESTED);
+			return solutions;
 		}
 	}
 }

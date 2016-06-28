@@ -105,12 +105,12 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 			String time = rtcElement.getAttribute(TIMESTAMP);
 			if (Strings.isBlank(time)) {
 				Collection<Date> chronology = testCase.chronology();
-				if (!chronology.isEmpty()) {
-					List<Date> chronologyList = new ArrayList<>(chronology);
-					date = new Date(chronologyList.get(chronologyList.size() - 1).getTime() + 1);
+				if (chronology.isEmpty()) {
+					date = testCase.getStartDate();
 				}
 				else {
-					date = testCase.getStartDate();
+					List<Date> chronologyList = new ArrayList<>(chronology);
+					date = new Date(chronologyList.get(chronologyList.size() - 1).getTime() + 1);
 				}
 			}
 			else {

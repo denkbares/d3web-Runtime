@@ -127,6 +127,7 @@ public class CondActiveTest extends IndicationTest {
 		condActive = saveAndLoadCondition(condActive);
 		session = SessionFactory.createSession(kb);
 		getInterview(session).setFormStrategy(new CurrentQContainerFormStrategy());
+		testMixedQContainerAndQuestionIndication(session, condActive);
 	}
 
 	private void testMixedQContainerAndQuestionIndication(Session session, CondActive condActive) throws UnknownAnswerException, NoAnswerException {

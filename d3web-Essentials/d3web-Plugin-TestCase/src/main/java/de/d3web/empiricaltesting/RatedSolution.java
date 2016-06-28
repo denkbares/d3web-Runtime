@@ -111,8 +111,12 @@ public class RatedSolution implements Comparable<RatedSolution>, de.d3web.testca
 	@Override
 	public int compareTo(RatedSolution o) {
 		int comp = rating.compareTo(o.rating);
-		if (comp != 0) return comp;
-		else return solution.getName().compareTo(o.solution.getName());
+		if (comp == 0) {
+			return solution.getName().compareTo(o.solution.getName());
+		}
+		else {
+			return comp;
+		}
 	}
 
 	/**

@@ -539,7 +539,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 		}
 		Condition condition;
-		if (!conditions.isEmpty()) {
+		if (conditions.isEmpty()) {
+			condition = precondition;
+		}
+		else {
 			List<Condition> conditionsToUse = new LinkedList<>();
 			// add the original condition
 			conditionsToUse.add(precondition);
@@ -617,10 +620,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 												sessionObject.preconditionCache.get(found.pop());
 										for (Condition recursiveCandidate : recursivePair.getA()) {
 											if (recursiveCandidate.getTerminalObjects().size()
-														== 1
+													== 1
 													&&
 													recursiveCandidate.getTerminalObjects().iterator().next()
-														== question) {
+															== question) {
 												Set<Value> coveredRecursiveValues =
 														getCoveredValues(
 																recursiveCandidate).get(question);
@@ -651,9 +654,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 					}
 				}
 			}
-		}
-		else {
-			condition = precondition;
 		}
 		return condition;
 	}

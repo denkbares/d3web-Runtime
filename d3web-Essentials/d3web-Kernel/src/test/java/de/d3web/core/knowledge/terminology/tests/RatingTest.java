@@ -19,17 +19,15 @@
 
 package de.d3web.core.knowledge.terminology.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.session.values.UndefinedValue;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit test for {@link Rating}
@@ -56,8 +54,7 @@ public class RatingTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalRating() {
-		@SuppressWarnings("unused")
-		Rating illegalRating = new Rating("illegalRating");
+		new Rating("illegalRating");
 	}
 
 	/**
@@ -67,9 +64,7 @@ public class RatingTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testNullRating() {
-		State nullState = null;
-		@SuppressWarnings("unused")
-		Rating nullRating = new Rating(nullState);
+		new Rating((State) null);
 	}
 
 	/**
@@ -82,7 +77,7 @@ public class RatingTest {
 	public void testRatingMethods() {
 		// test getState() and getValue()
 		assertThat(EXCLUDED.getState(), is(equalTo(Rating.State.EXCLUDED)));
-		assertThat((State) EXCLUDED.getValue(), is(equalTo(Rating.State.EXCLUDED)));
+		assertThat(EXCLUDED.getValue(), is(equalTo(Rating.State.EXCLUDED)));
 		// test hasState(State)
 		assertThat(SUGGESTED.hasState(Rating.State.SUGGESTED), is(true));
 		assertThat(UNCLEAR.hasState(Rating.State.ESTABLISHED), is(false));

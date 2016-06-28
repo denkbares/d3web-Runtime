@@ -241,12 +241,12 @@ public class MultipleChoiceValue implements QuestionValue {
 			return (choiceIDs.containsAll(other.choiceIDs) && other.choiceIDs.containsAll(choiceIDs));
 		}
 		else if (obj instanceof ChoiceValue) {
-			if (choiceIDs.size() != 1) {
-				return false;
-			}
-			else {
+			if (choiceIDs.size() == 1) {
 				ChoiceValue other = (ChoiceValue) obj;
 				return choiceIDs.contains(other.getChoiceID());
+			}
+			else {
+				return false;
 			}
 		}
 		else {

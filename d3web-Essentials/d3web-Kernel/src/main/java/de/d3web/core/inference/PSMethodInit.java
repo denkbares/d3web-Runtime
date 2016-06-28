@@ -171,13 +171,13 @@ public class PSMethodInit implements PSMethod {
 					badIds.add(id);
 				}
 			}
-			if (!badIds.isEmpty()) {
+			if (badIds.isEmpty()) {
+				return new MultipleChoiceValue(choices.toArray(new ChoiceID[choices.size()]));
+			}
+			else {
 				throw new IllegalArgumentException("Cannot set initial value '" + property +
 						"' for question '" + q.getName()
 						+ "'. The following choices could not be found: " + badIds);
-			}
-			else {
-				return new MultipleChoiceValue(choices.toArray(new ChoiceID[choices.size()]));
 			}
 		}
 		else if (q instanceof QuestionNum) {

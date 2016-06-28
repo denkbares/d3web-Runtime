@@ -56,7 +56,7 @@ public class AbnormalityTest {
 		Choice choice = new Choice("Choice");
 		Assert.assertEquals(
 				0.8,
-				DefaultAbnormality.valueOf(choice.toString() + ":0.8").getValue(
+				DefaultAbnormality.valueOf(choice + ":0.8").getValue(
 						new ChoiceValue(choice)));
 
 	}

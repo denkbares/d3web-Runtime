@@ -218,9 +218,7 @@ public class KnowledgeBaseUtilsTest {
 
 	@Test
 	public void badCreationOfFacts() {
-		QuestionChoice qc = new QuestionOC(kb, "Please enter: ");
-		assertThat(qc != null, is(true));
-
+		new QuestionOC(kb, "Please enter: ");
 		Fact badFact = FactFactory.createUserEnteredFact(kb, "Please enter: ", (String) null);
 		assertThat(badFact == null, is(true));
 	}

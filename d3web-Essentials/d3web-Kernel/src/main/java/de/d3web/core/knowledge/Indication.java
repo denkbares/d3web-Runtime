@@ -175,11 +175,11 @@ public class Indication implements Value {
 			State otherState = ((Indication) other).state;
 			int otherOrdinal = otherState.ordinal();
 			int ordinal = state.ordinal();
-			if (otherOrdinal != ordinal) {
-				return ordinal - otherOrdinal;
+			if (otherOrdinal == ordinal) {
+				return Double.compare(this.sorting, ((Indication) other).sorting);
 			}
 			else {
-				return Double.compare(this.sorting, ((Indication) other).sorting);
+				return ordinal - otherOrdinal;
 			}
 		}
 		else {

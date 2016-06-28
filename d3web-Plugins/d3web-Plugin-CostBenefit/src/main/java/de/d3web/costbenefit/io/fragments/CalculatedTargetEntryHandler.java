@@ -77,13 +77,13 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 			}
 			Set<String> solutions = new HashSet<>();
 			if (elementList.size() >= 3) {
-				if (!elementList.get(2).getNodeName().equals(SPRINT_GROUP)) {
-					throw new IOException("The third element must be named " + SPRINT_GROUP);
-				}
-				else {
+				if (elementList.get(2).getNodeName().equals(SPRINT_GROUP)) {
 					for (Element e : XMLUtil.getElementList(elementList.get(2).getChildNodes())) {
 						solutions.add(e.getTextContent());
 					}
+				}
+				else {
+					throw new IOException("The third element must be named " + SPRINT_GROUP);
 				}
 			}
 			return new CalculatedTargetEntry(calculatedTarget, targets, date, solutions);

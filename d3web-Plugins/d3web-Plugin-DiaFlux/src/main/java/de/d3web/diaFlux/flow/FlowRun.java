@@ -116,12 +116,12 @@ public class FlowRun {
 	public boolean addSupport(Node node, DiaFluxElement support) {
 		boolean contained = nodeSupports.containsKey(node);
 		Set<DiaFluxElement> supports;
-		if (!contained) {
-			supports = new HashSet<>(5);
-			nodeSupports.put(node, supports);
+		if (contained) {
+			supports = nodeSupports.get(node);
 		}
 		else {
-			supports = nodeSupports.get(node);
+			supports = new HashSet<>(5);
+			nodeSupports.put(node, supports);
 		}
 		supports.add(support);
 

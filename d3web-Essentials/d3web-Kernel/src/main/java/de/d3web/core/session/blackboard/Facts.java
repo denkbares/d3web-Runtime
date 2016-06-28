@@ -194,6 +194,7 @@ public final class Facts {
 		for (Fact fact : filteredFacts) {
 			Value value = fact.getValue();
 
+			//noinspection StatementWithEmptyBody
 			if (value instanceof Unknown) { // NOSONAR
 				// handle unknown as first one!
 				// unknown is never taken into the merge operation
@@ -209,13 +210,13 @@ public final class Facts {
 			}
 			else if (value instanceof NumValue) {
 				// for numeric questions, add the values
+				@SuppressWarnings("ConstantConditions")
 				NumValue num1 = (NumValue) resultValue;
 				NumValue num2 = (NumValue) value;
 				Number d1 = (Number) num1.getValue();
 				Number d2 = (Number) num2.getValue();
 				double sum = d1.doubleValue() + d2.doubleValue();
-				resultValue = new NumValue(sum); // deleteme:
-													// AnswerFactory.createAnswerNum(sum);
+				resultValue = new NumValue(sum);
 			}
 			else if (question instanceof QuestionMC) {
 				Collection<ChoiceID> choices = new HashSet<>();
@@ -230,7 +231,7 @@ public final class Facts {
 			}
 			else {
 				// otherwise use the lowest value
-				if (resultValue == null || value.compareTo(resultValue) < 0) {
+				if (value.compareTo(resultValue) < 0) {
 					resultValue = value;
 				}
 			}

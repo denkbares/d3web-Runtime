@@ -45,11 +45,11 @@ public class IndicationComparator implements Comparator<Indication> {
 			State otherState = arg1.getState();
 			int otherOrdinal = getOrdinal(otherState);
 			int ordinal = getOrdinal(arg0.getState());
-			if (otherOrdinal != ordinal) {
-				return otherOrdinal - ordinal;
+			if (otherOrdinal == ordinal) {
+				return Double.compare(arg0.getSorting(), arg1.getSorting());
 			}
 			else {
-				return Double.compare(arg0.getSorting(), arg1.getSorting());
+				return otherOrdinal - ordinal;
 			}
 		}
 	}

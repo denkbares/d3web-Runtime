@@ -94,7 +94,7 @@ public class JarExtractor {
 
 		FileOutputStream os = new FileOutputStream(outputFile);
 		InputStream is = zipFile.getInputStream(entry);
-		int n = 0;
+		int n;
 		while ((n = is.read(b)) > 0)
 			os.write(b, 0, n);
 		is.close();

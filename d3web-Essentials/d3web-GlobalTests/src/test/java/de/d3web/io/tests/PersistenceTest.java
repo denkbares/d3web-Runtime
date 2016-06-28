@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLTestCase;
 
 import de.d3web.core.io.PersistenceManager;
@@ -136,13 +135,12 @@ public class PersistenceTest extends XMLTestCase {
 		BufferedReader org;
 		BufferedReader rel;
 		int actual = 0;
-		message = new StringBuffer("Differences found (Without Properties):\n\r");
 		for (File[] p : pairs) {
 			message = new StringBuffer("Differences found in " +
 					p[0].getName() + "::" + p[0].getAbsolutePath() +
 					" (Without Properties):\n\r");
-			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0])));
-			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1])));
+			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0]), "UTF-8"));
+			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1]), "UTF-8"));
 
 			if (p[0].getName().endsWith(".xml")) {
 				diff = new Diff(org, rel);
@@ -151,7 +149,7 @@ public class PersistenceTest extends XMLTestCase {
 				if (actual <= 1) actual = 0;
 
 				for (Object f : df.getAllDifferences()) {
-					message.append(((Difference) f).toString()).append("\n\r");
+					message.append(f).append("\n\r");
 				}
 
 				assertEquals(message.toString(), 0, actual);

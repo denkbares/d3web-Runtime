@@ -198,11 +198,11 @@ public final class FactFactory {
 
 		PropagationManager propagationManager = session.getPropagationManager();
 
-		if (!propagationManager.isInPropagation()) {
-			return System.currentTimeMillis();
+		if (propagationManager.isInPropagation()) {
+			return propagationManager.getPropagationTime();
 		}
 		else {
-			return propagationManager.getPropagationTime();
+			return System.currentTimeMillis();
 		}
 
 	}

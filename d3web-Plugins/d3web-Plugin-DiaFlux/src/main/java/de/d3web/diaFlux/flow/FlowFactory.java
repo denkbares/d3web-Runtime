@@ -20,12 +20,10 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.Arrays;
 import java.util.List;
 
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PSAction;
-import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -151,14 +149,6 @@ public final class FlowFactory {
 
 	public static Edge createEdge(String id, Node startNode, Node endNode, Condition condition) {
 		DefaultEdge edge = new DefaultEdge(id, startNode, endNode, condition);
-
-		Condition defaultCondition = startNode.getEdgePrecondition();
-
-		// If the node specifies a default condition, it is AND'ed with the
-		// condition on the edge
-		if (defaultCondition != null) {
-			condition = new CondAnd(Arrays.asList(defaultCondition, condition));
-		}
 
 		((AbstractNode) startNode).addOutgoingEdge(edge);
 		((AbstractNode) endNode).addIncomingEdge(edge);

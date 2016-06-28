@@ -70,17 +70,17 @@ public class TerminologyManager {
 					+ " has no assigned name.");
 		}
 		else if (objectNameMap.containsKey(object.getName())) {
-			if (objectNameMap.get(object.getName()) != object) {
-				throw new IllegalArgumentException(
-						"TerminologyObject "
-								+ object
-								+ " cannot be added, an Object with the same name is already contained in the knowledge base.");
-			}
-			else {
+			if (objectNameMap.get(object.getName()) == object) {
 				// no need to insert the object twice
 				// but the order may have changed
 				clearIndexer(object);
 				return;
+			}
+			else {
+				throw new IllegalArgumentException(
+						"TerminologyObject "
+								+ object
+								+ " cannot be added, an Object with the same name is already contained in the knowledge base.");
 			}
 		}
 		if (object.getKnowledgeBase() != kb) {

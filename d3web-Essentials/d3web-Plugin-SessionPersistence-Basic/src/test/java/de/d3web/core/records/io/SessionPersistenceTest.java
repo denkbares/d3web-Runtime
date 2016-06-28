@@ -32,8 +32,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Comment;
@@ -89,6 +87,8 @@ import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for SessionPersistence. Creates a KB and Session, puts them into a
@@ -199,7 +199,7 @@ public class SessionPersistenceTest {
 		sessionRepository.add(sessionRecord2);
 		File file = new File(targetFolder, "file.xml");
 		if (file.exists()) {
-			Assert.assertTrue(file.delete());
+			assertTrue(file.delete());
 		}
 		sessionRepository.save(file);
 		SingleXMLSessionRepository reloadedRepository = new SingleXMLSessionRepository();
@@ -208,7 +208,7 @@ public class SessionPersistenceTest {
 		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
 		SessionRecord record1 = iterator.next();
 		SessionRecord record2 = iterator.next();
-		Assert.assertFalse(iterator.hasNext());
+		assertFalse(iterator.hasNext());
 		Session session1 = SessionConversionFactory.copyToSession(kb, record1);
 		Session session2 = SessionConversionFactory.copyToSession(kb, record2);
 		// the sorting in the hashmap isn't stable, so we sort manually
@@ -230,7 +230,7 @@ public class SessionPersistenceTest {
 		catch (NullPointerException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		try {
 			InputStream nullStream = null;
@@ -239,7 +239,7 @@ public class SessionPersistenceTest {
 		catch (NullPointerException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		try {
 			File nullFile = null;
@@ -248,7 +248,7 @@ public class SessionPersistenceTest {
 		catch (NullPointerException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		try {
 			OutputStream nullStream = null;
@@ -257,7 +257,7 @@ public class SessionPersistenceTest {
 		catch (NullPointerException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		// Tests if file is a directory
 		try {
@@ -266,7 +266,7 @@ public class SessionPersistenceTest {
 		catch (IllegalArgumentException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		try {
 			errorTestingRepository.save(directory);
@@ -274,12 +274,12 @@ public class SessionPersistenceTest {
 		catch (IllegalArgumentException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		// Test if file doesn't exist
 		File noFile = new File(targetFolder, "noFile.file");
 		noFile.delete();
-		Assert.assertFalse(
+		assertFalse(
 				"Something manipulated test by creating a folder nofile.file in target/temp",
 				noFile.isDirectory());
 		try {
@@ -288,7 +288,7 @@ public class SessionPersistenceTest {
 		catch (IllegalArgumentException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 	}
 
@@ -299,7 +299,7 @@ public class SessionPersistenceTest {
 		sessionRepository.add(sessionRecord2);
 		clearDirectory(directory);
 		sessionRepository.save(directory);
-		Assert.assertEquals(2, directory.listFiles().length);
+		assertEquals(2, directory.listFiles().length);
 		MultipleXMLSessionRepository reloadedRepository = new MultipleXMLSessionRepository();
 		reloadedRepository.load(directory);
 		// Test copying - nothing has changed, the files should be simply copied
@@ -314,11 +314,11 @@ public class SessionPersistenceTest {
 		for (File f : directory2.listFiles()) {
 			allMarked &= testMark(f);
 		}
-		Assert.assertTrue(allMarked);
+		assertTrue(allMarked);
 		MultipleXMLSessionRepository rereloadedRepository = new MultipleXMLSessionRepository();
 		rereloadedRepository.load(directory2);
 		File[] files = directory2.listFiles();
-		Assert.assertEquals(2, files.length);
+		assertEquals(2, files.length);
 		// Test saving to the same location without modifing something (the
 		// files should stay equal)
 		rereloadedRepository.save(directory2);
@@ -326,7 +326,7 @@ public class SessionPersistenceTest {
 		for (File f : directory2.listFiles()) {
 			allMarked &= testMark(f);
 		}
-		Assert.assertTrue(allMarked);
+		assertTrue(allMarked);
 		// When adding facts, the files should change
 		SessionRecord rereloadedSessionRecord = rereloadedRepository.getSessionRecordById(sessionID);
 		SessionRecord rereloadedSessionRecord2 = rereloadedRepository.getSessionRecordById(session2ID);
@@ -337,11 +337,11 @@ public class SessionPersistenceTest {
 		rereloadedSessionRecord.addValueFact(dummyFact);
 		rereloadedSessionRecord2.addValueFact(dummyFact);
 		rereloadedSessionRecord2.addInterviewFact(dummyFact2);
-		Assert.assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
+		assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
 				- factCountBeforeAdding);
 		// Fact already contained, should be ignored
 		rereloadedSessionRecord.addValueFact(dummyFact);
-		Assert.assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
+		assertEquals(1, rereloadedSessionRecord.getValueFacts().size()
 				- factCountBeforeAdding);
 		// now the saved files should be newly created
 		rereloadedRepository.save(directory2);
@@ -349,7 +349,7 @@ public class SessionPersistenceTest {
 		for (File f : directory2.listFiles()) {
 			nomarked |= testMark(f);
 		}
-		Assert.assertFalse(nomarked);
+		assertFalse(nomarked);
 
 		// Test getting Records by Session id, getting them with iterator has a
 		// random order (depending on the alphabetical order of the Session ids)
@@ -360,9 +360,9 @@ public class SessionPersistenceTest {
 				reloadedRepository.getSessionRecordById(session2ID));
 		checkValuesAfterReload(session, session2);
 		int folderSize = directory.listFiles().length;
-		Assert.assertTrue(reloadedRepository.remove(reloadedRecord));
+		assertTrue(reloadedRepository.remove(reloadedRecord));
 		// one record should be removed
-		Assert.assertEquals(folderSize - 1, directory.listFiles().length);
+		assertEquals(folderSize - 1, directory.listFiles().length);
 
 		// Test error behaviour
 		MultipleXMLSessionRepository errorTestingRepository = new MultipleXMLSessionRepository();
@@ -374,7 +374,7 @@ public class SessionPersistenceTest {
 		catch (NullPointerException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		try {
 			errorTestingRepository.save(null);
@@ -382,7 +382,7 @@ public class SessionPersistenceTest {
 		catch (NullPointerException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		// testing file instead of a folder
 		File file = new File(targetFolder, "/aFile.error");
@@ -393,7 +393,7 @@ public class SessionPersistenceTest {
 		catch (IllegalArgumentException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
+		assertTrue(error);
 		error = false;
 		try {
 			errorTestingRepository.save(file);
@@ -401,8 +401,7 @@ public class SessionPersistenceTest {
 		catch (IllegalArgumentException e) {
 			error = true;
 		}
-		Assert.assertTrue(error);
-		error = false;
+		assertTrue(error);
 	}
 
 	/**
@@ -447,7 +446,7 @@ public class SessionPersistenceTest {
 
 	private void clearDirectory(File directory) throws IOException {
 		for (File f : directory.listFiles()) {
-			Assert.assertFalse(
+			assertFalse(
 					"Something has corrupted this test by putting a folder in "
 							+ directory.getCanonicalPath(),
 					f.isDirectory());
@@ -456,46 +455,46 @@ public class SessionPersistenceTest {
 	}
 
 	private void checkValuesAfterReload(Session session, Session session2) throws IOException {
-		Assert.assertEquals(sessionID, session.getId());
-		Assert.assertEquals(TESTNAME, session.getName());
-		Assert.assertEquals("First test session",
+		assertEquals(sessionID, session.getId());
+		assertEquals(TESTNAME, session.getName());
+		assertEquals("First test session",
 				session.getInfoStore().getValue(MMInfo.DESCRIPTION));
-		Assert.assertEquals("First test session",
+		assertEquals("First test session",
 				sessionRecord.getInfoStore().getValue(MMInfo.DESCRIPTION));
-		Assert.assertEquals(session2ID, session2.getId());
-		Assert.assertEquals(creationDate, session.getCreationDate());
-		Assert.assertEquals(lastChangeDate, session.getLastChangeDate());
+		assertEquals(session2ID, session2.getId());
+		assertEquals(creationDate, session.getCreationDate());
+		assertEquals(lastChangeDate, session.getLastChangeDate());
 		Blackboard blackboard = session.getBlackboard();
 		ChoiceValue value = (ChoiceValue) blackboard.getValue(questionOC);
-		Assert.assertEquals(choices[0], value.getChoice(questionOC));
+		assertEquals(choices[0], value.getChoice(questionOC));
 		MultipleChoiceValue value2 = (MultipleChoiceValue) blackboard.getValue(questionMC);
 		Collection<?> values = (Collection<?>) value2.getValue();
-		Assert.assertTrue(values.size() == 2 && value2.contains(new ChoiceValue(choices2[0]))
+		assertTrue(values.size() == 2 && value2.contains(new ChoiceValue(choices2[0]))
 				&& value2.contains(new ChoiceValue(choices2[1])));
-		Assert.assertEquals(startDate, blackboard.getValue(questionDate).getValue());
-		Assert.assertEquals(TEXTVALUE, blackboard.getValue(questionText));
-		Assert.assertEquals(NUMVALUE, blackboard.getValue(questionNum));
-		Assert.assertTrue(blackboard.getRating(solution).hasState(Rating.State.ESTABLISHED));
+		assertEquals(startDate, blackboard.getValue(questionDate).getValue());
+		assertEquals(TEXTVALUE, blackboard.getValue(questionText));
+		assertEquals(NUMVALUE, blackboard.getValue(questionNum));
+		assertTrue(blackboard.getRating(solution).hasState(Rating.State.ESTABLISHED));
 		Blackboard blackboard2 = session2.getBlackboard();
-		Assert.assertEquals(Unknown.getInstance(), blackboard2.getValue(questionOC));
-		Assert.assertTrue(blackboard2.getIndication(questionMC).hasState(Indication.State.INDICATED));
-		Assert.assertFalse(blackboard2.getIndication(questionNum).hasState(
+		assertEquals(Unknown.getInstance(), blackboard2.getValue(questionOC));
+		assertTrue(blackboard2.getIndication(questionMC).hasState(Indication.State.INDICATED));
+		assertFalse(blackboard2.getIndication(questionNum).hasState(
 				Indication.State.INDICATED));
 		Rating rating = blackboard.getRating(solution2);
-		Assert.assertTrue(rating instanceof HeuristicRating);
-		Assert.assertTrue(rating.hasState(Rating.State.ESTABLISHED));
+		assertTrue(rating instanceof HeuristicRating);
+		assertTrue(rating.hasState(Rating.State.ESTABLISHED));
 		Protocol protocol = session.getProtocol();
 		Protocol protocol2 = session2.getProtocol();
-		Assert.assertEquals(protocol.getProtocolHistory().size(), 8);
-		Assert.assertEquals(protocol2.getProtocolHistory().size(), 2);
-		Assert.assertEquals(protocol.getProtocolHistory(FactProtocolEntry.class).size(), 6);
-		Assert.assertEquals(protocol2.getProtocolHistory(FactProtocolEntry.class).size(), 2);
+		assertEquals(protocol.getProtocolHistory().size(), 8);
+		assertEquals(protocol2.getProtocolHistory().size(), 2);
+		assertEquals(protocol.getProtocolHistory(FactProtocolEntry.class).size(), 6);
+		assertEquals(protocol2.getProtocolHistory(FactProtocolEntry.class).size(), 2);
 		List<TextProtocolEntry> textprotocolHistory = protocol.getProtocolHistory(TextProtocolEntry.class);
-		Assert.assertEquals(textprotocolHistory.size(), 2);
+		assertEquals(textprotocolHistory.size(), 2);
 		boolean[] foundEntries = new boolean[2];
 		for (TextProtocolEntry entry : textprotocolHistory) {
 			if (entry.getMessage().equals("ancient entry")) {
-				Assert.assertEquals(new Date(startDate.getTime() - 10), entry.getDate());
+				assertEquals(new Date(startDate.getTime() - 10), entry.getDate());
 				foundEntries[0] = true;
 			}
 			else if (entry.getMessage().equals("future entry")) {
@@ -503,8 +502,8 @@ public class SessionPersistenceTest {
 			}
 		}
 		// both textentries are present
-		Assert.assertTrue(foundEntries[0] && foundEntries[1]);
-		Assert.assertEquals(protocol2.getProtocolHistory(TextProtocolEntry.class).size(), 0);
+		assertTrue(foundEntries[0] && foundEntries[1]);
+		assertEquals(protocol2.getProtocolHistory(TextProtocolEntry.class).size(), 0);
 		// compare all facts
 		compareFacts(this.session, session);
 		compareFacts(this.session2, session2);
@@ -516,13 +515,13 @@ public class SessionPersistenceTest {
 		for (TerminologyObject to : originalBlackboard.getValuedObjects()) {
 			TerminologyObject toReloaded = reloadedSession.getKnowledgeBase().getManager().search(
 					to.getName());
-			Assert.assertEquals(originalBlackboard.getValueFact(to),
+			assertEquals(originalBlackboard.getValueFact(to),
 					reloadedBlackboard.getValueFact(toReloaded));
 		}
 		for (TerminologyObject to : originalBlackboard.getInterviewObjects()) {
 			TerminologyObject toReloaded = reloadedSession.getKnowledgeBase().getManager().search(
 					to.getName());
-			Assert.assertEquals(originalBlackboard.getInterviewFact(to),
+			assertEquals(originalBlackboard.getInterviewFact(to),
 					reloadedBlackboard.getInterviewFact(toReloaded));
 		}
 	}
@@ -552,7 +551,7 @@ public class SessionPersistenceTest {
 		catch (IOException e) {
 			expected = e.getCause();
 		}
-		Assert.assertTrue(expected instanceof ParseException);
+		assertTrue(expected instanceof ParseException);
 		File file = new File("src/test/resources/parseException.xml");
 		expected = null;
 		try {
@@ -561,7 +560,7 @@ public class SessionPersistenceTest {
 		catch (IOException e) {
 			expected = e.getCause();
 		}
-		Assert.assertTrue(expected instanceof ParseException);
+		assertTrue(expected instanceof ParseException);
 	}
 
 	/**
@@ -582,9 +581,9 @@ public class SessionPersistenceTest {
 		SessionPersistence persistence =
 				new SessionPersistence(spm, new DefaultSessionRecord(), element);
 		Object readFragment = persistence.readFragment(element);
-		Assert.assertTrue(readFragment instanceof UndefinedValue);
+		assertTrue(readFragment instanceof UndefinedValue);
 		Element writeFragment = persistence.writeFragment(UndefinedValue.getInstance());
-		Assert.assertTrue(element.isEqualNode(writeFragment));
+		assertTrue(element.isEqualNode(writeFragment));
 	}
 
 	@Test
@@ -593,7 +592,7 @@ public class SessionPersistenceTest {
 		repository.add(sessionRecord);
 		repository.add(sessionRecord);
 		countRecords(1, repository);
-		Assert.assertNotNull(repository.getSessionRecordById(sessionID));
+		assertNotNull(repository.getSessionRecordById(sessionID));
 		DefaultSessionRecord newSessionRecordWithSameID = new DefaultSessionRecord(
 				sessionRecord.getId(),
 				sessionRecord.getCreationDate(), sessionRecord.getLastChangeDate());
@@ -605,7 +604,7 @@ public class SessionPersistenceTest {
 		// when removing this record, the repository is empty
 		repository.remove(newSessionRecordWithSameID);
 		countRecords(0, repository);
-		Assert.assertNull(repository.getSessionRecordById(sessionID));
+		assertNull(repository.getSessionRecordById(sessionID));
 	}
 
 	private void countRecords(int expected, SessionRepository repository) {
@@ -615,7 +614,7 @@ public class SessionPersistenceTest {
 			iterator.next();
 			count++;
 		}
-		Assert.assertEquals(expected, count);
+		assertEquals(expected, count);
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -633,7 +632,7 @@ public class SessionPersistenceTest {
 	@Test
 	public void removingANotConatainedRecord() {
 		SessionRepository repository = new DefaultSessionRepository();
-		Assert.assertFalse(repository.remove(sessionRecord));
+		assertFalse(repository.remove(sessionRecord));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -653,9 +652,9 @@ public class SessionPersistenceTest {
 		// Testing methods not used in other Tests yet
 		SessionRecord record = new DefaultSessionRecord();
 		Date later = new Date(System.currentTimeMillis() + 1);
-		Assert.assertFalse(later.equals(record.getLastChangeDate()));
+		assertFalse(later.equals(record.getLastChangeDate()));
 		record.touch(later);
-		Assert.assertEquals(later, record.getLastChangeDate());
+		assertEquals(later, record.getLastChangeDate());
 	}
 
 	@Test(expected = IOException.class)
@@ -680,7 +679,7 @@ public class SessionPersistenceTest {
 				Unknown.getInstance(), this, session.getPSMethodInstance(PSMethodAbstraction.class)));
 		// Number of Facts should have increased by 2
 		SessionRecord sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
-		Assert.assertEquals(2,
+		assertEquals(2,
 				sessionRecord2extended.getValueFacts().size()
 						- sessionRecord2.getValueFacts().size());
 		blackboard.addInterviewFact(FactFactory.createFact(questionMC,
@@ -689,13 +688,13 @@ public class SessionPersistenceTest {
 						questionMC.getKnowledgeBase().getManager().getTreeIndex(questionMC)), this,
 				session.getPSMethodInstance(PSMethodStrategic.class)));
 		sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
-		Assert.assertEquals(2,
+		assertEquals(2,
 				sessionRecord2extended.getValueFacts().size()
 						- sessionRecord2.getValueFacts().size());
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(solution2, new Rating(
 				Rating.State.EXCLUDED)));
 		sessionRecord2extended = SessionConversionFactory.copyToSessionRecord(session);
-		Assert.assertEquals(4,
+		assertEquals(4,
 				sessionRecord2extended.getValueFacts().size()
 						- sessionRecord2.getValueFacts().size());
 	}
@@ -705,7 +704,7 @@ public class SessionPersistenceTest {
 		File directory = new File("src/test/resources/noRecordsFolder");
 		MultipleXMLSessionRepository repository = new MultipleXMLSessionRepository();
 		repository.load(directory);
-		Assert.assertFalse(repository.iterator().hasNext());
+		assertFalse(repository.iterator().hasNext());
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -731,9 +730,9 @@ public class SessionPersistenceTest {
 		File file = new File(targetFolder, "folder3/file.xml");
 		file.getParentFile().mkdirs();
 		clearDirectory(file.getParentFile());
-		Assert.assertTrue(file.getParentFile().delete());
+		assertTrue(file.getParentFile().delete());
 		sessionRepository.save(file);
-		Assert.assertTrue(file.exists());
+		assertTrue(file.exists());
 	}
 
 	@Test
@@ -743,10 +742,10 @@ public class SessionPersistenceTest {
 		File folder = new File(targetFolder, "folder2/folder");
 		folder.mkdirs();
 		clearDirectory(folder);
-		Assert.assertTrue(folder.delete());
+		assertTrue(folder.delete());
 		clearDirectory(folder.getParentFile());
-		Assert.assertTrue(folder.getParentFile().delete());
+		assertTrue(folder.getParentFile().delete());
 		sessionRepository.save(folder);
-		Assert.assertTrue(folder.exists());
+		assertTrue(folder.exists());
 	}
 }

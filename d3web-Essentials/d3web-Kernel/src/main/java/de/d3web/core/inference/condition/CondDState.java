@@ -109,14 +109,13 @@ public class CondDState extends TerminalCondition {
 			return false;
 		}
 		CondDState otherCDS = (CondDState) other;
-		boolean test = true;
+		boolean test;
 		if (this.getSolution() != null) {
 			test = this.getSolution().equals(
-					otherCDS.getSolution())
-					&& test;
+					otherCDS.getSolution());
 		}
 		else {
-			test = (otherCDS.getSolution() == null) && test;
+			test = otherCDS.getSolution() == null;
 		}
 
 		if (this.getRatingState() != null) {

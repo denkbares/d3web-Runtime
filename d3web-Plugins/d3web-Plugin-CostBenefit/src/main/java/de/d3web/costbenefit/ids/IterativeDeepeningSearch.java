@@ -56,11 +56,11 @@ class IterativeDeepeningSearch {
 		@Override
 		public int compare(Node o1, Node o2) {
 			int comparator = (int) (o1.getStaticCosts() - o2.getStaticCosts());
-			if (comparator != 0) {
-				return comparator;
+			if (comparator == 0) {
+				return -1 * o1.getQContainer().getName().compareTo(o2.getQContainer().getName());
 			}
 			else {
-				return -1 * o1.getQContainer().getName().compareTo(o2.getQContainer().getName());
+				return comparator;
 			}
 		}
 	}

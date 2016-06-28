@@ -52,7 +52,7 @@ public class EmptyQuestionnaireTestTest {
 		EmptyQuestionnaireTest test = new EmptyQuestionnaireTest();
 		Message execute = test.execute(kb, new String[] {});
 
-		assertTrue(execute.getType().equals(Message.Type.SUCCESS));
+		assertTrue(execute.getType() == Message.Type.SUCCESS);
 
 	}
 
@@ -66,7 +66,7 @@ public class EmptyQuestionnaireTestTest {
 		EmptyQuestionnaireTest test = new EmptyQuestionnaireTest();
 		Message execute = test.execute(kb, new String[] {});
 
-		assertTrue(execute.getType().equals(Message.Type.FAILURE));
+		assertTrue(execute.getType() == Message.Type.FAILURE);
 
 	}
 
