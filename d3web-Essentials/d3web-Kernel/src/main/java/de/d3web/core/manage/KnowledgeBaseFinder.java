@@ -39,7 +39,7 @@ public class KnowledgeBaseFinder implements NamedObjectFinder {
 	@Override
 	public Collection<NamedObject> find(String name, KnowledgeBase kb) {
 		if (name.equals(KNOWLEDGEBASE_ID) || name.equals(kb.getName())) {
-			return Arrays.<NamedObject> asList(kb);
+			return Collections.singletonList(kb);
 		}
 		else {
 			return Collections.emptyList();

@@ -35,5 +35,5 @@ public interface Value extends Comparable<Value> {
 	 * @author joba
 	 * @date 15.04.2010
 	 */
-	public Object getValue();
+	Object getValue();
 }

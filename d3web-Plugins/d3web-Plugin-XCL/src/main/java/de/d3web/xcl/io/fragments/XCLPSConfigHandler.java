@@ -59,7 +59,7 @@ public class XCLPSConfigHandler extends DefaultPSConfigHandler {
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		PSConfig psconfig = (PSConfig) super.read(element, persistence);
 		PSMethodXCL psm = (PSMethodXCL) psconfig.getPsMethod();
-		List<Object> fragments = new ArrayList<Object>();
+		List<Object> fragments = new ArrayList<>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			fragments.add(persistence.readFragment(e));
 		}

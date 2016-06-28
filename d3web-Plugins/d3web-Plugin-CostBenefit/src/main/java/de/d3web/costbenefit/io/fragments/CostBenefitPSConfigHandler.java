@@ -70,7 +70,7 @@ public class CostBenefitPSConfigHandler extends DefaultPSConfigHandler {
 		if (!manualAttribute.isEmpty()) {
 			psm.setManualMode(Boolean.parseBoolean(manualAttribute));
 		}
-		List<Object> fragments = new ArrayList<Object>();
+		List<Object> fragments = new ArrayList<>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			fragments.add(persistence.readFragment(e));
 		}

@@ -60,5 +60,5 @@ public interface ProtocolEntry {
 	 * @created 19.10.2010
 	 * @return the log date
 	 */
-	public Date getDate();
+	Date getDate();
 }

@@ -27,8 +27,8 @@ import de.d3web.core.knowledge.InterviewObject;
  */
 public interface InterviewAgenda {
 
-	public enum InterviewState {
-		ACTIVE, INACTIVE;
+	enum InterviewState {
+		ACTIVE, INACTIVE
 	}
 
 	boolean hasState(InterviewObject interviewObject, InterviewState state);

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -63,19 +62,19 @@ public class KnowledgeBase implements NamedObject {
 
 	// stores all qasets contained in the init questionnaires together with
 	// their respective priority
-	private Map<QASet, Integer> initQuestions = new HashMap<QASet, Integer>();
+	private Map<QASet, Integer> initQuestions = new HashMap<>();
 
-	private final List<Resource> resouces = new ArrayList<Resource>();
+	private final List<Resource> resouces = new ArrayList<>();
 
-	private final List<PSConfig> psConfigs = new ArrayList<PSConfig>();
+	private final List<PSConfig> psConfigs = new ArrayList<>();
 
 	private QASet rootQASet = null;
 
 	private Solution rootSolution = null;
 
-	private TerminologyManager manager = new TerminologyManager(this);
+	private final TerminologyManager manager = new TerminologyManager(this);
 
-	private KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
+	private final KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
 
 	/**
 	 * @return the unique identifier of this KnowledgeBase instance.
@@ -103,7 +102,7 @@ public class KnowledgeBase implements NamedObject {
 	 * {@link KnowledgeBaseUtils} instead).
 	 */
 	public KnowledgeBase() {
-		initQuestions = new HashMap<QASet, Integer>();
+		initQuestions = new HashMap<>();
 	}
 
 	/**
@@ -114,7 +113,7 @@ public class KnowledgeBase implements NamedObject {
 	 * contained in the {@link KnowledgeBase}
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledgeSlices() {
-		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<KnowledgeSlice>(
+		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<>(
 				Arrays.asList(getKnowledgeStore().getKnowledge()));
 		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
 			allKnowledgeSlices.addAll(Arrays.asList(to.getKnowledgeStore().getKnowledge()));
@@ -133,7 +132,7 @@ public class KnowledgeBase implements NamedObject {
 	 * access key
 	 */
 	public <T extends KnowledgeSlice> Collection<T> getAllKnowledgeSlicesFor(KnowledgeKind<T> kind) {
-		Collection<T> slices = new LinkedList<T>();
+		Collection<T> slices = new LinkedList<>();
 		T ks = getKnowledgeStore().getKnowledge(kind);
 		if (ks != null) slices.add(ks);
 		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
@@ -155,15 +154,11 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	private static List<QASet> sortByValue(final Map<QASet, Integer> map) {
-		List<QASet> result = new LinkedList<QASet>(map.keySet());
-		Collections.sort(result, new Comparator<QASet>() {
-
-			@Override
-			public int compare(QASet o1, QASet o2) {
-				Integer prio1 = map.get(o1);
-				Integer prio2 = map.get(o2);
-				return prio1.compareTo(prio2);
-			}
+		List<QASet> result = new LinkedList<>(map.keySet());
+		Collections.sort(result, (o1, o2) -> {
+			Integer prio1 = map.get(o1);
+			Integer prio2 = map.get(o2);
+			return prio1.compareTo(prio2);
 		});
 		return result;
 	}

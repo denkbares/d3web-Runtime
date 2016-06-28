@@ -34,7 +34,7 @@ import de.d3web.core.records.SessionRecord;
 public class StringPropertyFilter implements Filter {
 
 	private final Property<String> property;
-	private Pattern p;
+	private final Pattern p;
 	private final Locale locale;
 
 	public StringPropertyFilter(Property<String> property, String regexp) {

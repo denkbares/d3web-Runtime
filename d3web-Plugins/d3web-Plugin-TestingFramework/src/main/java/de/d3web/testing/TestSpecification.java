@@ -36,7 +36,7 @@ public class TestSpecification<T> {
 	private final String[] args;
 	private final String[][] ignores;
 
-	private final Map<String, Object> customInfos = new HashMap<String, Object>();
+	private final Map<String, Object> customInfos = new HashMap<>();
 
 	/**
 	 * @param test Instance of the test to be executed. (mandatory)

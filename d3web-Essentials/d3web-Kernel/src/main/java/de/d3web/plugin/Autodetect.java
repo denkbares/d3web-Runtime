@@ -27,10 +27,10 @@ public interface Autodetect {
 	 * see {@link KernelExtensionPoints}
 	 */
 	@Deprecated
-	public final static String EXTENSIONPOINT_ID = KernelExtensionPoints.EXTENSIONPOINT_AUTODETECT;
+	String EXTENSIONPOINT_ID = KernelExtensionPoints.EXTENSIONPOINT_AUTODETECT;
 
 	/**
 	 * @return true, if the Plugin is needed, false otherwise
 	 */
-	public boolean check(KnowledgeBase kb);
+	boolean check(KnowledgeBase kb);
 }

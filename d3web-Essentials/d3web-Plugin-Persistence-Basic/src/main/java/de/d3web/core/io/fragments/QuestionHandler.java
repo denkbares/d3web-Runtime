@@ -63,31 +63,34 @@ public class QuestionHandler implements FragmentHandler<KnowledgeBase> {
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String type = element.getAttribute("type");
 		String name = element.getAttribute("name");
-		Question q = null;
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		ArrayList<NumericalInterval> intervalls = null;
+		ArrayList<NumericalInterval> intervals = null;
 		Element answersElement = null;
 		KnowledgeBase kb = persistence.getArtifact();
+		Question question;
 		if (type.equals("YN")) {
-			q = new QuestionYN(kb, name);
+			question = new QuestionYN(kb, name);
 		}
 		else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
-			q = new QuestionZC(kb, name);
+			question = new QuestionZC(kb, name);
 		}
 		else if (type.equals("OC")) {
-			q = new QuestionOC(kb, name);
+			question = new QuestionOC(kb, name);
 		}
 		else if (type.equals("MC")) {
-			q = new QuestionMC(kb, name);
+			question = new QuestionMC(kb, name);
 		}
 		else if (type.equals("Num")) {
-			q = new QuestionNum(kb, name);
+			question = new QuestionNum(kb, name);
 		}
 		else if (type.equals("Text")) {
-			q = new QuestionText(kb, name);
+			question = new QuestionText(kb, name);
 		}
 		else if (type.equals("Date")) {
-			q = new QuestionDate(kb, name);
+			question = new QuestionDate(kb, name);
+		}
+		else {
+			throw new IOException("Unknown question type " + type);
 		}
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : childNodes) {
@@ -95,10 +98,10 @@ public class QuestionHandler implements FragmentHandler<KnowledgeBase> {
 				answersElement = child;
 			}
 			else if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
-				XMLUtil.fillInfoStore(persistence, q.getInfoStore(), child);
+				XMLUtil.fillInfoStore(persistence, question.getInfoStore(), child);
 			}
 			else if (ph.canRead(child)) {
-				InfoStoreUtil.copyEntries(ph.read(persistence, child), q.getInfoStore());
+				InfoStoreUtil.copyEntries(ph.read(persistence, child), question.getInfoStore());
 			}
 			// If the child is none of the types above and it doesn't contain
 			// the children or the costs,
@@ -108,11 +111,11 @@ public class QuestionHandler implements FragmentHandler<KnowledgeBase> {
 					&& !child.getNodeName().equals("Costs")) {
 				Object readFragment = persistence.readFragment(child);
 				if (readFragment instanceof List<?>) {
-					intervalls = new ArrayList<NumericalInterval>();
+					intervals = new ArrayList<>();
 					List<?> list = (List<?>) readFragment;
 					for (Object o : list) {
 						if (o instanceof NumericalInterval) {
-							intervalls.add((NumericalInterval) o);
+							intervals.add((NumericalInterval) o);
 						}
 					}
 				}
@@ -122,19 +125,19 @@ public class QuestionHandler implements FragmentHandler<KnowledgeBase> {
 				}
 			}
 		}
-		if (intervalls != null) {
-			((QuestionNum) q).setValuePartitions(intervalls);
+		if (intervals != null) {
+			((QuestionNum) question).setValuePartitions(intervals);
 		}
-		if (answersElement != null && q instanceof QuestionChoice) {
-			QuestionChoice qc = (QuestionChoice) q;
+		if (answersElement != null && question instanceof QuestionChoice) {
+			QuestionChoice qc = (QuestionChoice) question;
 			List<Element> answerNodes = XMLUtil.getElementList(answersElement.getChildNodes());
-			List<Choice> answers = new ArrayList<Choice>();
+			List<Choice> answers = new ArrayList<>();
 			for (Element answerElement : answerNodes) {
 				answers.add((Choice) persistence.readFragment(answerElement));
 			}
 			qc.setAlternatives(answers);
 		}
-		return q;
+		return question;
 	}
 
 	@Override

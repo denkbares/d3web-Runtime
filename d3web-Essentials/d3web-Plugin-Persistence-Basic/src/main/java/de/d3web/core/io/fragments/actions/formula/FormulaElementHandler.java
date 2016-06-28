@@ -34,7 +34,6 @@ import de.d3web.abstraction.formula.FormulaNumberElement;
 import de.d3web.abstraction.formula.Operator;
 import de.d3web.abstraction.formula.Operator.Operation;
 import de.d3web.abstraction.formula.QNumWrapper;
-import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -77,7 +76,7 @@ public class FormulaElementHandler implements FragmentHandler<KnowledgeBase> {
 		else if (element.getNodeName().equalsIgnoreCase("QuestionNum")) {
 			// [MISC) tobi: QuestionNums are never saved directly.
 			// Is this legacy-Code or can it be removed?
-			String id = "";
+			String id;
 			id = element.getChildNodes().item(0).getNodeValue();
 			if (id == null) id = element.getChildNodes().item(1).getNodeValue();
 			expr = (FormulaNumberElement) kb.getManager().searchQuestion(id);
@@ -87,7 +86,7 @@ public class FormulaElementHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
-		Element element = null;
+		Element element;
 		Document doc = persistence.getDocument();
 		if (object instanceof Operator) {
 			Operator fa = (Operator) object;
@@ -109,7 +108,7 @@ public class FormulaElementHandler implements FragmentHandler<KnowledgeBase> {
 		return element;
 	}
 
-	private Element createFormulaTerm(Persistence<KnowledgeBase> persistence, String symbol, Object argument1, Object argument2) throws DOMException, NoSuchFragmentHandlerException, IOException {
+	private Element createFormulaTerm(Persistence<KnowledgeBase> persistence, String symbol, Object argument1, Object argument2) throws DOMException, IOException {
 		Element element = persistence.getDocument().createElement("FormulaTerm");
 		element.setAttribute("type", symbol);
 		Element arg1 = persistence.getDocument().createElement("arg1");

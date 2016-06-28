@@ -61,7 +61,7 @@ public class SessionRecordWrapper implements TemplateTestCase {
 
 	@Override
 	public Collection<Date> chronology() {
-		Set<Date> dates = new TreeSet<Date>();
+		Set<Date> dates = new TreeSet<>();
 		for (ProtocolEntry entry : record.getProtocol().getProtocolHistory()) {
 			dates.add(entry.getDate());
 		}
@@ -117,7 +117,7 @@ public class SessionRecordWrapper implements TemplateTestCase {
 
 	@Override
 	public Collection<String> check(KnowledgeBase knowledgeBase) {
-		Collection<String> errors = new HashSet<String>();
+		Collection<String> errors = new HashSet<>();
 		for (ProtocolEntry entry : record.getProtocol().getProtocolHistory()) {
 			if (entry instanceof FactProtocolEntry) {
 				FactProtocolEntry fpe = (FactProtocolEntry) entry;

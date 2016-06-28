@@ -25,7 +25,6 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -47,8 +46,8 @@ public class FactHandler implements SessionPersistenceHandler {
 		for (Element e : elementList) {
 			if (e.getNodeName().equals("facts")) {
 				List<Element> factCategorieList = XMLUtil.getElementList(e.getChildNodes());
-				List<FactRecord> valueFacts = new LinkedList<FactRecord>();
-				List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
+				List<FactRecord> valueFacts = new LinkedList<>();
+				List<FactRecord> interviewFacts = new LinkedList<>();
 				for (Element factCategorieElement : factCategorieList) {
 					if (factCategorieElement.getNodeName().equals("valueFacts")) {
 						getFacts(persistence, factCategorieElement, valueFacts);
@@ -67,7 +66,7 @@ public class FactHandler implements SessionPersistenceHandler {
 		}
 	}
 
-	private void getFacts(Persistence<SessionRecord> persistence, Element factCategorieElement, List<FactRecord> facts) throws NoSuchFragmentHandlerException, IOException {
+	private void getFacts(Persistence<SessionRecord> persistence, Element factCategorieElement, List<FactRecord> facts) throws IOException {
 		for (Element factElement : XMLUtil.getElementList(factCategorieElement.getChildNodes())) {
 			String idObjectName = factElement.getAttribute("objectName");
 			String psmName = factElement.getAttribute("psm");
@@ -99,7 +98,7 @@ public class FactHandler implements SessionPersistenceHandler {
 		addFacts(persistence, record.getInterviewFacts(), interviewFactsElement);
 	}
 
-	private void addFacts(Persistence<SessionRecord> persistence, List<FactRecord> facts, Element factsElement) throws NoSuchFragmentHandlerException, IOException {
+	private void addFacts(Persistence<SessionRecord> persistence, List<FactRecord> facts, Element factsElement) throws IOException {
 		for (FactRecord fact : facts) {
 			Element factElement = persistence.getDocument().createElement("fact");
 			factsElement.appendChild(factElement);

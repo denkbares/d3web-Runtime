@@ -68,7 +68,7 @@ public class AStarExplanationComponent {
 	 */
 	public AStarPath getLongestSubPathReached(QContainer... path) {
 		AStarPath subPath = new AStarPath(null, null, 0);
-		Collection<Node> nodes = new LinkedList<Node>(astar.getClosedNodes());
+		Collection<Node> nodes = new LinkedList<>(astar.getClosedNodes());
 		nodes.addAll(astar.getOpenNodes());
 		for (Node n : nodes) {
 			List<QContainer> actualPath = n.getPath().getPath();
@@ -101,7 +101,7 @@ public class AStarExplanationComponent {
 	public AnalysisResult getBestPathContaining(QContainer... path) {
 		Node bestNode = null;
 		int reached = -1;
-		Collection<Node> nodes = new LinkedList<Node>(astar.getClosedNodes());
+		Collection<Node> nodes = new LinkedList<>(astar.getClosedNodes());
 		nodes.addAll(astar.getOpenNodes());
 		for (Node n : nodes) {
 			int tempReached = 0;
@@ -188,7 +188,7 @@ public class AStarExplanationComponent {
 
 		@Override
 		public String toString() {
-			return path.toString() + ", f-Value: " + fValue + ", closed: " + closed;
+			return path + ", f-Value: " + fValue + ", closed: " + closed;
 		}
 	}
 
@@ -205,7 +205,7 @@ public class AStarExplanationComponent {
 	public static Map<Condition, Set<QContainer>> findVariations(Session session, Condition transitiveCondition) {
 		List<Condition> primitiveTransitiveConditions = TPHeuristic.getPrimitiveConditions(transitiveCondition);
 		KnowledgeBase kb = session.getKnowledgeBase();
-		Collection<StateTransition> stateTransitions = new LinkedList<StateTransition>();
+		Collection<StateTransition> stateTransitions = new LinkedList<>();
 		// filter StateTransitions that cannot be applied due to final questions
 		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
@@ -215,10 +215,10 @@ public class AStarExplanationComponent {
 				stateTransitions.add(st);
 			}
 		}
-		Map<Condition, Set<QContainer>> result = new HashMap<Condition, Set<QContainer>>();
+		Map<Condition, Set<QContainer>> result = new HashMap<>();
 		for (Condition condition : primitiveTransitiveConditions) {
 			if (!Conditions.isTrue(condition, session)) {
-				Set<QContainer> transitionalQContainer = new HashSet<QContainer>();
+				Set<QContainer> transitionalQContainer = new HashSet<>();
 				for (StateTransition st : stateTransitions) {
 					for (ValueTransition vt : st.getPostTransitions()) {
 						if (vt.getQuestion() == condition.getTerminalObjects().iterator().next()) {
@@ -267,7 +267,7 @@ public class AStarExplanationComponent {
 				new AStarPath(null, null, 0),
 				stateTransition, model.getSession());
 
-		List<QContainer> path = new LinkedList<QContainer>(target.getMinPath().getPath());
+		List<QContainer> path = new LinkedList<>(target.getMinPath().getPath());
 		path.removeAll(target.getQContainers());
 		return getUnexpectedQContainers(path, model.getSession(), transitiveCondition);
 	}
@@ -283,7 +283,7 @@ public class AStarExplanationComponent {
 	 * @return list of unexpected QContainers
 	 */
 	public static Set<QContainer> getUnexpectedQContainers(List<QContainer> path, Session session, Condition transitiveCondition) {
-		Set<QContainer> result = new HashSet<QContainer>(path);
+		Set<QContainer> result = new HashSet<>(path);
 		Map<Condition, Set<QContainer>> variations = findVariations(session, transitiveCondition);
 		for (Set<QContainer> qcons : variations.values()) {
 			result.removeAll(qcons);
@@ -337,9 +337,9 @@ public class AStarExplanationComponent {
 	 * @return a set of unfullfilled (sub) conditions
 	 */
 	public static Set<Condition> getUnfullfilledConditions(Path path, Condition transitiveCondition, Session session) {
-		Set<Condition> result = new HashSet<Condition>(
+		Set<Condition> result = new HashSet<>(
 				TPHeuristic.getPrimitiveConditions(transitiveCondition));
-		Set<Condition> fullfilledConditions = new HashSet<Condition>();
+		Set<Condition> fullfilledConditions = new HashSet<>();
 		Session copiedSession = CostBenefitUtil.createSearchCopy(session);
 		addFullfilledConditions(result, copiedSession, fullfilledConditions);
 		for (QContainer qcon : path.getPath()) {

@@ -51,7 +51,7 @@ import de.d3web.utils.Log;
  */
 class IterativeDeepeningSearch {
 
-	private final class StaticCostComparator implements Comparator<Node> {
+	private static final class StaticCostComparator implements Comparator<Node> {
 
 		@Override
 		public int compare(Node o1, Node o2) {
@@ -71,8 +71,8 @@ class IterativeDeepeningSearch {
 	private IDSPath minSearchedPath;
 	// TODO move to constructor...
 	private AbortStrategy abortStrategy = new DefaultAbortStrategy();
-	private final Map<Node, List<Target>> referencingTargets = new HashMap<Node, List<Target>>();
-	private final Map<QContainer, Node> map = new HashMap<QContainer, Node>();
+	private final Map<Node, List<Target>> referencingTargets = new HashMap<>();
+	private final Map<QContainer, Node> map = new HashMap<>();
 	private int countMinPaths = 0;
 	private final Session originalSession;
 
@@ -94,24 +94,20 @@ class IterativeDeepeningSearch {
 				Node key = map.get(qcon);
 				List<Target> refs = this.referencingTargets.get(key);
 				if (refs == null) {
-					refs = new LinkedList<Target>();
+					refs = new LinkedList<>();
 					this.referencingTargets.put(key, refs);
 				}
 				refs.add(target);
 			}
 		}
 		// get finalNodes
-		List<Target> possibleTargets = new LinkedList<Target>(model.getTargets());
-		Collections.sort(possibleTargets, new Comparator<Target>() {
-
-			@Override
-			public int compare(Target o1, Target o2) {
-				String name1 = o1.getQContainers().get(0).getName();
-				String name2 = o2.getQContainers().get(0).getName();
-				return -1 * (name1.compareTo(name2));
-			}
+		List<Target> possibleTargets = new LinkedList<>(model.getTargets());
+		Collections.sort(possibleTargets, (o1, o2) -> {
+			String name1 = o1.getQContainers().get(0).getName();
+			String name2 = o2.getQContainers().get(0).getName();
+			return -1 * (name1.compareTo(name2));
 		});
-		List<Node> temp = new LinkedList<Node>();
+		List<Node> temp = new LinkedList<>();
 		for (Target t : possibleTargets) {
 			for (QContainer qcon : t.getQContainers()) {
 				temp.add(map.get(qcon));
@@ -119,7 +115,7 @@ class IterativeDeepeningSearch {
 		}
 		finalNodes = temp.toArray(new Node[temp.size()]);
 		Set<Node> nodeList = getNodes();
-		HashSet<Node> relevantNodes = new HashSet<Node>();
+		HashSet<Node> relevantNodes = new HashSet<>();
 		Blackboard blackboard = originalSession.getBlackboard();
 		// Nodes without post transitions are not relevant as successors
 		// TODO more sophisticated filter of successors (only relevant
@@ -155,8 +151,8 @@ class IterativeDeepeningSearch {
 
 	/**
 	 * Starts the search with depth 1
-	 * 
-	 * @param session
+	 *
+	 * @param session the session to be searched
 	 */
 	public void search(Session session) {
 		// Abort if there are no targets in the model
@@ -182,7 +178,9 @@ class IterativeDeepeningSearch {
 
 	private void search(Session testcase, int depth) throws AbortException {
 		if ((depth <= 0) || model.getTargets() == null
-				|| model.getTargets().size() == 0) return;
+				|| model.getTargets().isEmpty()) {
+			return;
+		}
 		IDSPath actual = new IDSPath();
 		minSearchedPath = null;
 		findCheapestPath(actual, depth, testcase);
@@ -196,7 +194,7 @@ class IterativeDeepeningSearch {
 			// if a minSearchPath is found, the costs are at least the costs of
 			// the minSearchPath plus the cheapest unused teststep
 			mincosts = minSearchedPath.getCosts();
-			List<Node> nextnodes = new LinkedList<Node>();
+			List<Node> nextnodes = new LinkedList<>();
 			nextnodes.addAll(Arrays.asList(successorNodes));
 			nextnodes.addAll(Arrays.asList(finalNodes));
 			Collections.sort(nextnodes, new StaticCostComparator());
@@ -214,11 +212,9 @@ class IterativeDeepeningSearch {
 			// or if the minimal costs are to high for even for the most
 			// beneficial
 			// test step
-			return;
 		}
 		else if (depth > successorNodes.length) {
 			// stop iterative depth search if all test steps have been used
-			return;
 		}
 		else {
 			// otherwise try to find solutions with one more iteration
@@ -256,7 +252,7 @@ class IterativeDeepeningSearch {
 			// Session testcase = Util.copyCase(session);
 			for (Node successor : successorNodes) {
 				if (!isValidSuccessor(actual, successor, session)) continue;
-				List<Fact> undo = new LinkedList<Fact>();
+				List<Fact> undo = new LinkedList<>();
 				actual.add(successor, session);
 				nextStep(actual);
 				undo.addAll(successor.setNormalValues(session));
@@ -288,11 +284,9 @@ class IterativeDeepeningSearch {
 
 	/**
 	 * Returns all nodes of the graph to be searched.
-	 * 
-	 * @return
 	 */
 	private Set<Node> getNodes() {
-		Set<Node> nodeList = new HashSet<Node>();
+		Set<Node> nodeList = new HashSet<>();
 		for (Node node : map.values()) {
 			if (node.getStateTransition() != null) nodeList.add(node);
 		}
@@ -302,11 +296,9 @@ class IterativeDeepeningSearch {
 	/**
 	 * Returns all Nodes contained in combined Targets (targets with more than
 	 * one target Node)
-	 * 
-	 * @return
 	 */
 	private Collection<? extends Node> getCombinedTargetsNodes() {
-		List<Node> list = new LinkedList<Node>();
+		List<Node> list = new LinkedList<>();
 		for (Target t : model.getTargets()) {
 			List<QContainer> qContainers = t.getQContainers();
 			if (qContainers.size() > 1) {
@@ -320,8 +312,8 @@ class IterativeDeepeningSearch {
 
 	/**
 	 * Minimizes if necessary the path in all targets which are reached
-	 * 
-	 * @param path
+	 *
+	 * @param path the path to be minimized
 	 */
 	private void minimizePath(IDSPath path) {
 		Node node = path.getLastNode();
@@ -340,8 +332,8 @@ class IterativeDeepeningSearch {
 	/**
 	 * Checks if all targets are reached. If this is true, every target has a
 	 * minPath.
-	 * 
-	 * @return
+	 *
+	 * @return if all targets are reached
 	 */
 	public boolean allTargetsReached() {
 		return (countMinPaths == model.getTargets().size());

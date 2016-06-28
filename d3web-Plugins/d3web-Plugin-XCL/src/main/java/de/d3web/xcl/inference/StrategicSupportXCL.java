@@ -67,8 +67,8 @@ public class StrategicSupportXCL implements StrategicSupport {
 	@Override
 	public double getInformationGain(Collection<? extends QASet> qasets,
 			Collection<Solution> solutions, Session session) {
-		Map<List<Condition>, Float> map = new HashMap<List<Condition>, Float>();
-		Collection<Question> questions = new HashSet<Question>();
+		Map<List<Condition>, Float> map = new HashMap<>();
+		Collection<Question> questions = new HashSet<>();
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		FormStrategy formStrategy = interview.getFormStrategy();
 		for (QASet qaSet : qasets) {
@@ -83,13 +83,13 @@ public class StrategicSupportXCL implements StrategicSupport {
 		for (Solution solution : solutions) {
 			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 			if (model == null) continue;
-			LinkedList<Set<Condition>> conditionsForQuestions = new LinkedList<Set<Condition>>();
+			LinkedList<Set<Condition>> conditionsForQuestions = new LinkedList<>();
 			for (Question q : questions) {
-				Set<Condition> set = new HashSet<Condition>();
+				Set<Condition> set = new HashSet<>();
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
 				Set<Condition> conditions = excludingQuestions.get(q) == null
-						? new HashSet<Condition>()
-						: new HashSet<Condition>(excludingQuestions.get(q));
+						? new HashSet<>()
+						: new HashSet<>(excludingQuestions.get(q));
 				for (XCLRelation r : coveringRelations) {
 					if (r.hasType(XCLRelationType.contradicted)) {
 						extractOrs(set, new CondNot(r.getConditionedFinding()));
@@ -112,7 +112,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 
 			// multiply possible value sets to get pots
 			// and add solution probabilities to these pots
-			List<List<Condition>> combinations = getCombinations(new LinkedList<Set<Condition>>(
+			List<List<Condition>> combinations = getCombinations(new LinkedList<>(
 					conditionsForQuestions));
 			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
 			float weight = (apriori == null) ? 1f : apriori.floatValue();
@@ -140,7 +140,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 	}
 
 	private Map<Question, Set<Condition>> getExcludingQuestion(Collection<Solution> solutions, Collection<Question> questions) {
-		Map<Question, Set<Condition>> excludingQuestions = new HashMap<Question, Set<Condition>>();
+		Map<Question, Set<Condition>> excludingQuestions = new HashMap<>();
 		for (Question q : questions) {
 			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
 					XCLContributedModelSet.KNOWLEDGE_KIND);
@@ -153,7 +153,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 							if (relationObjects.contains(q)) {
 								Set<Condition> conditions = excludingQuestions.get(q);
 								if (conditions == null) {
-									conditions = new HashSet<Condition>();
+									conditions = new HashSet<>();
 									excludingQuestions.put(q, conditions);
 								}
 								conditions.add(relation.getConditionedFinding());
@@ -168,16 +168,16 @@ public class StrategicSupportXCL implements StrategicSupport {
 	}
 
 	private static List<List<Condition>> getCombinations(LinkedList<Set<Condition>> conditionsForQuestions) {
-		List<List<Condition>> result = new LinkedList<List<Condition>>();
+		List<List<Condition>> result = new LinkedList<>();
 		if (conditionsForQuestions.isEmpty()) {
-			result.add(Collections.<Condition> emptyList());
+			result.add(Collections.emptyList());
 			return result;
 		}
 		Set<Condition> first = conditionsForQuestions.poll();
 		List<List<Condition>> restresult = getCombinations(conditionsForQuestions);
 		for (List<Condition> list : restresult) {
 			for (Condition condition : first) {
-				List<Condition> item = new LinkedList<Condition>();
+				List<Condition> item = new LinkedList<>();
 				item.add(condition);
 				item.addAll(list);
 				result.add(item);
@@ -197,7 +197,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 				Value value = condEqual.getValue();
 				if (condEqual.getQuestion() instanceof QuestionOC && value instanceof ChoiceValue) {
 					ChoiceValue cv = (ChoiceValue) value;
-					List<Condition> terms = new LinkedList<Condition>();
+					List<Condition> terms = new LinkedList<>();
 					QuestionOC oc = (QuestionOC) condEqual.getQuestion();
 					for (Choice c : oc.getAllAlternatives()) {
 						if (!cv.getChoiceID().equals(new ChoiceID(c))) {
@@ -210,7 +210,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 			// use De Morgan
 			else if (subCondition instanceof CondAnd) {
 				CondAnd condAnd = (CondAnd) subCondition;
-				List<Condition> terms = new LinkedList<Condition>();
+				List<Condition> terms = new LinkedList<>();
 				for (Condition c : condAnd.getTerms()) {
 					terms.add(new CondNot(c));
 				}
@@ -218,7 +218,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 			}
 			else if (subCondition instanceof CondOr) {
 				CondOr condOr = (CondOr) subCondition;
-				List<Condition> terms = new LinkedList<Condition>();
+				List<Condition> terms = new LinkedList<>();
 				for (Condition c : condOr.getTerms()) {
 					terms.add(new CondNot(c));
 				}
@@ -260,20 +260,20 @@ public class StrategicSupportXCL implements StrategicSupport {
 	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
 		if (solutions.size() > 0) {
-			return new HashSet<Solution>(solutions);
+			return new HashSet<>(solutions);
 		}
 		solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
 		if (solutions.size() > 0) {
-			return new HashSet<Solution>(solutions);
+			return new HashSet<>(solutions);
 		}
 		solutions = session.getBlackboard().getSolutions(State.UNCLEAR);
-		return new HashSet<Solution>(solutions);
+		return new HashSet<>(solutions);
 	}
 
 	@Override
 	public Collection<Question> getDiscriminatingQuestions(
 			Collection<Solution> solutions, Session session) {
-		Set<Question> coveredSymptoms = new HashSet<Question>();
+		Set<Question> coveredSymptoms = new HashSet<>();
 		for (Solution solution : solutions) {
 			KnowledgeSlice ks = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 			if (ks == null) continue;

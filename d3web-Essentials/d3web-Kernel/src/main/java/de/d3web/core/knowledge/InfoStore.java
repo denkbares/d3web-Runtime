@@ -28,7 +28,7 @@ import de.d3web.utils.Triple;
 
 public interface InfoStore {
 
-	public static final Locale NO_LANGUAGE = null;
+	Locale NO_LANGUAGE = null;
 
 	/**
 	 * Returns the value stored for the specified key with language {@link #NO_LANGUAGE}. If there
@@ -99,8 +99,8 @@ public interface InfoStore {
 	 * @param key the property to store the value for
 	 * @param value the value to store
 	 * @created 28.10.2010
-	 * @throws ClassCastException if the value is not compatible with the property
-	 * @throws NullPointerException if the key or value is null
+	 * @throw ClassCastException if the value is not compatible with the property
+	 * @throw NullPointerException if the key or value is null
 	 */
 	void addValue(Property<?> key, Object value) throws ClassCastException;
 
@@ -115,8 +115,8 @@ public interface InfoStore {
 	 * @throws IllegalArgumentException if a language other than NO_LANGUAGE is specified for a non
 	 * multilingual property
 	 * @created 28.10.2010
-	 * @throws ClassCastException if the value is not compatible with the property
-	 * @throws NullPointerException if the key or value is null
+	 * @throw ClassCastException if the value is not compatible with the property
+	 * @throw NullPointerException if the key or value is null
 	 */
 	void addValue(Property<?> key, Locale language, Object value) throws ClassCastException;
 

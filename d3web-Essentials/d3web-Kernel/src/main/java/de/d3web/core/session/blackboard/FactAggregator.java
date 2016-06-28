@@ -52,7 +52,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	private Fact mergedFact;
 
 	public FactAggregator() {
-		this.facts = new ArrayList<Fact>();
+		this.facts = new ArrayList<>();
 		this.mergedFact = null;
 	}
 
@@ -62,7 +62,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	 * @param source the source instance to be copied
 	 */
 	private FactAggregator(FactAggregator source) {
-		this.facts = new ArrayList<Fact>(source.facts);
+		this.facts = new ArrayList<>(source.facts);
 		this.mergedFact = source.mergedFact;
 	}
 
@@ -178,18 +178,18 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 		// otherwise we have to do the complex merge operation
 		// so we build a set of fact collections
-		Map<PSMethod, Collection<Fact>> factBoxes = new HashMap<PSMethod, Collection<Fact>>();
+		Map<PSMethod, Collection<Fact>> factBoxes = new HashMap<>();
 		for (Fact fact : this.facts) {
 			PSMethod key = fact.getPSMethod();
 			Collection<Fact> box = factBoxes.get(key);
 			if (box == null) {
-				box = new ArrayList<Fact>();
+				box = new ArrayList<>();
 				factBoxes.put(key, box);
 			}
 			box.add(fact);
 		}
 		// and collect them to single facts
-		List<Fact> mergedFacts = new ArrayList<Fact>();
+		List<Fact> mergedFacts = new ArrayList<>();
 		for (Collection<Fact> box : factBoxes.values()) {
 			Fact[] factArray = box.toArray(new Fact[box.size()]);
 			Fact newMergedFact = (factArray.length == 1)
@@ -300,7 +300,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	 * @return merged Fact
 	 */
 	public Fact getMergedFact(PSMethod psMethod) {
-		List<Fact> psmfacts = new LinkedList<Fact>();
+		List<Fact> psmfacts = new LinkedList<>();
 		for (Fact f : facts) {
 			if (f.getPSMethod().equals(psMethod)) {
 				psmfacts.add(f);
@@ -342,7 +342,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	 * @return the contributing solver instances
 	 */
 	public Collection<PSMethod> getContributingPSMethods() {
-		Set<PSMethod> result = new HashSet<PSMethod>();
+		Set<PSMethod> result = new HashSet<>();
 		for (Fact fact : facts) {
 			result.add(fact.getPSMethod());
 		}

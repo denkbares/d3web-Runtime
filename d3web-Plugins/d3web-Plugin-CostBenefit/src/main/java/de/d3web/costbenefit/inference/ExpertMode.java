@@ -118,7 +118,7 @@ public class ExpertMode implements SessionObject {
 		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
 
 		// create a list of all targets
-		List<Target> result = new ArrayList<Target>();
+		List<Target> result = new ArrayList<>();
 		result.addAll(pso.getDiscriminatingTargets());
 
 		// but without the currently selected one
@@ -236,7 +236,7 @@ public class ExpertMode implements SessionObject {
 	 * such a path this method results in an {@link AbortException}.
 	 * 
 	 * @created 07.03.2011
-	 * @param target the target to select
+	 * @param targetQuestionnaire the target to select
 	 * @throws AbortException if no path towards the target could be found
 	 * @see AbortException
 	 * @see AbortStrategy
@@ -314,7 +314,7 @@ public class ExpertMode implements SessionObject {
 	 * @return list of applicable permenantly relevant QContainers
 	 */
 	public Collection<QContainer> getApplicablePermanentlyRelevantQContainers() {
-		Collection<QContainer> result = new LinkedList<QContainer>();
+		Collection<QContainer> result = new LinkedList<>();
 		for (QContainer qcontainer : session.getKnowledgeBase().getManager().getQContainers()) {
 			if (qcontainer.getInfoStore().getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
 				StateTransition stateTransition = StateTransition.getStateTransition(qcontainer);

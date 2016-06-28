@@ -58,15 +58,15 @@ import de.d3web.scoring.Score;
  */
 public final class PSMethodHeuristic extends PSMethodRulebased {
 
-	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<RuleSet>(
+	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<>(
 			"HEURISTIC.FORWARD",
 			RuleSet.class);
-	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<RuleSet>(
+	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<>(
 			"HEURISTIC.BACKWARD",
 			RuleSet.class);
 
 	// do not move this line above the declarations of the Knowledgekinds
-	private static PSMethodHeuristic instance = new PSMethodHeuristic();
+	private static final PSMethodHeuristic instance = new PSMethodHeuristic();
 
 	private PSMethodHeuristic() {
 		super(FORWARD, BACKWARD);
@@ -93,10 +93,6 @@ public final class PSMethodHeuristic extends PSMethodRulebased {
 		}
 	}
 
-	/**
-	 * @param session
-	 * @param nob
-	 */
 	private void checkRulesFor(Session session, TerminologyObject nob) {
 		KnowledgeSlice knowledgeSlices = nob.getKnowledgeStore().getKnowledge(FORWARD);
 		if (knowledgeSlices != null) {

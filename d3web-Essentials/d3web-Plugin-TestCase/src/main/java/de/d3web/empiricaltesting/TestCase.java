@@ -27,6 +27,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 /**
  * @deprecated use {@link de.d3web.testcase.model.TestCase} instead
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public final class TestCase {
 
@@ -39,7 +40,7 @@ public final class TestCase {
 	 * Creates a new collection of {@link SequentialTestCase} instances.
 	 */
 	public TestCase() {
-		repository = new ArrayList<SequentialTestCase>();
+		repository = new ArrayList<>();
 	}
 
 	/**

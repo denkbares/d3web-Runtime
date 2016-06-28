@@ -43,7 +43,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @created 30.04.2011
 	 * @param termObject the object to look for the merged fact
 	 */
-	public Fact getMergedFact(TerminologyObject termObject);
+	Fact getMergedFact(TerminologyObject termObject);
 
 	/**
 	 * Returns a collection of all facts added for the specified termObject.
@@ -52,7 +52,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @created 30.04.2011
 	 * @param termObject the object to look for the facts
 	 */
-	public Collection<Fact> getAllFacts(TerminologyObject termObject);
+	Collection<Fact> getAllFacts(TerminologyObject termObject);
 
 	/**
 	 * Returns the merged fact for a specific problem or strategic solver if
@@ -62,7 +62,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @created 30.04.2011
 	 * @param object the object to look for the merged fact
 	 */
-	public Fact getMergedFact(TerminologyObject termObject, PSMethod psMethod);
+	Fact getMergedFact(TerminologyObject termObject, PSMethod psMethod);
 
 	/**
 	 * Returns the fact for a specific problem or strategic solver and a
@@ -75,7 +75,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @created 30.04.2011
 	 * @param object the object to look for the merged fact
 	 */
-	public Fact getFact(TerminologyObject termObject, PSMethod psMethod, Object source);
+	Fact getFact(TerminologyObject termObject, PSMethod psMethod, Object source);
 
 	/**
 	 * Returns if there are any facts available for the specified
@@ -85,7 +85,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @param termObject the object to look for facts
 	 * @return if there is at least one fact
 	 */
-	public boolean hasFact(TerminologyObject termObject);
+	boolean hasFact(TerminologyObject termObject);
 
 	/**
 	 * Returns if there are any facts available for the specified
@@ -97,7 +97,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @param method the solver to search for facts
 	 * @return if there is at least one fact
 	 */
-	public boolean hasFact(TerminologyObject termObject, PSMethod method);
+	boolean hasFact(TerminologyObject termObject, PSMethod method);
 
 	/**
 	 * Adds a new fact to this storage. If an other fact for the same
@@ -106,7 +106,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * 
 	 * @param fact the fact to be added
 	 */
-	public void add(Fact fact);
+	void add(Fact fact);
 
 	/**
 	 * Removes a fact from this storage. If the fact does not exists in the
@@ -114,7 +114,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * 
 	 * @param fact the fact to be removed
 	 */
-	public void remove(Fact fact);
+	void remove(Fact fact);
 
 	/**
 	 * Removes all facts with the specified source from this storage for the
@@ -124,7 +124,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @param termObject the terminology object to remove the facts from
 	 * @param source the fact source to be removed
 	 */
-	public void remove(TerminologyObject termObject, Object source);
+	void remove(TerminologyObject termObject, Object source);
 
 	/**
 	 * Removes all facts from this storage for the specified terminology object.
@@ -133,7 +133,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @param termObject the terminology object to remove the facts from
 	 * @param source the fact source to be removed
 	 */
-	public void remove(TerminologyObject termObject);
+	void remove(TerminologyObject termObject);
 
 	/**
 	 * Returns a list of all terminology objects that have been rated with
@@ -141,7 +141,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * 
 	 * @return the list of rated terminology objects
 	 */
-	public Collection<TerminologyObject> getValuedObjects();
+	Collection<TerminologyObject> getValuedObjects();
 
 	/**
 	 * Returns a collection of all problem and strategic solvers that are
@@ -151,5 +151,5 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * @param termObject the object to get the contributing solvers for
 	 * @return the contributing solver instances
 	 */
-	public Collection<PSMethod> getContributingPSMethods(TerminologyObject termObject);
+	Collection<PSMethod> getContributingPSMethods(TerminologyObject termObject);
 }

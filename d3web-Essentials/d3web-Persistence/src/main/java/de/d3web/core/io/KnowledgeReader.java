@@ -45,6 +45,6 @@ public interface KnowledgeReader {
 	 * @throws IOException when an IO errors occurs during reading the part of
 	 *         the knowledge base
 	 */
-	public void read(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException;
+	void read(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, InputStream stream, ProgressListener listerner) throws IOException;
 
 }

@@ -91,7 +91,7 @@ public class XCLRelation {
 		if (o instanceof XCLRelation) {
 			XCLRelation r = (XCLRelation) o;
 			return conditionedFinding.equals(r.conditionedFinding)
-					&& weight == r.weight && type.equals(r.type);
+					&& weight == r.weight && type == r.type;
 		}
 		return false;
 	}
@@ -130,6 +130,6 @@ public class XCLRelation {
 	 * @return if the relation if of expected type, false otherwise
 	 */
 	public boolean hasType(XCLRelationType type) {
-		return type.equals(this.type);
+		return type == this.type;
 	}
 }

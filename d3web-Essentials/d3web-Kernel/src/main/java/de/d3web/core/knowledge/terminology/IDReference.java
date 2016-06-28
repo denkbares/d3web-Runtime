@@ -34,5 +34,5 @@ public interface IDReference {
 	/**
 	 * @return the unique identifier of this object.
 	 */
-	public abstract String getId();
+	String getId();
 }

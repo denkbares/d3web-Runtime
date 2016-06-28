@@ -89,7 +89,7 @@ public class FormulaNumber implements FormulaNumberElement {
 	 */
 	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
-		return new LinkedList<TerminologyObject>();
+		return new LinkedList<>();
 	}
 
 	public Double getValue() {

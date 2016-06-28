@@ -32,7 +32,7 @@ import de.d3web.core.inference.KnowledgeSlice;
  */
 public class DefaultKnowledgeStore implements KnowledgeStore {
 
-	private final Map<KnowledgeKind<?>, KnowledgeSlice> entries = new HashMap<KnowledgeKind<?>, KnowledgeSlice>();
+	private final Map<KnowledgeKind<?>, KnowledgeSlice> entries = new HashMap<>();
 
 	@Override
 	public void addKnowledge(KnowledgeKind<?> kind, KnowledgeSlice slice) {

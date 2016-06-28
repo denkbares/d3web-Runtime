@@ -277,8 +277,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 */
 	private void initializeSearchModel(CostBenefitCaseObject caseObject) {
 		Session session = caseObject.getSession();
-		HashSet<Solution> allSolutions = new HashSet<Solution>();
-		HashSet<Target> allTargets = new HashSet<Target>();
+		HashSet<Solution> allSolutions = new HashSet<>();
+		HashSet<Target> allTargets = new HashSet<>();
 		SearchModel searchModel = new SearchModel(session);
 		List<StrategicSupport> strategicSupports = CostBenefitUtil.getStrategicSupports(session);
 		for (StrategicSupport strategicSupport : strategicSupports) {
@@ -323,9 +323,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private void addStrategicBenefit(Session session, HashSet<Target> allTargets, SearchModel searchModel) {
 		double totalbenefit = 0.0;
 		List<Question> finalQuestions = getFinalQuestions(session);
-		HashMap<Condition, Double> conditionValueCache = new HashMap<Condition, Double>();
+		HashMap<Condition, Double> conditionValueCache = new HashMap<>();
 
-		HashMap<QContainer, Target> targetMap = new HashMap<QContainer, Target>();
+		HashMap<QContainer, Target> targetMap = new HashMap<>();
 		for (Target t : allTargets) {
 			targetMap.put(t.getQContainers().get(0), t);
 			totalbenefit += t.getBenefit() / t.getCosts();
@@ -369,7 +369,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 													+ additiveValue);
 										}
 										else {
-											target = new Target(Arrays.asList(st.getQcontainer()));
+											target = new Target(Collections.singletonList(st.getQcontainer()));
 											target.setBenefit(additiveValue);
 											// log.info("Creating new target " +
 											// target
@@ -396,7 +396,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				t.getQContainers().get(0));
 		if (stateTransition == null) return;
 		Condition activationCondition = stateTransition.getActivationCondition();
-		List<Condition> terms = new LinkedList<Condition>();
+		List<Condition> terms = new LinkedList<>();
 		// Expand ands
 		if (activationCondition instanceof CondAnd) {
 			CondAnd condAnd = (CondAnd) activationCondition;
@@ -406,7 +406,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			terms.add(activationCondition);
 		}
 		// invert ContNots containing a CondEqual of QuestionOCs
-		for (Condition c : new LinkedList<Condition>(terms)) {
+		for (Condition c : new LinkedList<>(terms)) {
 			if (c instanceof CondNot) {
 				CondNot condNot = (CondNot) c;
 				if (condNot.getTerms().get(0) instanceof CondEqual) {
@@ -414,7 +414,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					if (condEqual.getQuestion() instanceof QuestionOC
 							&& condEqual.getValue() instanceof ChoiceValue) {
 						ChoiceValue value = (ChoiceValue) condEqual.getValue();
-						List<Condition> conds = new LinkedList<Condition>();
+						List<Condition> conds = new LinkedList<>();
 						for (Choice choice : ((QuestionOC) condEqual.getQuestion()).getAllAlternatives()) {
 							if (!choice.getName().equals(value.getChoiceID().getText())) {
 								conds.add(new CondEqual(condEqual.getQuestion(),
@@ -430,7 +430,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// spit ors, each subcondition is added to the list of
 		// conditions
 		// (ignoring the fact that one condition would be enough)
-		for (Condition condition : new LinkedList<Condition>(terms)) {
+		for (Condition condition : new LinkedList<>(terms)) {
 			if (condition instanceof CondOr) {
 				CondOr condOr = (CondOr) condition;
 				terms.remove(condOr);
@@ -449,7 +449,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	private static List<Question> getFinalQuestions(Session session) {
-		List<Question> finalQuestions = new LinkedList<Question>();
+		List<Question> finalQuestions = new LinkedList<>();
 		for (Question question : session.getKnowledgeBase().getManager().getQuestions()) {
 			Boolean value = question.getInfoStore().getValue(FINAL_QUESTION);
 			if (value) {
@@ -486,7 +486,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @return set of blocked QContainers
 	 */
 	public static Set<QContainer> getBlockedQContainers(Session session, boolean includeContraindicated, boolean includePermanentlyRelevant) {
-		Set<QContainer> result = new HashSet<QContainer>();
+		Set<QContainer> result = new HashSet<>();
 		Session emptySession = new CopiedSession(session);
 		Map<Question, Value> finalValues = getFinalValues(session);
 		// now all unmutable facts are added to the emptySession
@@ -517,11 +517,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					result.add(stateTransition.getQcontainer());
 				}
 			}
-			catch (NoAnswerException e) {
-				continue;
-			}
-			catch (UnknownAnswerException e) {
-				continue;
+			catch (NoAnswerException | UnknownAnswerException ignored) {
 			}
 		}
 		return result;
@@ -537,7 +533,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 *         specified session
 	 */
 	public static Map<Question, Value> getFinalValues(Session session) {
-		Map<Question, Value> finalValues = new HashMap<Question, Value>();
+		Map<Question, Value> finalValues = new HashMap<>();
 		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
 			if (q.getInfoStore().getValue(FINAL_QUESTION)) {
 				// check if q has not the init value
@@ -558,10 +554,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		CostBenefitCaseObject caseObject = session.getSessionObject(this);
-		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
+		Set<QContainer> answeredQuestionnaires = new HashSet<>();
 		List<QContainer> sequence = caseObject.getCurrentSequence() != null
 				? Arrays.asList(caseObject.getCurrentSequence())
-				: new LinkedList<QContainer>();
+				: new LinkedList<>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
@@ -612,7 +608,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				caseObject.getCurrentSequence()[caseObject.getCurrentPathIndex()];
 		if (!new Node(qc, null).isApplicable(session)) {
 			caseObject.resetPath();
-			return;
 		}
 	}
 
@@ -646,7 +641,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * created before setting this set are not affected
 	 * 
 	 * @created 17.09.2014
-	 * @param watchedQContainers
 	 */
 	public void setWatchSet(WatchSet watchedQContainers) {
 		this.watchSet = watchedQContainers;

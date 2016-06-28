@@ -50,11 +50,11 @@ public class DecoratedFactStorage implements FactStorage {
 	/**
 	 * Creates a new DecoratedFactStorage that covers the specified fact
 	 * storage.
-	 * 
-	 * @param storage the FactStorage to be covered.
+	 *
+	 * @param decoratedStorage the FactStorage to be covered.
 	 */
 	public DecoratedFactStorage(FactStorage decoratedStorage) {
-		this(new DefaultFactStorage(), decoratedStorage, new HashSet<TerminologyObject>());
+		this(new DefaultFactStorage(), decoratedStorage, new HashSet<>());
 	}
 
 	private DecoratedFactStorage(FactStorage covering, FactStorage decorated, Set<TerminologyObject> coveredObjects) {
@@ -66,7 +66,7 @@ public class DecoratedFactStorage implements FactStorage {
 	@Override
 	public DecoratedFactStorage copy() {
 		return new DecoratedFactStorage(
-				covering.copy(), decorated, new HashSet<TerminologyObject>(coveredObjects));
+				covering.copy(), decorated, new HashSet<>(coveredObjects));
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class DecoratedFactStorage implements FactStorage {
 
 	@Override
 	public Collection<TerminologyObject> getValuedObjects() {
-		Set<TerminologyObject> allObjects = new HashSet<TerminologyObject>(
+		Set<TerminologyObject> allObjects = new HashSet<>(
 				decorated.getValuedObjects());
 		allObjects.addAll(covering.getValuedObjects());
 		return allObjects;

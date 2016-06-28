@@ -29,5 +29,5 @@ public interface InterviewObject extends TerminologyObject {
 	 * @created 30.09.2010
 	 * @return default interview value
 	 */
-	public Indication getDefaultInterviewValue();
+	Indication getDefaultInterviewValue();
 }

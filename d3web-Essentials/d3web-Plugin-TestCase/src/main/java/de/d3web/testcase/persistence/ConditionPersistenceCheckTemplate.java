@@ -49,7 +49,7 @@ import de.d3web.testcase.model.TransformationException;
  */
 public class ConditionPersistenceCheckTemplate implements CheckTemplate {
 
-	private String conditionXml;
+	private final String conditionXml;
 	private Document document = null;
 
 	public ConditionPersistenceCheckTemplate(String conditionXml) {

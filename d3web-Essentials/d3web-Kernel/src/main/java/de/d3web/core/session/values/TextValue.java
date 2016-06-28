@@ -88,10 +88,7 @@ public class TextValue implements QuestionValue {
 			return false;
 		}
 		TextValue other = (TextValue) obj;
-		if (!value.equals(other.value)) {
-			return false;
-		}
-		return true;
+		return value.equals(other.value);
 	}
 
 	@Override

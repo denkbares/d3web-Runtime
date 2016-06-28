@@ -120,7 +120,7 @@ public class CondDState extends TerminalCondition {
 		}
 
 		if (this.getRatingState() != null) {
-			test = this.getRatingState().equals(otherCDS.getRatingState())
+			test = this.getRatingState() == otherCDS.getRatingState()
 					&& test;
 		}
 		else {

@@ -54,14 +54,14 @@ public class DiaFluxCaseObject implements SessionObject {
 
 	private final Session session;
 	private final FluxSolver fluxSolver;
-	private final List<FlowRun> runs = new ArrayList<FlowRun>();
-	private final Map<SnapshotNode, Long> latestSnapshotTime = new HashMap<SnapshotNode, Long>();
+	private final List<FlowRun> runs = new ArrayList<>();
+	private final Map<SnapshotNode, Long> latestSnapshotTime = new HashMap<>();
 
 	/**
 	 * Provide a set of edges from active nodes, but with still undefined conditions, that might
 	 * become "true" in the further interview process.
 	 */
-	private final Set<Edge> undefinedEdges = new HashSet<Edge>();
+	private final Set<Edge> undefinedEdges = new HashSet<>();
 
 	/**
 	 * The internal set of solutions suspected by still open paths
@@ -126,7 +126,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	 * @return all active nodes
 	 */
 	public Set<Node> getActiveNodes() {
-		Set<Node> activeNodes = new HashSet<Node>();
+		Set<Node> activeNodes = new HashSet<>();
 		for (FlowRun run : runs) {
 			activeNodes.addAll(run.getActiveNodes());
 		}
@@ -173,7 +173,7 @@ public class DiaFluxCaseObject implements SessionObject {
 
 		long maxTime = Long.MIN_VALUE;
 		for (Long time : values) {
-			maxTime = Math.max(maxTime, time.longValue());
+			maxTime = Math.max(maxTime, time);
 		}
 		return new Date(maxTime);
 	}
@@ -198,7 +198,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	 * @created 28.02.2011
 	 */
 	public Collection<SnapshotNode> getActivatedSnapshots() {
-		Collection<SnapshotNode> result = new HashSet<SnapshotNode>();
+		Collection<SnapshotNode> result = new HashSet<>();
 		for (FlowRun run : this.runs) {
 			for (SnapshotNode node : run.getActivatedNodesOfClass(SnapshotNode.class)) {
 				if (!run.isSnapshotBlocked(node, session)) {
@@ -214,7 +214,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	 * process. It also de-suspect all the solutions that are no longer in that list.
 	 */
 	public void updateSuspectedSolutions() {
-		Set<Node> startNodes = new HashSet<Node>();
+		Set<Node> startNodes = new HashSet<>();
 		for (Edge edge : undefinedEdges) {
 			startNodes.add(edge.getEndNode());
 		}
@@ -246,7 +246,7 @@ public class DiaFluxCaseObject implements SessionObject {
 
 	private Set<Solution> findPotentialSolutions(Set<Node> startNodes) {
 		Set<Node> nodes = findPotentialNodes(startNodes);
-		Set<Solution> solutions = new HashSet<Solution>();
+		Set<Solution> solutions = new HashSet<>();
 		for (Node node : nodes) {
 			// if node rates a solution positively, add the solution,
 			// otherwise continue to next node
@@ -265,7 +265,7 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	private Set<Node> findPotentialNodes(Set<Node> openNodes) {
-		Set<Node> closedNodes = new HashSet<Node>();
+		Set<Node> closedNodes = new HashSet<>();
 		boolean preciseMode = (fluxSolver.getSuggestMode() == SuggestMode.precise);
 
 		loopOpenNodes:

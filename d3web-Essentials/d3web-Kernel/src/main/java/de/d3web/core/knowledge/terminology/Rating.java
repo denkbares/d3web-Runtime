@@ -103,7 +103,7 @@ public class Rating implements Value {
 	 * @return true, if both states are equal; false otherwise
 	 */
 	public boolean hasState(State state) {
-		return this.state.equals(state);
+		return this.state == state;
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class Rating implements Value {
 		if (!(other instanceof Rating)) {
 			return false;
 		}
-		return this.state.equals(((Rating) other).state);
+		return this.state == ((Rating) other).state;
 	}
 
 	@Override

@@ -34,10 +34,10 @@ import de.d3web.core.session.blackboard.Facts;
  */
 public class PSMethodAbstraction extends PSMethodRulebased {
 
-	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<RuleSet>(
+	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<>(
 			"ABSTRACTION.FORWARD",
 			RuleSet.class);
-	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<RuleSet>(
+	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<>(
 			"ABSTRACTION.BACKWARD",
 			RuleSet.class);
 

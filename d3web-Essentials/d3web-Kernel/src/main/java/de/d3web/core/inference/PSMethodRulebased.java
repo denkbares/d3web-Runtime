@@ -41,8 +41,8 @@ import de.d3web.core.session.Session;
  */
 public abstract class PSMethodRulebased extends PSMethodAdapter {
 
-	private static final Map<Class<? extends PSMethodRulebased>, KnowledgeKind<RuleSet>> forwardKinds = new HashMap<Class<? extends PSMethodRulebased>, KnowledgeKind<RuleSet>>();
-	private static final Map<Class<? extends PSMethodRulebased>, KnowledgeKind<RuleSet>> backwardKinds = new HashMap<Class<? extends PSMethodRulebased>, KnowledgeKind<RuleSet>>();
+	private static final Map<Class<? extends PSMethodRulebased>, KnowledgeKind<RuleSet>> forwardKinds = new HashMap<>();
+	private static final Map<Class<? extends PSMethodRulebased>, KnowledgeKind<RuleSet>> backwardKinds = new HashMap<>();
 
 	public PSMethodRulebased(KnowledgeKind<RuleSet> forward, KnowledgeKind<RuleSet> backward) {
 		forwardKinds.put(getClass(), forward);
@@ -104,7 +104,7 @@ public abstract class PSMethodRulebased extends PSMethodAdapter {
 	}
 
 	private Set<TerminologyObject> getSourceObjects(TerminologyObject derivedObject, Session session) {
-		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		Set<TerminologyObject> result = new HashSet<>();
 		RuleSet rules = derivedObject.getKnowledgeStore().getKnowledge(getBackwardKind(this.getClass()));
 		if (rules == null) return Collections.emptySet();
 		for (Rule rule : rules.getRules()) {

@@ -35,10 +35,10 @@ import de.d3web.costbenefit.model.Path;
  */
 public class IDSPath implements Path {
 
-	private Stack<Node> stack = new Stack<Node>();
+	private final Stack<Node> stack = new Stack<>();
 	private double costs = 0;
 	private double negativeCosts = 0;
-	private Stack<Double> coststack = new Stack<Double>();
+	private final Stack<Double> coststack = new Stack<>();
 
 	@Override
 	public double getCosts() {
@@ -47,9 +47,6 @@ public class IDSPath implements Path {
 
 	/**
 	 * Adds a new Node to the IDSPath and updates the costs
-	 * 
-	 * @param node
-	 * @param session
 	 */
 	public void add(Node node, Session session) {
 		stack.push(node);
@@ -71,8 +68,6 @@ public class IDSPath implements Path {
 
 	/**
 	 * Returns a copy of this path
-	 * 
-	 * @return
 	 */
 	public IDSPath copy() {
 		IDSPath copy = new IDSPath();
@@ -91,9 +86,6 @@ public class IDSPath implements Path {
 
 	/**
 	 * Checks if the Node is contained in the path
-	 * 
-	 * @param node
-	 * @return
 	 */
 	public boolean contains(Node node) {
 		return stack.contains(node);
@@ -101,8 +93,6 @@ public class IDSPath implements Path {
 
 	/**
 	 * Returns the last node added to the path.
-	 * 
-	 * @return
 	 */
 	public Node getLastNode() {
 		return stack.peek();
@@ -114,7 +104,7 @@ public class IDSPath implements Path {
 
 	@Override
 	public List<QContainer> getPath() {
-		LinkedList<QContainer> list = new LinkedList<QContainer>();
+		LinkedList<QContainer> list = new LinkedList<>();
 		for (Node n : stack) {
 			list.add(n.getQContainer());
 		}

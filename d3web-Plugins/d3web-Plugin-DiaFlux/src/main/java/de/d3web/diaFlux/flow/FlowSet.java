@@ -34,9 +34,9 @@ import de.d3web.core.inference.KnowledgeSlice;
  */
 public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 
-	private final Map<String, Flow> map = new HashMap<String, Flow>();
+	private final Map<String, Flow> map = new HashMap<>();
 
-	private final DefaultMultiMap<String, ComposedNode> calledFlowToComposedNode = new DefaultMultiMap<String, ComposedNode>();
+	private final DefaultMultiMap<String, ComposedNode> calledFlowToComposedNode = new DefaultMultiMap<>();
 
 	public boolean contains(String name) {
 		return map.containsKey(name);

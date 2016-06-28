@@ -162,7 +162,7 @@ public final class RuleFactory {
 	public static Rule createIndicationRule(
 			QASet singleIndication,
 			Condition theCondition) {
-		List<QASet> ind = new LinkedList<QASet>();
+		List<QASet> ind = new LinkedList<>();
 		ind.add(singleIndication);
 		return createIndicationRule(ind, theCondition, null);
 	}
@@ -257,7 +257,7 @@ public final class RuleFactory {
 	public static Rule createInstantIndicationRule(
 			QASet singleIndication,
 			Condition theCondition) {
-		List<QASet> ind = new ArrayList<QASet>();
+		List<QASet> ind = new ArrayList<>();
 		ind.add(singleIndication);
 		return createInstantIndicationRule(ind, theCondition, null);
 	}

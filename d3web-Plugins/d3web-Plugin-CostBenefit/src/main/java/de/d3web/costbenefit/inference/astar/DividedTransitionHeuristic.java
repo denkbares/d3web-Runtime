@@ -116,10 +116,10 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		sessionObject.finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
 		// otherwise prepare some information
 		sessionObject.knowledgeBase = kb;
-		sessionObject.transitionalStateTransitions = new LinkedList<StateTransition>();
+		sessionObject.transitionalStateTransitions = new LinkedList<>();
 		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
 		sessionObject.answeredSession = CostBenefitUtil.createSearchCopy(model.getSession());
-		sessionObject.valueCache = new ConcurrentHashMap<ValueTransition, Value>();
+		sessionObject.valueCache = new ConcurrentHashMap<>();
 		// set normal values of all questions in transitional qcontainers
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
 			CostBenefitUtil.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
@@ -147,13 +147,13 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		if (entry == null) {
 			entry = new ActivationCacheEntry();
 			entry.targetMap = getTargetMap(sessionObject, activationCondition);
-			entry.objects = new ArrayList<TerminologyObject>(
+			entry.objects = new ArrayList<>(
 					activationCondition.getTerminalObjects());
 			entry.costFunction = compile(activationCondition, entry.objects, entry.targetMap);
 			sessionObject.costCache.put(activationCondition, entry);
 		}
 
-		ArrayList<Value> key = new ArrayList<Value>(entry.objects.size());
+		ArrayList<Value> key = new ArrayList<>(entry.objects.size());
 		for (TerminologyObject object : entry.objects) {
 			if (object instanceof Question) {
 				key.add(state.getValue((Question) object));
@@ -166,7 +166,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		return entry.costFunction.eval(key);
 	}
 
-	private static interface CompiledCostsFunction {
+	private interface CompiledCostsFunction {
 
 		void setConflicting(int index);
 
@@ -195,7 +195,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 		@Override
 		public Set<Integer> getIndexes() {
-			Set<Integer> indexes = new HashSet<Integer>();
+			Set<Integer> indexes = new HashSet<>();
 			for (CompiledCostsFunction child : children) {
 				indexes.addAll(child.getIndexes());
 			}
@@ -232,7 +232,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 		@Override
 		public Set<Integer> getIndexes() {
-			Set<Integer> indexes = new HashSet<Integer>();
+			Set<Integer> indexes = new HashSet<>();
 			for (CompiledCostsFunction child : children) {
 				indexes.addAll(child.getIndexes());
 			}
@@ -284,7 +284,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 		@Override
 		public Set<Integer> getIndexes() {
-			Set<Integer> indexes = new HashSet<Integer>();
+			Set<Integer> indexes = new HashSet<>();
 			indexes.add(index);
 			return indexes;
 		}
@@ -326,7 +326,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 		@Override
 		public Set<Integer> getIndexes() {
-			Set<Integer> indexes = new HashSet<Integer>();
+			Set<Integer> indexes = new HashSet<>();
 			indexes.add(index);
 			return indexes;
 		}
@@ -344,7 +344,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 			CompiledCostsFunction[] children =
 					getCompiledChildren((CondAnd) cond, objects, targetMap);
 			// mark conds of the same question as conflicting
-			Map<Integer, CompiledCostsFunction> map = new HashMap<Integer, CompiledCostsFunction>();
+			Map<Integer, CompiledCostsFunction> map = new HashMap<>();
 			for (CompiledCostsFunction function : children) {
 				Set<Integer> indexes = function.getIndexes();
 				// only for condand more than one index is allowed, but condand
@@ -428,8 +428,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	}
 
 	private static Map<Value, Double> getCosts(Map<Question, Map<Value, Double>> targetMap, QuestionChoice question) {
-		Map<Value, Double> questionMap = targetMap.get(question);
-		return questionMap;
+		return targetMap.get(question);
 	}
 
 	/**
@@ -444,14 +443,13 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	 * @param preparingTransition the state transition possibly used to prepare
 	 *        the target
 	 * @param stateQuestion the question represents the state to be estimated
-	 * @param target the target QContainer to be prepared
 	 * @return the minimal costs per question of the target's precondition
 	 */
 	private static double calculateCosts(StateTransition preparingTransition, Set<Question> set, Question stateQuestion) {
 
 		// if no question has been found, return infinite costs
 		// because this state transition cannot set up the target
-		if (set.size() == 0) {
+		if (set.isEmpty()) {
 			return Double.POSITIVE_INFINITY;
 		}
 
@@ -483,13 +481,10 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	 * c) the set values are common with the required values
 	 * 
 	 * @created 23.05.2012
-	 * @param preparingTransition
-	 * @param activationCondition
-	 * @return
 	 */
 	private static Map<Question, Value> getQuestionSet(DividedTransitionHeuristicSessionObject sessionObject, StateTransition preparingTransition, Condition activationCondition) {
 		Collection<? extends TerminologyObject> terminalObjects = activationCondition.getTerminalObjects();
-		Map<Question, Value> set = new HashMap<Question, Value>();
+		Map<Question, Value> set = new HashMap<>();
 		for (ValueTransition vt : preparingTransition.getPostTransitions()) {
 			Question question = vt.getQuestion();
 			// the question is relevant
@@ -529,7 +524,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	private static Set<Value> calculateRequiredValues(Question question, Condition condition) {
 		if (condition instanceof CondAnd) {
 			CondAnd cand = (CondAnd) condition;
-			Set<Value> result = new HashSet<Value>();
+			Set<Value> result = new HashSet<>();
 			for (Condition subCondition : cand.getTerms()) {
 				result.addAll(calculateRequiredValues(question, subCondition));
 			}
@@ -537,7 +532,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		}
 		else if (condition instanceof CondOr) {
 			CondOr cor = (CondOr) condition;
-			Set<Value> result = new HashSet<Value>();
+			Set<Value> result = new HashSet<>();
 			for (Condition subCondition : cor.getTerms()) {
 				result.addAll(calculateRequiredValues(question, subCondition));
 			}
@@ -547,7 +542,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 			CondEqual c = (CondEqual) condition;
 			if (!c.getQuestion().equals(question)) return Collections.emptySet();
 			ChoiceValue value = (ChoiceValue) c.getValue();
-			Set<Value> result = new HashSet<Value>();
+			Set<Value> result = new HashSet<>();
 			result.add(value);
 			return result;
 		}
@@ -560,7 +555,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 			}
 			if (!cnot.getTerminalObjects().iterator().next().equals(question)) return Collections.emptySet();
 			// use all choices as values
-			Set<Value> result = new HashSet<Value>();
+			Set<Value> result = new HashSet<>();
 			for (Choice choice : ((QuestionOC) question).getAllAlternatives()) {
 				result.add(new ChoiceValue(choice));
 			}
@@ -577,7 +572,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	}
 
 	private static HashMap<Question, Map<Value, Double>> getTargetMap(DividedTransitionHeuristicSessionObject sessionObject, Condition activationCondition) {
-		HashMap<Question, Map<Value, Double>> targetMap = new HashMap<Question, Map<Value, Double>>();
+		HashMap<Question, Map<Value, Double>> targetMap = new HashMap<>();
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
 			for (ValueTransition vt : st.getPostTransitions()) {
 				Question stateQuestion = vt.getQuestion();
@@ -585,7 +580,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				if (sessionObject.finalValues.containsKey(stateQuestion)) continue;
 				Map<Value, Double> questionMap = targetMap.get(stateQuestion);
 				if (questionMap == null) {
-					questionMap = new HashMap<Value, Double>();
+					questionMap = new HashMap<>();
 					targetMap.put(stateQuestion, questionMap);
 				}
 				Map<Question, Value> set = getQuestionSet(sessionObject, st, activationCondition);
@@ -600,7 +595,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 			}
 		}
 		for (Entry<Question, Value> entry : sessionObject.finalValues.entrySet()) {
-			Map<Value, Double> valueMap = new HashMap<Value, Double>();
+			Map<Value, Double> valueMap = new HashMap<>();
 			valueMap.put(entry.getValue(), 0.0);
 			targetMap.put(entry.getKey(), valueMap);
 		}

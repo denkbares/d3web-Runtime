@@ -41,7 +41,7 @@ import de.d3web.utils.Log;
  */
 public class DefaultSessionRepository implements SessionRepository {
 
-	protected Map<String, SessionRecord> sessionRecords = new HashMap<String, SessionRecord>();
+	protected Map<String, SessionRecord> sessionRecords = new HashMap<>();
 
 	@Override
 	public boolean add(SessionRecord sessionRecord) {
@@ -108,9 +108,9 @@ public class DefaultSessionRepository implements SessionRepository {
 	}
 
 	private Collection<SessionRecord> getSessionRecords(Collection<SessionRecord> sessionRecords, Filter filter) {
-		List<Filter> simpleFilters = new LinkedList<Filter>();
-		List<OrFilter> orFilters = new LinkedList<OrFilter>();
-		List<Filter> complexFilters = new LinkedList<Filter>();
+		List<Filter> simpleFilters = new LinkedList<>();
+		List<OrFilter> orFilters = new LinkedList<>();
+		List<Filter> complexFilters = new LinkedList<>();
 		sortFilters(filter, simpleFilters, orFilters, complexFilters);
 		// shrinks the possible matches by applying simply filters first
 		Collection<SessionRecord> matchingRecords = filterRecords(sessionRecords,
@@ -119,10 +119,10 @@ public class DefaultSessionRepository implements SessionRepository {
 		// primarily the cheap filters:
 		// for example: (A and B) or (C and D)
 		for (OrFilter or : orFilters) {
-			Collection<SessionRecord> temp = new HashSet<SessionRecord>();
+			Collection<SessionRecord> temp = new HashSet<>();
 			temp.addAll(getSessionRecords(matchingRecords, or.getF1()));
 			temp.addAll(getSessionRecords(matchingRecords, or.getF2()));
-			matchingRecords = new LinkedList<SessionRecord>(temp);
+			matchingRecords = new LinkedList<>(temp);
 		}
 		// at last all non-optimizable Filters are used
 		matchingRecords = filterRecords(matchingRecords,
@@ -135,7 +135,7 @@ public class DefaultSessionRepository implements SessionRepository {
 	 * @return a Collection of all SessionRecords, being matched by all filters
 	 */
 	private static Collection<SessionRecord> filterRecords(Collection<SessionRecord> sessionRecords, Filter... filters) {
-		Collection<SessionRecord> matchingRecords = new LinkedList<SessionRecord>();
+		Collection<SessionRecord> matchingRecords = new LinkedList<>();
 		next: for (SessionRecord sr : sessionRecords) {
 			for (Filter filter : filters) {
 				if (!filter.accept(sr)) {

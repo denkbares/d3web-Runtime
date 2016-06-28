@@ -53,7 +53,7 @@ public class DefaultBlackboard implements Blackboard {
 	private FactStorage valueStorage;
 	private FactStorage interviewStorage;
 	private boolean sourceRecording = true;
-	private final List<BlackboardListener> listeners = new LinkedList<BlackboardListener>();
+	private final List<BlackboardListener> listeners = new LinkedList<>();
 
 	@Override
 	public boolean isSourceRecording() {
@@ -183,7 +183,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Collection<Question> getValuedQuestions() {
-		Collection<Question> result = new LinkedList<Question>();
+		Collection<Question> result = new LinkedList<>();
 		for (TerminologyObject object : getValuedObjects()) {
 			if (object instanceof Question) {
 				result.add((Question) object);
@@ -194,7 +194,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public Collection<Solution> getValuedSolutions() {
-		Collection<Solution> result = new LinkedList<Solution>();
+		Collection<Solution> result = new LinkedList<>();
 		for (TerminologyObject object : getValuedObjects()) {
 			if (object instanceof Solution) {
 				result.add((Solution) object);
@@ -272,7 +272,7 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public Collection<InterviewObject> getInterviewObjects() {
 		Collection<TerminologyObject> objects = this.getInterviewStorage().getValuedObjects();
-		ArrayList<InterviewObject> result = new ArrayList<InterviewObject>(objects.size());
+		ArrayList<InterviewObject> result = new ArrayList<>(objects.size());
 		for (TerminologyObject object : objects) {
 			result.add((InterviewObject) object);
 		}
@@ -317,7 +317,7 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public List<Question> getAnsweredQuestions() {
-		List<Question> questions = new LinkedList<Question>();
+		List<Question> questions = new LinkedList<>();
 		// for (Question q :
 		// session.getKnowledgeBase().getManager().getQuestions()) {
 		for (TerminologyObject object : getValuedObjects()) {
@@ -333,8 +333,8 @@ public class DefaultBlackboard implements Blackboard {
 
 	@Override
 	public List<Solution> getSolutions(Rating.State state) {
-		List<Solution> result = new LinkedList<Solution>();
-		if (state.equals(Rating.State.UNCLEAR)) {
+		List<Solution> result = new LinkedList<>();
+		if (state == State.UNCLEAR) {
 			// if the state is unclear
 			// we can have to look at all objects
 			for (Solution diag : getSession().getKnowledgeBase().getManager().getSolutions()) {

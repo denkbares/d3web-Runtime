@@ -21,7 +21,6 @@ package de.d3web.plugin.io.fragments;
 import org.w3c.dom.Element;
 
 import de.d3web.core.inference.PSConfig;
-import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Autodetect;
 
 /**
@@ -32,7 +31,7 @@ import de.d3web.plugin.Autodetect;
  */
 public class DummyPSConfig extends PSConfig {
 
-	private Element element;
+	private final Element element;
 
 	public Element getElement() {
 		return element;
@@ -47,13 +46,9 @@ public class DummyPSConfig extends PSConfig {
 
 	@Override
 	public Autodetect getAutodetect() {
-		return new Autodetect() {
-
-			@Override
-			public boolean check(KnowledgeBase kb) {
-				// PSMethod cannot be added, so autodetect always fails
-				return false;
-			}
+		return kb -> {
+			// PSMethod cannot be added, so autodetect always fails
+			return false;
 		};
 	}
 

@@ -35,13 +35,13 @@ public class DefaultInfoStore implements InfoStore {
 	private static final String KEY_MUST_NOT_BE_NULL = "The key must not be null.";
 
 	private final Map<Pair<Property<?>, Locale>, Object> entries =
-			new HashMap<Pair<Property<?>, Locale>, Object>();
+			new HashMap<>();
 
 	@Override
 	public Collection<Triple<Property<?>, Locale, Object>> entries() {
-		Collection<Triple<Property<?>, Locale, Object>> result = new LinkedList<Triple<Property<?>, Locale, Object>>();
+		Collection<Triple<Property<?>, Locale, Object>> result = new LinkedList<>();
 		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
-			result.add(new Triple<Property<?>, Locale, Object>(
+			result.add(new Triple<>(
 					entry.getKey().getA(),
 					entry.getKey().getB(),
 					entry.getValue()));
@@ -51,7 +51,7 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key) {
-		Map<Locale, StoredType> result = new HashMap<Locale, StoredType>();
+		Map<Locale, StoredType> result = new HashMap<>();
 		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
 			if (entry.getKey().getA() == key) {
 				result.put(entry.getKey().getB(), key.castToStoredValue(entry.getValue()));
@@ -110,7 +110,7 @@ public class DefaultInfoStore implements InfoStore {
 	}
 
 	private <StoredType> Pair<Property<?>, Locale> createEntryKey(Property<StoredType> key, Locale language) {
-		return new Pair<Property<?>, Locale>(key, language);
+		return new Pair<>(key, language);
 	}
 
 	@Override

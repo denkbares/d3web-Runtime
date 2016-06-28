@@ -61,7 +61,7 @@ public class InterviewPSConfigHandler extends DefaultPSConfigHandler {
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		PSConfig psconfig = (PSConfig) super.read(element, persistence);
 		PSMethodInterview psm = (PSMethodInterview) psconfig.getPsMethod();
-		List<Object> fragments = new ArrayList<Object>();
+		List<Object> fragments = new ArrayList<>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			fragments.add(persistence.readFragment(e));
 		}

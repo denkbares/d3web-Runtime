@@ -34,10 +34,10 @@ import de.d3web.core.session.blackboard.Facts;
  */
 public class PSMethodStrategic extends PSMethodRulebased {
 
-	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<RuleSet>(
+	public final static KnowledgeKind<RuleSet> FORWARD = new KnowledgeKind<>(
 			"STRATEGIC.FORWARD",
 			RuleSet.class);
-	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<RuleSet>(
+	public final static KnowledgeKind<RuleSet> BACKWARD = new KnowledgeKind<>(
 			"STRATEGIC.BACKWARD",
 			RuleSet.class);
 	// do not move this line above the declarations of the Knowledgekinds

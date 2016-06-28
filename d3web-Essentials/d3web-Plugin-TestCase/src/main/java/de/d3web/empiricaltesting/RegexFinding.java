@@ -35,7 +35,7 @@ import de.d3web.testcase.model.Check;
 @Deprecated
 public class RegexFinding implements Comparable<RegexFinding>, Check {
 
-	private Question question;
+	private final Question question;
 	private String regex;
 
 	public RegexFinding(Question question, String regex) {

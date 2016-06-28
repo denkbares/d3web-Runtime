@@ -51,7 +51,7 @@ public interface Blackboard {
 	 * 
 	 * @return the session of this blackboard
 	 */
-	public Session getSession();
+	Session getSession();
 
 	/**
 	 * Adds a new value fact to this blackboard. If an other fact for the same
@@ -65,7 +65,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void addValueFact(Fact fact) throws SessionTerminatedException;
+	void addValueFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes a value fact from this blackboard. If the fact does not exists in
@@ -78,7 +78,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeValueFact(Fact fact) throws SessionTerminatedException;
+	void removeValueFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes all value facts with the specified source from this blackboard
@@ -93,7 +93,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeValueFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
+	void removeValueFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
 
 	/**
 	 * Returns the value of an {@link ValueObject}. The method never returns
@@ -105,7 +105,7 @@ public interface Blackboard {
 	 * @param valueObject the object to get the value for
 	 * @return Value the current value for this object
 	 */
-	public Value getValue(ValueObject valueObject);
+	Value getValue(ValueObject valueObject);
 
 	/**
 	 * Returns the merged fact for all value facts of the specified terminology
@@ -115,7 +115,7 @@ public interface Blackboard {
 	 *        for
 	 * @return the merged fact
 	 */
-	public Fact getValueFact(TerminologyObject valueObject);
+	Fact getValueFact(TerminologyObject valueObject);
 
 	/**
 	 * Returns a collection of all terminology objects that have a value. This
@@ -125,7 +125,7 @@ public interface Blackboard {
 	 * 
 	 * @return the collection of valued terminology objects
 	 */
-	public Collection<TerminologyObject> getValuedObjects();
+	Collection<TerminologyObject> getValuedObjects();
 
 	/**
 	 * Returns a collection of all questions that have a value. This means this
@@ -134,7 +134,7 @@ public interface Blackboard {
 	 * 
 	 * @return the collection of valued questions
 	 */
-	public Collection<Question> getValuedQuestions();
+	Collection<Question> getValuedQuestions();
 
 	/**
 	 * Returns a collection of all diagnoses that have a value. This means this
@@ -143,7 +143,7 @@ public interface Blackboard {
 	 * 
 	 * @return the collection of valued diagnoses
 	 */
-	public Collection<Solution> getValuedSolutions();
+	Collection<Solution> getValuedSolutions();
 
 	/**
 	 * Adds a new interview fact to this blackboard. If an other interview fact
@@ -157,7 +157,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void addInterviewFact(Fact fact) throws SessionTerminatedException;
+	void addInterviewFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes a interview fact from this blackboard. If the interview fact does
@@ -170,7 +170,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeInterviewFact(Fact fact) throws SessionTerminatedException;
+	void removeInterviewFact(Fact fact) throws SessionTerminatedException;
 
 	/**
 	 * Removes all interview facts with the specified source from this
@@ -186,7 +186,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeInterviewFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
+	void removeInterviewFact(TerminologyObject terminologyObject, Object source) throws SessionTerminatedException;
 
 	/**
 	 * Returns all interview facts from this blackboard for the specified
@@ -198,7 +198,7 @@ public interface Blackboard {
 	 *        facts from
 	 * @return collection of interview facts
 	 */
-	public Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject);
+	Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject);
 
 	/**
 	 * Removes all interview facts from this blackboard for the specified
@@ -213,7 +213,7 @@ public interface Blackboard {
 	 *         propagation frame. In this case the exception is thrown when the
 	 *         propagation will be committed using {@link #commitPropagation()}
 	 */
-	public void removeInterviewFacts(TerminologyObject terminologyObject) throws SessionTerminatedException;
+	void removeInterviewFacts(TerminologyObject terminologyObject) throws SessionTerminatedException;
 
 	/**
 	 * Returns the merged fact for all interview facts of the specified
@@ -223,7 +223,7 @@ public interface Blackboard {
 	 *        for
 	 * @return the merged fact
 	 */
-	public Fact getInterviewFact(TerminologyObject terminologyObject);
+	Fact getInterviewFact(TerminologyObject terminologyObject);
 
 	/**
 	 * Returns a collection of all terminology objects that have been rated for
@@ -233,7 +233,7 @@ public interface Blackboard {
 	 * 
 	 * @return the collection of interview rated terminology objects
 	 */
-	public Collection<InterviewObject> getInterviewObjects();
+	Collection<InterviewObject> getInterviewObjects();
 
 	/**
 	 * Returns the current rating of the diagnosis. The returned rating is the
@@ -245,7 +245,7 @@ public interface Blackboard {
 	 * @param solution the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
-	public Rating getRating(Solution solution);
+	Rating getRating(Solution solution);
 
 	/**
 	 * Returns the Value of a {@link ValueObject}, calculated by the specified
@@ -259,7 +259,7 @@ public interface Blackboard {
 	 * @param psmethod PSMethod
 	 * @return Value the current value for this object and psmethod
 	 */
-	public Value getValue(ValueObject object, PSMethod psmethod);
+	Value getValue(ValueObject object, PSMethod psmethod);
 
 	/**
 	 * Returns the Value of a {@link ValueObject}, calculated by the specified
@@ -274,7 +274,7 @@ public interface Blackboard {
 	 * @param source the source object that derived that value
 	 * @return Value the current value for this object, psmethod and source
 	 */
-	public Value getValue(ValueObject object, PSMethod psmethod, Object source);
+	Value getValue(ValueObject object, PSMethod psmethod, Object source);
 
 	/**
 	 * Returns the Value of a Solution, calculated by the specified psmethod.
@@ -286,7 +286,7 @@ public interface Blackboard {
 	 * @param psmethod PSMethod
 	 * @return Rating
 	 */
-	public Rating getRating(Solution solution, PSMethod psmethod);
+	Rating getRating(Solution solution, PSMethod psmethod);
 
 	/**
 	 * Returns the current indication state of the interview element. The
@@ -299,16 +299,15 @@ public interface Blackboard {
 	 * @param interviewElement the question to take the rating from
 	 * @return the indication of the interview element
 	 */
-	public Indication getIndication(InterviewObject interviewElement);
+	Indication getIndication(InterviewObject interviewElement);
 
 	/**
 	 * Return a list of all answered questions.
 	 * 
-	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 11.05.2010
 	 * @return List of answered questions
 	 */
-	public List<Question> getAnsweredQuestions();
+	List<Question> getAnsweredQuestions();
 
 	/**
 	 * Returns all {@link Solution} instances, that hold the specified
@@ -317,7 +316,7 @@ public interface Blackboard {
 	 * @param state the Rating the diagnoses must have to be returned
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
-	public List<Solution> getSolutions(Rating.State state);
+	List<Solution> getSolutions(Rating.State state);
 
 	/**
 	 * Returns the Value Fact of one {@link PSMethod} of a
@@ -411,7 +410,7 @@ public interface Blackboard {
 	 */
 	void removeBlackboardListner(BlackboardListener listener);
 
-	public abstract void setSourceRecording(boolean autosaveSource);
+	void setSourceRecording(boolean autosaveSource);
 
-	public abstract boolean isSourceRecording();
+	boolean isSourceRecording();
 }

@@ -35,7 +35,7 @@ public class EdgeMap implements KnowledgeSlice {
 	private final List<Edge> edges;
 
 	public EdgeMap() {
-		this.edges = new ArrayList<Edge>();
+		this.edges = new ArrayList<>();
 	}
 
 	public void addEdge(Edge edge) {
@@ -50,7 +50,7 @@ public class EdgeMap implements KnowledgeSlice {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
+		result = prime * result + edges.hashCode();
 		return result;
 	}
 
@@ -60,11 +60,7 @@ public class EdgeMap implements KnowledgeSlice {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		EdgeMap other = (EdgeMap) obj;
-		if (edges == null) {
-			if (other.edges != null) return false;
-		}
-		else if (!edges.equals(other.edges)) return false;
-		return true;
+		return edges.equals(other.edges);
 	}
 
 	@Override

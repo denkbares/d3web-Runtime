@@ -31,11 +31,8 @@ public class DefaultSolutionRaterHandler implements FragmentHandler<KnowledgeBas
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("solutionRater")
-				&& element.getAttribute("name").equals("DefaultSolutionRater")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("solutionRater")
+				&& element.getAttribute("name").equals("DefaultSolutionRater");
 	}
 
 	@Override

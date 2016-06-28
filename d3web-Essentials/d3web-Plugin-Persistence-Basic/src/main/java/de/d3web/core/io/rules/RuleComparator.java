@@ -56,7 +56,7 @@ public final class RuleComparator implements Comparator<Rule> {
 	}
 
 	public int compareIDObjectLists(Collection<? extends TerminologyObject> terminalObjects, Collection<? extends TerminologyObject> terminalObjects2) {
-		List<TerminologyObject> allTerminalObjects = new LinkedList<TerminologyObject>();
+		List<TerminologyObject> allTerminalObjects = new LinkedList<>();
 		allTerminalObjects.addAll(terminalObjects);
 		allTerminalObjects.addAll(terminalObjects2);
 		Collections.sort(allTerminalObjects, new NamedObjectComparator());

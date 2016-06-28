@@ -40,5 +40,5 @@ public interface SessionObjectSource<T extends SessionObject> {
 	 * 
 	 * @return the created session object for this instance
 	 */
-	public T createSessionObject(Session session);
+	T createSessionObject(Session session);
 }

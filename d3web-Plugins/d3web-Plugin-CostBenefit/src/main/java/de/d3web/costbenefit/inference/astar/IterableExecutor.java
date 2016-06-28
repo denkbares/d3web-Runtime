@@ -66,8 +66,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		@Override
 		public T call() throws Exception {
 			try {
-				T result = callable.call();
-				return result;
+				return callable.call();
 			}
 			finally {
 				addFinishedWorker(this);
@@ -98,7 +97,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 			Log.info("created multicore thread pool of size " + threadCount);
 		}
 		// and return new executor based on the thread pool
-		return new IterableExecutor<T>(threadPool);
+		return new IterableExecutor<>(threadPool);
 	}
 
 	/**

@@ -188,7 +188,7 @@ public class NumericalIntervalHandler implements FragmentHandler<KnowledgeBase> 
 			return getIntervall(element);
 		}
 		else if (element.getNodeName().equals(GROUPTAG)) {
-			List<NumericalInterval> list = new ArrayList<NumericalInterval>();
+			List<NumericalInterval> list = new ArrayList<>();
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
 			for (Element child : childNodes) {
 				list.add((NumericalInterval) read(child, persistence));

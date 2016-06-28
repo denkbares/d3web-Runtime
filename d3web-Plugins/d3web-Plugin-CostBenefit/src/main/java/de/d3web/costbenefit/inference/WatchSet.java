@@ -18,7 +18,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
  */
 public class WatchSet {
 
-	private final Set<QContainer> qContainers = new HashSet<QContainer>();
+	private final Set<QContainer> qContainers = new HashSet<>();
 
 	public boolean addQContainer(QContainer qContainer) {
 		return qContainers.add(qContainer);

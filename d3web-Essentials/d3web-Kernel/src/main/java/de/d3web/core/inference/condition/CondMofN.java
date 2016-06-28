@@ -134,9 +134,6 @@ public class CondMofN extends NonTerminalCondition {
 		if (max != other.max) {
 			return false;
 		}
-		if (min != other.min) {
-			return false;
-		}
-		return true;
+		return min == other.min;
 	}
 }

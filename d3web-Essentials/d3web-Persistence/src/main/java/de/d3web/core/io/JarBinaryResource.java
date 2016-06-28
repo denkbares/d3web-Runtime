@@ -37,9 +37,9 @@ import de.d3web.core.knowledge.Resource;
  */
 public class JarBinaryResource implements Resource {
 
-	private int size;
-	private String entryPath;
-	private File file;
+	private final int size;
+	private final String entryPath;
+	private final File file;
 	private final Cipher cipher;
 
 	public JarBinaryResource(ZipEntry entry, File zipfile, Cipher cipher) throws IOException {

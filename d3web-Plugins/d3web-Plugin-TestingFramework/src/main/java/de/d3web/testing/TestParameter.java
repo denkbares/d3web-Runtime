@@ -33,11 +33,11 @@ public class TestParameter {
 
 	public enum Type {
 		String, Regex, Number, Percentage, Enum
-	};
+	}
 
 	public enum Mode {
 		Mandatory, Optional
-	};
+	}
 
 	private final Type type;
 	private final String name;
@@ -76,7 +76,7 @@ public class TestParameter {
 
 	@Override
 	public String toString() {
-		return "\"" + name + "\" (" + type.toString() + ", " + mode.toString() + "): "
+		return "\"" + name + "\" (" + type + ", " + mode + "): "
 				+ description;
 	}
 
@@ -86,49 +86,52 @@ public class TestParameter {
 	 * 
 	 * 
 	 * @created 15.10.2012
-	 * @param value
+	 * @param value the value to check
 	 * @return Compliance of the string to the parameter type
 	 */
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public boolean checkParameterValue(String value) {
 
-		if (value == null || value.trim().length() == 0) {
+		if (value == null || value.trim().isEmpty()) {
 			return false;
 		}
 
 		// check whether it is a valid regex
-		if (type.equals(Type.Regex)) {
-			try {
-				Pattern.compile(value);
-			}
-			catch (PatternSyntaxException e) {
+		switch (type) {
+			case Regex:
+				try {
+					Pattern.compile(value);
+				}
+				catch (PatternSyntaxException e) {
+					return false;
+				}
+				break;
+			// check whether it is a valid number
+			case Number:
+				try {
+					Double.parseDouble(value);
+				}
+				catch (NumberFormatException e) {
+					return false;
+				}
+				break;
+			// check whether it is a valid percentage or fraction
+			case Percentage:
+				try {
+					Strings.parsePercentage(value);
+				}
+				catch (NumberFormatException e) {
+					return false;
+				}
+				break;
+			// check, if a valid option has been supplied for
+			case Enum:
+				for (String string : options) {
+					if (value.equalsIgnoreCase(string)) {
+						return true;
+					}
+				}
 				return false;
-			}
-		}
-		// check whether it is a valid number
-		else if (type.equals(Type.Number)) {
-			try {
-				Double.parseDouble(value);
-			}
-			catch (NumberFormatException e) {
-				return false;
-			}
-		}
-		// check whether it is a valid percentage or fraction
-		else if (type.equals(Type.Percentage)) {
-			try {
-				Strings.parsePercentage(value);
-			}
-			catch (NumberFormatException e) {
-				return false;
-			}
-		}
-		// check, if a valid option has been supplied for
-		else if (type.equals(Type.Enum)) {
-			for (String string : options) {
-				if (value.equalsIgnoreCase(string))
-					return true;
-			}
-			return false;
 		}
 
 		// hence ok

@@ -69,7 +69,7 @@ public class SequentialTestCase extends DefaultTestCase implements DescribedTest
 	private Date lastAddedDate = null;
 
 	public SequentialTestCase() {
-		this(Collections.<RatedTestCase>emptyList());
+		this(Collections.emptyList());
 	}
 
 	public SequentialTestCase(Collection<RatedTestCase> ratedTestCases) {
@@ -196,6 +196,7 @@ public class SequentialTestCase extends DefaultTestCase implements DescribedTest
 
 	}
 
+	@Override
 	public void setStartDate(Date startDate) {
 		if (this.startDate != null) {
 			throw new UnsupportedOperationException(
@@ -204,6 +205,7 @@ public class SequentialTestCase extends DefaultTestCase implements DescribedTest
 		this.startDate = startDate;
 	}
 
+	@Override
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -320,7 +322,7 @@ public class SequentialTestCase extends DefaultTestCase implements DescribedTest
 	public String toString() {
 		StringBuilder builder = new StringBuilder(getName() + ": ");
 		for (RatedTestCase rtc : ratedTestCases.values()) {
-			builder.append(rtc.toString()).append(", ");
+			builder.append(rtc).append(", ");
 		}
 		builder.replace(builder.length() - 2, builder.length(), ""); // remove last
 		// ", "

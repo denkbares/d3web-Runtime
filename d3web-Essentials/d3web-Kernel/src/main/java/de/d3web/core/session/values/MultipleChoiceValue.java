@@ -46,8 +46,8 @@ public class MultipleChoiceValue implements QuestionValue {
 
 	/**
 	 * Constructs a new MultipleChoiceValue
-	 * 
-	 * @param values the ChoiceID[] for which a new MultipleChoiceValue should
+	 *
+	 * @param choiceIDs the ChoiceID[] for which a new MultipleChoiceValue should
 	 *        be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -55,14 +55,14 @@ public class MultipleChoiceValue implements QuestionValue {
 		if (choiceIDs == null) {
 			throw new NullPointerException();
 		}
-		this.choiceIDs = new LinkedHashSet<ChoiceID>();
+		this.choiceIDs = new LinkedHashSet<>();
 		Collections.addAll(this.choiceIDs, choiceIDs);
 	}
 
 	/**
 	 * Constructs a new MultipleChoiceValue
-	 * 
-	 * @param values the Collection of ChoiceID for which a new
+	 *
+	 * @param choiceIDs the Collection of ChoiceID for which a new
 	 *        MultipleChoiceValue should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -70,7 +70,7 @@ public class MultipleChoiceValue implements QuestionValue {
 		if (choiceIDs == null) {
 			throw new NullPointerException();
 		}
-		this.choiceIDs = new LinkedHashSet<ChoiceID>(choiceIDs);
+		this.choiceIDs = new LinkedHashSet<>(choiceIDs);
 	}
 
 	public static MultipleChoiceValue fromChoicesValues(List<ChoiceValue> choices) {
@@ -204,7 +204,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	}
 
 	public List<Choice> asChoiceList(QuestionChoice question) {
-		List<Choice> choices = new ArrayList<Choice>(choiceIDs.size());
+		List<Choice> choices = new ArrayList<>(choiceIDs.size());
 		for (ChoiceID choiceID : choiceIDs) {
 			Choice choice = choiceID.getChoice(question);
 			if (choice == null) {

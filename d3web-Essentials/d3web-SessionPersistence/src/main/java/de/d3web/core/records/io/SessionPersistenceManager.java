@@ -41,6 +41,7 @@ import de.d3web.core.records.DefaultSessionRecord;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.plugin.Extension;
 import de.d3web.plugin.PluginManager;
+import de.d3web.strings.Strings;
 
 /**
  * PersistenceManager to write/read SessionRecords to/from an xml file
@@ -56,7 +57,7 @@ public final class SessionPersistenceManager {
 
 	private static SessionPersistenceManager manager;
 	private Extension[] handler;
-	private final FragmentManager<SessionRecord> fragmentManager = new FragmentManager<SessionRecord>();
+	private final FragmentManager<SessionRecord> fragmentManager = new FragmentManager<>();
 
 	private static final String REPOSITORY_TAG = "repository";
 	private static final String SESSION_TAG = "session";
@@ -152,8 +153,8 @@ public final class SessionPersistenceManager {
 
 			Element sessionElement = doc.createElement(SESSION_TAG);
 			sessionElement.setAttribute("id", co.getId());
-			sessionElement.setAttribute("created", XMLUtil.writeDate(co.getCreationDate()));
-			sessionElement.setAttribute("changed", XMLUtil.writeDate(co.getLastChangeDate()));
+			sessionElement.setAttribute("created", Strings.writeDate(co.getCreationDate()));
+			sessionElement.setAttribute("changed", Strings.writeDate(co.getLastChangeDate()));
 			for (Extension extension : handler) {
 				SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
 				SessionPersistence persistence = new SessionPersistence(this, co, sessionElement);
@@ -229,7 +230,7 @@ public final class SessionPersistenceManager {
 	 */
 	public Collection<SessionRecord> loadSessions(InputStream inputStream, ProgressListener listener) throws IOException {
 		updateHandler();
-		Collection<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
+		Collection<SessionRecord> sessionRecords = new ArrayList<>();
 		listener.updateProgress(0.0f, "reading file from disc");
 		Document doc = XMLUtil.streamToDocument(inputStream);
 		List<Element> childNodes = XMLUtil.getElementList(doc.getChildNodes());
@@ -249,8 +250,8 @@ public final class SessionPersistenceManager {
 				String created = e.getAttribute("created");
 				String changed = e.getAttribute("changed");
 				try {
-					Date creationDate = XMLUtil.readDate(created);
-					Date dateOfLastEdit = XMLUtil.readDate(changed);
+					Date creationDate = Strings.readDate(created, Strings.DATE_FORMAT_COMPATIBILITY);
+					Date dateOfLastEdit = Strings.readDate(changed, Strings.DATE_FORMAT_COMPATIBILITY);
 					DefaultSessionRecord sr =
 							new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
 					for (Extension extension : handler) {

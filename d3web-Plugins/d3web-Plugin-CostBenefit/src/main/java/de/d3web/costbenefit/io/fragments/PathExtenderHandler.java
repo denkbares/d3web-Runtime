@@ -38,11 +38,8 @@ public class PathExtenderHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("searchAlgorithm")
-				&& element.getAttribute("name").equals("PathExtender")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("searchAlgorithm")
+				&& element.getAttribute("name").equals("PathExtender");
 	}
 
 	@Override

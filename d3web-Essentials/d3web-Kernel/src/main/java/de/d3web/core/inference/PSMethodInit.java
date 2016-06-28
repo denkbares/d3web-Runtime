@@ -130,7 +130,7 @@ public class PSMethodInit implements PSMethod {
 		if (property.equalsIgnoreCase("unknown")) {
 			return Unknown.getInstance();
 		}
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		int posstart = 0;
 		int posend = property.indexOf(';');
 		while (posend != -1) {
@@ -160,8 +160,8 @@ public class PSMethodInit implements PSMethod {
 		}
 		else if (q instanceof QuestionMC) {
 			QuestionMC qmc = (QuestionMC) q;
-			List<ChoiceID> choices = new LinkedList<ChoiceID>();
-			List<String> badIds = new LinkedList<String>();
+			List<ChoiceID> choices = new LinkedList<>();
+			List<String> badIds = new LinkedList<>();
 			for (String id : ids) {
 				Choice choice = KnowledgeBaseUtils.findChoice(qmc, id);
 				if (choice != null) {

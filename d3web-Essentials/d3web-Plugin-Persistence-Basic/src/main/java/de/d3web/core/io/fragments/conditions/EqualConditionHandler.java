@@ -44,6 +44,7 @@ import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.strings.Strings;
 
 /**
  * FragmentHandler for CondEquals It can also read choiceYes and choiceNo
@@ -75,9 +76,22 @@ public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 			if (idObject instanceof QuestionChoice) {
 				QuestionChoice q = (QuestionChoice) idObject;
 				Value a = null;
-				if (value.length() > 0) {
+				if (value.isEmpty()) {
+					if (q instanceof QuestionYN) {
+						QuestionYN qyn = (QuestionYN) q;
+						if (type.equals("choiceYes")) {
+							return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceYes()));
+						}
+						else {
+							return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceNo()));
+						}
+					}
+				}
+				// in previous versions conditions of questions yn were stored
+				// in a different way
+				else {
 					ChoiceID[] choices = ChoiceID.decodeChoiceIDs(value);
-					List<ChoiceValue> conds = new ArrayList<ChoiceValue>();
+					List<ChoiceValue> conds = new ArrayList<>();
 					for (ChoiceID s : choices) {
 						if (s.getText().equals(Unknown.UNKNOWN_ID)) {
 							a = Unknown.getInstance();
@@ -104,24 +118,14 @@ public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 						throw new IOException("Action could not be parsed.");
 					}
 				}
-				// in previous versions conditions of questions yn were stored
-				// in a different way
-				else if (q instanceof QuestionYN) {
-					QuestionYN qyn = (QuestionYN) q;
-					if (type.equals("choiceYes")) {
-						return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceYes()));
-					}
-					else {
-						return new CondEqual(q, new ChoiceValue(qyn.getAnswerChoiceNo()));
-					}
-				}
+
 			}
 			else if (idObject instanceof QuestionText) {
 				return new CondEqual((Question) idObject, new TextValue(value));
 			}
 			else if (idObject instanceof QuestionDate) {
 				try {
-					return new CondEqual((Question) idObject, new DateValue(XMLUtil.readDate(value)));
+					return new CondEqual((Question) idObject, new DateValue(Strings.readDate(value)));
 				}
 				catch (ParseException ignore) {
 				}

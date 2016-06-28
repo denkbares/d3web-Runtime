@@ -54,7 +54,7 @@ public class EmptyQuestionnaireTest extends KBTest {
 
 		Collection<Pattern> ignorePatterns = TestingUtils.compileIgnores(ignores);
 
-		List<TerminologyObject> emptyQASets = new ArrayList<TerminologyObject>();
+		List<TerminologyObject> emptyQASets = new ArrayList<>();
 		// iterate over QAsets and check if they are empty
 		for (QASet qaset : kb.getManager().getQASets()) {
 			if (!qaset.isQuestionOrHasQuestions()) {
@@ -62,7 +62,7 @@ public class EmptyQuestionnaireTest extends KBTest {
 				emptyQASets.add(qaset);
 			}
 		}
-		if (emptyQASets.size() > 0) {// empty QASets were found:
+		if (!emptyQASets.isEmpty()) {// empty QASets were found:
 			return D3webTestUtils.createFailure(emptyQASets,
 					"Knowledge base has empty questionnaires:");
 		}

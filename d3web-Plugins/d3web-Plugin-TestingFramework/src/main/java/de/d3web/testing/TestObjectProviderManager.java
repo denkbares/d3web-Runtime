@@ -34,7 +34,7 @@ import de.d3web.plugin.PluginManager;
  */
 public class TestObjectProviderManager {
 
-	public static final Set<TestObjectProvider> registeredProviders = new HashSet<TestObjectProvider>();
+	public static final Set<TestObjectProvider> registeredProviders = new HashSet<>();
 
 	/**
 	 * Can be used for tests to add special {@link TestObjectProvider}s without
@@ -49,7 +49,7 @@ public class TestObjectProviderManager {
 	public static List<TestObjectProvider> getTestObjectProviders() {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				TestObjectProvider.EXTENSION_POINT_ID);
-		List<TestObjectProvider> pluggedProviders = new ArrayList<TestObjectProvider>(
+		List<TestObjectProvider> pluggedProviders = new ArrayList<>(
 				registeredProviders);
 		for (Extension extension : extensions) {
 			if (extension.getNewInstance() instanceof TestObjectProvider) {

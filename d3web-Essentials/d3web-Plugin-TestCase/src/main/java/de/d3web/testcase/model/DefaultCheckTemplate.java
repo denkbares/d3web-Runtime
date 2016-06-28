@@ -86,7 +86,7 @@ public class DefaultCheckTemplate implements CheckTemplate {
 		DefaultCheckTemplate that = (DefaultCheckTemplate) o;
 
 		if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
-		return !(value != null ? !value.equals(that.value) : that.value != null);
+		return value != null ? value.equals(that.value) : that.value == null;
 
 	}
 

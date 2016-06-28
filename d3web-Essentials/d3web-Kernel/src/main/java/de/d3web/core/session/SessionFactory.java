@@ -53,7 +53,7 @@ public final class SessionFactory {
 			PSMethodInit.getInstance()
 			);
 
-	private static final Collection<PropagationListener> propagationListeners = new LinkedList<PropagationListener>();
+	private static final Collection<PropagationListener> propagationListeners = new LinkedList<>();
 
 	private SessionFactory() { // enforce noninstantiability
 	}

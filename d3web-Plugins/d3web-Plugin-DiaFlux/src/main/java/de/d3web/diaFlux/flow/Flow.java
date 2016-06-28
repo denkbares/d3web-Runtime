@@ -96,7 +96,7 @@ public class Flow extends AbstractNamedObject {
 	}
 
 	public <T> Collection<T> getNodesOfClass(Class<T> clazz) {
-		Collection<T> result = new HashSet<T>();
+		Collection<T> result = new HashSet<>();
 		for (Node node : nodes) {
 			if (clazz.isInstance(node)) {
 				result.add(clazz.cast(node));
@@ -123,7 +123,7 @@ public class Flow extends AbstractNamedObject {
 
 	@SuppressWarnings("unchecked")
 	private <T> List<T> getNodesOfType(Class<T> clazz) {
-		List<T> result = new LinkedList<T>();
+		List<T> result = new LinkedList<>();
 
 		for (Node node : nodes) {
 			if (clazz.isAssignableFrom(node.getClass())) result.add((T) node);

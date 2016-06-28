@@ -46,7 +46,7 @@ public class DerivedSolutionCheck implements Check {
 
 	@Override
 	public String getCondition() {
-		return solution.getName() + " = " + rating.toString();
+		return solution.getName() + " = " + rating;
 	}
 
 	public Solution getSolution() {

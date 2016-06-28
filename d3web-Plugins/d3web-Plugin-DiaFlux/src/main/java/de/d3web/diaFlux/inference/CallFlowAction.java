@@ -81,7 +81,7 @@ public class CallFlowAction extends PSAction {
 
 	@Override
 	public List<TerminologyObject> getBackwardObjects() {
-		return new ArrayList<TerminologyObject>(0);
+		return new ArrayList<>(0);
 	}
 
 	public String getFlowName() {
@@ -98,11 +98,8 @@ public class CallFlowAction extends PSAction {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		CallFlowAction that = (CallFlowAction) o;
-		return !(flowName != null
-				? !flowName.equals(that.flowName)
-				: that.flowName != null) && !(startNodeName != null
-				? !startNodeName.equals(that.startNodeName)
-				: that.startNodeName != null);
+		return (flowName != null ? flowName.equals(that.flowName) : that.flowName == null)
+				&& (startNodeName != null ? startNodeName.equals(that.startNodeName) : that.startNodeName == null);
 	}
 
 	@Override

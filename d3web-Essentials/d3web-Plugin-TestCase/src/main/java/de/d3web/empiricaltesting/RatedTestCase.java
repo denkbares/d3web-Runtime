@@ -119,7 +119,7 @@ public class RatedTestCase {
 		if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
 		if (!findingsMap.equals(that.findingsMap)) return false;
 		if (!checksMap.equals(that.checksMap)) return false;
-		return !(timeStamp != null ? !timeStamp.equals(that.timeStamp) : that.timeStamp != null);
+		return timeStamp != null ? timeStamp.equals(that.timeStamp) : that.timeStamp == null;
 
 	}
 
@@ -179,7 +179,7 @@ public class RatedTestCase {
 	 * This Rated Testcase's List of derived Solutions (derived from the
 	 * KnowledgeBase while in TestRun)
 	 */
-	private List<RatedSolution> derivedSolutions = new ArrayList<>();
+	private final List<RatedSolution> derivedSolutions = new ArrayList<>();
 
 	/**
 	 * Returns true if this RatedTestCase was tested before.

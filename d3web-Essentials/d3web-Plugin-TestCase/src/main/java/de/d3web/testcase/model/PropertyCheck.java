@@ -22,7 +22,7 @@ public class PropertyCheck<T> implements Check {
 
 	private final @NotNull NamedObject namedObject;
 	private final Property<T> property;
-	private Locale locale;
+	private final Locale locale;
 	private final T propertyValue;
 
 	/**

@@ -31,11 +31,8 @@ public class DefaultTargetFunctionHandler implements FragmentHandler<KnowledgeBa
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("targetFunction")
-				&& element.getAttribute("name").equals("DefaultTargetFunction")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("targetFunction")
+				&& element.getAttribute("name").equals("DefaultTargetFunction");
 	}
 
 	@Override

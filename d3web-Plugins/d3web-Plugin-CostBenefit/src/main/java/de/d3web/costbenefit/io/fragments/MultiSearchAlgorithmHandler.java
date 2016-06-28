@@ -40,11 +40,8 @@ public class MultiSearchAlgorithmHandler implements FragmentHandler<KnowledgeBas
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("searchAlgorithm")
-				&& element.getAttribute("name").equals("MultiSearchAlgorithm")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("searchAlgorithm")
+				&& element.getAttribute("name").equals("MultiSearchAlgorithm");
 	}
 
 	@Override

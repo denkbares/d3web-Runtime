@@ -30,6 +30,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
+import de.d3web.strings.Strings;
 
 /**
  * Saves and loads CalculatedPathEntries
@@ -50,7 +51,7 @@ public class CalculatedPathEntryHandler implements FragmentHandler<KnowledgeBase
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		try {
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = XMLUtil.readDate(dateString);
+			Date date = Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY);
 			List<Element> elementList = XMLUtil.getElementList(element.getChildNodes());
 			if (elementList.size() != 2
 					|| !elementList.get(0).getNodeName().equals(CALCULATION_TIME)
@@ -75,7 +76,7 @@ public class CalculatedPathEntryHandler implements FragmentHandler<KnowledgeBase
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CalculatedPathEntry entry = (CalculatedPathEntry) object;
-		String dateString = XMLUtil.writeDate(entry.getDate());
+		String dateString = Strings.writeDate(entry.getDate());
 		Element e = persistence.getDocument().createElement(ELEMENT_NAME);
 		e.setAttribute("type", ELEMENT_TYPE);
 		e.setAttribute(ATTR_DATE, dateString);

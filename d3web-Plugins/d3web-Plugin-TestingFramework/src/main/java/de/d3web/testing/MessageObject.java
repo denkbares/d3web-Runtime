@@ -53,9 +53,8 @@ public class MessageObject {
 		MessageObject that = (MessageObject) o;
 
 		if (!clazz.equals(that.clazz)) return false;
-		if (!objectName.equals(that.objectName)) return false;
+		return objectName.equals(that.objectName);
 
-		return true;
 	}
 
 	@Override

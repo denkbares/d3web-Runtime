@@ -50,7 +50,7 @@ public class DefaultFinding implements Finding {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[" + object.getName() + " = " + value.toString() + "]";
+		return getClass().getSimpleName() + "[" + object.getName() + " = " + value + "]";
 	}
 
 	@Override

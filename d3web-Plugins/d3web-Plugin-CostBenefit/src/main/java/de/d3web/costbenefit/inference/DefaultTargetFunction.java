@@ -46,7 +46,7 @@ public class DefaultTargetFunction implements TargetFunction {
 	public Collection<Target> getTargets(Session session,
 			Collection<Question> relevantQuestions,
 			Collection<Solution> diagnosisToDiscriminate, StrategicSupport strategicSupport) {
-		Set<Target> set = new HashSet<Target>();
+		Set<Target> set = new HashSet<>();
 		for (Question question : relevantQuestions) {
 			// ignore contra indicated question to be used as targets
 			if (isContraIndicated(session, question)) continue;

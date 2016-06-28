@@ -36,11 +36,8 @@ public class DefaultAbortStrategyHandler implements FragmentHandler<KnowledgeBas
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("abortStrategy")
-				&& element.getAttribute("name").equals("DefaultAbortStrategy")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("abortStrategy")
+				&& element.getAttribute("name").equals("DefaultAbortStrategy");
 	}
 
 	@Override
@@ -52,10 +49,10 @@ public class DefaultAbortStrategyHandler implements FragmentHandler<KnowledgeBas
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String maxsteps = element.getAttribute("maxsteps");
 		String increasingFactor = element.getAttribute("increasingFactor");
-		if (maxsteps.length() != 0 && increasingFactor.length() == 0) {
+		if (!maxsteps.isEmpty() && increasingFactor.isEmpty()) {
 			return new DefaultAbortStrategy(Integer.parseInt(maxsteps));
 		}
-		else if (maxsteps.length() != 0 && increasingFactor.length() != 0) {
+		else if (!maxsteps.isEmpty() && !increasingFactor.isEmpty()) {
 			return new DefaultAbortStrategy(
 					Integer.parseInt(maxsteps),
 					Float.parseFloat(increasingFactor));

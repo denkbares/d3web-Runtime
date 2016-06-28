@@ -47,12 +47,12 @@ public class SessionPersistence implements Persistence<SessionRecord> {
 	}
 
 	@Override
-	public Object readFragment(Element element) throws NoSuchFragmentHandlerException, IOException {
+	public Object readFragment(Element element) throws IOException {
 		return manager.getFragmentManager().readFragment(element, this);
 	}
 
 	@Override
-	public Element writeFragment(Object object) throws NoSuchFragmentHandlerException, IOException {
+	public Element writeFragment(Object object) throws IOException {
 		return manager.getFragmentManager().writeFragment(object, this);
 	}
 }

@@ -34,7 +34,7 @@ import de.d3web.core.session.Session;
  */
 public final class NOOPAction extends PSAction {
 
-	private final List<TerminologyObject> objects = new LinkedList<TerminologyObject>();
+	private final List<TerminologyObject> objects = new LinkedList<>();
 
 	public NOOPAction() {
 	}

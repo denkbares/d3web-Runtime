@@ -35,7 +35,7 @@ public class NodeList implements KnowledgeSlice, Iterable<Node> {
 	private final List<Node> nodes;
 
 	public NodeList() {
-		this.nodes = new ArrayList<Node>();
+		this.nodes = new ArrayList<>();
 	}
 
 	public void addNode(Node edge) {
@@ -55,7 +55,7 @@ public class NodeList implements KnowledgeSlice, Iterable<Node> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((nodes == null) ? 0 : nodes.hashCode());
+		result = prime * result + nodes.hashCode();
 		return result;
 	}
 
@@ -65,11 +65,7 @@ public class NodeList implements KnowledgeSlice, Iterable<Node> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		NodeList other = (NodeList) obj;
-		if (nodes == null) {
-			if (other.nodes != null) return false;
-		}
-		else if (!nodes.equals(other.nodes)) return false;
-		return true;
+		return nodes.equals(other.nodes);
 	}
 
 	@Override

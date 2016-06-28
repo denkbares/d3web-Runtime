@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,6 +107,7 @@ public final class XMLUtil {
 	/**
 	 * @deprecated Use {@link de.d3web.strings.Strings#readDate(String, SimpleDateFormat)} instead
 	 */
+	@Deprecated
 	public static Date readDate(String dateString, SimpleDateFormat compatibilityFormat) throws ParseException {
 		return Strings.readDate(dateString, compatibilityFormat);
 	}
@@ -117,6 +117,7 @@ public final class XMLUtil {
 	 * <p>
 	 * TODO: Refactor {@link Strings#DATE_FORMAT_COMPATIBILITY} when removing this method.
 	 */
+	@Deprecated
 	public static Date readDate(String dateString) throws ParseException {
 		return Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY);
 	}
@@ -345,7 +346,7 @@ public final class XMLUtil {
 			return ((TextValue) answer).getValue().toString();
 		}
 		else if (answer instanceof DateValue) {
-			return writeDate(((DateValue) answer).getDate());
+			return Strings.writeDate(((DateValue) answer).getDate());
 		}
 		else {
 			throw new IOException(
@@ -405,7 +406,7 @@ public final class XMLUtil {
 	 * @return List of represented QASets
 	 */
 	public static List<QASet> getTargetQASets(Element element, KnowledgeBase kb) {
-		List<QASet> ret = new LinkedList<QASet>();
+		List<QASet> ret = new LinkedList<>();
 		if (element.getNodeName().equalsIgnoreCase(TARGET_QA_SETS)) {
 			NodeList qaSets = element.getChildNodes();
 			for (int k = 0; k < qaSets.getLength(); ++k) {
@@ -539,7 +540,7 @@ public final class XMLUtil {
 	 * other nodes such as text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list) {
-		List<Element> col = new ArrayList<Element>(list.getLength());
+		List<Element> col = new ArrayList<>(list.getLength());
 		for (int i = 0; i < list.getLength(); i++) {
 			if (list.item(i) instanceof Element) {
 				col.add((Element) list.item(i));
@@ -560,7 +561,7 @@ public final class XMLUtil {
 	 * other nodes such as text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list, String... nodeNames) {
-		List<Element> col = new ArrayList<Element>();
+		List<Element> col = new ArrayList<>();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node item = list.item(i);
 			if (item instanceof Element) {
@@ -613,43 +614,40 @@ public final class XMLUtil {
 	}
 
 	public static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
-		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<Triple<Property<?>, Locale, Object>>(
+		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<>(
 				entries);
-		Collections.sort(ret, new Comparator<Triple<Property<?>, Locale, Object>>() {
-
-			@Override
-			public int compare(Triple<Property<?>, Locale, Object> arg0, Triple<Property<?>, Locale, Object> arg1) {
-				if (arg0 == arg1) return 0;
-				// if the property is different, compare the names
-				if (arg0.getA().getName() != arg1.getA().getName()) {
-					return arg0.getA().getName().compareTo(arg1.getA().getName());
+		Collections.sort(ret, (arg0, arg1) -> {
+			if (arg0 == arg1) return 0;
+			// if the property is different, compare the names
+			//noinspection StringEquality
+			if (arg0.getA().getName() != arg1.getA().getName()) {
+				return arg0.getA().getName().compareTo(arg1.getA().getName());
+			}
+			// the next criteria is the locale
+			else if (arg0.getB() != arg1.getB()) {
+				if (arg0.getB() == InfoStore.NO_LANGUAGE) {
+					return 1;
 				}
-				// the next criteria is the locale
-				else if (arg0.getB() != arg1.getB()) {
-					if (arg0.getB() == InfoStore.NO_LANGUAGE) {
-						return 1;
-					}
-					else if (arg1.getB() == InfoStore.NO_LANGUAGE) {
-						return -1;
-					}
-					else {
-						return arg0.getB().toString().compareTo(arg1.getB().toString());
-					}
+				else if (arg1.getB() == InfoStore.NO_LANGUAGE) {
+					return -1;
 				}
-				// finally compare the content using its toString()
 				else {
-					if (arg0.getC() == arg1.getC()) {
-						return 0;
-					}
-					if (arg0.getC() == null) {
-						return 1;
-					}
-					else if (arg1.getC() == null) {
-						return -1;
-					}
-					else {
-						return arg0.getC().toString().compareTo(arg1.getC().toString());
-					}
+					return arg0.getB().toString().compareTo(arg1.getB().toString());
+				}
+			}
+			// finally compare the content using its toString()
+			else {
+				if (arg0.getC() == arg1.getC()) {
+					return 0;
+				}
+				if (arg0.getC() == null) {
+					return 1;
+				}
+				else if (arg1.getC() == null) {
+					return -1;
+				}
+				else {
+					return arg0.getC().toString().compareTo(arg1.getC().toString());
 				}
 			}
 		});
@@ -691,10 +689,7 @@ public final class XMLUtil {
 			}
 			List<Element> childNodes = XMLUtil.getElementList(child.getChildNodes());
 			Object value;
-			if (childNodes.size() > 0) {
-				value = persistence.readFragment(childNodes.get(0));
-			}
-			else {
+			if (childNodes.isEmpty()) {
 				String s = child.getTextContent();
 				try {
 					value = property.parseValue(s);
@@ -703,9 +698,15 @@ public final class XMLUtil {
 					throw new IOException(e);
 				}
 			}
+			else {
+				value = persistence.readFragment(childNodes.get(0));
+			}
 
 			String language = child.getAttribute("lang");
-			if (language.length() > 0) {
+			if (language.isEmpty()) {
+				infoStore.addValue(property, value);
+			}
+			else {
 				String[] split = language.split("_", 3);
 				Locale locale;
 				if (split.length < 2) {
@@ -718,9 +719,6 @@ public final class XMLUtil {
 					locale = new Locale(split[0], split[1], split[2]);
 				}
 				infoStore.addValue(property, locale, value);
-			}
-			else {
-				infoStore.addValue(property, value);
 			}
 		}
 	}
@@ -768,12 +766,8 @@ public final class XMLUtil {
 	 * @throws IOException when an error occurs
 	 */
 	public static Document fileToDocument(File file) throws IOException {
-		InputStream in = new FileInputStream(file);
-		try {
+		try (InputStream in = new FileInputStream(file)) {
 			return streamToDocument(in);
-		}
-		finally {
-			in.close();
 		}
 	}
 
@@ -789,12 +783,8 @@ public final class XMLUtil {
 	 * @throws IOException when an error occurs
 	 */
 	public static Document fileToDocument(File file, ProgressListener progress, String message) throws IOException {
-		InputStream in = new ProgressInputStream(new FileInputStream(file), progress, message);
-		try {
+		try (InputStream in = new ProgressInputStream(new FileInputStream(file), progress, message)) {
 			return streamToDocument(in);
-		}
-		finally {
-			in.close();
 		}
 	}
 
@@ -956,7 +946,7 @@ public final class XMLUtil {
 	 * @created 25.01.2014
 	 */
 	public static String[] readStrings(Element element, String tagName) {
-		List<String> result = new ArrayList<String>(10);
+		List<String> result = new ArrayList<>(10);
 		List<Element> list = getElementList(element.getChildNodes(), tagName);
 		for (Element node : list) {
 			result.add(node.getTextContent());

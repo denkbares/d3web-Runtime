@@ -36,7 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import de.d3web.core.io.utilities.XMLUtil;
+import de.d3web.strings.Strings;
 import de.d3web.utils.Log;
 
 /**
@@ -80,7 +80,7 @@ public class BuildResultPersistenceHandler {
 
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
-		root.setAttribute(DATE, XMLUtil.writeDate(build.getBuildDate()));
+		root.setAttribute(DATE, Strings.writeDate(build.getBuildDate()));
 
 		// add child results for single tests
 		for (TestResult result : build.getResults()) {
@@ -151,14 +151,14 @@ public class BuildResultPersistenceHandler {
 		long duration = Long.parseLong(root.getAttribute(DURATION));
 
 		String dateAttribute = root.getAttribute(DATE);
-		Date date = XMLUtil.readDate(dateAttribute);
+		Date date = Strings.readDate(dateAttribute, Strings.DATE_FORMAT_COMPATIBILITY);
 		int successfulTests = 0;
 
 		// create test item
 		// BuildResult build = new BuildResult(date);
 		// build.setBuildDuration(duration);
 
-		List<TestResult> resultList = new ArrayList<TestResult>();
+		List<TestResult> resultList = new ArrayList<>();
 
 		// parse single child tests
 		NodeList testElements = document.getElementsByTagName(TEST);

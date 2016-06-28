@@ -63,7 +63,7 @@ public abstract class PSAction {
 	 * @created 30.09.2010
 	 */
 	public List<? extends TerminologyObject> getForwardObjects() {
-		return new LinkedList<TerminologyObject>();
+		return new LinkedList<>();
 	}
 
 	/**

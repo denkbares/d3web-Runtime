@@ -50,7 +50,7 @@ public class RuleHandler implements FragmentHandler<KnowledgeBase> {
 			Node namedItem = attributes.getNamedItem("type");
 			if (namedItem != null) {
 				String nodeValue = namedItem.getNodeValue();
-				if (nodeValue != null && nodeValue.equals("RuleComplex")) {
+				if ("RuleComplex".equals(nodeValue)) {
 					return true;
 				}
 			}

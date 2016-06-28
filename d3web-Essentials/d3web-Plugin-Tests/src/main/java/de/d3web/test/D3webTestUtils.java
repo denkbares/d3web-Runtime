@@ -49,7 +49,7 @@ public class D3webTestUtils {
 	 * @return an error message for the objects
 	 */
 	public static Message createFailure(Collection<? extends NamedObject> erroneousObjects, String failedMessage) {
-		Collection<String> objectNames = new ArrayList<String>(erroneousObjects.size());
+		Collection<String> objectNames = new ArrayList<>(erroneousObjects.size());
 		for (NamedObject object : erroneousObjects) {
 			objectNames.add(object.getName());
 		}
@@ -73,7 +73,7 @@ public class D3webTestUtils {
 			ignorePatterns.add(Pattern.compile(ignore, Pattern.CASE_INSENSITIVE));
 		}
 
-		Collection<T> result = new LinkedList<T>();
+		Collection<T> result = new LinkedList<>();
 
 		for (T object : objects) {
 			if (TestingUtils.isIgnored(object.getName(), ignorePatterns)) continue;
@@ -96,7 +96,7 @@ public class D3webTestUtils {
 	 */
 	public static Message createFailure(Collection<TerminologyObject> objects, String kbName, String notificationText) {
 		Message message = new Message(Type.FAILURE, notificationText);
-		Collection<MessageObject> msgObjects = new ArrayList<MessageObject>();
+		Collection<MessageObject> msgObjects = new ArrayList<>();
 		for (TerminologyObject object : objects) {
 			msgObjects.add(new MessageObject(object.getName(), NamedObject.class));
 		}
@@ -120,12 +120,12 @@ public class D3webTestUtils {
 	}
 
 	public static Collection<Pair<Pattern, Boolean>> compileHierarchicalIgnores(String[][] ignores) {
-		Collection<Pair<Pattern, Boolean>> ignorePatterns = new LinkedList<Pair<Pattern, Boolean>>();
+		Collection<Pair<Pattern, Boolean>> ignorePatterns = new LinkedList<>();
 		for (String[] ignore : ignores) {
 			Pattern pattern = Pattern.compile(ignore[0], Pattern.CASE_INSENSITIVE);
 			boolean hierarchical = ignore.length == 2
 					&& ignore[1].trim().equalsIgnoreCase("true");
-			ignorePatterns.add(new Pair<Pattern, Boolean>(pattern, hierarchical));
+			ignorePatterns.add(new Pair<>(pattern, hierarchical));
 		}
 		return ignorePatterns;
 	}

@@ -158,7 +158,7 @@ public final class CostBenefitUtil {
 	 *        questions from the blackboard are returned
 	 */
 	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
-		List<QuestionOC> questions = new LinkedList<QuestionOC>();
+		List<QuestionOC> questions = new LinkedList<>();
 		FormStrategy formStrategy = getFormStrategy(session);
 		for (Question q : formStrategy.getForm(qContainer, session).getActiveQuestions()) {
 			if (q instanceof QuestionOC) {
@@ -166,7 +166,7 @@ public final class CostBenefitUtil {
 			}
 		}
 		Blackboard blackboard = session.getBlackboard();
-		Map<Question, Value> expectedmap = new HashMap<Question, Value>();
+		Map<Question, Value> expectedmap = new HashMap<>();
 		for (QuestionOC q : questions) {
 			Value value = blackboard.getValue(q);
 			if (UndefinedValue.isUndefinedValue(value)) {
@@ -205,7 +205,7 @@ public final class CostBenefitUtil {
 	 * @return List of QuestionOC
 	 */
 	public static List<QuestionOC> getQuestionOCs(QContainer qContainer) {
-		LinkedList<QuestionOC> result = new LinkedList<QuestionOC>();
+		LinkedList<QuestionOC> result = new LinkedList<>();
 		collectQuestions(qContainer, result);
 		return result;
 	}
@@ -230,7 +230,7 @@ public final class CostBenefitUtil {
 	 */
 	public static List<Fact> setNormalValues(Session session, QContainer qContainer, Object source) {
 		Map<Question, Value> valuesToSet = answerGetterAndSetter(session, qContainer, true);
-		List<Fact> facts = new LinkedList<Fact>();
+		List<Fact> facts = new LinkedList<>();
 		PSMethod psmCostBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		try {
 			session.getPropagationManager().openPropagation();
@@ -364,10 +364,9 @@ public final class CostBenefitUtil {
 	 * size of the current solutions
 	 * 
 	 * @created 13.12.2013
-	 * @param solutions
 	 */
 	public static Set<TerminologyObject> calculatePossibleConflictingQuestions(Session session, Collection<Solution> solutions) {
-		Set<TerminologyObject> negativeObjects = new HashSet<TerminologyObject>();
+		Set<TerminologyObject> negativeObjects = new HashSet<>();
 		// TODO: handle positive relations?
 		for (Solution s : solutions) {
 			XCLModel model = s.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
@@ -441,7 +440,7 @@ public final class CostBenefitUtil {
 		Condition condition = null;
 		if (stateTransition != null && stateTransition.getActivationCondition() != null
 				&& comfort != null) {
-			List<Condition> conds = new LinkedList<Condition>();
+			List<Condition> conds = new LinkedList<>();
 			conds.add(stateTransition.getActivationCondition());
 			conds.add(comfort.getCondition());
 			condition = new CondAnd(conds);
@@ -461,7 +460,7 @@ public final class CostBenefitUtil {
 	}
 
 	public static List<StrategicSupport> getStrategicSupports(Session session) {
-		List<StrategicSupport> ret = new ArrayList<StrategicSupport>();
+		List<StrategicSupport> ret = new ArrayList<>();
 		for (PSMethod psm : session.getPSMethods()) {
 			if (psm instanceof StrategicSupport) {
 				ret.add((StrategicSupport) psm);
@@ -480,7 +479,7 @@ public final class CostBenefitUtil {
 	 * @return Map representing the result
 	 */
 	public static Map<Question, Set<Value>> calculateReachableFinalValues(Session session) {
-		Map<Question, Set<Value>> result = new HashMap<Question, Set<Value>>();
+		Map<Question, Set<Value>> result = new HashMap<>();
 		Session copiedSession = new CopiedSession(session);
 		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
@@ -494,7 +493,7 @@ public final class CostBenefitUtil {
 								PSMethodCostBenefit.FINAL_QUESTION)) {
 					Set<Value> set = result.get(fact.getTerminologyObject());
 					if (set == null) {
-						set = new HashSet<Value>();
+						set = new HashSet<>();
 						result.put((Question) fact.getTerminologyObject(), set);
 					}
 					set.add(fact.getValue());

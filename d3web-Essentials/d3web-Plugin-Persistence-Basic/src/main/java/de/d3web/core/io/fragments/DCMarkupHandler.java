@@ -57,7 +57,7 @@ public class DCMarkupHandler {
 	}
 
 	public Triple<String, Property<?>, Locale> read(KnowledgeBase kb, Element element) throws IOException {
-		Map<String, String> parsedValues = new HashMap<String, String>();
+		Map<String, String> parsedValues = new HashMap<>();
 		NodeList dcMList = element.getChildNodes();
 		for (int i = 0; i < dcMList.getLength(); ++i) {
 			Node dcelem = dcMList.item(i);
@@ -89,7 +89,7 @@ public class DCMarkupHandler {
 
 				// [MISC]:aha:obsolete after supportknowledge refactoring is
 				// propagated
-				String label = "";
+				String label;
 				Node labelNode = dcelem.getAttributes().getNamedItem("label");
 				if (labelNode != null) {
 					label = labelNode.getNodeValue();
@@ -106,7 +106,7 @@ public class DCMarkupHandler {
 			String language = parsedValues.get("dc.language");
 			Locale locale = null;
 			if (language != null) locale = new Locale(language);
-			return new Triple<String, Property<?>, Locale>(parsedValues.get("dc.source"),
+			return new Triple<>(parsedValues.get("dc.source"),
 					property, locale);
 		}
 		catch (NoSuchElementException e) {

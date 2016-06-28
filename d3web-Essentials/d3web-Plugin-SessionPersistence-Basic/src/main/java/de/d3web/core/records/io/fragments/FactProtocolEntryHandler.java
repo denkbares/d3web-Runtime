@@ -31,6 +31,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.strings.Strings;
 
 /**
  * Handles writing of a {@link FactProtocolEntry}. It delegated the writing of
@@ -52,7 +53,7 @@ public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 		try {
 			// prepare fact entry header information
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = XMLUtil.readDate(dateString);
+			Date date = Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY);
 			String name = element.getAttribute(ATTR_OBJECT_NAME);
 			String solver = element.getAttribute(ATTR_SOLVER);
 
@@ -75,7 +76,7 @@ public class FactProtocolEntryHandler implements FragmentHandler<SessionRecord> 
 	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		// prepare information
 		FactProtocolEntry entry = (FactProtocolEntry) object;
-		String dateString = XMLUtil.writeDate(entry.getDate());
+		String dateString = Strings.writeDate(entry.getDate());
 
 		// create element
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);

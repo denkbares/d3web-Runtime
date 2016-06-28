@@ -19,14 +19,14 @@
  */
 package de.d3web.interview;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class DefaultForm implements Form {
 
@@ -62,7 +62,7 @@ public class DefaultForm implements Form {
 
 	@Override
 	public List<Question> getActiveQuestions() {
-		List<Question> result = new LinkedList<Question>();
+		List<Question> result = new LinkedList<>();
 		collectActiveQuestions(interviewObject, result);
 		return result;
 	}

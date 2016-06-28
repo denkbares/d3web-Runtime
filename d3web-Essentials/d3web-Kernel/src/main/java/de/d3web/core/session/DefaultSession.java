@@ -99,9 +99,9 @@ public class DefaultSession implements Session {
 		// notifications
 		this.blackboard = new DefaultBlackboard(this);
 
-		this.dynamicStore = new HashMap<SessionObjectSource<?>, SessionObject>();
+		this.dynamicStore = new HashMap<>();
 		// add problem-solving methods used for this case
-		this.usedPSMethods = new TreeSet<PSMethod>(new PSMethodComparator());
+		this.usedPSMethods = new TreeSet<>(new PSMethodComparator());
 		this.propagationController = new DefaultPropagationManager(this);
 
 		// Interview should be defined very late, since it uses blackboard
@@ -292,7 +292,7 @@ public class DefaultSession implements Session {
 
 	@Override
 	public List<PSMethod> getPSMethods() {
-		return new ArrayList<PSMethod>(usedPSMethods);
+		return new ArrayList<>(usedPSMethods);
 	}
 
 	@Override

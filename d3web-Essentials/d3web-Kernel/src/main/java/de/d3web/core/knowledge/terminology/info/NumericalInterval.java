@@ -82,10 +82,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		if (value == left && !isLeftOpen()) {
 			return true;
 		}
-		if (value == right && !isRightOpen()) {
-			return true;
-		}
-		return false;
+		return value == right && !isRightOpen();
 	}
 
 	public final double getLeft() {
@@ -135,10 +132,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 			return false;
 		}
 		if (other.getLeft() == this.getRight()) {
-			if (this.isRightOpen() || other.isLeftOpen()) {
-				return false;
-			}
-			return true;
+			return !(this.isRightOpen() || other.isLeftOpen());
 		}
 		return true;
 

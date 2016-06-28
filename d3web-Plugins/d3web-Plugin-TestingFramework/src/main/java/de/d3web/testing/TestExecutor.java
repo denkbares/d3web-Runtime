@@ -60,7 +60,7 @@ public class TestExecutor {
 	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
 	private final BuildResult build;
-	private final HashMap<TestSpecification, TestResult> testResults = new HashMap<TestSpecification, TestResult>();
+	private final HashMap<TestSpecification, TestResult> testResults = new HashMap<>();
 	private String currentMessage;
 	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
 	private float finishedTests;
@@ -120,7 +120,7 @@ public class TestExecutor {
 
 	private void updateTestResults(Map<TestSpecification, Collection<CallableTest>> callableTests) {
 		MultiMap<TestResult, TestResult> groups =
-				new DefaultMultiMap<TestResult, TestResult>();
+				new DefaultMultiMap<>();
 		TestResult currentGroup = null;
 		for (TestSpecification<?> specification : callableTests.keySet()) {
 			Collection<CallableTest> ct = callableTests.get(specification);
@@ -160,7 +160,7 @@ public class TestExecutor {
 
 	private <T> Collection<TestObjectContainer<T>> getTestObjects(TestSpecification<T> specification) {
 
-		Collection<TestObjectContainer<T>> allTestObjects = new LinkedList<TestObjectContainer<T>>();
+		Collection<TestObjectContainer<T>> allTestObjects = new LinkedList<>();
 		Test<T> test = specification.getTest();
 		Class<T> objectClass = test.getTestObjectClass();
 		if (objectClass == null) return Collections.emptyList();
@@ -174,7 +174,7 @@ public class TestExecutor {
 
 	@SuppressWarnings("UnnecessaryLabelOnContinueStatement")
 	private Collection<TestSpecification<?>> getValidSpecifications() {
-		Collection<TestSpecification<?>> validTests = new ArrayList<TestSpecification<?>>();
+		Collection<TestSpecification<?>> validTests = new ArrayList<>();
 		prepareTests:
 		for (TestSpecification<?> specification : specifications) {
 
@@ -249,14 +249,14 @@ public class TestExecutor {
 			return Collections.emptyList();
 		}
 
-		Collection<CallableTest<T>> result = new HashSet<CallableTest<T>>();
+		Collection<CallableTest<T>> result = new HashSet<>();
 		boolean noTestObjects = true;
 
 		for (final TestObjectContainer<T> testObjectContainer : testObjects) {
 			noTestObjects = false;
 			String testObjectName = testObjectContainer.getTestObjectName();
 			T testObject = testObjectContainer.getTestObject();
-			CallableTest<T> callableTest = new CallableTest<T>(specification, testObjectName,
+			CallableTest<T> callableTest = new CallableTest<>(specification, testObjectName,
 					testObject, testResult);
 			result.add(callableTest);
 		}
@@ -403,7 +403,7 @@ public class TestExecutor {
 	class CallableTest<T> implements Callable<Void> {
 
 		private final String testObjectName;
-		private TestSpecification<T> specification;
+		private final TestSpecification<T> specification;
 		private final T testObject;
 		private final TestResult testResult;
 
@@ -458,7 +458,7 @@ public class TestExecutor {
 				}
 				Test<T> test = specification.getTest();
 				Message message = test.execute(specification, testObject);
-				if (message.getType().equals(Message.Type.SUCCESS)) {
+				if (message.getType() == Type.SUCCESS) {
 					testResult.addExpectedMessage(testObjectName, message);
 				}
 				else {

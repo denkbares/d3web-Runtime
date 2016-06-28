@@ -38,11 +38,8 @@ public class SwitchingHeuristicHandler implements FragmentHandler<KnowledgeBase>
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("heuristic")
-				&& element.getAttribute("name").equals(NODE_NAME)) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("heuristic")
+				&& element.getAttribute("name").equals(NODE_NAME);
 	}
 
 	@Override

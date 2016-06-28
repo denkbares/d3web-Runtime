@@ -77,7 +77,7 @@ public final class SessionConversionFactory {
 		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 
 		// Search psmethods of session
-		Map<String, PSMethod> psMethods = new HashMap<String, PSMethod>();
+		Map<String, PSMethod> psMethods = new HashMap<>();
 		for (PSMethod psm : target.getPSMethods()) {
 			psMethods.put(psm.getClass().getName(), psm);
 		}
@@ -110,7 +110,7 @@ public final class SessionConversionFactory {
 	}
 
 	private static List<Fact> getFacts(KnowledgeBase kb, List<FactRecord> factRecords, Map<String, PSMethod> psMethods) throws IOException {
-		List<Fact> resultFacts = new LinkedList<Fact>();
+		List<Fact> resultFacts = new LinkedList<>();
 		for (FactRecord factRecord : factRecords) {
 			// ignore merged facts
 			String psm = factRecord.getPSM();

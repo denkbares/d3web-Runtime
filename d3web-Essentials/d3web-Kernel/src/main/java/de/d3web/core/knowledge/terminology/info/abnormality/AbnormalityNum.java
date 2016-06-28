@@ -46,7 +46,7 @@ import de.d3web.core.session.values.NumValue;
  */
 public class AbnormalityNum implements Abnormality {
 
-	private final List<AbnormalityInterval> intervals = new LinkedList<AbnormalityInterval>();
+	private final List<AbnormalityInterval> intervals = new LinkedList<>();
 
 	public AbnormalityNum() {
 	}
@@ -69,14 +69,6 @@ public class AbnormalityNum implements Abnormality {
 		return true;
 	}
 
-	/**
-	 * 
-	 * @param lowerBoundary double
-	 * @param upperBoundary double
-	 * @param value double
-	 * @param type String
-	 * @throws AbnormalityIntervalException if any of these values is not sound
-	 */
 	public void addValue(
 			double lowerBoundary,
 			double upperBoundary,
@@ -124,12 +116,12 @@ public class AbnormalityNum implements Abnormality {
 	 *         AbnormalityInterval
 	 */
 	@Override
-	public double getValue(Value ans) {
-		if (ans instanceof NumValue) {
-			double d = 0;
-			Double D = (Double) ((NumValue) ans).getValue();
-			if (D != null) d = D.doubleValue();
-			return getValue(d);
+	public double getValue(Value answerValue) {
+		if (answerValue instanceof NumValue) {
+			double doubleValue = 0;
+			Double objectDoubleValue = (Double) answerValue.getValue();
+			if (objectDoubleValue != null) doubleValue = objectDoubleValue;
+			return getValue(doubleValue);
 		}
 		return AbnormalityUtils.getDefault();
 	}

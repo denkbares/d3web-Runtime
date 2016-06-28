@@ -37,7 +37,7 @@ import de.d3web.core.session.values.UndefinedValue;
 public class Operator implements FormulaNumberElement {
 
 	public enum Operation {
-		Add, Div, Max, Min, Mult, Sub;
+		Add, Div, Max, Min, Mult, Sub
 	}
 
 	/** first argument of the term */
@@ -140,7 +140,7 @@ public class Operator implements FormulaNumberElement {
 	 */
 	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
-		Collection<TerminologyObject> ret = new LinkedList<TerminologyObject>(
+		Collection<TerminologyObject> ret = new LinkedList<>(
 				getArg1().getTerminalObjects());
 		ret.addAll(getArg2().getTerminalObjects());
 
@@ -151,11 +151,11 @@ public class Operator implements FormulaNumberElement {
 	public String toString() {
 
 		return "("
-				+ getArg1().toString()
+				+ getArg1()
 				+ " "
 				+ getSymbol()
 				+ " "
-				+ getArg2().toString()
+				+ getArg2()
 				+ ")";
 
 	}

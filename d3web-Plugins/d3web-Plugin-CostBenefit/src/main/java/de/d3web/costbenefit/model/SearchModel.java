@@ -41,12 +41,12 @@ import de.d3web.utils.Log;
  */
 public class SearchModel {
 
-	private final NavigableSet<Target> targets = new TreeSet<Target>(new TargetComparator());
+	private final NavigableSet<Target> targets = new TreeSet<>(new TargetComparator());
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
 	private boolean aborted = false;
-	private CostFunction costFunction;
+	private final CostFunction costFunction;
 	private final Session session;
 	private final Set<StateTransition> transitionalStateTransitions;
 	private final Set<QContainer> blockedQContainers;
@@ -63,7 +63,7 @@ public class SearchModel {
 			Log.warning("No Costbenefit-PSMethod included in the session, using default cost function.");
 		}
 		blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
-		transitionalStateTransitions = new HashSet<StateTransition>();
+		transitionalStateTransitions = new HashSet<>();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
@@ -311,7 +311,7 @@ public class SearchModel {
 	 * @return List of unblocked target StateTransitions
 	 */
 	public Set<StateTransition> getTargetStateTransitions() {
-		HashSet<StateTransition> result = new HashSet<StateTransition>();
+		HashSet<StateTransition> result = new HashSet<>();
 		for (Target t : targets) {
 			for (QContainer qcon : t.getQContainers()) {
 				if (!blockedQContainers.contains(qcon)) {

@@ -44,8 +44,8 @@ public class Message implements Comparable<Message> {
 
 	private final Type type;
 	private final String message;
-	private Collection<MessageObject> objects = new ArrayList<MessageObject>();
-	private MultiMap<Boolean, File> attachments = new DefaultMultiMap<Boolean, File>();
+	private Collection<MessageObject> objects = new ArrayList<>();
+	private final MultiMap<Boolean, File> attachments = new DefaultMultiMap<>();
 
 	public Message(Type type) {
 		this(type, null);
@@ -132,7 +132,7 @@ public class Message implements Comparable<Message> {
 
 	@Override
 	public String toString() {
-		return getType().toString() + ": " + getText();
+		return getType() + ": " + getText();
 	}
 
 	@Override

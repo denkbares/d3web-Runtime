@@ -34,5 +34,5 @@ public interface ValueObject extends TerminologyObject {
 	 * @created 30.09.2010
 	 * @return DefaultValue
 	 */
-	public Value getDefaultValue();
+	Value getDefaultValue();
 }

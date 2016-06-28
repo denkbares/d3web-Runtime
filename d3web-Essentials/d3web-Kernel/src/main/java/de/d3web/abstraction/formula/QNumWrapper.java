@@ -87,7 +87,7 @@ public class QNumWrapper implements FormulaNumberElement {
 	 */
 	@Override
 	public Collection<? extends TerminologyObject> getTerminalObjects() {
-		Collection<QuestionNum> ret = new LinkedList<QuestionNum>();
+		Collection<QuestionNum> ret = new LinkedList<>();
 		ret.add(value);
 
 		return ret;

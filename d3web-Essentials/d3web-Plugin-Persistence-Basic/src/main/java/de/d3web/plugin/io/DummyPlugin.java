@@ -29,7 +29,7 @@ import de.d3web.plugin.Resource;
  */
 public class DummyPlugin implements Plugin {
 
-	private String id;
+	private final String id;
 
 	public DummyPlugin(String id) {
 		this.id = id;

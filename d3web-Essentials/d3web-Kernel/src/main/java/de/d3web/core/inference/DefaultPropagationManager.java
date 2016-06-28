@@ -40,23 +40,23 @@ import de.d3web.utils.Log;
 
 public class DefaultPropagationManager implements PropagationManager {
 
-	private final Collection<PropagationListener> listeners = new LinkedList<PropagationListener>();
+	private final Collection<PropagationListener> listeners = new LinkedList<>();
 
-	private final Set<ValueObject> forcedPropagationEntries = new HashSet<ValueObject>();
+	private final Set<ValueObject> forcedPropagationEntries = new HashSet<>();
 
-	private final Map<ValueObject, Value> postPropagationEntries = new HashMap<ValueObject, Value>();
-	private final Map<InterviewObject, Value> postInterviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
+	private final Map<ValueObject, Value> postPropagationEntries = new HashMap<>();
+	private final Map<InterviewObject, Value> postInterviewPropagationEntries = new LinkedHashMap<>();
 
-	private final Map<ValueObject, Value> globalPropagationEntries = new HashMap<ValueObject, Value>();
-	private final Map<InterviewObject, Value> globalInterviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
+	private final Map<ValueObject, Value> globalPropagationEntries = new HashMap<>();
+	private final Map<InterviewObject, Value> globalInterviewPropagationEntries = new LinkedHashMap<>();
 
 	private class PSMethodHandler {
 
 		private boolean hasPropagated;
 		private final PSMethod psMethod;
-		private final Map<ValueObject, Value> propagationEntries = new HashMap<ValueObject, Value>();
-		private final Set<ValueObject> hazardPropagationEntries = new HashSet<ValueObject>();
-		private final Map<InterviewObject, Value> interviewPropagationEntries = new LinkedHashMap<InterviewObject, Value>();
+		private final Map<ValueObject, Value> propagationEntries = new HashMap<>();
+		private final Set<ValueObject> hazardPropagationEntries = new HashSet<>();
+		private final Map<InterviewObject, Value> interviewPropagationEntries = new LinkedHashMap<>();
 
 		public PSMethodHandler(PSMethod psMethod) {
 			this.psMethod = psMethod;
@@ -138,7 +138,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	private void initHandlers() {
-		this.psHandlers = new LinkedList<PSMethodHandler>();
+		this.psHandlers = new LinkedList<>();
 		for (PSMethod psMethod : session.getPSMethods()) {
 			psHandlers.add(new PSMethodHandler(psMethod));
 		}
@@ -230,7 +230,7 @@ public class DefaultPropagationManager implements PropagationManager {
 		// inform listener about starting entries
 		Collection<PropagationEntry> startingEntries = convertMapsToEntries(
 				globalPropagationEntries,
-				Collections.<ValueObject>emptySet(),
+				Collections.emptySet(),
 				globalInterviewPropagationEntries, false);
 		for (PropagationListener listener : listeners) {
 			listener.propagationStarted(session, startingEntries);
@@ -238,7 +238,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 		try {
 			while (true) {
-				PSMethodHandler firstHandler = null;
+				PSMethodHandler firstHandler;
 
 				// find first handler that requires propagation
 				firstHandler = findNextHandler();
@@ -248,7 +248,7 @@ public class DefaultPropagationManager implements PropagationManager {
 					// inform listener about post propagation entries
 					Collection<PropagationEntry> entries = convertMapsToEntries(
 							postPropagationEntries,
-							Collections.<ValueObject>emptySet(),
+							Collections.emptySet(),
 							postInterviewPropagationEntries, true);
 					for (PropagationListener listener : listeners) {
 						listener.postPropagationStarted(session, entries);
@@ -274,7 +274,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			// even if we have been terminated
 			Collection<PropagationEntry> entries = convertMapsToEntries(
 					globalPropagationEntries,
-					Collections.<ValueObject>emptySet(),
+					Collections.emptySet(),
 					globalInterviewPropagationEntries, true);
 			forcedPropagationEntries.clear();
 			for (PropagationListener listener : listeners) {
@@ -289,7 +289,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			Map<InterviewObject, Value> interviewPropagationEntries,
 			boolean clearEntries) {
 
-		Collection<PropagationEntry> entries = new ArrayList<PropagationEntry>(
+		Collection<PropagationEntry> entries = new ArrayList<>(
 				propagationEntries.size() + interviewPropagationEntries.size());
 		for (Map.Entry<ValueObject, Value> change : propagationEntries.entrySet()) {
 			ValueObject object = change.getKey();

@@ -33,8 +33,8 @@ import de.d3web.strings.Strings;
  */
 public abstract class AbstractTest<T> implements Test<T> {
 
-	private final List<TestParameter> argParameters = new ArrayList<TestParameter>();
-	private final List<TestParameter> ignoreParameters = new ArrayList<TestParameter>();
+	private final List<TestParameter> argParameters = new ArrayList<>();
+	private final List<TestParameter> ignoreParameters = new ArrayList<>();
 
 	@Override
 	public final List<TestParameter> getParameterSpecification() {
@@ -130,7 +130,7 @@ public abstract class AbstractTest<T> implements Test<T> {
 			if (!ok) {
 				r.setError(i, (ignoreParams ? "Ignore a" : "A") + "rgument passed as '"
 						+ parameter.getName()
-						+ "' is not a valid " + parameter.getType().toString()
+						+ "' is not a valid " + parameter.getType()
 						+ " argument: \"" + args[i] + "\".");
 			}
 		}
@@ -151,7 +151,7 @@ public abstract class AbstractTest<T> implements Test<T> {
 	private static int getNumberOfMandatoryParameters(List<TestParameter> parameters) {
 		int count = 0;
 		for (TestParameter p : parameters) {
-			if (p.getMode().equals(TestParameter.Mode.Mandatory)) {
+			if (p.getMode() == TestParameter.Mode.Mandatory) {
 				count++;
 			}
 		}

@@ -166,7 +166,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 				}
 			}
 			else {
-				List<SessionRecord> templist = new LinkedList<SessionRecord>();
+				List<SessionRecord> templist = new LinkedList<>();
 				templist.add(record);
 				spm.saveSessions(file, templist, new DummyProgressListener());
 			}

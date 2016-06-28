@@ -31,6 +31,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
+import de.d3web.strings.Strings;
 
 /**
  * Saves and loads ManualTargetSelectionEntrys
@@ -50,8 +51,8 @@ public class ManualTargetSelectionEntryHandler implements FragmentHandler<Knowle
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		try {
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = XMLUtil.readDate(dateString);
-			List<String> targets = new LinkedList<String>();
+			Date date = Strings.readDate(dateString);
+			List<String> targets = new LinkedList<>();
 			List<Element> elementList = XMLUtil.getElementList(element.getChildNodes());
 			if (elementList.size() != 1 || !elementList.get(0).getNodeName().equals(TARGETS)) {
 				throw new IOException("Element must have exactly one child named " + TARGETS);
@@ -69,7 +70,7 @@ public class ManualTargetSelectionEntryHandler implements FragmentHandler<Knowle
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		ManualTargetSelectionEntry entry = (ManualTargetSelectionEntry) object;
-		String dateString = XMLUtil.writeDate(entry.getDate());
+		String dateString = Strings.writeDate(entry.getDate());
 		Element e = persistence.getDocument().createElement(ELEMENT_NAME);
 		e.setAttribute("type", ELEMENT_TYPE);
 		e.setAttribute(ATTR_DATE, dateString);

@@ -48,5 +48,5 @@ public interface Copyable<T> {
 	 * @created 04.06.2012
 	 * @return the deep copy
 	 */
-	public T copy();
+	T copy();
 }

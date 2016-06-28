@@ -36,11 +36,8 @@ public class DividedTransitionHeuristicHandler implements FragmentHandler<Knowle
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("heuristic")
-				&& element.getAttribute("name").equals("DividedTransitionHeuristic")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("heuristic")
+				&& element.getAttribute("name").equals("DividedTransitionHeuristic");
 	}
 
 	@Override

@@ -66,8 +66,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 	private static final List<NodeFragmentHandler> HANDLERS;
 
 	static {
-		// TODO create ExtensionPoint
-		HANDLERS = new ArrayList<NodeFragmentHandler>();
+		HANDLERS = new ArrayList<>();
 		HANDLERS.add(new StartNodeFragmentHandler());
 		HANDLERS.add(new ExitNodeFragmentHandler());
 		HANDLERS.add(new ActionNodeFragmentHandler());
@@ -193,14 +192,14 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 	private Flow readFlow(Persistence<KnowledgeBase> persistence, Element flowElem) throws IOException {
 		NodeList nodeList = flowElem.getElementsByTagName(NODE_ELEM);
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			nodes.add(readNode(persistence, (Element) nodeList.item(i)));
 		}
 
 		NodeList edgeList = flowElem.getElementsByTagName(EDGE_ELEM);
-		List<Edge> edges = new ArrayList<Edge>();
+		List<Edge> edges = new ArrayList<>();
 
 		for (int i = 0; i < edgeList.getLength(); i++) {
 			edges.add(readEdge(persistence, (Element) edgeList.item(i), nodes));

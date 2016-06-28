@@ -33,12 +33,12 @@ public class PSConfig implements Comparable<PSConfig> {
 		autodetect,
 	}
 
-	private PSState psState;
-	private PSMethod psMethod;
-	private Autodetect autodetect;
-	private String extensionID;
-	private String pluginID;
-	private double priority;
+	private final PSState psState;
+	private final PSMethod psMethod;
+	private final Autodetect autodetect;
+	private final String extensionID;
+	private final String pluginID;
+	private final double priority;
 
 	public double getPriority() {
 		return priority;
@@ -79,11 +79,8 @@ public class PSConfig implements Comparable<PSConfig> {
 
 	@Override
 	public int compareTo(PSConfig o) {
-		int comparePrioritiy = Double.compare(priority, o.getPriority());
-		if (comparePrioritiy != 0) {
-			return comparePrioritiy;
-		}
-		else {
+		int comparePriority = Double.compare(priority, o.getPriority());
+		if (comparePriority == 0) {
 			if (psMethod != null && o.getPsMethod() != null) {
 				return psMethod.getClass().toString().compareTo(
 						o.getPsMethod().getClass().toString());
@@ -97,6 +94,9 @@ public class PSConfig implements Comparable<PSConfig> {
 			else {
 				return pluginID.compareTo(o.getPluginID());
 			}
+		}
+		else {
+			return comparePriority;
 		}
 	}
 }

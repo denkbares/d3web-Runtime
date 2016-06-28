@@ -78,7 +78,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				Value value = condEqual.getValue();
 				if (condEqual.getQuestion() instanceof QuestionOC && value instanceof ChoiceValue) {
 					ChoiceValue cv = (ChoiceValue) value;
-					List<Condition> terms = new LinkedList<Condition>();
+					List<Condition> terms = new LinkedList<>();
 					QuestionOC oc = (QuestionOC) condEqual.getQuestion();
 					for (Choice c : oc.getAllAlternatives()) {
 						if (!cv.getChoiceID().equals(new ChoiceID(c))) {
@@ -91,7 +91,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			// use De Morgan
 			else if (subCondition instanceof CondAnd) {
 				CondAnd condAnd = (CondAnd) subCondition;
-				List<Condition> terms = new LinkedList<Condition>();
+				List<Condition> terms = new LinkedList<>();
 				for (Condition c : condAnd.getTerms()) {
 					terms.add(new CondNot(c));
 				}
@@ -99,7 +99,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			}
 			else if (subCondition instanceof CondOr) {
 				CondOr condOr = (CondOr) subCondition;
-				List<Condition> terms = new LinkedList<Condition>();
+				List<Condition> terms = new LinkedList<>();
 				for (Condition c : condOr.getTerms()) {
 					terms.add(new CondNot(c));
 				}
@@ -140,7 +140,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	private static Collection<Question> getRelevantQuestions(Collection<? extends QASet> qasets, Session session) {
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		FormStrategy formStrategy = interview.getFormStrategy();
-		Set<Question> result = new HashSet<Question>();
+		Set<Question> result = new HashSet<>();
 		for (QASet qaSet : qasets) {
 			Form form = formStrategy.getForm(qaSet, session);
 			for (Question q : form.getActiveQuestions()) {
@@ -160,7 +160,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	@Override
 	public Collection<Question> getDiscriminatingQuestions(
 			Collection<Solution> solutions, Session session) {
-		Set<Question> coveredSymptoms = new HashSet<Question>();
+		Set<Question> coveredSymptoms = new HashSet<>();
 		for (Solution solution : solutions) {
 			KnowledgeSlice ks = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 			if (ks == null) continue;
@@ -175,7 +175,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	private Map<Question, Set<XCLRelation>> getExcludingQuestion(Collection<Solution> solutions, Collection<Question> questions) {
-		Map<Question, Set<XCLRelation>> excludingQuestions = new HashMap<Question, Set<XCLRelation>>();
+		Map<Question, Set<XCLRelation>> excludingQuestions = new HashMap<>();
 		for (Question q : questions) {
 			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
 					XCLContributedModelSet.KNOWLEDGE_KIND);
@@ -186,7 +186,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 							if (relation.hasType(XCLRelationType.contradicted)) {
 								Set<XCLRelation> conditions = excludingQuestions.get(q);
 								if (conditions == null) {
-									conditions = new HashSet<XCLRelation>();
+									conditions = new HashSet<>();
 									excludingQuestions.put(q, conditions);
 								}
 								conditions.add(relation);
@@ -206,12 +206,12 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Collection<Question> questions = getRelevantQuestions(qasets, session);
 		if (questions.size() == 0) return 0;
 
-		InformationPots<Condition> pots = new InformationPots<Condition>();
+		InformationPots<Condition> pots = new InformationPots<>();
 
 		Map<Question, Set<XCLRelation>> excludingQuestions =
 				getExcludingQuestion(solutions, questions);
 
-		Set<XCLModel> coveringModels = new HashSet<XCLModel>();
+		Set<XCLModel> coveringModels = new HashSet<>();
 		// collect models of the specified solutions, covering the questions
 		for (Question q : questions) {
 			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
@@ -226,7 +226,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 		for (XCLModel model : coveringModels) {
 			ArrayList<Set<Condition>> conditionsForQuestions =
-					new ArrayList<Set<Condition>>(questions.size());
+					new ArrayList<>(questions.size());
 			for (Question q : questions) {
 				Set<Condition> set = null;
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
@@ -264,7 +264,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		// finally we add all the solutions that are not covered at all
 		float allWeight = getTotalWeight(solutions);
 		ArrayList<Set<Condition>> conditionsForQuestions =
-				new ArrayList<Set<Condition>>(questions.size());
+				new ArrayList<>(questions.size());
 		for (Question q : questions) {
 			Set<Condition> set = NULL_SET;
 			Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
@@ -282,7 +282,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	private Collection<Condition> filterForeignConditions(Question q, Collection<Condition> extractedOrs) {
-		Collection<Condition> filteredExtractedOrs = new HashSet<Condition>();
+		Collection<Condition> filteredExtractedOrs = new HashSet<>();
 		for (Condition c : extractedOrs) {
 			if (c == null || c.getTerminalObjects().contains(q)) {
 				filteredExtractedOrs.add(c);
@@ -312,8 +312,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		return totalWeight;
 	}
 
-	private static final Set<Condition> NULL_SET = Collections.unmodifiableSet(new HashSet<Condition>(
-			Arrays.asList((Condition) null)));
+	private static final Set<Condition> NULL_SET = Collections.unmodifiableSet(new HashSet<>(
+			Collections.singletonList((Condition) null)));
 
 	/**
 	 * Adds item to a source set that may be null and returns the resulting set.
@@ -330,9 +330,9 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 */
 	private static final Set<Condition> lazyAddAll(Set<Condition> source, Collection<Condition> items) {
 		if (items == null || items.isEmpty()) return source;
-		if (source == null) return new HashSet<Condition>(items);
+		if (source == null) return new HashSet<>(items);
 		if (source == NULL_SET) {
-			source = new HashSet<Condition>(items);
+			source = new HashSet<>(items);
 			source.add(null);
 			return source;
 		}
@@ -340,8 +340,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		return source;
 	}
 
-	private final Map<Condition, Collection<Condition>> extractedOrCache = new HashMap<Condition, Collection<Condition>>();
-	private final Map<Condition, Collection<Condition>> negatedExtractedOrCache = new HashMap<Condition, Collection<Condition>>();
+	private final Map<Condition, Collection<Condition>> extractedOrCache = new HashMap<>();
+	private final Map<Condition, Collection<Condition>> negatedExtractedOrCache = new HashMap<>();
 
 	/**
 	 * Returns the extracted ors for the condition of a specified xcl relation.
@@ -351,7 +351,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Condition condition = r.getConditionedFinding();
 		Collection<Condition> result = extractedOrCache.get(condition);
 		if (result == null) {
-			result = new HashSet<Condition>();
+			result = new HashSet<>();
 			extractOrs(result, condition);
 			result = Collections.unmodifiableCollection(result);
 			extractedOrCache.put(condition, result);
@@ -368,7 +368,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Condition condition = r.getConditionedFinding();
 		Collection<Condition> result = negatedExtractedOrCache.get(condition);
 		if (result == null) {
-			result = new HashSet<Condition>();
+			result = new HashSet<>();
 			extractOrs(result, new CondNot(condition));
 			result = Collections.unmodifiableCollection(result);
 			negatedExtractedOrCache.put(condition, result);
@@ -388,7 +388,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		// make a hashset, because we require it for fast access
 		// during information gain calculation later on
 		// and remove all non-xcl solutions from the set meanwhile
-		HashSet<Solution> result = new HashSet<Solution>();
+		HashSet<Solution> result = new HashSet<>();
 		for (Solution solution : solutions) {
 			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 			if (model != null) {

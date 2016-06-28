@@ -45,7 +45,7 @@ public interface KnowledgeWriter {
 	 * 
 	 * @throws IOException when an IO expection ocurrs during the write action
 	 */
-	public void write(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException;
+	void write(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException;
 
 	/**
 	 * The size of the knowledge--written by this {@link KnowledgeWriter}--is
@@ -55,5 +55,5 @@ public interface KnowledgeWriter {
 	 *        estimation
 	 * @return the valued size of the write method
 	 */
-	public int getEstimatedSize(KnowledgeBase knowledgeBase);
+	int getEstimatedSize(KnowledgeBase knowledgeBase);
 }

@@ -26,24 +26,24 @@ import de.d3web.core.session.Session;
 
 public interface InferenceTrace {
 
-	public abstract Rating getState();
+	Rating getState();
 
-	public abstract Collection<XCLRelation> getPosRelations();
+	Collection<XCLRelation> getPosRelations();
 
-	public abstract Collection<XCLRelation> getNegRelations();
+	Collection<XCLRelation> getNegRelations();
 
-	public abstract Collection<XCLRelation> getContrRelations();
+	Collection<XCLRelation> getContrRelations();
 
-	public abstract Collection<XCLRelation> getReqPosRelations();
+	Collection<XCLRelation> getReqPosRelations();
 
-	public abstract Collection<XCLRelation> getReqNegRelations();
+	Collection<XCLRelation> getReqNegRelations();
 
-	public abstract Collection<XCLRelation> getSuffRelations();
+	Collection<XCLRelation> getSuffRelations();
 
-	public abstract double getScore();
+	double getScore();
 
-	public abstract double getSupport();
+	double getSupport();
 
-	public void refreshRelations(XCLModel xclModel, Session session);
+	void refreshRelations(XCLModel xclModel, Session session);
 
 }

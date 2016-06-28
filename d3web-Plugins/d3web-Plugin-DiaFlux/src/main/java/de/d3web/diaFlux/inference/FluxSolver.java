@@ -20,7 +20,6 @@
 
 package de.d3web.diaFlux.inference;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -85,26 +84,23 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		precise
 	}
 
-	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<EdgeMap>(
+	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<>(
 			"DEPENDANT_EDGES", EdgeMap.class);
-	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<NodeList>(
+	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<>(
 			"DEPENDANT_NODES", NodeList.class);
 	/**
 	 * Nodes that derive a specific terminology object.
 	 */
-	public final static KnowledgeKind<NodeList> DERIVING_NODES = new KnowledgeKind<NodeList>(
+	public final static KnowledgeKind<NodeList> DERIVING_NODES = new KnowledgeKind<>(
 			"DERIVING_NODES", NodeList.class);
 
-	public final static KnowledgeKind<FlowSet> FLOW_SET = new KnowledgeKind<FlowSet>(
+	public final static KnowledgeKind<FlowSet> FLOW_SET = new KnowledgeKind<>(
 			"FLOW_SET", FlowSet.class);
 
 	public static final Object SNAPSHOT_SOURCE = SnapshotNode.class;
 	public static final Object SUGGEST_SOURCE = SuggestMode.class;
 
 	private SuggestMode suggestMode = SuggestMode.ignore;
-
-	public FluxSolver() {
-	}
 
 	public SuggestMode getSuggestMode() {
 		return suggestMode;
@@ -338,7 +334,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		Log.fine("Taking snapshots: " + snappyFlows);
 
 		// Calculate new flow runs (before changing anything in the session)
-		Collection<FlowRun> newRuns = new HashSet<FlowRun>();
+		Collection<FlowRun> newRuns = new HashSet<>();
 		for (SnapshotNode snapshotNode : enteredSnapshots) {
 			// Generate a new FlowRun for each snapshot
 			newRuns.add(generateNewFlowRunForSnapshot(session, snapshotNode));
@@ -387,13 +383,13 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		run.addBlockedSnapshot(snapshotNode, session);
 
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
-		Collection<FlowRun> runsForSnapshot = getFlowRunsWithEnteredSnapshot(Arrays.asList(snapshotNode), caseObject);
+		Collection<FlowRun> runsForSnapshot = getFlowRunsWithEnteredSnapshot(Collections.singletonList(snapshotNode), caseObject);
 
 		// collect the parents, active nodes and blocked nodes from the previous FlowRuns
 		for (FlowRun flowRun : runsForSnapshot) {
-			Set<Node> parents = new LinkedHashSet<Node>();
-			Set<ComposedNode> activeComposedNodes = new LinkedHashSet<ComposedNode>();
-			Set<DiaFluxElement> activeElements = new LinkedHashSet<DiaFluxElement>();
+			Set<Node> parents = new LinkedHashSet<>();
+			Set<ComposedNode> activeComposedNodes = new LinkedHashSet<>();
+			Set<DiaFluxElement> activeElements = new LinkedHashSet<>();
 			run.addBlockedSnapshot(flowRun, session);
 			addActiveNodesLeadingToNode(flowRun, snapshotNode, null, activeComposedNodes, activeElements);
 			addParents(flowRun, activeComposedNodes, snapshotNode, parents);
@@ -465,7 +461,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * @created 28.02.2011
 	 */
 	public static Collection<Node> getAllActiveNodesOfRunsWithSnapshot(SnapshotNode snapshotNode, Collection<FlowRun> snapshotFlows) {
-		Collection<Node> result = new HashSet<Node>();
+		Collection<Node> result = new HashSet<>();
 		for (FlowRun run : snapshotFlows) {
 			if (run.isActivated(snapshotNode)) {
 				result.addAll(run.getActiveNodes());
@@ -530,7 +526,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 	public static Collection<FlowRun> getFlowRunsWithEnteredSnapshot(Collection<SnapshotNode> enteredSnapshots,
 																	 DiaFluxCaseObject caseObject) {
-		Set<FlowRun> snappyRuns = new HashSet<FlowRun>();
+		Set<FlowRun> snappyRuns = new HashSet<>();
 
 		for (FlowRun flowRun : caseObject.getRuns()) {
 			for (SnapshotNode snapshotNode : enteredSnapshots) {
@@ -607,8 +603,8 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// "snapshot"ed objects do not deliver their deriving
 		// objects any longer
 
-		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
-		Set<Node> visited = new HashSet<Node>();
+		Set<TerminologyObject> result = new HashSet<>();
+		Set<Node> visited = new HashSet<>();
 		NodeList nodes = derivedObject.getKnowledgeStore().getKnowledge(DERIVING_NODES);
 		if (nodes == null) return Collections.emptySet();
 		for (Node node : nodes.getNodes()) {

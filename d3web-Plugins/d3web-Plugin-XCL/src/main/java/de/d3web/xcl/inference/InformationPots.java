@@ -73,7 +73,7 @@ public class InformationPots<K> {
 		}
 	}
 
-	private final Map<MultiKey<K>, WeightSum> map = new HashMap<MultiKey<K>, WeightSum>();
+	private final Map<MultiKey<K>, WeightSum> map = new HashMap<>();
 	private float totalWeight = 0;
 
 	/**
@@ -125,7 +125,7 @@ public class InformationPots<K> {
 	 */
 	private void addWeights(float weight, ArrayList<? extends Collection<K>> allAnswers, int index, K[] result) {
 		if (index == -1) {
-			MultiKey<K> key = new MultiKey<K>(result);
+			MultiKey<K> key = new MultiKey<>(result);
 			WeightSum weightSum = map.get(key);
 			if (weightSum == null) {
 				weightSum = new WeightSum();

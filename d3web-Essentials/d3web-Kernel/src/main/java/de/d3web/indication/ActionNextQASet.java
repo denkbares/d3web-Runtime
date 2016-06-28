@@ -20,6 +20,10 @@
 
 package de.d3web.indication;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
@@ -29,9 +33,6 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.utils.EqualsUtils;
 import de.d3web.utils.HashCodeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This abstract class is representing the Action of an indication. Specialize
@@ -98,10 +99,8 @@ public abstract class ActionNextQASet extends PSAction {
 	 * @param qasets the specified list of {@link QASet} instances
 	 */
 	public void setQASets(QASet... qasets) {
-		this.qasets = new ArrayList<QASet>();
-		for (QASet qaSet : qasets) {
-			this.qasets.add(qaSet);
-		}
+		this.qasets = new ArrayList<>();
+		Collections.addAll(this.qasets, qasets);
 	}
 
 	/**

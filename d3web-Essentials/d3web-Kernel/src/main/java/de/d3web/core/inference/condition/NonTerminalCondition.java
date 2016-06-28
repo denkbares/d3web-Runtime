@@ -55,8 +55,8 @@ public abstract class NonTerminalCondition implements Condition {
 	 * @param conditions the specified sub-conditions
 	 */
 	public NonTerminalCondition(List<Condition> conditions) {
-		terms = Collections.unmodifiableList(new ArrayList<Condition>(conditions));
-		termSet = new HashSet<Condition>(conditions);
+		terms = Collections.unmodifiableList(new ArrayList<>(conditions));
+		termSet = new HashSet<>(conditions);
 		// create hash code an cache it
 		int temphash = HashCodeUtils.SEED;
 		temphash = HashCodeUtils.hash(temphash, getClass().getName());
@@ -66,7 +66,7 @@ public abstract class NonTerminalCondition implements Condition {
 
 	@Override
 	public Collection<TerminologyObject> getTerminalObjects() {
-		Set<TerminologyObject> v = new HashSet<TerminologyObject>();
+		Set<TerminologyObject> v = new HashSet<>();
 		for (Condition condition : terms) {
 			v.addAll(condition.getTerminalObjects());
 		}

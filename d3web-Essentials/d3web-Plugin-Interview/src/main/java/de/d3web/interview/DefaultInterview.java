@@ -205,7 +205,7 @@ public class DefaultInterview implements Interview {
 			}
 		}
 
-		else if (!oldIndication.getState().equals(newIndication.getState())) {
+		else if (oldIndication.getState() != newIndication.getState()) {
 			Log.warning("Unknown indication state: old: " + oldIndication + ", new: "
 					+ newIndication + ", ignoring it...");
 		}
@@ -269,7 +269,7 @@ public class DefaultInterview implements Interview {
 				// State=ACTIVE
 				else if (child instanceof QContainer) {
 					InterviewState childState = checkChildrenState((QContainer) child);
-					if (childState.equals(InterviewState.ACTIVE)) {
+					if (childState == InterviewState.ACTIVE) {
 						return InterviewState.ACTIVE;
 					}
 				}

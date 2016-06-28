@@ -44,7 +44,7 @@ public class MultipleChoiceValueHandler implements FragmentHandler<SessionRecord
 
 	@Override
 	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
-		List<ChoiceID> choiceIDs = new LinkedList<ChoiceID>();
+		List<ChoiceID> choiceIDs = new LinkedList<>();
 		for (Element e : XMLUtil.getElementList(element.getChildNodes())) {
 			ChoiceID answer = new ChoiceID(e.getTextContent());
 			choiceIDs.add(answer);

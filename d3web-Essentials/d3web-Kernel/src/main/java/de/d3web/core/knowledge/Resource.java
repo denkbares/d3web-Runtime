@@ -32,7 +32,7 @@ public interface Resource {
 	/**
 	 * @return the size of the data of this resource
 	 */
-	public long getSize();
+	long getSize();
 
 	/**
 	 * Returns the input stream of the specified resource.
@@ -56,7 +56,7 @@ public interface Resource {
 	 * @return the InputStream to read the data of this resource
 	 * @throws IOException if the stream cannot be provided
 	 */
-	public InputStream getInputStream() throws IOException;
+	InputStream getInputStream() throws IOException;
 
 	/**
 	 * Returns the relative path to the resource within the knowledge base. The
@@ -67,6 +67,6 @@ public interface Resource {
 	 * 
 	 * @return the relative path of the resource (no leading "/")
 	 */
-	public String getPathName();
+	String getPathName();
 
 }

@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.TerminologyObject;
  */
 public abstract class TerminalCondition implements Condition {
 
-	private final ArrayList<TerminologyObject> terminals = new ArrayList<TerminologyObject>();
+	private final ArrayList<TerminologyObject> terminals = new ArrayList<>();
 
 	/**
 	 * Creates a new terminal condition with the specified depending objects.

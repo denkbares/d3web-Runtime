@@ -29,6 +29,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
+import de.d3web.strings.Strings;
 
 /**
  * Handels {@link ActualQContainerEntryHandler}
@@ -48,7 +49,7 @@ public class ActualQContainerEntryHandler implements FragmentHandler<SessionReco
 		String dateString = element.getAttribute(ATTR_DATE);
 		String name = element.getAttribute(ATTR_OBJECT_NAME);
 		try {
-			Date date = XMLUtil.readDate(dateString);
+			Date date = Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY);
 			return new ActualQContainerEntry(date, name);
 		}
 		catch (ParseException e) {
@@ -60,7 +61,7 @@ public class ActualQContainerEntryHandler implements FragmentHandler<SessionReco
 	public Element write(Object object, Persistence<SessionRecord> persistence) throws IOException {
 		ActualQContainerEntry entry = (ActualQContainerEntry) object;
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
-		String dateString = XMLUtil.writeDate(entry.getDate());
+		String dateString = Strings.writeDate(entry.getDate());
 		element.setAttribute(ATTR_DATE, dateString);
 		element.setAttribute("type", ELEMENT_TYPE);
 		element.setAttribute(ATTR_OBJECT_NAME, entry.getQContainerName());

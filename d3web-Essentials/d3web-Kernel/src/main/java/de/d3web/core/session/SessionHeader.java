@@ -36,14 +36,14 @@ public interface SessionHeader extends NamedObject {
 	 * 
 	 * @return {@link Protocol}
 	 */
-	public Protocol getProtocol();
+	Protocol getProtocol();
 
 	/**
 	 * This method should be called, when the session is edited manually.
 	 * 
 	 * @created 24.09.2010
 	 */
-	public void touch();
+	void touch();
 
 	/**
 	 * This method should be called, when the session was edited at the given
@@ -52,7 +52,7 @@ public interface SessionHeader extends NamedObject {
 	 * @created 24.09.2010
 	 * @param date the Date when the Session was edited
 	 */
-	public void touch(Date date);
+	void touch(Date date);
 
 	/**
 	 * Returns the Date of the last change on this Session.
@@ -60,7 +60,7 @@ public interface SessionHeader extends NamedObject {
 	 * @created 24.09.2010
 	 * @return the date of the last edit
 	 */
-	public Date getLastChangeDate();
+	Date getLastChangeDate();
 
 	/**
 	 * Returns the creation date of the Session.
@@ -68,9 +68,9 @@ public interface SessionHeader extends NamedObject {
 	 * @created 24.09.2010
 	 * @return the creation date
 	 */
-	public Date getCreationDate();
+	Date getCreationDate();
 
 	@Override
-	public String getId();
+	String getId();
 
 }

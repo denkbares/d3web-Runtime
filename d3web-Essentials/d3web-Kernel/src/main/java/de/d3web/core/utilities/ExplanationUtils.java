@@ -31,7 +31,7 @@ public class ExplanationUtils {
 	public static Collection<Fact> getPredecessorFacts(Session session, TerminologyObject object) {
 		Fact valueFact = session.getBlackboard().getValueFact(object);
 		Set<TerminologyObject> predecessorObjects = valueFact.getPSMethod().getActiveDerivationSources(object, session);
-		Collection<Fact> predecessorFacts = new HashSet<Fact>(predecessorObjects.size());
+		Collection<Fact> predecessorFacts = new HashSet<>(predecessorObjects.size());
 		for (TerminologyObject predecessorObject : predecessorObjects) {
 			Fact predecessorFact = session.getBlackboard().getValueFact(predecessorObject);
 			if (predecessorFact == null) continue;
@@ -63,8 +63,8 @@ public class ExplanationUtils {
 		Fact valueFact = session.getBlackboard().getValueFact(object);
 		if (valueFact == null) return Collections.emptyList();
 
-		Set<Fact> sources = new HashSet<Fact>();
-		Set<Fact> visited = new HashSet<Fact>();
+		Set<Fact> sources = new HashSet<>();
+		Set<Fact> visited = new HashSet<>();
 		getSourceFacts(session, valueFact, sources, visited);
 		return sources;
 	}

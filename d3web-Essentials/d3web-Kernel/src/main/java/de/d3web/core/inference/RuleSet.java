@@ -33,7 +33,7 @@ public class RuleSet implements KnowledgeSlice {
 
 	// rules that equal are entered into the set, but the same rule
 	// (reference-identity) will not be inserted twice
-	private final Collection<Rule> rules = new IdentitySet<Rule>();
+	private final Collection<Rule> rules = new IdentitySet<>();
 
 	public Collection<Rule> getRules() {
 		return Collections.unmodifiableCollection(rules);

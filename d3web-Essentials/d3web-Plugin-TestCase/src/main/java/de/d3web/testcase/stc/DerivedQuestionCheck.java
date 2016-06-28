@@ -81,7 +81,7 @@ public class DerivedQuestionCheck implements Check {
 
 	@Override
 	public String getCondition() {
-		return question.getName() + " = " + value.toString();
+		return question.getName() + " = " + value;
 	}
 
 	public Question getQuestion() {

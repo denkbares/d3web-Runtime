@@ -43,7 +43,7 @@ public class TerminologyManager {
 	/**
 	 * Hashes the objects for names (unique name assumption required)
 	 */
-	private final Map<String, TerminologyObject> objectNameMap = new HashMap<String, TerminologyObject>();
+	private final Map<String, TerminologyObject> objectNameMap = new HashMap<>();
 	private final TreeIndexer solutionIndexer = new TreeIndexer();
 	private final TreeIndexer questionIndexer = new TreeIndexer();
 	private final KnowledgeBase kb;
@@ -156,7 +156,7 @@ public class TerminologyManager {
 	 *         this KnowledgeBase
 	 */
 	public <T extends TerminologyObject> List<T> getObjects(Class<T> clazz) {
-		List<T> questions = new ArrayList<T>();
+		List<T> questions = new ArrayList<>();
 		for (NamedObject o : objectNameMap.values()) {
 			if (clazz.isInstance(o)) {
 				questions.add(clazz.cast(o));
@@ -283,7 +283,7 @@ public class TerminologyManager {
 	 * @return all question/questionnaires contained in this knowledge base
 	 */
 	public List<QASet> getQASets() {
-		List<QASet> qASets = new ArrayList<QASet>();
+		List<QASet> qASets = new ArrayList<>();
 		for (NamedObject o : objectNameMap.values()) {
 			if (o instanceof QASet) {
 				qASets.add((QASet) o);

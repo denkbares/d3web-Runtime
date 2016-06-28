@@ -182,7 +182,7 @@ public class TestCaseUtils {
 			}
 			else {
 				errors.add("The QuestionOC \"" + object.getName()
-						+ "\" cannot be matched to \"" + value.toString() + "\".");
+						+ "\" cannot be matched to \"" + value + "\".");
 			}
 		}
 		else if (object instanceof QuestionMC) {
@@ -190,7 +190,7 @@ public class TestCaseUtils {
 				MultipleChoiceValue mcv = (MultipleChoiceValue) value;
 				if (mcv.asChoiceList((QuestionChoice) object).contains(null)) {
 					errors.add("The question \"" + object.getName()
-							+ "\" does not contain all choices of " + mcv.toString() + ".");
+							+ "\" does not contain all choices of " + mcv + ".");
 				}
 			}
 			else if (value instanceof ChoiceValue) {
@@ -204,26 +204,26 @@ public class TestCaseUtils {
 			}
 			else {
 				errors.add("The QuestionMC \"" + object.getName()
-						+ "\" cannot be matched to \"" + value.toString()
+						+ "\" cannot be matched to \"" + value
 						+ "\".");
 			}
 		}
 		else if (object instanceof QuestionNum) {
 			if (!(value instanceof NumValue)) {
 				errors.add("The QuestionNum \"" + object.getName()
-						+ "\" needs a numeric value instead of \"" + value.toString() + "\".");
+						+ "\" needs a numeric value instead of \"" + value + "\".");
 			}
 		}
 		else if (object instanceof QuestionText) {
 			if (!(value instanceof TextValue)) {
 				errors.add("The QuestionText \"" + object.getName()
-						+ "\" needs a text value instead of \"" + value.toString() + "\".");
+						+ "\" needs a text value instead of \"" + value + "\".");
 			}
 		}
 		else if (object instanceof QuestionDate) {
 			if (!(value instanceof DateValue)) {
 				errors.add("The QuestionDate \"" + object.getName()
-						+ "\" needs a date value instead of \"" + value.toString() + "\".");
+						+ "\" needs a date value instead of \"" + value + "\".");
 			}
 		}
 	}

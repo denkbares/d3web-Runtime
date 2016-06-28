@@ -38,7 +38,6 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -64,15 +63,15 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	private QContainer[] currentSequence;
 	private SearchModel searchModel;
-	private List<Fact> indicatedFacts = new LinkedList<Fact>();
+	private List<Fact> indicatedFacts = new LinkedList<>();
 	private int currentPathIndex = -1;
-	private Set<Solution> undiscriminatedSolutions = new HashSet<Solution>();
-	private Set<Target> discriminatingTargets = new HashSet<Target>();
+	private Set<Solution> undiscriminatedSolutions = new HashSet<>();
+	private Set<Target> discriminatingTargets = new HashSet<>();
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
-	private Set<TerminologyObject> conflictingObjects = new HashSet<TerminologyObject>();
+	private Set<TerminologyObject> conflictingObjects = new HashSet<>();
 	private QContainer unreachedTarget = null;
-	private final Set<QContainer> watchedQContainers = new HashSet<QContainer>();
+	private final Set<QContainer> watchedQContainers = new HashSet<>();
 
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
@@ -134,7 +133,7 @@ public class CostBenefitCaseObject implements SessionObject {
 		for (Fact fact : indicatedFacts) {
 			session.getBlackboard().removeInterviewFact(fact);
 		}
-		indicatedFacts = new LinkedList<Fact>();
+		indicatedFacts = new LinkedList<>();
 		this.currentPathIndex = -1;
 		abortedManuallySetTarget = false;
 	}
@@ -171,7 +170,7 @@ public class CostBenefitCaseObject implements SessionObject {
 		if (currentSequence == null) return null;
 		if (currentPathIndex == -1) {
 			Log.warning("Sequence was generated and is accessed, but is not activated yet: "
-					+ currentSequence);
+					+ Arrays.toString(currentSequence));
 			return null;
 		}
 		return currentSequence[currentPathIndex];
@@ -210,8 +209,6 @@ public class CostBenefitCaseObject implements SessionObject {
 	/**
 	 * This method is just for refreshing the path of the CaseObject, the Facts
 	 * get pushed into the blackboard by calculateNewPath
-	 * 
-	 * @param caseObject {@link SessionObjectSource}
 	 */
 	public void activateNextQContainer() {
 		if (currentSequence == null) return;
@@ -289,14 +286,14 @@ public class CostBenefitCaseObject implements SessionObject {
 	 * it into the specified case object
 	 * 
 	 * @created 08.03.2011
-	 * @param caseObject the case object for this cost benefit session
+	 * @param psmethod the ps method
 	 * @param path the path to be activated
 	 */
 	public void activatePath(Path path, PSMethod psmethod) {
 		Collection<QContainer> qContainers = path.getPath();
 		QContainer[] currentSequence = new QContainer[qContainers.size()];
 		int i = 0;
-		List<Fact> facts = new LinkedList<Fact>();
+		List<Fact> facts = new LinkedList<>();
 		for (QContainer qContainer : qContainers) {
 			currentSequence[i] = qContainer;
 			makeOKQuestionsUndone(currentSequence[i], session);
@@ -328,7 +325,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 		// otherwise calculate the current solution to be discriminated and
 		// compare them to the previous ones
-		HashSet<Solution> currentSolutions = new HashSet<Solution>();
+		HashSet<Solution> currentSolutions = new HashSet<>();
 		for (StrategicSupport strategicSupport : CostBenefitUtil.getStrategicSupports(session)) {
 			currentSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
 		}

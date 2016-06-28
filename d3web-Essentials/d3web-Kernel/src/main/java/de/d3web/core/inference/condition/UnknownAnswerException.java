@@ -24,14 +24,20 @@ package de.d3web.core.inference.condition;
  * Exception that will be thrown if a question has an "unknown" answer when it
  * should have a known one. This is a singleton class. Creation date:
  * (06.12.2000 11:10:41)
- * 
+ *
  * @author Norman Brümmer
  */
 public class UnknownAnswerException extends Exception {
 
 	private static final long serialVersionUID = 6088241033278509430L;
-	private static UnknownAnswerException instance =
-			new UnknownAnswerException();
+	@SuppressWarnings("ThrowableInstanceNeverThrown")
+	private static final UnknownAnswerException instance = new UnknownAnswerException();
+
+	@Override
+	public void printStackTrace() {
+		//noinspection UseOfSystemOutOrSystemErr
+		System.err.println("Unknown answer in Condition"); // NOSONAR
+	}
 
 	/**
 	 * @return the only instance of this Exception

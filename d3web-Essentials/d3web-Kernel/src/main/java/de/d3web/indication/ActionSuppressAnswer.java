@@ -46,7 +46,7 @@ public class ActionSuppressAnswer extends PSAction {
 	private QuestionChoice question = null;
 
 	/* alternatives that should be suppressed, if rule fires */
-	private final List<ChoiceID> suppress = new LinkedList<ChoiceID>();
+	private final List<ChoiceID> suppress = new LinkedList<>();
 
 	/**
 	 * Creates a new ActionSuppressAnswer for the given corresponding rule
@@ -80,7 +80,7 @@ public class ActionSuppressAnswer extends PSAction {
 	 */
 	@Override
 	public List<? extends TerminologyObject> getBackwardObjects() {
-		List<TerminologyObject> terminals = new ArrayList<TerminologyObject>(1);
+		List<TerminologyObject> terminals = new ArrayList<>(1);
 		if (getQuestion() != null) {
 			terminals.add(getQuestion());
 		}

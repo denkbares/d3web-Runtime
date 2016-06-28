@@ -41,6 +41,7 @@ import de.d3web.utils.Log;
  *
  * @deprecated use {@link de.d3web.testcase.model.Finding} instead
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public class Finding implements Comparable<Finding>, de.d3web.testcase.model.Finding, Check {
 
@@ -114,6 +115,7 @@ public class Finding implements Comparable<Finding>, de.d3web.testcase.model.Fin
 	 * 
 	 * @return value
 	 */
+	@Override
 	public QuestionValue getValue() {
 		return value;
 	}

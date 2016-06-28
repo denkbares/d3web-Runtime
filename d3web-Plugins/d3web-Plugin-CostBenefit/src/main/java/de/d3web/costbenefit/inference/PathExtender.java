@@ -45,7 +45,7 @@ public class PathExtender implements SearchAlgorithm {
 
 	private final SearchAlgorithm subalgorithm;
 	private KnowledgeBase kb = null;
-	private List<QContainer> qcontainersToAdd = new LinkedList<QContainer>();
+	private List<QContainer> qcontainersToAdd = new LinkedList<>();
 
 	/**
 	 * This property should not be used anymore. It is replaced by the
@@ -67,7 +67,7 @@ public class PathExtender implements SearchAlgorithm {
 	public synchronized void search(Session session, SearchModel model) {
 		if (session.getKnowledgeBase() != kb) {
 			kb = session.getKnowledgeBase();
-			qcontainersToAdd = new LinkedList<QContainer>();
+			qcontainersToAdd = new LinkedList<>();
 			for (QContainer qcon : kb.getManager().getQContainers()) {
 				if (qcon.getInfoStore().getValue(comfortBenefit)
 						|| qcon.getKnowledgeStore().getKnowledge(ComfortBenefit.KNOWLEDGE_KIND) != null) {
@@ -121,7 +121,7 @@ public class PathExtender implements SearchAlgorithm {
 	}
 
 	private Path getNewPath(int position, QContainer qconToInclude, Path path, Session session) {
-		List<QContainer> qContainers = new LinkedList<QContainer>(path.getPath());
+		List<QContainer> qContainers = new LinkedList<>(path.getPath());
 		qContainers.add(position, qconToInclude);
 		ExtendedPath newPath = new ExtendedPath(qContainers, path.getCosts(),
 				path.getNegativeCosts());

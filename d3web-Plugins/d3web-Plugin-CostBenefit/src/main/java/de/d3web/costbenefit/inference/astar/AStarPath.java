@@ -120,10 +120,10 @@ public class AStarPath implements Path {
 				return path;
 			}
 		}
-		ArrayList<QContainer> newPath = new ArrayList<QContainer>();
+		ArrayList<QContainer> newPath = new ArrayList<>();
 		addQContainersToPath(newPath);
 		List<QContainer> path = Collections.unmodifiableList(newPath);
-		pathReference = new SoftReference<List<QContainer>>(path);
+		pathReference = new SoftReference<>(path);
 		return path;
 	}
 
@@ -211,8 +211,8 @@ public class AStarPath implements Path {
 			set = pathSetReference.get();
 		}
 		if (set == null) {
-			set = new HashSet<QContainer>(getPath());
-			pathSetReference = new SoftReference<Set<QContainer>>(set);
+			set = new HashSet<>(getPath());
+			pathSetReference = new SoftReference<>(set);
 		}
 		return set;
 	}

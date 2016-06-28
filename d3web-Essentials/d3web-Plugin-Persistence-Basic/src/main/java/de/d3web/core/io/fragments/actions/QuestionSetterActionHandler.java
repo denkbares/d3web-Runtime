@@ -81,7 +81,7 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 			else if (child.getNodeName().equalsIgnoreCase("values")) {
 				NodeList values = child.getChildNodes();
 
-				List<Object> parsedValues = new LinkedList<Object>();
+				List<Object> parsedValues = new LinkedList<>();
 				for (int k = 0; k < values.getLength(); ++k) {
 					Node valNode = values.item(k);
 					if (valNode.getNodeName().equalsIgnoreCase("value")) {
@@ -113,7 +113,7 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 								parsedValues.add(new DateValue(new Date(Long.parseLong(name))));
 							}
 							else if (type.equalsIgnoreCase("mcanswer")) {
-								List<ChoiceID> ids = new LinkedList<ChoiceID>();
+								List<ChoiceID> ids = new LinkedList<>();
 								for (Element grandchild : XMLUtil.getElementList(valNode.getChildNodes())) {
 									if (grandchild.getNodeName().equals("choice")) {
 										ids.add(new ChoiceID(grandchild.getAttribute("name")));
@@ -145,9 +145,7 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 		ActionSetQuestion action = (ActionSetQuestion) object;
 		Question question = action.getQuestion();
 		Element element = persistence.getDocument().createElement("Action");
-		if (action instanceof ActionSetQuestion) {
-			element.setAttribute("type", "ActionSetValue");
-		}
+		element.setAttribute("type", "ActionSetValue");
 		Element questionNode = persistence.getDocument().createElement("Question");
 		String questionId = "";
 		if (question != null) {
@@ -156,7 +154,7 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 		questionNode.setAttribute("name", questionId);
 		element.appendChild(questionNode);
 		Element valuesNode = persistence.getDocument().createElement("Values");
-		if (action != null && action.getValue() instanceof Value) {
+		if (action.getValue() instanceof Value) {
 			String name = "";
 			Element valueNode = persistence.getDocument().createElement("Value");
 			if (action.getValue() instanceof ChoiceValue) {

@@ -41,7 +41,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
  */
 public class DefaultAbnormality implements Abnormality {
 
-	private final Map<Value, Double> values = new HashMap<Value, Double>();
+	private final Map<Value, Double> values = new HashMap<>();
 
 	/**
 	 * with this method you can add an answer-abnorm.Value pair Creation date:
@@ -57,11 +57,11 @@ public class DefaultAbnormality implements Abnormality {
 		if (ans instanceof MultipleChoiceValue) {
 			MultipleChoiceValue mcv = (MultipleChoiceValue) ans;
 			for (ChoiceID cid : mcv.getChoiceIDs()) {
-				values.put(new ChoiceValue(cid), new Double(value));
+				values.put(new ChoiceValue(cid), value);
 			}
 		}
 		else {
-			values.put(ans, new Double(value));
+			values.put(ans, value);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class DefaultAbnormality implements Abnormality {
 	public double getValue(Value ans) {
 		Double ret = values.get(ans);
 		if (ret != null) {
-			return ret.doubleValue();
+			return ret;
 		}
 
 		if (ans instanceof MultipleChoiceValue) {
@@ -140,7 +140,7 @@ public class DefaultAbnormality implements Abnormality {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Entry<Value, Double> entry : values.entrySet()) {
-			sb.append(entry.getKey().toString());
+			sb.append(entry.getKey());
 			sb.append(":");
 			sb.append(entry.getValue());
 			sb.append(";");

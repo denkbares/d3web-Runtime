@@ -52,7 +52,7 @@ public class ForcingSetQuestionAction extends ActionSetQuestion {
 	@Override
 	public void doIt(Session session, Object source, PSMethod psmethod) {
 		delegate.doIt(session, source, psmethod);
-		if (getQuestion().getInfoStore().getValue(DiaFluxUtils.FORCE_PROPAGATION).booleanValue()) {
+		if (getQuestion().getInfoStore().getValue(DiaFluxUtils.FORCE_PROPAGATION)) {
 			session.getPropagationManager().forcePropagate(getQuestion());
 		}
 	}

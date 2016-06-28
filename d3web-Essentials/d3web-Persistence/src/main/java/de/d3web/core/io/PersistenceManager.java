@@ -280,7 +280,7 @@ public final class PersistenceManager {
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
 		try (ZipFile zipfile = new ZipFile(file)) {
 			KnowledgeBase kb = new KnowledgeBase();
-			List<ZipEntry> files = new LinkedList<ZipEntry>();
+			List<ZipEntry> files = new LinkedList<>();
 			// pre-calculate the size of the files to be parsed
 			Enumeration<? extends ZipEntry> entries = zipfile.entries();
 			long size = 0;
@@ -299,7 +299,7 @@ public final class PersistenceManager {
 			CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
 			boolean parsedAnyFile = false;
 			for (Extension plugin : readerPlugins) {
-				for (ZipEntry entry : new LinkedList<ZipEntry>(files)) {
+				for (ZipEntry entry : new LinkedList<>(files)) {
 					String name = entry.getName();
 					// checks if this entry can be parsed with this plugin
 					boolean canparse = false;

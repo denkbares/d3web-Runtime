@@ -113,7 +113,7 @@ public interface PropagationManager {
 	 * 
 	 * @return if the kernel is in propagation
 	 */
-	public boolean isInPropagation();
+	boolean isInPropagation();
 
 	/**
 	 * Returns the propagation time of the current propagation. If no

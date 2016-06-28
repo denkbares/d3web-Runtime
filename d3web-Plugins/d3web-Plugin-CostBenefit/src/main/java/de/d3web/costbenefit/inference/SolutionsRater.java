@@ -38,6 +38,6 @@ public interface SolutionsRater {
 	 * @param undiscriminateSolutions solutions
 	 * @return true if the calculation should be started, false otherwise
 	 */
-	public boolean check(Collection<Solution> undiscriminateSolutions);
+	boolean check(Collection<Solution> undiscriminateSolutions);
 
 }

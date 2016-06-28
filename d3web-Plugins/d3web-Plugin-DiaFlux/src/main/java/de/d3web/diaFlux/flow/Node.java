@@ -47,6 +47,7 @@ public interface Node extends DiaFluxElement {
 	/**
 	 * @return s the flow this node belongs to
 	 */
+	@Override
 	Flow getFlow();
 
 	/**

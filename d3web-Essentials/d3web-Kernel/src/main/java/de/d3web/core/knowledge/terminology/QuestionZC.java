@@ -67,7 +67,7 @@ public class QuestionZC extends QuestionOC {
 
 	@Override
 	public List<Choice> getAllAlternatives() {
-		return new ArrayList<Choice>();
+		return new ArrayList<>();
 	}
 
 	@Override

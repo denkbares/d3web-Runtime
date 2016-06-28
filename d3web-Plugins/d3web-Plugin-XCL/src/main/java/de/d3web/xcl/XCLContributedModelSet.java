@@ -39,9 +39,9 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	 * KnowledgeKind for backward referenced xclModels from the NamedObjects of
 	 * the Conditions of the contained relations
 	 */
-	public final static KnowledgeKind<XCLContributedModelSet> KNOWLEDGE_KIND = new KnowledgeKind<XCLContributedModelSet>(
+	public final static KnowledgeKind<XCLContributedModelSet> KNOWLEDGE_KIND = new KnowledgeKind<>(
 			"XCLContributedModelSet", XCLContributedModelSet.class);
-	private final List<XCLModel> models = new ArrayList<XCLModel>();
+	private final List<XCLModel> models = new ArrayList<>();
 
 	public void addModel(XCLModel model) {
 		if (!models.contains(model)) {

@@ -162,7 +162,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
-		Set<QContainer> answeredQuestionnaires = new HashSet<QContainer>();
+		Set<QContainer> answeredQuestionnaires = new HashSet<>();
 		for (PropagationEntry entry : changes) {
 			TerminologyObject object = entry.getObject();
 			if (!entry.isStrategic() && entry.hasChanged() && object instanceof Question) {
@@ -229,7 +229,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 	public static class StateTransitionSessionObject implements SessionObject {
 
-		private List<Fact> facts = new LinkedList<Fact>();
+		private List<Fact> facts = new LinkedList<>();
 		private QContainer qContainer = null;
 
 	}
@@ -246,7 +246,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		// due to not caching the StateTransitions, this method tends to be
 		// slow...
 		if (!(derivedObject instanceof Question)) return Collections.emptySet();
-		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		Set<TerminologyObject> result = new HashSet<>();
 		Collection<StateTransition> transitions = derivedObject.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND);
 		for (StateTransition stateTransition : transitions) {
@@ -274,7 +274,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		if (fact instanceof StateTransitionFact) {
 			Condition condition = ((StateTransitionFact) fact).cvs.getCondition();
 			if (condition != null) {
-				return new HashSet<TerminologyObject>(condition.getTerminalObjects());
+				return new HashSet<>(condition.getTerminalObjects());
 			}
 		}
 		return Collections.emptySet();

@@ -35,9 +35,9 @@ import de.d3web.core.knowledge.KnowledgeBase;
 public class PluginConfig implements KnowledgeSlice {
 
 	// TODO change
-	private final Map<String, PluginEntry> entries = new HashMap<String, PluginEntry>();
+	private final Map<String, PluginEntry> entries = new HashMap<>();
 
-	public static final KnowledgeKind<PluginConfig> KNOWLEDGE_KIND = new KnowledgeKind<PluginConfig>(
+	public static final KnowledgeKind<PluginConfig> KNOWLEDGE_KIND = new KnowledgeKind<>(
 			"ExtensionConfig", PluginConfig.class);
 
 	/**
@@ -119,7 +119,7 @@ public class PluginConfig implements KnowledgeSlice {
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + ": " + getEntries().toString();
+		return this.getClass().getSimpleName() + ": " + getEntries();
 	}
 
 }

@@ -56,12 +56,12 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 	/**
 	 * The parents of this object (including the linked parents).
 	 */
-	private final List<AbstractTerminologyObject> parents = new LinkedList<AbstractTerminologyObject>();
+	private final List<AbstractTerminologyObject> parents = new LinkedList<>();
 
 	/**
 	 * The children of this object (including the linked children).
 	 */
-	private final List<AbstractTerminologyObject> children = new ArrayList<AbstractTerminologyObject>();
+	private final List<AbstractTerminologyObject> children = new ArrayList<>();
 
 	/**
 	 * The children again as a set to speed up the very frequent contains
@@ -131,7 +131,7 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 		parent.children.add(pos, child);
 		if (parent.childrenSet == null) {
 			if (parent.children.size() > BOUNDARY) {
-				parent.childrenSet = new HashSet<AbstractTerminologyObject>(parent.children);
+				parent.childrenSet = new HashSet<>(parent.children);
 			}
 		}
 		else {
@@ -212,7 +212,7 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 
 	@Override
 	public void destroy() {
-		for (AbstractTerminologyObject object : new ArrayList<AbstractTerminologyObject>(parents)) {
+		for (AbstractTerminologyObject object : new ArrayList<>(parents)) {
 			removeParentChildLink(object, this);
 		}
 		knowledgeBase.getManager().remove(this);

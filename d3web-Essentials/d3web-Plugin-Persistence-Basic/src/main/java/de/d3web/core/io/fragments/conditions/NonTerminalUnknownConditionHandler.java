@@ -51,7 +51,7 @@ public class NonTerminalUnknownConditionHandler implements FragmentHandler<Knowl
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		List<Condition> conds = new ArrayList<Condition>();
+		List<Condition> conds = new ArrayList<>();
 		for (Element child : childNodes) {
 			conds.add((Condition) persistence.readFragment(child));
 		}

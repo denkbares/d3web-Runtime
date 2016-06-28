@@ -62,7 +62,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		root.setAttribute("system", "d3web");
 		root.setAttribute("type", ruletype);
 		doc.appendChild(root);
-		List<Rule> rules = new ArrayList<Rule>(getRules(kb));
+		List<Rule> rules = new ArrayList<>(getRules(kb));
 		// sort the rules
 		Collections.sort(rules, new RuleComparator());
 		float count = 0;
@@ -75,7 +75,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 	}
 
 	private Set<Rule> getRules(KnowledgeBase kb) {
-		Set<Rule> rules = new HashSet<Rule>();
+		Set<Rule> rules = new HashSet<>();
 		try {
 			for (RuleSet rs : kb.getAllKnowledgeSlicesFor(PSMethodRulebased.getForwardKind(getProblemSolverContent()))) {
 				rules.addAll(rs.getRules());
@@ -107,7 +107,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		}
 		List<Element> children = XMLUtil.getElementList(root.getChildNodes());
 		float count = 0;
-		List<Rule> rules = new ArrayList<Rule>();
+		List<Rule> rules = new ArrayList<>();
 		for (Element child : children) {
 			rules.add((Rule) persistence.readFragment(child));
 			listener.updateProgress(count++ / children.size(), "Reading " + ruletype);

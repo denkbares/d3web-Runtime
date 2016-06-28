@@ -29,18 +29,19 @@ import de.d3web.core.session.Session;
 
 public class DefaultInferenceTrace implements InferenceTrace {
 
-	private final Collection<XCLRelation> posRelations = new HashSet<XCLRelation>();
-	private final Collection<XCLRelation> negRelations = new HashSet<XCLRelation>();
-	private final Collection<XCLRelation> contrRelations = new HashSet<XCLRelation>();
-	private final Collection<XCLRelation> reqPosRelations = new HashSet<XCLRelation>();
-	private final Collection<XCLRelation> reqNegRelations = new HashSet<XCLRelation>();
-	private final Collection<XCLRelation> suffRelations = new HashSet<XCLRelation>();
+	private final Collection<XCLRelation> posRelations = new HashSet<>();
+	private final Collection<XCLRelation> negRelations = new HashSet<>();
+	private final Collection<XCLRelation> contrRelations = new HashSet<>();
+	private final Collection<XCLRelation> reqPosRelations = new HashSet<>();
+	private final Collection<XCLRelation> reqNegRelations = new HashSet<>();
+	private final Collection<XCLRelation> suffRelations = new HashSet<>();
 
 	private Rating state = new Rating(Rating.State.UNCLEAR);
 
 	private double score = 0;
 	private double support = 0;
 
+	@Override
 	public Rating getState() {
 		return state;
 	}
@@ -49,30 +50,37 @@ public class DefaultInferenceTrace implements InferenceTrace {
 		this.state = state;
 	}
 
+	@Override
 	public Collection<XCLRelation> getPosRelations() {
 		return posRelations;
 	}
 
+	@Override
 	public Collection<XCLRelation> getNegRelations() {
 		return negRelations;
 	}
 
+	@Override
 	public Collection<XCLRelation> getContrRelations() {
 		return contrRelations;
 	}
 
+	@Override
 	public Collection<XCLRelation> getReqPosRelations() {
 		return reqPosRelations;
 	}
 
+	@Override
 	public Collection<XCLRelation> getReqNegRelations() {
 		return reqNegRelations;
 	}
 
+	@Override
 	public Collection<XCLRelation> getSuffRelations() {
 		return suffRelations;
 	}
 
+	@Override
 	public double getScore() {
 		return score;
 	}
@@ -81,6 +89,7 @@ public class DefaultInferenceTrace implements InferenceTrace {
 		this.score = score;
 	}
 
+	@Override
 	public double getSupport() {
 		return support;
 	}
@@ -95,6 +104,7 @@ public class DefaultInferenceTrace implements InferenceTrace {
 	 * 
 	 * @param session the current case
 	 */
+	@Override
 	public void refreshRelations(XCLModel xclModel, Session session) {
 		evalRelations(session, xclModel.getRelations(), posRelations, negRelations);
 		evalRelations(session, xclModel.getNecessaryRelations(), reqPosRelations,

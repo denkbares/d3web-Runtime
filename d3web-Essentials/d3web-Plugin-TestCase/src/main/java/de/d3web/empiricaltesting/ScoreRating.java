@@ -33,7 +33,7 @@ import de.d3web.scoring.Score;
 @Deprecated
 public class ScoreRating implements Rating {
 
-	private static NumberFormat formatter = new DecimalFormat("#######.##");
+	private static final NumberFormat formatter = new DecimalFormat("#######.##");
 	private double rating;
 
 	/**
@@ -64,6 +64,7 @@ public class ScoreRating implements Rating {
 	 *
 	 * @return double value representing the rating.
 	 */
+	@Override
 	public Double getRating() {
 		return rating;
 	}

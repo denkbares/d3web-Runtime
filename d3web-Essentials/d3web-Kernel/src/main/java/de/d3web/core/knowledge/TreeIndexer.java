@@ -49,7 +49,7 @@ public class TreeIndexer {
 		// first index the root tree if the cache is not build yet
 		if (indexCache == null) {
 			KnowledgeBase base = object.getKnowledgeBase();
-			indexCache = new HashMap<TerminologyObject, Integer>();
+			indexCache = new HashMap<>();
 			TerminologyObject root = (object instanceof Solution)
 					? base.getRootSolution()
 					: base.getRootQASet();
@@ -73,8 +73,8 @@ public class TreeIndexer {
 	}
 
 	private List<TerminologyObject> getDanglingRoots(TerminologyObject object) {
-		List<TerminologyObject> result = new LinkedList<TerminologyObject>();
-		getDanglingRoots(object, new HashSet<TerminologyObject>(), result);
+		List<TerminologyObject> result = new LinkedList<>();
+		getDanglingRoots(object, new HashSet<>(), result);
 		return result;
 	}
 

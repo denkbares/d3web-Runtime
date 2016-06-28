@@ -28,7 +28,7 @@ public enum XCLRelationType {
 
 	private final String name;
 
-	private XCLRelationType(String name) {
+	XCLRelationType(String name) {
 		this.name = name;
 	}
 

@@ -42,7 +42,7 @@ public class DiaFluxFinder implements NamedObjectFinder {
 
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(kb);
 		if (flowSet.contains(name)) {
-			return Arrays.<NamedObject> asList(flowSet.get(name));
+			return Collections.singletonList(flowSet.get(name));
 		}
 
 		return Collections.emptyList();

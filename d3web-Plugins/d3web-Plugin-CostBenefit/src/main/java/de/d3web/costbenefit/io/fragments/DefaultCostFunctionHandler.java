@@ -31,11 +31,8 @@ public class DefaultCostFunctionHandler implements FragmentHandler<KnowledgeBase
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("costFunction")
-				&& element.getAttribute("name").equals("DefaultCostFunction")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("costFunction")
+				&& element.getAttribute("name").equals("DefaultCostFunction");
 	}
 
 	@Override

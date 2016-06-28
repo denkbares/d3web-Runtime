@@ -43,7 +43,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -62,6 +61,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
+import de.d3web.strings.Strings;
 import de.d3web.testcase.persistence.TestCasePersistenceManager;
 import de.d3web.utils.Log;
 
@@ -70,6 +70,7 @@ import de.d3web.utils.Log;
  *
  * @deprecated Use {@link TestCasePersistenceManager} instead.
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public final class TestPersistence {
 
@@ -401,76 +402,81 @@ public final class TestPersistence {
 
 		String elName = sr.getLocalName();
 
-		if (elName.equals(SEQUENTIAL_TEST_CASES) || elName.equals(SEQUENTIAL_TEST_CASES_OLD)) {
-			imported = new ArrayList<>();
-		}
-		else if (elName.equals(SEQUENTIAL_TEST_CASE) || elName.equals(SEQUENTIAL_TEST_CASE_OLD)) {
-			stc = new SequentialTestCase();
-			stc.setName(sr.getAttributeValue(null, NAME));
-			String dateString = sr.getAttributeValue(null, START_DATE);
-			if (dateString != null) {
-				try {
-					stc.setStartDate(XMLUtil.readDate(dateString));
+		switch (elName) {
+			case SEQUENTIAL_TEST_CASES:
+			case SEQUENTIAL_TEST_CASES_OLD:
+				imported = new ArrayList<>();
+				break;
+			case SEQUENTIAL_TEST_CASE:
+			case SEQUENTIAL_TEST_CASE_OLD:
+				stc = new SequentialTestCase();
+				stc.setName(sr.getAttributeValue(null, NAME));
+				String dateString = sr.getAttributeValue(null, START_DATE);
+				if (dateString != null) {
+					try {
+						stc.setStartDate(Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY));
+					}
+					catch (ParseException e) {
+						Log.severe("Unable to parse date", e);
+					}
 				}
-				catch (ParseException e) {
-					Log.severe("Unable to parse date", e);
+				break;
+			case RATED_TEST_CASE:
+				rtc = new RatedTestCase();
+				rtc.setName(sr.getAttributeValue(null, NAME));
+				rtc.setNote(sr.getAttributeValue(null, NOTE));
+				String time = sr.getAttributeValue(null, TIMESTAMP);
+				if (time == null) time = sr.getAttributeValue(null, TIMESTAMP_OLD);
+				if (time != null) {
+					try {
+						rtc.setTimeStamp(Strings.readDate(time, Strings.DATE_FORMAT_COMPATIBILITY));
+					}
+					catch (ParseException e) {
+						Log.severe("Unable to parse timestamp " + time, e);
+					}
 				}
-			}
-		}
-		else if (elName.equals(RATED_TEST_CASE)) {
-			rtc = new RatedTestCase();
-			rtc.setName(sr.getAttributeValue(null, NAME));
-			rtc.setNote(sr.getAttributeValue(null, NOTE));
-			String time = sr.getAttributeValue(null, TIMESTAMP);
-			if (time == null) time = sr.getAttributeValue(null, TIMESTAMP_OLD);
-			if (time != null) {
-				try {
-					rtc.setTimeStamp(XMLUtil.readDate(time));
+				String lastTestedDate = sr.getAttributeValue(null, LAST_TESTED);
+				if (lastTestedDate != null && (!lastTestedDate.equals(""))) {
+					rtc.setTestingDate(lastTestedDate);
+					rtc.setWasTestedBefore(true);
 				}
-				catch (ParseException e) {
-					Log.severe("Unable to parse timestamp " + time, e);
-				}
-			}
-			String lastTestedDate = sr.getAttributeValue(null, LAST_TESTED);
-			if (lastTestedDate != null && (!lastTestedDate.equals(""))) {
-				rtc.setTestingDate(lastTestedDate);
-				rtc.setWasTestedBefore(true);
-			}
 
-		}
-		else if (elName.equals(FINDING)) {
-			Finding f = getFinding(sr, kb);
-			if (f != null) rtc.add(f);
-		}
-		else if (elName.equals(EXPECTED_FINDING)) {
-			String matches = sr.getAttributeValue(null, MATCHES);
-			if (matches == null) {
-				Finding f = getFinding(sr, kb);
-				if (f != null) rtc.addExpectedFinding(f);
-			} else {
-				RegexFinding rf = getRegexFinding(sr, kb);
-				if (rf != null) rtc.addExpectedRegexFinding(rf);
-			}
-		}
-		else if (elName.equals(SOLUTION)) {
-			String name = sr.getAttributeValue(null, NAME);
-			Solution d = kb.getManager().searchSolution(name);
-			if (d == null) {
-				Log.warning("Solution not found '" + name + "'.");
-				return;
-			}
-			Rating r;
-			String s = sr.getAttributeValue(null, RATING);
-			try {
-				Double score = Double.parseDouble(s);
-				r = new ScoreRating(score);
-			}
-			catch (NumberFormatException nfe) {
-				r = new StateRating(s);
-			}
+				break;
+			case FINDING:
+				Finding f1 = getFinding(sr, kb);
+				if (f1 != null) rtc.add(f1);
+				break;
+			case EXPECTED_FINDING:
+				String matches = sr.getAttributeValue(null, MATCHES);
+				if (matches == null) {
+					Finding f2 = getFinding(sr, kb);
+					if (f2 != null) rtc.addExpectedFinding(f2);
+				}
+				else {
+					RegexFinding rf = getRegexFinding(sr, kb);
+					if (rf != null) rtc.addExpectedRegexFinding(rf);
+				}
+				break;
+			case SOLUTION:
+				String name = sr.getAttributeValue(null, NAME);
+				Solution d = kb.getManager().searchSolution(name);
+				if (d == null) {
+					Log.warning("Solution not found '" + name + "'.");
+					return;
+				}
+				Rating r;
+				String s = sr.getAttributeValue(null, RATING);
+				try {
+					Double score = Double.parseDouble(s);
+					r = new ScoreRating(score);
+				}
+				catch (NumberFormatException nfe) {
+					r = new StateRating(s);
+				}
 
-			RatedSolution rs = new RatedSolution(d, r);
-			rtc.addExpected(rs);
+				RatedSolution rs = new RatedSolution(d, r);
+				rtc.addExpected(rs);
+				break;
 		}
 	}
 
@@ -544,9 +550,6 @@ public final class TestPersistence {
 		return null;
 	}
 
-	/**
-	 * @param sr
-	 */
 	private void parseEndElement(XMLStreamReader sr) {
 
 		String elName = sr.getLocalName();
@@ -561,7 +564,7 @@ public final class TestPersistence {
 
 	private Collection<Solution> computeUsedSolutions(
 			List<SequentialTestCase> theTestCases) {
-		Set<Solution> solutions = new HashSet<Solution>();
+		Set<Solution> solutions = new HashSet<>();
 		for (SequentialTestCase sequentialTestCase : theTestCases) {
 			for (RatedTestCase rCase : sequentialTestCase.getCases()) {
 				for (RatedSolution rSolution : rCase.getExpectedSolutions()) {
@@ -574,7 +577,7 @@ public final class TestPersistence {
 
 	private Collection<Finding> computeUsedFindings(
 			List<SequentialTestCase> theTestCases) {
-		Set<Finding> findings = new HashSet<Finding>();
+		Set<Finding> findings = new HashSet<>();
 		for (SequentialTestCase sequentialTestCase : theTestCases) {
 			for (RatedTestCase rCase : sequentialTestCase.getCases()) {
 				findings.addAll(rCase.getFindings());

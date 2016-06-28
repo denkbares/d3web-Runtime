@@ -42,7 +42,7 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public class StateTransition implements KnowledgeSlice {
 
-	public static final KnowledgeKind<StateTransition> KNOWLEDGE_KIND = new KnowledgeKind<StateTransition>(
+	public static final KnowledgeKind<StateTransition> KNOWLEDGE_KIND = new KnowledgeKind<>(
 			"STATE_TRANSITION", StateTransition.class);
 
 	private final Condition activationCondition;
@@ -75,12 +75,9 @@ public class StateTransition implements KnowledgeSlice {
 	 * This method is used to fire all ValueTransitions of the QContainer. For
 	 * each question, the first ValueTransition whose condition is fulfilled, is
 	 * used.
-	 * 
-	 * @param session
-	 * @return
 	 */
 	public List<Fact> fire(Session session) {
-		List<Fact> facts = new LinkedList<Fact>();
+		List<Fact> facts = new LinkedList<>();
 		for (ValueTransition vt : postTransitions) {
 			Question q = vt.getQuestion();
 			List<ConditionalValueSetter> setters = vt.getSetters();

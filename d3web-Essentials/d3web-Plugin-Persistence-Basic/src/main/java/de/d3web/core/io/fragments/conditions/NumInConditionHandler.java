@@ -74,7 +74,6 @@ public class NumInConditionHandler implements FragmentHandler<KnowledgeBase> {
 		Element element = XMLUtil.writeConditionWithValueNode(persistence, cond.getQuestion(),
 				"numIn",
 				intervalElemenent);
-		;
 		return element;
 	}
 

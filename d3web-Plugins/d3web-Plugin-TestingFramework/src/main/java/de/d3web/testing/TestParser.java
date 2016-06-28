@@ -41,9 +41,9 @@ public class TestParser {
 	public static final Pattern PARAMETER_PATTERN = Pattern.compile("(?:[^(\"|\\s)]+|\".+?\")");
 
 	private String declaration;
-	private final List<String> ignoreParameters = new LinkedList<String>();
-	private ArgsCheckResult parameterCheckResult;
-	private final List<ArgsCheckResult> ignoreCheckResults = new LinkedList<ArgsCheckResult>();
+	private final List<String> ignoreParameters = new LinkedList<>();
+	private final ArgsCheckResult parameterCheckResult;
+	private final List<ArgsCheckResult> ignoreCheckResults = new LinkedList<>();
 	private TestSpecification<?> testSpecification;
 
 	/**
@@ -98,6 +98,7 @@ public class TestParser {
 		// check whether test object identifier string is a valid regex
 		String testObject = paramters.remove(0);
 		try {
+			//noinspection ResultOfMethodCallIgnored
 			Pattern.compile(testObject);
 		}
 		catch (PatternSyntaxException e) {
@@ -134,7 +135,7 @@ public class TestParser {
 	 */
 	public static List<String> splitParameters(String parameters) {
 		Matcher matcher = PARAMETER_PATTERN.matcher(parameters);
-		List<String> paramters = new ArrayList<String>();
+		List<String> paramters = new ArrayList<>();
 		while (matcher.find()) {
 			String parameter = matcher.group();
 			if (parameter.startsWith("\"") && parameter.endsWith("\"")) {

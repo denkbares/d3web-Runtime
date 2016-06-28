@@ -47,7 +47,7 @@ public interface PSMethod {
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 21.09.2010
 	 */
-	public enum Type {
+	enum Type {
 		/**
 		 * a source psm adds facts and does not react on other facts, e.g.
 		 * PSMetodUserSelected
@@ -73,7 +73,7 @@ public interface PSMethod {
 	 * see {@link KernelExtensionPoints}
 	 */
 	@Deprecated
-	public final static String EXTENSIONPOINT_ID = KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD;
+	String EXTENSIONPOINT_ID = KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD;
 
 	/**
 	 * Initialization method for this PSMethod; will be called when a new
@@ -156,7 +156,7 @@ public interface PSMethod {
 	 * Returns the Priority of the PSMethod
 	 * 
 	 * @created 01.02.2011
-	 * @return
+	 * @return the priority of the PSMethod
 	 */
 	double getPriority();
 }

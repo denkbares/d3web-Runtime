@@ -28,12 +28,12 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 	public CalculatedTargetEntry(de.d3web.costbenefit.model.Target calculatedTarget, Set<de.d3web.costbenefit.model.Target> targets, Date date, Collection<Solution> solutions) {
 		super();
 		this.calculatedTarget = convertTarget(calculatedTarget);
-		this.targets = new HashSet<CalculatedTargetEntry.Target>();
+		this.targets = new HashSet<>();
 		for (de.d3web.costbenefit.model.Target cbTarget : targets) {
 			this.targets.add(convertTarget(cbTarget));
 		}
 		this.date = date;
-		this.sprintGroup = new HashSet<String>();
+		this.sprintGroup = new HashSet<>();
 		for (Solution s : solutions) {
 			this.sprintGroup.add(s.getName());
 		}
@@ -61,7 +61,7 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 	}
 
 	private static CalculatedTargetEntry.Target convertTarget(de.d3web.costbenefit.model.Target cbTarget) {
-		Set<String> qContainerNames = new HashSet<String>();
+		Set<String> qContainerNames = new HashSet<>();
 		for (QContainer qContainer : cbTarget.getQContainers()) {
 			qContainerNames.add(qContainer.getName());
 		}
@@ -107,11 +107,11 @@ public class CalculatedTargetEntry implements ProtocolEntry {
 		@Override
 		public String toString() {
 			if (benefit != Float.MAX_VALUE) {
-				return qContainerNames.toString() + " Benefit: " + benefit + " Cost/Benefit: "
+				return qContainerNames + " Benefit: " + benefit + " Cost/Benefit: "
 						+ costbenefit;
 			}
 			else {
-				return qContainerNames.toString() + " Benefit: " + benefit
+				return qContainerNames + " Benefit: " + benefit
 						+ " Cost/Benefit: unknown";
 			}
 		}

@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
  */
 public class ComfortBenefit implements KnowledgeSlice {
 
-	public static final KnowledgeKind<ComfortBenefit> KNOWLEDGE_KIND = new KnowledgeKind<ComfortBenefit>(
+	public static final KnowledgeKind<ComfortBenefit> KNOWLEDGE_KIND = new KnowledgeKind<>(
 			"COMFORT_BENEFIT", ComfortBenefit.class);
 	private final QContainer qContainer;
 	private final Condition condition;
@@ -51,7 +51,7 @@ public class ComfortBenefit implements KnowledgeSlice {
 	 * @param qContainer QContainer this {@link KnowledgeSlice} belongs to
 	 */
 	public ComfortBenefit(QContainer qContainer) {
-		this(qContainer, new CondAnd(new LinkedList<Condition>()));
+		this(qContainer, new CondAnd(new LinkedList<>()));
 	}
 
 	/**

@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
  */
 public class Target implements Comparable<Target> {
 
-	private final List<QContainer> qContainers = new LinkedList<QContainer>();
+	private final List<QContainer> qContainers = new LinkedList<>();
 	private final double costs;
 	private double benefit = 0.0;
 	private Path minPath;
@@ -139,7 +139,7 @@ public class Target implements Comparable<Target> {
 	 * more details about minimal paths.
 	 * 
 	 * @created 07.03.2011
-	 * @param minPath
+	 * @param minPath the minPath to be set
 	 */
 	public void setMinPath(Path minPath) {
 		this.minPath = minPath;

@@ -99,7 +99,7 @@ public final class KnowledgeBaseUtils {
 	}
 
 	public static boolean isInLoop(TerminologyObject object) {
-		return isInLoop(new HashSet<TerminologyObject>(), object);
+		return isInLoop(new HashSet<>(), object);
 	}
 
 	private static boolean isInLoop(Set<TerminologyObject> visited, TerminologyObject object) {
@@ -139,8 +139,8 @@ public final class KnowledgeBaseUtils {
 	 * @created 26.02.2013
 	 */
 	public static <T extends TerminologyObject> List<T> getAncestors(TerminologyObject parent, Class<T> typeOf) {
-		List<T> result = new ArrayList<T>();
-		Set<TerminologyObject> visited = new HashSet<TerminologyObject>();
+		List<T> result = new ArrayList<>();
+		Set<TerminologyObject> visited = new HashSet<>();
 		collectAncestors(parent, visited, result, typeOf);
 		return Collections.unmodifiableList(result);
 	}
@@ -186,8 +186,8 @@ public final class KnowledgeBaseUtils {
 	 * @created 04.05.2011
 	 */
 	public static <T extends TerminologyObject> List<T> getSuccessors(TerminologyObject terminologyObject, Class<T> typeOf) {
-		List<T> result = new LinkedList<T>();
-		Set<TerminologyObject> visited = new HashSet<TerminologyObject>();
+		List<T> result = new LinkedList<>();
+		Set<TerminologyObject> visited = new HashSet<>();
 		collectSuccessors(terminologyObject, visited, result, typeOf);
 		return Collections.unmodifiableList(result);
 	}
@@ -244,7 +244,7 @@ public final class KnowledgeBaseUtils {
 	}
 
 	public static MultipleChoiceValue findMultipleChoiceValue(QuestionMC question, List<String> valueNames) throws IllegalArgumentException {
-		List<Choice> choices = new ArrayList<Choice>(valueNames.size());
+		List<Choice> choices = new ArrayList<>(valueNames.size());
 		for (String name : valueNames) {
 			Choice choice = findChoice(question, name);
 			if (choice != null) {
@@ -298,7 +298,7 @@ public final class KnowledgeBaseUtils {
 
 		// multiple choice question given
 		if (question instanceof QuestionMC) {
-			List<Choice> values = new LinkedList<Choice>();
+			List<Choice> values = new LinkedList<>();
 
 			// if mc val is a "real" mc val, i.e. more than one answervals
 			if (ChoiceID.isEncodedChoiceIDs(valueString)) {
@@ -427,7 +427,7 @@ public final class KnowledgeBaseUtils {
 	 * @created 15.12.2010
 	 */
 	public static Set<Locale> getAvailableLocales(KnowledgeBase kb) {
-		Set<Locale> locales = new HashSet<Locale>();
+		Set<Locale> locales = new HashSet<>();
 		// get all locales from knowledge base
 		getAvailableLocales(kb, locales);
 		for (NamedObject object : kb.getManager().getAllTerminologyObjects()) {
@@ -479,7 +479,7 @@ public final class KnowledgeBaseUtils {
 	 * @return the position of the object in the tree
 	 */
 	public static List<Integer> getPositionInTree(TerminologyObject object) {
-		List<Integer> position = new ArrayList<Integer>();
+		List<Integer> position = new ArrayList<>();
 		getPositionInTree(object, position);
 		return position;
 	}
@@ -522,8 +522,8 @@ public final class KnowledgeBaseUtils {
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
 	public static MultiMap<Solution, Solution> groupSolutions(Collection<Solution> solutions) {
-		MultiMap<Solution, Solution> groups = new DefaultMultiMap<Solution, Solution>(
-				MultiMaps.<Solution>linkedFactory(), MultiMaps.<Solution>linkedFactory());
+		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(
+				MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
 		for (Solution solution : solutions) {
 			groupSolution(solution, groups);
 		}
@@ -551,8 +551,8 @@ public final class KnowledgeBaseUtils {
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
 	public static MultiMap<Solution, Solution> getGroupedSolutions(Session session, State... solutionStates) {
-		MultiMap<Solution, Solution> groups = new DefaultMultiMap<Solution, Solution>(
-				MultiMaps.<Solution>linkedFactory(), MultiMaps.<Solution>linkedFactory());
+		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(
+				MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
 		for (State state : solutionStates) {
 			for (Solution solution : session.getBlackboard().getSolutions(state)) {
 				groupSolution(solution, groups);
@@ -562,8 +562,8 @@ public final class KnowledgeBaseUtils {
 	}
 
 	private static void groupSolution(Solution solution, MultiMap<Solution, Solution> groups) {
-		LinkedList<Solution> queue = new LinkedList<Solution>();
-		HashSet<Solution> visited = new HashSet<Solution>();
+		LinkedList<Solution> queue = new LinkedList<>();
+		HashSet<Solution> visited = new HashSet<>();
 		queue.add(solution);
 		while (!queue.isEmpty()) {
 			// take the first and process if not visited yet

@@ -21,6 +21,7 @@
 package de.d3web.core.inference.condition;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import de.d3web.core.session.Session;
 
@@ -44,7 +45,7 @@ public class CondNot extends NonTerminalCondition {
 	 * @param condition the enclosed condition to be negated
 	 */
 	public CondNot(Condition condition) {
-		super(Arrays.asList(new Condition[] { condition }));
+		super(Collections.singletonList(condition));
 		this.condition = condition;
 	}
 

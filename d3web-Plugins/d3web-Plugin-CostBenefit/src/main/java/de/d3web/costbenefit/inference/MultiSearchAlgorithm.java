@@ -46,7 +46,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 
 	public enum Mode {
 		continued, merged, parallel
-	};
+	}
 
 	private static class Worker implements Callable<SearchModel> {
 
@@ -67,7 +67,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 		}
 	}
 
-	private final List<SearchAlgorithm> delegates = new LinkedList<SearchAlgorithm>();
+	private final List<SearchAlgorithm> delegates = new LinkedList<>();
 	private Mode mode = Mode.parallel;
 
 	@Override
@@ -86,7 +86,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 		case parallel:
 			// mode: independent, threaded calculation for each search
 			IterableExecutor<SearchModel> executor = IterableExecutor.createExecutor();
-			List<Worker> workers = new LinkedList<Worker>();
+			List<Worker> workers = new LinkedList<>();
 			boolean succeeded = false;
 			for (SearchAlgorithm searchAlgorithm : delegates) {
 				SearchModel result = model.clone();
@@ -107,10 +107,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 					}
 					model.merge(result);
 				}
-				catch (InterruptedException e) {
-					Log.severe("error in cost/benefit search thread", e);
-				}
-				catch (ExecutionException e) {
+				catch (InterruptedException | ExecutionException e) {
 					Log.severe("error in cost/benefit search thread", e);
 				}
 			}
@@ -121,7 +118,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 
 		case merged:
 			// mode: independent, non-threaded calculation for each search
-			List<SearchModel> results = new ArrayList<SearchModel>();
+			List<SearchModel> results = new ArrayList<>();
 			for (SearchAlgorithm searchAlgorithm : delegates) {
 				SearchModel result = model.clone();
 				searchAlgorithm.search(session, result);

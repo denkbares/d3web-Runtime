@@ -23,17 +23,19 @@ package de.d3web.core.inference.condition;
 /**
  * Exception that will be thrown if a question has no answer when it should have
  * one. Creation date: (20.11.2000 10:03:12)
- * 
+ *
  * @see java.lang.Exception
  * @author Christian Betz
  */
 public final class NoAnswerException extends Exception {
 
 	private static final long serialVersionUID = -6470604092308987319L;
-	private static NoAnswerException instance = new NoAnswerException();
+	@SuppressWarnings("ThrowableInstanceNeverThrown")
+	private static final NoAnswerException instance = new NoAnswerException();
 
 	@Override
 	public void printStackTrace() {
+		//noinspection UseOfSystemOutOrSystemErr
 		System.err.println("No answer in Condition"); // NOSONAR
 	}
 

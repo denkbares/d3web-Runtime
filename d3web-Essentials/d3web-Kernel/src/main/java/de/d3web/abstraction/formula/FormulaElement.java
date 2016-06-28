@@ -41,7 +41,7 @@ public interface FormulaElement {
 	 * @return a list of FormulaElements, if it is a complex type. Otherwise
 	 *         e.g. a Double
 	 */
-	public Collection<? extends TerminologyObject> getTerminalObjects();
+	Collection<? extends TerminologyObject> getTerminalObjects();
 
 	/**
 	 * Evaluates the {@link Value} of the {@link FormulaElement}
@@ -50,5 +50,5 @@ public interface FormulaElement {
 	 * @param session {@link Session}
 	 * @return {@link Value}
 	 */
-	public Value eval(Session session);
+	Value eval(Session session);
 }

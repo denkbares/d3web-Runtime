@@ -66,7 +66,7 @@ public final class DiaFluxUtils {
 
 	public static Collection<Flow> getFlows(KnowledgeBase knowledgeBase) {
 		FlowSet flowSet = getFlowSet(knowledgeBase);
-		return (flowSet == null) ? Collections.<Flow>emptyList() : flowSet.getFlows();
+		return (flowSet == null) ? Collections.emptyList() : flowSet.getFlows();
 	}
 
 	public static Collection<Flow> getFlows(Session session) {
@@ -87,7 +87,7 @@ public final class DiaFluxUtils {
 	}
 
 	public static <C extends Node> Collection<C> getNodesOfClass(KnowledgeBase knowledgeBase, Class<C> clazz) {
-		Collection<C> nodes = new ArrayList<C>();
+		Collection<C> nodes = new ArrayList<>();
 		for (Flow flow : DiaFluxUtils.getFlowSet(knowledgeBase).getFlows()) {
 			nodes.addAll(flow.getNodesOfClass(clazz));
 		}
@@ -103,7 +103,7 @@ public final class DiaFluxUtils {
 	 * @created 04.04.2012
 	 */
 	public static boolean areConnectedNodes(Node fromNode, Node toNode) {
-		return fromNode.getFlow() == toNode.getFlow() && areConnectedNodes(fromNode, toNode, new LinkedList<Edge>());
+		return fromNode.getFlow() == toNode.getFlow() && areConnectedNodes(fromNode, toNode, new LinkedList<>());
 	}
 
 	private static boolean areConnectedNodes(Node fromNode, Node toNode, Collection<Edge> activeEdges) {
@@ -122,7 +122,7 @@ public final class DiaFluxUtils {
 	 * Returns a set of connected nodes.
 	 */
 	public static Collection<Node> getReachableNodes(Node node) {
-		Collection<Node> result = new HashSet<Node>();
+		Collection<Node> result = new HashSet<>();
 		getReachableNodes(node, result);
 		return result;
 	}
@@ -136,7 +136,7 @@ public final class DiaFluxUtils {
 	}
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
-		List<StartNode> result = new LinkedList<StartNode>();
+		List<StartNode> result = new LinkedList<>();
 
 		for (Flow flow : getFlowSet(base)) {
 			if (flow.isAutostart()) {
@@ -266,7 +266,7 @@ public final class DiaFluxUtils {
 	 * @created 15.03.2012
 	 */
 	public static List<ComposedNode> getCallingNodes(KnowledgeBase kb, StartNode startNode) {
-		List<ComposedNode> result = new ArrayList<ComposedNode>();
+		List<ComposedNode> result = new ArrayList<>();
 
 		for (ComposedNode composedNode : getFlowSet(kb).getNodesCalling(startNode.getFlow()
 				.getName())) {
@@ -288,7 +288,7 @@ public final class DiaFluxUtils {
 		assert nodes.size() == 1; // TODO for now works only with 1
 
 		Flow callingFlow = nodes.get(0).getFlow();
-		return createFlowStructure(new HashMap<Flow, Collection<ComposedNode>>(), callingFlow);
+		return createFlowStructure(new HashMap<>(), callingFlow);
 
 	}
 
@@ -309,7 +309,7 @@ public final class DiaFluxUtils {
 	private static void addFlow(Map<Flow, Collection<ComposedNode>> result, Flow calledFlow) {
 		Collection<ComposedNode> flows = result.get(calledFlow);
 		if (flows == null) {
-			flows = new HashSet<ComposedNode>();
+			flows = new HashSet<>();
 			result.put(calledFlow, flows);
 		}
 	}

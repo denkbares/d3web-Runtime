@@ -45,7 +45,7 @@ public class CondNumLess extends CondNum {
 
 	@Override
 	protected boolean compare(Double caseValue, Double conditionedValue) {
-		return (caseValue.doubleValue() < conditionedValue.doubleValue());
+		return (caseValue < conditionedValue);
 	}
 
 	@Override

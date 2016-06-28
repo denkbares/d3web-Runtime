@@ -74,7 +74,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		updateAnsweredWeight(session, changes);
 
 		// find xcl models to be updated (and remember affecting changes)
-		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<XCLModel, List<PropagationEntry>>();
+		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<>();
 		for (PropagationEntry change : changes) {
 			// do not handle strategic changes
 			if (change.isStrategic() || !change.hasChanged()) continue;
@@ -86,7 +86,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 				for (XCLModel model : ms.getModels()) {
 					List<PropagationEntry> entries = modelsToUpdate.get(model);
 					if (entries == null) {
-						entries = new LinkedList<PropagationEntry>();
+						entries = new LinkedList<>();
 						modelsToUpdate.put(model, entries);
 					}
 					entries.add(change);
@@ -133,7 +133,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		// no slice ==> every answer is abnormal
 		if (abnormality == null || (!(answer instanceof Value))) return 1.0;
 
-		double max = 0;
+		double max;
 		max = abnormality.getValue((Value) answer);
 		return max;
 	}
@@ -217,7 +217,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	@Override
 	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
-		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		Set<TerminologyObject> result = new HashSet<>();
 		XCLModel model = derivedObject.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 		if (model == null) return Collections.emptySet();
 		addAllObjects(result, model.getRelations());
@@ -229,7 +229,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	@Override
 	public Set<TerminologyObject> getActiveDerivationSources(TerminologyObject derivedObject, Session session) {
 		if (session == null) throw new NullPointerException();
-		Set<TerminologyObject> result = new HashSet<TerminologyObject>();
+		Set<TerminologyObject> result = new HashSet<>();
 		XCLModel model = derivedObject.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 		if (model == null) return Collections.emptySet();
 		InferenceTrace trace = model.getInferenceTrace(session);

@@ -110,7 +110,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 
 	private Element writeRelations(Persistence<KnowledgeBase> persistence, Collection<XCLRelation> relations, String elementName, RelationPool pool) throws IOException {
 		Element relationsElement = persistence.getDocument().createElement(elementName);
-		List<XCLRelation> relList = new ArrayList<XCLRelation>(relations);
+		List<XCLRelation> relList = new ArrayList<>(relations);
 		Collections.sort(relList, XCLRelationComparator.getInstance());
 		for (XCLRelation current : relList) {
 			relationsElement.appendChild(writeRelation(persistence, current, pool));
@@ -147,7 +147,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 		}
 	}
 
-	private Element writeRelation(Persistence<KnowledgeBase> persistence, String id, XCLRelation relation) throws NoSuchFragmentHandlerException, IOException {
+	private Element writeRelation(Persistence<KnowledgeBase> persistence, String id, XCLRelation relation) throws IOException {
 		Element relationElement = persistence.getDocument().createElement(ELEMENT_RELATION);
 		if (id != null) relationElement.setAttribute(ATTRIBUTE_ID, id);
 		Condition cond = relation.getConditionedFinding();
@@ -178,7 +178,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 		root.appendChild(ksNode);
 
 		// prepare loading
-		ArrayList<XCLModel> slices = new ArrayList<XCLModel>(
+		ArrayList<XCLModel> slices = new ArrayList<>(
 				kb.getAllKnowledgeSlicesFor(XCLModel.KNOWLEDGE_KIND));
 		Collections.sort(slices, XCLModelComparator.getInstance());
 		float cur = 0;
@@ -284,7 +284,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 		if (ac == null) {
 			throw new IOException("missing condition in relation");
 		}
-		XCLRelationType type = null;
+		XCLRelationType type;
 		if (typeName.equals(ELEMENT_RELATIONS)) {
 			type = XCLRelationType.explains;
 		}

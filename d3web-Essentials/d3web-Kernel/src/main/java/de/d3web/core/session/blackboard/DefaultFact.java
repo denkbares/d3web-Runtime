@@ -108,9 +108,6 @@ public class DefaultFact implements Fact {
 		if (!terminologyObject.equals(other.terminologyObject)) {
 			return false;
 		}
-		if (!value.equals(other.value)) {
-			return false;
-		}
-		return true;
+		return value.equals(other.value);
 	}
 }

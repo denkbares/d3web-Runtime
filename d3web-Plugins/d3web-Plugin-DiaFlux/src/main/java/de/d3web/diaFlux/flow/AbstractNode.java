@@ -48,8 +48,8 @@ public abstract class AbstractNode implements Node {
 	public AbstractNode(String id, String name) {
 
 		this.id = id;
-		this.outgoing = new ArrayList<Edge>();
-		this.incoming = new ArrayList<Edge>();
+		this.outgoing = new ArrayList<>();
+		this.incoming = new ArrayList<>();
 		this.name = name;
 	}
 
@@ -60,7 +60,7 @@ public abstract class AbstractNode implements Node {
 
 		if (edge.getStartNode() != this) {
 			throw new IllegalArgumentException("edge '" + edge + "' does not start at: "
-					+ this.toString());
+					+ this);
 		}
 
 		return outgoing.add(edge);
@@ -74,7 +74,7 @@ public abstract class AbstractNode implements Node {
 
 		if (edge.getEndNode() != this) {
 			throw new IllegalArgumentException("edge '" + edge + "' does not end at: "
-					+ this.toString());
+					+ this);
 		}
 
 		return incoming.add(edge);

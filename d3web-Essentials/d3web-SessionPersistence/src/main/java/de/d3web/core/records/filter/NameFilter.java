@@ -30,7 +30,7 @@ import de.d3web.core.records.SessionRecord;
  */
 public class NameFilter implements Filter {
 
-	private Pattern p;
+	private final Pattern p;
 
 	public NameFilter(String regex) {
 		p = Pattern.compile(regex);

@@ -135,7 +135,7 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 	}
 
 	private List<Question> collectFollowUpQuestions(Question question) {
-		List<Question> children = new ArrayList<Question>();
+		List<Question> children = new ArrayList<>();
 		for (TerminologyObject object : question.getChildren()) {
 			if (object instanceof Question) {
 				Question child = (Question) object;

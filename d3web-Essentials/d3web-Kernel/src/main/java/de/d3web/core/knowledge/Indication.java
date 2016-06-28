@@ -123,7 +123,7 @@ public class Indication implements Value {
 	 * @return whether the state is equal to the specified one
 	 */
 	public boolean hasState(State state) {
-		return this.state.equals(state);
+		return this.state == state;
 	}
 
 	/**
@@ -133,11 +133,11 @@ public class Indication implements Value {
 	 * @return the relevance due to this interview state
 	 */
 	public boolean isRelevant() {
-		return this.state.equals(State.INDICATED)
-				|| this.state.equals(State.INSTANT_INDICATED)
-				|| this.state.equals(State.RELEVANT)
-				|| this.state.equals(State.MULTIPLE_INDICATED)
-				|| this.state.equals(State.REPEATED_INDICATED);
+		return this.state == State.INDICATED
+				|| this.state == State.INSTANT_INDICATED
+				|| this.state == State.RELEVANT
+				|| this.state == State.MULTIPLE_INDICATED
+				|| this.state == State.REPEATED_INDICATED;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class Indication implements Value {
 	 * @return whether the interview element is excluded from the interview
 	 */
 	public boolean isContraIndicated() {
-		return this.state.equals(State.CONTRA_INDICATED);
+		return this.state == State.CONTRA_INDICATED;
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class Indication implements Value {
 		if (!(other instanceof Indication)) {
 			return false;
 		}
-		return this.state.equals(((Indication) other).state);
+		return this.state == ((Indication) other).state;
 	}
 
 	@Override

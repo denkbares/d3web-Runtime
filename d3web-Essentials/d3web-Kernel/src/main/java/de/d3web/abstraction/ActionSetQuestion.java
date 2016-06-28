@@ -55,7 +55,7 @@ public class ActionSetQuestion extends ActionAddValueFact {
 	 */
 	@Override
 	public List<? extends TerminologyObject> getBackwardObjects() {
-		List<TerminologyObject> terminals = new ArrayList<TerminologyObject>(1);
+		List<TerminologyObject> terminals = new ArrayList<>(1);
 		if (getQuestion() != null) {
 			terminals.add(getQuestion());
 		}
@@ -101,7 +101,7 @@ public class ActionSetQuestion extends ActionAddValueFact {
 
 	@Override
 	public List<? extends TerminologyObject> getForwardObjects() {
-		List<TerminologyObject> list = new LinkedList<TerminologyObject>();
+		List<TerminologyObject> list = new LinkedList<>();
 		if (getValue() instanceof FormulaElement) {
 			FormulaElement fe = (FormulaElement) getValue();
 			list.addAll(fe.getTerminalObjects());

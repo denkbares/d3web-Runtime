@@ -44,7 +44,7 @@ public class CondNumEqual extends CondNum {
 
 	@Override
 	protected boolean compare(Double caseValue, Double conditionedValue) {
-		return (Math.abs(caseValue.doubleValue() - conditionedValue.doubleValue()) <= CondNum.EPSILON);
+		return (Math.abs(caseValue - conditionedValue) <= CondNum.EPSILON);
 	}
 
 	@Override

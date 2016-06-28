@@ -33,8 +33,8 @@ public class RelationPool {
 
 	private int counter = 0;
 
-	private final Map<String, XCLRelation> idToRelation = new HashMap<String, XCLRelation>();
-	private final Map<XCLRelation, String> relationtoID = new HashMap<XCLRelation, String>();
+	private final Map<String, XCLRelation> idToRelation = new HashMap<>();
+	private final Map<XCLRelation, String> relationtoID = new HashMap<>();
 
 	/**
 	 * Adds a condition (if not present yet) and returns if it has been added.

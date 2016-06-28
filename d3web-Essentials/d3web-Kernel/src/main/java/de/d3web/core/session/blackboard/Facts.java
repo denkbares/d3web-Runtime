@@ -218,7 +218,7 @@ public final class Facts {
 													// AnswerFactory.createAnswerNum(sum);
 			}
 			else if (question instanceof QuestionMC) {
-				Collection<ChoiceID> choices = new HashSet<ChoiceID>();
+				Collection<ChoiceID> choices = new HashSet<>();
 				// add current choices
 				if (resultValue instanceof ChoiceValue) choices.add(((ChoiceValue) resultValue).getChoiceID());
 				if (resultValue instanceof MultipleChoiceValue) choices.addAll(((MultipleChoiceValue) resultValue).getChoiceIDs());
@@ -268,7 +268,7 @@ public final class Facts {
 		// filtering is required
 		if (hasSource && hasDerive) {
 			// so only use the source entries
-			Collection<Fact> result = new ArrayList<Fact>(facts.length);
+			Collection<Fact> result = new ArrayList<>(facts.length);
 			for (Fact fact : facts) {
 				if (isSourceSolver(fact)) result.add(fact);
 			}

@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -109,30 +108,22 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		root.appendChild(plugins);
 		listener.updateProgress(0, "Saving plugin configuration");
 		float count = 1;
-		List<PluginEntry> entries = new LinkedList<PluginEntry>(getEntries(kb));
-		Collections.sort(entries, new Comparator<PluginEntry>() {
-
-			@Override
-			public int compare(PluginEntry o1, PluginEntry o2) {
-				return o1.getPlugin().getPluginID().compareTo(o2.getPlugin().getPluginID());
-			}
-		});
-		if (entries != null) {
-			float max = entries.size();
-			for (PluginEntry conf : entries) {
-				Element pluginElement = doc.createElement(ELEMENT_PLUGIN);
-				Plugin plugin = conf.getPlugin();
-				pluginElement.setAttribute(ATTRIBUTE_ID, plugin.getPluginID());
-				pluginElement.setAttribute(ATTRIBUTE_REQUIRED, String.valueOf(conf.isRequired()));
-				pluginElement.setAttribute(ATTRIBUTE_AUTODETECT,
-						String.valueOf(conf.isAutodetect()));
-				plugins.appendChild(pluginElement);
-				listener.updateProgress(count++ / max, "Saving plugin configuration");
-			}
+		List<PluginEntry> entries = new LinkedList<>(getEntries(kb));
+		Collections.sort(entries, (o1, o2) -> o1.getPlugin().getPluginID().compareTo(o2.getPlugin().getPluginID()));
+		float max = entries.size();
+		for (PluginEntry conf : entries) {
+			Element pluginElement = doc.createElement(ELEMENT_PLUGIN);
+			Plugin plugin = conf.getPlugin();
+			pluginElement.setAttribute(ATTRIBUTE_ID, plugin.getPluginID());
+			pluginElement.setAttribute(ATTRIBUTE_REQUIRED, String.valueOf(conf.isRequired()));
+			pluginElement.setAttribute(ATTRIBUTE_AUTODETECT,
+					String.valueOf(conf.isAutodetect()));
+			plugins.appendChild(pluginElement);
+			listener.updateProgress(count++ / max, "Saving plugin configuration");
 		}
 		Element psmethods = doc.createElement(ELEMENT_PSMETHODS);
 		root.appendChild(psmethods);
-		LinkedList<PSConfig> psconfigs = new LinkedList<PSConfig>(kb.getPsConfigs());
+		LinkedList<PSConfig> psconfigs = new LinkedList<>(kb.getPsConfigs());
 		Collections.sort(psconfigs);
 		for (PSConfig ps : psconfigs) {
 			psmethods.appendChild(persistence.writeFragment(ps));

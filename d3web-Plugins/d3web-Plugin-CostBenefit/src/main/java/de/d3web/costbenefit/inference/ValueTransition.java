@@ -60,7 +60,7 @@ public class ValueTransition {
 	 * @return Set of possible values
 	 */
 	public Set<Value> calculatePossibleValues() {
-		Set<Value> result = new HashSet<Value>();
+		Set<Value> result = new HashSet<>();
 		for (ConditionalValueSetter setter : setters) {
 			result.add(setter.getAnswer());
 		}

@@ -46,8 +46,8 @@ import de.d3web.utils.Log;
  */
 public final class Property<T> {
 
-	private static final Map<String, Property<?>> properties = new HashMap<String, Property<?>>();
-	private static final Map<String, Property<?>> synonyms = new HashMap<String, Property<?>>();
+	private static final Map<String, Property<?>> properties = new HashMap<>();
+	private static final Map<String, Property<?>> synonyms = new HashMap<>();
 	static {
 		parseProperties();
 	}
@@ -79,7 +79,7 @@ public final class Property<T> {
 	}
 
 	public boolean hasState(Autosave autosave) {
-		return this.autosave.equals(autosave);
+		return this.autosave == autosave;
 	}
 
 	public String getName() {
@@ -356,7 +356,7 @@ public final class Property<T> {
 			String storedClassName = extension.getParameter("instanceof");
 			String defaultValueString = extension.getParameter("default");
 			String description = extension.getParameter("description");
-			Property<?> property = new Property<Object>(extension,
+			Property<?> property = new Property<>(extension,
 					pautosave, pname, description, pmultilingual,
 					storedClassName, defaultValueString);
 			properties.put(pname.toLowerCase(), property);

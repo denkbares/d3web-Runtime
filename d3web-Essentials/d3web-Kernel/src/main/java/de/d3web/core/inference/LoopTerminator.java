@@ -79,7 +79,7 @@ public class LoopTerminator implements SessionObjectSource<LoopStatus> {
 
 		private final Session session;
 		private final PSMethod observedPSMethod;
-		private final CountingSet<TerminologyObject> counter = new CountingSet<TerminologyObject>();
+		private final CountingSet<TerminologyObject> counter = new CountingSet<>();
 
 		private Integer maxPropagations = null; // lazy init
 		private boolean terminated = false;
@@ -118,7 +118,7 @@ public class LoopTerminator implements SessionObjectSource<LoopStatus> {
 				max = Math.max(max, counter.getCount(object));
 			}
 			// get all objects with these max propagations (or slightly below)
-			Collection<TerminologyObject> result = new HashSet<TerminologyObject>();
+			Collection<TerminologyObject> result = new HashSet<>();
 			for (TerminologyObject object : counter) {
 				if (counter.getCount(object) >= max - 1000) {
 					result.add(object);

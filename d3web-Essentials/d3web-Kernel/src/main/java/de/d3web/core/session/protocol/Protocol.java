@@ -40,7 +40,7 @@ public interface Protocol {
 	 * 
 	 * @return all protocol entries in a chronological order
 	 */
-	public List<ProtocolEntry> getProtocolHistory();
+	List<ProtocolEntry> getProtocolHistory();
 
 	/**
 	 * Return the list of all protocol entries of a certain class in a
@@ -50,7 +50,7 @@ public interface Protocol {
 	 * 
 	 * @return the matching protocol entries in a chronological order
 	 */
-	public <T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass);
+	<T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass);
 
 	/**
 	 * Append a new protocol entry to the {@link Protocol}. The protocol takes
@@ -58,7 +58,7 @@ public interface Protocol {
 	 * 
 	 * @param entry the entry to be added to the protocol
 	 */
-	public void addEntry(ProtocolEntry entry);
+	void addEntry(ProtocolEntry entry);
 
 	/**
 	 * Append a new protocol entries to the {@link Protocol}. The protocol takes
@@ -66,7 +66,7 @@ public interface Protocol {
 	 * 
 	 * @param entries the entries to be added to the protocol
 	 */
-	public void addEntries(Collection<? extends ProtocolEntry> entries);
+	void addEntries(Collection<? extends ProtocolEntry> entries);
 
 	/**
 	 * Append a new protocol entries to the {@link Protocol}. The protocol takes
@@ -74,7 +74,7 @@ public interface Protocol {
 	 * 
 	 * @param entries the entries to be added to the protocol
 	 */
-	public void addEntries(ProtocolEntry... entries);
+	void addEntries(ProtocolEntry... entries);
 
 	/**
 	 * Removes all protocol entries from that protocol. The protocol will be
@@ -82,7 +82,7 @@ public interface Protocol {
 	 * 
 	 * @created 26.10.2010
 	 */
-	public void clear();
+	void clear();
 
 	/**
 	 * Removes the first occurrence of the specified ProtocolEntry from this
@@ -92,5 +92,5 @@ public interface Protocol {
 	 * @param entry
 	 * @return true if entry was contained in this protocol
 	 */
-	public boolean removeEntry(ProtocolEntry entry);
+	boolean removeEntry(ProtocolEntry entry);
 }

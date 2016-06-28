@@ -74,7 +74,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 		}
 
 		public boolean hasState(InterviewState state) {
-			return this.interviewState.equals(state);
+			return this.interviewState == state;
 		}
 
 		@Override
@@ -123,7 +123,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 			if (!indication.equals(other.indication)) {
 				return false;
 			}
-			else if (!interviewState.equals(other.interviewState)) {
+			else if (interviewState != other.interviewState) {
 				return false;
 			}
 			return true;

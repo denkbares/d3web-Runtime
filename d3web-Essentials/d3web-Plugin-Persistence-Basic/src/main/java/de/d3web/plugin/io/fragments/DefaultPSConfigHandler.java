@@ -60,20 +60,20 @@ public class DefaultPSConfigHandler implements FragmentHandler<KnowledgeBase> {
 		String pluginID = element.getAttribute("pluginID");
 		PluginManager pluginManager = PluginManager.getInstance();
 		PSState psState = PSConfig.PSState.valueOf(element.getAttribute("state"));
-		Extension extension = null;
+		Extension extension;
 		try {
 			extension = pluginManager.getExtension(KernelExtensionPoints.PLUGIN_ID,
 					KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD, pluginID, extensionID);
 		}
 		catch (IllegalArgumentException e) {
-			if (psState.equals(PSConfig.PSState.active)) {
+			if (psState == PSState.active) {
 				throw new IOException("Problemsolver " + extensionID + " not found");
 			}
 			else {
 				return new DummyPSConfig(psState, extensionID, pluginID, element);
 			}
 		}
-		if (psState.equals(PSConfig.PSState.active) && extension == null) {
+		if (psState == PSState.active && extension == null) {
 			throw new IOException("Problemsolver " + extensionID + " not found");
 		}
 		else if (extension == null) {

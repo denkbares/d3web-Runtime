@@ -34,8 +34,8 @@ import de.d3web.core.session.Session;
  */
 public class FlowRun {
 
-	private final Map<Node, Set<DiaFluxElement>> nodeSupports = new LinkedHashMap<Node, Set<DiaFluxElement>>();
-	private final Set<Node> startNodes = new LinkedHashSet<Node>();
+	private final Map<Node, Set<DiaFluxElement>> nodeSupports = new LinkedHashMap<>();
+	private final Set<Node> startNodes = new LinkedHashSet<>();
 
 	private Set<SnapshotNode> blockedSnapshots = null;
 	private long blockedTime = Long.MIN_VALUE;
@@ -54,7 +54,7 @@ public class FlowRun {
 	private void check(Session session) {
 		long propagationTime = session.getPropagationManager().getPropagationTime();
 		if (propagationTime != blockedTime) {
-			blockedSnapshots = new HashSet<SnapshotNode>();
+			blockedSnapshots = new HashSet<>();
 			blockedTime = propagationTime;
 		}
 	}
@@ -117,7 +117,7 @@ public class FlowRun {
 		boolean contained = nodeSupports.containsKey(node);
 		Set<DiaFluxElement> supports;
 		if (!contained) {
-			supports = new HashSet<DiaFluxElement>(5);
+			supports = new HashSet<>(5);
 			nodeSupports.put(node, supports);
 		}
 		else {
@@ -153,7 +153,7 @@ public class FlowRun {
 	}
 
 	public Collection<Node> getActiveNodes() {
-		Collection<Node> activeNodes = new HashSet<Node>();
+		Collection<Node> activeNodes = new HashSet<>();
 		activeNodes.addAll(startNodes);
 		activeNodes.addAll(nodeSupports.keySet());
 		return Collections.unmodifiableCollection(activeNodes);
@@ -162,13 +162,12 @@ public class FlowRun {
 	/**
 	 * Return the active nodes of that flow run, that matches the specified class (being of this class or a subclass.
 	 *
-	 * @param <T>
 	 * @param clazz the class for the nodes
 	 * @return the active nodes
 	 * @created 28.02.2011
 	 */
 	public <T> Collection<T> getActiveNodesOfClass(Class<T> clazz) {
-		Collection<T> activeNodes = new HashSet<T>();
+		Collection<T> activeNodes = new HashSet<>();
 		for (Node node : startNodes) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));
@@ -187,13 +186,12 @@ public class FlowRun {
 	 * subclass.
 	 * Activated nodes are those notes that have active incoming edges, regardless if they are start nodes or not.
 	 *
-	 * @param <T>
 	 * @param clazz the class for the nodes
 	 * @return the activated nodes
 	 * @created 28.02.2011
 	 */
 	public <T> Collection<T> getActivatedNodesOfClass(Class<T> clazz) {
-		Collection<T> activeNodes = new HashSet<T>();
+		Collection<T> activeNodes = new HashSet<>();
 		for (Node node : nodeSupports.keySet()) {
 			if (clazz.isInstance(node)) {
 				activeNodes.add(clazz.cast(node));

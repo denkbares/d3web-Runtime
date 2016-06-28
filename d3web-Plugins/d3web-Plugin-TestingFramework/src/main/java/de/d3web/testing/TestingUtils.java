@@ -55,10 +55,10 @@ public class TestingUtils {
 		Type t = Message.Type.SUCCESS;
 		for (String testObjectName : testResult.getTestObjectsWithUnexpectedOutcome()) {
 			Message test = testResult.getMessageForTestObject(testObjectName);
-			if (test == null || test.getType().equals(Type.ERROR)) {
+			if (test == null || test.getType() == Type.ERROR) {
 				return Type.ERROR;
 			}
-			if (test.getType().equals(Type.FAILURE)) {
+			if (test.getType() == Type.FAILURE) {
 				t = Type.FAILURE;
 			}
 		}
@@ -70,7 +70,7 @@ public class TestingUtils {
 	}
 
 	public static Message createFailure(String failedMessage, Collection<String> erroneousObjects, Class<?> objectClass) {
-		ArrayList<MessageObject> messageObject = new ArrayList<MessageObject>();
+		ArrayList<MessageObject> messageObject = new ArrayList<>();
 		for (String object : erroneousObjects) {
 			messageObject.add(new MessageObject(object, objectClass));
 		}
@@ -97,7 +97,7 @@ public class TestingUtils {
 	 * @return the list of patterns
 	 */
 	public static Collection<Pattern> compileIgnores(String[]... ignores) {
-		Collection<Pattern> ignorePatterns = new LinkedList<Pattern>();
+		Collection<Pattern> ignorePatterns = new LinkedList<>();
 		for (String[] ignore : ignores) {
 			ignorePatterns.add(Pattern.compile(ignore[0], Pattern.CASE_INSENSITIVE));
 		}
@@ -129,7 +129,7 @@ public class TestingUtils {
 	 * @created 27.05.2013
 	 */
 	public static Collection<String> filterIgnored(Collection<String> objects, Collection<Pattern> ignorePatterns) {
-		Collection<String> result = new ArrayList<String>(objects);
+		Collection<String> result = new ArrayList<>(objects);
 
 		for (String string : objects) {
 

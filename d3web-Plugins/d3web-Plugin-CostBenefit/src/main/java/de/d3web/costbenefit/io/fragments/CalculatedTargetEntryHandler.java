@@ -34,6 +34,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry.Target;
+import de.d3web.strings.Strings;
 
 /**
  * Saves and loads {@link CalculatedTargetEntry}s
@@ -52,13 +53,13 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 	private static final String QCONTAINER = "qcontainer";
 	private static final String SOLUTION = "solution";
 	private static final String SPRINT_GROUP = "sprintGroup";
-	private static final String BENEFIT = "benefit";;
+	private static final String BENEFIT = "benefit";
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		try {
 			String dateString = element.getAttribute(ATTR_DATE);
-			Date date = XMLUtil.readDate(dateString);
+			Date date = Strings.readDate(dateString);
 			List<Element> elementList = XMLUtil.getElementList(element.getChildNodes());
 			if (elementList.size() < 2
 					|| !elementList.get(0).getNodeName().equals(CALCULATEDTARGET)
@@ -70,11 +71,11 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 			Target calculatedTarget = readTarget(XMLUtil.getElementList(
 					elementList.get(0).getChildNodes()).get(0));
 			List<Element> grandChildren = XMLUtil.getElementList(elementList.get(1).getChildNodes());
-			Set<Target> targets = new HashSet<Target>();
+			Set<Target> targets = new HashSet<>();
 			for (Element grandChild : grandChildren) {
 				targets.add(readTarget(grandChild));
 			}
-			Set<String> solutions = new HashSet<String>();
+			Set<String> solutions = new HashSet<>();
 			if (elementList.size() >= 3) {
 				if (!elementList.get(2).getNodeName().equals(SPRINT_GROUP)) {
 					throw new IOException("The third element must be named " + SPRINT_GROUP);
@@ -95,7 +96,7 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		CalculatedTargetEntry entry = (CalculatedTargetEntry) object;
-		String dateString = XMLUtil.writeDate(entry.getDate());
+		String dateString = Strings.writeDate(entry.getDate());
 		Element e = persistence.getDocument().createElement(ELEMENT_NAME);
 		e.setAttribute("type", ELEMENT_TYPE);
 		e.setAttribute(ATTR_DATE, dateString);
@@ -137,7 +138,7 @@ public class CalculatedTargetEntryHandler implements FragmentHandler<KnowledgeBa
 	private static Target readTarget(Element targetElement) throws IOException {
 		String benefitString = targetElement.getAttribute(BENEFIT);
 		String costBenefitString = targetElement.getAttribute(COSTBENEFIT);
-		Set<String> qcontainer = new HashSet<String>();
+		Set<String> qcontainer = new HashSet<>();
 		for (Element qContainerElement : XMLUtil.getElementList(targetElement.getChildNodes())) {
 			qcontainer.add(qContainerElement.getTextContent());
 		}

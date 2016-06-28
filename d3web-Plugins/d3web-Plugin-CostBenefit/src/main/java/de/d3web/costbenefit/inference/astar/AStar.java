@@ -88,10 +88,10 @@ public class AStar {
 	}
 
 	private final SearchModel model;
-	private final Map<Question, Value> usedStateQuestions = new LinkedHashMap<Question, Value>();
-	private final Queue<Node> openNodes = new PriorityQueue<Node>();
-	private final Collection<Node> closedNodes = new LinkedList<Node>();
-	private final Map<State, Node> nodes = new HashMap<State, Node>();
+	private final Map<Question, Value> usedStateQuestions = new LinkedHashMap<>();
+	private final Queue<Node> openNodes = new PriorityQueue<>();
+	private final Collection<Node> closedNodes = new LinkedList<>();
+	private final Map<State, Node> nodes = new HashMap<>();
 	private final AStarAlgorithm algorithm;
 	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
@@ -116,11 +116,11 @@ public class AStar {
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 
 		// collect all target QContainers
-		Set<QContainer> targets = new HashSet<QContainer>();
+		Set<QContainer> targets = new HashSet<>();
 		for (Target t : model.getTargets()) {
 			targets.addAll(t.getQContainers());
 		}
-		successors = new HashSet<StateTransition>();
+		successors = new HashSet<>();
 		successors.addAll(model.getTransitionalStateTransitions());
 		successors.addAll(model.getTargetStateTransitions());
 		// QContainers without a StateTransition can be executed at any time,
@@ -197,14 +197,14 @@ public class AStar {
 			session.getProtocol().addEntry(
 					new CalculatedPathEntry(
 							session.getPropagationManager().getPropagationTime(),
-							Collections.<QContainer> emptyList(), time2
+							Collections.emptyList(), time2
 									- time1));
 		}
 	}
 
 	private void removeInfiniteTargets() {
 		Node startNode = getOpenNodes().iterator().next();
-		for (Target target : new ArrayList<Target>(model.getTargets())) {
+		for (Target target : new ArrayList<>(model.getTargets())) {
 			Heuristic heuristic = algorithm.getHeuristic();
 			QContainer qcontainer = target.getQContainers().get(0);
 			double distance =
@@ -323,7 +323,6 @@ public class AStar {
 	 * @created 09.09.2011
 	 * @param node the node to apply the state transition to
 	 * @param stateTransition the state transition to be applied
-	 * @return
 	 */
 	private boolean canApplyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
@@ -422,8 +421,7 @@ public class AStar {
 
 		AStarPath newPath = new AStarPath(qcontainer, node.getPath(), costs);
 		double f = calculateFValue(newPath, newState, copiedSession);
-		Node newFollower = new Node(newState, copiedSession, newPath, f);
-		return newFollower;
+		return new Node(newState, copiedSession, newPath, f);
 	}
 
 	private void updateTargets(AStarPath newPath) {
@@ -470,7 +468,7 @@ public class AStar {
 				// trial: also check cache
 				AStarPath prePath = ((AStarPath) path).getPredecessor();
 				if (prePath != null) {
-					Pair<Path, QContainer> key = new Pair<Path, QContainer>(prePath, qContainer);
+					Pair<Path, QContainer> key = new Pair<>(prePath, qContainer);
 					Double preHValue = hValueCache.get(key);
 					if (preHValue != null) {
 						double costs2 = preHValue + prePath.getCosts();
@@ -481,7 +479,7 @@ public class AStar {
 				double distance = algorithm.getHeuristic().getDistance(model, path, state,
 						qContainer);
 				costs += distance;
-				Pair<Path, QContainer> key = new Pair<Path, QContainer>(path, qContainer);
+				Pair<Path, QContainer> key = new Pair<>(path, qContainer);
 				hValueCache.put(key, distance);
 				targetCosts = Math.max(targetCosts, costs);
 			}

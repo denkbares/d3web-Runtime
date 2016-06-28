@@ -98,7 +98,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		doc.appendChild(root);
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
-		SortedSet<StateTransition> knowledgeSlices = new TreeSet<StateTransition>(
+		SortedSet<StateTransition> knowledgeSlices = new TreeSet<>(
 				new StateTransitionComparator());
 		for (StateTransition knowledgeSlice : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			if (knowledgeSlice != null) {
@@ -158,7 +158,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 				qcontainerID);
 		NodeList children = current.getChildNodes();
 		Condition activationCondition = null;
-		List<ValueTransition> postTransitions = new ArrayList<ValueTransition>();
+		List<ValueTransition> postTransitions = new ArrayList<>();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node n = children.item(i);
 			if (n.getNodeName().equals("activationCondition")) {
@@ -169,7 +169,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 			else if (n.getNodeName().equals("ValueTransition")) {
 				String question = n.getAttributes().getNamedItem("QID").getTextContent();
 				Question q = persistence.getArtifact().getManager().searchQuestion(question);
-				List<ConditionalValueSetter> cvss = new ArrayList<ConditionalValueSetter>();
+				List<ConditionalValueSetter> cvss = new ArrayList<>();
 				NodeList childNodes = n.getChildNodes();
 				for (int j = 0; j < childNodes.getLength(); j++) {
 					Node child = childNodes.item(j);

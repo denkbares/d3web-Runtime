@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ import java.util.List;
  */
 public class DefaultProtocol implements Protocol {
 
-	private final List<ProtocolEntry> entries = new ArrayList<ProtocolEntry>();
+	private final List<ProtocolEntry> entries = new ArrayList<>();
 
 	public DefaultProtocol() {
 	}
@@ -56,7 +55,7 @@ public class DefaultProtocol implements Protocol {
 
 	@Override
 	public <T extends ProtocolEntry> List<T> getProtocolHistory(Class<T> filterClass) {
-		ArrayList<T> result = new ArrayList<T>(this.entries.size());
+		ArrayList<T> result = new ArrayList<>(this.entries.size());
 		for (ProtocolEntry entry : this.entries) {
 			if (filterClass.isInstance(entry)) {
 				result.add(filterClass.cast(entry));

@@ -64,7 +64,7 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	public static TestResult createTestResult(String testName, String[] configuration, Map<String, Message> unexpectedMessages, int successfulRuns, Message summary) {
-		Map<String, Message> expectedMessages = new TreeMap<String, Message>();
+		Map<String, Message> expectedMessages = new TreeMap<>();
 		for (int i = 0; i < successfulRuns; i++) {
 			expectedMessages.put(generateUnknownTestObjectString(i), Message.SUCCESS);
 		}
@@ -105,6 +105,7 @@ public class TestResult implements Comparable<TestResult> {
 
 	@Override
 	public int compareTo(TestResult tr) {
+		//noinspection StringEquality
 		if (testName != tr.getTestName()) {
 			return testName.compareTo(tr.getTestName());
 		}
@@ -192,8 +193,8 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	public Collection<File> getAttachments() {
-		Collection<File> files = new LinkedList<File>();
-		for (Message message : new ConcatenateIterable<Message>(
+		Collection<File> files = new LinkedList<>();
+		for (Message message : new ConcatenateIterable<>(
 				expectedMessages.values(), unexpectedMessages.values())) {
 			files.addAll(message.getAttachments());
 		}
@@ -201,7 +202,7 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	public void handleAutoDelete() {
-		for (Message message : new ConcatenateIterable<Message>(
+		for (Message message : new ConcatenateIterable<>(
 				expectedMessages.values(), unexpectedMessages.values())) {
 			message.handleAutoDelete();
 		}
@@ -238,7 +239,7 @@ public class TestResult implements Comparable<TestResult> {
 	public void addUnexpectedMessage(String testObjectName, Message message) {
 		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
 		if (message == null) throw new NullPointerException("Message cannot be null");
-		if (message.getType().equals(Message.Type.SUCCESS)) {
+		if (message.getType() == Message.Type.SUCCESS) {
 			throw new IllegalArgumentException("wrong failed/error message type: " + message);
 		}
 		this.unexpectedMessages.put(testObjectName, message);
@@ -255,7 +256,7 @@ public class TestResult implements Comparable<TestResult> {
 	public void addExpectedMessage(String testObjectName, Message message) {
 		if (testObjectName == null) throw new NullPointerException("TestObjectName cannot be null");
 		if (message == null) throw new NullPointerException("Message cannot be null");
-		if (!message.getType().equals(Message.Type.SUCCESS)) {
+		if (message.getType() != Message.Type.SUCCESS) {
 			throw new IllegalArgumentException("wrong success message type: " + message);
 		}
 		this.expectedMessages.put(testObjectName, message);

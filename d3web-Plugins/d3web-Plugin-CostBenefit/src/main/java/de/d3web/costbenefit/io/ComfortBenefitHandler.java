@@ -32,7 +32,6 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
-import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.io.progress.ProgressListener;
@@ -110,7 +109,7 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 		}
 	}
 
-	private void addComfortBenefitKnowledge(Persistence<KnowledgeBase> persistence, Node current) throws NoSuchFragmentHandlerException, IOException {
+	private void addComfortBenefitKnowledge(Persistence<KnowledgeBase> persistence, Node current) throws IOException {
 		String qcontainerID = current.getAttributes().getNamedItem("QID").getTextContent();
 		QContainer qcontainer =
 				persistence.getArtifact().getManager().searchQContainer(qcontainerID);

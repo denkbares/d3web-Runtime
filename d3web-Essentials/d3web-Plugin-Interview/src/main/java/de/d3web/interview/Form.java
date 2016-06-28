@@ -39,11 +39,13 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 	/**
 	 * Returns the title of the Form
 	 */
+	@Override
 	String getTitle();
 
 	/**
 	 * Returns true if the form is empty
 	 */
+	@Override
 	boolean isNotEmpty();
 
 	/**

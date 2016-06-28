@@ -55,9 +55,9 @@ public final class Score implements Comparable<Object> {
 	public static final List<Score> APRIORI = Arrays.asList(P5, P4, P3, P2, N2, N3, N4, N5);
 	private static final List<Score> allScores = Arrays.asList(P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7);
 
-	private String symbol;
-	private double score;
-	private double aPriori;
+	private final String symbol;
+	private final double score;
+	private final double aPriori;
 
 	/**
 	 * Creates a new score given to a diagnosis with a fixed amount of points
@@ -90,7 +90,7 @@ public final class Score implements Comparable<Object> {
 			return 0;
 		}
 		else {
-			throw new ClassCastException(); // nicht vergleichbar
+			throw new ClassCastException();
 		}
 	}
 
@@ -126,11 +126,7 @@ public final class Score implements Comparable<Object> {
 			return false;
 		}
 		Score other = (Score) obj;
-		if ((other.getSymbol() != null) && (this.getSymbol() != null)
-				&& (other.getSymbol() != this.getSymbol())) {
-			return false;
-		}
-		return (other.getScore() == getScore());
+		return other.getScore() == getScore();
 	}
 
 	public double getAPriori() {

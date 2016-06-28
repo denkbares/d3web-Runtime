@@ -50,7 +50,7 @@ public class PropertiesHandler {
 			if (prop.getNodeName().equals("Property")) {
 				// [MISC]:aha:obsolete after supportknowledge refactoring is
 				// propagated
-				String name = "";
+				String name;
 				if (prop.getAttributes().getNamedItem("name") != null) {
 					name = prop.getAttributes().getNamedItem("name").getNodeValue();
 				}
@@ -58,7 +58,7 @@ public class PropertiesHandler {
 					name = prop.getAttributes().getNamedItem("descriptor").getNodeValue();
 				}
 
-				Property<?> property = null;
+				Property<?> property;
 				try {
 					property = Property.getUntypedProperty(name);
 				}

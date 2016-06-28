@@ -47,8 +47,8 @@ public class DefaultSessionRecord implements SessionRecord {
 	private final Date creationDate;
 	private Date lastEditDate;
 
-	private final List<FactRecord> valueFacts = new LinkedList<FactRecord>();
-	private final List<FactRecord> interviewFacts = new LinkedList<FactRecord>();
+	private final List<FactRecord> valueFacts = new LinkedList<>();
+	private final List<FactRecord> interviewFacts = new LinkedList<>();
 
 	private final Protocol protocol = new DefaultProtocol();
 
@@ -141,7 +141,7 @@ public class DefaultSessionRecord implements SessionRecord {
 
 	@Override
 	public List<Solution> getSolutions(KnowledgeBase kb, State... states) {
-		HashMap<Solution, FactRecord> map = new HashMap<Solution, FactRecord>();
+		HashMap<Solution, FactRecord> map = new HashMap<>();
 		for (FactRecord fact : valueFacts) {
 			Solution solution = kb.getManager().searchSolution(fact.getObjectName());
 			if (solution != null) {
@@ -156,7 +156,7 @@ public class DefaultSessionRecord implements SessionRecord {
 				}
 			}
 		}
-		List<Solution> result = new LinkedList<Solution>();
+		List<Solution> result = new LinkedList<>();
 		for (Entry<Solution, FactRecord> entry : map.entrySet()) {
 			for (State state : states) {
 				Rating value = (Rating) entry.getValue().getValue();

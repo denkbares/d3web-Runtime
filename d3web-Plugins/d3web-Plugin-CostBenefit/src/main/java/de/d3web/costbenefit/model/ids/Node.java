@@ -39,7 +39,7 @@ import de.d3web.costbenefit.model.SearchModel;
 public class Node {
 
 	private final QContainer qContainer;
-	private StateTransition st;
+	private final StateTransition st;
 	private final SearchModel cbm;
 
 	public Node(QContainer qcon, SearchModel cbm) {
@@ -51,9 +51,6 @@ public class Node {
 	/**
 	 * Checks if the Node is applicable in session. A node is applicable if the
 	 * preconditions of the associated QContainer are matching session.
-	 * 
-	 * @param session
-	 * @return
 	 */
 	public boolean isApplicable(Session session) {
 		if (st == null) return true;

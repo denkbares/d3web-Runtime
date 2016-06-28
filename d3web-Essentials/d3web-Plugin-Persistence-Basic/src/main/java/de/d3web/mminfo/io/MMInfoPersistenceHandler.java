@@ -94,7 +94,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		listener.updateProgress(0, "Starting to save multimedia");
 		int maxvalue = getEstimatedSize(kb);
 		float aktvalue = 0;
-		List<TerminologyObject> objects = new ArrayList<TerminologyObject>(
+		List<TerminologyObject> objects = new ArrayList<>(
 				kb.getManager().getAllTerminologyObjects());
 		Collections.sort(objects, new NamedObjectComparator());
 

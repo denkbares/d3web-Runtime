@@ -74,7 +74,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 					}
 				}
 				else if (object instanceof QASet) {
-					Collection<TerminologyObject> traversedQuestions = new HashSet<TerminologyObject>();
+					Collection<TerminologyObject> traversedQuestions = new HashSet<>();
 					Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object,
 							session,
 							traversedQuestions);

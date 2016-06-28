@@ -53,7 +53,7 @@ public class MofNConditionHandler implements FragmentHandler<KnowledgeBase> {
 		int min = Integer.parseInt(element.getAttribute("min"));
 		int max = Integer.parseInt(element.getAttribute("max"));
 		List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());
-		List<Condition> conds = new ArrayList<Condition>();
+		List<Condition> conds = new ArrayList<>();
 		for (Element child : childNodes) {
 			conds.add((Condition) persistence.readFragment(child));
 		}

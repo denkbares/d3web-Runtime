@@ -36,11 +36,8 @@ public class NoAbortStrategyHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("abortStrategy")
-				&& element.getAttribute("name").equals("NoAbortStrategy")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("abortStrategy")
+				&& element.getAttribute("name").equals("NoAbortStrategy");
 	}
 
 	@Override

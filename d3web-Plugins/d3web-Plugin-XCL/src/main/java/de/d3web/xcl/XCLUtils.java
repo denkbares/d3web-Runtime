@@ -103,14 +103,14 @@ public class XCLUtils {
 		if (model == null) {
 			return Collections.emptyList();
 		}
-		Set<Value> values = new HashSet<Value>();
+		Set<Value> values = new HashSet<>();
 		Set<XCLRelation> coveringRelations = model.getCoveringRelations(question);
 		for (XCLRelation relation : coveringRelations) {
 			// we assume that terminology objects cannot be used in
 			// contradicting and normal relations
 			if (relation.hasType(XCLRelationType.contradicted)) {
 				Condition condition = relation.getConditionedFinding();
-				Set<Value> forbiddenValues = new HashSet<Value>();
+				Set<Value> forbiddenValues = new HashSet<>();
 				fillForbiddenValues(question, condition, forbiddenValues);
 				for (Choice c : question.getAllAlternatives()) {
 					ChoiceValue value = new ChoiceValue(c);
@@ -207,7 +207,7 @@ public class XCLUtils {
 	 * @created 22.02.2014
 	 */
 	public static Set<Value> getValues(Condition condition, Question question, Session session) {
-		Set<Value> result = new HashSet<Value>();
+		Set<Value> result = new HashSet<>();
 		// return an empty set, if no value is covered
 		if (!condition.getTerminalObjects().contains(question)) {
 			return result;
@@ -241,7 +241,7 @@ public class XCLUtils {
 				Log.info("skip values due to false sub-condition of AND condition: " + condition);
 			}
 			else {
-				List<Set<Value>> subSets = new ArrayList<Set<Value>>();
+				List<Set<Value>> subSets = new ArrayList<>();
 				for (Condition c : ((CondAnd) condition).getTerms()) {
 					// if the subcondition coveres the question, collect its
 					// values
@@ -275,7 +275,7 @@ public class XCLUtils {
 	 * @created 03.03.2014
 	 */
 	public static Set<CondEqual> getCondEquals(Condition condition) {
-		Set<CondEqual> result = new LinkedHashSet<CondEqual>();
+		Set<CondEqual> result = new LinkedHashSet<>();
 		collectCondEqual(result, condition);
 		return result;
 	}

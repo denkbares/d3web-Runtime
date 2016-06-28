@@ -98,7 +98,7 @@ public class TestManager {
 	 * @created 31.07.2012
 	 */
 	public static List<Test<?>> findAllTests() {
-		List<Test<?>> result = new ArrayList<Test<?>>();
+		List<Test<?>> result = new ArrayList<>();
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
@@ -121,7 +121,7 @@ public class TestManager {
 	 * @created 07.08.2012
 	 */
 	public static List<String> findAllTestNames() {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID,
 				Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {

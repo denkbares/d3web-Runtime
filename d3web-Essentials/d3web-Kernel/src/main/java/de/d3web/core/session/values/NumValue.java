@@ -94,10 +94,7 @@ public class NumValue implements QuestionValue {
 			return false;
 		}
 		NumValue other = (NumValue) obj;
-		if (!value.equals(other.value)) {
-			return false;
-		}
-		return true;
+		return value.equals(other.value);
 	}
 
 	// @Override

@@ -31,7 +31,7 @@ import de.d3web.utils.Triple;
  */
 public class InfoStoreUtil {
 
-	private static TripleComparator tripleComparator = new TripleComparator();
+	private static final TripleComparator tripleComparator = new TripleComparator();
 
 	public static void copyEntries(InfoStore source, InfoStore target) {
 		for (Triple<Property<?>, Locale, ?> entry : source.entries()) {

@@ -39,11 +39,8 @@ public class AStarSearchAlgorithmHandler implements FragmentHandler<KnowledgeBas
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("searchAlgorithm")
-				&& element.getAttribute("name").equals("AStarSearchAlgorithm")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("searchAlgorithm")
+				&& element.getAttribute("name").equals("AStarSearchAlgorithm");
 	}
 
 	@Override

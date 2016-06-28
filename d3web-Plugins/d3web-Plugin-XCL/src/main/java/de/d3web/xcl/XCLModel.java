@@ -46,9 +46,9 @@ import de.d3web.xcl.inference.PSMethodXCL;
 public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, SessionObjectSource<XCLCaseModel> {
 
 	public final static KnowledgeKind<XCLModel> KNOWLEDGE_KIND =
-			new KnowledgeKind<XCLModel>("XCLModel", XCLModel.class);
+			new KnowledgeKind<>("XCLModel", XCLModel.class);
 
-	private Solution solution;
+	private final Solution solution;
 
 	private Double establishedThreshold = null;
 	private Double suggestedThreshold = null;
@@ -63,16 +63,16 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	private boolean considerOnlyRelevantRelations = true;
 	// TODO: store these information in the NamedObjects, also required for
 	// efficient propagation
-	private transient final Map<TerminologyObject, Set<XCLRelation>> coveringRelations = new HashMap<TerminologyObject, Set<XCLRelation>>();
-	private transient final Set<TerminologyObject> positiveCoveredSymptoms = new HashSet<TerminologyObject>();
+	private transient final Map<TerminologyObject, Set<XCLRelation>> coveringRelations = new HashMap<>();
+	private transient final Set<TerminologyObject> positiveCoveredSymptoms = new HashSet<>();
 
 	public XCLModel(Solution solution) {
 		this.solution = solution;
 
-		relations = new LinkedList<XCLRelation>();
-		necessaryRelations = new LinkedList<XCLRelation>();
-		sufficientRelations = new LinkedList<XCLRelation>();
-		contradictingRelations = new LinkedList<XCLRelation>();
+		relations = new LinkedList<>();
+		necessaryRelations = new LinkedList<>();
+		sufficientRelations = new LinkedList<>();
+		contradictingRelations = new LinkedList<>();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	 */
 	public Set<XCLRelation> getCoveringRelations(TerminologyObject no) {
 		Set<XCLRelation> result = coveringRelations.get(no);
-		return (result == null) ? Collections.<XCLRelation> emptySet() : result;
+		return (result == null) ? Collections.emptySet() : result;
 	}
 
 	public static void insertXCLRelation(KnowledgeBase kb,
@@ -139,7 +139,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		}
 
 		// insert XCL
-		XCLRelation relation = null;
+		XCLRelation relation;
 		XCLModel xclModel = d.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
 		if (xclModel == null) {
 			xclModel = new XCLModel(d);
@@ -152,7 +152,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 	public Map<XCLRelationType, Collection<XCLRelation>> getTypedRelations() {
 
-		Map<XCLRelationType, Collection<XCLRelation>> relationMap = new HashMap<XCLRelationType, Collection<XCLRelation>>();
+		Map<XCLRelationType, Collection<XCLRelation>> relationMap = new HashMap<>();
 
 		relationMap.put(XCLRelationType.explains, this.getRelations());
 		relationMap.put(XCLRelationType.contradicted, this.getContradictingRelations());
@@ -229,7 +229,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		for (TerminologyObject no : terminalObjects) {
 			Set<XCLRelation> set = coveringRelations.get(no);
 			if (set == null) {
-				set = new HashSet<XCLRelation>();
+				set = new HashSet<>();
 				coveringRelations.put(no, set);
 			}
 			set.add(relation);
@@ -336,7 +336,7 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	public List<XCLRelation> getAllRelations() {
-		List<XCLRelation> allRels = new ArrayList<XCLRelation>();
+		List<XCLRelation> allRels = new ArrayList<>();
 		allRels.addAll(relations);
 		allRels.addAll(necessaryRelations);
 		allRels.addAll(sufficientRelations);

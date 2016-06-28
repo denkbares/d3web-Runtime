@@ -48,7 +48,7 @@ public class LinkedListHandler implements FragmentHandler<KnowledgeBase> {
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
-		List<Object> list = new LinkedList<Object>();
+		List<Object> list = new LinkedList<>();
 		List<Element> children = XMLUtil.getElementList(element.getChildNodes());
 		for (Element entry : children) {
 			if ((entry != null) && (entry.getNodeName().equals("Entry"))) {

@@ -42,7 +42,7 @@ public final class BuildResult {
 	/**
 	 * List of test results of executed tests with unexpected outcome
 	 */
-	private final List<TestResult> testResults = new ArrayList<TestResult>();
+	private final List<TestResult> testResults = new ArrayList<>();
 
 	/**
 	 * time/date of build execution
@@ -144,10 +144,10 @@ public final class BuildResult {
 			// build results are considered equal if containing the same test
 			// results (disregarding build date, duration, number..)
 			BuildResult other = (BuildResult) obj;
-			Set<TestResult> otherSet = new HashSet<TestResult>();
+			Set<TestResult> otherSet = new HashSet<>();
 			otherSet.addAll(other.getResults());
 
-			Set<TestResult> thisSet = new HashSet<TestResult>();
+			Set<TestResult> thisSet = new HashSet<>();
 			thisSet.addAll(this.getResults());
 
 			if (!(thisSet.size() == otherSet.size())) {
@@ -155,7 +155,7 @@ public final class BuildResult {
 			}
 
 			thisSet.removeAll(otherSet);
-			if (thisSet.size() > 0) {
+			if (!thisSet.isEmpty()) {
 				return false;
 			}
 			// sets have equal size and contain same elements
@@ -208,10 +208,10 @@ public final class BuildResult {
 		for (TestResult testResult : testResults) {
 			Message summary = testResult.getSummary();
 			if (summary == null) continue;
-			if (summary.getType().equals(Message.Type.ERROR)) {
+			if (summary.getType() == Message.Type.ERROR) {
 				return Message.Type.ERROR;
 			}
-			if (summary.getType().equals(Message.Type.FAILURE)){
+			if (summary.getType() == Message.Type.FAILURE) {
 				overallResult = Message.Type.FAILURE;
 			}
 		}

@@ -47,7 +47,7 @@ public interface Session extends SessionHeader {
 	 * 
 	 * @return the knowledge base used in this session
 	 */
-	public KnowledgeBase getKnowledgeBase();
+	KnowledgeBase getKnowledgeBase();
 
 	// --- manage problem solvers ---
 	/**

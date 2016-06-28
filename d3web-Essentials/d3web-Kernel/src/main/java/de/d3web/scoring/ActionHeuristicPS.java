@@ -20,6 +20,9 @@
 
 package de.d3web.scoring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.d3web.core.inference.ActionAddValueFact;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -28,9 +31,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.utils.EqualsUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Action to add scores to solutions (heuristic problem-solver) <br>
@@ -54,7 +54,7 @@ public class ActionHeuristicPS extends ActionAddValueFact {
 	 */
 	@Override
 	public List<? extends TerminologyObject> getBackwardObjects() {
-		List<Solution> terminals = new ArrayList<Solution>(1);
+		List<Solution> terminals = new ArrayList<>(1);
 		if (getSolution() != null) {
 			terminals.add(getSolution());
 		}

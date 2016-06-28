@@ -42,7 +42,7 @@ import de.d3web.core.utilities.NamedObjectComparator;
  */
 public class DefaultFactStorage implements FactStorage {
 
-	private final Map<TerminologyObject, FactAggregator> mediators = new HashMap<TerminologyObject, FactAggregator>();
+	private final Map<TerminologyObject, FactAggregator> mediators = new HashMap<>();
 
 	/**
 	 * Returns the {@link FactAggregator} for a specified terminology object. If
@@ -201,7 +201,7 @@ public class DefaultFactStorage implements FactStorage {
 	 * @return the dumped information
 	 */
 	public String dump() {
-		List<TerminologyObject> objects = new ArrayList<TerminologyObject>(mediators.keySet());
+		List<TerminologyObject> objects = new ArrayList<>(mediators.keySet());
 		Collections.sort(objects, new NamedObjectComparator());
 		StringBuilder result = new StringBuilder();
 		for (TerminologyObject object : objects) {

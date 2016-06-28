@@ -50,12 +50,10 @@ public abstract class QuestionChoice extends Question {
 
 	public QuestionChoice(KnowledgeBase kb, String name, Choice... choices) {
 		super(kb, name);
-		for (Choice c : choices) {
-			alternatives.add(c);
-		}
+		Collections.addAll(alternatives, choices);
 	}
 
-	private final List<Choice> alternatives = new LinkedList<Choice>();
+	private final List<Choice> alternatives = new LinkedList<>();
 
 	/**
 	 * Gives you all the answers (alternatives) and does not care about any

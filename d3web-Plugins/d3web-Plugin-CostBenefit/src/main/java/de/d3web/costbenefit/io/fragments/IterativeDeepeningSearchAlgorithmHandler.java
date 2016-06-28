@@ -38,11 +38,8 @@ public class IterativeDeepeningSearchAlgorithmHandler implements FragmentHandler
 
 	@Override
 	public boolean canRead(Element element) {
-		if (element.getNodeName().equals("searchAlgorithm")
-				&& element.getAttribute("name").equals("IterativeDeepeningSearchAlgorithm")) {
-			return true;
-		}
-		return false;
+		return element.getNodeName().equals("searchAlgorithm")
+				&& element.getAttribute("name").equals("IterativeDeepeningSearchAlgorithm");
 	}
 
 	@Override

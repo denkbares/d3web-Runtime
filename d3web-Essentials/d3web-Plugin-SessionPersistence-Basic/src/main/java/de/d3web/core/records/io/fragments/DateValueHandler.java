@@ -26,9 +26,9 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
-import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.values.DateValue;
+import de.d3web.strings.Strings;
 
 /**
  * Handels DateValues
@@ -43,7 +43,7 @@ public class DateValueHandler implements FragmentHandler<SessionRecord> {
 	@Override
 	public Object read(Element element, Persistence<SessionRecord> persistence) throws IOException {
 		try {
-			return new DateValue(XMLUtil.readDate(element.getTextContent()));
+			return new DateValue(Strings.readDate(element.getTextContent(), Strings.DATE_FORMAT_COMPATIBILITY));
 		}
 		catch (ParseException e) {
 			throw new IOException(e);
@@ -55,7 +55,7 @@ public class DateValueHandler implements FragmentHandler<SessionRecord> {
 		DateValue dv = (DateValue) object;
 		Date date = (Date) dv.getValue();
 		Element element = persistence.getDocument().createElement(elementName);
-		element.setTextContent(XMLUtil.writeDate(date));
+		element.setTextContent(Strings.writeDate(date));
 		return element;
 	}
 

@@ -77,15 +77,14 @@ public abstract class CondNum extends CondQuestion {
 		else {
 			CondNum otherCN = (CondNum) other;
 
-			boolean test = true;
+			boolean test;
 
 			if (this.getQuestion() != null) {
 				test = this.getQuestion().equals(
-						otherCN.getQuestion())
-						&& test;
+						otherCN.getQuestion());
 			}
 			else {
-				test = (otherCN.getQuestion() == null) && test;
+				test = otherCN.getQuestion() == null;
 			}
 
 			if (this.getConditionValue() != null) {
@@ -97,7 +96,7 @@ public abstract class CondNum extends CondQuestion {
 				test = (otherCN.getConditionValue() == null) && test;
 			}
 
-			if (this.getTerminalObjects() != null && otherCN != null) {
+			if (this.getTerminalObjects() != null) {
 				test = this.getTerminalObjects().containsAll(
 						otherCN.getTerminalObjects())
 						&& otherCN.getTerminalObjects().containsAll(this.getTerminalObjects())
@@ -117,7 +116,7 @@ public abstract class CondNum extends CondQuestion {
 			throws NoAnswerException, UnknownAnswerException {
 		Value caseValue = checkAnswer(session);
 		if (caseValue instanceof NumValue) {
-			Double caseValueDouble = (Double) (((NumValue) caseValue).getValue());
+			Double caseValueDouble = (Double) (caseValue.getValue());
 			return compare(caseValueDouble, getConditionValue());
 		}
 		else {
@@ -133,12 +132,12 @@ public abstract class CondNum extends CondQuestion {
 			return (getQuestion().getName()).hashCode();
 		}
 		else {
-			return (getClass().toString() + toString()).hashCode();
+			return (getClass() + toString()).hashCode();
 		}
 	}
 
 	static double doubleValue(NumValue value) {
-		return ((Double) (value.getValue())).doubleValue();
+		return (Double) (value.getValue());
 	}
 
 }

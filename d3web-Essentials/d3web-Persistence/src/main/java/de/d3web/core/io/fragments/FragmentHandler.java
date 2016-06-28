@@ -41,7 +41,7 @@ public interface FragmentHandler<Artifact> {
 	 * @return object represented by the xml element
 	 * @throws IOException if an error occurs
 	 */
-	public Object read(Element element, Persistence<Artifact> persistence) throws IOException;
+	Object read(Element element, Persistence<Artifact> persistence) throws IOException;
 
 	/**
 	 * Creates an xml element as a representation of the given object
@@ -51,7 +51,7 @@ public interface FragmentHandler<Artifact> {
 	 * @return an xml element representing the object
 	 * @throws IOException if an error occurs
 	 */
-	public Element write(Object object, Persistence<Artifact> persistence) throws IOException;
+	Element write(Object object, Persistence<Artifact> persistence) throws IOException;
 
 	/**
 	 * Checks if this handler can read the element
@@ -59,7 +59,7 @@ public interface FragmentHandler<Artifact> {
 	 * @param element to be read
 	 * @return true, if it can be read, false otherwise
 	 */
-	public boolean canRead(Element element);
+	boolean canRead(Element element);
 
 	/**
 	 * Checks if this handler can write the object
@@ -67,5 +67,5 @@ public interface FragmentHandler<Artifact> {
 	 * @param object to be written
 	 * @return true, if it can be written, false otherwise
 	 */
-	public boolean canWrite(Object object);
+	boolean canWrite(Object object);
 }

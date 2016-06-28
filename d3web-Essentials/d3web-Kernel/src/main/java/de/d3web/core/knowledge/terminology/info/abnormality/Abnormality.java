@@ -28,12 +28,12 @@ import de.d3web.core.session.Value;
  */
 public interface Abnormality {
 
-	public static final double A0 = 0;
-	public static final double A1 = 0.0625;
-	public static final double A2 = 0.125;
-	public static final double A3 = 0.25;
-	public static final double A4 = 0.5;
-	public static final double A5 = 1;
+	double A0 = 0;
+	double A1 = 0.0625;
+	double A2 = 0.125;
+	double A3 = 0.25;
+	double A4 = 0.5;
+	double A5 = 1;
 
 	/**
 	 * 
@@ -42,5 +42,5 @@ public interface Abnormality {
 	 *         contains answerValue, A0 if answerValue is not contained in any
 	 *         AbnormalityInterval
 	 */
-	public abstract double getValue(Value ans);
+	double getValue(Value answerValue);
 }

@@ -31,7 +31,7 @@ import de.d3web.strings.Strings;
 public class DOMBuilder {
 
 	private final Document document;
-	private final Stack<Node> nodes = new Stack<Node>();
+	private final Stack<Node> nodes = new Stack<>();
 	private final Element element;
 
 	public DOMBuilder(Document document) throws SAXException {
@@ -52,7 +52,7 @@ public class DOMBuilder {
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
 		if (Strings.isBlank(namespaceURI)) namespaceURI = null;
 		Element element = document.createElementNS(namespaceURI, qName);
-		Node parentNode = (Node) nodes.peek();
+		Node parentNode = nodes.peek();
 		parentNode.appendChild(element);
 		nodes.push(element);
 
@@ -72,7 +72,7 @@ public class DOMBuilder {
 		if (Strings.isBlank(content)) return;
 
 		Text text = document.createTextNode(content);
-		Node parentNode = (Node) nodes.peek();
+		Node parentNode = nodes.peek();
 		parentNode.appendChild(text);
 	}
 }
