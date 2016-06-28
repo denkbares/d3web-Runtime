@@ -19,7 +19,6 @@
 package de.d3web.file.records.io;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -93,12 +92,8 @@ public class SingleXMLSessionRepository extends DefaultSessionRepository {
 	 */
 	public void loadAllXMLFromDirectory(File directory, ProgressListener progressListener) throws IOException {
 
-		File[] xmlFiles = directory.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().endsWith(".xml");
-			}
+		File[] xmlFiles = directory.listFiles((dir, name) -> {
+			return name.toLowerCase().endsWith(".xml");
 		});
 		SessionPersistenceManager spm = SessionPersistenceManager.getInstance();
 		for (int i = 0; i < xmlFiles.length; i++) {
