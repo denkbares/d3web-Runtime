@@ -66,7 +66,7 @@ public class QuestionMCTest {
 		qMC2.addAlternative(c2);
 		qMC2.addAlternative(c3);
 
-		List<String> valueNames = new ArrayList<String>(2);
+		List<String> valueNames = new ArrayList<>(2);
 		valueNames.add("c2");
 		valueNames.add("c3");
 

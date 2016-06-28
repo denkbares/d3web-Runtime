@@ -110,17 +110,17 @@ public class XMLUtilTest {
 	@Test
 	public void sortEntries() throws IOException {
 		InitPluginManager.init();
-		Triple<Property<?>, Locale, Object> triple1 = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> triple1 = new Triple<>(
 				MMInfo.PROMPT, InfoStore.NO_LANGUAGE, "424");
-		Triple<Property<?>, Locale, Object> triple2 = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> triple2 = new Triple<>(
 				MMInfo.PROMPT, Locale.GERMAN, "34");
-		Triple<Property<?>, Locale, Object> triple3 = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> triple3 = new Triple<>(
 				MMInfo.PROMPT, Locale.GERMAN, "asd");
-		Triple<Property<?>, Locale, Object> triple4 = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> triple4 = new Triple<>(
 				MMInfo.PROMPT, Locale.ENGLISH, "asw");
-		Triple<Property<?>, Locale, Object> triple5 = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> triple5 = new Triple<>(
 				MMInfo.PROMPT, Locale.GERMAN, null);
-		Triple<Property<?>, Locale, Object> triple6 = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> triple6 = new Triple<>(
 				MMInfo.PROMPT, Locale.ENGLISH, null);
 		@SuppressWarnings("unchecked")
 		List<Triple<Property<?>, Locale, Object>> expected = Arrays.asList(triple2, triple3,

@@ -82,7 +82,7 @@ public class TestHeuristicFinalQuestionBehaviour {
 		finalQuestion.getInfoStore().addValue(PSMethodCostBenefit.FINAL_QUESTION, true);
 		QContainer transition = new QContainer(kb, "transitionalQContainer");
 		QContainer target = new QContainer(kb, "target");
-		LinkedList<ValueTransition> transitions = new LinkedList<ValueTransition>();
+		LinkedList<ValueTransition> transitions = new LinkedList<>();
 		transitions.add(new ValueTransition(finalQuestion,
 				Arrays.asList(new ConditionalValueSetter(value,
 						new CondAnd(Collections.<Condition> emptyList())))));

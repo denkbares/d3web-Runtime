@@ -111,7 +111,7 @@ public class UseFluxProblemSolverTest {
 		Node startNode = new StartNode("Start_ID", "Start");
 		Node endNode = new EndNode("End_ID", "Ende");
 
-		List<QASet> qasets = new ArrayList<QASet>();
+		List<QASet> qasets = new ArrayList<>();
 		qasets.add(questionYN);
 		ActionInstantIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);
@@ -122,7 +122,7 @@ public class UseFluxProblemSolverTest {
 		heuristicAction.setSolution(solutionFoo);
 		solutionNode = new ActionNode("solutionNode_ID", heuristicAction);
 
-		nodesList = new LinkedList<Node>(Arrays.asList(startNode, endNode, questionNode,
+		nodesList = new LinkedList<>(Arrays.asList(startNode, endNode, questionNode,
 				solutionNode));
 
 		// ---------------------------------
@@ -139,7 +139,7 @@ public class UseFluxProblemSolverTest {
 
 		Edge solutionToEnd = FlowFactory.createEdge("solutionToEnd_ID", solutionNode, endNode,
 				ConditionTrue.INSTANCE);
-		edgesList = new LinkedList<Edge>(Arrays.asList(startToQuestion, questionToSolution,
+		edgesList = new LinkedList<>(Arrays.asList(startToQuestion, questionToSolution,
 				solutionToEnd));
 
 		// ----------------------------------

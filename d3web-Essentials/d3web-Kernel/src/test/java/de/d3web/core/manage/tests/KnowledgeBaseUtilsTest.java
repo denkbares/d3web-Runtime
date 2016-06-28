@@ -77,7 +77,7 @@ public class KnowledgeBaseUtilsTest {
 	 */
 	@Test
 	public void findValueMCValSingleVal() {
-		List<Choice> choiceList = new LinkedList<Choice>();
+		List<Choice> choiceList = new LinkedList<>();
 		choiceList.add(choice1);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
 
@@ -94,7 +94,7 @@ public class KnowledgeBaseUtilsTest {
 	 */
 	@Test
 	public void findValueMCValRealMC() {
-		List<Choice> choiceList = new LinkedList<Choice>();
+		List<Choice> choiceList = new LinkedList<>();
 		choiceList.add(choice1);
 		choiceList.add(choice2);
 		Value mcValToFind = MultipleChoiceValue.fromChoices(choiceList);
@@ -264,7 +264,7 @@ public class KnowledgeBaseUtilsTest {
 		qmc.getInfoStore().addValue(MMInfo.PROMPT, Locale.FRENCH, "qcf");
 		choice1.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.CHINESE, "chinese?");
 		assertEquals(
-				new HashSet<Locale>(Arrays.asList(Locale.FRENCH, Locale.CHINESE, Locale.GERMAN)),
+				new HashSet<>(Arrays.asList(Locale.FRENCH, Locale.CHINESE, Locale.GERMAN)),
 				KnowledgeBaseUtils.getAvailableLocales(kb));
 	}
 }

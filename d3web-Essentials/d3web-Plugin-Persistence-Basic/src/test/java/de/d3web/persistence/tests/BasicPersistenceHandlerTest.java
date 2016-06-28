@@ -163,7 +163,7 @@ public class BasicPersistenceHandlerTest {
 	}
 
 	public void addInitQuestions() {
-		LinkedList<Question> initList = new LinkedList<Question>();
+		LinkedList<Question> initList = new LinkedList<>();
 		initList.add(q1);
 		initList.add(q2);
 

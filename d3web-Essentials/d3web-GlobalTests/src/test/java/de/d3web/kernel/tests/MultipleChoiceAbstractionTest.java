@@ -147,7 +147,7 @@ public class MultipleChoiceAbstractionTest {
 	}
 
 	private static MultipleChoiceValue getAllMCValue(QuestionChoice question, List<String> ignoredValues) {
-		List<Choice> weekdayValues = new ArrayList<Choice>();
+		List<Choice> weekdayValues = new ArrayList<>();
 		for (Choice c : question.getAllAlternatives()) {
 			if (ignoredValues == null || !ignoredValues.contains(c.getName())) weekdayValues.add(c);
 		}

@@ -95,17 +95,17 @@ public class UtilTest {
 	@Test
 	public void testTripleComparator() throws IOException {
 		InitPluginManager.init();
-		Triple<Property<?>, Locale, Object> a = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> a = new Triple<>(
 				MMInfo.PROMPT, null, "foo");
-		Triple<Property<?>, Locale, Object> b = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> b = new Triple<>(
 				MMInfo.PROMPT, null, "bar");
-		Triple<Property<?>, Locale, Object> c = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> c = new Triple<>(
 				MMInfo.PROMPT, Locale.US, "bar");
-		Triple<Property<?>, Locale, Object> d = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> d = new Triple<>(
 				MMInfo.DESCRIPTION, null, "foo bar");
-		Triple<Property<?>, Locale, Object> e = new Triple<Property<?>, Locale, Object>(
+		Triple<Property<?>, Locale, Object> e = new Triple<>(
 				MMInfo.PROMPT, null, null);
-		List<Triple<Property<?>, Locale, Object>> list = new LinkedList<Triple<Property<?>, Locale, Object>>();
+		List<Triple<Property<?>, Locale, Object>> list = new LinkedList<>();
 		list.add(a);
 		list.add(b);
 		list.add(c);

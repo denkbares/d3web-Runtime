@@ -104,7 +104,7 @@ public class TestPathProtocolEntry {
 	}
 
 	private static CalculatedPathEntry getEntry(Session session) {
-		List<CalculatedPathEntry> entries = new LinkedList<CalculatedPathEntry>();
+		List<CalculatedPathEntry> entries = new LinkedList<>();
 		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
 			if (entry instanceof CalculatedPathEntry) {
 				entries.add((CalculatedPathEntry) entry);

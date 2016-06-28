@@ -147,7 +147,7 @@ public class TestCaseTestTester {
 
 	private List<TestCase> readTestCases(File file) {
 		List<SequentialTestCase> stcaList = readSTC(file);
-		List<TestCase> result = new ArrayList<TestCase>();
+		List<TestCase> result = new ArrayList<>();
 		for (SequentialTestCase sequentialTestCase : stcaList) {
 			result.add(sequentialTestCase);
 		}
@@ -164,7 +164,7 @@ public class TestCaseTestTester {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new ArrayList<SequentialTestCase>(0);
+		return new ArrayList<>(0);
 	}
 
 }

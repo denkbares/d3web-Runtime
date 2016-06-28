@@ -101,16 +101,16 @@ public class FilterTest {
 
 	@Test
 	public void testProperty() {
-		Collection<SessionRecord> records = repository.getSessionRecords(new PropertyFilter<String>(
+		Collection<SessionRecord> records = repository.getSessionRecords(new PropertyFilter<>(
 				MMInfo.DESCRIPTION, "This is the second session"));
 		Assert.assertEquals(1, records.size());
 		Assert.assertEquals("session2", records.iterator().next().getId());
-		records = repository.getSessionRecords(new PropertyFilter<String>(
+		records = repository.getSessionRecords(new PropertyFilter<>(
 				MMInfo.DESCRIPTION, Locale.GERMAN, "This is the second session"));
 		// a German version will not be found, but the general (NoLanguage) will
 		// be taken
 		Assert.assertEquals(1, records.size());
-		records = repository.getSessionRecords(new PropertyFilter<String>(MMInfo.DESCRIPTION,
+		records = repository.getSessionRecords(new PropertyFilter<>(MMInfo.DESCRIPTION,
 				"This is the first session"));
 		Assert.assertEquals(0, records.size());
 		records = repository.getSessionRecords(new StringPropertyFilter(
@@ -121,7 +121,7 @@ public class FilterTest {
 				MMInfo.DESCRIPTION, ".*erste.*"));
 		Assert.assertEquals(0, records.size());
 		// testing that no description is assigned
-		records = repository.getSessionRecords(new PropertyFilter<String>(
+		records = repository.getSessionRecords(new PropertyFilter<>(
 				MMInfo.DESCRIPTION, Locale.GERMAN, null));
 		Assert.assertEquals(1, records.size());
 		Assert.assertEquals("session3", records.iterator().next().getId());

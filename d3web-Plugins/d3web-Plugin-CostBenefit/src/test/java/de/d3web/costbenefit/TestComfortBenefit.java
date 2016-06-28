@@ -86,7 +86,7 @@ public class TestComfortBenefit {
 		qContainerWithComfortBenefit = new QContainer(kb, "comfortBenefit");
 		end = new QContainer(kb, "end");
 		new StateTransition(condTrue, Collections.<ValueTransition> emptyList(), end);
-		List<QContainer> pathlist = new LinkedList<QContainer>();
+		List<QContainer> pathlist = new LinkedList<>();
 		pathlist.add(start);
 		pathlist.add(end);
 		startPath = new TestPath(pathlist);

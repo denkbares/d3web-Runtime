@@ -102,7 +102,7 @@ public class EmpiricalTestingFunctionsTest {
 		rtc12.setName("rtc12");
 		// also use addFindings() method for coverage
 		Finding finding = new Finding(q2, new NumValue(1.0));
-		List<Finding> findings = new ArrayList<Finding>();
+		List<Finding> findings = new ArrayList<>();
 		findings.add(finding);
 		rtc12.addFindings(findings);
 		rtc12.addDerived(rs1_e, rs2_e);

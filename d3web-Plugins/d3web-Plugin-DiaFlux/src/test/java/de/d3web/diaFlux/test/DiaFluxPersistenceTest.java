@@ -128,7 +128,7 @@ public class DiaFluxPersistenceTest {
 		Node startNode = new StartNode("Start_ID", "Start");
 		Node endNode = new EndNode("End_ID", "Ende");
 
-		List<QASet> qasets = new ArrayList<QASet>();
+		List<QASet> qasets = new ArrayList<>();
 		qasets.add(questionYN);
 		ActionInstantIndication instantIndication = new ActionInstantIndication();
 		instantIndication.setQASets(qasets);

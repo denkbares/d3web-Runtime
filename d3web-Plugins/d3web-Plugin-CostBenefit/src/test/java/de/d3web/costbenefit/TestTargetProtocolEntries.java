@@ -173,7 +173,7 @@ public class TestTargetProtocolEntries {
 	}
 
 	private static List<ManualTargetSelectionEntry> getManualTargetSelectionEntries(Session session) {
-		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = new LinkedList<ManualTargetSelectionEntry>();
+		List<ManualTargetSelectionEntry> manualTargetSelectionEntries = new LinkedList<>();
 		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
 			if (entry instanceof ManualTargetSelectionEntry) {
 				manualTargetSelectionEntries.add((ManualTargetSelectionEntry) entry);
@@ -183,7 +183,7 @@ public class TestTargetProtocolEntries {
 	}
 
 	private static List<CalculatedTargetEntry> getCalculatedTargetEntries(Session session) {
-		List<CalculatedTargetEntry> manualTargetSelectionEntries = new LinkedList<CalculatedTargetEntry>();
+		List<CalculatedTargetEntry> manualTargetSelectionEntries = new LinkedList<>();
 		for (ProtocolEntry entry : session.getProtocol().getProtocolHistory()) {
 			if (entry instanceof CalculatedTargetEntry) {
 				manualTargetSelectionEntries.add((CalculatedTargetEntry) entry);

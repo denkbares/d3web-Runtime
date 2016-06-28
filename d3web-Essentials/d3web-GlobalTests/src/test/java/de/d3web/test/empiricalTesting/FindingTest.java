@@ -71,7 +71,7 @@ public class FindingTest {
 		String choiceName2 = "c2";
 		Choice c2 = new Choice(choiceName2);
 		q2.addAlternative(c2);
-		List<ChoiceID> choices = new ArrayList<ChoiceID>();
+		List<ChoiceID> choices = new ArrayList<>();
 		choices.add(new ChoiceID(c2));
 		f2.setValue(new MultipleChoiceValue(choices));
 		assertEquals(f2.getValuePrompt(), choiceName2);
@@ -120,7 +120,7 @@ public class FindingTest {
 		assertTrue(f.equals(f3));
 		assertTrue(f.compareTo(f3) == 0);
 
-		Set<RegexFinding> hashTest = new HashSet<RegexFinding>();
+		Set<RegexFinding> hashTest = new HashSet<>();
 		hashTest.add(f);
 		assertTrue(hashTest.contains(f));
 		assertFalse(hashTest.contains(f2));

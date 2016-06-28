@@ -46,7 +46,7 @@ public class PairTest {
 		stringObjectOne = new String("stringObjectOne");
 		doubleObjectTwo = new Double(2.0);
 
-		pairUnderTest = new Pair<String, Double>(stringObjectOne, doubleObjectTwo);
+		pairUnderTest = new Pair<>(stringObjectOne, doubleObjectTwo);
 	}
 
 	/**

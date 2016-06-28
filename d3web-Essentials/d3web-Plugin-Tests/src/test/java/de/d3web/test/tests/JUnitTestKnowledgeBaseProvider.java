@@ -40,8 +40,8 @@ public class JUnitTestKnowledgeBaseProvider implements TestObjectProvider {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		List<TestObjectContainer<T>> kbs = new ArrayList<TestObjectContainer<T>>();
-		kbs.add(new TestObjectContainer<T>("Car faults diagnosis", clazz.cast(kb)));
+		List<TestObjectContainer<T>> kbs = new ArrayList<>();
+		kbs.add(new TestObjectContainer<>("Car faults diagnosis", clazz.cast(kb)));
 		return kbs;
 	}
 }

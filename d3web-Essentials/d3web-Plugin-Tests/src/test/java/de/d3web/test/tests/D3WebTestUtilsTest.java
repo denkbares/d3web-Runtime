@@ -124,7 +124,7 @@ public class D3WebTestUtilsTest {
 		new QContainer(mess, "Dev");
 		Question q = new QuestionNum(user, "age");
 
-		List<TerminologyObject> objects = new ArrayList<TerminologyObject>();
+		List<TerminologyObject> objects = new ArrayList<>();
 		objects.add(root);
 		objects.add(in);
 		objects.add(mess);

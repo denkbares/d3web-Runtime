@@ -82,7 +82,7 @@ public class ChoiceTest {
 		Choice choiceOne = new Choice("choiceOne");
 		Choice choiceTwo = new Choice("choiceTwo");
 
-		List<Choice> choicesList = new ArrayList<Choice>();
+		List<Choice> choicesList = new ArrayList<>();
 		choicesList.add(choiceOne);
 		choicesList.add(choiceTwo);
 

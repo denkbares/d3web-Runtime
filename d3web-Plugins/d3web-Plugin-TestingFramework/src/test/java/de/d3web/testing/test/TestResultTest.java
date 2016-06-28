@@ -85,7 +85,7 @@ public class TestResultTest {
 		// result3 with same content as result1
 		TestResult result3 = createTestResult();
 
-		Set<TestResult> set = new HashSet<TestResult>();
+		Set<TestResult> set = new HashSet<>();
 		set.add(result);
 		assertTrue(set.contains(result3));
 		assertFalse(result.equals(result2));

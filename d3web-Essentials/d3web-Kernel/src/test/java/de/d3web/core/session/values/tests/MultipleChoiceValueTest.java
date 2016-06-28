@@ -70,7 +70,7 @@ public class MultipleChoiceValueTest {
 		mcValueOneChoiceA = new Choice("mcValueOneChoiceA");
 		mcValueOneChoiceB = new Choice("mcValueOneChoiceB");
 		mcValueOneChoiceC = new Choice("mcValueOneChoiceC");
-		List<Choice> choicesList = new LinkedList<Choice>();
+		List<Choice> choicesList = new LinkedList<>();
 		choicesList.add(mcValueOneChoiceA);
 		choicesList.add(mcValueOneChoiceB);
 		choicesList.add(mcValueOneChoiceC);
@@ -114,7 +114,7 @@ public class MultipleChoiceValueTest {
 		assertThat(derived.length(), is(equalTo(manual.length())));
 
 		// test empty list answerChoicesID
-		MultipleChoiceValue emptyMCValue = MultipleChoiceValue.fromChoices(new ArrayList<Choice>());
+		MultipleChoiceValue emptyMCValue = MultipleChoiceValue.fromChoices(new ArrayList<>());
 		assertThat(ChoiceID.encodeChoiceIDs(emptyMCValue.getChoiceIDs()), is(""));
 	}
 
@@ -136,7 +136,7 @@ public class MultipleChoiceValueTest {
 		// the mcValueTwoChoices and some extra ones
 		Choice newChoiceOne = new Choice("newChoiceOne");
 		Choice newChoiceTwo = new Choice("newChoiceTwo");
-		List<Choice> choicesList = new LinkedList<Choice>();
+		List<Choice> choicesList = new LinkedList<>();
 		choicesList.add(newChoiceOne);
 		choicesList.add(mcValueTwoChoiceX);
 		choicesList.add(mcValueTwoChoiceY);
@@ -162,7 +162,7 @@ public class MultipleChoiceValueTest {
 		assertThat(mcValueOne.hashCode(), is(not(0)));
 		assertThat(mcValueTwo.hashCode(), is(not(0)));
 
-		MultipleChoiceValue mcValueEmpty = new MultipleChoiceValue(new ArrayList<ChoiceID>());
+		MultipleChoiceValue mcValueEmpty = new MultipleChoiceValue(new ArrayList<>());
 		assertThat(mcValueEmpty.hashCode(), is(1));
 	}
 
@@ -194,7 +194,7 @@ public class MultipleChoiceValueTest {
 	public void testAsChoiceList() {
 		ChoiceID newChoiceOne = new ChoiceID("newChoiceOne");
 		ChoiceID newChoiceTwo = new ChoiceID("newChoiceTwo");
-		List<ChoiceID> choicesList = new LinkedList<ChoiceID>();
+		List<ChoiceID> choicesList = new LinkedList<>();
 		choicesList.add(newChoiceOne);
 		choicesList.add(newChoiceTwo);
 		MultipleChoiceValue newMCValue = new MultipleChoiceValue(choicesList);

@@ -81,7 +81,7 @@ public class QuestionChoiceTest {
 		answersTag = new XMLTag("Answers");
 		shouldTag.addChild(answersTag);
 
-		List<Choice> alternatives = new LinkedList<Choice>();
+		List<Choice> alternatives = new LinkedList<>();
 
 		Choice a1 = new Choice("q1a1");
 		alternatives.add(a1);

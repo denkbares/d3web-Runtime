@@ -55,7 +55,7 @@ public class ComparatorTest {
 
 	@Test
 	public void testNamedObjectComparator() {
-		List<Solution> solutions = new LinkedList<Solution>();
+		List<Solution> solutions = new LinkedList<>();
 		Solution a = new Solution(kb, "A");
 		solutions.add(a);
 		Solution z = new Solution(kb, "Z");
@@ -70,7 +70,7 @@ public class ComparatorTest {
 
 	@Test
 	public void testResourceComparator() throws IOException {
-		List<Resource> resouces = new LinkedList<Resource>();
+		List<Resource> resouces = new LinkedList<>();
 		TestResource b_b = new TestResource("b/b");
 		resouces.add(b_b);
 		TestResource c_a = new TestResource("c/a");

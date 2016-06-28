@@ -78,8 +78,8 @@ public class PropagationListenerTest {
 
 	private static class TestListener implements PropagationListener {
 
-		private final Collection<PropagationEntry> entries = new LinkedList<PropagationEntry>();
-		private final Collection<PropagationEntry> postpropagationEntries = new LinkedList<PropagationEntry>();
+		private final Collection<PropagationEntry> entries = new LinkedList<>();
+		private final Collection<PropagationEntry> postpropagationEntries = new LinkedList<>();
 
 		@Override
 		public void propagationStarted(Session session, Collection<PropagationEntry> entries) {

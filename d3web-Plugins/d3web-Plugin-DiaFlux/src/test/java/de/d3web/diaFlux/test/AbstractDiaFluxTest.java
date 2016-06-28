@@ -189,7 +189,7 @@ public abstract class AbstractDiaFluxTest {
 
 		Flow flow = flowSet.get(flowName);
 
-		List<String> inactiveIDs = new ArrayList<String>();
+		List<String> inactiveIDs = new ArrayList<>();
 
 		nextNode:
 		for (Node node : flow.getNodes()) {

@@ -132,7 +132,7 @@ public class XCLModelTest extends TestCase {
 		// the question "Genre"
 		action = new Choice("action");
 		love = new Choice("love");
-		List<Choice> alternatives = new ArrayList<Choice>();
+		List<Choice> alternatives = new ArrayList<>();
 		alternatives.add(action);
 		alternatives.add(love);
 		genre.setAlternatives(alternatives);
@@ -141,14 +141,14 @@ public class XCLModelTest extends TestCase {
 		// the question "player"
 		arnold = new Choice("arnold");
 		will = new Choice("will");
-		List<Choice> alt = new ArrayList<Choice>();
+		List<Choice> alt = new ArrayList<>();
 		alt.add(arnold);
 		alt.add(will);
 		player.setAlternatives(alt);
 		container.addChild(player);
 
 		// the question "rated"
-		List<Choice> aPlayer = new ArrayList<Choice>();
+		List<Choice> aPlayer = new ArrayList<>();
 		plus18 = new Choice("18+");
 		baby = new Choice("baby");
 		aPlayer.add(plus18);

@@ -99,7 +99,7 @@ public class TestRuleCBCompatibilityQContainer {
 		ChoiceValue valueAnswer1b = new ChoiceValue(answer1b);
 		DefaultAbnormality.setAbnormality(q1b, valueAnswer1b, Abnormality.A0);
 		q1b.addAlternative(answer1b);
-		LinkedList<QASet> followUpQuestions = new LinkedList<QASet>();
+		LinkedList<QASet> followUpQuestions = new LinkedList<>();
 		followUpQuestions.add(q1b);
 		RuleFactory.createIndicationRule(followUpQuestions, new CondEqual(q1, valueAbnormal));
 		ValueTransition vt1 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(

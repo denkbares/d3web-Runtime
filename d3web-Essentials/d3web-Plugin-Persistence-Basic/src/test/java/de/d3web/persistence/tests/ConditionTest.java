@@ -100,8 +100,8 @@ public class ConditionTest {
 		QuestionNum qnum2 = new QuestionNum(kb, "qnum2-id");
 		QuestionText qt1 = new QuestionText(kb, "qt1-id");
 
-		Vector<Choice> val1 = new Vector<Choice>();
-		Vector<Choice> val2 = new Vector<Choice>();
+		Vector<Choice> val1 = new Vector<>();
+		Vector<Choice> val2 = new Vector<>();
 
 		Choice ach1 = new Choice("ach1-id");
 		val1.add(ach1);
@@ -126,7 +126,7 @@ public class ConditionTest {
 
 	public void _testAllCondNums() throws Exception {
 
-		LinkedList<Condition> l1 = new LinkedList<Condition>();
+		LinkedList<Condition> l1 = new LinkedList<>();
 		l1.add(cNumL1);
 		l1.add(cNumIn1);
 		l1.add(cNumG1);
@@ -172,17 +172,17 @@ public class ConditionTest {
 
 		ac3 = new CondNot(cDState1);
 
-		LinkedList<Condition> l21 = new LinkedList<Condition>();
+		LinkedList<Condition> l21 = new LinkedList<>();
 		// l21.add(cEqual1);
 		l21.add(cNumG1);
 		l21.add(ac3);
 		ac21 = new CondAnd(l21);
 
-		LinkedList<Condition> l22 = new LinkedList<Condition>();
+		LinkedList<Condition> l22 = new LinkedList<>();
 		l22.add(cTextContains1);
 		ac22 = new CondMofN(l22, 1, 1);
 
-		LinkedList<Condition> l1 = new LinkedList<Condition>();
+		LinkedList<Condition> l1 = new LinkedList<>();
 		l1.add(ac21);
 		l1.add(ac22);
 		ac1 = new CondOr(l1);
@@ -243,7 +243,7 @@ public class ConditionTest {
 	@Test
 	public void testAllCondText() throws Exception {
 
-		LinkedList<Condition> l1 = new LinkedList<Condition>();
+		LinkedList<Condition> l1 = new LinkedList<>();
 		l1.add(cTextContains1);
 		l1.add(cTextEqual1);
 		ac1 = new CondOr(l1);
@@ -281,7 +281,7 @@ public class ConditionTest {
 	@Test
 	public void testCondKnownAndUnknown() throws Exception {
 
-		LinkedList<Condition> l1 = new LinkedList<Condition>();
+		LinkedList<Condition> l1 = new LinkedList<>();
 		l1.add(cKnown1);
 		l1.add(cUnknown1);
 		ac1 = new CondOr(l1);

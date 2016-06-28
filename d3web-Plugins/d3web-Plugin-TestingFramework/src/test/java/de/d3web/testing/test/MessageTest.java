@@ -47,7 +47,7 @@ public class MessageTest {
 		Message m3 = new Message(Type.ERROR, TEXT2);
 		Message m1a = new Message(Type.ERROR, TEXT1);
 
-		Set<Message> set = new HashSet<Message>();
+		Set<Message> set = new HashSet<>();
 		set.add(m1);
 		assertTrue(set.contains(m1a));
 		assertFalse(set.contains(m2));

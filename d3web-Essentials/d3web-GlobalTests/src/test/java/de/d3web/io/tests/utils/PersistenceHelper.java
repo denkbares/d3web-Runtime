@@ -32,14 +32,14 @@ import java.util.List;
  */
 public class PersistenceHelper {
 
-	private final ArrayList<File[]> pairs = new ArrayList<File[]>();
-	private final ArrayList<String[]> errors = new ArrayList<String[]>();
+	private final ArrayList<File[]> pairs = new ArrayList<>();
+	private final ArrayList<String[]> errors = new ArrayList<>();
 	private final ArrayList<String> _excludedFolders;
 	private final ArrayList<String> _excludedFileTypes;
 
 	public PersistenceHelper(List<String> fileTypes, List<String> folders) {
-		_excludedFileTypes = new ArrayList<String>(fileTypes);
-		_excludedFolders = new ArrayList<String>(folders);
+		_excludedFileTypes = new ArrayList<>(fileTypes);
+		_excludedFolders = new ArrayList<>(folders);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class PersistenceHelper {
 	 * @return
 	 */
 	private File[] sortDirectory(File f) {
-		ArrayList<File> proved = new ArrayList<File>();
+		ArrayList<File> proved = new ArrayList<>();
 
 		if (f.isDirectory() && !_excludedFolders.contains(f.getName())) {
 			for (File f1 : f.listFiles())

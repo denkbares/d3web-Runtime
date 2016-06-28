@@ -112,7 +112,7 @@ public class KnowledgeBaseExportTest {
 	public void testQuestionOCOutput() throws Exception {
 
 		QuestionOC q1 = new QuestionOC(persistence.getArtifact(), "q1");
-		List<Choice> alternatives = new LinkedList<Choice>();
+		List<Choice> alternatives = new LinkedList<>();
 		Choice a1 = new Choice("q1a1");
 		alternatives.add(a1);
 		q1.setAlternatives(alternatives);

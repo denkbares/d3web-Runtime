@@ -141,7 +141,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionIndication() throws Exception {
-		List<QASet> indicationList = new LinkedList<QASet>();
+		List<QASet> indicationList = new LinkedList<>();
 		indicationList.add(qContainer);
 		indicationList.add(questionMC);
 
@@ -170,7 +170,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionContraIndication() throws Exception {
-		List<QASet> contraindicationList = new LinkedList<QASet>();
+		List<QASet> contraindicationList = new LinkedList<>();
 		contraindicationList.add(questionMC);
 		contraindicationList.add(qContainer);
 
@@ -224,7 +224,7 @@ public class ActionTest {
 	public void testActionSetQuestionValue() throws Exception {
 		FormulaNumber fn = new FormulaNumber(new Double(13));
 
-		List<Object> setValueList = new LinkedList<Object>();
+		List<Object> setValueList = new LinkedList<>();
 		setValueList.add(answerNo);
 		setValueList.add(fn);
 		setValueList.add(answerYes);

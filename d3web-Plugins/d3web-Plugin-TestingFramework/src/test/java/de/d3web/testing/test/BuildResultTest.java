@@ -41,14 +41,14 @@ public class BuildResultTest {
 	public void testEqualsHashCode() {
 		Date buildDate = new Date();
 		int buildDuration = 1000;
-		ArrayList<TestResult> testResults = new ArrayList<TestResult>();
+		ArrayList<TestResult> testResults = new ArrayList<>();
 		testResults.add(new TestResult("testName", new String[] { "config" }));
 		BuildResult build1 = BuildResult.createBuildResult(buildDuration, buildDate,
 				testResults, 0, false);
 		BuildResult build2 = BuildResult.createBuildResult(buildDuration, buildDate,
 				testResults, 0, false);
 
-		Set<BuildResult> set = new HashSet<BuildResult>();
+		Set<BuildResult> set = new HashSet<>();
 		set.add(build1);
 		assertTrue(set.contains(build2));
 	}

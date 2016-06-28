@@ -109,7 +109,7 @@ public class TestKfz {
 		Choice Mf7a2 = KnowledgeBaseUtils.findChoice(Mf7, "klingeln");
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
-		List<Choice> values = new ArrayList<Choice>(choices.length);
+		List<Choice> values = new ArrayList<>(choices.length);
 		for (Choice choice : choices) {
 			values.add(choice);
 		}

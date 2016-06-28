@@ -48,7 +48,7 @@ public class TripleTest {
 		doubleObjectTwo = new Double(2.0);
 		integerObjectThree = new Integer(3);
 
-		tripleUnderTest = new Triple<String, Double, Integer>(stringObjectOne,
+		tripleUnderTest = new Triple<>(stringObjectOne,
 				doubleObjectTwo, integerObjectThree);
 	}
 

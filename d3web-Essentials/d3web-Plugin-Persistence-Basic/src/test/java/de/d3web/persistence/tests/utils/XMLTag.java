@@ -50,8 +50,8 @@ public class XMLTag {
 	 */
 	public XMLTag(String name) {
 		this.name = name;
-		attributes = new Hashtable<String, String>();
-		children = new LinkedList<XMLTag>();
+		attributes = new Hashtable<>();
+		children = new LinkedList<>();
 		content = "\n";
 	}
 
@@ -63,8 +63,8 @@ public class XMLTag {
 	public XMLTag(Node node) {
 		// will create an XMLTag from a Node !
 
-		attributes = new Hashtable<String, String>();
-		children = new LinkedList<XMLTag>();
+		attributes = new Hashtable<>();
+		children = new LinkedList<>();
 		content = "\n";
 
 		// name

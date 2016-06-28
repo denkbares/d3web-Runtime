@@ -55,13 +55,13 @@ public class PersistenceTest extends XMLTestCase {
 
 	public PersistenceTest(String name) throws Exception {
 		super(name);
-		_excludedFolders = new ArrayList<String>();
+		_excludedFolders = new ArrayList<>();
 		_excludedFolders.add("CVS");
 		_excludedFolders.add(".svn");
 		_excludedFolders.add("META-INF");
 		_excludedFolders.add("CRS-INF");
 		_excludedFolders.add("KB-INF");
-		_excludedFileTypes = new ArrayList<String>();
+		_excludedFileTypes = new ArrayList<>();
 		_excludedFileTypes.add(".MF");
 		_excludedFileTypes.add(".DS_Store");
 	}

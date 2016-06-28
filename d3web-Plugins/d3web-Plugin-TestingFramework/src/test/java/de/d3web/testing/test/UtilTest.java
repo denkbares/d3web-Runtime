@@ -20,7 +20,7 @@ public class UtilTest {
 
 	@Test
 	public void testIsIgnored() {
-		Collection<String> strings = new HashSet<String>();
+		Collection<String> strings = new HashSet<>();
 		String string1 = "abbab";
 		strings.add(string1);
 		String string2 = "abab";

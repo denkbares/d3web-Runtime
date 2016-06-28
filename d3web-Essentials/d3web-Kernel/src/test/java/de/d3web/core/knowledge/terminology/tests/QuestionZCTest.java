@@ -97,7 +97,7 @@ public class QuestionZCTest {
 	public void testSetAlternativesLogsErrormessage() {
 
 		// create a empry list of choices
-		List<Choice> choicesList = new ArrayList<Choice>();
+		List<Choice> choicesList = new ArrayList<>();
 		questionZC.setAlternatives(choicesList);// this should NOT log a msg
 		// flush the StreamHandler and retrieve the log Message
 		handler.flush();

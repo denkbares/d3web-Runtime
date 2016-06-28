@@ -88,27 +88,27 @@ public class TestEmptyQContainers {
 		DefaultAbnormality.setAbnormality(testStepQuestion, new ChoiceValue(lighting),
 				DefaultAbnormality.A0);
 		testStepQuestion.addAlternative(lighting);
-		List<ValueTransition> postTransitions = new LinkedList<ValueTransition>();
+		List<ValueTransition> postTransitions = new LinkedList<>();
 		List<ConditionalValueSetter> setters = Arrays.asList(new ConditionalValueSetter(
 				new ChoiceValue(b), new CondEqual(testStepQuestion, new ChoiceValue(lighting))));
 		postTransitions.add(new ValueTransition(state, setters));
-		new StateTransition(new CondAnd(new LinkedList<Condition>()), postTransitions, testStep);
+		new StateTransition(new CondAnd(new LinkedList<>()), postTransitions, testStep);
 		// create follow up QContainer
 		QContainer follower = new QContainer(kb, "follower");
 		QuestionNum followerQuestion = new QuestionNum(follower, "dummy");
 		new StateTransition(new CondEqual(state, new ChoiceValue(b)),
-				new LinkedList<ValueTransition>(), follower);
+				new LinkedList<>(), follower);
 		// create TestStep2 (with ok Question)
 		QContainer testStep2 = new QContainer(kb, "TestStep2");
 		QuestionOC okQuestionOC = new QuestionOC(testStep2, "okQuestion");
 		Choice ok = new Choice("ok");
 		okQuestionOC.addAlternative(ok);
 		QuestionNum testStep2Question = new QuestionNum(testStep2, "TestStep2 question");
-		postTransitions = new LinkedList<ValueTransition>();
+		postTransitions = new LinkedList<>();
 		setters = Arrays.asList(new ConditionalValueSetter(
 				new ChoiceValue(a), new CondNumGreater(testStep2Question, 5.0)));
 		postTransitions.add(new ValueTransition(state, setters));
-		new StateTransition(new CondAnd(new LinkedList<Condition>()), postTransitions, testStep2);
+		new StateTransition(new CondAnd(new LinkedList<>()), postTransitions, testStep2);
 		// start session
 		Session session = SessionFactory.createSession(kb);
 		Blackboard blackboard = session.getBlackboard();

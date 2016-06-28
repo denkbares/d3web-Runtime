@@ -102,7 +102,7 @@ public class QuestionNumTest {
 	@Test
 	public void testQuestionWithIntervals() throws Exception {
 
-		List<NumericalInterval> intervals = new LinkedList<NumericalInterval>();
+		List<NumericalInterval> intervals = new LinkedList<>();
 		intervals.add(new NumericalInterval(Double.NEGATIVE_INFINITY, 30, true, false));
 		intervals.add(new NumericalInterval(30, 300.03, true, true));
 		intervals.add(new NumericalInterval(300.03, Double.POSITIVE_INFINITY, false, true));

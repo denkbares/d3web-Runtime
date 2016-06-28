@@ -91,7 +91,7 @@ public class RepeatedIndicationTest {
 		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
 
 		// IF (pregnant = yes && sex = m) THEN repeatIndicate (sex)
-		List<Condition> conditions = new ArrayList<Condition>(2);
+		List<Condition> conditions = new ArrayList<>(2);
 		conditions.add(new CondEqual(sex, male));
 		conditions.add(new CondEqual(pregnant, yes));
 		Condition cond = new CondAnd(conditions);
