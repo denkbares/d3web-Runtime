@@ -23,22 +23,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
@@ -85,15 +81,15 @@ public class TestHeuristicFinalQuestionBehaviour {
 		LinkedList<ValueTransition> transitions = new LinkedList<>();
 		transitions.add(new ValueTransition(finalQuestion,
 				Collections.singletonList(new ConditionalValueSetter(value,
-						new CondAnd(Collections.<Condition>emptyList())))));
+						new CondAnd(Collections.emptyList())))));
 		transitions.add(new ValueTransition(nonfinalQuestion,
 				Collections.singletonList(new ConditionalValueSetter(value,
-						new CondAnd(Collections.<Condition>emptyList())))));
-		new StateTransition(new CondAnd(Arrays.<Condition> asList(new CondEqual(finalQuestion,
+						new CondAnd(Collections.emptyList())))));
+		new StateTransition(new CondAnd(Arrays.asList(new CondEqual(finalQuestion,
 				value),
 				new CondEqual(nonfinalQuestion, value))),
-				Collections.<ValueTransition> emptyList(), target);
-		new StateTransition(new CondAnd(Collections.<Condition> emptyList()), transitions,
+				Collections.emptyList(), target);
+		new StateTransition(new CondAnd(Collections.emptyList()), transitions,
 				transition);
 
 		Session session = SessionFactory.createSession(kb);
@@ -102,13 +98,13 @@ public class TestHeuristicFinalQuestionBehaviour {
 		SearchModel model = new SearchModel(session);
 		heuristic.init(model);
 		double distance = heuristic.getDistance(model, emptyPath,
-				new State(session, Collections.<Question, Value> emptyMap()), target);
+				new State(session, Collections.emptyMap()), target);
 		Assert.assertEquals(1.0, distance);
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(finalQuestion, value));
 		heuristic.init(model);
 		distance = heuristic.getDistance(model, emptyPath,
-				new State(session, Collections.<Question, Value> emptyMap()), target);
+				new State(session, Collections.emptyMap()), target);
 		Assert.assertEquals(1.0, distance);
 	}
 

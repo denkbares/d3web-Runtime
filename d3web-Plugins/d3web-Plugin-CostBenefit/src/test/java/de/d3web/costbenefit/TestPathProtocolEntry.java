@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
@@ -80,7 +80,7 @@ public class TestPathProtocolEntry {
 		// QContainer2 (precondition valueA_B, no post transition
 		QContainer qContainer2 = new QContainer(kb, "QContainer2");
 		new StateTransition(new CondEqual(statusA, valueA_B),
-				Collections.<ValueTransition> emptyList(), qContainer2);
+				Collections.emptyList(), qContainer2);
 		QuestionOC finish = new QuestionOC(qContainer2, "Finish");
 		Choice doneChoice = new Choice("ok");
 		finish.addAlternative(doneChoice);

@@ -18,7 +18,7 @@
  */
 package de.d3web.core.session.blackboard.tests;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;

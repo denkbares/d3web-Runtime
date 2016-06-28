@@ -32,6 +32,7 @@ import de.d3web.testcase.model.Finding;
 /**
  * @deprecated use {@link de.d3web.testcase.model.TestCase} instead, it does not need an analog for {@link RatedTestCase}.
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public class RatedTestCase {
 

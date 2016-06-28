@@ -21,7 +21,7 @@ package de.d3web.core.utilities.tests;
 import java.io.IOException;
 import java.util.Locale;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -18,7 +18,7 @@
  */
 package de.d3web.core.utilities.tests;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

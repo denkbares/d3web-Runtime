@@ -63,8 +63,7 @@ public class DialogTest {
 		QASet root = kb.getRootQASet();
 		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
 		sex = new QuestionOC(pregnancyQuestions, "sex", "male", "female");
-		pregnant = new QuestionOC(sex, "pregnant", new String[] {
-				"yes", "no" });
+		pregnant = new QuestionOC(sex, "pregnant", "yes", "no");
 		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
 
 		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", "yes", "no");

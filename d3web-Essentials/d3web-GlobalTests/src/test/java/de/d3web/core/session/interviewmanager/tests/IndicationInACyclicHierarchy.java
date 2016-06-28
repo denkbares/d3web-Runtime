@@ -92,7 +92,7 @@ public class IndicationInACyclicHierarchy {
 		RuleFactory.createIndicationRule(pregnancyTest,
 				new CondEqual(pregnant, dontKnow));
 
-		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
+		kb.setInitQuestions(Arrays.asList(pregnancyQuestions));
 
 		session = SessionFactory.createSession(kb);
 		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));

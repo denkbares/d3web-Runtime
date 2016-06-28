@@ -99,7 +99,7 @@ public class RepeatedIndicationTest {
 		action.setQASets(sex);
 		RuleFactory.createStrategicRule(action, cond);
 
-		kb.setInitQuestions(Arrays.asList(new QASet[] { pregnancyQuestions }));
+		kb.setInitQuestions(Arrays.asList(pregnancyQuestions));
 
 		session = SessionFactory.createSession(kb);
 		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));

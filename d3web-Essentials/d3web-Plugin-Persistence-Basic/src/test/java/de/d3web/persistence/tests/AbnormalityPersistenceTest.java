@@ -21,7 +21,6 @@ package de.d3web.persistence.tests;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
 
 import org.junit.Test;
 
@@ -38,6 +37,8 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * Tests reading and writing of AbnormalityHandlers
@@ -72,17 +73,17 @@ public class AbnormalityPersistenceTest {
 		num = (QuestionNum) reloadedKB.getManager().searchQuestion("Num");
 		choice = oc.getAllAlternatives().get(0);
 		a = oc.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY);
-		Assert.assertEquals(Abnormality.A0, a.getValue(new ChoiceValue(choice)));
+		assertEquals(Abnormality.A0, a.getValue(new ChoiceValue(choice)));
 		Choice choice2 = oc.getAllAlternatives().get(1);
 		// A5 is default
-		Assert.assertEquals(Abnormality.A5, a.getValue(new ChoiceValue(choice2)));
+		assertEquals(Abnormality.A5, a.getValue(new ChoiceValue(choice2)));
 
 		aNum = num.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
-		Assert.assertEquals(Abnormality.A0, aNum.getValue(new NumValue(6)));
-		Assert.assertEquals(Abnormality.A5, aNum.getValue(new NumValue(1)));
+		assertEquals(Abnormality.A0, aNum.getValue(new NumValue(6)));
+		assertEquals(Abnormality.A5, aNum.getValue(new NumValue(1)));
 		// left open
-		Assert.assertEquals(Abnormality.A5, aNum.getValue(new NumValue(5)));
+		assertEquals(Abnormality.A5, aNum.getValue(new NumValue(5)));
 		// right closed
-		Assert.assertEquals(Abnormality.A0, aNum.getValue(new NumValue(10)));
+		assertEquals(Abnormality.A0, aNum.getValue(new NumValue(10)));
 	}
 }

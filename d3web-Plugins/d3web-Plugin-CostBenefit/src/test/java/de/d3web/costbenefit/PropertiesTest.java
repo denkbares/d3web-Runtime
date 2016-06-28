@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -150,7 +150,7 @@ public class PropertiesTest {
 		DefaultAbnormality.setAbnormality(q1, valueAnswer1, Abnormality.A0);
 		ValueTransition vt1 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateA, new CondEqual(q1, valueAnswer1))));
-		new StateTransition(new CondAnd(Collections.<Condition>emptyList()), Collections.singletonList(vt1),
+		new StateTransition(new CondAnd(Collections.emptyList()), Collections.singletonList(vt1),
 				first);
 		first.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
@@ -190,7 +190,7 @@ public class PropertiesTest {
 						valueStateWorks, new CondEqual(q4, choiceValue4)),
 				new ConditionalValueSetter(
 						valueStateNotWorks, new CondEqual(q4, choiceValue5))));
-		new StateTransition(new CondOr(Arrays.<Condition> asList(new CondEqual(state, valueStateA),
+		new StateTransition(new CondOr(Arrays.asList(new CondEqual(state, valueStateA),
 				new CondEqual(state, valueStateB))), Arrays.asList(vt4, vtWork4),
 				permanentlyRelevant);
 		permanentlyRelevant.getInfoStore().addValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT, true);
@@ -205,10 +205,10 @@ public class PropertiesTest {
 		valueAnswer51 = new ChoiceValue(answer51);
 		valueAnswer52 = new ChoiceValue(answer52);
 		new QuestionNum(target, "Finish");
-		new StateTransition(new CondAnd(Arrays.<Condition> asList(
+		new StateTransition(new CondAnd(Arrays.asList(
 				new CondEqual(state, valueStateB),
 				new CondEqual(indicator, valueStateWorks))),
-				Collections.<ValueTransition> emptyList(), target);
+				Collections.emptyList(), target);
 
 		targetOnly = new QContainer(kb, TARGET_ONLY_NAME);
 		q3 = new QuestionOC(targetOnly, "Q3");
@@ -221,7 +221,7 @@ public class PropertiesTest {
 		ValueTransition vt3works = new ValueTransition(indicator,
 				Collections.singletonList(new ConditionalValueSetter(
 						valueStateWorks, new CondEqual(q3, valueAnswer3))));
-		new StateTransition(new CondAnd(Collections.<Condition> emptyList()), Arrays.asList(vt3,
+		new StateTransition(new CondAnd(Collections.emptyList()), Arrays.asList(vt3,
 				vt3works),
 				targetOnly);
 		targetOnly.getInfoStore().addValue(BasicProperties.COST, 1.0);
@@ -248,7 +248,7 @@ public class PropertiesTest {
 		tpHeuristic.init(model);
 
 		AStarPath emptyPath = new AStarPath(null, null, 0);
-		State startState = new State(session, Collections.<Question, Value> emptyMap());
+		State startState = new State(session, Collections.emptyMap());
 		// heuristic ignores targetOnly as intermediate step
 		Assert.assertEquals(2.0, tpHeuristic.getDistance(model, emptyPath, startState, target));
 		Assert.assertEquals(0.0, tpHeuristic.getDistance(model, emptyPath, startState, targetOnly));

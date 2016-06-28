@@ -57,24 +57,24 @@ public class KnowledgeBaseFinderTest {
 		String kbName = "wissensbasis";
 		kb.getInfoStore().addValue(MMInfo.PROMPT, kbName);
 
-		find(kbName, Collections.<NamedObject>singletonList(kb));
+		find(kbName, Collections.singletonList(kb));
 	}
 
 	@Test
 	public void testFindSuccessfullByID() {
-		find(KnowledgeBaseFinder.KNOWLEDGEBASE_ID, Collections.<NamedObject>singletonList(kb));
+		find(KnowledgeBaseFinder.KNOWLEDGEBASE_ID, Collections.singletonList(kb));
 	}
 
 	@Test
 	public void testFindFailDifferentName() {
 		kb.getInfoStore().addValue(MMInfo.PROMPT, "blubb");
 
-		find("bla", Collections.<NamedObject> emptyList());
+		find("bla", Collections.emptyList());
 	}
 
 	@Test
 	public void testFindFailNoName() {
-		find("bla", Collections.<NamedObject> emptyList());
+		find("bla", Collections.emptyList());
 	}
 
 	private void find(String kbName, Collection<NamedObject> result) {

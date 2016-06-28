@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -184,7 +184,7 @@ public class TestConflictsTPHeuristic {
 
 		new StateTransition(new CondAnd(
 				Arrays.asList(condIgnitionOrEngine, condMDOn, condBatteryOn)),
-				Collections.<ValueTransition> emptyList(), qCMeasure);
+				Collections.emptyList(), qCMeasure);
 		
 		
 		// Start a session
@@ -208,7 +208,7 @@ public class TestConflictsTPHeuristic {
 
 		new StateTransition(
 				new CondAnd(Arrays.asList(condNotIgnitionOff, condMDOn, condBatteryOn)),
-				Collections.<ValueTransition> emptyList(), qCMeasure);
+				Collections.emptyList(), qCMeasure);
 
 		session = SessionFactory.createSession(kb);
 		condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
@@ -233,7 +233,7 @@ public class TestConflictsTPHeuristic {
 		Target target = new Target(qCMeasure);
 		model.addTarget(target);
 		heuristic.init(model);
-		State state = new State(session, Collections.<Question, Value> emptyMap());
+		State state = new State(session, Collections.emptyMap());
 		double hMeasurement = heuristic.getDistance(model, new AStarPath(null, null, 0), state,
 				qCMeasure);
 		return hMeasurement;

@@ -57,21 +57,21 @@ public class DiaFluxFinderTest {
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
-		flow = FlowFactory.createFlow(kb, FLOW_NAME, Collections.<Node> emptyList(),
-				Collections.<Edge> emptyList());
+		flow = FlowFactory.createFlow(kb, FLOW_NAME, Collections.emptyList(),
+				Collections.emptyList());
 	}
 
 	@Test
 	public void testFindSuccessfullByName() {
 
-		find(FLOW_NAME, Collections.<NamedObject>singletonList(flow));
+		find(FLOW_NAME, Collections.singletonList(flow));
 	}
 
 
 	@Test
 	public void testFindFailDifferentName() {
 
-		find("bla", Collections.<NamedObject> emptyList());
+		find("bla", Collections.emptyList());
 	}
 
 	private void find(String name, Collection<NamedObject> result) {

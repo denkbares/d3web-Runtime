@@ -18,7 +18,7 @@
  */
 package de.d3web.core.knowledge.terminology.info.tests;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

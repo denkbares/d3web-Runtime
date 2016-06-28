@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -79,13 +79,13 @@ public class TestComfortBenefit {
 		start = new QContainer(kb, "start");
 		questionNum = new QuestionNum(start, "num");
 		CondAnd condTrue = new CondAnd(
-				Collections.<Condition> emptyList());
+				Collections.emptyList());
 		List<ConditionalValueSetter> cvslist = Collections.singletonList(new ConditionalValueSetter(
 				new NumValue(15.0), condTrue));
 		new StateTransition(null, Collections.singletonList(new ValueTransition(questionNum, cvslist)), start);
 		qContainerWithComfortBenefit = new QContainer(kb, "comfortBenefit");
 		end = new QContainer(kb, "end");
-		new StateTransition(condTrue, Collections.<ValueTransition> emptyList(), end);
+		new StateTransition(condTrue, Collections.emptyList(), end);
 		List<QContainer> pathlist = new LinkedList<>();
 		pathlist.add(start);
 		pathlist.add(end);
@@ -103,7 +103,7 @@ public class TestComfortBenefit {
 	public void fittingConditions() {
 		new ComfortBenefit(qContainerWithComfortBenefit);
 		new StateTransition(new CondNumGreater(questionNum, 10.0),
-				Collections.<ValueTransition> emptyList(),
+				Collections.emptyList(),
 				qContainerWithComfortBenefit);
 		searchAndCheckPath(start, qContainerWithComfortBenefit, end);
 	}
@@ -112,7 +112,7 @@ public class TestComfortBenefit {
 	public void fittingComfortCondition() {
 		new ComfortBenefit(qContainerWithComfortBenefit);
 		new StateTransition(null,
-				Collections.<ValueTransition> emptyList(),
+				Collections.emptyList(),
 				qContainerWithComfortBenefit);
 		searchAndCheckPath(qContainerWithComfortBenefit, start, end);
 	}
@@ -121,7 +121,7 @@ public class TestComfortBenefit {
 	public void notfittingComfortBenefitCondition() {
 		new ComfortBenefit(qContainerWithComfortBenefit, new CondNumLess(questionNum, 10.0));
 		new StateTransition(null,
-				Collections.<ValueTransition> emptyList(),
+				Collections.emptyList(),
 				qContainerWithComfortBenefit);
 		searchAndCheckPath(start, end);
 	}
@@ -130,7 +130,7 @@ public class TestComfortBenefit {
 	public void notFittingStateTransitionCondition() {
 		new ComfortBenefit(qContainerWithComfortBenefit);
 		new StateTransition(new CondNumLess(questionNum, 10.0),
-				Collections.<ValueTransition> emptyList(),
+				Collections.emptyList(),
 				qContainerWithComfortBenefit);
 		searchAndCheckPath(start, end);
 	}
@@ -138,7 +138,7 @@ public class TestComfortBenefit {
 	@Test
 	public void noComfortBenefit() {
 		new StateTransition(null,
-				Collections.<ValueTransition> emptyList(),
+				Collections.emptyList(),
 				qContainerWithComfortBenefit);
 		searchAndCheckPath(start, end);
 	}
@@ -147,7 +147,7 @@ public class TestComfortBenefit {
 	public void destroyingPrecontion() {
 		QuestionNum questionNum2 = new QuestionNum(qContainerWithComfortBenefit, "num2");
 		CondAnd condTrue = new CondAnd(
-				Collections.<Condition> emptyList());
+				Collections.emptyList());
 		List<ConditionalValueSetter> cvslist = Collections.singletonList(new ConditionalValueSetter(
 				new NumValue(15.0), condTrue));
 		new StateTransition(new CondNumGreater(questionNum, 10.0),
@@ -157,7 +157,7 @@ public class TestComfortBenefit {
 		searchAndCheckPath(start, qContainerWithComfortBenefit, end);
 		// overwritting statetransition of end
 		new StateTransition(new CondNumLess(questionNum2, 10.0),
-				Collections.<ValueTransition> emptyList(), end);
+				Collections.emptyList(), end);
 		// reset startPath
 		target.setMinPath(startPath);
 		searchAndCheckPath(start, end);
@@ -176,7 +176,7 @@ public class TestComfortBenefit {
 		ComfortBenefit comfortBenfit = loadedComfortBenefits.iterator().next();
 		Assert.assertEquals(qContainerWithComfortBenefit.getName(),
 				comfortBenfit.getQContainer().getName());
-		Assert.assertEquals(new CondAnd(Collections.<Condition> emptyList()),
+		Assert.assertEquals(new CondAnd(Collections.emptyList()),
 				comfortBenfit.getCondition());
 	}
 

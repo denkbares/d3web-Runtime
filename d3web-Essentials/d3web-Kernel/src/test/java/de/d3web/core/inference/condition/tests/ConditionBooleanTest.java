@@ -18,11 +18,6 @@
  */
 package de.d3web.core.inference.condition.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -46,6 +41,11 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.plugin.test.InitPluginManager;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 /**
  * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
@@ -65,10 +65,8 @@ public class ConditionBooleanTest {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
 		init = new QContainer(kb.getRootQASet(), "init");
-		choiceQuestion1 = new QuestionOC(init, "choiceQuestion1", new String[] {
-				"yes", "no" });
-		choiceQuestion2 = new QuestionOC(init, "choiceQuestion2", new String[] {
-				"yes", "no" });
+		choiceQuestion1 = new QuestionOC(init, "choiceQuestion1", "yes", "no");
+		choiceQuestion2 = new QuestionOC(init, "choiceQuestion2", "yes", "no");
 
 		// two ChoiceValues, representing to two possible answers "yes" and "no"
 		// for the above questions

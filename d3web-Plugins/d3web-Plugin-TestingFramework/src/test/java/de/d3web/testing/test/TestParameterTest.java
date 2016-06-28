@@ -42,8 +42,7 @@ public class TestParameterTest {
 		String description = "description";
 		String option1 = "option1";
 		String option2 = "option2";
-		TestParameter p = new TestParameter(name, Mode.Optional, description, new String[] {
-				option1, option2 });
+		TestParameter p = new TestParameter(name, Mode.Optional, description, option1, option2);
 
 		assertEquals("\"name\" (Enum, Optional): description", p.toString());
 		assertEquals(description, p.getDescription());

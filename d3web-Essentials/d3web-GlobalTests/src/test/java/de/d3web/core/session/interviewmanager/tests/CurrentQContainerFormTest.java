@@ -86,22 +86,18 @@ public class CurrentQContainerFormTest {
 		// Container: pregnancyQuestions = { sex {pregnant}, ask_for_pregnancy
 		// } 
 		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
-		sex = new QuestionOC(pregnancyQuestions, "sex", new String[] {
-				"male", "female" });
+		sex = new QuestionOC(pregnancyQuestions, "sex", "male", "female");
 		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
 		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
-		pregnant = new QuestionOC(sex, "pregnant", new String[] {
-				"yes", "no" });
-		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", new String[] {
-				"yes", "no" });
+		pregnant = new QuestionOC(sex, "pregnant", "yes", "no");
+		ask_for_pregnancy = new QuestionOC(pregnancyQuestions, "ask for pregnancy", "yes", "no");
 
 		// Container: heightWeightQuestions = { weight, height } 
 		heightWeightQuestions = new QContainer(root, "heightWeightQuestions");
 		weight = new QuestionNum(heightWeightQuestions, "weight");
 		height = new QuestionNum(heightWeightQuestions, "height");
 
-		initQuestion = new QuestionOC(root, "initQuestion", new String[] {
-				"all", "pregnacyQuestions", "height+weight" });
+		initQuestion = new QuestionOC(root, "initQuestion", "all", "pregnacyQuestions", "height+weight");
 		session = SessionFactory.createSession(kb);
 		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		interview.setFormStrategy(new CurrentQContainerFormStrategy());

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.d3web.core.inference.condition.CondAnd;
@@ -117,7 +118,7 @@ public class RunningACase {
 		dangerousMood = new Solution(kb.getRootSolution(), "dangerousMood");
 
 		// Define the init questionnaire
-		kb.setInitQuestions(Arrays.asList(demoQuestions));
+		kb.setInitQuestions(Collections.singletonList(demoQuestions));
 
 		// Define the magic rule: preganant=yes AND weight > 70 => dangerousMood
 		// (P7)

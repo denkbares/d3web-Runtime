@@ -50,6 +50,7 @@ import static junit.framework.Assert.assertNotNull;
  * @author Joachim Baumeister (denkbares GmbH)
  * @created 02.05.2011
  */
+@SuppressWarnings("deprecation")
 public class EmpiricalTestingFunctionsTest {
 
 	private static final double EPS = 0.001;

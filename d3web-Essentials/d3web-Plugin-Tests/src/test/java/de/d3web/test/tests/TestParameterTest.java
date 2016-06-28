@@ -41,11 +41,9 @@ public class TestParameterTest extends AbstractTest<Object> {
  */
 	public TestParameterTest() {
 		this.addParameter("parameter with options", Mode.Mandatory,
-				"parameter with options for testing only!", new String[] {
-						O1, O2, O3 });
+				"parameter with options for testing only!", O1, O2, O3);
 		this.addIgnoreParameter("ignore parameter with options", Mode.Mandatory,
-				"ignore parameter with options for testing only!", new String[] {
-						I1, I2, I3 });
+				"ignore parameter with options for testing only!", I1, I2, I3);
 	}
 
 	@Override

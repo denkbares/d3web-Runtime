@@ -85,7 +85,7 @@ public final class DDNode {
 		return new DDNode(
 				caseName,
 				null,
-				Collections.<Finding> emptyList(),
+				Collections.emptyList(),
 				expectedSolutions,
 				derivedSolutions,
 				testedBefore);
@@ -96,8 +96,8 @@ public final class DDNode {
 				testcase.getName(),
 				testcase.getNote(),
 				testcase.getFindings(),
-				Collections.<RatedSolution> emptyList(),
-				Collections.<RatedSolution> emptyList(),
+				Collections.emptyList(),
+				Collections.emptyList(),
 				testcase.wasTestedBefore());
 	}
 
@@ -106,8 +106,8 @@ public final class DDNode {
 				caseName,
 				null,
 				findings,
-				Collections.<RatedSolution> emptyList(),
-				Collections.<RatedSolution> emptyList(),
+				Collections.emptyList(),
+				Collections.emptyList(),
 				testedBefore);
 	}
 

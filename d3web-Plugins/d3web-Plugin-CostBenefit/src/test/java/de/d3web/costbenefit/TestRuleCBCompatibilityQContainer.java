@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
@@ -130,7 +130,7 @@ public class TestRuleCBCompatibilityQContainer {
 		finish.addAlternative(ok);
 		DefaultAbnormality.setAbnormality(finish, new ChoiceValue(ok), Abnormality.A0);
 		new StateTransition(new CondEqual(state, valueStateB),
-				Collections.<ValueTransition> emptyList(), target);
+				Collections.emptyList(), target);
 		runInterview(kb, target, false, q1, q2, finish);
 		runInterview(kb, target, true, q1, q1b, q2, finish);
 	}

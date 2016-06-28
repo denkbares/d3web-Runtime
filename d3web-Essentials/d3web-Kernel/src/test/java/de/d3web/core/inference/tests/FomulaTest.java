@@ -21,7 +21,7 @@ package de.d3web.core.inference.tests;
 import java.io.IOException;
 import java.util.Collection;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
@@ -70,12 +70,12 @@ public class FomulaTest {
 		Assert.assertTrue(UndefinedValue.isUndefinedValue(add.eval(session)));
 		session.getBlackboard().addValueFact(
 				FactFactory.createUserEnteredFact(question, new NumValue(9)));
-		Assert.assertEquals(12.0, ((NumValue) add.eval(session)).getDouble());
-		Assert.assertEquals(6.0, ((NumValue) sub.eval(session)).getDouble());
-		Assert.assertEquals(3.0, ((NumValue) div.eval(session)).getDouble());
-		Assert.assertEquals(9.0, ((NumValue) max.eval(session)).getDouble());
-		Assert.assertEquals(3.0, ((NumValue) min.eval(session)).getDouble());
-		Assert.assertEquals(27.0, ((NumValue) mult.eval(session)).getDouble());
+		Assert.assertEquals(12.0, ((NumValue) add.eval(session)).getDouble(), 0);
+		Assert.assertEquals(6.0, ((NumValue) sub.eval(session)).getDouble(), 0);
+		Assert.assertEquals(3.0, ((NumValue) div.eval(session)).getDouble(), 0);
+		Assert.assertEquals(9.0, ((NumValue) max.eval(session)).getDouble(), 0);
+		Assert.assertEquals(3.0, ((NumValue) min.eval(session)).getDouble(), 0);
+		Assert.assertEquals(27.0, ((NumValue) mult.eval(session)).getDouble(), 0);
 		Collection<? extends TerminologyObject> terminalObjects = mult.getTerminalObjects();
 		Assert.assertEquals(1, terminalObjects.size());
 		Assert.assertEquals(question, terminalObjects.iterator().next());

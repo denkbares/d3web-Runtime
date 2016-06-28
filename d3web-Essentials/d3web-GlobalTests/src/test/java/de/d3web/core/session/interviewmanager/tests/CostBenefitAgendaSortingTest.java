@@ -82,8 +82,7 @@ public class CostBenefitAgendaSortingTest {
 		// - height [num]
 
 		pregnancyQuestions = new QContainer(root, "pregnancyQuestions");
-		sex = new QuestionOC(pregnancyQuestions, "sex", new String[] {
-				"male", "female" });
+		sex = new QuestionOC(pregnancyQuestions, "sex", "male", "female");
 		female = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "female"));
 		male = new ChoiceValue(KnowledgeBaseUtils.findChoice(sex, "male"));
 		name = new QuestionText(pregnancyQuestions, "name");

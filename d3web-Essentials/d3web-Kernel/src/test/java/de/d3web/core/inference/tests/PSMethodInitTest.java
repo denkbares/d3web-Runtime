@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.d3web.core.inference.PSMethodInit;
@@ -93,7 +93,7 @@ public class PSMethodInitTest {
 		checkDate(dateValue, 1989, 11, 9);
 		Assert.assertEquals(textAnswer, blackboard.getValue(text).getValue().toString());
 		NumValue numValue = (NumValue) blackboard.getValue(num);
-		Assert.assertEquals(300.0, numValue.getDouble());
+		Assert.assertEquals(300.0, numValue.getDouble(), 0);
 		Assert.assertTrue(Unknown.assignedTo(blackboard.getValue(ocUnknown)));
 	}
 

@@ -21,7 +21,7 @@ package de.d3web.persistence.tests;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class QuestionSetterActionTest {
 		actionSetQuestion.setValue(new NumValue(doubleValue));
 		ActionSetQuestion asq = reload();
 		Assert.assertTrue(asq.getValue() instanceof NumValue);
-		Assert.assertEquals(doubleValue, ((NumValue) asq.getValue()).getDouble());
+		Assert.assertEquals(doubleValue, ((NumValue) asq.getValue()).getDouble(), 0);
 	}
 
 	@Test
