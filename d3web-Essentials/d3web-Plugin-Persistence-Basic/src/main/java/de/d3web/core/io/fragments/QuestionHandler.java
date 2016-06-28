@@ -68,29 +68,30 @@ public class QuestionHandler implements FragmentHandler<KnowledgeBase> {
 		Element answersElement = null;
 		KnowledgeBase kb = persistence.getArtifact();
 		Question question;
-		if (type.equals("YN")) {
-			question = new QuestionYN(kb, name);
-		}
-		else if (type.equals(QuestionZC.XML_IDENTIFIER)) {
-			question = new QuestionZC(kb, name);
-		}
-		else if (type.equals("OC")) {
-			question = new QuestionOC(kb, name);
-		}
-		else if (type.equals("MC")) {
-			question = new QuestionMC(kb, name);
-		}
-		else if (type.equals("Num")) {
-			question = new QuestionNum(kb, name);
-		}
-		else if (type.equals("Text")) {
-			question = new QuestionText(kb, name);
-		}
-		else if (type.equals("Date")) {
-			question = new QuestionDate(kb, name);
-		}
-		else {
-			throw new IOException("Unknown question type " + type);
+		switch (type) {
+			case "YN":
+				question = new QuestionYN(kb, name);
+				break;
+			case QuestionZC.XML_IDENTIFIER:
+				question = new QuestionZC(kb, name);
+				break;
+			case "OC":
+				question = new QuestionOC(kb, name);
+				break;
+			case "MC":
+				question = new QuestionMC(kb, name);
+				break;
+			case "Num":
+				question = new QuestionNum(kb, name);
+				break;
+			case "Text":
+				question = new QuestionText(kb, name);
+				break;
+			case "Date":
+				question = new QuestionDate(kb, name);
+				break;
+			default:
+				throw new IOException("Unknown question type " + type);
 		}
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : childNodes) {

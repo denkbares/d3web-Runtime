@@ -148,9 +148,9 @@ public class PropertiesTest {
 		q1.addAlternative(answer1);
 		valueAnswer1 = new ChoiceValue(answer1);
 		DefaultAbnormality.setAbnormality(q1, valueAnswer1, Abnormality.A0);
-		ValueTransition vt1 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
+		ValueTransition vt1 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateA, new CondEqual(q1, valueAnswer1))));
-		new StateTransition(new CondAnd(Collections.<Condition> emptyList()), Arrays.asList(vt1),
+		new StateTransition(new CondAnd(Collections.<Condition>emptyList()), Collections.singletonList(vt1),
 				first);
 		first.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
@@ -160,10 +160,10 @@ public class PropertiesTest {
 		q2.addAlternative(answer2);
 		valueAnswer2 = new ChoiceValue(answer2);
 		DefaultAbnormality.setAbnormality(q2, valueAnswer2, Abnormality.A0);
-		ValueTransition vt2 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
+		ValueTransition vt2 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateB, new CondEqual(q2, valueAnswer2))));
 		ValueTransition vtIndicator = new ValueTransition(indicator,
-				Arrays.asList(new ConditionalValueSetter(valueStateWorks, new CondEqual(q2,
+				Collections.singletonList(new ConditionalValueSetter(valueStateWorks, new CondEqual(q2,
 						valueAnswer2))));
 		new StateTransition(new CondEqual(state, valueStateA), Arrays.asList(vt2, vtIndicator),
 				second);
@@ -216,10 +216,10 @@ public class PropertiesTest {
 		q3.addAlternative(answer3);
 		valueAnswer3 = new ChoiceValue(answer3);
 		DefaultAbnormality.setAbnormality(q3, valueAnswer3, Abnormality.A0);
-		ValueTransition vt3 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
+		ValueTransition vt3 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateB, new CondEqual(q3, valueAnswer3))));
 		ValueTransition vt3works = new ValueTransition(indicator,
-				Arrays.asList(new ConditionalValueSetter(
+				Collections.singletonList(new ConditionalValueSetter(
 						valueStateWorks, new CondEqual(q3, valueAnswer3))));
 		new StateTransition(new CondAnd(Collections.<Condition> emptyList()), Arrays.asList(vt3,
 				vt3works),
@@ -326,9 +326,9 @@ public class PropertiesTest {
 		// the information gain of the permanent relevant QContainer must be
 		// higher then the information gain of the target
 		PSMethodXCL xcl = session.getPSMethodInstance(PSMethodXCL.class);
-		double informationGainTarget = xcl.getInformationGain(Arrays.asList(q5),
+		double informationGainTarget = xcl.getInformationGain(Collections.singletonList(q5),
 				Arrays.asList(s1, s2, s3), session);
-		double informationGainPermanentlyRelevant = xcl.getInformationGain(Arrays.asList(q4),
+		double informationGainPermanentlyRelevant = xcl.getInformationGain(Collections.singletonList(q4),
 				Arrays.asList(s1, s2, s3), session);
 		Assert.assertTrue(informationGainTarget < informationGainPermanentlyRelevant);
 		// normally permanently relevant would be chosen because of the lower

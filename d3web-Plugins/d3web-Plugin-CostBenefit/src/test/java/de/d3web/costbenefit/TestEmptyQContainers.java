@@ -19,6 +19,7 @@
 package de.d3web.costbenefit;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class TestEmptyQContainers {
 				DefaultAbnormality.A0);
 		testStepQuestion.addAlternative(lighting);
 		List<ValueTransition> postTransitions = new LinkedList<>();
-		List<ConditionalValueSetter> setters = Arrays.asList(new ConditionalValueSetter(
+		List<ConditionalValueSetter> setters = Collections.singletonList(new ConditionalValueSetter(
 				new ChoiceValue(b), new CondEqual(testStepQuestion, new ChoiceValue(lighting))));
 		postTransitions.add(new ValueTransition(state, setters));
 		new StateTransition(new CondAnd(new LinkedList<>()), postTransitions, testStep);
@@ -105,7 +106,7 @@ public class TestEmptyQContainers {
 		okQuestionOC.addAlternative(ok);
 		QuestionNum testStep2Question = new QuestionNum(testStep2, "TestStep2 question");
 		postTransitions = new LinkedList<>();
-		setters = Arrays.asList(new ConditionalValueSetter(
+		setters = Collections.singletonList(new ConditionalValueSetter(
 				new ChoiceValue(a), new CondNumGreater(testStep2Question, 5.0)));
 		postTransitions.add(new ValueTransition(state, setters));
 		new StateTransition(new CondAnd(new LinkedList<>()), postTransitions, testStep2);

@@ -384,7 +384,7 @@ public class TestExecutor {
 		progressListener.updateProgress(finishedTests / overallTestsCount, currentMessage);
 	}
 
-	class FutureTestTask extends FutureTask<Void> {
+	static class FutureTestTask extends FutureTask<Void> {
 
 		private final CallableTest<?> callable;
 

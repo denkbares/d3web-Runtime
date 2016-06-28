@@ -51,7 +51,7 @@ public class NodeTest {
 	 * @author Marc-Oliver Ochlast (denkbares GmbH)
 	 * @created 11.11.2010
 	 */
-	private class NodeMock extends AbstractNode {
+	private static class NodeMock extends AbstractNode {
 
 		public NodeMock(String id, String name) {
 			super(id, name);

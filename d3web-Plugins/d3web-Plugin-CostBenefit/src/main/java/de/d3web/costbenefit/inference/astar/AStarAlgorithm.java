@@ -96,7 +96,7 @@ public class AStarAlgorithm implements SearchAlgorithm, SessionObjectSource<ASta
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 21.11.2012
 	 */
-	public class AStarSessionObject implements SessionObject {
+	public static class AStarSessionObject implements SessionObject {
 
 		private AStar lastSearch;
 	}

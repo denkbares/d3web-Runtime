@@ -187,7 +187,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	}
 
 	public String getName() {
-		StringBuffer b = new StringBuffer();
+		StringBuilder b = new StringBuilder();
 		for (Iterator<ChoiceID> iterator = choiceIDs.iterator(); iterator.hasNext();) {
 			ChoiceID choiceID = iterator.next();
 			b.append(choiceID.getText());

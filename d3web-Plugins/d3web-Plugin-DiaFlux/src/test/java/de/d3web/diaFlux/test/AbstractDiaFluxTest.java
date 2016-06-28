@@ -250,10 +250,10 @@ public abstract class AbstractDiaFluxTest {
 	private void failWithUnsupportedNode(String flowName, String id) {
 		FlowSet flowSet = DiaFluxUtils.getFlowSet(session);
 		Flow flow = flowSet.get(flowName);
-		StringBuffer buffy = new StringBuffer("Supported Nodes in '" + flowName + "': ");
+		StringBuilder buffy = new StringBuilder("Supported Nodes in '" + flowName + "': ");
 
 		for (Node node : flow.getNodes()) {
-			if (isSupported(node)) buffy.append(getID(node) + ", ");
+			if (isSupported(node)) buffy.append(getID(node)).append(", ");
 		}
 
 		Log.info(buffy.toString());

@@ -21,6 +21,7 @@ package de.d3web.core.session.interviewmanager.tests;
 import static junit.framework.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +82,7 @@ public class MixedUserRuleIndicationTest {
 		height = new QuestionNum(init, "height");
 		importantQuestion = new QuestionNum(qc, "importantQuestion");
 
-		kb.setInitQuestions(Arrays.asList(init));
+		kb.setInitQuestions(Collections.singletonList(init));
 
 		// Define rule for follow-up question
 		// r1: weight > 120 => indicate abnormalWeight

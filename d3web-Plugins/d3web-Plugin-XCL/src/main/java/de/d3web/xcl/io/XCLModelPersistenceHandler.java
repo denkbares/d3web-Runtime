@@ -284,20 +284,21 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 			throw new IOException("missing condition in relation");
 		}
 		XCLRelationType type;
-		if (typeName.equals(ELEMENT_RELATIONS)) {
-			type = XCLRelationType.explains;
-		}
-		else if (typeName.equals(ELEMENT_NECESSARY_RELATIONS)) {
-			type = XCLRelationType.requires;
-		}
-		else if (typeName.equals(ELEMENT_CONTRADICTING_RELATIONS)) {
-			type = XCLRelationType.contradicted;
-		}
-		else if (typeName.equals(ELEMENT_SUFFICIENT_RELATIONS)) {
-			type = XCLRelationType.sufficiently;
-		}
-		else {
-			throw new IOException("unknown relation type '" + typeName + "'");
+		switch (typeName) {
+			case ELEMENT_RELATIONS:
+				type = XCLRelationType.explains;
+				break;
+			case ELEMENT_NECESSARY_RELATIONS:
+				type = XCLRelationType.requires;
+				break;
+			case ELEMENT_CONTRADICTING_RELATIONS:
+				type = XCLRelationType.contradicted;
+				break;
+			case ELEMENT_SUFFICIENT_RELATIONS:
+				type = XCLRelationType.sufficiently;
+				break;
+			default:
+				throw new IOException("unknown relation type '" + typeName + "'");
 		}
 		XCLRelation rel = new XCLRelation(ac, weight, type);
 		return rel;

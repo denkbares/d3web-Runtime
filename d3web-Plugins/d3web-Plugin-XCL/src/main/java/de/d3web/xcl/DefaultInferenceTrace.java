@@ -128,10 +128,7 @@ public class DefaultInferenceTrace implements InferenceTrace {
 					if (falseSet != null) falseSet.add(rel);
 				}
 			}
-			catch (NoAnswerException e) {
-				// do nothing
-			}
-			catch (UnknownAnswerException e) {
+			catch (NoAnswerException | UnknownAnswerException e) {
 				// do nothing
 			}
 		}

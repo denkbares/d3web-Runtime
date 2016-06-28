@@ -413,20 +413,12 @@ public class SessionPersistenceTest {
 	 * @throws FileNotFoundException
 	 */
 	private void markXMLFile(File f) throws IOException {
-		FileInputStream istream = new FileInputStream(f);
-		try {
+		try (FileInputStream istream = new FileInputStream(f)) {
 			Document doc = XMLUtil.streamToDocument(istream);
 			doc.appendChild(doc.createComment("original"));
-			FileOutputStream ostream = new FileOutputStream(f);
-			try {
+			try (FileOutputStream ostream = new FileOutputStream(f)) {
 				XMLUtil.writeDocumentToOutputStream(doc, ostream);
 			}
-			finally {
-				ostream.close();
-			}
-		}
-		finally {
-			istream.close();
 		}
 	}
 
@@ -439,9 +431,8 @@ public class SessionPersistenceTest {
 	 * @throws IOException
 	 */
 	private boolean testMark(File f) throws IOException {
-		FileInputStream istream = new FileInputStream(f);
 		boolean marked = false;
-		try {
+		try (FileInputStream istream = new FileInputStream(f)) {
 			Document doc = XMLUtil.streamToDocument(istream);
 			for (int i = 0; i < doc.getChildNodes().getLength(); i++) {
 				Node child = doc.getChildNodes().item(i);
@@ -451,9 +442,6 @@ public class SessionPersistenceTest {
 			}
 
 		}
-		finally {
-			istream.close();
-		}
 		return marked;
 	}
 
@@ -461,7 +449,7 @@ public class SessionPersistenceTest {
 		for (File f : directory.listFiles()) {
 			Assert.assertFalse(
 					"Something has corrupted this test by putting a folder in "
-							+ directory.getCanonicalPath().toString(),
+							+ directory.getCanonicalPath(),
 					f.isDirectory());
 			f.delete();
 		}

@@ -20,6 +20,7 @@ package de.d3web.test.empiricalTesting;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Test;
 
@@ -60,13 +61,13 @@ public class RatedTestCaseTest {
 		assertTrue(rtc1.equals(rtc1));
 
 		RatedSolution rs = new RatedSolution(solution, new ScoreRating(100));
-		rtc1.addExpected(Arrays.asList(rs));
+		rtc1.addExpected(Collections.singletonList(rs));
 		assertTrue(rtc1.getExpectedSolutions().contains(rs));
 
-		rtc1.addDerived(Arrays.asList(rs));
+		rtc1.addDerived(Collections.singletonList(rs));
 		assertTrue(rtc1.getDerivedSolutions().contains(rs));
 
-		rtc1.setExpectedSolutions(Arrays.asList(rs));
+		rtc1.setExpectedSolutions(Collections.singletonList(rs));
 		assertTrue(rtc1.getDerivedSolutions().contains(rs));
 
 
@@ -79,7 +80,7 @@ public class RatedTestCaseTest {
 		ChoiceValue value1 = new ChoiceValue(c1);
 		f.setValue(value1);
 
-		rtc1.addExpectedFindings(Arrays.asList(f));
+		rtc1.addExpectedFindings(Collections.singletonList(f));
 		assertTrue(rtc1.getExpectedFindings().contains(f));
 	}
 }

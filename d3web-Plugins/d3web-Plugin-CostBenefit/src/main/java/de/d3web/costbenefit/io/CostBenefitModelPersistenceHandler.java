@@ -193,7 +193,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		new StateTransition(activationCondition, postTransitions, qcontainer);
 	}
 
-	private class StateTransitionComparator implements Comparator<StateTransition> {
+	private static class StateTransitionComparator implements Comparator<StateTransition> {
 
 		@Override
 		public int compare(StateTransition r1, StateTransition r2) {

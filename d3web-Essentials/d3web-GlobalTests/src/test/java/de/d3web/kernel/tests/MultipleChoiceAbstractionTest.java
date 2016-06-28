@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -122,7 +123,7 @@ public class MultipleChoiceAbstractionTest {
 
 		// Day = Workday, Weekend => Weekday = Monday, Tuesday, Wednesday,
 		// Thursday, Friday, Saturday, Sunday
-		MultipleChoiceValue weekendAndWorkday = getDayMCValue(Arrays.asList(""));
+		MultipleChoiceValue weekendAndWorkday = getDayMCValue(Collections.singletonList(""));
 		condition = new CondEqual(day, weekendAndWorkday);
 		RuleFactory.createSetValueRule(weekday, getWeekdayMCValue(null),
 				condition);
@@ -251,12 +252,12 @@ public class MultipleChoiceAbstractionTest {
 		// SET 'Day' = 'Weekend, Workday'
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(day,
-						getDayMCValue(Arrays.asList("")), PSMethodUserSelected.getInstance(),
+						getDayMCValue(Collections.singletonList("")), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 
 		// TEST 'Day' == 'Weekend, Workday'
 		Value dayValue = session.getBlackboard().getValue(day);
-		assertEquals("Question 'Day' has wrong value", getDayMCValue(Arrays.asList("")),
+		assertEquals("Question 'Day' has wrong value", getDayMCValue(Collections.singletonList("")),
 				dayValue);
 
 		// TEST 'Weekday' == 'Monday, Tuesday, Wednesday, Thursday, Friday,

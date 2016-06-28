@@ -64,7 +64,7 @@ public class DiaFluxFinderTest {
 	@Test
 	public void testFindSuccessfullByName() {
 
-		find(FLOW_NAME, Arrays.<NamedObject> asList(flow));
+		find(FLOW_NAME, Collections.<NamedObject>singletonList(flow));
 	}
 
 

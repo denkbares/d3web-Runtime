@@ -54,14 +54,16 @@ public class ChoiceHandler implements FragmentHandler<KnowledgeBase> {
 		String type = element.getAttribute("type");
 		String id = element.getAttribute("name");
 		Choice ac = null;
-		if (type.equals("AnswerNo")) {
-			ac = new AnswerNo(id);
-		}
-		else if (type.equals("AnswerYes")) {
-			ac = new AnswerYes(id);
-		}
-		else if (type.equals("AnswerChoice")) {
-			ac = new Choice(id);
+		switch (type) {
+			case "AnswerNo":
+				ac = new AnswerNo(id);
+				break;
+			case "AnswerYes":
+				ac = new AnswerYes(id);
+				break;
+			case "AnswerChoice":
+				ac = new Choice(id);
+				break;
 		}
 		if (ac != null) {
 			List<Element> childNodes = XMLUtil.getElementList(element.getChildNodes());

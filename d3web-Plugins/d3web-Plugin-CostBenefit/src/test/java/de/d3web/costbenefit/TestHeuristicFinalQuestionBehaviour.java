@@ -84,11 +84,11 @@ public class TestHeuristicFinalQuestionBehaviour {
 		QContainer target = new QContainer(kb, "target");
 		LinkedList<ValueTransition> transitions = new LinkedList<>();
 		transitions.add(new ValueTransition(finalQuestion,
-				Arrays.asList(new ConditionalValueSetter(value,
-						new CondAnd(Collections.<Condition> emptyList())))));
+				Collections.singletonList(new ConditionalValueSetter(value,
+						new CondAnd(Collections.<Condition>emptyList())))));
 		transitions.add(new ValueTransition(nonfinalQuestion,
-				Arrays.asList(new ConditionalValueSetter(value,
-						new CondAnd(Collections.<Condition> emptyList())))));
+				Collections.singletonList(new ConditionalValueSetter(value,
+						new CondAnd(Collections.<Condition>emptyList())))));
 		new StateTransition(new CondAnd(Arrays.<Condition> asList(new CondEqual(finalQuestion,
 				value),
 				new CondEqual(nonfinalQuestion, value))),

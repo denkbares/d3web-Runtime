@@ -194,12 +194,8 @@ public final class SessionPersistenceManager {
 	 * @created 31.08.2011
 	 */
 	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener) throws IOException {
-		FileInputStream stream = new FileInputStream(file);
-		try {
+		try (FileInputStream stream = new FileInputStream(file)) {
 			return loadSessions(stream, listener);
-		}
-		finally {
-			stream.close();
 		}
 	}
 

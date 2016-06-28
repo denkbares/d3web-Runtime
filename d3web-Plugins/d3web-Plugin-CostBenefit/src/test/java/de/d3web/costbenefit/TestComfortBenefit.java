@@ -80,9 +80,9 @@ public class TestComfortBenefit {
 		questionNum = new QuestionNum(start, "num");
 		CondAnd condTrue = new CondAnd(
 				Collections.<Condition> emptyList());
-		List<ConditionalValueSetter> cvslist = Arrays.asList(new ConditionalValueSetter(
+		List<ConditionalValueSetter> cvslist = Collections.singletonList(new ConditionalValueSetter(
 				new NumValue(15.0), condTrue));
-		new StateTransition(null, Arrays.asList(new ValueTransition(questionNum, cvslist)), start);
+		new StateTransition(null, Collections.singletonList(new ValueTransition(questionNum, cvslist)), start);
 		qContainerWithComfortBenefit = new QContainer(kb, "comfortBenefit");
 		end = new QContainer(kb, "end");
 		new StateTransition(condTrue, Collections.<ValueTransition> emptyList(), end);
@@ -148,10 +148,10 @@ public class TestComfortBenefit {
 		QuestionNum questionNum2 = new QuestionNum(qContainerWithComfortBenefit, "num2");
 		CondAnd condTrue = new CondAnd(
 				Collections.<Condition> emptyList());
-		List<ConditionalValueSetter> cvslist = Arrays.asList(new ConditionalValueSetter(
+		List<ConditionalValueSetter> cvslist = Collections.singletonList(new ConditionalValueSetter(
 				new NumValue(15.0), condTrue));
 		new StateTransition(new CondNumGreater(questionNum, 10.0),
-				Arrays.asList(new ValueTransition(
+				Collections.singletonList(new ValueTransition(
 						questionNum2, cvslist)), qContainerWithComfortBenefit);
 		new ComfortBenefit(qContainerWithComfortBenefit);
 		searchAndCheckPath(start, qContainerWithComfortBenefit, end);

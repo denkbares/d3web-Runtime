@@ -46,7 +46,7 @@ public class CondTextContains extends CondTextQuestion {
 
 	@Override
 	protected boolean compare(String caseValue) {
-		return (caseValue.indexOf(getValue()) > -1);
+		return (caseValue.contains(getValue()));
 	}
 
 	@Override

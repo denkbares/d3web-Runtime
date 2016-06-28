@@ -208,7 +208,7 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 20.09.2010
 	 */
-	private class FileRecord implements SessionRecord {
+	private static class FileRecord implements SessionRecord {
 
 		private final File file;
 		private boolean modified = false;

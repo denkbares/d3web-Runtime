@@ -121,10 +121,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 								"is missing. This property will be lost when saving " +
 								"the knowledge base.");
 			}
-			catch (NoSuchMethodException e) {
-				throw new SAXException(e);
-			}
-			catch (IOException e) {
+			catch (NoSuchMethodException | IOException e) {
 				throw new SAXException(e);
 			}
 			finally {

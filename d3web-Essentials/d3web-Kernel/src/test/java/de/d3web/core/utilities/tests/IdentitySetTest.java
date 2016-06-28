@@ -37,8 +37,8 @@ public class IdentitySetTest {
 	@Test
 	public void test() {
 		Assert.assertTrue(set.isEmpty());
-		String s1 = new String("test");
-		String s2 = new String("test");
+		String s1 = "test";
+		String s2 = "test";
 		Assert.assertTrue(set.add(s1));
 		Assert.assertFalse(set.add(s1));
 		set.add(s2);

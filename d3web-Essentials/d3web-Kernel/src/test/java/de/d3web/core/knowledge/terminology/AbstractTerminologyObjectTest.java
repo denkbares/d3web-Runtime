@@ -37,7 +37,7 @@ import de.d3web.core.knowledge.TerminologyObject;
  */
 public class AbstractTerminologyObjectTest {
 
-	private class NamedObjectMock extends AbstractTerminologyObject {
+	private static class NamedObjectMock extends AbstractTerminologyObject {
 
 		/**
 		 * @param id

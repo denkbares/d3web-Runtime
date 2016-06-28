@@ -69,25 +69,27 @@ public class NextQASetActionHandler implements FragmentHandler<KnowledgeBase> {
 			}
 		}
 		PSAction action = null;
-		if (type.equals("ActionNextQASet")) {
-			throw new IOException("Can not instantiate abstract class ActionNextQASet");
-		}
-		else if (type.equals("ActionIndication") || type.equals("ActionClarify")
-				|| type.equals("ActionRefine")) {
-			ActionIndication actionIndication = new ActionIndication();
-			actionIndication.setQASets(qaSets);
-			action = actionIndication;
-		}
-		else if (type.equals("ActionInstantIndication")) {
-			ActionInstantIndication actionInstantIndication = new ActionInstantIndication();
-			actionInstantIndication.setQASets(qaSets);
-			action = actionInstantIndication;
+		switch (type) {
+			case "ActionNextQASet":
+				throw new IOException("Can not instantiate abstract class ActionNextQASet");
+			case "ActionIndication":
+			case "ActionClarify":
+			case "ActionRefine":
+				ActionIndication actionIndication = new ActionIndication();
+				actionIndication.setQASets(qaSets);
+				action = actionIndication;
+				break;
+			case "ActionInstantIndication":
+				ActionInstantIndication actionInstantIndication = new ActionInstantIndication();
+				actionInstantIndication.setQASets(qaSets);
+				action = actionInstantIndication;
 
-		}
-		else if (type.equals("ActionRelevantIndication")) {
-			ActionRelevantIndication ari = new ActionRelevantIndication();
-			ari.setQASets(qaSets);
-			action = ari;
+				break;
+			case "ActionRelevantIndication":
+				ActionRelevantIndication ari = new ActionRelevantIndication();
+				ari.setQASets(qaSets);
+				action = ari;
+				break;
 		}
 		return action;
 	}

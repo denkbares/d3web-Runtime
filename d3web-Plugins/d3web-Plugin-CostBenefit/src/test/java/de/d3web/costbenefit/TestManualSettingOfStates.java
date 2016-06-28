@@ -71,8 +71,8 @@ public class TestManualSettingOfStates {
 		statusA.addAlternative(choiceA_B);
 		// QContainer1 (always applicable, always setting statusA to valueA_B
 		QContainer qContainer1 = new QContainer(kb, "QContainer1");
-		new StateTransition(null, Arrays.asList(new ValueTransition(statusA,
-				Arrays.asList(new ConditionalValueSetter(valueA_B, null)))), qContainer1);
+		new StateTransition(null, Collections.singletonList(new ValueTransition(statusA,
+				Collections.singletonList(new ConditionalValueSetter(valueA_B, null)))), qContainer1);
 		QuestionOC next = new QuestionOC(qContainer1, "Next");
 		Choice okChoice = new Choice("ok");
 		next.addAlternative(okChoice);

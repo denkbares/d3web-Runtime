@@ -34,7 +34,7 @@ public class Butil {
 	 * @return
 	 */
 	public static String readString(InputStream s) {
-		StringBuffer buffi = new StringBuffer();
+		StringBuilder buffi = new StringBuilder();
 		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(s, "UTF8"));
 			String b = r.readLine();

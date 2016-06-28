@@ -20,13 +20,12 @@ package de.d3web.core.records.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -60,7 +59,7 @@ public class ActualQContainerEntryHandlerTest {
 		SessionRecord record = SessionConversionFactory.copyToSessionRecord(session);
 		File file = new File("target/temp/ActualQContainerEntryTest.xml");
 		file.getParentFile().mkdirs();
-		SessionPersistenceManager.getInstance().saveSessions(file, Arrays.asList(record));
+		SessionPersistenceManager.getInstance().saveSessions(file, Collections.singletonList(record));
 		Collection<SessionRecord> reloadedRecords = SessionPersistenceManager.getInstance().loadSessions(
 				file);
 		Assert.assertEquals(1, reloadedRecords.size());

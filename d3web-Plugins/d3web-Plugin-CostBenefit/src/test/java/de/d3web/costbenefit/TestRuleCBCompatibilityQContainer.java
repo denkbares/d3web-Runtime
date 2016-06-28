@@ -108,7 +108,7 @@ public class TestRuleCBCompatibilityQContainer {
 		RuleFactory.createIndicationRule(followUpQuestions, new CondEqual(q1, valueAbnormal));
 		RuleFactory.createSetValueRule(q1b, Unknown.getInstance(), new CondEqual(q1,
 				valueNormal));
-		new StateTransition(new CondNot(new CondEqual(state, valueStateA)), Arrays.asList(vt1),
+		new StateTransition(new CondNot(new CondEqual(state, valueStateA)), Collections.singletonList(vt1),
 				first);
 		first.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
@@ -119,9 +119,9 @@ public class TestRuleCBCompatibilityQContainer {
 		q2.addAlternative(answer2);
 		ChoiceValue valueAnswer2 = new ChoiceValue(answer2);
 		DefaultAbnormality.setAbnormality(q2, valueAnswer2, Abnormality.A0);
-		ValueTransition vt2 = new ValueTransition(state, Arrays.asList(new ConditionalValueSetter(
+		ValueTransition vt2 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateB, new CondEqual(q2, valueAnswer2))));
-		new StateTransition(new CondEqual(state, valueStateA), Arrays.asList(vt2), second);
+		new StateTransition(new CondEqual(state, valueStateA), Collections.singletonList(vt2), second);
 		second.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
 		QContainer target = new QContainer(kb, "Target");

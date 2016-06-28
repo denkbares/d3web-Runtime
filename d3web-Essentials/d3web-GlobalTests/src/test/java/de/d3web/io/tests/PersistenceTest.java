@@ -125,7 +125,7 @@ public class PersistenceTest extends XMLTestCase {
 		ArrayList<String[]> err = h.getErrors();
 		StringBuffer message = new StringBuffer("Missing Files:\n\r");
 		for (String[] m : err) {
-			message.append(m[0] + " missing in " + m[1] + " or in reloaded-Folder" + "\n\r");
+			message.append(m[0]).append(" missing in ").append(m[1]).append(" or in reloaded-Folder").append("\n\r");
 		}
 		assertEquals(message.toString(), 0, err.size());
 
@@ -150,8 +150,9 @@ public class PersistenceTest extends XMLTestCase {
 				actual = df.getAllDifferences().size();
 				if (actual <= 1) actual = 0;
 
-				for (Object f : df.getAllDifferences())
-					message.append(((Difference) f).toString() + "\n\r");
+				for (Object f : df.getAllDifferences()) {
+					message.append(((Difference) f).toString()).append("\n\r");
+				}
 
 				assertEquals(message.toString(), 0, actual);
 			}

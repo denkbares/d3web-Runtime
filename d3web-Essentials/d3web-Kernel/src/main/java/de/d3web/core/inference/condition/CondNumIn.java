@@ -135,7 +135,7 @@ public class CondNumIn extends CondNum {
 	 * @return a {@link String} representation of the specified interval
 	 */
 	public String getValue() {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		out.append(getInterval().isLeftOpen() ? "(" : "[");
 		out.append(getInterval().getLeft());
 		out.append(" ");

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class TestTargetProtocolEntries {
 		// test persistence
 		file.getParentFile().mkdirs();
 		SessionRecord sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
-		SessionPersistenceManager.getInstance().saveSessions(file, Arrays.asList(sessionRecord));
+		SessionPersistenceManager.getInstance().saveSessions(file, Collections.singletonList(sessionRecord));
 		Collection<SessionRecord> loadedRecords = SessionPersistenceManager.getInstance().loadSessions(
 				file);
 		Assert.assertEquals(1, loadedRecords.size());

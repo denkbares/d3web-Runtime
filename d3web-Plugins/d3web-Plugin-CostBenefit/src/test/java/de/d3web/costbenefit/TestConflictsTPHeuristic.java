@@ -125,9 +125,9 @@ public class TestConflictsTPHeuristic {
 
 		ConditionalValueSetter cvsIgnitionOn = new ConditionalValueSetter(new ChoiceValue(
 				cIgnitionOn), null);
-		ValueTransition vIgnitionOn = new ValueTransition(stateStatus, Arrays.asList(cvsIgnitionOn));
+		ValueTransition vIgnitionOn = new ValueTransition(stateStatus, Collections.singletonList(cvsIgnitionOn));
 		new StateTransition(new CondAnd(Arrays.asList(condBatteryOn, condIgnitionOff)),
-				Arrays.asList(vIgnitionOn), qCIgnitionOn);
+				Collections.singletonList(vIgnitionOn), qCIgnitionOn);
 
 		QContainer qCIgnitionOff = new QContainer(kb, "Switch Off Ignition");
 		QuestionOC qIgnitionOff = new QuestionOC(qCIgnitionOff, "Please switch off the ignition!");
@@ -136,8 +136,8 @@ public class TestConflictsTPHeuristic {
 		ConditionalValueSetter cvsIgnitionOff = new ConditionalValueSetter(new ChoiceValue(
 				cIgnitionOff), null);
 		ValueTransition vIgnitionOff = new ValueTransition(stateStatus,
-				Arrays.asList(cvsIgnitionOff));
-		new StateTransition(condIgnitionOn, Arrays.asList(vIgnitionOff), qCIgnitionOff);
+				Collections.singletonList(cvsIgnitionOff));
+		new StateTransition(condIgnitionOn, Collections.singletonList(vIgnitionOff), qCIgnitionOff);
 
 		QContainer qCBatteryOn = new QContainer(kb, "Connect Battery");
 		QuestionOC qBatteryOn = new QuestionOC(qCBatteryOn, "Please connect the battery!");
@@ -145,8 +145,8 @@ public class TestConflictsTPHeuristic {
 
 		ConditionalValueSetter cvsBatteryOn = new ConditionalValueSetter(
 				new ChoiceValue(cBatteryOn), null);
-		ValueTransition vBatteryOn = new ValueTransition(stateBattery, Arrays.asList(cvsBatteryOn));
-		new StateTransition(condBatteryOff, Arrays.asList(vBatteryOn), qCBatteryOn);
+		ValueTransition vBatteryOn = new ValueTransition(stateBattery, Collections.singletonList(cvsBatteryOn));
+		new StateTransition(condBatteryOff, Collections.singletonList(vBatteryOn), qCBatteryOn);
 
 		QContainer qCBatteryOff = new QContainer(kb, "Disconnect Battery");
 		QuestionOC qBatteryOff = new QuestionOC(qCBatteryOff, "Please disconnect the battery!");
@@ -155,9 +155,9 @@ public class TestConflictsTPHeuristic {
 		ConditionalValueSetter cvsBatteryOff = new ConditionalValueSetter(new ChoiceValue(
 				cBatteryOff), null);
 		ValueTransition vBatteryOff = new ValueTransition(stateBattery,
-				Arrays.asList(cvsBatteryOff));
+				Collections.singletonList(cvsBatteryOff));
 		new StateTransition(new CondAnd(Arrays.asList(condIgnitionOff, condBatteryOn)),
-				Arrays.asList(vBatteryOff), qCBatteryOff);
+				Collections.singletonList(vBatteryOff), qCBatteryOff);
 
 		QContainer qCMDOn = new QContainer(kb, "Install Measurement Device");
 		QuestionOC qMDOn = new QuestionOC(qCMDOn, "Please install the measurement device!");
@@ -165,8 +165,8 @@ public class TestConflictsTPHeuristic {
 
 		ConditionalValueSetter cvsMDOn = new ConditionalValueSetter(new ChoiceValue(
 				cDeviceInstalled), null);
-		ValueTransition vMDOn = new ValueTransition(stateMD, Arrays.asList(cvsMDOn));
-		new StateTransition(condBatteryOff, Arrays.asList(vMDOn), qCMDOn);
+		ValueTransition vMDOn = new ValueTransition(stateMD, Collections.singletonList(cvsMDOn));
+		new StateTransition(condBatteryOff, Collections.singletonList(vMDOn), qCMDOn);
 
 		QContainer qCMDOff = new QContainer(kb, "Remove Measurement Device");
 		QuestionOC qMDOff = new QuestionOC(qCMDOff, "Please remove the measurement device!");
@@ -174,8 +174,8 @@ public class TestConflictsTPHeuristic {
 
 		ConditionalValueSetter cvsMDOff = new ConditionalValueSetter(
 				new ChoiceValue(cDeviceRemoved), null);
-		ValueTransition vMDOff = new ValueTransition(stateMD, Arrays.asList(cvsMDOff));
-		new StateTransition(condBatteryOff, Arrays.asList(vMDOff), qCMDOff);
+		ValueTransition vMDOff = new ValueTransition(stateMD, Collections.singletonList(cvsMDOff));
+		new StateTransition(condBatteryOff, Collections.singletonList(vMDOff), qCMDOff);
 
 		QContainer qCMeasure = new QContainer(kb, "Measure");
 		QuestionOC qMeasure = new QuestionOC(qCMeasure,

@@ -120,9 +120,9 @@ public class TestExtendedConflictsTPHeuristic {
 				new ChoiceValue(
 						cDaytimeRunningLight), null);
 		ValueTransition vDaytime = new ValueTransition(stateLightSwitch,
-				Arrays.asList(cvsDaytimeRunningLights));
-		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchOff)),
-				Arrays.asList(vDaytime), qCSwitchDaytime);
+				Collections.singletonList(cvsDaytimeRunningLights));
+		new StateTransition(new CondAnd(Collections.singletonList(condLightSwitchOff)),
+				Collections.singletonList(vDaytime), qCSwitchDaytime);
 
 		qCSwitchDriving = new QContainer(kb, "Switch on driving light");
 		QuestionOC qDrivingOn = new QuestionOC(qCSwitchDriving,
@@ -132,9 +132,9 @@ public class TestExtendedConflictsTPHeuristic {
 		ConditionalValueSetter cvsDrivingLights = new ConditionalValueSetter(new ChoiceValue(
 				cDrivingLight), null);
 		vDriving = new ValueTransition(stateLightSwitch,
-				Arrays.asList(cvsDrivingLights));
-		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchDay)),
-				Arrays.asList(vDriving), qCSwitchDriving);
+				Collections.singletonList(cvsDrivingLights));
+		new StateTransition(new CondAnd(Collections.singletonList(condLightSwitchDay)),
+				Collections.singletonList(vDriving), qCSwitchDriving);
 
 		QContainer qCSwitchFrontFog = new QContainer(kb, "Switch on front fog lights");
 		QuestionOC qFrontFogOn = new QuestionOC(qCSwitchDriving,
@@ -144,9 +144,9 @@ public class TestExtendedConflictsTPHeuristic {
 		ConditionalValueSetter cvsFrontFogLights = new ConditionalValueSetter(new ChoiceValue(
 				cFrontFogLight), null);
 		ValueTransition vFrontFog = new ValueTransition(stateLightSwitch,
-				Arrays.asList(cvsFrontFogLights));
-		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchDriving)),
-				Arrays.asList(vFrontFog), qCSwitchFrontFog);
+				Collections.singletonList(cvsFrontFogLights));
+		new StateTransition(new CondAnd(Collections.singletonList(condLightSwitchDriving)),
+				Collections.singletonList(vFrontFog), qCSwitchFrontFog);
 
 		qCSwitchRearFog = new QContainer(kb, "Switch on rear fog lights");
 		QuestionOC qRearFogOn = new QuestionOC(qCSwitchDriving,
@@ -156,9 +156,9 @@ public class TestExtendedConflictsTPHeuristic {
 		ConditionalValueSetter cvsRearFogLights = new ConditionalValueSetter(new ChoiceValue(
 				cRearFogLight), null);
 		vRearFog = new ValueTransition(stateLightSwitch,
-				Arrays.asList(cvsRearFogLights));
-		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchFront)),
-				Arrays.asList(vRearFog), qCSwitchRearFog);
+				Collections.singletonList(cvsRearFogLights));
+		new StateTransition(new CondAnd(Collections.singletonList(condLightSwitchFront)),
+				Collections.singletonList(vRearFog), qCSwitchRearFog);
 
 		QContainer qCInsertAdapter = new QContainer(kb, "Please Insert the Adapter");
 		QuestionOC qInsertAdapter = new QuestionOC(qCInsertAdapter,
@@ -167,9 +167,9 @@ public class TestExtendedConflictsTPHeuristic {
 
 		ConditionalValueSetter cvsAdapterOn = new ConditionalValueSetter(new ChoiceValue(
 				cAdapterInstalled), null);
-		ValueTransition vAdapter = new ValueTransition(stateAdapter, Arrays.asList(cvsAdapterOn));
+		ValueTransition vAdapter = new ValueTransition(stateAdapter, Collections.singletonList(cvsAdapterOn));
 		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchOff, condAdapterOff)),
-				Arrays.asList(vAdapter), qCInsertAdapter);
+				Collections.singletonList(vAdapter), qCInsertAdapter);
 
 		qCMeasure = new QContainer(kb, "Please start the measurement");
 		QuestionOC qMeasure = new QuestionOC(qCInsertAdapter,
@@ -238,7 +238,7 @@ public class TestExtendedConflictsTPHeuristic {
 		Condition condFogOff = new CondEqual(stateFogLightSwitch, new ChoiceValue(cFogOff));
 		// switching to rear fog light requires the new state
 		new StateTransition(new CondAnd(Arrays.asList(condLightSwitchFront, condFogOn)),
-				Arrays.asList(vRearFog), qCSwitchRearFog);
+				Collections.singletonList(vRearFog), qCSwitchRearFog);
 		// add qcontainers switching the new state on and off
 		QContainer qCSwitchFog = new QContainer(kb, "Switch on the fog light switch");
 		QuestionOC qSwitchFog = new QuestionOC(qCSwitchFog,
@@ -249,9 +249,9 @@ public class TestExtendedConflictsTPHeuristic {
 				new ChoiceValue(
 						cFogOn), null);
 		ValueTransition vFogOn = new ValueTransition(stateFogLightSwitch,
-				Arrays.asList(cvsFogOn));
-		new StateTransition(new CondAnd(Arrays.asList(condFogOff)),
-				Arrays.asList(vFogOn), qCSwitchFog);
+				Collections.singletonList(cvsFogOn));
+		new StateTransition(new CondAnd(Collections.singletonList(condFogOff)),
+				Collections.singletonList(vFogOn), qCSwitchFog);
 
 		QContainer qCSwitchFogOff = new QContainer(kb, "Switch off the fog light switch");
 		QuestionOC qSwitchFogOff = new QuestionOC(qCSwitchFog,
@@ -262,9 +262,9 @@ public class TestExtendedConflictsTPHeuristic {
 				new ChoiceValue(
 						cFogOff), null);
 		ValueTransition vFogOff = new ValueTransition(stateFogLightSwitch,
-				Arrays.asList(cvsFogOff));
-		new StateTransition(new CondAnd(Arrays.asList(condFogOn)),
-				Arrays.asList(vFogOff), qCSwitchFogOff);
+				Collections.singletonList(cvsFogOff));
+		new StateTransition(new CondAnd(Collections.singletonList(condFogOn)),
+				Collections.singletonList(vFogOff), qCSwitchFogOff);
 
 		Session session = SessionFactory.createSession(kb);
 		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
@@ -295,7 +295,7 @@ public class TestExtendedConflictsTPHeuristic {
 		stateLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFrontFogLight.getName());
 		// switching to driving light is also possible with lights off
 		new StateTransition(new CondOr(Arrays.asList(condLightSwitchDay, condLightSwitchOff)),
-				Arrays.asList(vDriving), qCSwitchDriving);
+				Collections.singletonList(vDriving), qCSwitchDriving);
 		Session session = SessionFactory.createSession(kb);
 		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
 		Assert.assertTrue(condition instanceof CondAnd);
@@ -318,7 +318,7 @@ public class TestExtendedConflictsTPHeuristic {
 		stateLightSwitch.getInfoStore().addValue(BasicProperties.INIT, cFrontFogLight.getName());
 		// switching to rear fog light is also possible with lights off
 		new StateTransition(new CondOr(Arrays.asList(condLightSwitchFront, condLightSwitchOff)),
-				Arrays.asList(vRearFog), qCSwitchRearFog);
+				Collections.singletonList(vRearFog), qCSwitchRearFog);
 		Session session = SessionFactory.createSession(kb);
 		Condition condition = TPHeuristic.calculateTransitiveCondition(session, qCMeasure);
 		Assert.assertTrue(condition instanceof CondAnd);

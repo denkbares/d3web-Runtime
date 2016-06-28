@@ -172,7 +172,7 @@ public class XMLTag {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer ret = new StringBuffer();
+		StringBuilder ret = new StringBuilder();
 
 		ret.append("<");
 		ret.append(name);
@@ -182,7 +182,7 @@ public class XMLTag {
 			String key = enumeration.nextElement();
 			String value = attributes.get(key);
 
-			ret.append(" " + key + "='" + value + "'");
+			ret.append(" ").append(key).append("='").append(value).append("'");
 		}
 		ret.append(">\n");
 
@@ -191,9 +191,9 @@ public class XMLTag {
 			ret.append(iter.next().toString());
 		}
 
-		ret.append(content + "\n");
+		ret.append(content).append("\n");
 
-		ret.append("</" + name + ">\n");
+		ret.append("</").append(name).append(">\n");
 
 		return ret.toString();
 	}

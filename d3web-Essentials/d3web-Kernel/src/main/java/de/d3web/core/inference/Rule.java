@@ -100,13 +100,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 			}
 
 		}
-		catch (NoAnswerException ex) {
-			/*
-			 * The exception could not be tested --> just go on and treat it
-			 * like there is no exception
-			 */
-		}
-		catch (UnknownAnswerException uex) {
+		catch (NoAnswerException | UnknownAnswerException ex) {
 			/*
 			 * The exception could not be tested --> just go on and treat it
 			 * like there is no exception
@@ -529,9 +523,9 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 
 	@Override
 	public String toString() {
-		StringBuffer b = new StringBuffer();
-		b.append("IF   " + this.getCondition() + " \n");
-		b.append("THEN " + this.getAction() + "\n");
+		StringBuilder b = new StringBuilder();
+		b.append("IF   ").append(this.getCondition()).append(" \n");
+		b.append("THEN ").append(this.getAction()).append("\n");
 		if (this.getException() != null) {
 			b.append("EXCEPT  ");
 			b.append(this.getException());

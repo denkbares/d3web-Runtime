@@ -57,12 +57,12 @@ public class KnowledgeBaseFinderTest {
 		String kbName = "wissensbasis";
 		kb.getInfoStore().addValue(MMInfo.PROMPT, kbName);
 
-		find(kbName, Arrays.<NamedObject> asList(kb));
+		find(kbName, Collections.<NamedObject>singletonList(kb));
 	}
 
 	@Test
 	public void testFindSuccessfullByID() {
-		find(KnowledgeBaseFinder.KNOWLEDGEBASE_ID, Arrays.<NamedObject> asList(kb));
+		find(KnowledgeBaseFinder.KNOWLEDGEBASE_ID, Collections.<NamedObject>singletonList(kb));
 	}
 
 	@Test

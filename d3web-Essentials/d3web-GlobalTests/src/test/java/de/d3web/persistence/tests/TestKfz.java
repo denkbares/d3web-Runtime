@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -110,9 +111,7 @@ public class TestKfz {
 		Choice[] choices = new Choice[] {
 				Mf7a1, Mf7a2 };
 		List<Choice> values = new ArrayList<>(choices.length);
-		for (Choice choice : choices) {
-			values.add(choice);
-		}
+		Collections.addAll(values, choices);
 		MultipleChoiceValue mcv = MultipleChoiceValue.fromChoices(values);
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf7,
