@@ -128,7 +128,7 @@ public class PathExtender implements SearchAlgorithm {
 		return newPath;
 	}
 
-	private static class ExtendedPath implements Path {
+	private static final class ExtendedPath implements Path {
 
 		private final List<QContainer> qContainers;
 		private final double costs;
@@ -168,7 +168,7 @@ public class PathExtender implements SearchAlgorithm {
 
 		@Override
 		public boolean containsAll(Collection<QContainer> qContainers) {
-			return qContainers.containsAll(qContainers);
+			return this.qContainers.containsAll(qContainers);
 		}
 
 		@Override
