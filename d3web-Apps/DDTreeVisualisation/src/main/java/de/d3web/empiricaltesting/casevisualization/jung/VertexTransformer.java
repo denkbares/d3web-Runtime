@@ -56,17 +56,17 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 * Graph which's vertices are transformed. This reference is necessary for
 	 * getting the questions which are asked next.
 	 */
-	private CaseTree<RatedTestCase, EdgeFinding> graph;
+	private final CaseTree<RatedTestCase, EdgeFinding> graph;
 
 	/**
 	 * Provides some methods that are useful during the transformation process.
 	 */
-	private CaseUtils bh = CaseUtils.getInstance();
+	private final CaseUtils bh = CaseUtils.getInstance();
 
 	/**
 	 * Formatter to format Scores.
 	 */
-	private static NumberFormat formater = new DecimalFormat("#########");
+	private static final NumberFormat formater = new DecimalFormat("#########");
 
 	/**
 	 * Creates an instance of VertexTransformer backed on the committed CaseTree
@@ -90,19 +90,18 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 
 		Map<String, String> cfg = getConfigs(rtc);
 
-		StringBuilder result = new StringBuilder();
-		result.append("<html>");
-		result.append("<table ");
-		result.append("border=\"0\" ");
-		result.append("cellpadding=\"1\" ");
-		result.append("cellspacing=\"2\">");
-		result.append(transformFinding(rtc, cfg));
-		result.append(transformSolutions(rtc, cfg));
-		result.append(transformNextQuestion(rtc, cfg));
-		result.append("</table>");
-		result.append("</html>");
+		String result = "<html>" +
+				"<table " +
+				"border=\"0\" " +
+				"cellpadding=\"1\" " +
+				"cellspacing=\"2\">" +
+				transformFinding(rtc, cfg) +
+				transformSolutions(rtc, cfg) +
+				transformNextQuestion(rtc, cfg) +
+				"</table>" +
+				"</html>";
 
-		return result.toString();
+		return result;
 	}
 
 	/**
@@ -115,7 +114,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 
 		ConfigLoader config = ConfigLoader.getInstance();
 
-		Map<String, String> configs = new HashMap<String, String>();
+		Map<String, String> configs = new HashMap<>();
 		String nodeColor = config.getProperty("nodeColorNewCase");
 		String correctColor = config.getProperty("nodeColorNewCase");
 		String colspan = "3";
@@ -186,7 +185,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 				getSolutionsInHashMap(rtc.getExpectedSolutions());
 		Map<Solution, RatedSolution> derSolutions =
 				getSolutionsInHashMap(rtc.getDerivedSolutions());
-		Set<Solution> solutions = new HashSet<Solution>();
+		Set<Solution> solutions = new HashSet<>();
 
 		solutions.addAll(expSolutions.keySet());
 		solutions.addAll(derSolutions.keySet());
@@ -221,7 +220,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			List<RatedSolution> solutions) {
 
 		Map<Solution, RatedSolution> result =
-				new HashMap<Solution, RatedSolution>();
+				new HashMap<>();
 
 		for (RatedSolution rs : solutions) {
 			result.put(rs.getSolution(), rs);
@@ -239,28 +238,26 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 */
 	private String transformSolutionsHeader(Map<String, String> cfg) {
 
-		StringBuilder result = new StringBuilder();
+		String result = "<tr>" +
+				"<th bgcolor=\"" +
+				cfg.get("nodeColor") +
+				"\">" +
+				"Solution" +
+				"</th>" +
+				"<th bgcolor=\"" +
+				cfg.get("nodeColor") +
+				"\">" +
+				"exp." +
+				"</th>" +
+				"<th bgcolor=\"" +
+				cfg.get("nodeColor") +
+				"\">" +
+				"der." +
+				"</th>" +
+				createCorrectionColumn(cfg) +
+				"</tr>";
 
-		result.append("<tr>");
-		result.append("<th bgcolor=\"");
-		result.append(cfg.get("nodeColor"));
-		result.append("\">");
-		result.append("Solution");
-		result.append("</th>");
-		result.append("<th bgcolor=\"");
-		result.append(cfg.get("nodeColor"));
-		result.append("\">");
-		result.append("exp.");
-		result.append("</th>");
-		result.append("<th bgcolor=\"");
-		result.append(cfg.get("nodeColor"));
-		result.append("\">");
-		result.append("der.");
-		result.append("</th>");
-		result.append(createCorrectionColumn(cfg));
-		result.append("</tr>");
-
-		return result.toString();
+		return result;
 
 	}
 
@@ -278,27 +275,26 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	private String transformCorrectSolution(RatedSolution derived,
 			Map<String, String> cfg) {
 
-		StringBuilder result = new StringBuilder();
+		String result = "<tr>" +
+				"<td bgcolor=\"" +
+				cfg.get("correctColor") +
+				"\" >" +
+				bh.pretty(derived.getSolution().getName()) +
+				"</td>" +
+				"<td colspan=\"2\" bgcolor=\"" +
+				cfg.get("correctColor") +
+				"\" >" +
+				"<center>" +
+				transformState(derived, cfg) +
+				"</center>" +
+				"</td>" +
+				createCorrectionColumn(cfg) +
+				"</tr>";
 
-		result.append("<tr>");
-		result.append("<td bgcolor=\"");
-		result.append(cfg.get("correctColor"));
 		// result.append(getColor(derived, cfg));
-		result.append("\" >");
-		result.append(bh.pretty(derived.getSolution().getName()));
-		result.append("</td>");
-		result.append("<td colspan=\"2\" bgcolor=\"");
-		result.append(cfg.get("correctColor"));
 		// result.append(getColor(derived, cfg));
-		result.append("\" >");
-		result.append("<center>");
-		result.append(transformState(derived, cfg));
-		result.append("</center>");
-		result.append("</td>");
-		result.append(createCorrectionColumn(cfg));
-		result.append("</tr>");
 
-		return result.toString();
+		return result;
 	}
 
 	/**
@@ -502,7 +498,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 	 */
 	private List<Question> getNextQuestions(RatedTestCase rtc) {
 
-		List<Question> questions = new ArrayList<Question>();
+		List<Question> questions = new ArrayList<>();
 		Collection<RatedTestCase> children = graph.getSuccessors(rtc);
 
 		if (children != null) {
@@ -518,7 +514,7 @@ public class VertexTransformer implements Transformer<RatedTestCase, String> {
 			return questions;
 		}
 
-		return new ArrayList<Question>();
+		return new ArrayList<>();
 
 	}
 

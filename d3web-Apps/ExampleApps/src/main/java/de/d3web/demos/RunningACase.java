@@ -23,7 +23,6 @@ package de.d3web.demos;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,7 +121,7 @@ public class RunningACase {
 
 		// Define the magic rule: preganant=yes AND weight > 70 => dangerousMood
 		// (P7)
-		List<Condition> terms = new ArrayList<Condition>();
+		List<Condition> terms = new ArrayList<>();
 		terms.add(new CondEqual(pregnant, yes));
 		terms.add(new CondNumGreater(weight, (double) 70));
 		RuleFactory.createHeuristicPSRule(dangerousMood, Score.P7, new CondAnd(terms));

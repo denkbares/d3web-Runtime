@@ -162,7 +162,6 @@ public class DefaultSessionRecord implements SessionRecord {
 				Rating value = (Rating) entry.getValue().getValue();
 				if (value.hasState(state)) {
 					result.add(entry.getKey());
-					continue;
 				}
 			}
 		}

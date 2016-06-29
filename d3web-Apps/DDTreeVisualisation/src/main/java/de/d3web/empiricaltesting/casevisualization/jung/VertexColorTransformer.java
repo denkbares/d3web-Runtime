@@ -45,6 +45,7 @@ public class VertexColorTransformer implements Transformer<RatedTestCase, Paint>
 	 *         !RatedTestCase.isCorrect(), GRAY, if
 	 *         RatedTestCase.wasTestedBefore()
 	 */
+	@Override
 	public Paint transform(RatedTestCase rtc) {
 
 		// String color =

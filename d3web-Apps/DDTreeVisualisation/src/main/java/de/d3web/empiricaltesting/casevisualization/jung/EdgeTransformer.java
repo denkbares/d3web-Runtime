@@ -54,6 +54,7 @@ public class EdgeTransformer implements Transformer<EdgeFinding, String> {
 	 * Transforms a Finding to nice formatted String which is necessary for
 	 * rendering.
 	 */
+	@Override
 	public String transform(EdgeFinding ef) {
 
 		StringBuilder result = new StringBuilder();

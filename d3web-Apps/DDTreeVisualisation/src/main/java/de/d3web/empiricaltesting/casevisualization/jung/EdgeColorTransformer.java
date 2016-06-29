@@ -38,7 +38,7 @@ public class EdgeColorTransformer implements Transformer<EdgeFinding, Paint> {
 	/**
 	 * The underlying graph
 	 */
-	private CaseTree<RatedTestCase, EdgeFinding> graph;
+	private final CaseTree<RatedTestCase, EdgeFinding> graph;
 
 	/**
 	 * Default Constructor

@@ -45,8 +45,8 @@ public class TripleTest {
 	@Before
 	public void setUp() throws Exception {
 		stringObjectOne = "stringObjectOne";
-		doubleObjectTwo = new Double(2.0);
-		integerObjectThree = new Integer(3);
+		doubleObjectTwo = 2.0;
+		integerObjectThree = 3;
 
 		tripleUnderTest = new Triple<>(stringObjectOne,
 				doubleObjectTwo, integerObjectThree);

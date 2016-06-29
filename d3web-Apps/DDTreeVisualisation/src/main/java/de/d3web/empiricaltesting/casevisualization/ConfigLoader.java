@@ -19,11 +19,14 @@
 
 package de.d3web.empiricaltesting.casevisualization;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
+
+import de.d3web.utils.Log;
 
 public final class ConfigLoader {
 
@@ -37,10 +40,11 @@ public final class ConfigLoader {
 	private ConfigLoader() {
 		setDefaultProperties();
 		try {
-			String userdir = System.getProperty("user.dir") + "/src/main/resources/";
-			config.load(new FileReader(userdir + "config.properties"));
+			String userDir = System.getProperty("user.dir") + "/src/main/resources/";
+			config.load(new InputStreamReader(new FileInputStream(userDir + "config.properties"), "UTF-8"));
 		}
 		catch (Exception e) {
+			Log.severe("Exception while loading config", e);
 		}
 	}
 
@@ -49,16 +53,13 @@ public final class ConfigLoader {
 		return instance;
 	}
 
-	public void loadConfig(URL configUrl) {
+	public void loadConfig(URL configUrl) throws FileNotFoundException {
 		config = new Properties();
 		try {
-			config.load(new FileReader(configUrl.getFile()));
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			config.load(new InputStreamReader(new FileInputStream(configUrl.getFile()), "UTF-8"));
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			Log.severe("Exception while loading config", e);
 		}
 	}
 

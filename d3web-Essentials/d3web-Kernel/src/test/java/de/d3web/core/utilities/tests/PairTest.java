@@ -44,7 +44,7 @@ public class PairTest {
 	@Before
 	public void setUp() throws Exception {
 		stringObjectOne = "stringObjectOne";
-		doubleObjectTwo = new Double(2.0);
+		doubleObjectTwo = 2.0;
 
 		pairUnderTest = new Pair<>(stringObjectOne, doubleObjectTwo);
 	}

@@ -113,10 +113,10 @@ public class ConditionTest {
 		cDState1 = new CondDState(d1, new Rating(Rating.State.SUGGESTED));
 		cKnown1 = new CondKnown(qnum1);
 
-		cNumL1 = new CondNumEqual(qnum1, new Double(4.5));
-		cNumG1 = new CondNumGreater(qnum1, new Double(10));
-		cNumIn1 = new CondNumIn(qnum2, new Double(4.0), new Double(12));
-		cNumE1 = new CondNumLess(qnum2, new Double(3));
+		cNumL1 = new CondNumEqual(qnum1, 4.5);
+		cNumG1 = new CondNumGreater(qnum1, 10d);
+		cNumIn1 = new CondNumIn(qnum2, 4.0, 12d);
+		cNumE1 = new CondNumLess(qnum2, 3d);
 
 		cTextContains1 = new CondTextContains(qt1, "text");
 		cTextEqual1 = new CondTextEqual(qt1, "qt1-text");

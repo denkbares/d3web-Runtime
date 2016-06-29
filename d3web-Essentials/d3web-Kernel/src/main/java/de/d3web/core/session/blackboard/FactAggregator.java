@@ -324,9 +324,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	public Fact getFact(PSMethod psmethod, Object source) {
-		Iterator<Fact> iterator = facts.iterator();
-		while (iterator.hasNext()) {
-			Fact fact = iterator.next();
+		for (Fact fact : facts) {
 			if (source.equals(fact.getSource()) && psmethod.equals(fact.getPSMethod())) {
 				return fact;
 			}

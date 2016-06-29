@@ -27,7 +27,7 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
  * Condition for numerical questions, where the question needs to hold a value
  * in the specified range. (Double values). The composite pattern is used for
  * this. This class is a "leaf".
- * 
+ *
  * @author joba
  */
 public class CondNumIn extends CondNum {
@@ -37,7 +37,7 @@ public class CondNumIn extends CondNum {
 	/**
 	 * Creates a new condition, where the value of a specified numerical
 	 * question needs to be within the specified minimum and maximum range.
-	 * 
+	 *
 	 * @param question the specified numerical question
 	 * @param minValue the specified minimum value (Double)
 	 * @param maxValue the specified maximum value (Double)
@@ -50,8 +50,8 @@ public class CondNumIn extends CondNum {
 	/**
 	 * Creates a new condition, where the value of a specified numerical
 	 * question needs to be within the specified interval.
-	 * 
-	 * @param question the specified numerical question
+	 *
+	 * @param question    the specified numerical question
 	 * @param theInterval the specified interval
 	 */
 	public CondNumIn(QuestionNum question, NumericalInterval theInterval) {
@@ -66,7 +66,7 @@ public class CondNumIn extends CondNum {
 
 	/**
 	 * Returns the maximum value to be allowed by this condition.
-	 * 
+	 *
 	 * @return the maximum value of the condition
 	 */
 	public Double getMaxValue() {
@@ -75,7 +75,7 @@ public class CondNumIn extends CondNum {
 
 	/**
 	 * Returns the minimum value required by this condition
-	 * 
+	 *
 	 * @return the minimum value of this condition
 	 */
 	public Double getMinValue() {
@@ -113,7 +113,7 @@ public class CondNumIn extends CondNum {
 
 	/**
 	 * Returns the numerical interval of allowed values for this condition.
-	 * 
+	 *
 	 * @return the interval of allowed numerical values
 	 */
 	public NumericalInterval getInterval() {
@@ -122,7 +122,7 @@ public class CondNumIn extends CondNum {
 
 	/**
 	 * Sets the interval of allowed numerical values for this condition.
-	 * 
+	 *
 	 * @param inter the interval of allowed numerical values
 	 */
 	public void setInterval(NumericalInterval inter) {
@@ -131,16 +131,15 @@ public class CondNumIn extends CondNum {
 
 	/**
 	 * Returns a {@link String} print-out of the interval.
-	 * 
+	 *
 	 * @return a {@link String} representation of the specified interval
 	 */
 	public String getValue() {
-		StringBuilder out = new StringBuilder();
-		out.append(getInterval().isLeftOpen() ? "(" : "[");
-		out.append(getInterval().getLeft());
-		out.append(" ");
-		out.append(getInterval().getRight());
-		out.append(getInterval().isRightOpen() ? ")" : "]");
-		return out.toString();
+		String out = (getInterval().isLeftOpen() ? "(" : "[") +
+				getInterval().getLeft() +
+				" " +
+				getInterval().getRight() +
+				(getInterval().isRightOpen() ? ")" : "]");
+		return out;
 	}
 }

@@ -20,8 +20,6 @@
 
 package de.d3web.persistence.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.junit.Before;
@@ -43,6 +41,8 @@ import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 import de.d3web.scoring.inference.PSMethodHeuristic;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author merz
@@ -74,7 +74,7 @@ public class RuleComplexTest {
 
 		cDState1 = new CondDState(diag1, new Rating(Rating.State.EXCLUDED));
 
-		cNumL1 = new CondNumEqual(qnum1, new Double(12.7));
+		cNumL1 = new CondNumEqual(qnum1, 12.7);
 
 		rcomp = new Rule(PSMethodHeuristic.class);
 		ah = new ActionHeuristicPS();

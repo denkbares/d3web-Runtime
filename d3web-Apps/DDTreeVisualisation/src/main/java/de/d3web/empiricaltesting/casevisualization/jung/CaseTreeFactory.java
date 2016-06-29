@@ -45,7 +45,7 @@ public final class CaseTreeFactory {
 	/**
 	 * Instance for Singleton Pattern!
 	 */
-	private static CaseTreeFactory instance = new CaseTreeFactory();
+	private static final CaseTreeFactory instance = new CaseTreeFactory();
 
 	/**
 	 * Private Constructor to ensure noninstantiability.
@@ -74,7 +74,7 @@ public final class CaseTreeFactory {
 			List<SequentialTestCase> cases) {
 
 		CaseTree<RatedTestCase, EdgeFinding> graph =
-				new CaseTree<RatedTestCase, EdgeFinding>();
+				new CaseTree<>();
 
 		for (SequentialTestCase stc : cases) {
 
@@ -137,7 +137,7 @@ public final class CaseTreeFactory {
 			RatedTestCase previousRTC, RatedTestCase currentRTC) {
 
 		if (previousRTC != null
-				&& currentRTC.getFindings().size() > 0) {
+				&& !currentRTC.getFindings().isEmpty()) {
 
 			try {
 				EdgeFinding edge = new EdgeFinding(previousRTC, currentRTC,

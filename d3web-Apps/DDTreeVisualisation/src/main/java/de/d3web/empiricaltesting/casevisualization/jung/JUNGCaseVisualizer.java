@@ -75,7 +75,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 */
 	private VisualizationViewer<RatedTestCase, EdgeFinding> vv;
 
-	private static JUNGCaseVisualizer instance = new JUNGCaseVisualizer();
+	private static final JUNGCaseVisualizer instance = new JUNGCaseVisualizer();
 
 	/**
 	 * Private Constructor that ensures noninstantiability.
@@ -122,6 +122,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 		init(cases);
 
 		JFrame frame = new JFrame();
+		//noinspection MagicConstant
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container content = frame.getContentPane();
 		final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
@@ -156,7 +157,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 				TestCase partitioned =
 						Util.getPartiallyAnsweredSuite(answerOfFirstQuestion,
 								testSuite.getRepository());
-				if (partitioned.getRepository().size() > 0) {
+				if (!partitioned.getRepository().isEmpty()) {
 					writeToFile(partitioned.getRepository(),
 							checkFilePath(filepath, answerOfFirstQuestion.toString()));
 				}
@@ -183,12 +184,8 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 	private void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
 		filepath = checkFilePath(filepath, "");
-		FileOutputStream fileOutputStream = new FileOutputStream(filepath);
-		try {
+		try (FileOutputStream fileOutputStream = new FileOutputStream(filepath)) {
 			writeToStream(cases, fileOutputStream);
-		}
-		finally {
-			fileOutputStream.close();
 		}
 	}
 
@@ -258,7 +255,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 		vv = generateVisualizationViewer();
 
 		VertexLabelAsShapeRenderer<RatedTestCase, EdgeFinding> vlasr =
-				new VertexLabelAsShapeRenderer<RatedTestCase, EdgeFinding>(vv.getRenderContext());
+				new VertexLabelAsShapeRenderer<>(vv.getRenderContext());
 
 		// Vertex transformation
 		vv.getRenderContext().setVertexLabelTransformer(new VertexTransformer(graph));
@@ -269,7 +266,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 		vv.getRenderContext().setEdgeLabelTransformer(new EdgeTransformer(graph));
 		vv.getRenderContext().setEdgeDrawPaintTransformer(new EdgeColorTransformer(graph));
 		vv.getRenderContext().setEdgeShapeTransformer(
-				new EdgeShape.Line<RatedTestCase, EdgeFinding>());
+				new EdgeShape.Line<>());
 		vv.getRenderContext().setArrowFillPaintTransformer(new EdgeColorTransformer(graph));
 		vv.getRenderContext().setArrowDrawPaintTransformer(new EdgeColorTransformer(graph));
 		vv.getRenderContext().setEdgeStrokeTransformer(new EdgeStrokeTransformer(graph));
@@ -297,15 +294,15 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 		int distY = DistanceDeterminer.getInstance().determineDistance(graph.getVertices());
 
 		TreeLayout<RatedTestCase, EdgeFinding> treeLayout =
-				new TreeLayout<RatedTestCase, EdgeFinding>(graph, 250, distY);
+				new TreeLayout<>(graph, 250, distY);
 
 		Dimension preferredSize = new Dimension(1400, 800);
 
 		final VisualizationModel<RatedTestCase, EdgeFinding> visualizationModel =
-				new DefaultVisualizationModel<RatedTestCase, EdgeFinding>(treeLayout,
+				new DefaultVisualizationModel<>(treeLayout,
 						preferredSize);
 
-		return new VisualizationViewer<RatedTestCase, EdgeFinding>(visualizationModel,
+		return new VisualizationViewer<>(visualizationModel,
 				preferredSize);
 	}
 

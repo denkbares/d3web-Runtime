@@ -20,8 +20,9 @@
 
 package de.d3web.empiricaltesting.casevisualization.jung;
 
-import de.d3web.empiricaltesting.RatedTestCase;
 import edu.uci.ics.jung.graph.DelegateForest;
+
+import de.d3web.empiricaltesting.RatedTestCase;
 
 /**
  * This class serves as datastructure for the graph. It extends the DelegateTree
@@ -58,7 +59,7 @@ public class CaseTree<V, E> extends DelegateForest<V, E> {
 
 		for (Object o : getVertices()) {
 			if (o instanceof RatedTestCase) {
-				if (((RatedTestCase) o).equals(vertex)) {
+				if (o.equals(vertex)) {
 					return (V) o;
 				}
 			}

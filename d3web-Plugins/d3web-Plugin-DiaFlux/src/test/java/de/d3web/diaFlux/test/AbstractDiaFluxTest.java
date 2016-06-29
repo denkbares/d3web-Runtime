@@ -294,7 +294,7 @@ public abstract class AbstractDiaFluxTest {
 				return ((ComposedNode) node).getCalledFlowName();
 			}
 			else if (node instanceof ActionNode) {
-				return Strings.concat(", ", ((ActionNode) node).getOutgoingEdges()
+				return Strings.concat(", ", node.getOutgoingEdges()
 						.iterator().next().getCondition().getTerminalObjects());
 			}
 			return node.getName();
@@ -302,7 +302,7 @@ public abstract class AbstractDiaFluxTest {
 	}
 
 	protected void assertNumValue(QuestionNum num, double expected) {
-		double actual = ((NumValue) session.getBlackboard().getValue(num)).getDouble().doubleValue();
+		double actual = ((NumValue) session.getBlackboard().getValue(num)).getDouble();
 
 		Assert.assertEquals("Question '" + num.getName() + "' does not have the expected value.",
 				expected, actual, 0.005);

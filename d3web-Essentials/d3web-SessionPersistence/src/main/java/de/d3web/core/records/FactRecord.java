@@ -63,6 +63,7 @@ public class FactRecord {
 	 * @created 07.11.2012
 	 * @return name of the problem solver created this fact
 	 */
+	@SuppressWarnings("MethodNamesDifferingOnlyByCase")
 	public String getPSM() {
 		return psm;
 	}
@@ -70,6 +71,7 @@ public class FactRecord {
 	/**
 	 * @deprecated use {@link #getPSM()} instead
 	 */
+	@SuppressWarnings("MethodNamesDifferingOnlyByCase")
 	@Deprecated
 	public String getPsm() {
 		return psm;

@@ -20,6 +20,7 @@ package de.d3web.core.session.interviewmanager.tests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -99,7 +100,7 @@ public class RepeatedIndicationTest {
 		action.setQASets(sex);
 		RuleFactory.createStrategicRule(action, cond);
 
-		kb.setInitQuestions(Arrays.asList(pregnancyQuestions));
+		kb.setInitQuestions(Collections.singletonList(pregnancyQuestions));
 
 		session = SessionFactory.createSession(kb);
 		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));

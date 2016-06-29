@@ -20,7 +20,6 @@ package de.d3web.core.session.interviewmanager.tests;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Before;

@@ -35,9 +35,9 @@ import de.d3web.core.session.blackboard.Fact;
  */
 public class Label {
 
-	private final List<String> aboutKeys = new LinkedList<String>();
-	private final Map<String, String> aboutEntries = new HashMap<String, String>();
-	private final List<Fact> seedEntries = new LinkedList<Fact>();
+	private final List<String> aboutKeys = new LinkedList<>();
+	private final Map<String, String> aboutEntries = new HashMap<>();
+	private final List<Fact> seedEntries = new LinkedList<>();
 
 	public Label() {
 	}

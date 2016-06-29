@@ -34,7 +34,7 @@ import de.d3web.empiricaltesting.RatedTestCase;
 public final class DistanceDeterminer {
 
 	// Singleton Instance
-	private static DistanceDeterminer instance = new DistanceDeterminer();
+	private static final DistanceDeterminer instance = new DistanceDeterminer();
 
 	/**
 	 * Private constructor to ensure noninstantiability.

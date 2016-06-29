@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -116,10 +115,6 @@ public class AStar {
 		this.costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 
 		// collect all target QContainers
-		Set<QContainer> targets = new HashSet<>();
-		for (Target t : model.getTargets()) {
-			targets.addAll(t.getQContainers());
-		}
 		successors = new HashSet<>();
 		successors.addAll(model.getTransitionalStateTransitions());
 		successors.addAll(model.getTargetStateTransitions());

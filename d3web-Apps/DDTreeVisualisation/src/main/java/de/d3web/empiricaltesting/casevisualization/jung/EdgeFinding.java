@@ -31,9 +31,9 @@ import de.d3web.empiricaltesting.RatedTestCase;
  */
 public class EdgeFinding {
 
-	private RatedTestCase source;
-	private RatedTestCase destination;
-	private Finding finding;
+	private final RatedTestCase source;
+	private final RatedTestCase destination;
+	private final Finding finding;
 
 	/**
 	 * Default Constructor
@@ -127,11 +127,9 @@ public class EdgeFinding {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append("FINDING: " + finding.toString() + "\n");
-		result.append("SOURCE: " + source.getName() + "\n");
-		result.append("DESTINATION: " + destination.getName() + "\n");
-		return result.toString();
+		return "FINDING: " + finding + "\n" +
+				"SOURCE: " + source.getName() + "\n" +
+				"DESTINATION: " + destination.getName() + "\n";
 	}
 
 }

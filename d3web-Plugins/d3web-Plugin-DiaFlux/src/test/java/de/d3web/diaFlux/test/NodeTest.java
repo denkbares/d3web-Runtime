@@ -184,10 +184,10 @@ public class NodeTest {
 	// @Test
 	public void testSetAndGetFlow() {
 		// TODO fix this
-		List<Node> nodeList = Arrays.asList((Node) incomingNode1,
-				(Node) incomingNode2, (Node) outgoingNode1, (Node) outgoingNode2);
-		List<Edge> edgeList = Arrays.asList((Edge) incomingEdge1, (Edge) incomingEdge2,
-				(Edge) outgoingEdge1, (Edge) outgoingEdge2);
+		List<Node> nodeList = Arrays.asList(incomingNode1,
+				incomingNode2, outgoingNode1, outgoingNode2);
+		List<Edge> edgeList = Arrays.asList(incomingEdge1, incomingEdge2,
+				outgoingEdge1, outgoingEdge2);
 		Flow testFlow = FlowFactory.createFlow(null, "Main", nodeList, edgeList);
 		testFlow.setAutostart(true);
 

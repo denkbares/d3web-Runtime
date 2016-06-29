@@ -20,8 +20,6 @@
 
 package de.d3web.persistence.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.junit.Before;
@@ -38,6 +36,8 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author merz
@@ -88,7 +88,7 @@ public class QContainerTest {
 
 	@Test
 	public void testQContainerWithProperties() throws Exception {
-		qc1.getInfoStore().addValue(BasicProperties.COST, new Double(20));
+		qc1.getInfoStore().addValue(BasicProperties.COST, 20d);
 
 		// Set propertyKeys = qc1.getPropertyKeys();
 		// MockPropertyDescriptor mpd = new

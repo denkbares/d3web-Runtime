@@ -161,7 +161,7 @@ public class WaitTest {
 			session.getPropagationManager().commitPropagation();
 		}
 		NumValue value = (NumValue) session.getBlackboard().getValue(time);
-		Assert.assertEquals(20.0, value.getDouble().doubleValue(), 0.001);
+		Assert.assertEquals(20.0, value.getDouble(), 0.001);
 	}
 
 }

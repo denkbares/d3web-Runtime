@@ -142,7 +142,7 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 		try {
 			canFire = canFire(session);
 		}
-		catch (UnknownAnswerException ex) {
+		catch (UnknownAnswerException ignored) {
 		}
 		if (hasFired && canFire) {
 			update(session);

@@ -90,15 +90,15 @@ public class AbstractTerminologyObjectTest {
 
 		// verify all children and their correct ordering
 		TerminologyObject[] children = parent.getChildren();
-		assertThat(children[0], is(equalTo((TerminologyObject) childOne)));
-		assertThat(children[1], is(equalTo((TerminologyObject) childTwo)));
-		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
+		assertThat(children[0], is(equalTo(childOne)));
+		assertThat(children[1], is(equalTo(childTwo)));
+		assertThat(children[2], is(equalTo(childThree)));
 
 		// verify that every child has only one (to correct!) parent
 		for (TerminologyObject terminologyObjectChild : children) {
 			TerminologyObject[] parents = terminologyObjectChild.getParents();
 			assertThat(parents.length, is(1));
-			assertThat(parents[0], is(equalTo((TerminologyObject) parent)));
+			assertThat(parents[0], is(equalTo(parent)));
 		}
 	}
 
@@ -115,9 +115,9 @@ public class AbstractTerminologyObjectTest {
 	@Test
 	public void testAddChildAtPosition() {
 		TerminologyObject[] children = parent.getChildren();
-		assertThat(children[0], is(equalTo((TerminologyObject) childOne)));
-		assertThat(children[1], is(equalTo((TerminologyObject) childTwo)));
-		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
+		assertThat(children[0], is(equalTo(childOne)));
+		assertThat(children[1], is(equalTo(childTwo)));
+		assertThat(children[2], is(equalTo(childThree)));
 
 		// now move the childOne (currently at index 0) to index 1, between the
 		// other two children
@@ -125,9 +125,9 @@ public class AbstractTerminologyObjectTest {
 		parent.addChild(childOne, 1);
 		// verify all the new positions:
 		children = parent.getChildren();
-		assertThat(children[0], is(equalTo((TerminologyObject) childTwo)));
-		assertThat(children[1], is(equalTo((TerminologyObject) childOne)));
-		assertThat(children[2], is(equalTo((TerminologyObject) childThree)));
+		assertThat(children[0], is(equalTo(childTwo)));
+		assertThat(children[1], is(equalTo(childOne)));
+		assertThat(children[2], is(equalTo(childThree)));
 	}
 
 	/**

@@ -18,8 +18,6 @@
  */
 package de.d3web.core.session.blackboard.tests;
 
-import static junit.framework.Assert.assertEquals;
-
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -39,6 +37,8 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.plugin.test.InitPluginManager;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Purpose of this test: An abstraction rule defines the value of an abstraction
@@ -91,14 +91,14 @@ public class AbstractionsOnBlackboardTest {
 				new Double(200)));
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
-				new Double(1.9)));
+				1.9));
 		// BMI still undefined, since the rule couldn't fire
 		assertEquals(UndefinedValue.getInstance(), blackboard.getValue(bmi));
 
 		// set height=2, so that the rule can fire and the bmi is set
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
-				new Double(2.0)));
+				2.0));
 
 		// when bmi=50 then the rule hase fired
 		assertEquals(new NumValue(50), blackboard.getValue(bmi));

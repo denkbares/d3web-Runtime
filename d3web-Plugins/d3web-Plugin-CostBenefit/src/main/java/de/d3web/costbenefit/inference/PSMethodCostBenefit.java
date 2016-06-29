@@ -102,8 +102,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	/**
 	 * Can be used to mark QContainers, that are permanently relevant.
-	 * 
-	 * @see ExpetMode.getApplicablePermanentlyRelevantQContainers()
+	 *
+	 * @see ExpertMode#getApplicablePermanentlyRelevantQContainers()
 	 */
 	public static final Property<Boolean> PERMANENTLY_RELEVANT = Property.getProperty(
 			"permanentlyRelevant", Boolean.class);
@@ -117,7 +117,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * is added
 	 * 
 	 * @created 08.05.2012
-	 * @param strategicBenefitFactor
+	 * @param strategicBenefitFactor the factor to set
 	 * @throws IllegalArgumentException if the factor is lower than 0
 	 */
 	public void setStrategicBenefitFactor(double strategicBenefitFactor) {
@@ -165,7 +165,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * 
 	 * @created 08.03.2011
 	 * @param caseObject the case object to select the path for
-	 * @param target the target for the path to be calculated
+	 * @param targets the targets for the path to be calculated
 	 * @throws AbortException if no path could been established towards the
 	 *         specified target
 	 */
@@ -295,7 +295,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				for (QContainer qcontainer : target.getQContainers()) {
 					if (blockedQContainers.contains(qcontainer)) {
 						skipTarget = true;
-						continue;
+						break;
 					}
 				}
 				if (skipTarget) {

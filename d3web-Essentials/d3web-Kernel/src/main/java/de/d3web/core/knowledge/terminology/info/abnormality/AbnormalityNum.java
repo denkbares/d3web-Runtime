@@ -20,7 +20,6 @@
 
 package de.d3web.core.knowledge.terminology.info.abnormality;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,9 +59,8 @@ public class AbnormalityNum implements Abnormality {
 	 *         AbnormalityInterval in intervals
 	 */
 	private boolean checkIntervals(AbnormalityInterval ai) {
-		Iterator<AbnormalityInterval> iter = intervals.iterator();
-		while (iter.hasNext()) {
-			if ((iter.next()).intersects(ai)) {
+		for (AbnormalityInterval interval : intervals) {
+			if ((interval).intersects(ai)) {
 				return false;
 			}
 		}
@@ -100,9 +98,7 @@ public class AbnormalityNum implements Abnormality {
 	 *         AbnormalityInterval
 	 */
 	public double getValue(double answerValue) {
-		Iterator<AbnormalityInterval> iter = intervals.iterator();
-		while (iter.hasNext()) {
-			AbnormalityInterval ai = iter.next();
+		for (AbnormalityInterval ai : intervals) {
 			if (ai.contains(answerValue)) return ai.getValue();
 		}
 		return AbnormalityUtils.getDefault();

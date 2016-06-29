@@ -19,7 +19,6 @@
 package de.d3web.costbenefit;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Assert;

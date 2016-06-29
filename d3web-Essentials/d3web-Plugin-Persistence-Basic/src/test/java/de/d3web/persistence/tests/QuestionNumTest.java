@@ -71,7 +71,7 @@ public class QuestionNumTest {
 
 	@Test
 	public void testQuestionWithProperties() throws Exception {
-		q1.getInfoStore().addValue(BasicProperties.COST, new Double(20));
+		q1.getInfoStore().addValue(BasicProperties.COST, 20d);
 
 		// Set propertyKeys = q1.getPropertyKeys();
 		// MockPropertyDescriptor mpd = new

@@ -45,8 +45,8 @@ public class TupleTest {
 	@Before
 	public void setUp() throws Exception {
 		stringObjectOne = "stringObjectOne";
-		doubleObjectTwo = new Double(2.0);
-		integerObjectThree = new Integer(3);
+		doubleObjectTwo = 2.0;
+		integerObjectThree = 3;
 
 		tupleUnderTest = new Tuple(stringObjectOne, doubleObjectTwo, integerObjectThree);
 	}
@@ -66,15 +66,15 @@ public class TupleTest {
 	public void testGet() {
 		Object object = tupleUnderTest.get(0);
 		assertThat(object instanceof String, is(true));
-		assertThat((String) object, is("stringObjectOne"));
+		assertThat(object, is("stringObjectOne"));
 
 		object = tupleUnderTest.get(1);
 		assertThat(object instanceof Double, is(true));
-		assertThat((Double) object, is(2.0));
+		assertThat(object, is(2.0));
 
 		object = tupleUnderTest.get(2);
 		assertThat(object instanceof Integer, is(true));
-		assertThat((Integer) object, is(3));
+		assertThat(object, is(3));
 	}
 
 	/**

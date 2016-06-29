@@ -45,8 +45,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.empiricaltesting.CaseUtils;
-import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
-import de.d3web.empiricaltesting.casevisualization.ConfigLoader.EdgeShowAnswers;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
@@ -55,6 +53,8 @@ import de.d3web.empiricaltesting.ScoreRating;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader.EdgeShowAnswers;
 import de.d3web.empiricaltesting.casevisualization.Label;
 import de.d3web.empiricaltesting.casevisualization.util.Util;
 
@@ -67,13 +67,13 @@ public final class DDBuilder implements CaseVisualizer {
 			+ "edge [ \n" + "];\n";
 	private static final String FOOTER = "\n}\n";
 
-	private static NumberFormat formater = new DecimalFormat("#########");
+	private static final NumberFormat formater = new DecimalFormat("#########");
 
 	private ConfigLoader config = ConfigLoader.getInstance();
 	private Label label = null;
 
 	private Set<String> createdEdges;
-	private final List<DDNode> nodes = new LinkedList<DDNode>();
+	private final List<DDNode> nodes = new LinkedList<>();
 
 	public DDBuilder() {
 	}
@@ -85,8 +85,8 @@ public final class DDBuilder implements CaseVisualizer {
 
 	/**
 	 * Streams the graph to an OutputStream (useful for web requests!)
-	 * 
-	 * @param cases List<SequentialTestCase> cases
+	 *
+	 * @param cases     List<SequentialTestCase> cases
 	 * @param outStream OutputStream
 	 */
 	@Override
@@ -98,11 +98,11 @@ public final class DDBuilder implements CaseVisualizer {
 	/**
 	 * Saves the graph visualization to a <b>DOT file</b> which will be created
 	 * at the committed filepath.
-	 * 
+	 *
 	 * @param cases List<SequentialTestCase> which's elements will be visualized
-	 *        by this class.
-	 * @param file String which specifies where the created <b>DOT file</b> will
-	 *        be stored.
+	 *              by this class.
+	 * @param file  String which specifies where the created <b>DOT file</b> will
+	 *              be stored.
 	 */
 	@Override
 	public void writeToFile(List<SequentialTestCase> cases, File file) throws IOException {
@@ -111,23 +111,19 @@ public final class DDBuilder implements CaseVisualizer {
 
 	private void writeToFile(List<SequentialTestCase> cases, String filepath) throws IOException {
 		filepath = checkDotFilePath(filepath, "");
-		FileOutputStream fileOutputStream = new FileOutputStream(filepath);
-		try {
+		try (FileOutputStream fileOutputStream = new FileOutputStream(filepath)) {
 			writeToStream(cases, fileOutputStream);
-		}
-		finally {
-			fileOutputStream.close();
 		}
 	}
 
 	/**
 	 * Saves the graph visualization to a <b>DOT file</b> which will be created
 	 * at the committed filepath.
-	 * 
+	 *
 	 * @param testSuite TestSuite which's cases will be visualized by this
-	 *        class.
-	 * @param dotFile String which specifies where the created <b>DOT file</b> will
-	 *        be stored.
+	 *                  class.
+	 * @param dotFile   String which specifies where the created <b>DOT file</b> will
+	 *                  be stored.
 	 */
 	@Override
 	public void writeToFile(TestCase testSuite, File dotFile) throws IOException {
@@ -147,7 +143,7 @@ public final class DDBuilder implements CaseVisualizer {
 				TestCase partitioned =
 						Util.getPartiallyAnsweredSuite(answerOfFirstQuestion,
 								testSuite.getRepository());
-				if (partitioned.getRepository().size() > 0) {
+				if (!partitioned.getRepository().isEmpty()) {
 					String printFilePath =
 							checkDotFilePath(dotFilePath, answerOfFirstQuestion.getName());
 					writeToFile(partitioned.getRepository(), printFilePath);
@@ -190,8 +186,8 @@ public final class DDBuilder implements CaseVisualizer {
 
 	private void generateDDNet(List<SequentialTestCase> cases) {
 
-		createdEdges = new HashSet<String>();
-		Map<RatedTestCase, DDNode> nodeMap = new HashMap<RatedTestCase, DDNode>();
+		createdEdges = new HashSet<>();
+		Map<RatedTestCase, DDNode> nodeMap = new HashMap<>();
 
 		// first we generate the complete net
 		for (SequentialTestCase stc : cases) {
@@ -217,11 +213,11 @@ public final class DDBuilder implements CaseVisualizer {
 	/**
 	 * Splits all nodes that are mixing up findings and solutions into two
 	 * connected nodes
-	 * 
+	 *
 	 * @created 20.07.2011
 	 */
 	private void splitMixedFindingSolutionNodes() {
-		List<DDNode> allNodes = new ArrayList<DDNode>(this.nodes);
+		List<DDNode> allNodes = new ArrayList<>(this.nodes);
 		for (DDNode node : allNodes) {
 			if (node.getFindings().isEmpty()) continue;
 			if (node.getDerivedSolutions().isEmpty() && node.getExpectedSolutions().isEmpty()) continue;
@@ -240,11 +236,11 @@ public final class DDBuilder implements CaseVisualizer {
 
 	/**
 	 * Splits all nodes that are mixing up decisive and non-decisive findings.
-	 * 
+	 *
 	 * @created 20.07.2011
 	 */
 	private void splitMixedDecisiveNodes() {
-		List<DDNode> allNodes = new ArrayList<DDNode>(this.nodes);
+		List<DDNode> allNodes = new ArrayList<>(this.nodes);
 		for (DDNode node : allNodes) {
 			// check for decisive questions
 			// and continue if we do not have such ones
@@ -263,7 +259,7 @@ public final class DDBuilder implements CaseVisualizer {
 			this.nodes.add(commonNode);
 			for (DDNode child : node.getChildNodes()) {
 				// only add decisive findings and solutions
-				List<Finding> decisiveFindings = new LinkedList<Finding>(child.getFindings());
+				List<Finding> decisiveFindings = new LinkedList<>(child.getFindings());
 				decisiveFindings.removeAll(commonNode.getFindings());
 				DDNode specificNode = DDNode.createNode(
 						child.getCaseName(),
@@ -353,7 +349,7 @@ public final class DDBuilder implements CaseVisualizer {
 	}
 
 	private List<Question> computeOutgoing(DDNode node) {
-		List<Question> outgoingQuestions = new ArrayList<Question>(1);
+		List<Question> outgoingQuestions = new ArrayList<>(1);
 		for (DDEdge edge : node.getOutgoing()) {
 			outgoingQuestions = extractNewQuestions(
 					edge.getEnd().getFindings(), outgoingQuestions);
@@ -362,7 +358,7 @@ public final class DDBuilder implements CaseVisualizer {
 	}
 
 	private List<Question> extractNewQuestions(List<Finding> findings,
-			List<Question> outgoingQuestions) {
+											   List<Question> outgoingQuestions) {
 		for (Finding finding : findings) {
 			if (!outgoingQuestions.contains(finding.getQuestion())) outgoingQuestions.add(finding.getQuestion());
 		}
@@ -373,11 +369,10 @@ public final class DDBuilder implements CaseVisualizer {
 		String name0 = edge.getBegin().getID();
 		String name1 = edge.getEnd().getID();
 		String arcName = name0 + "-" + name1;
-		if (createdEdges.contains(arcName)) return;
-		else {
+		if (!createdEdges.contains(arcName)) {
 			createdEdges.add(arcName);
 
-			b.append("\"" + name0 + "\" -> \"" + name1 + "\" [");
+			b.append("\"").append(name0).append("\" -> \"").append(name1).append("\" [");
 			b.append("label = \"");
 			EdgeShowAnswers showAnswers =
 					EdgeShowAnswers.valueOf(getConfig().getProperty("edgeShowAnswers"));
@@ -398,16 +393,12 @@ public final class DDBuilder implements CaseVisualizer {
 					getConfig().getProperty("renderOldCasesLikeNewCases").equals("true");
 
 			if (edge.isTestedBefore() && !bolOldCasesLikeNewCases) {
-				b.append(" color = \"" +
-							getConfig().getProperty("edgeColorOldCase") + "\"");
-				b.append(" penwidth = " +
-							getConfig().getProperty("edgeWidthOldCase"));
+				b.append(" color = \"").append(getConfig().getProperty("edgeColorOldCase")).append("\"");
+				b.append(" penwidth = ").append(getConfig().getProperty("edgeWidthOldCase"));
 			}
 			else {
-				b.append(" color = \"" +
-						getConfig().getProperty("edgeColorNewCase") + "\"");
-				b.append(" penwidth = " +
-						getConfig().getProperty("edgeWidthNewCase"));
+				b.append(" color = \"").append(getConfig().getProperty("edgeColorNewCase")).append("\"");
+				b.append(" penwidth = ").append(getConfig().getProperty("edgeWidthNewCase"));
 			}
 
 			b.append("]\n");
@@ -417,14 +408,14 @@ public final class DDBuilder implements CaseVisualizer {
 	/**
 	 * Returns if the specified {@link Question} has multiple values within the
 	 * outgoing paths of a specified source {@link DDNode}.
-	 * 
-	 * @created 02.05.2011
-	 * @param question the question to be checked
+	 *
+	 * @param question   the question to be checked
 	 * @param sourceNode the node where the different paths starts
 	 * @return if there are multiple different values for this question
+	 * @created 02.05.2011
 	 */
 	static boolean hasMultipleOutgoingValues(Question question, DDNode sourceNode) {
-		Set<Value> values = new HashSet<Value>();
+		Set<Value> values = new HashSet<>();
 		List<DDEdge> outgoing = sourceNode.getOutgoing();
 		for (DDEdge edge : outgoing) {
 			List<Finding> findings = edge.getEnd().getFindings();
@@ -442,10 +433,10 @@ public final class DDBuilder implements CaseVisualizer {
 	 * by HTML entities as specified in DOT language. The returned text will be
 	 * displayed as the original one, but does not contain any invalid
 	 * characters.
-	 * 
-	 * @created 02.05.2011
+	 *
 	 * @param text the text to be encoded
 	 * @return the encoded text
+	 * @created 02.05.2011
 	 */
 	public String encodeHTML(String text) {
 		if (text == null) return "";
@@ -470,10 +461,10 @@ public final class DDBuilder implements CaseVisualizer {
 	 * Renders the name of one finding to be displayed as an edge label. The
 	 * rendered label must not contain any invalid characters. If you expect
 	 * those, use #encodeHTML(String) method.
-	 * 
-	 * @created 02.05.2011
+	 *
 	 * @param finding the finding to be rendered as a label
 	 * @return the rendered finding
+	 * @created 02.05.2011
 	 */
 	public String renderEdgeLabel(Finding finding) {
 		// if the next questions are shown in the previous node
@@ -506,10 +497,10 @@ public final class DDBuilder implements CaseVisualizer {
 	 * This method must render a set of HTML table rows into the buffer
 	 * (including the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as
 	 * specified in the dot language for HTML nodes.
-	 * 
-	 * @created 03.05.2011
+	 *
 	 * @param result the result buffer to render into
-	 * @param node the node to render its case name
+	 * @param node   the node to render its case name
+	 * @created 03.05.2011
 	 */
 	public void renderNodeCaseNameRow(StringBuffer result, DDNode node) {
 		if (Boolean.valueOf(config.getProperty("showTestCaseName"))) {
@@ -521,7 +512,7 @@ public final class DDBuilder implements CaseVisualizer {
 	public void renderNode(StringBuffer result, DDNode node, List<Question> nextQuestions) {
 
 		// prepare list of all solutions
-		List<RatedSolution> allRatedSolutions = new LinkedList<RatedSolution>();
+		List<RatedSolution> allRatedSolutions = new LinkedList<>();
 		allRatedSolutions.addAll(node.getExpectedSolutions());
 		allRatedSolutions.addAll(node.getDerivedSolutions());
 
@@ -577,7 +568,7 @@ public final class DDBuilder implements CaseVisualizer {
 			}
 			else {
 				// iterate over all rated solutions, but avoid duplicates
-				Set<Solution> printedSolutions = new HashSet<Solution>();
+				Set<Solution> printedSolutions = new HashSet<>();
 				for (RatedSolution ratedSolution : allRatedSolutions) {
 					// check if solution is already done
 					Solution d = ratedSolution.getSolution();
@@ -617,11 +608,11 @@ public final class DDBuilder implements CaseVisualizer {
 	 * the result buffer. This method must render a set of HTML table rows into
 	 * the buffer (including the opening and closing &lt;TR&gt;...&lt;/TR&gt;
 	 * tags), as specified in the dot language for HTML nodes.
-	 * 
-	 * @created 02.05.2011
-	 * @param result the result buffer to render into
-	 * @param node the node to render its findings as answers
+	 *
+	 * @param result        the result buffer to render into
+	 * @param node          the node to render its findings as answers
 	 * @param nextQuestions the next questions of that node
+	 * @created 02.05.2011
 	 */
 	public void renderNodeNextQuestions(StringBuffer result, DDNode node, List<Question> nextQuestions) {
 		for (Question question : nextQuestions) {
@@ -638,10 +629,10 @@ public final class DDBuilder implements CaseVisualizer {
 	 * method must render a set of HTML table rows into the buffer (including
 	 * the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as specified in
 	 * the dot language for HTML nodes.
-	 * 
-	 * @created 02.05.2011
+	 *
 	 * @param result the result buffer to render into
-	 * @param node the node to render its findings as answers
+	 * @param node   the node to render its findings as answers
+	 * @created 02.05.2011
 	 */
 	public void renderNodeAnswers(StringBuffer result, DDNode node) {
 		List<Finding> findings = node.getFindings();
@@ -694,16 +685,15 @@ public final class DDBuilder implements CaseVisualizer {
 
 	/**
 	 * Returns all elements (RatedSolution) of a List in a Map.
-	 * 
+	 *
 	 * @param solutions List<RatedSolution>
-	 * 
 	 * @return Map<Diagnosis, RatedSolution>
 	 */
 	private Map<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
 
 		Map<Solution, RatedSolution> result =
-				new HashMap<Solution, RatedSolution>();
+				new HashMap<>();
 
 		for (RatedSolution rs : solutions) {
 			result.put(rs.getSolution(), rs);
@@ -747,12 +737,11 @@ public final class DDBuilder implements CaseVisualizer {
 	 * must render a set of HTML table rows into the buffer (including the
 	 * opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as specified in the
 	 * dot language for HTML nodes.
-	 * 
-	 * @created 02.05.2011
-	 * @param result the result buffer to render into
-	 * @param node the node to render its findings as answers
+	 *
+	 * @param result           the result buffer to render into
+	 * @param node             the node to render its findings as answers
 	 * @param correctionColumn is a correction column required
-	 * 
+	 * @created 02.05.2011
 	 */
 	public void renderSolutionsHeader(StringBuffer result, DDNode node, boolean correctionColumn) {
 		String color = getConfig().getProperty("nodeColorSolutionTitle");
@@ -764,20 +753,19 @@ public final class DDBuilder implements CaseVisualizer {
 	 * buffer. This method must render a set of HTML table rows into the buffer
 	 * (including the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as
 	 * specified in the dot language for HTML nodes.
-	 * 
-	 * @created 02.05.2011
-	 * @param result the result buffer to render into
-	 * @param node the node to render its findings as answers
-	 * @param derived RatedSolution the derived solution which will be
-	 *        transformed
-	 * @param color String containing color information
+	 *
+	 * @param result         the result buffer to render into
+	 * @param node           the node to render its findings as answers
+	 * @param derived        RatedSolution the derived solution which will be
+	 *                       transformed
+	 * @param color          String containing color information
 	 * @param symbolicStates boolean containing information whether states are
-	 *        shown as symbolic states or scores
-	 * 
+	 *                       shown as symbolic states or scores
 	 * @return String representing the transformed RatedSolution
+	 * @created 02.05.2011
 	 */
 	public void renderCorrectSolution(StringBuffer result, DDNode node, RatedSolution derived,
-			String color, boolean correctionColumn, boolean symbolicStates) {
+									  String color, boolean correctionColumn, boolean symbolicStates) {
 		renderTableLine(result, color, correctionColumn,
 				encodeHTML(CaseUtils.getPrompt(derived.getSolution())),
 				renderSolutionState(derived, symbolicStates));
@@ -788,28 +776,28 @@ public final class DDBuilder implements CaseVisualizer {
 	 * buffer. This method must render a set of HTML table rows into the buffer
 	 * (including the opening and closing &lt;TR&gt;...&lt;/TR&gt; tags), as
 	 * specified in the dot language for HTML nodes.
-	 * 
-	 * @created 02.05.2011
-	 * @param result the result buffer to render into
-	 * @param node the node to render its findings as answers
-	 * @param derived RatedSolution the derived solution which will be rendered
-	 * @param expected RatedSolution the expected solution which will be
-	 *        rendered
-	 * @param expectedColor String containing color information for expected
-	 *        solution
-	 * @param derivedColor String containing color information for derived
-	 *        solution
+	 *
+	 * @param result           the result buffer to render into
+	 * @param node             the node to render its findings as answers
+	 * @param derived          RatedSolution the derived solution which will be rendered
+	 * @param expected         RatedSolution the expected solution which will be
+	 *                         rendered
+	 * @param expectedColor    String containing color information for expected
+	 *                         solution
+	 * @param derivedColor     String containing color information for derived
+	 *                         solution
 	 * @param correctionColumn
-	 * @param symbolicStates boolean containing information whether states are
-	 *        shown as symbolic states or scores
+	 * @param symbolicStates   boolean containing information whether states are
+	 *                         shown as symbolic states or scores
+	 * @created 02.05.2011
 	 */
 	public void renderIncorrectSolutions(StringBuffer result, DDNode node, RatedSolution expected,
-			RatedSolution derived, String expectedColor,
-			String derivedColor, boolean correctionColumn, boolean symbolicStates) {
+										 RatedSolution derived, String expectedColor,
+										 String derivedColor, boolean correctionColumn, boolean symbolicStates) {
 
 		String solName = CaseUtils.getPrompt(expected == null ?
-						derived.getSolution() :
-						expected.getSolution());
+				derived.getSolution() :
+				expected.getSolution());
 
 		int colspan = correctionColumn ? 1 : 2;
 
@@ -836,15 +824,13 @@ public final class DDBuilder implements CaseVisualizer {
 	/**
 	 * Renders the state of a RatedSolution to a nice formatted String in
 	 * preparation for rendering.
-	 * 
-	 * @param rs RatedSolution representing the currently processed
-	 *        RatedSolution
-	 * 
+	 *
+	 * @param rs             RatedSolution representing the currently processed
+	 *                       RatedSolution
 	 * @param symbolicStates boolean containing information whether states are
-	 *        shown as symbolic states or scores
-	 * 
+	 *                       shown as symbolic states or scores
 	 * @return String representing the score of the currently processed
-	 *         Solution.
+	 * Solution.
 	 */
 	public String renderSolutionState(RatedSolution rs, boolean symbolicStates) {
 		if (symbolicStates) {
@@ -859,12 +845,11 @@ public final class DDBuilder implements CaseVisualizer {
 	 * Transforms the state of a RatedSolution to nice a formatted String in
 	 * preparation for rendering. This Method transforms the scores to symbolic
 	 * states like "established" or "suggested".
-	 * 
+	 *
 	 * @param score Score representing the currently processed score of the
-	 *        solution
-	 * 
+	 *              solution
 	 * @return String representing the state of the currently processed
-	 *         solution.
+	 * solution.
 	 */
 	public String renderSymbolicState(Rating score) {
 		de.d3web.core.knowledge.terminology.Rating state = CaseUtils.getState(score);
@@ -874,12 +859,11 @@ public final class DDBuilder implements CaseVisualizer {
 	/**
 	 * Transforms the state of a RatedSolution to a nice formatted String in
 	 * preparation for rendering. This Method transforms the scores to numbers.
-	 * 
+	 *
 	 * @param score Score representing the currently processed score of the
-	 *        solution
-	 * 
+	 *              solution
 	 * @return String representing the score of the currently processed
-	 *         Solution.
+	 * Solution.
 	 */
 	public String renderScore(Rating score) {
 		if (score instanceof ScoreRating) {

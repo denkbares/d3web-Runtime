@@ -222,7 +222,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionSetQuestionValue() throws Exception {
-		FormulaNumber fn = new FormulaNumber(new Double(13));
+		FormulaNumber fn = new FormulaNumber(13d);
 
 		List<Object> setValueList = new LinkedList<>();
 		setValueList.add(answerNo);
@@ -300,7 +300,7 @@ public class ActionTest {
 
 	@Test
 	public void testActionSetValueAndActionAddValueDate() throws Exception {
-		FormulaElement fn = new FormulaNumber(new Double(13));
+		FormulaElement fn = new FormulaNumber(13d);
 
 		rule.setProblemsolverContext(PSMethodAbstraction.class);
 		ActionSetQuestion aav = new ActionSetQuestion();

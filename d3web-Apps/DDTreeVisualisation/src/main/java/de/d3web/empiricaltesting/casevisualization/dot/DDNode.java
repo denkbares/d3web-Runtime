@@ -38,8 +38,8 @@ public final class DDNode {
 	// variables to create the node / edge net
 	private static int idCounter = 0;
 	private final String id = "node" + (idCounter++);
-	private final List<DDEdge> outgoing = new ArrayList<DDEdge>();
-	private final List<DDEdge> incoming = new ArrayList<DDEdge>();
+	private final List<DDEdge> outgoing = new ArrayList<>();
+	private final List<DDEdge> incoming = new ArrayList<>();
 
 	// variables to describe the content of this node
 	private final String caseName;
@@ -138,8 +138,8 @@ public final class DDNode {
 	 * @return the list of decisive questions
 	 */
 	public List<Question> getDecisiveQuestions() {
-		List<Question> result = new LinkedList<Question>();
-		Set<Question> checked = new HashSet<Question>();
+		List<Question> result = new LinkedList<>();
+		Set<Question> checked = new HashSet<>();
 		for (DDNode child : getChildNodes()) {
 			for (Finding finding : child.getFindings()) {
 				Question question = finding.getQuestion();
@@ -165,8 +165,8 @@ public final class DDNode {
 	 * @return the list of non-decisive findings
 	 */
 	public List<Finding> getNonDecisiveFindings() {
-		List<Finding> result = new LinkedList<Finding>();
-		Set<Question> checked = new HashSet<Question>();
+		List<Finding> result = new LinkedList<>();
+		Set<Question> checked = new HashSet<>();
 		for (DDNode child : getChildNodes()) {
 			for (Finding finding : child.getFindings()) {
 				Question question = finding.getQuestion();
@@ -201,7 +201,7 @@ public final class DDNode {
 	}
 
 	public Set<DDNode> getParentNodes() {
-		Set<DDNode> result = new HashSet<DDNode>();
+		Set<DDNode> result = new HashSet<>();
 		for (DDEdge edge : this.incoming) {
 			result.add(edge.getBegin());
 		}
@@ -209,7 +209,7 @@ public final class DDNode {
 	}
 
 	public Set<DDNode> getChildNodes() {
-		Set<DDNode> result = new HashSet<DDNode>();
+		Set<DDNode> result = new HashSet<>();
 		for (DDEdge edge : this.outgoing) {
 			result.add(edge.getEnd());
 		}

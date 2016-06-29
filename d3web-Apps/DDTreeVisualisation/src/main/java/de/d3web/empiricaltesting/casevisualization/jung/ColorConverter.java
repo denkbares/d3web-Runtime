@@ -33,7 +33,7 @@ public final class ColorConverter {
 	/**
 	 * Singleton instance.
 	 */
-	private static ColorConverter instance = new ColorConverter();
+	private static final ColorConverter instance = new ColorConverter();
 
 	/**
 	 * Private Constructor (ensures noninstantiability).

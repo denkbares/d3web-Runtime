@@ -42,6 +42,7 @@ import de.d3web.core.records.FactRecord;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.core.session.protocol.Protocol;
+import de.d3web.utils.Streams;
 
 /**
  * This implementation of the SessionRepositoryPersistenceHandler interface can
@@ -159,7 +160,6 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 				if (fileRecord.file.getCanonicalPath().equals(file.getCanonicalPath())) {
 					// SessionRecord was not changed and should be saved to the
 					// same directory -> nothing to do
-					continue;
 				}
 				else {
 					copyFile(fileRecord.file, file);
@@ -360,8 +360,8 @@ public class MultipleXMLSessionRepository extends DefaultSessionRepository {
 			inChannel.transferTo(0, inChannel.size(), outChannel);
 		}
 		finally {
-			if (inChannel != null) inChannel.close();
-			if (outChannel != null) outChannel.close();
+			Streams.closeQuietly(inChannel);
+			Streams.closeQuietly(outChannel);
 		}
 	}
 

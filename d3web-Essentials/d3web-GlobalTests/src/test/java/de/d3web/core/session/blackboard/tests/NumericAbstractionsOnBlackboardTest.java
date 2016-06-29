@@ -106,7 +106,7 @@ public class NumericAbstractionsOnBlackboardTest {
 				new Double(200)));
 		blackboard.addValueFact(FactFactory.createUserEnteredFact(kb,
 				"height",
-				new Double(1.9)));
+				1.9));
 
 		// BMI should be around 55.4
 		double bmiValue = (Double) (blackboard.getValue(bmi).getValue());

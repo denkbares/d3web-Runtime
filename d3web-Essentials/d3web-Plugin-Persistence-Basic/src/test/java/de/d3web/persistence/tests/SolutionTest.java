@@ -20,8 +20,6 @@
 
 package de.d3web.persistence.tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.junit.Before;
@@ -37,6 +35,8 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.persistence.tests.utils.XMLTag;
 import de.d3web.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author merz
@@ -89,7 +89,7 @@ public class SolutionTest {
 
 	@Test
 	public void testSolutionWithProperties() throws Exception {
-		diag.getInfoStore().addValue(BasicProperties.COST, new Double(20));
+		diag.getInfoStore().addValue(BasicProperties.COST, 20d);
 
 		// Set propertyKeys = diag.getPropertyKeys();
 		// MockPropertyDescriptor mpd = new

@@ -40,7 +40,7 @@ public class EdgeStrokeTransformer implements Transformer<EdgeFinding, Stroke> {
 	/**
 	 * The underlying graph
 	 */
-	private CaseTree<RatedTestCase, EdgeFinding> graph;
+	private final CaseTree<RatedTestCase, EdgeFinding> graph;
 
 	/**
 	 * Default Constructor

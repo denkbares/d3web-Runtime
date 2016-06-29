@@ -19,7 +19,6 @@
 package de.d3web.costbenefit;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,7 +32,6 @@ import org.junit.Test;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondNumLess;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;

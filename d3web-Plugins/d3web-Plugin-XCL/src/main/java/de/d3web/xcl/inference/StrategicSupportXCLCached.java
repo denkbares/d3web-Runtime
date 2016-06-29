@@ -327,7 +327,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 * @param items the items to be added
 	 * @return the resulting set, may be the source one or a newly created one
 	 */
-	private static final Set<Condition> lazyAddAll(Set<Condition> source, Collection<Condition> items) {
+	private static Set<Condition> lazyAddAll(Set<Condition> source, Collection<Condition> items) {
 		if (items == null || items.isEmpty()) return source;
 		if (source == null) return new HashSet<>(items);
 		if (source == NULL_SET) {
