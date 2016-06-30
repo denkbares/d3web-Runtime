@@ -196,7 +196,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 					&& entry.hasState(InterviewState.ACTIVE)) {
 				// multiple indicated states have to be removed, otherwise old
 				// entries can "pop" in the again while answering the next
-				// occurency
+				// occurrence
 				if (entry.getIndication().hasState(State.MULTIPLE_INDICATED)) {
 					// modifying the agenda is ok, because we return the method
 					// -> no exception

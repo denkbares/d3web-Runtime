@@ -2,6 +2,7 @@ package de.d3web.interview;
 
 import java.util.Arrays;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,7 @@ import de.d3web.plugin.test.InitPluginManager;
 import static de.d3web.core.knowledge.Indication.State.*;
 import static de.d3web.core.manage.RuleFactory.setRuleParams;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests the different indication states
@@ -48,7 +50,8 @@ public class IndicationTest {
 	protected QuestionMC indicationChooser;
 	protected QContainer indicationContainer;
 	protected QuestionOC indicationQuestion1, indicationQuestion2,
-			relevantIndicationQuestion, relevantIndicationChildQuestion, repeatedIndicationQuestion, instantIndicationQuestion;
+			relevantIndicationQuestion, relevantIndicationChildQuestion, repeatedIndicationQuestion,
+			instantIndicationQuestion, multipleIndicationQuestion1, multipleIndicationQuestion2, multipleIndicationQuestion3;
 
 	@Before
 	public void setUp() throws Exception {
@@ -61,6 +64,9 @@ public class IndicationTest {
 		repeatedIndicationQuestion = new QuestionOC(init, "RepeatedIndicationQuestion");
 		instantIndicationQuestion = new QuestionOC(init, "InstantIndicationQuestion");
 		relevantIndicationQuestion = new QuestionOC(init, "RelevantIndicationQuestion");
+		multipleIndicationQuestion1 = new QuestionOC(init, "multipleIndicationQuestion1");
+		multipleIndicationQuestion2 = new QuestionOC(init, "multipleIndicationQuestion2");
+		multipleIndicationQuestion3 = new QuestionOC(init, "multipleIndicationQuestion3");
 		relevantIndicationChildQuestion = new QuestionOC(relevantIndicationQuestion, "RelevantIndicationChildQuestion");
 		indicationChooser = new QuestionMC(init, "IndicationChooser",
 				indicationQuestion1.getName(), indicationQuestion2.getName(), relevantIndicationQuestion.getName(),
@@ -84,6 +90,17 @@ public class IndicationTest {
 		ActionNextQASet ruleAction = new ActionRepeatedIndication(qaSetsToIndicate);
 		setRuleParams(rule, ruleAction, condition, null);
 		return rule;
+	}
+
+	@Test
+	public void testIndicationSorting() {
+		Session session = SessionFactory.createSession(kb);
+		indicate(session, indicationQuestion1, INDICATED, 2);
+		indicate(session, indicationQuestion2, INDICATED, 1);
+
+		assertActiveQuestions(session, indicationQuestion2);
+		answer(session, indicationQuestion2, Unknown.getInstance());
+		assertActiveQuestions(session, indicationQuestion1);
 	}
 
 	@Test
@@ -145,9 +162,10 @@ public class IndicationTest {
 		assertActiveQuestions(session, repeatedIndicationQuestion);
 	}
 
-	private void answer(Session session, Question question, Value value) {
+	private Fact answer(Session session, Question question, Value value) {
 		Fact valueFact = FactFactory.createUserEnteredFact(question, value);
 		session.getBlackboard().addValueFact(valueFact);
+		return valueFact;
 	}
 
 	private Fact indicate(Session session, QASet qaSet, Indication.State state) {
@@ -155,8 +173,17 @@ public class IndicationTest {
 	}
 
 	private Fact indicate(Session session, QASet qaSet, Indication.State state, Object source, PSMethod psMethod) {
-		Fact indicationFact = FactFactory.createIndicationFact(qaSet, new Indication(state, kb.getManager()
-				.getTreeIndex(qaSet)), source, psMethod);
+		int sorting = kb.getManager().getTreeIndex(qaSet);
+		return indicate(session, qaSet, state, sorting, source, psMethod);
+	}
+
+	private @NotNull Fact indicate(Session session, QASet qaSet, Indication.State indicated, int sorting) {
+		return indicate(session, qaSet, indicated, sorting, PSMethodUserSelected.getInstance(), PSMethodUserSelected.getInstance());
+	}
+
+	@NotNull
+	private Fact indicate(Session session, QASet qaSet, Indication.State state, int sorting, Object source, PSMethod psMethod) {
+		Fact indicationFact = FactFactory.createIndicationFact(qaSet, new Indication(state, sorting), source, psMethod);
 		session.getBlackboard().addInterviewFact(indicationFact);
 		return indicationFact;
 	}
@@ -229,6 +256,56 @@ public class IndicationTest {
 		assertActiveQuestions(session, indicationQuestion1);
 		session.getBlackboard().removeInterviewFact(indicationFact);
 		assertActiveQuestions(session);
+	}
+
+	@Test
+	public void testMultipleIndication() {
+		Session session = SessionFactory.createSession(kb);
+		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+
+		indicate(session, multipleIndicationQuestion1, MULTIPLE_INDICATED, 1);
+		indicate(session, multipleIndicationQuestion2, MULTIPLE_INDICATED, 2);
+		indicate(session, multipleIndicationQuestion3, MULTIPLE_INDICATED, 3);
+
+		assertActiveQuestions(session, multipleIndicationQuestion1);
+		Fact answer1 = answer(session, multipleIndicationQuestion1, Unknown.getInstance());
+		assertFalse(interview.getInterviewAgenda().onAgenda(multipleIndicationQuestion1));
+
+		assertActiveQuestions(session, multipleIndicationQuestion2);
+		Fact answer2 = answer(session, multipleIndicationQuestion2, Unknown.getInstance());
+		assertFalse(interview.getInterviewAgenda().onAgenda(multipleIndicationQuestion2));
+
+		assertActiveQuestions(session, multipleIndicationQuestion3);
+		Fact answer3 = answer(session, multipleIndicationQuestion3, Unknown.getInstance());
+		assertFalse(interview.getInterviewAgenda().onAgenda(multipleIndicationQuestion3));
+
+		removeValueFact(session, answer1);
+		removeValueFact(session, answer2);
+		removeValueFact(session, answer3);
+
+		indicate(session, multipleIndicationQuestion3, MULTIPLE_INDICATED, 1);
+		Fact indicationFact = indicate(session, multipleIndicationQuestion1, MULTIPLE_INDICATED, 2);
+		indicate(session, multipleIndicationQuestion2, MULTIPLE_INDICATED, 3);
+
+		assertActiveQuestions(session, multipleIndicationQuestion3);
+		answer(session, multipleIndicationQuestion3, Unknown.getInstance());
+		assertFalse(interview.getInterviewAgenda().onAgenda(multipleIndicationQuestion3));
+
+		session.getBlackboard().removeInterviewFact(indicationFact);
+		assertActiveQuestions(session, multipleIndicationQuestion2);
+		session.getBlackboard().addInterviewFact(indicationFact);
+
+		assertActiveQuestions(session, multipleIndicationQuestion1);
+		answer(session, multipleIndicationQuestion1, Unknown.getInstance());
+		assertFalse(interview.getInterviewAgenda().onAgenda(multipleIndicationQuestion1));
+
+		assertActiveQuestions(session, multipleIndicationQuestion2);
+		answer(session, multipleIndicationQuestion2, Unknown.getInstance());
+		assertFalse(interview.getInterviewAgenda().onAgenda(multipleIndicationQuestion2));
+	}
+
+	private void removeValueFact(Session session, Fact fact) {
+		session.getBlackboard().removeValueFact(fact);
 	}
 
 	private void assertActiveQuestions(Session session, QASet... qaSetsToIndicate) {
