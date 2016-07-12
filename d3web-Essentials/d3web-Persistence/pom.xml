@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<version>12.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>d3web-Persistence</artifactId>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>xmlunit</groupId>
@@ -34,22 +34,22 @@
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-PluginManager</artifactId>
-			<version>${project.version}</version>
+			<version>${denkbares.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Persistence-ExtensionPoints</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-Utils</artifactId>
-			<version>${project.version}</version>
+			<version>${denkbares.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-Progress</artifactId>
-			<version>${project.version}</version>
+			<version>${denkbares.version}</version>
 		</dependency>
 	</dependencies>
 </project>
