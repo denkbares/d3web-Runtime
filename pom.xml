@@ -4,15 +4,15 @@
 
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web</artifactId>
-	<version>12.0-SNAPSHOT</version>
+	<version>11.0</version>
 	<packaging>pom</packaging>
 
 	<description>Open source d3web parent</description>
 	<url>https://www.d3web.de/</url>
 
 	<properties>
-		<d3web.version>12.0-SNAPSHOT</d3web.version>
-		<denkbares.version>12.0-SNAPSHOT</denkbares.version>
+		<denkbares.version>11.0</denkbares.version>
+		<d3web.version>11.0</d3web.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
