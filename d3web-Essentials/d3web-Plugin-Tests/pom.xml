@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>11.0.0</version>
+		<version>12.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>d3web-Plugin-Tests</artifactId>
@@ -24,27 +24,27 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-TestingFramework</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-TestCase</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-DiaFlux</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-XCL</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

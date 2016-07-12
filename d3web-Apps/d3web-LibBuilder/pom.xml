@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>d3web-Apps</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>11.0.0</version>
+		<version>12.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -52,82 +52,82 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Kernel</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-BasicProperties</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Interview</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Persistence-ExtensionPoints</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-SessionPersistence-Basic</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-TestCase</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-SessionPersistence</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-CostBenefit</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-DiaFlux</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-TestingFramework</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-XCL</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Tests</artifactId>
-			<version>${project.version}</version>
+			<version>${d3web.version}</version>
 		</dependency>
 	</dependencies>
 
