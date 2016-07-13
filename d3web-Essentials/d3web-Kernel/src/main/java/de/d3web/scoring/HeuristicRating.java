@@ -36,8 +36,6 @@ public class HeuristicRating extends Rating {
 
 	/**
 	 * Creates a neutral (unclear) heuristic rating.
-	 * 
-	 * @param score the score of this rating
 	 */
 	public HeuristicRating() {
 		super(State.UNCLEAR);

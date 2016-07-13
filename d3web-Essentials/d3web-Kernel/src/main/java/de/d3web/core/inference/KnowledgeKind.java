@@ -34,7 +34,7 @@ public class KnowledgeKind<T extends KnowledgeSlice> {
 	/**
 	 * Insert the method's description here. Creation date: (07.09.00 13:40:46)
 	 * 
-	 * @param theKind java.lang.String
+	 * @param kind string describing the kind of knowledge
 	 */
 	public KnowledgeKind(String kind, Class<T> clazz) {
 		this.kind = kind;

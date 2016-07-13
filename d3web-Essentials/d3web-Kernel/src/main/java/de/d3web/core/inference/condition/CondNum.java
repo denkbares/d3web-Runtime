@@ -27,12 +27,11 @@ import de.d3web.core.session.values.NumValue;
 
 /**
  * Abstract class for conditions with numerical questions. This class handles
- * administrative stuff such as setting the question object and a number (
- * {@link AnswerNum}) to compare with. The children classes just insert the eval
- * method for the real comparison.
- * 
+ * administrative stuff such as setting the question object and a number to compare with.
+ * The children classes just insert the eval method for the real comparison.
+ * <p>
  * Creation date: (03.11.00 17:21:47)
- * 
+ *
  * @author Joachim Baumeister
  */
 public abstract class CondNum extends CondQuestion {
@@ -47,9 +46,9 @@ public abstract class CondNum extends CondQuestion {
 	/**
 	 * Creates a new numerical condition having the specified value constraining
 	 * to the specified question.
-	 * 
+	 *
 	 * @param question the specified question
-	 * @param value the specified value
+	 * @param value    the specified value
 	 */
 	protected CondNum(QuestionNum question, Double value) {
 		super(question);
@@ -59,7 +58,7 @@ public abstract class CondNum extends CondQuestion {
 
 	/**
 	 * Returns the numerical value constraining this condition.
-	 * 
+	 *
 	 * @return the numerical value of this condition
 	 */
 	public Double getConditionValue() {

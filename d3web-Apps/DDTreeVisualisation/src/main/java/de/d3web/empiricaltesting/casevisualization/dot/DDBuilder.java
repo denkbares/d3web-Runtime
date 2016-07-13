@@ -58,6 +58,7 @@ import de.d3web.empiricaltesting.casevisualization.ConfigLoader.EdgeShowAnswers;
 import de.d3web.empiricaltesting.casevisualization.Label;
 import de.d3web.empiricaltesting.casevisualization.util.Util;
 
+@SuppressWarnings("deprecation") // not important enough to refactor
 public final class DDBuilder implements CaseVisualizer {
 
 	private static final String CORRECTION_CELL = "<TD BGCOLOR=\"#FFFFFF\" WIDTH=\"50\"></TD>";
@@ -158,7 +159,7 @@ public final class DDBuilder implements CaseVisualizer {
 	}
 
 	private static String checkDotFilePath(String dotFile, String addOn) {
-		String ret = "";
+		String ret;
 
 		if (dotFile.equals("")) {
 			// empty
@@ -685,9 +686,6 @@ public final class DDBuilder implements CaseVisualizer {
 
 	/**
 	 * Returns all elements (RatedSolution) of a List in a Map.
-	 *
-	 * @param solutions List<RatedSolution>
-	 * @return Map<Diagnosis, RatedSolution>
 	 */
 	private Map<Solution, RatedSolution> getSolutionsInHashMap(
 			List<RatedSolution> solutions) {
@@ -761,7 +759,6 @@ public final class DDBuilder implements CaseVisualizer {
 	 * @param color          String containing color information
 	 * @param symbolicStates boolean containing information whether states are
 	 *                       shown as symbolic states or scores
-	 * @return String representing the transformed RatedSolution
 	 * @created 02.05.2011
 	 */
 	public void renderCorrectSolution(StringBuffer result, DDNode node, RatedSolution derived,
@@ -786,7 +783,7 @@ public final class DDBuilder implements CaseVisualizer {
 	 *                         solution
 	 * @param derivedColor     String containing color information for derived
 	 *                         solution
-	 * @param correctionColumn
+	 * @param correctionColumn decide whether correction cell should be shown
 	 * @param symbolicStates   boolean containing information whether states are
 	 *                         shown as symbolic states or scores
 	 * @created 02.05.2011

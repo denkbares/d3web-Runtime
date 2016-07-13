@@ -132,7 +132,7 @@ public class AStarPath implements Path {
 	 * recursively without having to create more than one list
 	 * 
 	 * @created 22.06.2011
-	 * @param pathReference each predecessor adds its qContainer to this list
+	 * @param path each predecessor adds its qContainer to this list
 	 */
 	private void addQContainersToPath(ArrayList<QContainer> path) {
 		if (predecessor != null) {

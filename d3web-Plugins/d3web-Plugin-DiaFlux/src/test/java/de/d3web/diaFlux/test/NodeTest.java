@@ -18,12 +18,6 @@
  */
 package de.d3web.diaFlux.test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +31,9 @@ import de.d3web.diaFlux.flow.Edge;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
 import de.d3web.diaFlux.flow.Node;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * 
@@ -76,11 +73,6 @@ public class NodeTest {
 	private DefaultEdge incomingEdge1, incomingEdge2;
 	private DefaultEdge outgoingEdge1, outgoingEdge2;
 
-	/**
-	 * 
-	 * @created 11.11.2010
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		// create test subject
@@ -177,10 +169,6 @@ public class NodeTest {
 		assertThat(edges.contains(outgoingEdge2), is(false));
 	}
 
-	/**
-	 * Test method for {@link AbstractNode#getFlow()} and
-	 * {@link AbstractNode#setFlow()}.
-	 */
 	// @Test
 	public void testSetAndGetFlow() {
 		// TODO fix this
@@ -196,68 +184,23 @@ public class NodeTest {
 		assertThat(testSubject.getFlow(), is(equalTo(testFlow)));
 	}
 
-	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#getName()}.
-	 */
 	@Test
 	public void testGetName() {
 		assertThat(testSubject.getName(), is(equalTo("nodeName")));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.AbstractNode#createSessionObject(de.d3web.core.session.Session)}
-	 * .
-	 */
-	@Test
-	public void testCreateCaseObject() {
-		// TODO
-	}
-
-	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#getID()}.
-	 */
 	@Test
 	public void testGetID() {
 		assertThat(testSubject.getID(), is(equalTo("nodeID")));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.AbstractNode#takeSnapshot(de.d3web.core.session.Session)}
-	 * .
-	 */
-	@Test
-	public void testTakeSnapshot() {
-		// TODO
-	}
-
-	/**
-	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.AbstractNode#resetNodeData(de.d3web.core.session.Session)}
-	 * .
-	 */
-	@Test
-	public void testResetNodeData() {
-		// TODO
-	}
-
-	/**
-	 * Test method for
-	 * {@link de.d3web.diaFlux.flow.AbstractNode#equals(java.lang.Object)}.
-	 */
 	@Test
 	public void testEqualsObject() {
 		assertThat(testSubject.equals(testSubject), is(true));
 		assertThat(testSubject.equals(null), is(false));
 		assertThat(testSubject.equals(new Object()), is(false));
-
-		// TODO
 	}
 
-	/**
-	 * Test method for {@link de.d3web.diaFlux.flow.AbstractNode#toString()}.
-	 */
 	@Test
 	public void testToString() {
 		assertThat(testSubject.toString(), is(equalTo("NodeMock[nodeID, nodeName]")));

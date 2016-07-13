@@ -24,15 +24,15 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.protocol.TextProtocolEntry;
-import com.denkbares.strings.Strings;
 
 /**
- * Handles writing of a {@link TextFactProtocolEntry}.
+ * Handles writing of a {@link TextProtocolEntry}.
  * 
  * @author volker_belli
  * @created 26.10.2010

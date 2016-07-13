@@ -71,7 +71,7 @@ public interface PropagationListener {
 	 * problem solver.
 	 * 
 	 * @created 14.02.2013
-	 * @param Session the session to perform the propagation on
+	 * @param session the session to perform the propagation on
 	 * @param psMethod the problem solver to be activated
 	 * @param entries the current entries to be propagated by the specified
 	 *        solver at once

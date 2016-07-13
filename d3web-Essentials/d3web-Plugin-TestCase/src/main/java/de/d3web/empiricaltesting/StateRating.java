@@ -106,11 +106,11 @@ public class StateRating implements de.d3web.empiricaltesting.Rating {
 		return rating.toString();
 	}
 
-	@Override
 	/**
 	 * Checks, whether the rating is not UNCLEAR.
 	 * @return true when the rating is not UNCLEAR
 	 */
+	@Override
 	public boolean isProblemSolvingRelevant() {
 		return rating.isRelevant();
 	}

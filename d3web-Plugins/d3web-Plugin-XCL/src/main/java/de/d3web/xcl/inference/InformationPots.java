@@ -99,9 +99,9 @@ public class InformationPots<K> {
 	 * are a Collection of answers for a vector (ArrayList) of questions. The
 	 * collection of answers may contain <code>null</code> that represents 'any
 	 * normal value' of that question.
-	 * 
+	 *
 	 * @created 01.06.2012
-	 * @param solution the solution to add to the pots
+	 * @param weight the weight to be added
 	 * @param answers all answers for all relevant questions
 	 */
 	public void addWeights(float weight, ArrayList<? extends Collection<K>> answers) {
@@ -119,7 +119,7 @@ public class InformationPots<K> {
 	 * 
 	 * @created 30.05.2012
 	 * @param weight the weight to be added
-	 * @param answers all possible answers for each question
+	 * @param allAnswers all possible answers for each question
 	 * @param index the current index to be processed
 	 * @param result the array to be used destructively
 	 */

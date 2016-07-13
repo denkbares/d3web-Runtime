@@ -36,7 +36,7 @@ public class CondUnknown extends CondQuestion {
 
 	/**
 	 * Creates a new CondUnknown instance, where a {@link Question} has to be
-	 * answered by {@link AnswerUnknown}.
+	 * answered by {@link Unknown}.
 	 * 
 	 * @param question the specified question
 	 */

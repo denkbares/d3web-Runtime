@@ -19,14 +19,14 @@
 
 package de.d3web.core.knowledge.terminology.info.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.knowledge.terminology.info.NumericalInterval.IntervalException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit test for {@link NumericalInterval}
@@ -117,46 +117,26 @@ public class NumericalIntervalTest {
 
 	}
 
-	/**
-	 * Test method for {@link NumericalInterval#setLeft(double)} and
-	 * {@link NumericalInterval#getLeft()}.
-	 */
 	@Test
 	public void testGetLeft() {
 		assertThat(parse("[4, 7]").getLeft(), is(4d));
 	}
 
-	/**
-	 * Test method for {@link NumericalInterval#getRight(double)} and
-	 * {@link NumericalInterval#SetRight()}.
-	 */
 	@Test
 	public void testGetRight() {
 		assertThat(parse("[4, 7]").getRight(), is(7d));
 	}
 
-	/**
-	 * Test method for {@link NumericalInterval#setLeftOpen(boolean)} and
-	 * {@link NumericalInterval#isLeftOpen()}.
-	 */
 	@Test
 	public void testGetLeftOpen() {
 		assertThat(parse("[4, 7]").isLeftOpen(), is(false));
 	}
 
-	/**
-	 * Test method for {@link NumericalInterval#setRightOpen(boolean)} and
-	 * {@link NumericalInterval#isRightOpen()}.
-	 */
 	@Test
 	public void testGetRightOpen() {
 		assertThat(parse("[4, 7]").isRightOpen(), is(false));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#equals(java.lang.Object)}
-	 */
 	@Test
 	public void testEqualsObject() {
 		assertThat(parse("[4, 7]").equals(parse("[4, 7]")), is(true));
@@ -166,10 +146,6 @@ public class NumericalIntervalTest {
 		assertThat(parse("[4, 7]").equals(parse("[4, 7.1]")), is(false));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#intersects(de.d3web.core.knowledge.terminology.info.NumericalInterval)}
-	 */
 	@Test
 	public void testIntersects() {
 		assertThat(parse("[4, 7]").intersects(parse("[1, 3]")), is(false));
@@ -181,20 +157,12 @@ public class NumericalIntervalTest {
 		assertThat(parse("[4, 7]").intersects(parse("[4, 7]")), is(true));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#toString()}
-	 */
 	@Test
 	public void testToString() {
 		assertThat(parse("[4, 7]").toString(), is("[4.0 7.0]"));
 		assertThat(new NumericalInterval(6.1, 8.3, true, true).toString(), is("]6.1 8.3["));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.NumericalInterval#compareTo(de.d3web.core.knowledge.terminology.info.NumericalInterval)}
-	 */
 	@Test
 	public void testCompareTo() {
 		assertThat(parse("[4, 7]").compareTo(parse("[5, 8]")), is(-1));

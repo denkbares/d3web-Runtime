@@ -48,7 +48,7 @@ public interface SessionRepository {
 	 * If you try to add null, an {@link IllegalArgumentException} will be
 	 * thrown.
 	 * 
-	 * @param DefaultSessionRecord the SessionRecord which will be added (null
+	 * @param sessionRecord the SessionRecord which will be added (null
 	 *        is not allowed)
 	 * @return true, if the SessionRecord was added to the SessionRepository;
 	 *         false otherwise
@@ -65,7 +65,7 @@ public interface SessionRepository {
 	 * If you try to remove null, then an {@link IllegalArgumentException} will
 	 * be thrown.
 	 * 
-	 * @param DefaultSessionRecord the SessionRecord to be removed (null is not
+	 * @param sessionRecord the SessionRecord to be removed (null is not
 	 *        allowed).
 	 * @return true, if the SessionRecord was removed from the
 	 *         SessionRepository, false otherwise.

@@ -19,13 +19,6 @@
 
 package de.d3web.core.session.values.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -35,10 +28,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for {@link MultipleChoiceValue}
@@ -59,11 +57,6 @@ public class MultipleChoiceValueTest {
 	Choice mcValueTwoChoiceX;
 	Choice mcValueTwoChoiceY;
 
-	/**
-	 * 
-	 * @created 25.08.2010
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		// Initialize mcValueOne and its Choices
@@ -93,12 +86,11 @@ public class MultipleChoiceValueTest {
 	/**
 	 * Summary: Test the getAnswerChoicesID() method which generated the ID by
 	 * accessing the getID() method of all contained {@link ChoiceValue}s and
-	 * "gluing" it together with {@link MultipleChoiceValue#ID_SEPARATOR}.
+	 * "gluing" it together.
 	 * 
 	 * Note: An ordering of the contained IDs is not guaranteed!
 	 * 
-	 * @see MultipleChoiceValue#getAnswerChoicesID()
-	 * 
+	 *
 	 * @created 25.08.2010
 	 */
 	@Test
@@ -186,7 +178,7 @@ public class MultipleChoiceValueTest {
 	 * contained {@link ChoiceValue}s of this {@link MultipleChoiceValue}
 	 * instance as a list of {@link Choice}s.
 	 * 
-	 * @see MultipleChoiceValue#asChoiceList()
+	 * @see MultipleChoiceValue#asChoiceList(QuestionChoice)
 	 * 
 	 * @created 25.08.2010
 	 */

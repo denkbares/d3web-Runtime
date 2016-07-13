@@ -85,7 +85,7 @@ public class QuestionNum extends Question {
 	 * Sets the list of meaningful partitions for the numerical value range of
 	 * this question.
 	 * 
-	 * @param valuePartions meaningful partitions of the value range.
+	 * @param valuePartitions meaningful partitions of the value range.
 	 */
 	public void setValuePartitions(List<NumericalInterval> valuePartitions) {
 		this.valuePartitions = valuePartitions;

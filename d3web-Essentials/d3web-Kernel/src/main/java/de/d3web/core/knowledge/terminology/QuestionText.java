@@ -74,7 +74,7 @@ public class QuestionText extends Question {
 	 * Sets the height of the displayed text field asking the text question. The
 	 * specified value must be greater 0.
 	 * 
-	 * @param newHeight int the specified height
+	 * @param height int the specified height
 	 */
 	public void setHeight(int height) {
 		if (height > 0) {
@@ -86,11 +86,11 @@ public class QuestionText extends Question {
 	 * Sets the width of the displayed text field asking the text question. The
 	 * specified value must be greater 0.
 	 * 
-	 * @param newHeight int the specified width
+	 * @param width int the specified width
 	 */
-	public void setWidth(int newWidth) {
-		if (newWidth > 0) {
-			width = newWidth;
+	public void setWidth(int width) {
+		if (width > 0) {
+			this.width = width;
 		}
 	}
 }

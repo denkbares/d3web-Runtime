@@ -20,16 +20,13 @@
 
 package de.d3web.empiricaltesting.casevisualization.jung;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -37,17 +34,6 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
-
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.empiricaltesting.CaseUtils;
-import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
-import de.d3web.empiricaltesting.RatedTestCase;
-import de.d3web.empiricaltesting.SequentialTestCase;
-import de.d3web.empiricaltesting.TestCase;
-import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
-import de.d3web.empiricaltesting.casevisualization.Label;
-import de.d3web.empiricaltesting.casevisualization.util.Util;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
@@ -56,6 +42,17 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
 
+import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.empiricaltesting.CaseUtils;
+import de.d3web.empiricaltesting.RatedTestCase;
+import de.d3web.empiricaltesting.SequentialTestCase;
+import de.d3web.empiricaltesting.TestCase;
+import de.d3web.empiricaltesting.casevisualization.CaseVisualizer;
+import de.d3web.empiricaltesting.casevisualization.ConfigLoader;
+import de.d3web.empiricaltesting.casevisualization.Label;
+import de.d3web.empiricaltesting.casevisualization.util.Util;
+
 /**
  * This class visualizes the generated graph and offers the ability to save the
  * graph to a PDF file.
@@ -63,6 +60,7 @@ import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
  * @author Sebastian Furth
  * 
  */
+@SuppressWarnings("deprecation") // should still work but not important enough to refactor to the new TestCases...
 public final class JUNGCaseVisualizer implements CaseVisualizer {
 
 	/**
@@ -136,7 +134,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 * at the committed filepath. Before the graph is saved to the file there is
 	 * a check if you want to partition the tree.
 	 * 
-	 * @param testsuite TestSuite which's cases will be visualized by this
+	 * @param testSuite TestSuite which's cases will be visualized by this
 	 *        class.
 	 * @param file String which specifies where the created <b>PDF file</b> will
 	 *        be stored.
@@ -193,7 +191,7 @@ public final class JUNGCaseVisualizer implements CaseVisualizer {
 	 * Streams the graph to an OutputStream (useful for web requests!)
 	 * 
 	 * @param cases List<SequentialTestCase> cases
-	 * @param out OutputStream
+	 * @param outStream OutputStream
 	 */
 	@Override
 	public void writeToStream(java.util.List<SequentialTestCase> cases, java.io.OutputStream outStream) throws IOException {

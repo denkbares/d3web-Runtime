@@ -23,12 +23,13 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
- * answered with {@link AnswerUnknown} AFTER it was indicated, ie a value has
+ * answered with {@link Unknown} AFTER it was indicated, ie a value has
  * been set after the latest indication of the question.
  * 
  * @author Reinhard Hatko
@@ -39,7 +40,7 @@ public class CondRepeatedAnswered extends CondQuestion {
 	/**
 	 * Creates a new CondRepeatedAnswered object for the given {@link Question}.
 	 * 
-	 * @param the given question
+	 * @param question the given question
 	 */
 	public CondRepeatedAnswered(Question question) {
 		super(question);
