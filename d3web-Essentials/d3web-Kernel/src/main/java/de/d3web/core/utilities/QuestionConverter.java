@@ -27,7 +27,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.utils.Triple;
+import com.denkbares.utils.Triple;
 
 /**
  * Util class to convert questions

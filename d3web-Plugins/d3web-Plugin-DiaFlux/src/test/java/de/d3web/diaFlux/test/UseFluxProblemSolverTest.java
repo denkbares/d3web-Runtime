@@ -59,7 +59,7 @@ import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 

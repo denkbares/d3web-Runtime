@@ -37,7 +37,7 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * 

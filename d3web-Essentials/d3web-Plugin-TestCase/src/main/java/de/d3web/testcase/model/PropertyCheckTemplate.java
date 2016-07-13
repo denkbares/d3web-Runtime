@@ -11,7 +11,7 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
-import de.d3web.strings.Identifier;
+import com.denkbares.strings.Identifier;
 
 /**
  * Template for checking whether a certain property has the expected value.

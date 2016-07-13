@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.io.tests.utils.Butil;
 import de.d3web.io.tests.utils.JarExtractor;
 import de.d3web.io.tests.utils.PersistenceHelper;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Saves a jar-File to a KnowledgeBase and reloads it. Original and Reloaded

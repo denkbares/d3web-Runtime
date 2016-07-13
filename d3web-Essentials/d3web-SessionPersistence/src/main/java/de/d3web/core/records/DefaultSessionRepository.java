@@ -30,7 +30,7 @@ import de.d3web.core.records.filter.AndFilter;
 import de.d3web.core.records.filter.CreationDateFilter;
 import de.d3web.core.records.filter.Filter;
 import de.d3web.core.records.filter.OrFilter;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Default Implementation of the SessionRepository Interface (@link

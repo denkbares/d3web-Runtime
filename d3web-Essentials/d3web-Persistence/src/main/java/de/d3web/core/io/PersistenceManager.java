@@ -43,21 +43,21 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 
-import de.d3web.core.io.progress.CombinedProgressListener;
-import de.d3web.core.io.progress.DummyProgressListener;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.CombinedProgressListener;
+import com.denkbares.progress.DummyProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.plugin.Autodetect;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.Plugin;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
-import de.d3web.plugin.PluginManager;
-import de.d3web.utils.Log;
-import de.d3web.utils.Streams;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Streams;
 
 /**
  * This class provides the management features to load and save

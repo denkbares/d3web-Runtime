@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import de.d3web.collections.DefaultMultiMap;
-import de.d3web.collections.MultiMap;
-import de.d3web.collections.MultiMaps;
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
+import com.denkbares.collections.MultiMaps;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -61,8 +61,8 @@ import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.TerminologyHierarchyComparator;
-import de.d3web.strings.Strings;
-import de.d3web.utils.Triple;
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Triple;
 
 /**
  * Provides utility methods for {@link KnowledgeBase}

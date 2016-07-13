@@ -51,7 +51,7 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 import de.d3web.xcl.XCLUtils;
 
 /**

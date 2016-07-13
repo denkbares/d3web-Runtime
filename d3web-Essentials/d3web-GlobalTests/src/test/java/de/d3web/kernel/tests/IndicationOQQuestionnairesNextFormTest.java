@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.manage.RuleFactory;
 import de.d3web.core.session.Value;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * This test is designed to control the indication mechanisms (calculation/

@@ -46,7 +46,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.scoring.Score;
 
 public class RunningACase {

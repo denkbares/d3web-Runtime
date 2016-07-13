@@ -24,8 +24,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
-import de.d3web.core.io.progress.DummyProgressListener;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.DummyProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.records.DefaultSessionRepository;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;

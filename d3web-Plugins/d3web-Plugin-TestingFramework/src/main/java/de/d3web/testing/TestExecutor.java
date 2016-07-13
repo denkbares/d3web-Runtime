@@ -16,11 +16,11 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import de.d3web.collections.DefaultMultiMap;
-import de.d3web.collections.MultiMap;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.testing.Message.Type;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /*
  * Copyright (C) 2012 denkbares GmbH

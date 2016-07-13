@@ -59,7 +59,7 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 public final class ValueUtils {
 

@@ -28,7 +28,7 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.values.DateValue;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Handels DateValues

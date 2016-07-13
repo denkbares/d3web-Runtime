@@ -35,13 +35,13 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.plugin.Plugin;
+import com.denkbares.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
-import de.d3web.plugin.PluginManager;
+import com.denkbares.plugin.PluginManager;
 
 /**
  * A KnowledgeReader/Writer for the configuration of the extensions

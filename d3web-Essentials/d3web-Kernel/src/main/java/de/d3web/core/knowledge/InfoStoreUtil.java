@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.utils.Triple;
+import com.denkbares.utils.Triple;
 
 /**
  * 

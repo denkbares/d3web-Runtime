@@ -45,7 +45,7 @@ import de.d3web.costbenefit.inference.astar.AStarPath;
 import de.d3web.costbenefit.inference.astar.DividedTransitionHeuristic;
 import de.d3web.costbenefit.inference.astar.State;
 import de.d3web.costbenefit.model.SearchModel;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests the behavior of the heuristics in combination with final questions

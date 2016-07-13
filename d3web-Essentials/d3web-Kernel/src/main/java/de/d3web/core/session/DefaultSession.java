@@ -43,12 +43,12 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.plugin.Autodetect;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.Plugin;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
-import de.d3web.plugin.PluginManager;
-import de.d3web.utils.Log;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.utils.Log;
 
 /**
  * The {@link DefaultSession} is the default implementation of {@link Session}.

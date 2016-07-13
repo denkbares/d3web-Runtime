@@ -38,7 +38,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
 import de.d3web.core.session.protocol.ProtocolEntry;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests {@link ActualQContainerEntryHandler}

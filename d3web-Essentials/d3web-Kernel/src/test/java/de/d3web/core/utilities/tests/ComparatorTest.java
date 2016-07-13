@@ -35,7 +35,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.utilities.NamedObjectComparator;
 import de.d3web.core.utilities.ResourceComparator;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests comparators delivered with the kernel

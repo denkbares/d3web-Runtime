@@ -10,7 +10,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
-import de.d3web.utils.EqualsUtils;
+import com.denkbares.utils.EqualsUtils;
 
 /**
  * Checks whether a certain property has the expected value.

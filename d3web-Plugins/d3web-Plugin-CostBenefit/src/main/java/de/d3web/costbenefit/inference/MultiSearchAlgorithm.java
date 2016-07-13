@@ -29,7 +29,7 @@ import java.util.concurrent.Future;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.astar.IterableExecutor;
 import de.d3web.costbenefit.model.SearchModel;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * A new {@link SearchAlgorithm} that delegates the search to a sequence of

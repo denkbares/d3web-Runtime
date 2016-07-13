@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * @author Jochen

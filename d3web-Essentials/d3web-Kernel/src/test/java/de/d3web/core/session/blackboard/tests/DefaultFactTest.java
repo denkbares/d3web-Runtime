@@ -30,7 +30,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;

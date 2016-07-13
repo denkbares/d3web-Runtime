@@ -32,13 +32,13 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 import de.d3web.testcase.model.CheckTemplate;
 import de.d3web.testcase.model.DefaultTestCase;
 import de.d3web.testcase.model.FindingTemplate;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testcase.persistence.TestCasePersistence;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Reads legacy xml persistence for {@link SequentialTestCase}s, but creates {@link DefaultTestCase}s. Writing is not

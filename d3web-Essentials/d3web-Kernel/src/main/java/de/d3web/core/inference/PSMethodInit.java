@@ -51,7 +51,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values. Especially

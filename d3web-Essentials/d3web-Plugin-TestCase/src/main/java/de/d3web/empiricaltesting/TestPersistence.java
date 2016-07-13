@@ -61,9 +61,9 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 import de.d3web.testcase.persistence.TestCasePersistenceManager;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Legacy persistence class for legacy {@link SequentialTestCase}s.

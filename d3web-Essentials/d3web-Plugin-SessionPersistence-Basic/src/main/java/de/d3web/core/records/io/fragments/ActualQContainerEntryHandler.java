@@ -29,7 +29,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Handels {@link ActualQContainerEntryHandler}

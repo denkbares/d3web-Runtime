@@ -30,8 +30,8 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.plugin.Autodetect;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.PluginManager;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
 
 /**
  * Default FragementHandler for PSConfigs Writes/Reades all PSConfigs, must have

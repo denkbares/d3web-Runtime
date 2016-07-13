@@ -39,7 +39,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.empiricaltesting.Finding;
 import de.d3web.empiricaltesting.RegexFinding;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 import static org.junit.Assert.*;
 

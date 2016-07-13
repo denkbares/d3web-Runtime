@@ -32,7 +32,7 @@ import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Extends the path of the sub {@link SearchAlgorithm} by adding specially

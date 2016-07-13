@@ -56,7 +56,7 @@ import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests the combination of Rules and the CostBenefit

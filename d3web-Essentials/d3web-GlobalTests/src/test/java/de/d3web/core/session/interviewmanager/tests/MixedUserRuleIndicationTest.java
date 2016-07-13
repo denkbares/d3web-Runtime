@@ -39,7 +39,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Purpose of this test:

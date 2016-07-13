@@ -26,7 +26,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
 
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 public final class ConfigLoader {
 

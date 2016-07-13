@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.testing.ArgsCheckResult;
 import de.d3web.testing.TestObjectProviderManager;
 

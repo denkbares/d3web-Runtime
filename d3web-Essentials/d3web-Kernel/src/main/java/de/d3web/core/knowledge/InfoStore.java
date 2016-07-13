@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.utils.Triple;
+import com.denkbares.utils.Triple;
 
 public interface InfoStore {
 

@@ -18,6 +18,9 @@
  */
 package de.d3web.plugin;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.Plugin;
+import com.denkbares.plugin.PluginManager;
 import de.d3web.core.extensions.KernelExtensionPoints;
 
 /**

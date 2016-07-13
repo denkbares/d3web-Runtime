@@ -41,7 +41,7 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 

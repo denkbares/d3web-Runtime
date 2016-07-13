@@ -32,11 +32,11 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.test.D3webTestUtils;
 import de.d3web.testing.Message;
 import de.d3web.testing.MessageObject;
-import de.d3web.utils.Pair;
+import com.denkbares.utils.Pair;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

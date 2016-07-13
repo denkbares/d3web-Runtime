@@ -37,7 +37,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 public final class Facts {
 

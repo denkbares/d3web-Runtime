@@ -26,7 +26,7 @@ import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 public class DOMBuilder {
 

@@ -60,8 +60,8 @@ import org.xml.sax.SAXException;
 
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
-import de.d3web.core.io.progress.ProgressInputStream;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.ProgressInputStream;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -79,9 +79,9 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.scoring.Score;
-import de.d3web.strings.Strings;
-import de.d3web.utils.Log;
-import de.d3web.utils.Triple;
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Triple;
 
 /**
  * Provides useful static functions for xml persistence handlers
@@ -97,7 +97,7 @@ public final class XMLUtil {
 	public static final String QA_SET = "QASet";
 
 	/**
-	 * @deprecated Use {@link de.d3web.strings.Strings#writeDate(Date)} instead
+	 * @deprecated Use {@link Strings#writeDate(Date)} instead
 	 */
 	@Deprecated
 	public static String writeDate(Date date) {
@@ -105,7 +105,7 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * @deprecated Use {@link de.d3web.strings.Strings#readDate(String, SimpleDateFormat)} instead
+	 * @deprecated Use {@link Strings#readDate(String, SimpleDateFormat)} instead
 	 */
 	@Deprecated
 	public static Date readDate(String dateString, SimpleDateFormat compatibilityFormat) throws ParseException {
@@ -113,7 +113,7 @@ public final class XMLUtil {
 	}
 
 	/**
-	 * @deprecated Use {@link de.d3web.strings.Strings#readDate(String)} instead
+	 * @deprecated Use {@link Strings#readDate(String)} instead
 	 * <p>
 	 * TODO: Refactor {@link Strings#DATE_FORMAT_COMPATIBILITY} when removing this method.
 	 */

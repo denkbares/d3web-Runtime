@@ -23,6 +23,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
@@ -36,7 +37,6 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.plugin.test.InitPluginManager;
 
 import static junit.framework.Assert.assertEquals;
 

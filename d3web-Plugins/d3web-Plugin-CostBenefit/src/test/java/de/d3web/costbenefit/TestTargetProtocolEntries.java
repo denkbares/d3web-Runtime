@@ -55,7 +55,7 @@ import de.d3web.costbenefit.inference.WatchSet;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 
 /**

@@ -37,8 +37,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.utils.EqualsUtils;
-import de.d3web.utils.HashCodeUtils;
+import com.denkbares.utils.EqualsUtils;
+import com.denkbares.utils.HashCodeUtils;
 
 /**
  * Implementation of {@link ProtocolEntry} to store facts that are provided by a

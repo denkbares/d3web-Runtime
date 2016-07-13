@@ -41,7 +41,7 @@ import org.w3c.dom.Node;
 
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.condition.CondNumLess;
-import de.d3web.core.io.progress.DummyProgressListener;
+import com.denkbares.progress.DummyProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
@@ -84,7 +84,7 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.file.records.io.SingleXMLSessionRepository;
 import de.d3web.folder.records.io.MultipleXMLSessionRepository;
 import de.d3web.indication.inference.PSMethodStrategic;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
 

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.collections.ConcatenateIterable;
+import com.denkbares.collections.ConcatenateIterable;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;

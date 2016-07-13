@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import de.d3web.utils.HashCodeUtils;
+import com.denkbares.utils.HashCodeUtils;
 
 /**
  * This class implements a reference to a choice within a knowledge base

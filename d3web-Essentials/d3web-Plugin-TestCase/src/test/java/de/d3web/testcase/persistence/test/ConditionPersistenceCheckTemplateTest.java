@@ -31,7 +31,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.TransformationException;
 import de.d3web.testcase.persistence.ConditionPersistenceCheckHandler;

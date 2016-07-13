@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.values.NumValue;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * This test class simulates the functionality of the {@link Blackboard} without

@@ -37,7 +37,7 @@ import de.d3web.interview.DefaultInterview;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * This PSMethod is used to notify the {@link Interview} of new facts added to the {@link Session}, i.e., new

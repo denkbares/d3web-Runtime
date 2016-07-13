@@ -23,7 +23,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.session.Session;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Implements an "and"-condition, where all sub-conditions have to be true. The

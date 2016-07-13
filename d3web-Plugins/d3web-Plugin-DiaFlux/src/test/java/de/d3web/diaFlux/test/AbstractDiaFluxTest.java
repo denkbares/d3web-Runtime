@@ -47,9 +47,9 @@ import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
-import de.d3web.plugin.test.InitPluginManager;
-import de.d3web.strings.Strings;
-import de.d3web.utils.Log;
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Log;
 
 /**
  * @author Reinhard Hatko

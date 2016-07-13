@@ -18,8 +18,8 @@
  */
 package de.d3web.plugin.io;
 
-import de.d3web.plugin.Plugin;
-import de.d3web.plugin.Resource;
+import com.denkbares.plugin.Plugin;
+import com.denkbares.plugin.Resource;
 
 /**
  * Objects of this class represent plugins, which are not available. This class

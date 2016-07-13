@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import de.d3web.collections.ConcatenateIterable;
+import com.denkbares.collections.ConcatenateIterable;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)

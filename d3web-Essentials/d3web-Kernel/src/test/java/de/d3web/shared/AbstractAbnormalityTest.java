@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Unit tests for {@link AbnormalityUtils}

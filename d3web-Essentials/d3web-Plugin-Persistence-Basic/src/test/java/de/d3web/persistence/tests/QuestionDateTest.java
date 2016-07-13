@@ -38,7 +38,7 @@ import de.d3web.core.io.fragments.QuestionHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.persistence.tests.utils.XMLTag;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 import static org.junit.Assert.assertEquals;
 

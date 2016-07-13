@@ -28,9 +28,9 @@ import org.w3c.dom.Node;
 
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.PluginManager;
-import de.d3web.strings.Strings;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.strings.Strings;
 
 /**
  * This is a utility class to write and read fragments to/from xml documents

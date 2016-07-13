@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
 import de.d3web.empiricaltesting.TestPersistence;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

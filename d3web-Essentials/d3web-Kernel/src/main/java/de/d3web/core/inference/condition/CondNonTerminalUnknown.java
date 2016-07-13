@@ -3,7 +3,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.session.Session;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * This Condition evaluates to true, if any of the nested {@link Condition}s throws the {@link UnknownAnswerException}.

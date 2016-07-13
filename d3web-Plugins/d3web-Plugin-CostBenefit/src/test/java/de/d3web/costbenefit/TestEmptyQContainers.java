@@ -51,7 +51,7 @@ import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests firing and proceeding of QContainers containing a ok Question and not

@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 import de.d3web.testcase.model.CheckTemplate;
 import de.d3web.testcase.model.DefaultTestCase;
 import de.d3web.testcase.model.DescribedTestCase;

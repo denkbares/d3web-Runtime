@@ -23,7 +23,7 @@ package de.d3web.core.inference.condition;
 import java.util.List;
 
 import de.d3web.core.session.Session;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Implements an "OR"-condition, where at least one sub-condition has to be

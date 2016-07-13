@@ -29,7 +29,7 @@ import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.Node;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * 

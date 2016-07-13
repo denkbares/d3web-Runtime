@@ -38,7 +38,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * The default implementation of {@link Interview}: This class stores an

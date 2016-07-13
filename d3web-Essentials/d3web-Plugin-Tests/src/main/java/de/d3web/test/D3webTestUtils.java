@@ -29,7 +29,7 @@ import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
 import de.d3web.testing.MessageObject;
 import de.d3web.testing.TestingUtils;
-import de.d3web.utils.Pair;
+import com.denkbares.utils.Pair;
 
 /**
  * Some utility methods.

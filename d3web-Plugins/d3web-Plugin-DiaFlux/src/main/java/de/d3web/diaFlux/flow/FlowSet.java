@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.collections.DefaultMultiMap;
+import com.denkbares.collections.DefaultMultiMap;
 import de.d3web.core.inference.KnowledgeSlice;
 
 /**
