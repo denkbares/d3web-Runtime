@@ -28,7 +28,7 @@ import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * This singleton class serves as factory for CaseTree graphs. It converts

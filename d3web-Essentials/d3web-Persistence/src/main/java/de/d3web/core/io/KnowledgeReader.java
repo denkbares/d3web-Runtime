@@ -21,7 +21,7 @@ package de.d3web.core.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 
 /**

@@ -21,7 +21,7 @@ package de.d3web.testing;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Represents a test parameter.

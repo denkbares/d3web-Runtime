@@ -30,7 +30,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Handler for properties

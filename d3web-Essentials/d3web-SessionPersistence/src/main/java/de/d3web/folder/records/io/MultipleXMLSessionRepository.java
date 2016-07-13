@@ -31,8 +31,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.d3web.core.io.progress.DummyProgressListener;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.DummyProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating.State;
@@ -42,7 +42,7 @@ import de.d3web.core.records.FactRecord;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.io.SessionPersistenceManager;
 import de.d3web.core.session.protocol.Protocol;
-import de.d3web.utils.Streams;
+import com.denkbares.utils.Streams;
 
 /**
  * This implementation of the SessionRepositoryPersistenceHandler interface can

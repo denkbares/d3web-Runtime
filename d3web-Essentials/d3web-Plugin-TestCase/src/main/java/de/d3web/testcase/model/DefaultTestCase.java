@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
-import de.d3web.collections.DefaultMultiMap;
-import de.d3web.collections.MultiMap;
-import de.d3web.collections.MultiMaps;
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
+import com.denkbares.collections.MultiMaps;
 
 /**
  * Default implementation of the TestCase interface.

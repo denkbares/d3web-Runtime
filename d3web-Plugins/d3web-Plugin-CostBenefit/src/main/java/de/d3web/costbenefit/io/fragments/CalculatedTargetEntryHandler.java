@@ -34,7 +34,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry.Target;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Saves and loads {@link CalculatedTargetEntry}s

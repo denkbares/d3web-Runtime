@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Factory for Session objects.

@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 public class DefaultPropagationManager implements PropagationManager {
 

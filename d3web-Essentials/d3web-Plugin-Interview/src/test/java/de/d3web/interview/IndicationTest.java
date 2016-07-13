@@ -31,7 +31,7 @@ import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 import static de.d3web.core.knowledge.Indication.State.*;
 import static de.d3web.core.manage.RuleFactory.setRuleParams;

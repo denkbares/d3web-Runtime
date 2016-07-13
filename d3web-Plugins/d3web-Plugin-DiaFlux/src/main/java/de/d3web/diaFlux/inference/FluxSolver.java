@@ -52,7 +52,7 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.NodeList;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Problem solver to process the flowcharts of a knowledge base.

@@ -31,8 +31,8 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.utils.EqualsUtils;
-import de.d3web.utils.HashCodeUtils;
+import com.denkbares.utils.EqualsUtils;
+import com.denkbares.utils.HashCodeUtils;
 
 /**
  * This abstract class is representing the Action of an indication. Specialize

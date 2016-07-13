@@ -51,7 +51,7 @@ import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * This test is designed to control the indication mechanisms (calculation/

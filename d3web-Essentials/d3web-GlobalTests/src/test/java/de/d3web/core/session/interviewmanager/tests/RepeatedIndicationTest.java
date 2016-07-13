@@ -19,7 +19,6 @@
 package de.d3web.core.session.interviewmanager.tests;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +46,7 @@ import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.indication.ActionRepeatedIndication;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 import static junit.framework.Assert.*;
 

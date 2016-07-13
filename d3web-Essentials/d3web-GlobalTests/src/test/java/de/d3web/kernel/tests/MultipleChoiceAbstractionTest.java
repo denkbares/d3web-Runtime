@@ -48,7 +48,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * This test is designed to control the setting of abstract multiplechoice

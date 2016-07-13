@@ -49,7 +49,7 @@ import de.d3web.costbenefit.inference.ExpertMode;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * 

@@ -34,14 +34,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.FragmentManager;
-import de.d3web.core.io.progress.DummyProgressListener;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.DummyProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.DefaultSessionRecord;
 import de.d3web.core.records.SessionRecord;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.PluginManager;
-import de.d3web.strings.Strings;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.strings.Strings;
 
 /**
  * PersistenceManager to write/read SessionRecords to/from an xml file

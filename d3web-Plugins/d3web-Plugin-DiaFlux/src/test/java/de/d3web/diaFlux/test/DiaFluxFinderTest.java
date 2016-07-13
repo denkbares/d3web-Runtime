@@ -34,7 +34,7 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.diaFlux.flow.DiaFluxFinder;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 
 /**

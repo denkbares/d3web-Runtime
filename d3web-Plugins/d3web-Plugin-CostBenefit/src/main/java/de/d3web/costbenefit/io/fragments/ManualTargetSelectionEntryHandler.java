@@ -31,7 +31,7 @@ import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Saves and loads ManualTargetSelectionEntrys

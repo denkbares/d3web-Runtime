@@ -27,7 +27,7 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.plugin.io.fragments.DefaultPSConfigHandler;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 import static de.d3web.diaFlux.inference.FluxSolver.SuggestMode;
 

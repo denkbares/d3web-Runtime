@@ -18,7 +18,7 @@ import de.d3web.core.session.Session;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Checks whether the given QASets are currently active or not.

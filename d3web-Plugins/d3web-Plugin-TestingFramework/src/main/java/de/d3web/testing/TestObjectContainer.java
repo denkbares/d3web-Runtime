@@ -18,7 +18,7 @@
  */
 package de.d3web.testing;
 
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Provides the actual TestObject and its name. We need this container, since

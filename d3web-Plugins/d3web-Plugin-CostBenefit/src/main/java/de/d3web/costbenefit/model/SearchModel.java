@@ -31,7 +31,7 @@ import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search

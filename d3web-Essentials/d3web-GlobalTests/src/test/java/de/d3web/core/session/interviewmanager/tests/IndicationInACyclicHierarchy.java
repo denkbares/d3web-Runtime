@@ -20,7 +20,6 @@ package de.d3web.core.session.interviewmanager.tests;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Before;
@@ -43,7 +42,7 @@ import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Checks, that the indication of follow-up questions is correctly performed

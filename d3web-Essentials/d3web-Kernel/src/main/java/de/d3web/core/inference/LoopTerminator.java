@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import de.d3web.collections.CountingSet;
+import com.denkbares.collections.CountingSet;
 import de.d3web.core.inference.LoopTerminator.LoopStatus;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -31,7 +31,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * This {@link PropagationListener} observes the reasoning process for endless

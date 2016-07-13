@@ -31,7 +31,7 @@ import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.SessionRecord;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * Handles writing of a {@link FactProtocolEntry}. It delegated the writing of

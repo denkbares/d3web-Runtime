@@ -57,8 +57,8 @@ import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import de.d3web.utils.Log;
-import de.d3web.utils.Pair;
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Pair;
 
 /**
  * Uses a "slice model" to calculate a more precise distance
@@ -131,9 +131,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 						BasicProperties.DEFAULT_ABNORMALITIY);
 				Value value = blackboard.getValue(q);
 				if (UndefinedValue.isNotUndefinedValue(value)) {
-					boolean abnormal = (abnormality == null)
-							? true
-							: abnormality.getValue(value) == Abnormality.A5;
+					boolean abnormal = (abnormality == null) || abnormality.getValue(value) == Abnormality.A5;
 					if (abnormal) {
 						result.add(q);
 					}

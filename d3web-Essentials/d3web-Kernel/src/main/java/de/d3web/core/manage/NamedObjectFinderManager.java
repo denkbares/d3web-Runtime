@@ -24,8 +24,8 @@ import java.util.Collections;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.PluginManager;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
 
 /**
  * Manager class that handles Finders for NamedObjects

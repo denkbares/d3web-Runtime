@@ -41,7 +41,7 @@ import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * @author Reinhard Hatko

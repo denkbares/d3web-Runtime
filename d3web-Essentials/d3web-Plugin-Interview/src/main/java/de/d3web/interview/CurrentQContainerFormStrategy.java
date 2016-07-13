@@ -28,7 +28,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * This class always creates a new {@link Form} that contains the

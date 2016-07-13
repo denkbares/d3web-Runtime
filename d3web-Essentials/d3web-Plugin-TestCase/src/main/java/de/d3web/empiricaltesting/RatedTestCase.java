@@ -24,8 +24,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import de.d3web.collections.DefaultMultiMap;
-import de.d3web.collections.MultiMaps;
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMaps;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.model.Finding;
 

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.strings.Strings;
+import com.denkbares.strings.Strings;
 
 /**
  * @author Markus Friedrich (denkbares GmbH)

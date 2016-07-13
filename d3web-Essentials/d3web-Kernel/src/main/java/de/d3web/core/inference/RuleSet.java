@@ -22,7 +22,7 @@ package de.d3web.core.inference;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.d3web.collections.IdentitySet;
+import com.denkbares.collections.IdentitySet;
 
 /**
  * Encapsulates rules of one PSMethod and one KnowledgeKind to one KnowlegeSlice

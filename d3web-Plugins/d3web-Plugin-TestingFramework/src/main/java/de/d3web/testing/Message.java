@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import de.d3web.collections.DefaultMultiMap;
-import de.d3web.collections.MultiMap;
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
 
 /**
  * A message contains a type which is one of SUCCESS, FAILURE, or ERROR and an (optional) message

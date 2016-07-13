@@ -31,8 +31,8 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.utils.Log;
-import de.d3web.utils.Triple;
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Triple;
 
 /**
  * Handler for DCMarkups DCMarkups are no longer used, this handler is used to

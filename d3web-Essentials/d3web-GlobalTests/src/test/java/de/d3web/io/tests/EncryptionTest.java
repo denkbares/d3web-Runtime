@@ -25,8 +25,8 @@ import org.junit.Test;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
-import de.d3web.plugin.test.InitPluginManager;
-import de.d3web.utils.Streams;
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.utils.Streams;
 
 public class EncryptionTest {
 

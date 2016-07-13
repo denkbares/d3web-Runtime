@@ -21,7 +21,7 @@ package de.d3web.core.utilities.tests;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.d3web.collections.IdentitySet;
+import com.denkbares.collections.IdentitySet;
 
 /**
  * Tests the special features of the IdentityTest

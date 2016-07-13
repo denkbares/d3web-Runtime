@@ -37,7 +37,7 @@ import de.d3web.core.records.SessionRecord;
 import de.d3web.core.records.SessionRepository;
 import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.SessionFactory;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * 

@@ -32,7 +32,7 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.stc.DerivedQuestionCheck;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * A finding is a tuple of a {@link Question} and an {@link QuestionValue}.

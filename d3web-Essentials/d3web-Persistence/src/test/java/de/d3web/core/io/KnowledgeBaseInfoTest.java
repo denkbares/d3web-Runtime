@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.d3web.core.io.PersistenceManager.KnowledgeBaseInfo;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * A simple test for KnowledgeBaseInfo

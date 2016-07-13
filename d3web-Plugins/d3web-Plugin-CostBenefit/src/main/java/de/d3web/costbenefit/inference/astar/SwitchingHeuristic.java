@@ -21,7 +21,7 @@ package de.d3web.costbenefit.inference.astar;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Switches from using {@link DividedTransitionHeuristic} and

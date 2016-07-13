@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.w3c.dom.Element;
 
 import de.d3web.core.io.Persistence;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.records.SessionRecord;
 
 /**

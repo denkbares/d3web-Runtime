@@ -41,7 +41,7 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.PropertiesHandler;
-import de.d3web.core.io.progress.ProgressListener;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -56,7 +56,7 @@ import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.inference.PSMethodHeuristic;
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * PersistenceHandler for reading and writing basic knowledge Creation date:

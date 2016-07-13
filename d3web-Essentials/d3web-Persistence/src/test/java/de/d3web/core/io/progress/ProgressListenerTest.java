@@ -28,6 +28,10 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
+import com.denkbares.progress.ConsoleProgressListener;
+import com.denkbares.progress.MultiProgressListener;
+import com.denkbares.progress.ProgressListener;
+
 /**
  * Tests progresslisteners not covered by other tests
  * 

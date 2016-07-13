@@ -52,7 +52,7 @@ import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 public class CurrentQContainerFormTest {
 

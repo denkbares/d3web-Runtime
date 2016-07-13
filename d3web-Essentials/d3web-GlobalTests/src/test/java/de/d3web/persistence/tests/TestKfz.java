@@ -38,7 +38,7 @@ import org.junit.Test;
 
 import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.PersistenceManager;
-import de.d3web.core.io.progress.DummyProgressListener;
+import com.denkbares.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -59,7 +59,7 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import de.d3web.plugin.test.InitPluginManager;
+import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Test class for the Loading and executing a kfz-kb from an XML file Creation

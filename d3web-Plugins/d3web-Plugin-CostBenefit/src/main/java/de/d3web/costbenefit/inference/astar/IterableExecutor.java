@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import de.d3web.utils.Log;
+import com.denkbares.utils.Log;
 
 /**
  * Class to decorate an executor service and allow to iterate over all futures

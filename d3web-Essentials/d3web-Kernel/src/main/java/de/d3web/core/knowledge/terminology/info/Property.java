@@ -29,10 +29,10 @@ import java.util.NoSuchElementException;
 
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
-import de.d3web.plugin.Extension;
-import de.d3web.plugin.PluginManager;
-import de.d3web.strings.Strings;
-import de.d3web.utils.Log;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Log;
 
 /**
  * Represents a Property. Properties can only be created by extending the

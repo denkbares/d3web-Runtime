@@ -28,7 +28,7 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.terminology.info.Property;
-import de.d3web.strings.Identifier;
+import com.denkbares.strings.Identifier;
 import de.d3web.testcase.model.PropertyCheckTemplate;
 import de.d3web.testcase.model.TestCase;
 
