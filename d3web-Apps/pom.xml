@@ -19,7 +19,7 @@
 
 	<profiles>
 		<profile>
-			<id>distribution</id>
+			<id>dist</id>
 			<modules>
 				<module>d3web-DistributionBuilder</module>
 			</modules>
