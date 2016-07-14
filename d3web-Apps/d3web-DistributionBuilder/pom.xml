@@ -33,6 +33,7 @@
 						</goals>
 						<configuration>
 							<includeScope>compile</includeScope>
+							<includeGroupIds>de.uniwue.d3web,com.denkbares</includeGroupIds>
 							<classifier>sources</classifier>
 							<outputDirectory>${project.build.directory}/sources</outputDirectory>
 						</configuration>
