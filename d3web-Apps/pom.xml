@@ -19,7 +19,7 @@
 
 	<profiles>
 		<profile>
-			<id>d3web-LibBuilder</id>
+			<id>distribution</id>
 			<modules>
 				<module>d3web-LibBuilder</module>
 			</modules>
