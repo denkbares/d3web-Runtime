@@ -51,10 +51,16 @@
 						</goals>
 						<configuration>
 							<failOnError>false</failOnError>
+							<outputDirectory>target/docs</outputDirectory>
 							<includeDependencySources>true</includeDependencySources>
+							<includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+							<additionalparam>-Xdoclint:none</additionalparam>
+							<dependencySourceIncludes>
+								<dependencySourceInclude>de.uniwue.d3web:*</dependencySourceInclude>
+								<dependencySourceInclude>com.denkbares:*</dependencySourceInclude>
+							</dependencySourceIncludes>
 							<dependencySourceExcludes>
-								<dependencySourceExclude>org.intellij:*</dependencySourceExclude>
-								<dependencySourceExclude>org.jetbrains:*</dependencySourceExclude>
+								<dependencySourceExclude>de.uniwue.d3web:d3web-DistributionBuilder</dependencySourceExclude>
 							</dependencySourceExcludes>
 						</configuration>
 					</execution>
