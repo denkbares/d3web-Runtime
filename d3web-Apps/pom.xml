@@ -21,7 +21,7 @@
 		<profile>
 			<id>distribution</id>
 			<modules>
-				<module>d3web-LibBuilder</module>
+				<module>d3web-DistributionBuilder</module>
 			</modules>
 		</profile>
 	</profiles>
