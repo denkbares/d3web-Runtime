@@ -60,7 +60,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * available for that solver.
 	 * 
 	 * @created 30.04.2011
-	 * @param object the object to look for the merged fact
+	 * @param termObject the object to look for the merged fact
 	 */
 	Fact getMergedFact(TerminologyObject termObject, PSMethod psMethod);
 
@@ -73,7 +73,7 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * merging facts is not needed at all.
 	 * 
 	 * @created 30.04.2011
-	 * @param object the object to look for the merged fact
+	 * @param termObject the object to look for the merged fact
 	 */
 	Fact getFact(TerminologyObject termObject, PSMethod psMethod, Object source);
 
@@ -131,7 +131,6 @@ public interface FactStorage extends Copyable<FactStorage> {
 	 * If no such fact exists in the storage, this method has no effect.
 	 * 
 	 * @param termObject the terminology object to remove the facts from
-	 * @param source the fact source to be removed
 	 */
 	void remove(TerminologyObject termObject);
 

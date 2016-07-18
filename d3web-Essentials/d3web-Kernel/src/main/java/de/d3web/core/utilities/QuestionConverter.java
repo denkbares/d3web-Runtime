@@ -18,6 +18,7 @@ package de.d3web.core.utilities;
 
 import java.util.Locale;
 
+import com.denkbares.utils.Triple;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -27,7 +28,6 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.info.Property;
-import com.denkbares.utils.Triple;
 
 /**
  * Util class to convert questions
@@ -78,13 +78,13 @@ public class QuestionConverter {
 	 * 
 	 * @created 15.05.2013
 	 * @param originalQuestion as source of the Choices
-	 * @param copie target question where the choices are added
+	 * @param copyTarget target question where the choices are added
 	 */
-	public static void copyChoices(QuestionChoice originalQuestion, QuestionChoice copy) {
+	public static void copyChoices(QuestionChoice originalQuestion, QuestionChoice copyTarget) {
 		for (Choice choice : originalQuestion.getAllAlternatives()) {
 			Choice copiedChoice = new Choice(choice.getName());
 			copyInfoStore(choice, copiedChoice);
-			copy.addAlternative(copiedChoice);
+			copyTarget.addAlternative(copiedChoice);
 		}
 	}
 

@@ -22,6 +22,8 @@ package de.d3web.core.session.protocol;
 import java.text.DateFormat;
 import java.util.Date;
 
+import com.denkbares.utils.EqualsUtils;
+import com.denkbares.utils.HashCodeUtils;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
@@ -37,8 +39,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
-import com.denkbares.utils.EqualsUtils;
-import com.denkbares.utils.HashCodeUtils;
 
 /**
  * Implementation of {@link ProtocolEntry} to store facts that are provided by a
@@ -53,7 +53,7 @@ import com.denkbares.utils.HashCodeUtils;
  * name of the {@link PSMethod}. The value is stored as a raw/native java value
  * as follows:
  * <ul>
- * <li> {@link InterviewObject}: {@link Indication#State} representing the
+ * <li> {@link InterviewObject}: {@link Indication.State} representing the
  * indication level of that interview object, if this facts entry is an
  * interview fact and not a value fact. Otherwise the value is one of the
  * following ones.
@@ -74,7 +74,7 @@ import com.denkbares.utils.HashCodeUtils;
  * unknown text of the question
  * <li> {@link QuestionDate}: {@link Date} representing the entered date of the
  * question
- * <li> {@link Solution}: {@link Rating#State} representing a value of the
+ * <li> {@link Solution}: {@link Rating.State} representing a value of the
  * solution
  * </ul>
  * 
@@ -126,7 +126,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * @param terminologyObjectName the name of the valued object
 	 * @param solvingMethodClassName the problem solver class name (fully
 	 *        qualified)
-	 * @param rawValue the value of the object
+	 * @param value the value of the object
 	 * @throws NullPointerException if any of the specified arguments are null
 	 */
 	public FactProtocolEntry(Date date, String terminologyObjectName, String solvingMethodClassName, Value value) {

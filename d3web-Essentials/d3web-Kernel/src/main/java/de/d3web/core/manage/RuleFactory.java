@@ -58,323 +58,236 @@ public final class RuleFactory {
 	private RuleFactory() { // enforce noninstantiability
 	}
 
-	/**
-	 * Creates a contra-indication-rule with the specified parameters.
-	 */
 	public static Rule createContraIndicationRule(
-			List<QASet> theQASets,
-			Condition theCondition) {
+			List<QASet> qaSets,
+			Condition condition) {
 
-		return createContraIndicationRule(theQASets, theCondition, null);
+		return createContraIndicationRule(qaSets, condition, null);
 	}
 
-	/**
-	 * Creates a contra-indication-rule with the specified parameters.
-	 */
 	public static Rule createContraIndicationRule(
-			List<QASet> theQASets,
-			Condition theCondition,
-			Condition theRuleException) {
+			List<QASet> qaSets,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionContraIndication theAction = new ActionContraIndication();
-		theAction.setQASets(theQASets);
+		theAction.setQASets(qaSets);
 
-		setRuleParams(rule, theAction, theCondition, theRuleException);
+		setRuleParams(rule, theAction, condition, exceptionCondition);
 
 		return rule;
 	}
 
 	public static void createContraIndicationRule(Question question,
-			Condition theCondition) {
+			Condition condition) {
 		createContraIndicationRule(
 				Arrays.asList(new QASet[] { question }),
-				theCondition);
+				condition);
 	}
 
-	/**
-	 * Creates a heuristic-rule with the specified parameters.
-	 * 
-	 * @param String theId
-	 * @param Solution theDiagnosisAction
-	 * @param Score theDiagnosisScore
-	 * @param Condition theCondition
-	 */
 	public static Rule createHeuristicPSRule(
-			Solution theDiagnosisAction,
-			Score theDiagnosisScore,
-			Condition theCondition) {
+			Solution solution,
+			Score score,
+			Condition condition) {
 
 		return createHeuristicPSRule(
-				theDiagnosisAction,
-				theDiagnosisScore,
-				theCondition,
+				solution,
+				score,
+				condition,
 				null);
 	}
 
-	public static Rule createRule(PSAction theAction, Condition theCondition, Condition theException, Class<? extends PSMethodRulebased> psMethodContext) {
+	public static Rule createRule(PSAction action, Condition condition, Condition exceptionCondition, Class<? extends PSMethodRulebased> psMethodContext) {
 		Rule rule = new Rule(psMethodContext);
-		setRuleParams(rule, theAction, theCondition, theException);
+		setRuleParams(rule, action, condition, exceptionCondition);
 		return rule;
 	}
 
-	/**
-	 * Creates a heuristic-rule with the specified parameters.
-	 */
 	public static Rule createHeuristicPSRule(
-			Solution theDiagnosisAction,
-			Score theDiagnosisScore,
-			Condition theCondition,
-			Condition theRuleException) {
+			Solution solution,
+			Score score,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodHeuristic.class);
 
-		ActionHeuristicPS theAction = new ActionHeuristicPS();
-		theAction.setSolution(theDiagnosisAction);
-		theAction.setScore(theDiagnosisScore);
+		ActionHeuristicPS actionHeuristicPS = new ActionHeuristicPS();
+		actionHeuristicPS.setSolution(solution);
+		actionHeuristicPS.setScore(score);
 
-		setRuleParams(rule, theAction, theCondition, theRuleException);
+		setRuleParams(rule, actionHeuristicPS, condition, exceptionCondition);
 		return rule;
 	}
 
-	/**
-	 * Creates an Indication-rule with the specified parameters.
-	 * 
-	 * @param String theId
-	 * @param List theAction
-	 * @param Condition theCondition
-	 */
 	public static Rule createIndicationRule(
-			List<QASet> theAction,
-			Condition theCondition) {
+			List<QASet> qaSets,
+			Condition condition) {
 
-		return createIndicationRule(theAction, theCondition, null);
+		return createIndicationRule(qaSets, condition, null);
 	}
 
-	/**
-	 * Creates an Indication-rule with the specified parameters.
-	 * 
-	 * @param String theId
-	 * @param QASet one single QASet to indicate
-	 * @param Condition theCondition
-	 */
 	public static Rule createIndicationRule(
-			QASet singleIndication,
-			Condition theCondition) {
+			QASet qaSet,
+			Condition condition) {
 		List<QASet> ind = new LinkedList<>();
-		ind.add(singleIndication);
-		return createIndicationRule(ind, theCondition, null);
+		ind.add(qaSet);
+		return createIndicationRule(ind, condition, null);
 	}
 
-	/**
-	 * Creates a standard indication rule with the specified parameters.
-	 */
 	public static Rule createIndicationRule(
-			List<QASet> theAction,
-			Condition theCondition,
-			Condition theRuleException) {
+			List<QASet> qaSets,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionNextQASet ruleAction = new ActionIndication();
-		ruleAction.setQASets(theAction);
+		ruleAction.setQASets(qaSets);
 
-		setRuleParams(rule, ruleAction, theCondition, theRuleException);
+		setRuleParams(rule, ruleAction, condition, exceptionCondition);
 		return rule;
 	}
 
-	/**
-	 * Creates a relevant indication rule with the specified parameters
-	 * 
-	 * @created 15.04.2013
-	 * @param theAction the QASet being relevant indicated by the created rule
-	 * @param theCondition the condition the rule evals
-	 * @return the created Rule
-	 */
-	public static Rule createRelevantIndicationRule(QASet theAction, Condition theCondition) {
+	public static Rule createRelevantIndicationRule(QASet qaSet, Condition condition) {
 		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionNextQASet ruleAction = new ActionRelevantIndication();
-		ruleAction.setQASets(theAction);
+		ruleAction.setQASets(qaSet);
 
-		setRuleParams(rule, ruleAction, theCondition, null);
+		setRuleParams(rule, ruleAction, condition, null);
 		return rule;
 	}
 
-	/**
-	 * Creates a rule with the specified action and condition
-	 * 
-	 */
 	public static Rule createStrategicRule(
-			PSAction theAction,
-			Condition theCondition) {
-		return createStrategicRule(theAction, theCondition, null);
+			PSAction action,
+			Condition condition) {
+		return createStrategicRule(action, condition, null);
 	}
 
-	/**
-	 * Creates a rule with the specified action, condition and exception
-	 * 
-	 */
 	public static Rule createStrategicRule(
-			PSAction theAction,
-			Condition theCondition,
-			Condition theRuleException) {
+			PSAction action,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodStrategic.class);
 
-		setRuleParams(rule, theAction, theCondition, theRuleException);
+		setRuleParams(rule, action, condition, exceptionCondition);
 		return rule;
 	}
 
-	/**
-	 * Creates a rule, that instantly (directly after current qaset) indicates
-	 * the specified qasets.
-	 */
 	public static Rule createInstantIndicationRule(
-			List<QASet> theAction,
-			Condition theCondition,
-			Condition theRuleException) {
+			List<QASet> qaSets,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodStrategic.class);
 		ActionNextQASet ruleAction = new ActionInstantIndication();
-		ruleAction.setQASets(theAction);
-		setRuleParams(rule, ruleAction, theCondition, theRuleException);
+		ruleAction.setQASets(qaSets);
+		setRuleParams(rule, ruleAction, condition, exceptionCondition);
 		return rule;
 	}
 
 	public static Rule createInstantIndicationRule(
-			List<QASet> theAction,
-			Condition theCondition) {
+			List<QASet> qaSets,
+			Condition condition) {
 
-		return createInstantIndicationRule(theAction, theCondition, null);
+		return createInstantIndicationRule(qaSets, condition, null);
 	}
 
-	/**
-	 * Creates a rule, that instantly (directly after current qaset) indicates
-	 * the specified qasets.
-	 */
 	public static Rule createInstantIndicationRule(
-			QASet singleIndication,
-			Condition theCondition) {
+			QASet qaSet,
+			Condition condition) {
 		List<QASet> ind = new ArrayList<>();
-		ind.add(singleIndication);
-		return createInstantIndicationRule(ind, theCondition, null);
+		ind.add(qaSet);
+		return createInstantIndicationRule(ind, condition, null);
 	}
 
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 * 
-	 * @param String theId
-	 * @param Question theQuestion
-	 * @param Object theValue
-	 * @param Condition theCondition
-	 */
 	public static Rule createSetValueRule(
-			Question theQuestion,
-			Object theValue,
-			Condition theCondition) {
+			Question question,
+			Object value,
+			Condition condition) {
 
 		return createSetValueRule(
-				theQuestion,
-				theValue,
-				theCondition,
+				question,
+				value,
+				condition,
 				null);
 	}
 
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 */
 	public static Rule createSetValueRule(
-			Question theQuestion,
-			Object theValue,
-			Condition theCondition,
-			Condition theRuleException) {
+			Question question,
+			Object value,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodAbstraction.class);
 
 		ActionSetQuestion theAction = new ActionSetQuestion();
-		theAction.setQuestion(theQuestion);
-		theAction.setValue(theValue);
+		theAction.setQuestion(question);
+		theAction.setValue(value);
 
-		setRuleParams(rule, theAction, theCondition, theRuleException);
+		setRuleParams(rule, theAction, condition, exceptionCondition);
 
 		return rule;
 	}
 
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 */
 	public static Rule createSetValueRule(
-			Question theQuestion,
-			FormulaElement theAnswer,
-			Condition theCondition) {
+			Question question,
+			FormulaElement valueFormula,
+			Condition condition) {
 		return createSetValueRule(
-				theQuestion,
-				theAnswer,
-				theCondition,
+				question,
+				valueFormula,
+				condition,
 				null);
 	}
 
-	/**
-	 * Creates a rule to set values for a given question with the specified
-	 * parameters.
-	 */
 	public static Rule createSetValueRule(
-			Question theQuestion,
-			FormulaElement theValue,
-			Condition theCondition,
-			Condition theRuleException) {
+			Question question,
+			FormulaElement valueFormula,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodAbstraction.class);
 
 		ActionSetQuestion theAction = new ActionSetQuestion();
-		theAction.setQuestion(theQuestion);
-		theAction.setValue(theValue);
+		theAction.setQuestion(question);
+		theAction.setValue(valueFormula);
 
-		setRuleParams(rule, theAction, theCondition, theRuleException);
+		setRuleParams(rule, theAction, condition, exceptionCondition);
 
 		return rule;
 	}
 
-	/**
-	 * Creates a rule to add values to a given question with the specified
-	 * parameters.
-	 */
 	public static Rule createSuppressAnswerRule(
-			QuestionChoice theQuestion,
-			Choice[] theAnswers,
-			Condition theCondition) {
+			QuestionChoice questionChoice,
+			Choice[] choices,
+			Condition condition) {
 
 		return createSuppressAnswerRule(
-				theQuestion,
-				theAnswers,
-				theCondition,
+				questionChoice,
+				choices,
+				condition,
 				null);
 	}
 
-	/**
-	 * Creates a rule to add values to a given question with the specified
-	 * parameters.
-	 */
 	public static Rule createSuppressAnswerRule(
-			QuestionChoice theQuestion,
-			Choice[] theAnswers,
-			Condition theCondition,
-			Condition theRuleException) {
+			QuestionChoice questionChoice,
+			Choice[] choices,
+			Condition condition,
+			Condition exceptionCondition) {
 
 		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionSuppressAnswer theAction = new ActionSuppressAnswer();
-		theAction.setQuestion(theQuestion);
-		for (Choice choice : theAnswers) {
+		theAction.setQuestion(questionChoice);
+		for (Choice choice : choices) {
 			theAction.addSuppress(choice);
 		}
 
-		setRuleParams(rule, theAction, theCondition, theRuleException);
+		setRuleParams(rule, theAction, condition, exceptionCondition);
 
 		return rule;
 	}
@@ -384,13 +297,13 @@ public final class RuleFactory {
 	 */
 	public static void setRuleParams(
 			Rule rule,
-			PSAction theAction,
-			Condition theCondition,
-			Condition theRuleException) {
+			PSAction action,
+			Condition condition,
+			Condition exceptionCondition) {
 
-		rule.setAction(theAction);
-		rule.setCondition(theCondition);
-		rule.setException(theRuleException);
+		rule.setAction(action);
+		rule.setCondition(condition);
+		rule.setException(exceptionCondition);
 
 	}
 

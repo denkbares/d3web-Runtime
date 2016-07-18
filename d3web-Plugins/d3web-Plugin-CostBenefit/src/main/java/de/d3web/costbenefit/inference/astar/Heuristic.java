@@ -23,7 +23,6 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 
 /**
- * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
  */
@@ -34,26 +33,24 @@ public interface Heuristic {
 	 * the specified state. The costs must be optimistic; thus under any
 	 * circumstances the returned distance must lower or equal to the best path
 	 * costs to reach that target.
-	 * 
-	 * @created 06.09.2011
-	 * @param model the actual SearchModel
-	 * @param path Path from the start of the search to the state
-	 * @param state the state to start from
+	 *
+	 * @param model  the actual SearchModel
+	 * @param path   Path from the start of the search to the state
+	 * @param state  the state to start from
 	 * @param target the target to be reached
-	 * @param costFunction a custom cost function to calculate costs for a
-	 *        questionnaire
 	 * @return optimistic estimation of the minimal distance
+	 * @created 06.09.2011
 	 */
 	double getDistance(SearchModel model, Path path, State state, QContainer target);
 
 	/**
 	 * Initializes the heuristic to be used for a specific {@link SearchModel}.
 	 * The heuristic is guaranteed to be used only for that search at the same
-	 * time, until {@link #init(SearchModel)} is called for an other search
+	 * time, until #init(SearchModel) is called for an other search
 	 * model.
-	 * 
-	 * @created 06.09.2011
+	 *
 	 * @param searchModel the SearchModel the heuristic should be used for
+	 * @created 06.09.2011
 	 */
 	void init(SearchModel searchModel);
 }

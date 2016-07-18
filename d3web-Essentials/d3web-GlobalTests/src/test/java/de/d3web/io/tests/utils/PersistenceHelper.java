@@ -45,10 +45,6 @@ public class PersistenceHelper {
 	/**
 	 * Scans a directory for a given Filename Attention: File with same Name are
 	 * not considered yet.
-	 * 
-	 * @param sub
-	 * @param s
-	 * @return
 	 */
 	public File scanDirectory(File[] sub, String s) {
 
@@ -90,9 +86,6 @@ public class PersistenceHelper {
 	/**
 	 * Sorts out the Directories not to be compared. Excluded fileTypes and
 	 * directories are in the exclude lists.
-	 * 
-	 * @param _rf
-	 * @return
 	 */
 	private File[] sortDirectory(File f) {
 		ArrayList<File> proved = new ArrayList<>();
@@ -109,9 +102,6 @@ public class PersistenceHelper {
 
 	/**
 	 * Diffs two subfolders.
-	 * 
-	 * @param sub
-	 * @param foundRootFolder
 	 */
 	private void diffFolders(File sub, File foundRootFolder) {
 		// File[] reloadedContent = foundRootFolder.listFiles();
@@ -163,9 +153,6 @@ public class PersistenceHelper {
 
 	/**
 	 * Deletes the content of a directory completely.
-	 * 
-	 * @param dir
-	 * @return
 	 */
 	public static boolean deleteRecursive(File dir) {
 		if (dir.isFile() || (dir.listFiles().length == 0)) {

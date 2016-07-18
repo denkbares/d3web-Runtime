@@ -28,6 +28,7 @@ import de.d3web.core.knowledge.InterviewObject;
  * @author Volker Belli & Joachim Baumeister (denkbares GmbH)
  * @deprecated use de.d3web.interview.inference.Interview
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public interface Interview {
 
@@ -40,8 +41,7 @@ public interface Interview {
 
 	/**
 	 * Optional configuration: Explicitly set a strategy that defines how the
-	 * nextForm method computes the next form. On example is the
-	 * {@link NextUnansweredQuestionFormStrategy}.
+	 * nextForm method computes the next form.
 	 * 
 	 * @param strategy the specified FormStrategy
 	 */

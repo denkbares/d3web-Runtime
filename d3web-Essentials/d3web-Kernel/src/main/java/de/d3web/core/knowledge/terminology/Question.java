@@ -33,7 +33,6 @@ import de.d3web.core.session.values.UndefinedValue;
  * 
  * @author joba, norman
  * @see QASet
- * @see DerivationType
  */
 public abstract class Question extends QASet implements ValueObject {
 

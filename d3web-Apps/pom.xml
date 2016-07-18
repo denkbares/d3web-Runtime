@@ -19,9 +19,9 @@
 
 	<profiles>
 		<profile>
-			<id>d3web-LibBuilder</id>
+			<id>dist</id>
 			<modules>
-				<module>d3web-LibBuilder</module>
+				<module>d3web-DistributionBuilder</module>
 			</modules>
 		</profile>
 	</profiles>

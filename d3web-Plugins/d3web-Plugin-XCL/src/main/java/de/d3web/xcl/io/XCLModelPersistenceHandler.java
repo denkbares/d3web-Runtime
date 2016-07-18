@@ -33,13 +33,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -49,9 +49,8 @@ import de.d3web.xcl.XCLRelationType;
 
 /**
  * PersistenceHandler for XCLModels
- * 
+ *
  * @author kazamatzuri, Markus Friedrich (denkbares GmbH)
- * 
  */
 public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
@@ -86,12 +85,18 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 
 	private Element writeModel(Persistence<KnowledgeBase> persistence, XCLModel xclmodel, RelationPool pool) throws IOException {
 		Element modelelement = persistence.getDocument().createElement(ELEMENT_XCL_MODEL);
-		if (xclmodel.getMinSupport() != null) modelelement.setAttribute(ATTRIBUTE_MIN_SUPPORT,
-				String.valueOf(xclmodel.getMinSupport()));
-		if (xclmodel.getSuggestedThreshold() != null) modelelement.setAttribute(
-				ATTRIBUTE_SUGGESTED_THRESHOLD, String.valueOf(xclmodel.getSuggestedThreshold()));
-		if (xclmodel.getEstablishedThreshold() != null) modelelement.setAttribute(
-				ATTRIBUTE_ESTABLISHED_THRESHOLD, String.valueOf(xclmodel.getEstablishedThreshold()));
+		if (xclmodel.getMinSupport() != null) {
+			modelelement.setAttribute(ATTRIBUTE_MIN_SUPPORT,
+					String.valueOf(xclmodel.getMinSupport()));
+		}
+		if (xclmodel.getSuggestedThreshold() != null) {
+			modelelement.setAttribute(
+					ATTRIBUTE_SUGGESTED_THRESHOLD, String.valueOf(xclmodel.getSuggestedThreshold()));
+		}
+		if (xclmodel.getEstablishedThreshold() != null) {
+			modelelement.setAttribute(
+					ATTRIBUTE_ESTABLISHED_THRESHOLD, String.valueOf(xclmodel.getEstablishedThreshold()));
+		}
 		modelelement.setAttribute(ATTRIBUTE_SOLUTION_ID,
 				xclmodel.getSolution().getName());
 		modelelement.setAttribute(ATTRIBUTE_CONSIDER_ONLY_RELEVANT_RELATIONS,
@@ -121,13 +126,13 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 	 * Writes a relation or a relation reference, based if it is already
 	 * available in the pool. The pool will also be updated by the specified
 	 * relation.
-	 * 
-	 * @created 07.09.2012
-	 * @param relation relation to be written
-	 * @param doc document to create element for
-	 * @param pool the pool to search relation and update if not exists
+	 *
+	 * @param relation    relation to be written
+	 * @param persistence the persistence object handling the document
+	 * @param pool        the pool to search relation and update if not exists
 	 * @return the xml element
 	 * @throws IOException if something went wrong
+	 * @created 07.09.2012
 	 */
 	private Element writeRelation(Persistence<KnowledgeBase> persistence, XCLRelation relation, RelationPool pool) throws IOException {
 		boolean isAdded = pool.add(relation);
@@ -300,8 +305,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 			default:
 				throw new IOException("unknown relation type '" + typeName + "'");
 		}
-		XCLRelation rel = new XCLRelation(ac, weight, type);
-		return rel;
+		return new XCLRelation(ac, weight, type);
 	}
 
 }

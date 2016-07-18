@@ -24,22 +24,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.denkbares.utils.EqualsUtils;
 import de.d3web.abstraction.formula.FormulaElement;
 import de.d3web.core.inference.ActionAddValueFact;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
-import com.denkbares.utils.EqualsUtils;
 
 /**
- * Sets a specified value for a specified question. The value can be a
- * {@link FormulaExpression} or a specified {@link Choice} of a question.
+ * Sets a specified value for a specified question. The value can be an
+ * expression or a specified {@link Choice} of a question.
  * <p/>
  * Creation date: (20.06.2001 18:19:13)
  *
@@ -97,6 +98,11 @@ public class ActionSetQuestion extends ActionAddValueFact {
 	 */
 	public ActionSetQuestion() {
 		super();
+	}
+
+	public ActionSetQuestion(Question question, QuestionValue value) {
+		setQuestion(question);
+		setValue(value);
 	}
 
 	@Override

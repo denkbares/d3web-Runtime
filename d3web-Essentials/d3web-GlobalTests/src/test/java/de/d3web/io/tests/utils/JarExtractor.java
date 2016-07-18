@@ -32,22 +32,20 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
+ * Helper class to extract files of a JAR/Zip archive
+ *
  * @author Peter Klügl
- * 
- *         Helper class to extract files of a JAR/Zip archive
  */
 public class JarExtractor {
 
 	/**
 	 * extracts the file of a given url to the given directory
-	 * 
-	 * @param url file
-	 * @param dir destination
-	 * @throws IOException
-	 * @throws
+	 *
+	 * @param zipFile file
+	 * @param dir     destination
 	 */
 	public static void extract(File zipFile, File dir) throws IOException {
-		/** For a given Zip file, process each entry. */
+		/* For a given Zip file, process each entry. */
 		if (!zipFile.exists()) {
 			throw new RuntimeException("File not found: " + zipFile.getAbsolutePath());
 		}
@@ -64,7 +62,7 @@ public class JarExtractor {
 	 * Process one file from the zip, given its name. create the file on disk.
 	 */
 	private static void extractSingleFile(ZipFile zipFile, URI baseURI,
-			ZipEntry entry) throws IOException {
+										  ZipEntry entry) throws IOException {
 		String zipName = entry.getName();
 		zipName = URLEncoder.encode(zipName, "UTF-8");
 
@@ -95,8 +93,9 @@ public class JarExtractor {
 		FileOutputStream os = new FileOutputStream(outputFile);
 		InputStream is = zipFile.getInputStream(entry);
 		int n;
-		while ((n = is.read(b)) > 0)
+		while ((n = is.read(b)) > 0) {
 			os.write(b, 0, n);
+		}
 		is.close();
 		os.close();
 

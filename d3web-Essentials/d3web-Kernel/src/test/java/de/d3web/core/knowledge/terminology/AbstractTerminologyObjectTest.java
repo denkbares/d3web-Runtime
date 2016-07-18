@@ -18,16 +18,16 @@
  */
 package de.d3web.core.knowledge.terminology;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.KnowledgeStore;
 import de.d3web.core.knowledge.TerminologyObject;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit test for {@link AbstractTerminologyObject}
@@ -39,9 +39,6 @@ public class AbstractTerminologyObjectTest {
 
 	private static class NamedObjectMock extends AbstractTerminologyObject {
 
-		/**
-		 * @param id
-		 */
 		public NamedObjectMock(KnowledgeBase kb, String name) {
 			super(kb, name);
 		}
@@ -134,8 +131,7 @@ public class AbstractTerminologyObjectTest {
 	 * Tests the methods to remove children
 	 * 
 	 * @see AbstractTerminologyObject#removeChild(AbstractTerminologyObject)
-	 * @see AbstractTerminologyObject#removeLinkedChild(AbstractTerminologyObject)
-	 * 
+	 *
 	 * @created 23.08.2010
 	 */
 	@Test

@@ -24,11 +24,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.denkbares.utils.Log;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestCase;
-import com.denkbares.utils.Log;
 
 /**
  * This singleton class serves as factory for CaseTree graphs. It converts
@@ -67,8 +67,7 @@ public final class CaseTreeFactory {
 	 * 
 	 * @param cases List<SequentialTestCase> which's elements will be in the
 	 *        graph.
-	 * @return CaseTree<RatedTestCase, EdgeFinding> representing the committed
-	 *         List<SequentialTestCase>
+	 * @return case tree representing the given cases
 	 */
 	public CaseTree<RatedTestCase, EdgeFinding> generateGraph(
 			List<SequentialTestCase> cases) {

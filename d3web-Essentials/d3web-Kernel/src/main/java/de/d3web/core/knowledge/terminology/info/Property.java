@@ -36,7 +36,7 @@ import com.denkbares.utils.Log;
 
 /**
  * Represents a Property. Properties can only be created by extending the
- * Extensionpoint "Property"
+ * extension point "Property"
  *
  * For more information about the xml markup, see plugin.xml of
  * d3web-Plugin-ExtensionPoints
@@ -173,7 +173,6 @@ public final class Property<T> {
 	 * "property" extension point.
 	 *
 	 * @created 31.10.2010
-	 * @param defaultValue
 	 */
 	public void setDefaultValue(T defaultValue) {
 		this.defaultValue = defaultValue;
@@ -208,15 +207,15 @@ public final class Property<T> {
 	 *         identical with the class specified in the plugin definition
 	 */
 	@SuppressWarnings("unchecked")
-	public static <StoreageType> Property<StoreageType> getProperty(String name, Class<StoreageType> theStoredClass) throws NoSuchElementException, ClassCastException {
+	public static <StorageType> Property<StorageType> getProperty(String name, Class<StorageType> storedClass) throws NoSuchElementException, ClassCastException {
 		Property<?> property = getUntypedProperty(name);
-		if (!property.storedClassName.equals(theStoredClass.getName())) {
+		if (!property.storedClassName.equals(storedClass.getName())) {
 			throw new ClassCastException(
 					"specified class not compatible to plugin's property declaration");
 		}
 		// this cast is save due to the test before
 		// thus we can accept the @SuppressWarnings("unchecked")
-		return (Property<StoreageType>) property;
+		return (Property<StorageType>) property;
 	}
 
 	/**
@@ -249,9 +248,6 @@ public final class Property<T> {
 	 * Dynamically casts the specified value to the type of the stored value.
 	 *
 	 * @created 28.10.2010
-	 * @param o
-	 * @return
-	 * @throws ClassCastException
 	 */
 	public T castToStoredValue(Object o) throws ClassCastException {
 		return getStoredClass().cast(o);

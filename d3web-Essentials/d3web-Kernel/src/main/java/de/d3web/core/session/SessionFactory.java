@@ -65,7 +65,7 @@ public final class SessionFactory {
 	 * @created 19.10.2010
 	 * @return the default solvers
 	 */
-	public static final List<PSMethod> getDefaultPSMethods() {
+	public static List<PSMethod> getDefaultPSMethods() {
 		return Collections.unmodifiableList(commonPSMethods);
 	}
 
@@ -82,7 +82,7 @@ public final class SessionFactory {
 	/**
 	 * Factory-method that creates instances of Session.
 	 * 
-	 * @oaram name name of the session
+	 * @param name name of the session
 	 * @param knowledgeBase the knowledge base used in the case.
 	 * @return new Session instance based on the specified knowledge base
 	 */
@@ -137,6 +137,7 @@ public final class SessionFactory {
 	 *             in an Interview or use the PSConfig of the PSMethodInterview
 	 *             to configure the FormStrategy
 	 */
+	@SuppressWarnings("deprecation")
 	@Deprecated
 	public static synchronized DefaultSession createSession(String id,
 			KnowledgeBase knowledgeBase,
@@ -148,8 +149,7 @@ public final class SessionFactory {
 
 	/**
 	 * Adds a {@link PropagationListener} which will be added to each session
-	 * @author this factory before the initialization of the {@link PSMethod}
-	 * s
+	 * created in this factory before the initialization of the {@link PSMethod}s
 	 * 
 	 * @created 23.04.2012
 	 * @param propagationListener {@link PropagationListener}
@@ -163,7 +163,6 @@ public final class SessionFactory {
 	 * Session
 	 * 
 	 * @created 23.04.2012
-	 * @param propagationListener
 	 */
 	public static void removePropagationListener(PropagationListener propagationListener) {
 		propagationListeners.remove(propagationListener);

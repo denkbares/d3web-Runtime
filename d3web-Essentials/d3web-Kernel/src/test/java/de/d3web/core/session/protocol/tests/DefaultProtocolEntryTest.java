@@ -19,12 +19,6 @@
 
 package de.d3web.core.session.protocol.tests;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 import java.util.Date;
 
 import org.junit.Before;
@@ -38,6 +32,9 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.ProtocolConversion;
 import de.d3web.core.session.values.NumValue;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit test for {@link FactProtocolEntry}
@@ -63,10 +60,6 @@ public class DefaultProtocolEntryTest {
 		defaultProtocolEntryUnderTest = new FactProtocolEntry(new Date(), protocolFact);
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.session.protocol.FactProtocolEntry#hashCode()}.
-	 */
 	@Test
 	public void testHashCode() {
 		assertThat(defaultProtocolEntryUnderTest.hashCode(), is(not(0)));
@@ -75,11 +68,6 @@ public class DefaultProtocolEntryTest {
 				is(new FactProtocolEntry(new Date(0), "", "", new NumValue(0)).hashCode()));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.session.protocol.FactProtocolEntry#equals(java.lang.Object)}
-	 * .
-	 */
 	@Test
 	public void testEqualsObject() {
 		// DefaultProtocolEntry(protocolFact) vs.
@@ -105,9 +93,6 @@ public class DefaultProtocolEntryTest {
 
 	}
 
-	/**
-	 * Test method for {@link FactProtocolEntry#getFact()}
-	 */
 	@Test
 	public void testGetFact() {
 		Fact fact = ProtocolConversion.createFact(knowledgeBase, defaultProtocolEntryUnderTest);
@@ -116,10 +101,6 @@ public class DefaultProtocolEntryTest {
 		assertThat(fact.getValue(), is(equalTo(protocolFact.getValue())));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.session.protocol.FactProtocolEntry#toString()}.
-	 */
 	@Test
 	public void testToString() {
 		String string = defaultProtocolEntryUnderTest.toString();

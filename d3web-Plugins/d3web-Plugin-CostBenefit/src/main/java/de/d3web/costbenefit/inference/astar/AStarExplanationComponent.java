@@ -46,7 +46,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class can be used to explain the result of an AStar calculation.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 03.07.2012
  */
@@ -61,10 +61,10 @@ public class AStarExplanationComponent {
 	/**
 	 * Returns the longest subpath of the specified path reached during the
 	 * AStar calculation
-	 * 
-	 * @created 03.07.2012
+	 *
 	 * @param path specified path
 	 * @return subpath of the specified path
+	 * @created 03.07.2012
 	 */
 	public AStarPath getLongestSubPathReached(QContainer... path) {
 		AStarPath subPath = new AStarPath(null, null, 0);
@@ -93,10 +93,10 @@ public class AStarExplanationComponent {
 	 * Returns the path of the last calculation, having reached most of the
 	 * specified QContainers. If two pathes have reached the same amount of
 	 * QContainers, the one with the better f Value is returned.
-	 * 
-	 * @created 03.07.2012
+	 *
 	 * @param path specified QContainers
 	 * @return best AStarPath fitting to the defined criterias
+	 * @created 03.07.2012
 	 */
 	public AnalysisResult getBestPathContaining(QContainer... path) {
 		Node bestNode = null;
@@ -129,9 +129,9 @@ public class AStarExplanationComponent {
 
 	/**
 	 * Returns the f value of the start state of the calculation
-	 * 
-	 * @created 05.07.2012
+	 *
 	 * @return start f value
+	 * @created 05.07.2012
 	 */
 	public double getPredictedPathCostsOnCalculationStart() {
 		for (Node n : astar.getClosedNodes()) {
@@ -145,9 +145,9 @@ public class AStarExplanationComponent {
 	/**
 	 * Returns the path which would have been expanded next, if the calculation
 	 * wouldn't have finished/aborted
-	 * 
-	 * @created 05.07.2012
+	 *
 	 * @return best unexpanded path after calculation
+	 * @created 05.07.2012
 	 */
 	public AnalysisResult getBestPathAtCalculationEnd() {
 		Node peek = astar.getOpenNodes().peek();
@@ -157,7 +157,7 @@ public class AStarExplanationComponent {
 	/**
 	 * Represents a Result of an Analysis containing the path, the f Value and a
 	 * boolean, if the path is closed (it's successors have been expanded)
-	 * 
+	 *
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 04.07.2012
 	 */
@@ -193,14 +193,14 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Calculates all conditions that must be fullfilled to be enable to execute
+	 * Calculates all conditions that must be fulfilled to be enable to execute
 	 * the target and a set of QContainers per target, enabling the condition.
-	 * 
-	 * @created 04.07.2012
-	 * @param session actual session
-	 * @param target specified target
+	 *
+	 * @param session             actual session
+	 * @param transitiveCondition the transitive condition of the target test step
 	 * @return a map containing the calculated conditions and its preparing
-	 *         QContainers
+	 * QContainers
+	 * @created 04.07.2012
 	 */
 	public static Map<Condition, Set<QContainer>> findVariations(Session session, Condition transitiveCondition) {
 		List<Condition> primitiveTransitiveConditions = TPHeuristic.getPrimitiveConditions(transitiveCondition);
@@ -242,11 +242,11 @@ public class AStarExplanationComponent {
 	/**
 	 * Calculates all QContainers of the path to the last calculated target, not
 	 * needed to establish a transitive precondition of the chosen target
-	 * 
-	 * @created 05.07.2012
+	 *
 	 * @return list of unexpected QContainers
 	 * @throws IllegalArgumentException if the method is called after an
-	 *         calculation with a multi target having the best cost benefit
+	 *                                  calculation with a multi target having the best cost benefit
+	 * @created 05.07.2012
 	 */
 	public Set<QContainer> getUnexpectedQContainers() throws IllegalArgumentException {
 		SearchModel model = astar.getModel();
@@ -275,12 +275,12 @@ public class AStarExplanationComponent {
 	/**
 	 * Calculates all QContainers of the path, not needed to establish a
 	 * transitive precondition
-	 * 
-	 * @created 05.07.2012
-	 * @param path specified Path
-	 * @param session actual session
+	 *
+	 * @param path                specified Path
+	 * @param session             actual session
 	 * @param transitiveCondition transitive activation condition of the target
 	 * @return list of unexpected QContainers
+	 * @created 05.07.2012
 	 */
 	public static Set<QContainer> getUnexpectedQContainers(List<QContainer> path, Session session, Condition transitiveCondition) {
 		Set<QContainer> result = new HashSet<>(path);
@@ -314,9 +314,9 @@ public class AStarExplanationComponent {
 	/**
 	 * Returns the path of the best cost benefit target or null if no path could
 	 * be found
-	 * 
-	 * @created 05.07.2012
+	 *
 	 * @return path to target
+	 * @created 05.07.2012
 	 */
 	public Path getBestCostBenefit() {
 		Target bestCostBenefitTarget = astar.getModel().getBestCostBenefitTarget();
@@ -329,12 +329,12 @@ public class AStarExplanationComponent {
 	/**
 	 * Calculates the primitive conditions, which are not fullfilled after or
 	 * while the specified path is processed
-	 * 
-	 * @created 05.07.2012
-	 * @param path specified path
+	 *
+	 * @param path                specified path
 	 * @param transitiveCondition Condition to be fullfilled
-	 * @param session actual session
+	 * @param session             actual session
 	 * @return a set of unfullfilled (sub) conditions
+	 * @created 05.07.2012
 	 */
 	public static Set<Condition> getUnfullfilledConditions(Path path, Condition transitiveCondition, Session session) {
 		Set<Condition> result = new HashSet<>(
@@ -363,9 +363,8 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * 
-	 * @created 13.11.2012
 	 * @return all targets of the last calculation
+	 * @created 13.11.2012
 	 */
 	public Set<Target> getTargets() {
 		return Collections.unmodifiableSet(astar.getModel().getTargets());
@@ -374,10 +373,10 @@ public class AStarExplanationComponent {
 	/**
 	 * Returns if the specified QContainer was part of a target in the last
 	 * search
-	 * 
-	 * @created 13.11.2012
+	 *
 	 * @param qContainer specified {@link QContainer}
 	 * @return true if the QContainer was part of a target
+	 * @created 13.11.2012
 	 */
 	public boolean wasTarget(QContainer qContainer) {
 		for (Target t : astar.getModel().getTargets()) {

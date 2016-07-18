@@ -20,10 +20,11 @@ package de.d3web.core.inference.condition;
 
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
- * answered with {@link AnswerUnknown}.
+ * answered with {@link Unknown}.
  *
  * @author Reinhard Hatko
  * @created 02.03.2011

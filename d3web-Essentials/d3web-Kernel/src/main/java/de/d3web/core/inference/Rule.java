@@ -295,16 +295,16 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 *
 	 * @param namedObjects list of named objects, in which the rule should be
 	 *                     removed
-	 * @param psContext    key for the specified knowledge map
+	 * @param rule         the rule to remove
 	 * @param kind         key for the specified knowledge map
 	 */
 	public static void removeFrom(
-			Rule r,
+			Rule rule,
 			Collection<? extends TerminologyObject> namedObjects,
 			KnowledgeKind<RuleSet> kind) {
 		if (namedObjects != null) {
 			for (TerminologyObject nob : namedObjects) {
-				removeFrom(r, kind, nob);
+				removeFrom(rule, kind, nob);
 			}
 		}
 	}
@@ -334,16 +334,16 @@ public class Rule implements SessionObjectSource<CaseRuleComplex> {
 	 *
 	 * @param namedObjects list of named objects, in which the rule should be
 	 *                     added
-	 * @param psContext    key for the specified knowledge map
+	 * @param rule         the rule to insert
 	 * @param kind         key for the specified knowledge map
 	 */
 	public static void insertInto(
-			Rule r,
+			Rule rule,
 			Collection<? extends TerminologyObject> namedObjects,
 			KnowledgeKind<RuleSet> kind) {
 		if (namedObjects != null) {
 			for (TerminologyObject nob : namedObjects) {
-				insertInto(r, kind, nob);
+				insertInto(rule, kind, nob);
 			}
 		}
 	}

@@ -32,6 +32,8 @@ import java.util.Set;
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Triple;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -61,8 +63,6 @@ import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.TerminologyHierarchyComparator;
-import com.denkbares.strings.Strings;
-import com.denkbares.utils.Triple;
 
 /**
  * Provides utility methods for {@link KnowledgeBase}
@@ -507,9 +507,9 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Groups all solutions into the closest parent solution that has set the property {@link
-	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If a solution has in no
+	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If a solution has no
 	 * such parent, or the group id in the specified list, the returned MultiMap contains an entry
-	 * with both, key an value is that solution. Additionally there are entries where the key is the
+	 * with both, key an value of that solution. Additionally there are entries where the key is the
 	 * grouping solution of each (non-group) solution and the values are the specified solutions.
 	 * <p/>
 	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the

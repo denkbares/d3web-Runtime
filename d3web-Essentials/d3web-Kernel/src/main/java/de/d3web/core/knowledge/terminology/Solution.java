@@ -36,7 +36,6 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
  * 
  * @author joba, chris
  * @see NamedObject
- * @see ScoreRating
  * @see Rating
  */
 public class Solution extends AbstractTerminologyObject implements ValueObject {
@@ -89,19 +88,19 @@ public class Solution extends AbstractTerminologyObject implements ValueObject {
 	 * <p>
 	 * Creation date: (25.09.00 15:13:34)
 	 * 
-	 * @param newAprioriPropability the new apriori probability of this instance
-	 * @throws IllegalArgumentException if the newAprioriProbability is not
+	 * @param aprioriProbability the new apriori probability of this instance
+	 * @throws IllegalArgumentException if the aprioriProbability is not
 	 *         valid
 	 */
-	public void setAprioriProbability(Score newAprioriProbability) throws IllegalArgumentException {
+	public void setAprioriProbability(Score aprioriProbability) throws IllegalArgumentException {
 		// check if legal probability entry
-		if (!Score.APRIORI.contains(newAprioriProbability)
-				&& (newAprioriProbability != null)) {
-			throw new IllegalArgumentException(newAprioriProbability
+		if (!Score.APRIORI.contains(aprioriProbability)
+				&& (aprioriProbability != null)) {
+			throw new IllegalArgumentException(aprioriProbability
 					+ " not a valid apriori probability.");
 		}
 		else {
-			aprioriProbability = newAprioriProbability;
+			this.aprioriProbability = aprioriProbability;
 		}
 	}
 

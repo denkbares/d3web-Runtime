@@ -31,12 +31,12 @@ import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
 
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.strings.Strings;
 import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.io.tests.utils.Butil;
 import de.d3web.io.tests.utils.JarExtractor;
 import de.d3web.io.tests.utils.PersistenceHelper;
-import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Saves a jar-File to a KnowledgeBase and reloads it. Original and Reloaded
@@ -156,8 +156,8 @@ public class PersistenceTest extends XMLTestCase {
 			}
 			else {
 				assertEquals("Difference in File: " + p[0].getPath(),
-						Butil.readString(new FileInputStream(p[0])),
-						Butil.readString(new FileInputStream(p[1])));
+						Strings.readStream(new FileInputStream(p[0])),
+						Strings.readStream(new FileInputStream(p[1])));
 			}
 		}
 	}

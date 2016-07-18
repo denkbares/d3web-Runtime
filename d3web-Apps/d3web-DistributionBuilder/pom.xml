@@ -8,7 +8,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>d3web-LibBuilder</artifactId>
+	<artifactId>d3web-DistributionBuilder</artifactId>
 
 	<build>
 		<plugins>
@@ -24,9 +24,6 @@
 						<configuration>
 							<includeScope>compile</includeScope>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
 						</configuration>
 					</execution>
 					<execution>
@@ -36,11 +33,35 @@
 						</goals>
 						<configuration>
 							<includeScope>compile</includeScope>
+							<includeGroupIds>de.uniwue.d3web,com.denkbares</includeGroupIds>
 							<classifier>sources</classifier>
 							<outputDirectory>${project.build.directory}/sources</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<executions>
+					<execution>
+						<id>javadoc-jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<failOnError>false</failOnError>
+							<outputDirectory>target/docs</outputDirectory>
+							<includeDependencySources>true</includeDependencySources>
+							<includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+							<additionalparam>-Xdoclint:none</additionalparam>
+							<dependencySourceIncludes>
+								<dependencySourceInclude>de.uniwue.d3web:*</dependencySourceInclude>
+								<dependencySourceInclude>com.denkbares:*</dependencySourceInclude>
+							</dependencySourceIncludes>
+							<dependencySourceExcludes>
+								<dependencySourceExclude>de.uniwue.d3web:d3web-DistributionBuilder</dependencySourceExclude>
+							</dependencySourceExcludes>
 						</configuration>
 					</execution>
 				</executions>
