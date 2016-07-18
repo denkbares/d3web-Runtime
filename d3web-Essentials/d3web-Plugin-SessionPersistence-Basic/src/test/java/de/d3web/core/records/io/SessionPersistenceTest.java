@@ -39,9 +39,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.progress.DummyProgressListener;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.condition.CondNumLess;
-import com.denkbares.progress.DummyProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
@@ -84,7 +85,6 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.file.records.io.SingleXMLSessionRepository;
 import de.d3web.folder.records.io.MultipleXMLSessionRepository;
 import de.d3web.indication.inference.PSMethodStrategic;
-import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
 
@@ -93,7 +93,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for SessionPersistence. Creates a KB and Session, puts them into a
  * repository, saves and reloads them.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 21.09.2010
  */
@@ -166,7 +166,7 @@ public class SessionPersistenceTest {
 		session.getProtocol().addEntries(
 				new TextProtocolEntry(new Date(System.currentTimeMillis() + 10), "future entry"),
 				new TextProtocolEntry(new Date(startDate.getTime() - 10), "ancient entry")
-				);
+		);
 		creationDate = session.getCreationDate();
 		lastChangeDate = session.getLastChangeDate();
 		sessionRecord = SessionConversionFactory.copyToSessionRecord(session);
@@ -197,27 +197,20 @@ public class SessionPersistenceTest {
 		SingleXMLSessionRepository sessionRepository = new SingleXMLSessionRepository();
 		sessionRepository.add(sessionRecord);
 		sessionRepository.add(sessionRecord2);
-		File file = new File(targetFolder, "file.xml");
+		String parent = targetFolder + "/repoFolder";
+		File file = new File(parent, "file.xml");
 		if (file.exists()) {
 			assertTrue(file.delete());
 		}
 		sessionRepository.save(file);
+
 		SingleXMLSessionRepository reloadedRepository = new SingleXMLSessionRepository();
 		reloadedRepository.load(file);
-		// Test iterator
-		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
-		SessionRecord record1 = iterator.next();
-		SessionRecord record2 = iterator.next();
-		assertFalse(iterator.hasNext());
-		Session session1 = SessionConversionFactory.copyToSession(kb, record1);
-		Session session2 = SessionConversionFactory.copyToSession(kb, record2);
-		// the sorting in the hashmap isn't stable, so we sort manually
-		if (session1.getLastChangeDate().before(session2.getLastChangeDate())) {
-			checkValuesAfterReload(session1, session2);
-		}
-		else {
-			checkValuesAfterReload(session2, session1);
-		}
+		testIterator(reloadedRepository);
+
+		reloadedRepository = new SingleXMLSessionRepository();
+		reloadedRepository.loadAllXMLFromDirectory(new File(parent));
+		testIterator(reloadedRepository);
 
 		// testing error behaviour
 		SingleXMLSessionRepository errorTestingRepository = new SingleXMLSessionRepository();
@@ -290,6 +283,22 @@ public class SessionPersistenceTest {
 		}
 		assertTrue(error);
 		error = false;
+	}
+
+	private void testIterator(SingleXMLSessionRepository reloadedRepository) throws IOException {
+		Iterator<SessionRecord> iterator = reloadedRepository.iterator();
+		SessionRecord record1 = iterator.next();
+		SessionRecord record2 = iterator.next();
+		assertFalse(iterator.hasNext());
+		Session session1 = SessionConversionFactory.copyToSession(kb, record1);
+		Session session2 = SessionConversionFactory.copyToSession(kb, record2);
+		// the sorting in the hashmap isn't stable, so we sort manually
+		if (session1.getLastChangeDate().before(session2.getLastChangeDate())) {
+			checkValuesAfterReload(session1, session2);
+		}
+		else {
+			checkValuesAfterReload(session2, session1);
+		}
 	}
 
 	@Test
@@ -406,7 +415,7 @@ public class SessionPersistenceTest {
 
 	/**
 	 * Marks a file by setting a comment "original"
-	 * 
+	 *
 	 * @created 23.09.2010
 	 * @throws IOException
 	 * @throws FileNotFoundException
@@ -423,7 +432,7 @@ public class SessionPersistenceTest {
 
 	/**
 	 * Checks if a file was marked with method markXMLFile
-	 * 
+	 *
 	 * @created 23.09.2010
 	 * @param f File
 	 * @return true if marked, false otherwise
@@ -528,7 +537,7 @@ public class SessionPersistenceTest {
 
 	/**
 	 * This tests provokes errors and checks if they occur
-	 * 
+	 *
 	 * @throws IOException
 	 * @created 22.09.2010
 	 */
@@ -568,7 +577,7 @@ public class SessionPersistenceTest {
 	 * least one of them setting a value different from undefined) results in an
 	 * undefined value. This will not happen with the default psm, to ensure the
 	 * functionality, this test is used.
-	 * 
+	 *
 	 * @throws IOException
 	 * @created 22.09.2010
 	 */
@@ -666,9 +675,9 @@ public class SessionPersistenceTest {
 	/**
 	 * When adding facts of more than one psm for an object, the globally merged
 	 * fact is inserted additionally
-	 * 
+	 *
 	 * @throws IOException
-	 * 
+	 *
 	 * @created 22.09.2010
 	 */
 	@Test
