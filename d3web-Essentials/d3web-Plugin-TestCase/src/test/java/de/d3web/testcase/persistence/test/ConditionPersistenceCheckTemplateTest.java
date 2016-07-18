@@ -25,13 +25,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionYN;
 import de.d3web.core.knowledge.terminology.Solution;
-import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.testcase.model.ConditionCheck;
 import de.d3web.testcase.model.TransformationException;
 import de.d3web.testcase.persistence.ConditionPersistenceCheckHandler;
@@ -67,6 +67,8 @@ public class ConditionPersistenceCheckTemplateTest {
 				"<Condition name=\"questionYN\" type=\"equal\" value=\"Yes\"/>\n" +
 				"</Condition>";
 		ConditionPersistenceCheckTemplate conditionCheckTemplate = new ConditionPersistenceCheckTemplate(conditionXml);
+
+		assertEquals(conditionXml, conditionCheckTemplate.getConditionXml());
 
 		ConditionCheck conditionCheck = (ConditionCheck) conditionCheckTemplate.toCheck(knowledgeBase);
 		Condition condition = conditionCheck.getConditionObject();
