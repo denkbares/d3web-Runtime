@@ -11,8 +11,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -24,8 +29,14 @@ import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionYN;
+import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
+import de.d3web.core.knowledge.terminology.info.SolutionDisplay;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -36,7 +47,8 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
-import com.denkbares.plugin.test.InitPluginManager;
+import de.d3web.scoring.HeuristicRating;
+import de.d3web.scoring.Score;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -55,6 +67,11 @@ public class KnowledgeBaseUtilsTest {
 	private KnowledgeBase kb;
 	private QuestionChoice qmc;
 	private QuestionChoice qc;
+
+	@BeforeClass
+	public static void init() throws IOException {
+		InitPluginManager.init();
+	}
 
 	@Before
 	public void setUp() {
@@ -182,7 +199,7 @@ public class KnowledgeBaseUtilsTest {
 			dateToGet = new DateValue(date);
 		}
 		catch (ParseException e) {
-			e.printStackTrace();
+			Log.severe("Exception in Test", e);
 		}
 		String dateValInput = "2010-09-02 12:13:30.000 UTC";
 		QuestionDate qd = new QuestionDate(kb, "Please enter: ");
@@ -264,5 +281,40 @@ public class KnowledgeBaseUtilsTest {
 		assertEquals(
 				new HashSet<>(Arrays.asList(Locale.FRENCH, Locale.CHINESE, Locale.GERMAN)),
 				KnowledgeBaseUtils.getAvailableLocales(kb));
+	}
+
+	@Test
+	public void positionInTree() {
+		assertEquals(Arrays.asList(0, 0), KnowledgeBaseUtils.getPositionInTree(qmc));
+		assertEquals(Arrays.asList(0, 1), KnowledgeBaseUtils.getPositionInTree(qc));
+		QuestionOC qcChild = new QuestionOC(qc, "QcChild");
+		assertEquals(Arrays.asList(0, 1, 0), KnowledgeBaseUtils.getPositionInTree(qcChild));
+
+		Solution solution = new Solution(kb, "Solution");
+		Solution solutionChild = new Solution(solution, "SolutionChild");
+		assertEquals(Arrays.asList(1, 0), KnowledgeBaseUtils.getPositionInTree(solutionChild));
+	}
+
+	@Test
+	public void groupSolutions() {
+		Solution group = new Solution(kb, "group");
+		Solution sub1 = new Solution(group, "sup1");
+		Solution sub2 = new Solution(group, "sup2");
+		group.getInfoStore().addValue(BasicProperties.SOLUTION_DISPLAY, SolutionDisplay.group);
+
+		MultiMap<Solution, Solution> solutionSolutionMultiMap = KnowledgeBaseUtils.groupSolutions(Arrays.asList(sub1, sub2));
+		DefaultMultiMap<Object, Object> expected = new DefaultMultiMap<>();
+		expected.put(group, sub1);
+		expected.put(group, sub2);
+		assertEquals(expected, solutionSolutionMultiMap);
+
+		Session session = SessionFactory.createSession(kb);
+
+		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(sub1, new HeuristicRating(Score.P7)));
+
+		solutionSolutionMultiMap = KnowledgeBaseUtils.getGroupedSolutions(session, Rating.State.ESTABLISHED);
+		expected = new DefaultMultiMap<>();
+		expected.put(group, sub1);
+		assertEquals(expected, solutionSolutionMultiMap);
 	}
 }

@@ -31,6 +31,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
@@ -97,6 +98,11 @@ public class ActionSetQuestion extends ActionAddValueFact {
 	 */
 	public ActionSetQuestion() {
 		super();
+	}
+
+	public ActionSetQuestion(Question question, QuestionValue value) {
+		setQuestion(question);
+		setValue(value);
 	}
 
 	@Override

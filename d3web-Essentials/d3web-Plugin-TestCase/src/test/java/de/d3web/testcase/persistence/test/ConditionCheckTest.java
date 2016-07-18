@@ -47,7 +47,7 @@ import static org.junit.Assert.assertTrue;
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 30.10.15
  */
-public class ConditionPersistenceCheckTemplateTest {
+public class ConditionCheckTest {
 
 	private static KnowledgeBase knowledgeBase;
 
