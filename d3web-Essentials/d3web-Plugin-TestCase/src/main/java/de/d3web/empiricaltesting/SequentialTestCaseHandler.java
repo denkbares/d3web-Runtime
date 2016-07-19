@@ -29,16 +29,18 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Log;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
-import com.denkbares.strings.Strings;
 import de.d3web.testcase.model.CheckTemplate;
+import de.d3web.testcase.model.DefaultCheckTemplate;
+import de.d3web.testcase.model.DefaultFindingTemplate;
 import de.d3web.testcase.model.DefaultTestCase;
 import de.d3web.testcase.model.FindingTemplate;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testcase.persistence.TestCasePersistence;
-import com.denkbares.utils.Log;
 
 /**
  * Reads legacy xml persistence for {@link SequentialTestCase}s, but creates {@link DefaultTestCase}s. Writing is not
@@ -60,6 +62,7 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 	private static final String FINDINGS = "Findings";
 	private static final String START_DATE = "startDate";
 	private static final String TIMESTAMP = "Time";
+	public static final String LEGACY_MC_SEPARATOR = "#####";
 
 	@Override
 	public Object read(Element element, Persistence<TestCase> persistence) throws IOException {
@@ -104,6 +107,9 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 			Date date;
 			String time = rtcElement.getAttribute(TIMESTAMP);
 			if (Strings.isBlank(time)) {
+				time = rtcElement.getAttribute(TIMESTAMP.toLowerCase());
+			}
+			if (Strings.isBlank(time)) {
 				Collection<Date> chronology = testCase.chronology();
 				if (chronology.isEmpty()) {
 					date = testCase.getStartDate();
@@ -130,6 +136,20 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, FINDINGS)) {
 				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
 					FindingTemplate findingTemplate = (FindingTemplate) persistence.readFragment(findingOrCheckElement);
+
+					if (findingTemplate instanceof DefaultFindingTemplate) {
+						// compatibility to old ##### multiple choice values
+						DefaultFindingTemplate defaultFindingTemplate = (DefaultFindingTemplate) findingTemplate;
+						String value = defaultFindingTemplate.getValue();
+						if (value.contains(LEGACY_MC_SEPARATOR)) {
+							String[] mcSplit = value.split(LEGACY_MC_SEPARATOR);
+							for (String mcValue : mcSplit) {
+								testCase.addFinding(date, new DefaultFindingTemplate(defaultFindingTemplate.getObjectName(), mcValue));
+							}
+							continue;
+						}
+					}
+
 					testCase.addFinding(date, findingTemplate);
 				}
 			}
@@ -137,6 +157,20 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, EXPECTED_FINDINGS, SOLUTIONS)) {
 				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
 					CheckTemplate checkTemplate = (CheckTemplate) persistence.readFragment(findingOrCheckElement);
+
+					if (checkTemplate instanceof DefaultCheckTemplate) {
+						// compatibility to old ##### multiple choice values
+						DefaultCheckTemplate defaultCheckTemplate = (DefaultCheckTemplate) checkTemplate;
+						String value = defaultCheckTemplate.getValue();
+						if (value.contains(LEGACY_MC_SEPARATOR)) {
+							String[] mcSplit = value.split(LEGACY_MC_SEPARATOR);
+							for (String mcValue : mcSplit) {
+								testCase.addCheck(date, new DefaultCheckTemplate(defaultCheckTemplate.getObjectName(), mcValue));
+							}
+							continue;
+						}
+					}
+
 					testCase.addCheck(date, checkTemplate);
 				}
 			}

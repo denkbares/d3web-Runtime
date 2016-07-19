@@ -132,7 +132,7 @@ public final class KnowledgeBaseUtils {
 	 * objects will be contained only once at its first occurrence. The specified terminologyObject
 	 * is always the first element of this list.
 	 *
-	 * @param <T> the type of the ancestors to be found
+	 * @param <T>    the type of the ancestors to be found
 	 * @param parent the leaf where the search starts
 	 * @param typeOf the class of the ancestors to be found
 	 * @return the ancestors of the given {@link TerminologyObject}
@@ -179,9 +179,9 @@ public final class KnowledgeBaseUtils {
 	 * within this sub-tree) will be contained only once at its first occurrence. The specified
 	 * terminologyObject is always the first element of this list.
 	 *
-	 * @param <T> the type of the successors to be found
+	 * @param <T>               the type of the successors to be found
 	 * @param terminologyObject the root of the sub-tree to be specified
-	 * @param typeOf the class of the successors to be found
+	 * @param typeOf            the class of the successors to be found
 	 * @return the depth-first search tree items
 	 * @created 04.05.2011
 	 */
@@ -211,7 +211,7 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified case sensitive text as answer text.
 	 *
-	 * @param question the specified question
+	 * @param question   the specified question
 	 * @param answerText the requested answer text
 	 * @return null, if no answer found for specified params
 	 */
@@ -223,21 +223,67 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified text as answer text.
 	 *
-	 * @param question the specified question
-	 * @param answerText the requested answer text
+	 * @param question      the specified question
+	 * @param answerText    the requested answer text
 	 * @param caseSensitive decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
 	public static Choice findChoice(QuestionChoice question, String answerText, boolean caseSensitive) {
+		return findChoice(question, answerText, caseSensitive ? Matching.CASE_SENSITIVE : Matching.CASE_INSENSITIVE);
+	}
+
+	public enum Matching {
+		/**
+		 * Matching is done case sensitive
+		 */
+		CASE_SENSITIVE,
+		/**
+		 * Matching is done case insensitive
+		 */
+		CASE_INSENSITIVE,
+		/**
+		 * Matching is first tried case sensitive. If no match is found, we check if we can find a match in case
+		 * insensitive mode. We only return it, if the match is not ambiguous, meaning there isn't any other choice that
+		 * could also match.
+		 */
+		CASE_INSENSITIVE_IF_NO_CONFLICT
+	}
+
+	/**
+	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
+	 * question, that has the specified text as answer text.
+	 *
+	 * @param question   the specified question
+	 * @param answerText the requested answer text
+	 * @param matching   decides whether to search case sensitive or not
+	 * @return null, if no answer found for specified params
+	 */
+	public static Choice findChoice(QuestionChoice question, String answerText, Matching matching) {
 		if (question == null
 				|| question.getAllAlternatives() == null
 				|| answerText == null) {
 			return null;
 		}
-		for (Choice choice : question.getAllAlternatives()) {
-			if (answerText.equals(choice.getName())
-					|| (!caseSensitive && answerText.equalsIgnoreCase(choice.getName()))) {
-				return choice;
+		if (matching == Matching.CASE_INSENSITIVE_IF_NO_CONFLICT) {
+			List<Choice> caseInsensitiveMatches = new ArrayList<>();
+			for (Choice choice : question.getAllAlternatives()) {
+				if (answerText.equals(choice.getName())) {
+					return choice;
+				}
+				else if (answerText.equalsIgnoreCase(choice.getName())) {
+					caseInsensitiveMatches.add(choice);
+				}
+			}
+			if (caseInsensitiveMatches.size() == 1) return caseInsensitiveMatches.get(0);
+		}
+		else {
+			for (Choice choice : question.getAllAlternatives()) {
+				if (matching == Matching.CASE_SENSITIVE && answerText.equals(choice.getName())) {
+					return choice;
+				}
+				if (matching == Matching.CASE_INSENSITIVE && answerText.equalsIgnoreCase(choice.getName())) {
+					return choice;
+				}
 			}
 		}
 		return null;
@@ -267,7 +313,7 @@ public final class KnowledgeBaseUtils {
 	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
 	 * choice).
 	 *
-	 * @param question the question to create the value for
+	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
 	 * @created 23.09.2013
@@ -286,7 +332,7 @@ public final class KnowledgeBaseUtils {
 	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
 	 * choice).
 	 *
-	 * @param question the question to create the value for
+	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
 	 * @created 23.09.2013
@@ -546,7 +592,7 @@ public final class KnowledgeBaseUtils {
 	 * <p/>
 	 * If multiple states are specified, the solutions are ordered by the order of these states.
 	 *
-	 * @param session the session to get the solutions from
+	 * @param session        the session to get the solutions from
 	 * @param solutionStates the states of the solutions to be fetched
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
