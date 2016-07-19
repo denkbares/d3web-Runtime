@@ -37,6 +37,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -59,7 +60,6 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.scoring.HeuristicRating;
 import de.d3web.scoring.Score;
-import com.denkbares.strings.Strings;
 
 public final class ValueUtils {
 
@@ -370,7 +370,7 @@ public final class ValueUtils {
 	 * @created 11.08.2012
 	 */
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
-		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString);
+		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString, KnowledgeBaseUtils.Matching.CASE_INSENSITIVE_IF_NO_CONFLICT);
 		if (choice == null) {
 			throw new IllegalArgumentException("'" + valueString + "' is not a valid choice for question '" + question.getName() + "'");
 		}
