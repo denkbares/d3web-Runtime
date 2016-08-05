@@ -49,6 +49,7 @@ import de.d3web.testcase.persistence.TestCasePersistence;
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 30.10.15
  */
+@SuppressWarnings("deprecation")
 public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 
 	private static final String SEQUENTIAL_TEST_CASES_OLD = "SeqTestCaseRepository"; // compatibility
@@ -104,79 +105,83 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 		}
 
 		for (Element rtcElement : XMLUtil.getChildren(stcElement, RATED_TEST_CASE)) {
-			Date date;
-			String time = rtcElement.getAttribute(TIMESTAMP);
-			if (Strings.isBlank(time)) {
-				time = rtcElement.getAttribute(TIMESTAMP.toLowerCase());
-			}
-			if (Strings.isBlank(time)) {
-				Collection<Date> chronology = testCase.chronology();
-				if (chronology.isEmpty()) {
-					date = testCase.getStartDate();
-				}
-				else {
-					List<Date> chronologyList = new ArrayList<>(chronology);
-					date = new Date(chronologyList.get(chronologyList.size() - 1).getTime() + 1);
-				}
-			}
-			else {
-				try {
-					date = Strings.readDate(time);
-				}
-				catch (ParseException e) {
-					throw new IOException(e);
-				}
-
-			}
-			String rtcName = rtcElement.getAttribute(NAME);
-			if (!Strings.isBlank(rtcName)) {
-				testCase.addDescription(date, rtcName);
-			}
-
-			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, FINDINGS)) {
-				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
-					FindingTemplate findingTemplate = (FindingTemplate) persistence.readFragment(findingOrCheckElement);
-
-					if (findingTemplate instanceof DefaultFindingTemplate) {
-						// compatibility to old ##### multiple choice values
-						DefaultFindingTemplate defaultFindingTemplate = (DefaultFindingTemplate) findingTemplate;
-						String value = defaultFindingTemplate.getValue();
-						if (value.contains(LEGACY_MC_SEPARATOR)) {
-							String[] mcSplit = value.split(LEGACY_MC_SEPARATOR);
-							for (String mcValue : mcSplit) {
-								testCase.addFinding(date, new DefaultFindingTemplate(defaultFindingTemplate.getObjectName(), mcValue));
-							}
-							continue;
-						}
-					}
-
-					testCase.addFinding(date, findingTemplate);
-				}
-			}
-
-			for (Element entryChildElements : XMLUtil.getChildren(rtcElement, EXPECTED_FINDINGS, SOLUTIONS)) {
-				for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
-					CheckTemplate checkTemplate = (CheckTemplate) persistence.readFragment(findingOrCheckElement);
-
-					if (checkTemplate instanceof DefaultCheckTemplate) {
-						// compatibility to old ##### multiple choice values
-						DefaultCheckTemplate defaultCheckTemplate = (DefaultCheckTemplate) checkTemplate;
-						String value = defaultCheckTemplate.getValue();
-						if (value.contains(LEGACY_MC_SEPARATOR)) {
-							String[] mcSplit = value.split(LEGACY_MC_SEPARATOR);
-							for (String mcValue : mcSplit) {
-								testCase.addCheck(date, new DefaultCheckTemplate(defaultCheckTemplate.getObjectName(), mcValue));
-							}
-							continue;
-						}
-					}
-
-					testCase.addCheck(date, checkTemplate);
-				}
-			}
+			readRTCElement(rtcElement, testCase, persistence);
 		}
 
 		return testCase;
+	}
+
+	private void readRTCElement(Element rtcElement, DefaultTestCase testCase, Persistence<TestCase> persistence) throws IOException {
+		Date date;
+		String time = rtcElement.getAttribute(TIMESTAMP);
+		if (Strings.isBlank(time)) {
+			time = rtcElement.getAttribute(TIMESTAMP.toLowerCase());
+		}
+		if (Strings.isBlank(time)) {
+			Collection<Date> chronology = testCase.chronology();
+			if (chronology.isEmpty()) {
+				date = testCase.getStartDate();
+			}
+			else {
+				List<Date> chronologyList = new ArrayList<>(chronology);
+				date = new Date(chronologyList.get(chronologyList.size() - 1).getTime() + 1);
+			}
+		}
+		else {
+			try {
+				date = Strings.readDate(time);
+			}
+			catch (ParseException e) {
+				throw new IOException(e);
+			}
+
+		}
+		String rtcName = rtcElement.getAttribute(NAME);
+		if (!Strings.isBlank(rtcName)) {
+			testCase.addDescription(date, rtcName);
+		}
+
+		for (Element entryChildElements : XMLUtil.getChildren(rtcElement, FINDINGS)) {
+			for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
+				FindingTemplate findingTemplate = (FindingTemplate) persistence.readFragment(findingOrCheckElement);
+
+				if (findingTemplate instanceof DefaultFindingTemplate) {
+					// compatibility to old ##### multiple choice values
+					DefaultFindingTemplate defaultFindingTemplate = (DefaultFindingTemplate) findingTemplate;
+					String value = defaultFindingTemplate.getValue();
+					if (value.contains(LEGACY_MC_SEPARATOR)) {
+						String[] mcSplit = value.split(LEGACY_MC_SEPARATOR);
+						for (String mcValue : mcSplit) {
+							testCase.addFinding(date, new DefaultFindingTemplate(defaultFindingTemplate.getObjectName(), mcValue));
+						}
+						continue;
+					}
+				}
+
+				testCase.addFinding(date, findingTemplate);
+			}
+		}
+
+		for (Element entryChildElements : XMLUtil.getChildren(rtcElement, EXPECTED_FINDINGS, SOLUTIONS)) {
+			for (Element findingOrCheckElement : XMLUtil.getChildren(entryChildElements)) {
+				CheckTemplate checkTemplate = (CheckTemplate) persistence.readFragment(findingOrCheckElement);
+
+				if (checkTemplate instanceof DefaultCheckTemplate) {
+					// compatibility to old ##### multiple choice values
+					DefaultCheckTemplate defaultCheckTemplate = (DefaultCheckTemplate) checkTemplate;
+					String value = defaultCheckTemplate.getValue();
+					if (value.contains(LEGACY_MC_SEPARATOR)) {
+						String[] mcSplit = value.split(LEGACY_MC_SEPARATOR);
+						for (String mcValue : mcSplit) {
+							testCase.addCheck(date, new DefaultCheckTemplate(defaultCheckTemplate.getObjectName(), mcValue));
+						}
+						continue;
+					}
+				}
+
+				testCase.addCheck(date, checkTemplate);
+			}
+		}
 	}
 
 	@Override
