@@ -18,9 +18,12 @@ import java.util.concurrent.TimeUnit;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
+import com.denkbares.progress.ParallelProgress;
 import com.denkbares.progress.ProgressListener;
-import de.d3web.testing.Message.Type;
 import com.denkbares.utils.Log;
+import de.d3web.testing.Message.Type;
+
+import static java.util.stream.Collectors.toList;
 
 /*
  * Copyright (C) 2012 denkbares GmbH
@@ -61,10 +64,7 @@ public class TestExecutor {
 	private final ProgressListener progressListener;
 	private final BuildResult build;
 	private final HashMap<TestSpecification, TestResult> testResults = new HashMap<>();
-	private String currentMessage;
 	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
-	private float finishedTests;
-	private float overallTestsCount;
 	private final ExecutorService executor;
 	private Thread executorThread;
 
@@ -108,7 +108,7 @@ public class TestExecutor {
 		Map<TestSpecification, Collection<CallableTest>> callableTests =
 				getCallableTestsMap(validSpecifications);
 		try {
-			initProgressFields(callableTests);
+			initProgress(callableTests);
 			executeTests(callableTests);
 		}
 		finally {
@@ -119,8 +119,7 @@ public class TestExecutor {
 	}
 
 	private void updateTestResults(Map<TestSpecification, Collection<CallableTest>> callableTests) {
-		MultiMap<TestResult, TestResult> groups =
-				new DefaultMultiMap<>();
+		MultiMap<TestResult, TestResult> groups = new DefaultMultiMap<>();
 		TestResult currentGroup = null;
 		for (TestSpecification<?> specification : callableTests.keySet()) {
 			Collection<CallableTest> ct = callableTests.get(specification);
@@ -144,10 +143,28 @@ public class TestExecutor {
 		}
 	}
 
-	private void initProgressFields(Map<TestSpecification, Collection<CallableTest>> callableTests) {
-		overallTestsCount = getNumberOfTests(callableTests);
-		finishedTests = 0f;
-		currentMessage = "Initializing...";
+	private void initProgress(Map<TestSpecification, Collection<CallableTest>> callableTestsBySpecification) {
+		List<CallableTest> callableTests = callableTestsBySpecification.values()
+				.stream()
+				.flatMap(Collection::stream)
+				.collect(toList());
+
+		// collect all the complexities from all tests
+		float[] complexities = new float[callableTests.size()];
+		for (int i = 0; i < callableTests.size(); i++) {
+			CallableTest callableTest = callableTests.get(i);
+			Test test = callableTest.specification.getTest();
+			complexities[i] = test instanceof ProgressingTest ?
+					((ProgressingTest) test).getComputationalComplexity() : ProgressingTest.DEFAULT_COMPUTATION_COMPLEXITY;
+		}
+
+		// create ParallelProgressListener and set the listener of the sub tasks accordingly
+		ParallelProgress parallelProgress = new ParallelProgress(this.progressListener, complexities);
+		for (int i = 0; i < callableTests.size(); i++) {
+			callableTests.get(i).setProgressListener(parallelProgress.getSubTaskProgressListener(i));
+		}
+		// set starting message
+		parallelProgress.updateProgress(0, "Initializing...");
 	}
 
 	private float getNumberOfTests(Map<TestSpecification, Collection<CallableTest>> callablesMap) {
@@ -381,10 +398,6 @@ public class TestExecutor {
 		return result;
 	}
 
-	private synchronized void updateProgressListener() {
-		progressListener.updateProgress(finishedTests / overallTestsCount, currentMessage);
-	}
-
 	static class FutureTestTask extends FutureTask<Void> {
 
 		private final CallableTest<?> callable;
@@ -407,6 +420,7 @@ public class TestExecutor {
 		private final TestSpecification<T> specification;
 		private final T testObject;
 		private final TestResult testResult;
+		private ProgressListener progressListener = null;
 
 		public CallableTest(TestSpecification<T> specification, String testObjectName, T testObject, TestResult testresult) {
 			this.specification = specification;
@@ -415,31 +429,22 @@ public class TestExecutor {
 			this.testResult = testresult;
 		}
 
+		public void setProgressListener(ProgressListener progressListener) {
+			this.progressListener = progressListener;
+			Test<T> test = specification.getTest();
+			if (test instanceof ProgressingTest) {
+				((ProgressingTest) test).setProgressListener(progressListener);
+			}
+		}
+
 		public void testStarted() {
 			currentlyRunningTests.add(getMessage());
-			currentMessage = getMessage();
-			updateProgressListener();
+			progressListener.updateProgress(0, getMessage());
 		}
 
 		public void testFinished() {
 			currentlyRunningTests.remove(getMessage());
-			String tempMessage = null;
-			try {
-				tempMessage = currentlyRunningTests.get(0);
-			}
-			catch (IndexOutOfBoundsException e) {
-				// since another thread could remove the last element between
-				// checking for not empty and actually retrieving it, we just
-				// try to retrieve it and catch a possible exception
-			}
-			if (tempMessage != null) currentMessage = tempMessage;
-			finishedTests += getTaskVolume();
-			updateProgressListener();
-		}
-
-		public float getTaskVolume() {
-			// maybe this can be derived somehow more precisely some time
-			return 1;
+			progressListener.updateProgress(1f, null);
 		}
 
 		public String getMessage() {
