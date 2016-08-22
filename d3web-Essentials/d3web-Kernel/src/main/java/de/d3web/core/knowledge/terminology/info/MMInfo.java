@@ -20,6 +20,9 @@ package de.d3web.core.knowledge.terminology.info;
 
 import java.util.Locale;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
@@ -79,12 +82,32 @@ public class MMInfo {
 	/**
 	 * Checks if the link points to an {@link Resource} of the {@link KnowledgeBase}
 	 *
-	 * @param link
+	 * @param link the link to be checked
 	 * @return true, if the link points to a {@link Resource}, false otherwise
 	 * @created 05.11.2010
 	 */
 	public static boolean isResourceLink(String link) {
 		return link != null && !link.contains(":");
+	}
+
+	/**
+	 * Returns the multimedia-links of the specified object. If no link property is found for the
+	 * locale or a parent (more common) locale, the object name is returned. If no link property is
+	 * found at all, an empty array is returned. If the found link property contains multiple links
+	 * (separated by ";"), they will be split correctly and returned as an array. Otherwise the
+	 * returned array contains the single link.
+	 *
+	 * @param object the object to get the links for
+	 * @param locale the language to get the links for
+	 * @return the links or an empty list
+	 * @created 03.07.2012
+	 */
+	@NotNull
+	public static String[] getLinks(NamedObject object, Locale locale) {
+		String property = Strings.trim(object.getInfoStore().getValue(MMInfo.LINK, locale));
+		if (Strings.isBlank(property)) return new String[0];
+		if (!property.contains(";")) return new String[] { property };
+		return property.split("\\s*;\\s*");
 	}
 
 	/**

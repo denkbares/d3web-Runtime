@@ -132,7 +132,7 @@ public final class KnowledgeBaseUtils {
 	 * objects will be contained only once at its first occurrence. The specified terminologyObject
 	 * is always the first element of this list.
 	 *
-	 * @param <T>    the type of the ancestors to be found
+	 * @param <T> the type of the ancestors to be found
 	 * @param parent the leaf where the search starts
 	 * @param typeOf the class of the ancestors to be found
 	 * @return the ancestors of the given {@link TerminologyObject}
@@ -179,9 +179,9 @@ public final class KnowledgeBaseUtils {
 	 * within this sub-tree) will be contained only once at its first occurrence. The specified
 	 * terminologyObject is always the first element of this list.
 	 *
-	 * @param <T>               the type of the successors to be found
+	 * @param <T> the type of the successors to be found
 	 * @param terminologyObject the root of the sub-tree to be specified
-	 * @param typeOf            the class of the successors to be found
+	 * @param typeOf the class of the successors to be found
 	 * @return the depth-first search tree items
 	 * @created 04.05.2011
 	 */
@@ -211,7 +211,7 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified case sensitive text as answer text.
 	 *
-	 * @param question   the specified question
+	 * @param question the specified question
 	 * @param answerText the requested answer text
 	 * @return null, if no answer found for specified params
 	 */
@@ -223,8 +223,8 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified text as answer text.
 	 *
-	 * @param question      the specified question
-	 * @param answerText    the requested answer text
+	 * @param question the specified question
+	 * @param answerText the requested answer text
 	 * @param caseSensitive decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
@@ -242,9 +242,9 @@ public final class KnowledgeBaseUtils {
 		 */
 		CASE_INSENSITIVE,
 		/**
-		 * Matching is first tried case sensitive. If no match is found, we check if we can find a match in case
-		 * insensitive mode. We only return it, if the match is not ambiguous, meaning there isn't any other choice that
-		 * could also match.
+		 * Matching is first tried case sensitive. If no match is found, we check if we can find a
+		 * match in case insensitive mode. We only return it, if the match is not ambiguous, meaning
+		 * there isn't any other choice that could also match.
 		 */
 		CASE_INSENSITIVE_IF_NO_CONFLICT
 	}
@@ -253,9 +253,9 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified text as answer text.
 	 *
-	 * @param question   the specified question
+	 * @param question the specified question
 	 * @param answerText the requested answer text
-	 * @param matching   decides whether to search case sensitive or not
+	 * @param matching decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
 	public static Choice findChoice(QuestionChoice question, String answerText, Matching matching) {
@@ -313,7 +313,7 @@ public final class KnowledgeBaseUtils {
 	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
 	 * choice).
 	 *
-	 * @param question    the question to create the value for
+	 * @param question the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
 	 * @created 23.09.2013
@@ -332,7 +332,7 @@ public final class KnowledgeBaseUtils {
 	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
 	 * choice).
 	 *
-	 * @param question    the question to create the value for
+	 * @param question the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
 	 * @created 23.09.2013
@@ -579,20 +579,23 @@ public final class KnowledgeBaseUtils {
 	/**
 	 * Fetches the solutions with the specified state(s) form the session. Groups all solutions into
 	 * the closest parent solution that has set the property {@link BasicProperties#SOLUTION_DISPLAY}
-	 * to {@link SolutionDisplay#group}. If a solution has in no such parent, or the group id in the
-	 * fetched list(s), the returned MultiMap contains an entry with both, key an value is that
-	 * solution. Additionally there are entries where the key is the grouping solution of each
-	 * (non-group) solution and the values are the fetched solutions.
+	 * to {@link SolutionDisplay#group}. If a solution of a specified rating state has no such
+	 * parent, the returned map contains an entry with that solution as the key and value. If a
+	 * grouping solution itself is has one of the specified rating states, the returned MultiMap
+	 * will also contain an entry with both, key an value is that solution. Additionally there are
+	 * entries where the key is the grouping solution of each (non-group) solution and the values
+	 * are the fetched solutions of the specified states.
 	 * <p/>
-	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the
-	 * group of the first solution. Additionally the values are also in the order of the fetched
-	 * solution, that means if a solution s1 is before a solution s2 in the specified list, the
-	 * groups of s1 is before the group of s2, and if both are in the same group, then s1 is in the
-	 * values of that group before s2.
+	 * The order of the solutions (highest rated solution comes first) is preserved. The first group
+	 * (when iterating the keys) is the the group of the first (highest rated) solution.
+	 * Additionally the values are also in the order of the fetched solution, that means if a
+	 * solution s1 is before a solution s2 in the specified list, the groups of s1 is before the
+	 * group of s2, and if both are in the same group, then s1 is in the values of that group before
+	 * s2.
 	 * <p/>
 	 * If multiple states are specified, the solutions are ordered by the order of these states.
 	 *
-	 * @param session        the session to get the solutions from
+	 * @param session the session to get the solutions from
 	 * @param solutionStates the states of the solutions to be fetched
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
