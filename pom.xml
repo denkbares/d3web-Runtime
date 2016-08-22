@@ -161,6 +161,14 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<distributionManagement>
+		<repository>
+			<id>des-releases-public</id>
+			<name>Denkbares Public Releases Repository</name>
+			<url>https://repo.denkbares.com/releases-public/</url>
+		</repository>
+	</distributionManagement>
+
 	<organization>
 		<name>Universität Würzburg</name>
 		<url>http://uni-wuerzburg.de/</url>
