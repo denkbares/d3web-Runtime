@@ -49,7 +49,7 @@ public class DefaultAbnormality implements Abnormality {
 	 * with this method you can add an answer-abnorm.Value pair Creation date:
 	 * (06.08.2001 16:25:46)
 	 *
-	 * @param ans   de.d3web.kernel.domainModel.Answer
+	 * @param ans de.d3web.kernel.domainModel.Answer
 	 * @param value double
 	 */
 	public void addValue(Value ans, double value) {
@@ -97,6 +97,7 @@ public class DefaultAbnormality implements Abnormality {
 		return A5;
 	}
 
+	@Override
 	public boolean isSet(Value ans) {
 		return (values.get(ans) != null);
 	}
@@ -118,7 +119,7 @@ public class DefaultAbnormality implements Abnormality {
 		DefaultAbnormality abnormalitySlice = infoStore.getValue(BasicProperties.DEFAULT_ABNORMALITIY);
 		if (abnormalitySlice == null) {
 			abnormalitySlice = new DefaultAbnormality();
-			infoStore.addValue(BasicProperties.DEFAULT_ABNORMALITIY, abnormalitySlice);
+			infoStore.addValue(BasicProperties.DEFAULT_ABNORMALITY, abnormalitySlice);
 		}
 		abnormalitySlice.addValue(value, abnormality);
 	}
@@ -148,11 +149,10 @@ public class DefaultAbnormality implements Abnormality {
 		for (String abnormalityString : abnormalities) {
 			if (abnormalityString.trim().isEmpty()) continue;
 			int lastColon = abnormalityString.lastIndexOf(":");
-			double abnormality = Double.parseDouble(abnormalityString.substring(lastColon + 1).replace(
-					",", ".").trim());
-			defaultAbnormality.addValue(
-					new ChoiceValue(new ChoiceID(abnormalityString.substring(0, lastColon).trim())),
-					abnormality);
+			double abnormality = Double.parseDouble(abnormalityString.substring(lastColon + 1)
+					.replace(",", ".").trim());
+			ChoiceID choiceID = new ChoiceID(abnormalityString.substring(0, lastColon).trim());
+			defaultAbnormality.addValue(new ChoiceValue(choiceID), abnormality);
 		}
 		return defaultAbnormality;
 	}
@@ -173,5 +173,4 @@ public class DefaultAbnormality implements Abnormality {
 			return "";
 		}
 	}
-
 }

@@ -83,10 +83,10 @@ public class AbnormalityUtils {
 	public static double getAbnormality(Question q, Value v) {
 		Abnormality abnormality;
 		if (q instanceof QuestionNum) {
-			abnormality = q.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
+			abnormality = q.getInfoStore().getValue(BasicProperties.ABNORMALITY_NUM);
 		}
 		else {
-			abnormality = q.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY);
+			abnormality = q.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
 		}
 		if (abnormality != null) {
 			return abnormality.getValue(v);

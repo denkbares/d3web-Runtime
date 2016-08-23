@@ -26,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
@@ -44,7 +45,6 @@ import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
-import com.denkbares.utils.Log;
 
 /**
  * Provides static methods for XCLModels
@@ -136,7 +136,7 @@ public class XCLUtils {
 		}
 		// nothing covered, return normal facts
 		DefaultAbnormality abnormality = question.getInfoStore().getValue(
-				BasicProperties.DEFAULT_ABNORMALITIY);
+				BasicProperties.DEFAULT_ABNORMALITY);
 		if (abnormality == null) {
 			return Collections.emptyList();
 		}

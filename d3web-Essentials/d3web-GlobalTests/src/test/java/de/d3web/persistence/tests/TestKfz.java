@@ -20,10 +20,6 @@
 
 package de.d3web.persistence.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -32,13 +28,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.progress.DummyProgressListener;
 import de.d3web.core.io.BasicPersistenceHandler;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.DummyProgressListener;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -59,7 +55,8 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
+
+import static org.junit.Assert.*;
 
 /**
  * Test class for the Loading and executing a kfz-kb from an XML file Creation
@@ -145,7 +142,7 @@ public class TestKfz {
 		//
 		session.getBlackboard().addValueFact(
 				FactFactory.createFact(Mf6,
-						new NumValue(new Double(10)), PSMethodUserSelected.getInstance(),
+						new NumValue(10), PSMethodUserSelected.getInstance(),
 						PSMethodUserSelected.getInstance()));
 		Value Mf58Value = session.getBlackboard().getValue(Mf58);
 		Assert.assertNotNull(Mf58Value);

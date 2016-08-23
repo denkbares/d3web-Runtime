@@ -34,11 +34,11 @@ import de.d3web.core.session.values.NumValue;
  * AbnormalityNum is for handling abnormality when working with QuestionNums
  * QuestionNums have no distinct values but can have as Answer an AnswerNum
  * encapsulating any double value
- * 
+ * <p>
  * instead of a associative memory associating AnswerQuestions with abnormality
  * values, AbnormalityNum uses AbnormalityIntervals to associate ranges of
  * doubles with abnormality values
- * 
+ * <p>
  * the addValue method takes an interval (defined by lower and upper boundary
  * and type) instead of an Answer (like Abnormalites addValue method) the
  * getValue method takes a double instead of an Answer
@@ -53,10 +53,9 @@ public class AbnormalityNum implements Abnormality {
 	/**
 	 * checks if AbnormalityInterval interferes with any AbnormalityInterval
 	 * added previously
-	 * 
+	 *
 	 * @param ai AbnormalityInterval
-	 * @return boolean, true if ai does not interfere with any
-	 *         AbnormalityInterval in intervals
+	 * @return boolean, true if ai does not interfere with any AbnormalityInterval in intervals
 	 */
 	private boolean checkIntervals(AbnormalityInterval ai) {
 		for (AbnormalityInterval interval : intervals) {
@@ -91,11 +90,9 @@ public class AbnormalityNum implements Abnormality {
 	}
 
 	/**
-	 * 
 	 * @param answerValue double
-	 * @return double, value of abnormality of the AbnormalityInterval which
-	 *         contains answerValue, A0 if answerValue is not contained in any
-	 *         AbnormalityInterval
+	 * @return double, value of abnormality of the AbnormalityInterval which contains answerValue,
+	 * A0 if answerValue is not contained in any AbnormalityInterval
 	 */
 	public double getValue(double answerValue) {
 		for (AbnormalityInterval ai : intervals) {
@@ -104,27 +101,28 @@ public class AbnormalityNum implements Abnormality {
 		return AbnormalityUtils.getDefault();
 	}
 
-	/**
-	 * 
-	 * @param answerValue double
-	 * @return double, value of abnormality of the AbnormalityInterval which
-	 *         contains answerValue, A0 if answerValue is not contained in any
-	 *         AbnormalityInterval
-	 */
+	@Override
+	public boolean isSet(Value answerValue) {
+		if (answerValue instanceof NumValue) {
+			double value = ((NumValue) answerValue).getDouble();
+			for (AbnormalityInterval ai : intervals) {
+				if (ai.contains(value)) return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public double getValue(Value answerValue) {
 		if (answerValue instanceof NumValue) {
-			double doubleValue = 0;
-			Double objectDoubleValue = (Double) answerValue.getValue();
-			if (objectDoubleValue != null) doubleValue = objectDoubleValue;
-			return getValue(doubleValue);
+			return getValue(((NumValue) answerValue).getDouble());
 		}
 		return AbnormalityUtils.getDefault();
 	}
 
 	/**
 	 * Returns the interval-list.
-	 * 
+	 *
 	 * @return List with the Intervals.
 	 */
 	public List<AbnormalityInterval> getIntervals() {
@@ -133,39 +131,37 @@ public class AbnormalityNum implements Abnormality {
 
 	/**
 	 * Sets the AbnormalityInterval for the {@link QuestionNum}
-	 * 
-	 * @created 25.06.2010
+	 *
 	 * @param qnum QuestionNum
 	 * @param i AbnormalityInterval
+	 * @created 25.06.2010
 	 */
 	public static void setAbnormality(QuestionNum qnum, AbnormalityInterval i) {
 		InfoStore infoStore = qnum.getInfoStore();
-		AbnormalityNum abnormalitySlice = infoStore.getValue(BasicProperties.ABNORMALITIY_NUM);
+		AbnormalityNum abnormalitySlice = infoStore.getValue(BasicProperties.ABNORMALITY_NUM);
 		if (abnormalitySlice == null) {
 			abnormalitySlice = new AbnormalityNum();
-			infoStore.addValue(BasicProperties.ABNORMALITIY_NUM, abnormalitySlice);
+			infoStore.addValue(BasicProperties.ABNORMALITY_NUM, abnormalitySlice);
 		}
 		abnormalitySlice.addValue(i);
 	}
 
 	/**
 	 * Sets the abnormality for the defined interval.
-	 * 
-	 * @created 25.06.2010
+	 *
 	 * @param qnum QuestionNum
 	 * @param lowerBoundary LowerBoundary
 	 * @param upperBoundary UpperBoundary
 	 * @param abnormality Abnormality
-	 * @param leftOpen true if the lowerBoundary should be included in the
-	 *        interval
-	 * @param rightOpen true if the UpperBoundary should be included in the
-	 *        interval
+	 * @param leftOpen true if the lowerBoundary should be included in the interval
+	 * @param rightOpen true if the UpperBoundary should be included in the interval
+	 * @created 25.06.2010
 	 */
 	public static void setAbnormality(QuestionNum qnum, double lowerBoundary,
-			double upperBoundary,
-			double abnormality,
-			boolean leftOpen,
-			boolean rightOpen) {
+									  double upperBoundary,
+									  double abnormality,
+									  boolean leftOpen,
+									  boolean rightOpen) {
 		AbnormalityInterval ai =
 				new AbnormalityInterval(lowerBoundary, upperBoundary, abnormality, leftOpen,
 						rightOpen);

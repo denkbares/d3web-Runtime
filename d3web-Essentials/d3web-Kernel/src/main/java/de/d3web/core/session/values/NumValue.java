@@ -19,33 +19,28 @@
  */
 package de.d3web.core.session.values;
 
+import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
 
 /**
  * Represents a numerical value (internally stored as a {@link Double}).
- * 
+ *
  * @author joba
- * 
  */
 public class NumValue implements QuestionValue {
 
-	private final Double value;
-
-	public NumValue(double value) {
-		this(Double.valueOf(value));
-	}
+	private final double value;
 
 	/**
 	 * Constructs a new NumValue
-	 * 
-	 * @param value the Double for which a new NumValue should be instantiated
-	 * @throws NullPointerException if a null object was passed in
+	 *
+	 * @param value the double for which a new NumValue should be instantiated
 	 */
-	public NumValue(Double value) {
-		if (value == null) {
-			throw new NullPointerException();
-		}
+	public NumValue(double value) {
 		this.value = value;
 	}
 
@@ -53,18 +48,19 @@ public class NumValue implements QuestionValue {
 	 * @return the {@link Double} of this num value
 	 */
 	@Override
-	public Object getValue() {
+	@NotNull
+	public Double getValue() {
 		return value;
 	}
 
-	public Double getDouble() {
+	public double getDouble() {
 		return value;
 	}
 
 	@Override
-	public int compareTo(Value o) {
+	public int compareTo(@NotNull Value o) {
 		if (o instanceof NumValue) {
-			return value.compareTo(((NumValue) o).value);
+			return Double.compare(value, ((NumValue) o).value);
 		}
 		return -1;
 	}
@@ -76,34 +72,14 @@ public class NumValue implements QuestionValue {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + value.hashCode();
-		return result;
+		return Objects.hash(value);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		NumValue other = (NumValue) obj;
-		return value.equals(other.value);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof NumValue)) return false;
+		NumValue numValue = (NumValue) o;
+		return Double.compare(numValue.value, value) == 0;
 	}
-
-	// @Override
-	// public boolean equals(Object o) {
-	// if (o instanceof NumValue) {
-	// NumValue nv = (NumValue) o;
-	// return nv.value.equals(value);
-	// }
-	// return super.equals(o);
-	// }
-
 }

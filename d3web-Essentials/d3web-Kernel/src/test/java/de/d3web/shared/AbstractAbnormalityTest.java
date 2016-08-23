@@ -19,12 +19,10 @@
 
 package de.d3web.shared;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
@@ -34,7 +32,9 @@ import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceValue;
-import com.denkbares.plugin.test.InitPluginManager;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link AbnormalityUtils}
@@ -107,7 +107,7 @@ public class AbstractAbnormalityTest {
 		// default-abnormality A5 should be returned:
 		assertThat(AbnormalityUtils.getAbnormality(questionOC, yes), is(Abnormality.A5));
 		// now set the question for the abnormality...
-		questionOC.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITIY,
+		questionOC.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITY,
 				abstractAbnormality);
 		abstractAbnormality.addValue(yes, Abnormality.A2);
 		// ...and retrieve the abnormality again:

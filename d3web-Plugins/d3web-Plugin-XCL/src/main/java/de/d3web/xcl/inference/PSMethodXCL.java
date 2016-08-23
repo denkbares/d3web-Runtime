@@ -140,9 +140,9 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	public Abnormality getAbnormalitySlice(Question question) {
 		Abnormality knowledge = question.getInfoStore().getValue(
-				BasicProperties.DEFAULT_ABNORMALITIY);
+				BasicProperties.DEFAULT_ABNORMALITY);
 		if (knowledge == null) {
-			knowledge = question.getInfoStore().getValue(BasicProperties.ABNORMALITIY_NUM);
+			knowledge = question.getInfoStore().getValue(BasicProperties.ABNORMALITY_NUM);
 		}
 		return knowledge;
 	}

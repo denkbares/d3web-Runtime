@@ -93,7 +93,7 @@ public class DefaultAbnormalityHandler implements FragmentHandler<KnowledgeBase>
 			}
 		}
 		if (question != null) {
-			question.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITIY, abnorm);
+			question.getInfoStore().addValue(BasicProperties.DEFAULT_ABNORMALITY, abnorm);
 		}
 		return abnorm;
 	}

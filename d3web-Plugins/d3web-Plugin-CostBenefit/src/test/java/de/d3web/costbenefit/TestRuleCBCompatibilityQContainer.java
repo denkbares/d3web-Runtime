@@ -24,9 +24,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.knowledge.InterviewObject;
@@ -56,7 +56,6 @@ import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests the combination of Rules and the CostBenefit
@@ -172,7 +171,7 @@ public class TestRuleCBCompatibilityQContainer {
 			}
 			for (Choice c : qoc.getAllAlternatives()) {
 				ChoiceValue value = new ChoiceValue(c);
-				if (interviewObject.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY).getValue(
+				if (interviewObject.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY).getValue(
 						value) == abnormality) {
 					session.getBlackboard().addValueFact(
 							FactFactory.createUserEnteredFact(qoc, value));

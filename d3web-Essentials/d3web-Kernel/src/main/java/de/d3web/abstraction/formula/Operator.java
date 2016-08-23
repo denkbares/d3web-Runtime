@@ -31,7 +31,7 @@ import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Complex FormulaElement. Creation date: (14.08.2000 15:41:43)
- * 
+ *
  * @author Norman Brümmer
  */
 public class Operator implements FormulaNumberElement {
@@ -40,17 +40,21 @@ public class Operator implements FormulaNumberElement {
 		Add, Div, Max, Min, Mult, Sub
 	}
 
-	/** first argument of the term */
+	/**
+	 * first argument of the term
+	 */
 	private final FormulaNumberElement arg1;
 
-	/** second argument of the term */
+	/**
+	 * second argument of the term
+	 */
 	private final FormulaNumberElement arg2;
 
 	private final Operation operator;
 
 	/**
 	 * Creates a new term with its two arguments
-	 * 
+	 *
 	 * @param arg1 first argument
 	 * @param arg2 second argument
 	 */
@@ -68,39 +72,38 @@ public class Operator implements FormulaNumberElement {
 	public Value eval(Session session) {
 		Object value = (getArg1().eval(session)).getValue();
 		Object value2 = (getArg2().eval(session)).getValue();
-		if ((value == null) || !(value instanceof Number) || (value2 == null)
-				|| !(value2 instanceof Number)) {
+		if (!(value instanceof Number) || !(value2 instanceof Number)) {
 			return UndefinedValue.getInstance();
 		}
 
 		Number evaluatedArg1 = (Number) value;
 		Number evaluatedArg2 = (Number) value2;
 		switch (operator) {
-		case Add:
-			return new NumValue(new Double(evaluatedArg1.doubleValue()
-					+ evaluatedArg2.doubleValue()));
-		case Div:
-			return new NumValue(new Double(evaluatedArg1.doubleValue()
-					/ evaluatedArg2.doubleValue()));
-		case Max:
-			return new NumValue(new Double(Math.max(evaluatedArg1.doubleValue(),
-					evaluatedArg2.doubleValue())));
-		case Min:
-			return new NumValue(new Double(Math.min(evaluatedArg1.doubleValue(),
-					evaluatedArg2.doubleValue())));
-		case Mult:
-			return new NumValue(new Double(evaluatedArg1.doubleValue()
-					* evaluatedArg2.doubleValue()));
-		default:
-			// only Sub is left
-			return new NumValue(new Double(evaluatedArg1.doubleValue()
-					- evaluatedArg2.doubleValue()));
+			case Add:
+				return new NumValue(evaluatedArg1.doubleValue()
+						+ evaluatedArg2.doubleValue());
+			case Div:
+				return new NumValue(evaluatedArg1.doubleValue()
+						/ evaluatedArg2.doubleValue());
+			case Max:
+				return new NumValue(Math.max(evaluatedArg1.doubleValue(),
+						evaluatedArg2.doubleValue()));
+			case Min:
+				return new NumValue(Math.min(evaluatedArg1.doubleValue(),
+						evaluatedArg2.doubleValue()));
+			case Mult:
+				return new NumValue(evaluatedArg1.doubleValue()
+						* evaluatedArg2.doubleValue());
+			default:
+				// only Sub is left
+				return new NumValue(evaluatedArg1.doubleValue()
+						- evaluatedArg2.doubleValue());
 		}
 	}
 
 	/**
 	 * Creation date: (14.08.2000 15:46:45)
-	 * 
+	 *
 	 * @return first argument of the term
 	 */
 	public FormulaNumberElement getArg1() {
@@ -109,7 +112,7 @@ public class Operator implements FormulaNumberElement {
 
 	/**
 	 * Creation date: (14.08.2000 15:46:45)
-	 * 
+	 *
 	 * @return second argument of the term
 	 */
 	public FormulaNumberElement getArg2() {
@@ -118,21 +121,20 @@ public class Operator implements FormulaNumberElement {
 
 	public String getSymbol() {
 		switch (operator) {
-		case Add:
-			return "+";
-		case Div:
-			return "/";
-		case Max:
-			return "max";
-		case Min:
-			return "min";
-		case Mult:
-			return "*";
-		case Sub:
-			return "-";
-		default:
-			return null;
+			case Add:
+				return "+";
+			case Div:
+				return "/";
+			case Max:
+				return "max";
+			case Min:
+				return "min";
+			case Mult:
+				return "*";
+			case Sub:
+				return "-";
 		}
+		throw new IllegalStateException("missing switch-case: " + operator);
 	}
 
 	/**

@@ -19,17 +19,15 @@
 
 package de.d3web.core.session.values.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -47,14 +45,6 @@ public class NumValueTest {
 	public void setUp() throws Exception {
 		numValue = new NumValue(19.3d);
 		textValue = new TextValue("textValue");
-	}
-
-	/**
-	 * Test method for {@link de.d3web.core.session.values.NumValue#NumValue(java.lang.Double)}.
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testNumValueDoubleThrowsNullPointerException() {
-		new NumValue(null);
 	}
 
 	/**

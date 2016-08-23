@@ -22,7 +22,7 @@ import de.d3web.core.session.Value;
 
 /**
  * Stores Abnormalities for values
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 03.02.2011
  */
@@ -36,11 +36,22 @@ public interface Abnormality {
 	double A5 = 1;
 
 	/**
-	 * 
-	 * @param answerValue double
-	 * @return double, value of abnormality of the AbnormalityInterval which
-	 *         contains answerValue, A0 if answerValue is not contained in any
-	 *         AbnormalityInterval
+	 * Returns the value of the abnormality for the specified answer value, or the default
+	 * abnormality of {@link #A5} (1.0) if the abnormality is not explicitly defined in this
+	 * Abnormality. To check is a abnormality is explicitly defined, use {@link #isSet(Value)}.
+	 *
+	 * @param answerValue the answer to get the abnormality for
+	 * @return the value of abnormality for the specified answer
 	 */
 	double getValue(Value answerValue);
+
+	/**
+	 * Returns if the abnormality is defined for the specified value. If not, the {@link
+	 * #getValue(Value)} method will still return a value, usually A5 if the value is completely
+	 * undefined.
+	 *
+	 * @param answerValue the answer to test if the abnormality is set for
+	 * @return true, if the abnormality is (explicitly) defined
+	 */
+	boolean isSet(Value answerValue);
 }

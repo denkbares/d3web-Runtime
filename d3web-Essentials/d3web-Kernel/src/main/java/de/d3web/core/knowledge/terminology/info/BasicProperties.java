@@ -20,13 +20,17 @@ package de.d3web.core.knowledge.terminology.info;
 
 import java.util.Date;
 
+import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
+import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
+import de.d3web.core.session.Value;
 
 /**
  * A collection of basic Properties for d3web
@@ -131,15 +135,27 @@ public class BasicProperties {
 	/**
 	 * @see DefaultAbnormality
 	 */
-	public static final Property<DefaultAbnormality> DEFAULT_ABNORMALITIY = Property.getProperty(
+	public static final Property<DefaultAbnormality> DEFAULT_ABNORMALITY = Property.getProperty(
 			"abnormality",
 			DefaultAbnormality.class);
 
 	/**
+	 * @deprecated replaced by {@link #DEFAULT_ABNORMALITY}
+	 */
+	@Deprecated
+	public static final Property<DefaultAbnormality> DEFAULT_ABNORMALITIY = DEFAULT_ABNORMALITY;
+
+	/**
 	 * @see AbnormalityNum
 	 */
-	public static final Property<AbnormalityNum> ABNORMALITIY_NUM = Property.getProperty(
+	public static final Property<AbnormalityNum> ABNORMALITY_NUM = Property.getProperty(
 			"abnormalityNum", AbnormalityNum.class);
+
+	/**
+	 * @deprecated replaced by {@link #ABNORMALITY_NUM}
+	 */
+	@Deprecated
+	public static final Property<AbnormalityNum> ABNORMALITIY_NUM = ABNORMALITY_NUM;
 
 	/**
 	 * Allows to specify the desired display type of date questions.
@@ -213,5 +229,39 @@ public class BasicProperties {
 			visible = question.getKnowledgeBase().getInfoStore().getValue(UNKNOWN_VISIBLE);
 		}
 		return (visible != null) && visible;
+	}
+
+	private static final Abnormality EMPTY_ABNORMALITY = new Abnormality() {
+		@Override
+		public double getValue(Value answerValue) {
+			return AbnormalityUtils.getDefault();
+		}
+
+		@Override
+		public boolean isSet(Value answerValue) {
+			return false;
+		}
+	};
+
+	/**
+	 * Returns an abnormality object for the specified question. The method works for any question,
+	 * regardless of the type of abnormality defined for the question. The method never returns
+	 * null. If no abnormality is specified, an empty abnormality is returned.
+	 *
+	 * @param question the question to get the abnormality for
+	 * @return the abnormality object
+	 */
+	public static Abnormality getAbnormality(Question question) {
+		// first test for default abnormality
+		InfoStore infoStore = question.getInfoStore();
+		Abnormality abnormality = infoStore.getValue(DEFAULT_ABNORMALITY);
+		if (abnormality != null) return abnormality;
+
+		// if not, test for numeric abnormality
+		abnormality = infoStore.getValue(ABNORMALITY_NUM);
+		if (abnormality != null) return abnormality;
+
+		// if not return empty abnormality
+		return EMPTY_ABNORMALITY;
 	}
 }

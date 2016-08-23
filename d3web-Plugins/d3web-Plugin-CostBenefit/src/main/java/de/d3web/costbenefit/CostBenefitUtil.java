@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.w3c.dom.Node;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.CondAnd;
@@ -68,7 +69,6 @@ import de.d3web.interview.Form;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.utils.Log;
 import de.d3web.xcl.InferenceTrace;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -171,7 +171,7 @@ public final class CostBenefitUtil {
 			Value value = blackboard.getValue(q);
 			if (UndefinedValue.isUndefinedValue(value)) {
 				DefaultAbnormality abnormality = q.getInfoStore().getValue(
-						BasicProperties.DEFAULT_ABNORMALITIY);
+						BasicProperties.DEFAULT_ABNORMALITY);
 				if (abnormality == null) {
 					if (set) {
 						Log.info("no normal value for question " + q);

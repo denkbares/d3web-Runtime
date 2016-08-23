@@ -238,7 +238,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 		else if (conditionedFinding instanceof CondEqual) {
 			CondEqual condEqual = (CondEqual) conditionedFinding;
 			DefaultAbnormality abnormalityStore = condEqual.getQuestion().getInfoStore().getValue(
-					BasicProperties.DEFAULT_ABNORMALITIY);
+					BasicProperties.DEFAULT_ABNORMALITY);
 			double abnormality = Abnormality.A5;
 			if (abnormalityStore != null) {
 				abnormality = abnormalityStore.getValue(condEqual.getValue());

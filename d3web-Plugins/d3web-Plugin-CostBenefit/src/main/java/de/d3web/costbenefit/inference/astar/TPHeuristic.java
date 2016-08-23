@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Pair;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
@@ -57,8 +59,6 @@ import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import com.denkbares.utils.Log;
-import com.denkbares.utils.Pair;
 
 /**
  * Uses a "slice model" to calculate a more precise distance
@@ -128,7 +128,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		for (StateTransition st : model.getTransitionalStateTransitions()) {
 			for (Question q : CostBenefitUtil.getQuestionOCs(st.getQcontainer())) {
 				DefaultAbnormality abnormality = q.getInfoStore().getValue(
-						BasicProperties.DEFAULT_ABNORMALITIY);
+						BasicProperties.DEFAULT_ABNORMALITY);
 				Value value = blackboard.getValue(q);
 				if (UndefinedValue.isNotUndefinedValue(value)) {
 					boolean abnormal = (abnormality == null) || abnormality.getValue(value) == Abnormality.A5;
