@@ -20,33 +20,29 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
-import com.denkbares.utils.Log;
 
 /**
+ * Question Zero Choice
+ * <p>
+ * This QuestionChoice is restricted to have NO answers. Its not a real
+ * Question-type but only used to attach texts. In the dialog those can
+ * be rendered to guide the user through the dialog without answer to
+ * click.
+ *
  * @author Jochen
- * 
- *         Question Zero Choice
- * 
- *         This QuestionChoice is restricted to have NO answers. Its not a real
- *         Question-type but only used to attach texts. In the dialog those can
- *         be rendered to guide the user through the dialog without answer to
- *         click.
- * 
  */
 public class QuestionZC extends QuestionOC {
 
 	public static final String XML_IDENTIFIER = "Info";
 
 	/**
-	 * Creates a new QuestionZC and adds it to the knowledgebase, so no manual
+	 * Creates a new QuestionZC and adds it to the knowledge base, so no manual
 	 * adding of the created object to the kb is needed
-	 * 
-	 * @param kb {@link KnowledgeBase} in which the QuestionOC should be
-	 *        inserted
+	 *
+	 * @param kb {@link KnowledgeBase} in which the QuestionOC should be inserted
 	 * @param name the name of the new QuestionOC
 	 */
 	public QuestionZC(KnowledgeBase kb, String name) {
@@ -54,9 +50,9 @@ public class QuestionZC extends QuestionOC {
 	}
 
 	/**
-	 * Creates a new QuestionZC, adds it to the knowledgebase and to the parent.
+	 * Creates a new QuestionZC, adds it to the knowledge base and to the parent.
 	 * No manual adding of the created object to the kb is needed
-	 * 
+	 *
 	 * @param parent the parent {@link QASet}
 	 * @param name the name of the new QuestionZC
 	 */
@@ -66,19 +62,19 @@ public class QuestionZC extends QuestionOC {
 	}
 
 	@Override
-	public List<Choice> getAllAlternatives() {
-		return new ArrayList<>();
-	}
-
-	@Override
 	public void setAlternatives(List<Choice> l) {
 		if (!l.isEmpty()) {
-			Log.severe("Tried to set AnswerAlternatives for QuestionZC");
+			throw new UnsupportedOperationException("Tried to set AnswerAlternatives for QuestionZC");
 		}
 	}
 
 	@Override
 	public void addAlternative(Choice a) {
-		Log.severe("Tried to add AnswerAlternative for QuestionZC");
+		throw new UnsupportedOperationException("Tried to add AnswerAlternative for QuestionZC");
+	}
+
+	@Override
+	public void addAlternative(Choice answer, int pos) {
+		throw new UnsupportedOperationException("Tried to add AnswerAlternative for QuestionZC");
 	}
 }
