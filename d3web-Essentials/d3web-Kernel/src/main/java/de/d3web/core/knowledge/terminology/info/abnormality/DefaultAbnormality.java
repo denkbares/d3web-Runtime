@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -36,8 +38,8 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 
 /**
  * Represents the abnormality of a symptom Creation date: (06.08.2001 15:51:58)
- * 
- * @author: Norman Brümmer
+ *
+ * @author Norman Brümmer
  */
 public class DefaultAbnormality implements Abnormality {
 
@@ -46,8 +48,8 @@ public class DefaultAbnormality implements Abnormality {
 	/**
 	 * with this method you can add an answer-abnorm.Value pair Creation date:
 	 * (06.08.2001 16:25:46)
-	 * 
-	 * @param ans de.d3web.kernel.domainModel.Answer
+	 *
+	 * @param ans   de.d3web.kernel.domainModel.Answer
 	 * @param value double
 	 */
 	public void addValue(Value ans, double value) {
@@ -68,9 +70,9 @@ public class DefaultAbnormality implements Abnormality {
 	/**
 	 * Returns the abnormality to the given answer Creation date: (06.08.2001
 	 * 16:28:14)
-	 * 
-	 * @return double
+	 *
 	 * @param ans de.d3web.kernel.domainModel.Answer
+	 * @return double
 	 */
 	@Override
 	public double getValue(Value ans) {
@@ -105,20 +107,39 @@ public class DefaultAbnormality implements Abnormality {
 
 	/**
 	 * Sets the Abnormality of the Question for the given the Value
-	 * 
-	 * @created 25.06.2010
-	 * @param q Question
-	 * @param value Value
+	 *
+	 * @param question    Question
+	 * @param value       Value
 	 * @param abnormality Abnormality
+	 * @created 25.06.2010
 	 */
-	public static void setAbnormality(Question q, Value value, double abnormality) {
-		InfoStore infoStore = q.getInfoStore();
+	public static void setAbnormality(Question question, Value value, double abnormality) {
+		InfoStore infoStore = question.getInfoStore();
 		DefaultAbnormality abnormalitySlice = infoStore.getValue(BasicProperties.DEFAULT_ABNORMALITIY);
 		if (abnormalitySlice == null) {
 			abnormalitySlice = new DefaultAbnormality();
 			infoStore.addValue(BasicProperties.DEFAULT_ABNORMALITIY, abnormalitySlice);
 		}
 		abnormalitySlice.addValue(value, abnormality);
+	}
+
+	/**
+	 * Gets the abnormality for the given value for the given question. If an abnormality was set for the question, this
+	 * method will always return an abnormality. If non was set specifically for the given value, {@link
+	 * Abnormality#A5} will be returned.
+	 * However, if not abnormality was set of any value of the given question, <tt>null</tt> will be returned.
+	 *
+	 * @param question the question with the abnormality
+	 * @param value    the value to the abnormality for
+	 * @return the abnormality for the given question and value, can be null
+	 * was set
+	 */
+	public static @Nullable Double getAbnormality(Question question, Value value) {
+		DefaultAbnormality abnormality = question.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY);
+		if (abnormality == null) {
+			return null;
+		}
+		return abnormality.getValue(value);
 	}
 
 	public static DefaultAbnormality valueOf(String s) {
