@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
@@ -38,7 +39,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
-import com.denkbares.utils.Log;
 
 /**
  * The default implementation of {@link Interview}: This class stores an
@@ -76,8 +76,7 @@ public class DefaultInterview implements Interview {
 
 	@Override
 	public Form nextForm() {
-		return formStrategy.nextForm(this.agenda.getCurrentlyActiveObjects(),
-				session);
+		return formStrategy.nextForm(this.agenda.getCurrentlyActiveObjects(), session);
 	}
 
 	@Override
@@ -137,7 +136,8 @@ public class DefaultInterview implements Interview {
 		// #### MULTIPLE_INDICATED ####
 		if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
 			agenda.delete(indicatedObject, oldIndication);
-			Collection<Fact> interviewFacts = session.getBlackboard().getInterviewFacts(indicatedObject);
+			Collection<Fact> interviewFacts = session.getBlackboard()
+					.getInterviewFacts(indicatedObject);
 			for (Fact fact : interviewFacts) {
 				Indication factIndication = (Indication) fact.getValue();
 				if (factIndication.hasState(State.MULTIPLE_INDICATED)) {
@@ -240,7 +240,9 @@ public class DefaultInterview implements Interview {
 		for (TerminologyObject child : children) {
 			if (child instanceof InterviewObject) {
 				// ignore contraindicated children
-				if (session.getBlackboard().getIndication((InterviewObject) child).isContraIndicated()) {
+				if (session.getBlackboard()
+						.getIndication((InterviewObject) child)
+						.isContraIndicated()) {
 					continue;
 				}
 				// If at least on question is not answered, then return
@@ -309,8 +311,7 @@ public class DefaultInterview implements Interview {
 	 * are computed, that are included in the current {@link InterviewAgenda}.
 	 *
 	 * @param interviewObject the specified {@link InterviewObject} instance
-	 * @return all (recursively) parental {@link QContainer} instances that are
-	 * on the agenda
+	 * @return all (recursively) parental {@link QContainer} instances that are on the agenda
 	 */
 	private List<QContainer> computeParentalContainersOnAgenda(
 			InterviewObject interviewObject) {

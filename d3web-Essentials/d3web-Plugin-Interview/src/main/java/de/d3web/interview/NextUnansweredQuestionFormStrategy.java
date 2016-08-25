@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
@@ -31,7 +30,10 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.blackboard.Blackboard;
+
+import static de.d3web.core.knowledge.Indication.State.REPEATED_INDICATED;
+import static de.d3web.core.session.values.UndefinedValue.isUndefinedValue;
 
 /**
  * This class always creates a new {@link Form} that contains the one
@@ -39,9 +41,8 @@ import de.d3web.core.session.values.UndefinedValue;
  * Here, the next question is the question that 1) is the next active question
  * on the {@link InterviewAgenda} OR 2) for an indicated {@link QContainer} the
  * next unanswered question in this container
- * 
+ *
  * @author joba
- * 
  */
 public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 
@@ -51,40 +52,33 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			return EmptyForm.getInstance();
 		}
 		else {
+			Blackboard blackboard = session.getBlackboard();
 			for (InterviewObject object : agendaEntries) {
 				if (object instanceof Question) {
-					if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
-							(ValueObject) object))
-							|| session.getBlackboard().getIndication(object).hasState(
-									State.REPEATED_INDICATED)) {
+					if (isUndefinedValue(blackboard.getValue((ValueObject) object))
+							|| blackboard.getIndication(object).hasState(REPEATED_INDICATED)) {
 						return new DefaultForm(object.getName(), object, session);
 					}
 					else {
 						for (TerminologyObject child : object.getChildren()) {
 							if (child instanceof Question
-									&& session.getBlackboard().getIndication(
-											(InterviewObject) child).isRelevant()
-									&& UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(
-											(ValueObject) child))) {
-								return new DefaultForm(child.getName(),
-										(InterviewObject) child,
-										session);
+									&& blackboard.getIndication((Question) child).isRelevant()
+									&& isUndefinedValue(blackboard.getValue((Question) child))) {
+								return new DefaultForm(child.getName(), (Question) child, session);
 							}
 						}
 					}
 				}
 				else if (object instanceof QASet) {
 					Collection<TerminologyObject> traversedQuestions = new HashSet<>();
-					Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object,
-							session,
-							traversedQuestions);
+					Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object, session, traversedQuestions);
 					if (nextQuestion == null) {
 						return EmptyForm.getInstance();
 					}
 					return new DefaultForm(nextQuestion.getName(), nextQuestion, session);
 				}
 			}
-			return null;
+			return EmptyForm.getInstance();
 		}
 	}
 
@@ -93,15 +87,15 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 * {@link QASet} and returns the first question, that has no value assigned
 	 * in the specified session. If no unanswered {@link Question} was be found,
 	 * then null is returned.
-	 * 
+	 *
 	 * @param qaset the specified {@link QASet}
 	 * @param session the specified session
 	 * @param traversedObjects objects traversed already to avoid loops
-	 * @return the first {@link Question} instance, that is a child of the
-	 *         specified {@link QASet} and is not answered; null otherwise
+	 * @return the first {@link Question} instance, that is a child of the specified {@link QASet}
+	 * and is not answered; null otherwise
 	 */
 	private Question retrieveNextQuestionToBeAnswered(QASet qaset,
-			Session session, Collection<TerminologyObject> traversedObjects) { // NOSONAR
+													  Session session, Collection<TerminologyObject> traversedObjects) { // NOSONAR
 		// Termination of recursive traversal: Required for possibly cyclic
 		// question hierarchies
 		if (traversedObjects.contains(qaset)) {
@@ -163,7 +157,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 * qcontainer as a parent. In this case, we also vote for a direct
 	 * qcontainer question, BUT this circumstance may indicate bad knowledge
 	 * base design. (joba)
-	 * 
+	 *
 	 * @param question the specified question
 	 * @return true, when the parents are only instances of {@link QContainer}.
 	 */
