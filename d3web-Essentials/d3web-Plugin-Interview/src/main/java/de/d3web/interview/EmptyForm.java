@@ -21,6 +21,9 @@ package de.d3web.interview;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -29,9 +32,8 @@ import de.d3web.core.knowledge.terminology.Question;
 /**
  * Null object to represent an empty form, where no questions are presented in
  * the dialog.
- * 
+ *
  * @author joba
- * 
  */
 public final class EmptyForm implements Form {
 
@@ -41,14 +43,16 @@ public final class EmptyForm implements Form {
 	private EmptyForm() {
 	}
 
+	@NotNull
 	@Override
-	public InterviewObject getInterviewObject() {
-		return null;
+	public String getName() {
+		return EMPTY_FORM_STRING;
 	}
 
+	@NotNull
 	@Override
-	public String getTitle() {
-		return EMPTY_FORM_STRING;
+	public String getPrompt(Locale lang) {
+		return "";
 	}
 
 	public static Form getInstance() {
@@ -59,8 +63,8 @@ public final class EmptyForm implements Form {
 	}
 
 	@Override
-	public boolean isNotEmpty() {
-		return false;
+	public boolean isEmpty() {
+		return true;
 	}
 
 	@Override
@@ -86,5 +90,23 @@ public final class EmptyForm implements Form {
 	@Override
 	public QContainer getRoot() {
 		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public InterviewObject getInterviewObject() {
+		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public String getTitle() {
+		return EMPTY_FORM_STRING;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean isNotEmpty() {
+		return false;
 	}
 }

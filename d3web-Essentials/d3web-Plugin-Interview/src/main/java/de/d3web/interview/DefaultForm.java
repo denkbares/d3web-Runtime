@@ -21,11 +21,15 @@ package de.d3web.interview;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.session.Session;
 
 public class DefaultForm implements Form {
@@ -40,14 +44,24 @@ public class DefaultForm implements Form {
 		this.session = session;
 	}
 
+	@NotNull
 	@Override
-	public InterviewObject getInterviewObject() {
-		return this.interviewObject;
+	public String getName() {
+		return "Form: " + interviewObject.getName();
 	}
 
+	@NotNull
 	@Override
-	public String getTitle() {
-		return this.title;
+	public String getPrompt(Locale lang) {
+		// for questionnaires, use the prompt of them
+		if (interviewObject instanceof QContainer) {
+			return MMInfo.getPrompt(interviewObject, lang);
+		}
+
+		// for single questions, use no prompt
+		// (makes no sense to use question's prompt, because the question will display its prompt themselves
+		// --> avoid display the same prompt twice)
+		return "";
 	}
 
 	@Override
@@ -56,8 +70,8 @@ public class DefaultForm implements Form {
 	}
 
 	@Override
-	public boolean isNotEmpty() {
-		return true;
+	public boolean isEmpty() {
+		return false;
 	}
 
 	@Override
@@ -79,7 +93,9 @@ public class DefaultForm implements Form {
 			activeQuestions.add((Question) interviewObject);
 			for (TerminologyObject to : interviewObject.getChildren()) {
 				if (to instanceof InterviewObject
-						&& session.getBlackboard().getIndication((InterviewObject) to).isRelevant()) {
+						&& session.getBlackboard()
+						.getIndication((InterviewObject) to)
+						.isRelevant()) {
 					collectActiveQuestions((InterviewObject) to, activeQuestions);
 				}
 			}
@@ -100,5 +116,23 @@ public class DefaultForm implements Form {
 			return (QContainer) interviewObject;
 		}
 		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public InterviewObject getInterviewObject() {
+		return this.interviewObject;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public String getTitle() {
+		return getName();
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean isNotEmpty() {
+		return true;
 	}
 }

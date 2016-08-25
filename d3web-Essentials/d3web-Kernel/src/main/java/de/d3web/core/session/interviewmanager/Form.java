@@ -22,19 +22,26 @@ package de.d3web.core.session.interviewmanager;
 import de.d3web.core.knowledge.InterviewObject;
 
 /**
- * 
  * @deprecated use de.d3web.interview.Form
  */
 @Deprecated
 public interface Form {
 
+	/**
+	 * @deprecated use de.d3web.interview.Form#getName
+	 */
+	@Deprecated
 	String getTitle();
 
 	/**
-	 * @deprecated use getRoot or getActiveObjects of de.d3web.interview.Form
-	 *             instead
+	 * @deprecated use getRoot or getActiveObjects of de.d3web.interview.Form instead
 	 */
+	@Deprecated
 	InterviewObject getInterviewObject();
 
+	/**
+	 * @deprecated use de.d3web.interview.Form#isEmpty
+	 */
+	@Deprecated
 	boolean isNotEmpty();
 }

@@ -18,14 +18,15 @@
  */
 package de.d3web.interview;
 
-import org.junit.Assert;
+import java.util.Locale;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Some tests for the class {@link EmptyForm}.
- * 
+ *
  * @author Joachim Baumeister (denkbares GmbH)
  * @created 04.05.2011
  */
@@ -47,8 +48,9 @@ public class EmptyFormTest {
 	@Test
 	public void testTitleString() {
 		Assert.assertEquals(EmptyForm.EMPTY_FORM_STRING, form.toString());
-
-		Assert.assertEquals(EmptyForm.EMPTY_FORM_STRING, form.getTitle());
+		Assert.assertEquals(EmptyForm.EMPTY_FORM_STRING, form.getName());
+		Assert.assertEquals("", form.getPrompt(Locale.GERMAN));
+		Assert.assertEquals("", form.getPrompt(Locale.ENGLISH));
 	}
 
 }

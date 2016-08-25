@@ -19,6 +19,8 @@
  */
 package de.d3web.interview;
 
+import java.util.Collection;
+
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
@@ -28,9 +30,8 @@ import de.d3web.core.session.values.UndefinedValue;
 /**
  * This abstract class is basically introduced to define some helper methods,
  * that are commonly used by implementations of {@link FormStrategy}.
- * 
+ *
  * @author joba
- * 
  */
 public abstract class AbstractFormStrategy implements FormStrategy {
 
@@ -38,15 +39,27 @@ public abstract class AbstractFormStrategy implements FormStrategy {
 	 * Helper method to check, if a {@link Value} is assigned to the specified
 	 * {@link Question} instance in the specified {@link Session} other than
 	 * {@link UndefinedValue}.
-	 * 
+	 *
 	 * @param question the specified {@link Question} instance
 	 * @param session the specified {@link Session} instance
-	 * @return true, when the specified question has a value other than
-	 *         {@link UndefinedValue}
+	 * @return true, when the specified question has a value other than {@link UndefinedValue}
 	 */
 	protected boolean hasValueUndefined(Question question, Session session) {
 		Value value = session.getBlackboard().getValue(question);
 		return (value instanceof UndefinedValue);
+	}
+
+	/**
+	 * Returns true if any of the questions remains unanswered (by any problem solver!) in the
+	 * specified session. In this case the questions are not totally completed. Returns false if the
+	 * questions are completely answered and therefore.
+	 *
+	 * @param questions the questions to be checked
+	 * @param session the session to check the answers
+	 * @return if any question is unanswered and the list is completed
+	 */
+	protected boolean hasAnyValueUndefined(Collection<Question> questions, Session session) {
+		return questions.stream().anyMatch(q -> hasValueUndefined(q, session));
 	}
 
 	@Override

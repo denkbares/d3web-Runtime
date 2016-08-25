@@ -19,6 +19,9 @@
 package de.d3web.interview;
 
 import java.util.List;
+import java.util.Locale;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -26,42 +29,53 @@ import de.d3web.core.knowledge.terminology.Question;
 /**
  * A Form groups interview items, which should be presented at the same time to
  * the user.
- * 
+ * <p>
  * Note: The reference to de.d3web.core.session.interviewmanager.Form will be
  * removed, when the class is removed from d3web-Kernel
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
  */
-@SuppressWarnings("deprecation")
 public interface Form extends de.d3web.core.session.interviewmanager.Form {
 
 	/**
-	 * Returns the title of the Form
+	 * Returns the Name of the Form. The name is a unique name that identifies
+	 * the form's source, e.g. the name of the qcontainer or question, or a generic name.
+	 *
+	 * @return the name of this form
 	 */
-	@Override
-	String getTitle();
+	@NotNull
+	String getName();
 
 	/**
-	 * Returns true if the form is empty
+	 * Returns the user-displayable title of the form for the specified language
+	 * or a more generic language if the specified language is not available.
+	 *
+	 * @param lang the language to request the prompt for
+	 * @return the prompt of this form
 	 */
-	@Override
-	boolean isNotEmpty();
+	@NotNull
+	String getPrompt(Locale lang);
+
+	/**
+	 * Returns true if the form is empty. The form is empty if it has no active questions.
+	 */
+	boolean isEmpty();
 
 	/**
 	 * Returns all active questions of this form
-	 * 
-	 * @created 25.03.2013
+	 *
 	 * @return a List of active objects
+	 * @created 25.03.2013
 	 */
 	List<Question> getActiveQuestions();
 
 	/**
 	 * Can be used to access the root QASet of the Form. If the form contains
 	 * only a question, null is returned
-	 * 
-	 * @created 25.03.2013
+	 *
 	 * @return root QASet or null if this form contains only a Question
+	 * @created 25.03.2013
 	 */
 	QContainer getRoot();
 
