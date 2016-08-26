@@ -19,12 +19,9 @@
 
 package de.d3web.core.knowledge.terminology.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -39,9 +36,13 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Unit test for {@link QuestionZC}
- * 
+ *
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010
  */
@@ -55,9 +56,8 @@ public class QuestionZCTest {
 	Handler handler;
 
 	/**
-	 * 
-	 * @created 24.08.2010
 	 * @throws java.lang.Exception
+	 * @created 24.08.2010
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -74,10 +74,9 @@ public class QuestionZCTest {
 
 	/**
 	 * Summary: Assure that getAllAlternatives() returns an empty list
-	 * 
-	 * @see QuestionZC#getAllAlternatives()
-	 * 
+	 *
 	 * @created 24.08.2010
+	 * @see QuestionZC#getAllAlternatives()
 	 */
 	@Test
 	public void testGetAllAlternativesIsEmpty() {
@@ -85,55 +84,36 @@ public class QuestionZCTest {
 		assertThat(alternatives.size(), is(0));
 	}
 
-	/**
-	 * Summary: Assure that setAlternatives(List<Choice>) logs an error message
-	 * when the given list is not empty
-	 * 
-	 * @see QuestionZC#setAlternatives(List)
-	 * 
-	 * @created 24.08.2010
-	 */
-	@Test
-	public void testSetAlternativesLogsErrormessage() {
-
-		// create a empry list of choices
+	@Test()
+	public void testSetEmptyAlternatives() {
+		// create a empty list of choices
 		List<Choice> choicesList = new ArrayList<>();
 		questionZC.setAlternatives(choicesList);// this should NOT log a msg
-		// flush the StreamHandler and retrieve the log Message
-		handler.flush();
-		String logMsg = out.toString();
-
-		assertThat(logMsg, is(notNullValue()));
-		assertThat(logMsg, is(""));
-
-		// now fill the list with a "choice"
-		Choice choice = new Choice("choice");
-		choicesList.add(choice);
-		questionZC.setAlternatives(choicesList);// this should produce log msg
-		// flush the StreamHandler and retrieve the log Message
-		handler.flush();
-		logMsg = out.toString();
-
-		assertThat(logMsg, is(notNullValue()));
-		assertThat(logMsg.contains("Tried to set AnswerAlternatives"), is(true));
+		assertTrue(questionZC.getAllAlternatives().isEmpty());
 	}
 
 	/**
-	 * Summary: Assure that addAlternative(Choice) logs an error message
-	 * 
-	 * @see QuestionZC#addAlternative(Choice)
-	 * 
+	 * Summary: Assure that setAlternatives(List<Choice>) throws an exception
+	 * when the given list is not empty
+	 *
 	 * @created 24.08.2010
+	 * @see QuestionZC#setAlternatives(List)
 	 */
-	@Test
-	public void testAddAlternativeLogsErrormessage() {
+	@Test(expected = UnsupportedOperationException.class)
+	public void testSetAlternativesThrowsException() {
+		List<Choice> choicesList = Collections.singletonList(new Choice("choice"));
+		questionZC.setAlternatives(choicesList);// this should produce an exception
+	}
+
+	/**
+	 * Summary: Assure that addAlternative(Choice) throws an exception
+	 *
+	 * @created 24.08.2010
+	 * @see QuestionZC#addAlternative(Choice)
+	 */
+	@Test(expected = UnsupportedOperationException.class)
+	public void testAddAlternativeThrowsException() {
 		Choice choice = new Choice("choice");
 		questionZC.addAlternative(choice);// this should produce log msg
-		// flush the StreamHandler and retrieve the log Message
-		handler.flush();
-		String logMsg = out.toString();
-
-		assertThat(logMsg, is(notNullValue()));
-		assertThat(logMsg.contains("Tried to add AnswerAlternative"), is(true));
 	}
 }
