@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PostHookablePSMethod;
@@ -71,13 +72,12 @@ import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.utils.Log;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
  * cheap as possible. This is configurable with a TargetFunction, a CostFunction
  * and a SearchAlgorithm.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject>, PostHookablePSMethod {
@@ -115,10 +115,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	/**
 	 * Sets the strategicBenefitFactor, if it is set to 0, no strategic benefit
 	 * is added
-	 * 
-	 * @created 08.05.2012
+	 *
 	 * @param strategicBenefitFactor the factor to set
 	 * @throws IllegalArgumentException if the factor is lower than 0
+	 * @created 08.05.2012
 	 */
 	public void setStrategicBenefitFactor(double strategicBenefitFactor) {
 		if (strategicBenefitFactor < 0.0) throw new IllegalArgumentException(
@@ -127,7 +127,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	public PSMethodCostBenefit(TargetFunction targetFunction,
-			CostFunction costFunction, SearchAlgorithm searchAlgorithm, SolutionsRater solutionsRater) {
+							   CostFunction costFunction, SearchAlgorithm searchAlgorithm, SolutionsRater solutionsRater) {
 		this.targetFunction = targetFunction;
 		this.costFunction = costFunction;
 		this.searchAlgorithm = searchAlgorithm;
@@ -162,12 +162,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * <p>
 	 * Due to changing indications, this method should only be called inside a
 	 * propagation frame.
-	 * 
-	 * @created 08.03.2011
+	 *
 	 * @param caseObject the case object to select the path for
 	 * @param targets the targets for the path to be calculated
-	 * @throws AbortException if no path could been established towards the
-	 *         specified target
+	 * @throws AbortException if no path could been established towards the specified target
+	 * @created 08.03.2011
 	 */
 	void calculateNewPathTo(CostBenefitCaseObject caseObject, Target... targets) throws AbortException {
 		// first reset the search path
@@ -260,10 +259,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private boolean hasUnansweredQuestions(Session session) {
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		Form nextForm = interview.nextForm();
-		if (nextForm == null) {
-			return false;
-		}
-		return nextForm.isNotEmpty();
+		return (nextForm != null) && !nextForm.isEmpty();
 	}
 
 	/**
@@ -271,9 +267,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * for the best cost benefit target. All possible questions to discriminate
 	 * are taken into account. Questions (or questionnaires) being
 	 * contra-indicated are left out from this search.
-	 * 
-	 * @created 08.03.2011
+	 *
 	 * @param caseObject the case object to be initialized for searching
+	 * @created 08.03.2011
 	 */
 	private void initializeSearchModel(CostBenefitCaseObject caseObject) {
 		Session session = caseObject.getSession();
@@ -341,15 +337,18 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					continue;
 				}
 				if (!Conditions.isTrue(condition, session)) {
-					ST: for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
+					ST:
+					for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 							StateTransition.KNOWLEDGE_KIND)) {
 						for (ValueTransition vt : st.getPostTransitions()) {
 							if (vt.getQuestion() == condEqual.getQuestion()) {
 								for (ConditionalValueSetter cvs : vt.getSetters()) {
 									boolean answeredQuestion = false;
-									for (TerminologyObject object : cvs.getCondition().getTerminalObjects()) {
+									for (TerminologyObject object : cvs.getCondition()
+											.getTerminalObjects()) {
 										if ((object instanceof Question)
-												&& UndefinedValue.isNotUndefinedValue(session.getBlackboard().getValue(
+												&& UndefinedValue.isNotUndefinedValue(session.getBlackboard()
+												.getValue(
 														(Question) object))) {
 											answeredQuestion = true;
 											break;
@@ -462,10 +461,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	/**
 	 * Calculates a set of all QContainers, which are blocked by final questions
 	 * or contra indicated or permanently relevant
-	 * 
-	 * @created 24.10.2012
+	 *
 	 * @param session actual session
 	 * @return set of blocked QContainers
+	 * @created 24.10.2012
 	 */
 	public static Set<QContainer> getBlockedQContainers(Session session) {
 		return getBlockedQContainers(session, true, true);
@@ -476,14 +475,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * questions. There are two flags to specify, if contraindicated or
 	 * permanentlyrelevant TS should also be returned as blocked, even if they
 	 * are not blocked by final questions
-	 * 
-	 * @created 01.03.2014
+	 *
 	 * @param session actual session
-	 * @param includeContraindicated if true, contraindicated QContainers are
-	 *        included in the returned set
-	 * @param includePermanentlyRelevant if true, permanently relevant
-	 *        QContainers are included in the returned set
+	 * @param includeContraindicated if true, contraindicated QContainers are included in the
+	 * returned set
+	 * @param includePermanentlyRelevant if true, permanently relevant QContainers are included in
+	 * the returned set
 	 * @return set of blocked QContainers
+	 * @created 01.03.2014
 	 */
 	public static Set<QContainer> getBlockedQContainers(Session session, boolean includeContraindicated, boolean includePermanentlyRelevant) {
 		Set<QContainer> result = new HashSet<>();
@@ -497,14 +496,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (StateTransition stateTransition : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
 			if (includeContraindicated
-					&& session.getBlackboard().getIndication(stateTransition.getQcontainer()).hasState(
+					&& session.getBlackboard()
+					.getIndication(stateTransition.getQcontainer())
+					.hasState(
 							State.CONTRA_INDICATED)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
 			if (includePermanentlyRelevant
 					&& stateTransition.getQcontainer().getInfoStore().getValue(
-							PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
+					PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
@@ -526,11 +527,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	/**
 	 * Calculates a map of all values of final questions, being different from
 	 * their initial value respectively undefined
-	 * 
-	 * @created 25.09.2012
+	 *
 	 * @param session specified session
-	 * @return a map of all final questions to their values being set in the
-	 *         specified session
+	 * @return a map of all final questions to their values being set in the specified session
+	 * @created 25.09.2012
 	 */
 	public static Map<Question, Value> getFinalValues(Session session) {
 		Map<Question, Value> finalValues = new HashMap<>();
@@ -541,7 +541,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				Value initValue = initString == null
 						? UndefinedValue.getInstance()
 						: PSMethodInit.getValue(q,
-								initString);
+						initString);
 				Value actualValue = session.getBlackboard().getValue(q);
 				if (!initValue.equals(actualValue)) {
 					finalValues.put(q, actualValue);
@@ -626,9 +626,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	/**
 	 * NOTE: Modifying the {@link WatchSet} only affects newly created session,
 	 * sessions being created before setting this set are not affected
-	 * 
-	 * @created 17.09.2014
+	 *
 	 * @return the actual watchset or null, if none is defined
+	 * @created 17.09.2014
 	 */
 	public WatchSet getWatchSet() {
 		return watchSet;
@@ -636,10 +636,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	/**
 	 * Sets a set of watched QContainers
-	 * 
+	 * <p>
 	 * NOTE: This method only affects newly created session, sessions being
 	 * created before setting this set are not affected
-	 * 
+	 *
 	 * @created 17.09.2014
 	 */
 	public void setWatchSet(WatchSet watchedQContainers) {
