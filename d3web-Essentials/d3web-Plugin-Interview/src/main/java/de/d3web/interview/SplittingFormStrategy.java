@@ -93,7 +93,9 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 		@NotNull
 		@Override
 		public String getName() {
-			return delegate.getName() + "#" + groupNumber;
+			return (groupNumber == 1)
+					? delegate.getName()
+					: (delegate.getName() + "#" + groupNumber);
 		}
 
 		@NotNull
