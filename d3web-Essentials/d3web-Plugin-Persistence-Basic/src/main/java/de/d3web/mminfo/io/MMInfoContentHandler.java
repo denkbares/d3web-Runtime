@@ -11,6 +11,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStore;
@@ -19,8 +20,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
-import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
 
 public class MMInfoContentHandler extends DefaultHandler {
 
@@ -107,7 +106,8 @@ public class MMInfoContentHandler extends DefaultHandler {
 				Property<Object> property = Property.getUntypedProperty(currentProperty);
 				Object value;
 				if (entityBuilder != null) {
-					List<Element> childNodes = XMLUtil.getElementList(entityBuilder.getElement().getChildNodes());
+					List<Element> childNodes = XMLUtil.getElementList(
+							entityBuilder.getElement().getChildNodes());
 					value = persistence.readFragment(childNodes.get(0));
 				}
 				else {
@@ -116,10 +116,9 @@ public class MMInfoContentHandler extends DefaultHandler {
 				this.currentStore.addValue(property, currentLocale, value);
 			}
 			catch (NoSuchElementException e) {
-				Log.warning("Property '" + currentProperty +
-								"' is not supported. Propably the corresponding plugin " +
-								"is missing. This property will be lost when saving " +
-								"the knowledge base.");
+				// log warning only once per mminfo file
+				// (for each file a new instance of this handler is created)
+				XMLUtil.logMissingProperty(persistence, currentProperty);
 			}
 			catch (NoSuchMethodException | IOException e) {
 				throw new SAXException(e);
@@ -136,13 +135,12 @@ public class MMInfoContentHandler extends DefaultHandler {
 	/**
 	 * Searches the info store for a specified object and returns it. The method
 	 * throws an exception if there is no such specified object.
-	 * 
-	 * @created 20.09.2013
+	 *
 	 * @param name the name of the object
-	 * @param choice the name of the objects choice or null if no choice is
-	 *        wanted
+	 * @param choice the name of the objects choice or null if no choice is wanted
 	 * @return the info store matching the specified object
-	 * @throws IOException if no such object with an info store exists
+	 * @throws SAXException if no such object with an info store exists
+	 * @created 20.09.2013
 	 */
 	private InfoStore findInfoStore(String name, String choice) throws SAXException {
 		NamedObject namedObject = persistence.getArtifact().getManager().search(name);

@@ -35,13 +35,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import com.denkbares.progress.ProgressInputStream;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressInputStream;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -52,8 +52,8 @@ import de.d3web.core.utilities.NamedObjectComparator;
 
 /**
  * PersistanceHandler for MMInfos
- * 
- * @author: Markus Friedrich, Volker Belli
+ *
+ * @author Markus Friedrich, Volker Belli
  */
 public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
@@ -65,7 +65,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 		// we create a persistence with an empty xml document
 		// because we do not read from it, but require it for
-		// creating elements our of sax parser if a fragment handler
+		// creating elements out of sax parser if a fragment handler
 		// shall be used for a specific mminfo property
 		Persistence<KnowledgeBase> dummyPersistence = new KnowledgeBasePersistence(manager, kb);
 		MMInfoContentHandler handler = new MMInfoContentHandler(dummyPersistence);

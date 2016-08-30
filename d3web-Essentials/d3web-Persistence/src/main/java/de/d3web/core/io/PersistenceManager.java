@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -36,6 +37,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -43,30 +45,30 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.Plugin;
+import com.denkbares.plugin.PluginManager;
 import com.denkbares.progress.CombinedProgressListener;
 import com.denkbares.progress.DummyProgressListener;
 import com.denkbares.progress.ProgressListener;
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Streams;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.plugin.Autodetect;
-import com.denkbares.plugin.Extension;
-import com.denkbares.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
-import com.denkbares.plugin.PluginManager;
-import com.denkbares.utils.Log;
-import com.denkbares.utils.Streams;
 
 /**
  * This class provides the management features to load and save
  * {@link KnowledgeBase} instances to a file system. This manager stores the
  * {@link KnowledgeBase} instance in a compressed file, that contains knowledge
  * base items as XML files together with additional resources.
- * 
+ * <p>
  * Access this class via the singleton <code>getInstance()</code> method.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class PersistenceManager {
@@ -134,9 +136,9 @@ public final class PersistenceManager {
 		/**
 		 * Returns the name of the knowledge base, as specified in the manifest
 		 * file.
-		 * 
-		 * @created 17.04.2011
+		 *
 		 * @return the name of the knowledge base
+		 * @created 17.04.2011
 		 */
 		public String getName() {
 			return name;
@@ -145,9 +147,9 @@ public final class PersistenceManager {
 		/**
 		 * Returns the description text of the knowledge base, as specified in
 		 * the manifest file.
-		 * 
-		 * @created 17.04.2011
+		 *
 		 * @return the description of the knowledge base
+		 * @created 17.04.2011
 		 */
 		public String getDescription() {
 			return description;
@@ -156,9 +158,9 @@ public final class PersistenceManager {
 		/**
 		 * Returns the author's name of this knowledge base, as specified in the
 		 * manifest file.
-		 * 
-		 * @created 17.04.2011
+		 *
 		 * @return the author of the knowledge base
+		 * @created 17.04.2011
 		 */
 		public String getAuthor() {
 			return author;
@@ -167,9 +169,9 @@ public final class PersistenceManager {
 		/**
 		 * Returns the date of this knowledge base, as specified in the manifest
 		 * file.
-		 * 
-		 * @created 17.04.2011
+		 *
 		 * @return the date of the knowledge base
+		 * @created 17.04.2011
 		 */
 		public Date getDate() {
 			return date;
@@ -177,9 +179,9 @@ public final class PersistenceManager {
 
 		/**
 		 * Returns the fav icon of this knowledge base.
-		 * 
-		 * @created 17.04.2011
+		 *
 		 * @return the date of the knowledge base
+		 * @created 17.04.2011
 		 */
 		public Resource getFavIcon() {
 			return favIcon;
@@ -218,7 +220,7 @@ public final class PersistenceManager {
 	 * Method to force the plugins to be updated. Usually it is not required to
 	 * call this method manually, because this will done by the persistence
 	 * manager of their own.
-	 * 
+	 *
 	 * @created 28.11.2013
 	 */
 	public void updatePlugins() {
@@ -231,7 +233,7 @@ public final class PersistenceManager {
 	/**
 	 * Method to access the singleton instance of this
 	 * {@link PersistenceManager}.
-	 * 
+	 *
 	 * @return the instance of this {@link PersistenceManager}
 	 */
 	public static PersistenceManager getInstance() {
@@ -257,9 +259,8 @@ public final class PersistenceManager {
 	 * Please not that the same {@link PersistenceManager} usually cannot be
 	 * used used for read and write, because the specified cipher is either
 	 * initialized for encryption or decryption mode.
-	 * 
-	 * @return the instance of this encrypting/encrypting
-	 *         {@link PersistenceManager}
+	 *
+	 * @return the instance of this encrypting/encrypting {@link PersistenceManager}
 	 */
 	public static PersistenceManager getInstance(Cipher cipher) {
 		return new PersistenceManager(cipher);
@@ -268,14 +269,12 @@ public final class PersistenceManager {
 	/**
 	 * Loads a knowledge base from a specified ZIP file and notifies the
 	 * specified listener about the working progress.
-	 * 
+	 *
 	 * @param file the specified ZIP {@link File} (usually a jar file)
-	 * @param listener the specified listener which should be notified about the
-	 *        load progress
-	 * @return a {@link KnowledgeBase} instance with the knowledge contained in
-	 *         the specified ZIP file
-	 * @throws IOException if an error occurs during opening and reading the
-	 *         file
+	 * @param listener the specified listener which should be notified about the load progress
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP
+	 * file
+	 * @throws IOException if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
 		try (ZipFile zipfile = new ZipFile(file)) {
@@ -321,7 +320,7 @@ public final class PersistenceManager {
 						cpl.next(entry.getSize());
 						cpl.updateProgress(0, "reading entry " + name);
 						// initialize the reader
-						KnowledgeReader reader = (KnowledgeReader) plugin.getSingleton();
+						KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
 						reader.read(this, kb, createInputStream(zipfile, entry), cpl);
 						// and mark this as done
 						files.remove(entry);
@@ -368,12 +367,12 @@ public final class PersistenceManager {
 	 * Creates an input stream for a specified zip entry to handle decryption.
 	 * If there is no request for decryption, the original zip input stream for
 	 * that entry is returned.
-	 * 
-	 * @created 27.11.2013
+	 *
 	 * @param zipfile the zip file to read from
 	 * @param entry the entry to be read
 	 * @return the decrypted stream
 	 * @throws IOException if there is any io issue
+	 * @created 27.11.2013
 	 */
 	private InputStream createInputStream(ZipFile zipfile, ZipEntry entry) throws IOException {
 		InputStream stream = zipfile.getInputStream(entry);
@@ -385,12 +384,12 @@ public final class PersistenceManager {
 	 * Creates a decrypted resource for the specified zip entry. If there is no
 	 * request for decryption, the original zip input stream for that entry is
 	 * returned.
-	 * 
-	 * @created 27.11.2013
+	 *
 	 * @param file the zip file to read from
 	 * @param entry the entry to be read
 	 * @return the decrypted resource
 	 * @throws IOException if there is any io issue
+	 * @created 27.11.2013
 	 */
 	private JarBinaryResource createResource(File file, ZipEntry entry) throws IOException {
 		return new JarBinaryResource(entry, file, cipher);
@@ -403,10 +402,10 @@ public final class PersistenceManager {
 	/**
 	 * Returns the the specified entry is an unrequired file from a previous
 	 * version of the persistence, that cannot be read any longer.
-	 * 
-	 * @created 18.06.2011
+	 *
 	 * @param entry the entry to be checked
 	 * @return if the entry should not be parsed
+	 * @created 18.06.2011
 	 */
 	private boolean notNeeded(ZipEntry entry) {
 		String name = entry.getName();
@@ -417,12 +416,11 @@ public final class PersistenceManager {
 
 	/**
 	 * Loads a knowledge base from the specified ZIP file.
-	 * 
+	 *
 	 * @param file the specified ZIP {@link File} (usually a jar file)
-	 * @return a {@link KnowledgeBase} instance with the knowledge contained in
-	 *         the specified ZIP file
-	 * @throws IOException if an error occurs during opening and reading the
-	 *         file
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP
+	 * file
+	 * @throws IOException if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file) throws IOException {
 		return load(file, new DummyProgressListener());
@@ -439,12 +437,10 @@ public final class PersistenceManager {
 	 * Saves the knowledge base to the specified {@link File}. The file is a
 	 * compressed ZIP containing different XML files and resources comprising
 	 * the knowledge base.
-	 * 
+	 *
 	 * @param knowledgeBase the specified knowledge base to be saved
-	 * @param file the specified file to which the knowledge base should be
-	 *        stored
-	 * @param listener listener which should be informed about the progress of
-	 *        the save operation
+	 * @param file the specified file to which the knowledge base should be stored
+	 * @param listener listener which should be informed about the progress of the save operation
 	 * @throws IOException if an error occurs during saving the files
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file, ProgressListener listener) throws IOException {
@@ -466,62 +462,37 @@ public final class PersistenceManager {
 
 		tempfile.getAbsoluteFile().getParentFile().mkdirs();
 
-		int size = 0;
-		for (Extension plugin : writerPlugins) {
-			KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
-			size += writer.getEstimatedSize(knowledgeBase);
-		}
-		size += knowledgeBase.getResources().size();
-		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
 		// update plugin configuration
-		PluginConfig pc = PluginConfig.getPluginConfig(knowledgeBase);
-		for (Plugin plugin : PluginManager.getInstance().getPlugins()) {
-			PluginEntry pluginEntry = pc.getPluginEntry(plugin.getPluginID());
-			// when there is no entry, create one with auto-detect = true
-			if (pluginEntry == null) {
-				pluginEntry = new PluginEntry(plugin);
-				pc.addEntry(pluginEntry);
-			}
-			// when autodetect is true, refresh the necessary state
-			if (pluginEntry.isAutodetect()) {
-				Autodetect auto = pluginEntry.getAutodetect();
-				// should not be null, because the pluginEntry return
-				// isAutodetect only if the plugin has autodetection
-				// capabilities
-				if (auto != null) {
-					pluginEntry.setRequired(auto.check(knowledgeBase));
-				}
-			}
-		}
+		PluginConfig pluginConfig = getUpdatedPluginConfig(knowledgeBase);
+		List<WriterInfo> preparedWriters = Arrays.stream(writerPlugins)
+				.map(plugin -> new WriterInfo(pluginConfig, plugin))
+				.collect(Collectors.toList());
+		int size = preparedWriters.stream().mapToInt(WriterInfo::getEstimatedSize).sum()
+				+ knowledgeBase.getResources().size();
+		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
 		try (JarOutputStream jarOutputStream = new JarOutputStream(
 				new FileOutputStream(tempfile), manifest)) {
 
-			for (Extension plugin : writerPlugins) {
+			for (WriterInfo writerInfo : preparedWriters) {
 				// if autodetect is available, the file is only written when the
 				// autodetect check is positive
-				Autodetect autodetect = pc.getPluginEntry(plugin.getPluginID()).getAutodetect();
-				if (autodetect != null && !autodetect.check(knowledgeBase)) {
+				if (!writerInfo.isRequired()) {
 					continue;
 				}
-				String filename = plugin.getParameter("filename");
-				if (filename == null) {
-					throw new IOException("No filename defined in plugin.xml");
-				}
-				ZipEntry entry = new ZipEntry(filename);
-				jarOutputStream.putNextEntry(entry);
-				KnowledgeWriter writer = (KnowledgeWriter) plugin.getSingleton();
-				cpl.next(writer.getEstimatedSize(knowledgeBase));
+				jarOutputStream.putNextEntry(writerInfo.createZipEntry());
+
+				cpl.next(writerInfo.getEstimatedSize());
 				// unfortunately we corrupt the jar stream if we directly
 				// connect the cipher stream to the entry stream
 				if (cipher == null) {
-					writer.write(this, knowledgeBase, jarOutputStream, cpl);
+					writerInfo.getWriter().write(this, knowledgeBase, jarOutputStream, cpl);
 				}
 				else {
 					// therefore if encrypted, write to encrypted byte[] first
 					// afterwards write the bytes to the jar stream.
 					ByteArrayOutputStream bytes = new ByteArrayOutputStream(256 * 1024);
 					CipherOutputStream stream = new CipherOutputStream(bytes, cipher);
-					writer.write(this, knowledgeBase, stream, cpl);
+					writerInfo.getWriter().write(this, knowledgeBase, stream, cpl);
 					stream.close();
 					bytes.writeTo(jarOutputStream);
 				}
@@ -570,18 +541,80 @@ public final class PersistenceManager {
 		bakfile.delete();
 	}
 
+	private PluginConfig getUpdatedPluginConfig(KnowledgeBase knowledgeBase) {
+		PluginConfig pc = PluginConfig.getPluginConfig(knowledgeBase);
+		for (Plugin plugin : PluginManager.getInstance().getPlugins()) {
+			PluginEntry pluginEntry = pc.getPluginEntry(plugin.getPluginID());
+			// when there is no entry, create one with auto-detect = true
+			if (pluginEntry == null) {
+				pluginEntry = new PluginEntry(plugin);
+				pc.addEntry(pluginEntry);
+			}
+			// when autodetect is true, refresh the necessary state
+			if (pluginEntry.isAutodetect()) {
+				Autodetect auto = pluginEntry.getAutodetect();
+				// should not be null, because the pluginEntry return
+				// isAutodetect only if the plugin has autodetection
+				// capabilities
+				if (auto != null) {
+					pluginEntry.setRequired(auto.check(knowledgeBase));
+				}
+			}
+		}
+		return pc;
+	}
+
 	/**
 	 * Saves the specified {@link KnowledgeBase} instance to the specified
 	 * {@link File}. During this process, a temporary file is created. If the
 	 * process is successful, the temporary file replaces the input file.
-	 * 
-	 * @param knowledgeBase the specified {@link KnowledgeBase} instance to be
-	 *        saved to the file
-	 * @param file the specified {@link File} in which the knowledge base is
-	 *        written
+	 *
+	 * @param knowledgeBase the specified {@link KnowledgeBase} instance to be saved to the file
+	 * @param file the specified {@link File} in which the knowledge base is written
 	 * @throws IOException if an error occurs, an IO Exception is thrown
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file) throws IOException {
 		save(knowledgeBase, file, new DummyProgressListener());
+	}
+
+	private static class WriterInfo {
+
+		private final PluginConfig pluginConfig;
+		private final Extension plugin;
+		private final KnowledgeWriter writer;
+		private final int estimatedSize;
+
+		public WriterInfo(PluginConfig pluginConfig, Extension plugin) {
+			this.pluginConfig = pluginConfig;
+			this.plugin = plugin;
+			this.writer = (KnowledgeWriter) plugin.getNewInstance();
+			this.estimatedSize = writer.getEstimatedSize(pluginConfig.getKnowledgeBase());
+		}
+
+		public Extension getPlugin() {
+			return plugin;
+		}
+
+		public KnowledgeWriter getWriter() {
+			return writer;
+		}
+
+		public int getEstimatedSize() {
+			return estimatedSize;
+		}
+
+		public boolean isRequired() {
+			Autodetect autodetect =
+					pluginConfig.getPluginEntry(plugin.getPluginID()).getAutodetect();
+			return (autodetect == null) || autodetect.check(pluginConfig.getKnowledgeBase());
+		}
+
+		public ZipEntry createZipEntry() throws IOException {
+			String filename = plugin.getParameter("filename");
+			if (filename == null) {
+				throw new IOException("No filename defined in plugin.xml");
+			}
+			return new ZipEntry(filename);
+		}
 	}
 }
