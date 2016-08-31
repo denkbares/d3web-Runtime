@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -732,7 +733,7 @@ public final class XMLUtil {
 		Set<String> missing = knownMissingProperties.computeIfAbsent(
 				persistence.getArtifact(), a -> new HashSet<>());
 		if (missing.add(propertyName)) {
-			Log.warning("Property '" + propertyName +
+			Log.mock(1, Level.WARNING, "Property '" + propertyName +
 					"' is not supported. Probably the corresponding plugin " +
 					"is missing. This property will be lost when saving " +
 					"the knowledge base.");
