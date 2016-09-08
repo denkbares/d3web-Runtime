@@ -23,6 +23,16 @@
 	</extension>
 
 	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
+		id="SingleAlternativeTest">
+		<parameter id="class"
+			value="de.d3web.test.SingleAlternativeTest" />
+		<parameter id="name" value="SingleAlternative" />
+		<parameter id="description" value="CITest SingleAlternativeTest" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
+
+	<extension plugin-id="d3web-Plugin-TestingFramework" point-id="Test"
 		id="TestCaseTest">
 		<parameter id="class"
 			value="de.d3web.test.TestCaseTest" />
