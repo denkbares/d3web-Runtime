@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import com.denkbares.utils.Pair;
+import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -195,5 +196,20 @@ public class D3webTestUtils {
 		Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) question);
 		String choicePrompt = choice == null ? null : choice.getInfoStore().getValue(MMInfo.PROMPT);
 		return choicePrompt == null ? value.getValue().toString() : choicePrompt + " (id: " + choice.getName() + ")";
+	}
+
+	/**
+	 * Verbalizes a path of CondEquals.
+	 *
+	 * @param conditionPath the path of CondEquals to verbalize
+	 * @param message the message to append the path to
+	 */
+	public static void getVerbalization(Collection<CondEqual> conditionPath, StringBuilder message) {
+		for (CondEqual condEqual : conditionPath) {
+			Question question = condEqual.getQuestion();
+			String questionVerbalization = D3webTestUtils.getVerbalization(question);
+			String valueVerbalization = D3webTestUtils.getVerbalization(question, condEqual.getValue());
+			message.append(questionVerbalization).append(" = ").append(valueVerbalization).append(" ➞ ");
+		}
 	}
 }
