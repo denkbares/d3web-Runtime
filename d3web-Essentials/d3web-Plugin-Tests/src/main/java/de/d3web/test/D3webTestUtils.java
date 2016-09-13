@@ -176,7 +176,7 @@ public class D3webTestUtils {
 	 * @param object the object we want to verbalize
 	 * @return the verbalization for the object
 	 */
-	public static String getVerbalization(TerminologyObject object) {
+	public static String getVerbalization(NamedObject object) {
 		String objectPrompt = object.getInfoStore().getValue(MMInfo.PROMPT);
 		return objectPrompt == null ? object.getName() : objectPrompt + " (id: " + object.getName() + ")";
 	}
@@ -214,8 +214,4 @@ public class D3webTestUtils {
 		return message.toString();
 	}
 
-	public static String getVerbalization(Choice choice) {
-		String choicePrompt = choice.getInfoStore().getValue(MMInfo.PROMPT);
-		return choicePrompt == null ? choice.getName() : choicePrompt + " (id: " + choice.getName() + ")";
-	}
 }
