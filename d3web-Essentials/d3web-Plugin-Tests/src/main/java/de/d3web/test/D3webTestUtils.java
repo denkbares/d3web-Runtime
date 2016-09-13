@@ -202,14 +202,20 @@ public class D3webTestUtils {
 	 * Verbalizes a path of CondEquals.
 	 *
 	 * @param conditionPath the path of CondEquals to verbalize
-	 * @param message the message to append the path to
 	 */
-	public static void getVerbalization(Collection<CondEqual> conditionPath, StringBuilder message) {
+	public static String getVerbalization(Collection<CondEqual> conditionPath) {
+		StringBuilder message = new StringBuilder();
 		for (CondEqual condEqual : conditionPath) {
 			Question question = condEqual.getQuestion();
 			String questionVerbalization = D3webTestUtils.getVerbalization(question);
 			String valueVerbalization = D3webTestUtils.getVerbalization(question, condEqual.getValue());
 			message.append(questionVerbalization).append(" = ").append(valueVerbalization).append(" ➞ ");
 		}
+		return message.toString();
+	}
+
+	public static String getVerbalization(Choice choice) {
+		String choicePrompt = choice.getInfoStore().getValue(MMInfo.PROMPT);
+		return choicePrompt == null ? choice.getName() : choicePrompt + " (id: " + choice.getName() + ")";
 	}
 }
