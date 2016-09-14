@@ -116,7 +116,7 @@ public class DefaultAbnormality implements Abnormality {
 	 */
 	public static void setAbnormality(Question question, Value value, double abnormality) {
 		InfoStore infoStore = question.getInfoStore();
-		DefaultAbnormality abnormalitySlice = infoStore.getValue(BasicProperties.DEFAULT_ABNORMALITIY);
+		DefaultAbnormality abnormalitySlice = infoStore.getValue(BasicProperties.DEFAULT_ABNORMALITY);
 		if (abnormalitySlice == null) {
 			abnormalitySlice = new DefaultAbnormality();
 			infoStore.addValue(BasicProperties.DEFAULT_ABNORMALITY, abnormalitySlice);
@@ -136,7 +136,7 @@ public class DefaultAbnormality implements Abnormality {
 	 * was set
 	 */
 	public static @Nullable Double getAbnormality(Question question, Value value) {
-		DefaultAbnormality abnormality = question.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITIY);
+		DefaultAbnormality abnormality = question.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
 		if (abnormality == null) {
 			return null;
 		}
