@@ -19,6 +19,7 @@
 package de.d3web.testing;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Log;
@@ -141,6 +143,18 @@ public class BuildResultPersistenceHandler {
 			messageElement.setAttribute(TEXT, summary.getText());
 			messageElement.setAttribute(SUMMARY, "true");
 			parent.appendChild(messageElement);
+		}
+	}
+
+	public static BuildResult fromXML(InputStream in) throws IOException {
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document document = docBuilder.parse(in);
+			return BuildResultPersistenceHandler.fromXML(document);
+		}
+		catch (ParseException | ParserConfigurationException | SAXException e) {
+			throw new IOException("internal xml error");
 		}
 	}
 
