@@ -31,7 +31,6 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
-import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
@@ -189,29 +188,26 @@ public class D3webTestUtils {
 	 * @param value    the value we want to verbalize
 	 * @return the verbalization for the object
 	 */
-	public static String getVerbalization(Question question, Value value) {
+	public static String getVerbalization(Question question, Object value) {
 		if (!(question instanceof QuestionChoice && value instanceof ChoiceValue)) {
-			return value.getValue().toString();
+			return value.toString();
 		}
 		Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) question);
 		String choicePrompt = choice == null ? null : choice.getInfoStore().getValue(MMInfo.PROMPT);
-		return choicePrompt == null ? value.getValue().toString() : choicePrompt + " (id: " + choice.getName() + ")";
+		return choicePrompt == null ? value.toString() : choicePrompt + " (id: " + choice.getName() + ")";
 	}
 
 	/**
-	 * Verbalizes a path of CondEquals.
+	 * Verbalizes a {@link CondEqual}
 	 *
-	 * @param conditionPath the path of CondEquals to verbalize
+	 * @param condEqual the {@link CondEqual} to verbalize
+	 * @return the verbalization of the {@link CondEqual}
 	 */
-	public static String getVerbalization(Collection<CondEqual> conditionPath) {
-		StringBuilder message = new StringBuilder();
-		for (CondEqual condEqual : conditionPath) {
-			Question question = condEqual.getQuestion();
-			String questionVerbalization = D3webTestUtils.getVerbalization(question);
-			String valueVerbalization = D3webTestUtils.getVerbalization(question, condEqual.getValue());
-			message.append(questionVerbalization).append(" = ").append(valueVerbalization).append(" ➞ ");
-		}
-		return message.toString();
+	public static String getVerbalization(CondEqual condEqual) {
+		Question question = condEqual.getQuestion();
+		String questionVerbalization = D3webTestUtils.getVerbalization(question);
+		String valueVerbalization = D3webTestUtils.getVerbalization(question, condEqual.getValue());
+		return questionVerbalization + " = " + valueVerbalization;
 	}
 
 }
