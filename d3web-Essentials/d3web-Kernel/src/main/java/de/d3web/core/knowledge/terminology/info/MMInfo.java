@@ -18,7 +18,10 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -92,20 +95,43 @@ public class MMInfo {
 
 	/**
 	 * Returns the multimedia-links of the specified object. If no link property is found for the
-	 * locale or a parent (more common) locale, the object name is returned. If no link property is
-	 * found at all, an empty array is returned. If the found link property contains multiple links
-	 * (separated by ";"), they will be split correctly and returned as an array. Otherwise the
-	 * returned array contains the single link.
+	 * locale or a parent (more common) locale, an empty array is returned. If the found link
+	 * property contains multiple links (separated by ";"), they will be split correctly and
+	 * returned as an array. Otherwise the returned array contains the single link.
 	 *
 	 * @param object the object to get the links for
 	 * @param locale the language to get the links for
-	 * @return the links or an empty list
+	 * @return the links or an empty array
 	 * @created 03.07.2012
 	 */
 	@NotNull
 	public static String[] getLinks(NamedObject object, Locale locale) {
-		String property = Strings.trim(object.getInfoStore().getValue(MMInfo.LINK, locale));
+		return splitLinks(object.getInfoStore().getValue(MMInfo.LINK, locale));
+	}
+
+	/**
+	 * Returns all the multimedia-links of the specified object, summarized for all languages. If no
+	 * link property is found at all, an empty array is returned. If the found link properties
+	 * contains multiple links (separated by ";"), they will be split correctly and returned in the
+	 * resulting set. The resulting set preserves the order of the links for a particular language,
+	 * but has no order over the languages.
+	 *
+	 * @param object the object to get the links for
+	 * @return the links or an empty set
+	 * @created 03.07.2012
+	 */
+	@NotNull
+	public static Set<String> getAllLinks(NamedObject object) {
+		Set<String> result = new LinkedHashSet<>();
+		for (String property : object.getInfoStore().entries(MMInfo.LINK).values()) {
+			Collections.addAll(result, splitLinks(property));
+		}
+		return result;
+	}
+
+	private static String[] splitLinks(String property) {
 		if (Strings.isBlank(property)) return new String[0];
+		property = Strings.trim(property);
 		if (!property.contains(";")) return new String[] { property };
 		return property.split("\\s*;\\s*");
 	}
@@ -153,5 +179,4 @@ public class MMInfo {
 		}
 		return prompt;
 	}
-
 }
