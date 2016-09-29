@@ -36,7 +36,7 @@ import de.d3web.core.session.blackboard.SessionObject;
  * values of answered questions are submitted and derived states of solutions
  * are retrieved. <br>
  * Note: This interface replaces the formerly used XPSCase.
- * 
+ *
  * @author Norman Bruemmer, joba, Volker Belli (denkbares GmbH)
  */
 public interface Session extends SessionHeader {
@@ -44,29 +44,39 @@ public interface Session extends SessionHeader {
 	/**
 	 * Returns the {@link KnowledgeBase} instance that is used in this session
 	 * for the problem-solving task.
-	 * 
+	 *
 	 * @return the knowledge base used in this session
 	 */
 	KnowledgeBase getKnowledgeBase();
 
 	// --- manage problem solvers ---
+
 	/**
 	 * Returns a list of all registered {@link PSMethod} instances used in this
 	 * case. The list is sorted by the priority.
-	 * 
+	 *
 	 * @return a list of {@link PSMethod} instances registered for this case
 	 */
 	List<? extends PSMethod> getPSMethods();
 
+	/**
+	 * Returns the instance of a specified PSMethod class definition, which is used in this Session;
+	 * null if the PSMethod-class is not used in this case. The method will not return sub-class
+	 * instances of the specified class
+	 *
+	 * @param solverClass the (exact) class to search for
+	 * @return the PSMethod of exactly the specified class, or null
+	 */
 	<T extends PSMethod> T getPSMethodInstance(Class<T> solverClass);
 
 	// --- access information ---
+
 	/**
 	 * The interview controls the dialog behavior of the session, i.e. the
 	 * indication of {@link Question} and {@link QContainer} instances.
-	 * 
-	 * @deprecated use Session.getSessionObject(PSMethodInterview)
+	 *
 	 * @return the acutal Interview or null if no interview is present
+	 * @deprecated use Session.getSessionObject(PSMethodInterview)
 	 */
 	@Deprecated
 	de.d3web.core.session.interviewmanager.Interview getInterview();
@@ -74,7 +84,7 @@ public interface Session extends SessionHeader {
 	/**
 	 * The {@link Blackboard} manages all entered and all derived facts of this
 	 * {@link Session}.
-	 * 
+	 *
 	 * @return the blackboard instance used in this session
 	 */
 	Blackboard getBlackboard();
@@ -82,7 +92,7 @@ public interface Session extends SessionHeader {
 	/**
 	 * Returns the {@link PropagationManager} instance, responsible for all
 	 * propagation actions of this session.
-	 * 
+	 *
 	 * @return the propagation manager of this session
 	 */
 	PropagationManager getPropagationManager();
@@ -93,9 +103,9 @@ public interface Session extends SessionHeader {
 	 * Returns the {@link SessionObject} (dynamically created flyweight object)
 	 * corresponding to the specified {@link SessionObjectSource} instance
 	 * (often this is a {@link Question} or a {@link Solution}.
-	 * 
-	 * @param item the specified object for which the corresponding session
-	 *        object should be returned
+	 *
+	 * @param item the specified object for which the corresponding session object should be
+	 * returned
 	 * @return the corresponding {@link SessionObject} of the specified object
 	 */
 	<T extends SessionObject> T getSessionObject(SessionObjectSource<T> item);

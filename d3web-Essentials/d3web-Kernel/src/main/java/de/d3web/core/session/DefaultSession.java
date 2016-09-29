@@ -30,6 +30,10 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.Plugin;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.utils.Log;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
@@ -43,12 +47,8 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.plugin.Autodetect;
-import com.denkbares.plugin.Extension;
-import com.denkbares.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
-import com.denkbares.plugin.PluginManager;
-import com.denkbares.utils.Log;
 
 /**
  * The {@link DefaultSession} is the default implementation of {@link Session}.
@@ -274,12 +274,6 @@ public class DefaultSession implements Session {
 		return kb;
 	}
 
-	/**
-	 * @return the instance of a specified PSMethod class definition, which is
-	 *         used in this Session; null if the PSMethod-class is not used in
-	 *         this case.
-	 * @param context java.lang.Class
-	 */
 	@Override
 	public <T extends PSMethod> T getPSMethodInstance(Class<T> context) {
 		for (PSMethod psm : usedPSMethods) {

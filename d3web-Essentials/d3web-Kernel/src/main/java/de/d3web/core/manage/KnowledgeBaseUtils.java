@@ -27,13 +27,17 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Triple;
+import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -54,7 +58,10 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.knowledge.terminology.info.SolutionDisplay;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
+import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -124,7 +131,6 @@ public final class KnowledgeBaseUtils {
 	 */
 	public static List<TerminologyObject> getAncestors(TerminologyObject terminologyObject) {
 		return getAncestors(terminologyObject, TerminologyObject.class);
-
 	}
 
 	/**
@@ -636,5 +642,57 @@ public final class KnowledgeBaseUtils {
 		if (BasicProperties.getSolutionDisplay(solution) != SolutionDisplay.context) {
 			groups.put(solution, solution);
 		}
+	}
+
+	/**
+	 * Adds a set of init answers to the specified session. The answers usually will not appear in
+	 * the user's interview as they are set as the init problem solver. If any of the answers value
+	 * string could not been decoded to a valid question value or any of the answers target
+	 * questions could not been found, an IllegalArgumentException is thrown
+	 *
+	 * @param session the session to apply the init values to
+	 * @param answers the values to be set where the keys are the question names and the values are
+	 * the answers
+	 * @throws IllegalArgumentException if the answers not match the session's knowledge base
+	 */
+	public static void setInitAnswers(Session session, Map<String, String> answers) {
+		KnowledgeBase base = session.getKnowledgeBase();
+		for (Map.Entry<String, String> answer : answers.entrySet()) {
+			// find the question to be set
+			Question question = assertQuestion(base, answer.getKey());
+
+			// create a value object for the question
+			String valueString = answer.getValue();
+			Value value = ValueUtils.createValue(question, valueString);
+			if (value == null) {
+				throw new IllegalArgumentException("question '" + question + "'" +
+						" is assigned an invalid value: " + valueString);
+			}
+
+			// set the value into the created session
+			// use init-solver to create hidden values that are not edited by the user
+			PSMethodInit psm = PSMethodInit.getInstance();
+			Fact fact = FactFactory.createFact(question, value, psm, psm);
+			session.getBlackboard().addValueFact(fact);
+		}
+	}
+
+	/**
+	 * Returns the question of the specified name from the specified knowledge base. If the question
+	 * does not exists, an {@link IllegalArgumentException} is thrown.
+	 *
+	 * @param base the knowledge base to get the question for
+	 * @param questionName the name of the question
+	 * @return the question
+	 * @throws IllegalArgumentException if the question is not in the knowledge base
+	 */
+	@NotNull
+	public static Question assertQuestion(KnowledgeBase base, String questionName) {
+		Question question = base.getManager().searchQuestion(questionName);
+		if (question == null) {
+			throw new IllegalArgumentException("could not find question '" + questionName + "' " +
+					"in knowledge base '" + base.getName() + "'");
+		}
+		return question;
 	}
 }
