@@ -382,7 +382,7 @@ public class TestExecutor {
 		for (int i = 0; i < arguments.length; i++) {
 			if (checkResult.hasError(i)) {
 				message = new Message(Type.ERROR,
-						"invalid argument " + arguments[i] + ": " + checkResult.getMessage(i));
+						"Invalid argument " + arguments[i] + ": " + checkResult.getMessage(i));
 				break;
 			}
 		}
@@ -393,7 +393,7 @@ public class TestExecutor {
 		TestResult result = new TestResult(test.getName(), checkResult.getArguments());
 		if (message != null) {
 			result.addUnexpectedMessage(testObjectName, message);
-			result.setSummary(new Message(Type.ERROR));
+			result.setSummary(new Message(Type.ERROR, message.getText()));
 		}
 		return result;
 	}

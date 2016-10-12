@@ -27,7 +27,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.denkbares.collections.ConcatenateIterable;
+import com.denkbares.strings.Strings;
+import com.denkbares.utils.Log;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)
@@ -104,7 +108,7 @@ public class TestResult implements Comparable<TestResult> {
 	}
 
 	@Override
-	public int compareTo(TestResult tr) {
+	public int compareTo(@NotNull TestResult tr) {
 		//noinspection StringEquality
 		if (testName != tr.getTestName()) {
 			return testName.compareTo(tr.getTestName());
@@ -190,6 +194,13 @@ public class TestResult implements Comparable<TestResult> {
 	 */
 	public void setSummary(Message summary) {
 		this.summary = summary;
+		if (summary.getType() == Message.Type.ERROR && Strings.isBlank(summary.getText())) {
+			try {
+				throw new Exception();
+			} catch (Exception e) {
+				Log.warning("Summary message of type ERROR without text was set to test result with the following stack:\n" + Strings.getStackTrace(e));
+			}
+		}
 	}
 
 	public Collection<File> getAttachments() {
