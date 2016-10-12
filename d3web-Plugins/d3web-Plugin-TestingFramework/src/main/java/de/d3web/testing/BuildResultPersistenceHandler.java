@@ -114,6 +114,7 @@ public class BuildResultPersistenceHandler {
 			// write unexpected messages
 			writeMessages(document, result, test, result.getTestObjectsWithUnexpectedOutcome());
 
+			writeSummary(document, result, test);
 		}
 
 		return document;
@@ -134,7 +135,9 @@ public class BuildResultPersistenceHandler {
 			messageElement.setAttribute(TEST_OBJECT, testObjectName);
 			parent.appendChild(messageElement);
 		}
+	}
 
+	private static void writeSummary(Document document, TestResult result, Element parent) {
 		// new: append summary message if available
 		Message summary = result.getSummary();
 		if (summary != null) {
