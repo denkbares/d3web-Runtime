@@ -21,8 +21,12 @@ package de.d3web.testing;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
+import com.denkbares.strings.Strings;
 import de.d3web.testing.Message.Type;
 
 /**
@@ -46,27 +50,42 @@ public class TestingUtils {
 		}
 	}
 
-	public static Type getSummarizedType(TestResult testResult) {
+	public static Message getSummarizedResult(TestResult testResult) {
 		// return error if we have no test objects
 		if (testResult.getSuccessfullyTestedObjects() == 0
 				&& testResult.getTestObjectsWithUnexpectedOutcome().isEmpty()) {
-			return Type.ERROR;
+			return new Message(Type.ERROR, "No test objects found.");
 		}
-		Type t = Message.Type.SUCCESS;
+		MultiMap<Type, String> typeToObject = new DefaultMultiMap<>();
 		for (String testObjectName : testResult.getTestObjectsWithUnexpectedOutcome()) {
 			Message test = testResult.getMessageForTestObject(testObjectName);
-			if (test == null || test.getType() == Type.ERROR) {
-				return Type.ERROR;
+			if (test == null) {
+				typeToObject.put(null, testObjectName);
 			}
-			if (test.getType() == Type.FAILURE) {
-				t = Type.FAILURE;
+			else {
+				typeToObject.put(test.getType(), testObjectName);
 			}
 		}
-		return t;
+		Set<String> nullTestObjects = typeToObject.getValues(null);
+		if (!nullTestObjects.isEmpty()) {
+			return new Message(Type.ERROR, "No message found for test object"
+					+ (nullTestObjects.size() > 1 ? "s " : " ") + Strings.concat(", ", nullTestObjects));
+		}
+		Set<String> errorTestObjects = typeToObject.getValues(Type.ERROR);
+		if (!errorTestObjects.isEmpty()) {
+			return new Message(Type.ERROR, "Test error for test object"
+					+ (errorTestObjects.size() > 1 ? "s " : " ") + Strings.concat(", ", errorTestObjects));
+		}
+		Set<String> failedTestObjects = typeToObject.getValues(Type.FAILURE);
+		if (!failedTestObjects.isEmpty()) {
+			return new Message(Type.FAILURE, "Test failure for test object"
+					+ (failedTestObjects.size() > 1 ? "s " : " ") + Strings.concat(", ", failedTestObjects));
+		}
+		return new Message(Message.Type.SUCCESS, "Test successful for all test objects");
 	}
 
 	public static void updateSummary(TestResult result) {
-		result.setSummary(new Message(getSummarizedType(result)));
+		result.setSummary(getSummarizedResult(result));
 	}
 
 	public static Message createFailure(String failedMessage, Collection<String> erroneousObjects, Class<?> objectClass) {
@@ -107,7 +126,7 @@ public class TestingUtils {
 	/**
 	 * Checks if a string should be ignored based on a list of {@link Pattern}s.
 	 *
-	 * @param object the name of the object to test
+	 * @param object         the name of the object to test
 	 * @param ignorePatterns the ignores
 	 * @return s if the object should be ignored
 	 * @created 06.03.2013
@@ -123,7 +142,7 @@ public class TestingUtils {
 	 * Filters the specified strings (test object names) and returns a new list without the strings
 	 * to be ignored according to the ignorePatterns.
 	 *
-	 * @param objects the test object names
+	 * @param objects        the test object names
 	 * @param ignorePatterns the object name patterns to be ignored
 	 * @return a new list, containing only the strings not to be ignored
 	 * @created 27.05.2013
