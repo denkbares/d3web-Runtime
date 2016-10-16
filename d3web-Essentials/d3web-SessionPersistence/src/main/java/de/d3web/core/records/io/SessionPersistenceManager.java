@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -33,15 +34,15 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.d3web.core.io.FragmentManager;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
 import com.denkbares.progress.DummyProgressListener;
 import com.denkbares.progress.ProgressListener;
+import com.denkbares.strings.Strings;
+import de.d3web.core.io.FragmentManager;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.records.DefaultSessionRecord;
 import de.d3web.core.records.SessionRecord;
-import com.denkbares.plugin.Extension;
-import com.denkbares.plugin.PluginManager;
-import com.denkbares.strings.Strings;
 
 /**
  * PersistenceManager to write/read SessionRecords to/from an xml file
@@ -85,7 +86,7 @@ public final class SessionPersistenceManager {
 	/**
 	 * Writes a set of session records as xml into the specified file.
 	 *
-	 * @param file           the target file to be written
+	 * @param file the target file to be written
 	 * @param sessionRecords the session records to be stored
 	 * @throws IOException if the xml content cannot be written into the file
 	 * @created 31.08.2011
@@ -97,9 +98,9 @@ public final class SessionPersistenceManager {
 	/**
 	 * Writes a set of session records as xml into the specified file.
 	 *
-	 * @param file           the target file to be written
+	 * @param file the target file to be written
 	 * @param sessionRecords the session records to be stored
-	 * @param listener       the progress listener to indicate the progress
+	 * @param listener the progress listener to indicate the progress
 	 * @throws IOException if the xml content cannot be written into the file
 	 * @created 19.05.2011
 	 */
@@ -120,7 +121,7 @@ public final class SessionPersistenceManager {
 	/**
 	 * Writes a set of session records as xml into the specified stream.
 	 *
-	 * @param stream         the target stream to be written
+	 * @param stream the target stream to be written
 	 * @param sessionRecords the session records to be stored
 	 * @throws IOException if the xml content cannot be written into the file
 	 * @created 31.08.2011
@@ -132,9 +133,21 @@ public final class SessionPersistenceManager {
 	/**
 	 * Writes a set of session records as xml into the specified stream.
 	 *
-	 * @param stream         the target stream to be written
+	 * @param stream the target stream to be written
 	 * @param sessionRecords the session records to be stored
-	 * @param listener       the progress listener to indicate the progress
+	 * @throws IOException if the xml content cannot be written into the file
+	 * @created 31.08.2011
+	 */
+	public void saveSessions(OutputStream stream, SessionRecord... sessionRecords) throws IOException {
+		saveSessions(stream, Arrays.asList(sessionRecords));
+	}
+
+	/**
+	 * Writes a set of session records as xml into the specified stream.
+	 *
+	 * @param stream the target stream to be written
+	 * @param sessionRecords the session records to be stored
+	 * @param listener the progress listener to indicate the progress
 	 * @throws IOException if the xml content cannot be written into the file
 	 * @created 19.05.2011
 	 */
@@ -174,8 +187,8 @@ public final class SessionPersistenceManager {
 	 *
 	 * @param file the file to read the records from
 	 * @return the records read
-	 * @throws IOException if the file cannot be accessed or its contents are
-	 *                     not stored session records
+	 * @throws IOException if the file cannot be accessed or its contents are not stored session
+	 * records
 	 * @created 31.08.2011
 	 */
 	public Collection<SessionRecord> loadSessions(File file) throws IOException {
@@ -186,11 +199,11 @@ public final class SessionPersistenceManager {
 	 * Reads the {@link SessionRecord}s from a xml file and returns them as a
 	 * collection.
 	 *
-	 * @param file     the file to read the records from
+	 * @param file the file to read the records from
 	 * @param listener the progress listener to indicate the progress
 	 * @return the records read
-	 * @throws IOException if the file cannot be accessed or its contents are
-	 *                     not stored session records
+	 * @throws IOException if the file cannot be accessed or its contents are not stored session
+	 * records
 	 * @created 31.08.2011
 	 */
 	public Collection<SessionRecord> loadSessions(File file, ProgressListener listener) throws IOException {
@@ -205,8 +218,7 @@ public final class SessionPersistenceManager {
 	 *
 	 * @param inputStream the stream to read the records from
 	 * @return the records read
-	 * @throws IOException if the stream's content is not a xml of stored
-	 *                     session records
+	 * @throws IOException if the stream's content is not a xml of stored session records
 	 * @created 31.08.2011
 	 */
 	public Collection<SessionRecord> loadSessions(InputStream inputStream) throws IOException {
@@ -218,10 +230,9 @@ public final class SessionPersistenceManager {
 	 * as a collection.
 	 *
 	 * @param inputStream the stream to read the records from
-	 * @param listener    the progress listener to indicate the progress
+	 * @param listener the progress listener to indicate the progress
 	 * @return the records read
-	 * @throws IOException if the stream's content is not a xml of stored
-	 *                     session records
+	 * @throws IOException if the stream's content is not a xml of stored session records
 	 * @created 31.08.2011
 	 */
 	public Collection<SessionRecord> loadSessions(InputStream inputStream, ProgressListener listener) throws IOException {
@@ -251,7 +262,8 @@ public final class SessionPersistenceManager {
 					DefaultSessionRecord sr =
 							new DefaultSessionRecord(id, creationDate, dateOfLastEdit);
 					for (Extension extension : handler) {
-						SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension.getSingleton();
+						SessionPersistenceHandler theHandler = (SessionPersistenceHandler) extension
+								.getSingleton();
 						SessionPersistence persistence = new SessionPersistence(this, sr, e);
 						theHandler.read(persistence, e, listener);
 					}
@@ -266,5 +278,4 @@ public final class SessionPersistenceManager {
 		listener.updateProgress(1f, "parsing done");
 		return sessionRecords;
 	}
-
 }
