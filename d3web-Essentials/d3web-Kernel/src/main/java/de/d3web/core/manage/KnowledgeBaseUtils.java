@@ -62,6 +62,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -674,6 +675,8 @@ public final class KnowledgeBaseUtils {
 			PSMethodInit psm = PSMethodInit.getInstance();
 			Fact fact = FactFactory.createFact(question, value, psm, psm);
 			session.getBlackboard().addValueFact(fact);
+			session.getProtocol().addEntry(new FactProtocolEntry(
+					session.getPropagationManager().getPropagationTime(), fact));
 		}
 	}
 
@@ -694,5 +697,20 @@ public final class KnowledgeBaseUtils {
 					"in knowledge base '" + base.getName() + "'");
 		}
 		return question;
+	}
+
+	/**
+	 * Returns the name of the knowledge base (for the root language), or the id if no name is
+	 * specified.
+	 *
+	 * @param base the knowledge base to get the name for
+	 * @return the name or id of the knowledge base
+	 */
+	public static String getBaseName(KnowledgeBase base) {
+		String name = base.getName();
+		if (name == null) {
+			name = base.getId();
+		}
+		return name;
 	}
 }

@@ -77,10 +77,10 @@ import de.d3web.core.session.values.Unknown;
  * <li> {@link Solution}: {@link Rating.State} representing a value of the
  * solution
  * </ul>
- * 
+ * <p>
  * See {@link ProtocolConversion} for some helper methods to deal with these
  * entries in combination to a defined knowledge base.
- * 
+ *
  * @author volker_belli
  * @created 19.10.2010
  */
@@ -93,7 +93,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 
 	/**
 	 * Creates a new protocol entry for a specified fact to the specified date.
-	 * 
+	 *
 	 * @param date the date of the entry
 	 * @param fact the fact to take the entry's information from
 	 * @throws NullPointerException if any of the specified arguments are null
@@ -109,7 +109,7 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * Creates a new protocol entry for a specified fact to the specified time.
 	 * The timeMillis is the number of milliseconds since the standard base time
 	 * known as "the epoch", namely January 1, 1970, 00:00:00 GMT
-	 * 
+	 *
 	 * @param timeMillis the date of the entry
 	 * @param fact the fact to take the entry's information from
 	 * @throws NullPointerException if the specified fact is null
@@ -121,11 +121,10 @@ public class FactProtocolEntry implements ProtocolEntry {
 	/**
 	 * Creates a new protocol entry with the specified values. The raw value
 	 * must be as described in {@link FactProtocolEntry}.
-	 * 
+	 *
 	 * @param date the date of the entry
 	 * @param terminologyObjectName the name of the valued object
-	 * @param solvingMethodClassName the problem solver class name (fully
-	 *        qualified)
+	 * @param solvingMethodClassName the problem solver class name (fully qualified)
 	 * @param value the value of the object
 	 * @throws NullPointerException if any of the specified arguments are null
 	 */
@@ -155,9 +154,9 @@ public class FactProtocolEntry implements ProtocolEntry {
 
 	/**
 	 * Returns the name of the terminology object.
-	 * 
-	 * @created 19.10.2010
+	 *
 	 * @return the terminology object name
+	 * @created 19.10.2010
 	 */
 	public String getTerminologyObjectName() {
 		return terminologyObjectName;
@@ -167,21 +166,19 @@ public class FactProtocolEntry implements ProtocolEntry {
 	 * Returns the fully qualified class name of the PSMethod having derived
 	 * this fact. If the class name is null, it is a fact merged from multiple
 	 * problem solvers.
-	 * 
-	 * @created 19.10.2010
+	 *
 	 * @return the PSMethod class name
+	 * @created 19.10.2010
 	 */
 	public String getSolvingMethodClassName() {
 		return solvingMethodClassName;
 	}
 
 	/**
-	 * Returns the raw value of this fact. Please note that the returned value
-	 * is <strong>not</strong> a {@link Value}. Instead see
-	 * {@link FactProtocolEntry} documentation for more details.
-	 * 
+	 * Returns the raw value of this fact.
+	 *
+	 * @return the value of the fact
 	 * @created 19.10.2010
-	 * @return the raw/primitive value
 	 */
 	public Value getValue() {
 		return value;
@@ -211,9 +208,9 @@ public class FactProtocolEntry implements ProtocolEntry {
 		FactProtocolEntry other = (FactProtocolEntry) obj;
 		return EqualsUtils.equals(this.getDate(), other.getDate())
 				&& EqualsUtils.equals(this.getTerminologyObjectName(),
-						other.getTerminologyObjectName())
+				other.getTerminologyObjectName())
 				&& EqualsUtils.equals(this.getSolvingMethodClassName(),
-						other.getSolvingMethodClassName())
+				other.getSolvingMethodClassName())
 				&& EqualsUtils.equals(this.getValue(), other.getValue());
 	}
 
@@ -228,5 +225,4 @@ public class FactProtocolEntry implements ProtocolEntry {
 				" = " +
 				this.getValue();
 	}
-
 }
