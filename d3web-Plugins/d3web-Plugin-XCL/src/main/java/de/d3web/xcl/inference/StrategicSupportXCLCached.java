@@ -50,7 +50,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.interview.Form;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
@@ -60,7 +59,6 @@ import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
 
 /**
- * 
  * @author volker_belli
  * @created 27.05.2012
  */
@@ -133,7 +131,6 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		else {
 			conds.add(conditionedFinding);
 		}
-
 	}
 
 	private static Collection<Question> getRelevantQuestions(Collection<? extends QASet> qasets, Session session) {
@@ -141,11 +138,10 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		FormStrategy formStrategy = interview.getFormStrategy();
 		Set<Question> result = new HashSet<>();
 		for (QASet qaSet : qasets) {
-			Form form = formStrategy.getForm(qaSet, session);
-			for (Question q : form.getActiveQuestions()) {
+			for (Question q : formStrategy.getActiveQuestions(qaSet, session)) {
 				boolean ignore = // false;
-				(q instanceof QuestionChoice)
-						&& ((QuestionChoice) q).getAllAlternatives().size() <= 1;
+						(q instanceof QuestionChoice)
+								&& ((QuestionChoice) q).getAllAlternatives().size() <= 1;
 				// unfortunately, in rare cases, ignoring irrelevant questions
 				// will result in slightly different information gain
 				if (!ignore) {
@@ -201,7 +197,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 	@Override
 	public double getInformationGain(Collection<? extends QASet> qasets,
-			Collection<Solution> solutions, Session session) {
+									 Collection<Solution> solutions, Session session) {
 		Collection<Question> questions = getRelevantQuestions(qasets, session);
 		if (questions.isEmpty()) return 0;
 
@@ -321,11 +317,11 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 * returned. For optimization reasons, we also consider the
 	 * {@link #NULL_SET} to be specified, that is a unmodifiable set containing
 	 * exactly one value 'null'.
-	 * 
-	 * @created 27.05.2012
+	 *
 	 * @param source the source set to be changed
 	 * @param items the items to be added
 	 * @return the resulting set, may be the source one or a newly created one
+	 * @created 27.05.2012
 	 */
 	private static Set<Condition> lazyAddAll(Set<Condition> source, Collection<Condition> items) {
 		if (items == null || items.isEmpty()) return source;
@@ -396,5 +392,4 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		}
 		return result;
 	}
-
 }

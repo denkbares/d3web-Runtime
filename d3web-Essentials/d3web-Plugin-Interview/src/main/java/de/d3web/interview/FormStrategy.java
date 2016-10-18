@@ -19,13 +19,15 @@
 package de.d3web.interview;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 
 /**
  * Combines Interview Objects to Forms
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
  */
@@ -40,13 +42,31 @@ public interface FormStrategy extends de.d3web.core.session.interviewmanager.For
 	Form nextForm(List<InterviewObject> agendaEntries, Session session);
 
 	/**
-	 * Returns a form of an {@link InterviewObject}, even if it is actually not
-	 * contained on the {@link InterviewAgenda}
-	 * 
+	 * Returns one or multiple forms of an {@link InterviewObject}, even if it is actually not
+	 * contained on the {@link InterviewAgenda}. Most FormStrategy implementation will try to
+	 * create a single form for each interview object, but for complex qcontainer the strategy might
+	 * decide to split it into multiple forms as well.
+	 *
+	 * @param object the interview object to create the Form(s) for
+	 * @param session the session to create the form(s) for
+	 * @return the forms created
 	 * @created 15.04.2013
-	 * @param object
-	 * @return
 	 */
-	Form getForm(InterviewObject object, Session session);
+	List<Form> getForm(InterviewObject object, Session session);
 
+	/**
+	 * Returns all the questions to be asked for the specified interview objects. These are the
+	 * questions that will be contained in the forms that would be created by {@link
+	 * #getForm(InterviewObject, Session)}.
+	 *
+	 * @param object the interview objects to be answered
+	 * @param session the session to answer the questions for
+	 * @return the questions that are active within the session for the specified interview objects
+	 * @created 15.04.2013
+	 */
+	default List<Question> getActiveQuestions(InterviewObject object, Session session) {
+		return getForm(object, session).stream()
+				.map(Form::getActiveQuestions).flatMap(List::stream)
+				.distinct().collect(Collectors.toList());
+	}
 }

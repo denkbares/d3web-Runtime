@@ -19,6 +19,7 @@
 package de.d3web.interview;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -28,7 +29,7 @@ import de.d3web.core.session.values.UndefinedValue;
 /**
  * Wraps a {@link FormStrategy} and returns always a{@link DefaultForm}
  * containing one question or the {@link EmptyForm}
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 19.04.2013
  */
@@ -48,8 +49,16 @@ public class SingleQuestionFormStrategyWrapper implements FormStrategy {
 	}
 
 	@Override
-	public Form getForm(InterviewObject object, Session session) {
-		return wrappedStrategy.getForm(object, session);
+	public List<Form> getForm(InterviewObject object, Session session) {
+		return wrappedStrategy.getActiveQuestions(object, session).stream()
+				.map(question -> new DefaultForm(question.getName(), question, session))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Question> getActiveQuestions(InterviewObject object, Session session) {
+		// overwritten to improve performance, because no wrapping is required here
+		return wrappedStrategy.getActiveQuestions(object, session);
 	}
 
 	private Form getNextUnansweredQuestionAsForm(Form form, Session session) {
@@ -60,5 +69,4 @@ public class SingleQuestionFormStrategyWrapper implements FormStrategy {
 		}
 		return EmptyForm.getInstance();
 	}
-
 }

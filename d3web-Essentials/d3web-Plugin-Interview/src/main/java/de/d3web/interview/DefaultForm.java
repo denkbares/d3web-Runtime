@@ -22,6 +22,7 @@ package de.d3web.interview;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,6 +73,21 @@ public class DefaultForm implements Form {
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DefaultForm)) return false;
+		DefaultForm that = (DefaultForm) o;
+		return Objects.equals(interviewObject, that.interviewObject) &&
+				Objects.equals(title, that.title) &&
+				Objects.equals(session, that.session);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(interviewObject, title, session);
 	}
 
 	@Override

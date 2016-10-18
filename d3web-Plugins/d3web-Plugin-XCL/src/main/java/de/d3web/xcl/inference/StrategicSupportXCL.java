@@ -48,7 +48,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.interview.Form;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
@@ -58,7 +57,6 @@ import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
 
 /**
- * 
  * @author volker_belli
  * @created 28.05.2012
  */
@@ -66,14 +64,13 @@ public class StrategicSupportXCL implements StrategicSupport {
 
 	@Override
 	public double getInformationGain(Collection<? extends QASet> qasets,
-			Collection<Solution> solutions, Session session) {
+									 Collection<Solution> solutions, Session session) {
 		Map<List<Condition>, Float> map = new HashMap<>();
 		Collection<Question> questions = new HashSet<>();
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		FormStrategy formStrategy = interview.getFormStrategy();
 		for (QASet qaSet : qasets) {
-			Form form = formStrategy.getForm(qaSet, session);
-			questions.addAll(form.getActiveQuestions());
+			questions.addAll(formStrategy.getActiveQuestions(qaSet, session));
 		}
 
 		Map<Question, Set<Condition>> excludingQuestions =
@@ -125,7 +122,6 @@ public class StrategicSupportXCL implements StrategicSupport {
 				else {
 					map.put(pot, weight + count);
 				}
-
 			}
 		}
 
@@ -253,7 +249,6 @@ public class StrategicSupportXCL implements StrategicSupport {
 		else {
 			conds.add(conditionedFinding);
 		}
-
 	}
 
 	@Override
@@ -286,5 +281,4 @@ public class StrategicSupportXCL implements StrategicSupport {
 		}
 		return coveredSymptoms;
 	}
-
 }

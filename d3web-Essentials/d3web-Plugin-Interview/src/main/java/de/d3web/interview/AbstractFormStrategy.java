@@ -20,6 +20,8 @@
 package de.d3web.interview;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.Question;
@@ -63,8 +65,7 @@ public abstract class AbstractFormStrategy implements FormStrategy {
 	}
 
 	@Override
-	public Form getForm(InterviewObject object, Session session) {
-		return new DefaultForm(object.getName(), object, session);
+	public List<Form> getForm(InterviewObject object, Session session) {
+		return Collections.singletonList(new DefaultForm(object.getName(), object, session));
 	}
-
 }

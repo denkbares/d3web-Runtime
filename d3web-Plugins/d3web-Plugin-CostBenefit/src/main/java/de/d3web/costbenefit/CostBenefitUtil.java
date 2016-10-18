@@ -65,7 +65,6 @@ import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import de.d3web.interview.Form;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
@@ -75,7 +74,7 @@ import de.d3web.xcl.XCLRelation;
 
 /**
  * Provides basic static functions for the CostBenefit package.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class CostBenefitUtil {
@@ -95,10 +94,10 @@ public final class CostBenefitUtil {
 	 * without any problem or strategic solver. Neither interview facts, nor
 	 * {@link SessionObject}s, nor the interview agenda, nor the protocol will
 	 * be copied.
-	 * 
-	 * @created 15.09.2011
+	 *
 	 * @param session the session to be copied
 	 * @return the created copy with value facts only
+	 * @created 15.09.2011
 	 */
 	public static Session createSearchCopy(Session session) {
 		Session testCase = new CopiedSession(session);
@@ -153,14 +152,12 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * @param set if true, the default values of all unanswered questions are
-	 *        returned, if false additionally the values of the answered
-	 *        questions from the blackboard are returned
+	 * @param set if true, the default values of all unanswered questions are returned, if false
+	 * additionally the values of the answered questions from the blackboard are returned
 	 */
 	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
 		List<QuestionOC> questions = new LinkedList<>();
-		FormStrategy formStrategy = getFormStrategy(session);
-		for (Question q : formStrategy.getForm(qContainer, session).getActiveQuestions()) {
+		for (Question q : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
 			if (q instanceof QuestionOC) {
 				questions.add((QuestionOC) q);
 			}
@@ -199,10 +196,10 @@ public final class CostBenefitUtil {
 	/**
 	 * Collects a list of all {@link QuestionOC}, being child of the defined
 	 * QContainer
-	 * 
-	 * @created 30.11.2012
+	 *
 	 * @param qContainer defined QContainer
 	 * @return List of QuestionOC
+	 * @created 30.11.2012
 	 */
 	public static List<QuestionOC> getQuestionOCs(QContainer qContainer) {
 		LinkedList<QuestionOC> result = new LinkedList<>();
@@ -222,7 +219,7 @@ public final class CostBenefitUtil {
 	/**
 	 * Ensures that all questions of the given QContainer are answered. For
 	 * unanswered Questions the expected values are set.
-	 * 
+	 *
 	 * @param session the Session where the values should be set
 	 * @param qContainer {@link QContainer}
 	 * @param source of the created Facts
@@ -289,28 +286,26 @@ public final class CostBenefitUtil {
 	 * public CoveringFactStorage(FactStorage factStorage) { super(); } }
 	 */
 	public static void addParentContainers(Set<QContainer> targets,
-			TerminologyObject q) {
+										   TerminologyObject q) {
 		for (TerminologyObject qaset : q.getParents()) {
 			if (qaset instanceof QContainer) {
 				targets.add((QContainer) qaset);
 			}
 			addParentContainers(targets, qaset);
 		}
-
 	}
 
 	/**
 	 * Checks, if all questions, contained in the specified {@link QASet} have a
 	 * value assigned to them in the specified session.
-	 * 
+	 *
 	 * @param qaset the qaset to be checked
 	 * @param session the specified session
 	 * @return if the qaset is fully answered
 	 */
 	public static boolean isDone(InterviewObject qaset, Session session) {
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
-		Form form = interview.getFormStrategy().getForm(qaset, session);
-		for (Question q : form.getActiveQuestions()) {
+		for (Question q : interview.getFormStrategy().getActiveQuestions(qaset, session)) {
 			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))) {
 				return false;
 			}
@@ -322,11 +317,10 @@ public final class CostBenefitUtil {
 	 * Offers easy access to the AStarAlgorithm even if it is capsuled with the
 	 * path extender. If no AStar is used in the {@link PSMethodCostBenefit},
 	 * null is returned
-	 * 
-	 * @created 04.12.2012
+	 *
 	 * @param psMethodCostBenefit specified PSMethod
-	 * @return configured instance of AStarAlgorithm or null, if another
-	 *         algorithm is used.
+	 * @return configured instance of AStarAlgorithm or null, if another algorithm is used.
+	 * @created 04.12.2012
 	 */
 	public static AStarAlgorithm getAStarAlogrithm(PSMethodCostBenefit psMethodCostBenefit) {
 		SearchAlgorithm searchAlgorithm = psMethodCostBenefit.getSearchAlgorithm();
@@ -345,10 +339,10 @@ public final class CostBenefitUtil {
 
 	/**
 	 * Evaluates if the terminology object has a permanently relevant parent
-	 * 
-	 * @created 13.11.2013
+	 *
 	 * @param termObject Terminology Object
 	 * @return true if a permanently relevant parent exists, false otherwise
+	 * @created 13.11.2013
 	 */
 	public static boolean hasPermanentlyRelevantParent(TerminologyObject termObject) {
 		for (TerminologyObject parent : KnowledgeBaseUtils.getAncestors(termObject)) {
@@ -362,7 +356,7 @@ public final class CostBenefitUtil {
 	/**
 	 * Calculates a set of questions, having negative affects on the solutions
 	 * size of the current solutions
-	 * 
+	 *
 	 * @created 13.12.2013
 	 */
 	public static Set<TerminologyObject> calculatePossibleConflictingQuestions(Session session, Collection<Solution> solutions) {
@@ -380,15 +374,16 @@ public final class CostBenefitUtil {
 	/**
 	 * Returns a set of all objects, having a negative influence on the sprint
 	 * group.
-	 * 
+	 * <p>
 	 * Note: This method is only updated, if a QContainer is completed.
-	 * 
-	 * @created 20.12.2013
+	 *
 	 * @param session actual Session
 	 * @return a set of conflicting objects
+	 * @created 20.12.2013
 	 */
 	public static Set<TerminologyObject> getConflictingObjects(Session session) {
-		return session.getSessionObject(session.getPSMethodInstance(PSMethodCostBenefit.class)).getConflictingObjects();
+		return session.getSessionObject(session.getPSMethodInstance(PSMethodCostBenefit.class))
+				.getConflictingObjects();
 	}
 
 	private static void addObjectsOfConditions(Set<TerminologyObject> positiveObjects, Collection<XCLRelation> relations) {
@@ -400,15 +395,14 @@ public final class CostBenefitUtil {
 	/**
 	 * Checks if the path is applicable in the actual session from the actual
 	 * position.
-	 * 
-	 * @created 26.02.2014
+	 *
 	 * @param path actual path
 	 * @param session specified session
 	 * @param position actual position in the path
-	 * @param sessionIsCopy if the flag is set to true, the specified session is
-	 *        modified in this method, should only be used if an copied session
-	 *        is used
+	 * @param sessionIsCopy if the flag is set to true, the specified session is modified in this
+	 * method, should only be used if an copied session is used
 	 * @return true if the path is applicable in the session
+	 * @created 26.02.2014
 	 */
 	public static boolean checkPath(List<QContainer> path, Session session, int position, boolean sessionIsCopy) {
 		if (!sessionIsCopy) session = createSearchCopy(session);
@@ -427,11 +421,11 @@ public final class CostBenefitUtil {
 
 	/**
 	 * Checks if a qcontainer is applicable in the actual session
-	 * 
-	 * @created 26.02.2014
+	 *
 	 * @param qcon QContainer
 	 * @param session Session
 	 * @return true if the qcontainer is applicable
+	 * @created 26.02.2014
 	 */
 	public static boolean isApplicable(QContainer qcon, Session session) {
 		StateTransition stateTransition = StateTransition.getStateTransition(qcon);
@@ -473,10 +467,10 @@ public final class CostBenefitUtil {
 	 * Calculates all values of final questions that can be reached in the
 	 * actual session by setting the normal values in a QContainer (if no values
 	 * are set)
-	 * 
-	 * @created 09.09.2014
+	 *
 	 * @param session actual Session
 	 * @return Map representing the result
+	 * @created 09.09.2014
 	 */
 	public static Map<Question, Set<Value>> calculateReachableFinalValues(Session session) {
 		Map<Question, Set<Value>> result = new HashMap<>();
@@ -484,13 +478,15 @@ public final class CostBenefitUtil {
 		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
 				StateTransition.KNOWLEDGE_KIND)) {
 			// ignore permanently relevant QContainer
-			if (st.getQcontainer().getInfoStore().getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) continue;
+			if (st.getQcontainer()
+					.getInfoStore()
+					.getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) continue;
 			setNormalValues(copiedSession, st.getQcontainer(), new Object());
 			List<Fact> facts = st.fire(copiedSession);
 			for (Fact fact : facts) {
 				if (fact.getTerminologyObject() instanceof Question
 						&& fact.getTerminologyObject().getInfoStore().getValue(
-								PSMethodCostBenefit.FINAL_QUESTION)) {
+						PSMethodCostBenefit.FINAL_QUESTION)) {
 					Set<Value> set = result.get(fact.getTerminologyObject());
 					if (set == null) {
 						set = new HashSet<>();

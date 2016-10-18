@@ -27,11 +27,10 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 
 /**
- * A Form groups interview items, which should be presented at the same time to
- * the user.
+ * A Form groups interview items, which should be presented at the same time to the user.
  * <p>
- * Note: The reference to de.d3web.core.session.interviewmanager.Form will be
- * removed, when the class is removed from d3web-Kernel
+ * Note: The reference to the deprecated class {@link de.d3web.core.session.interviewmanager.Form}
+ * will be removed, when the class is removed from d3web-Kernel.
  *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
@@ -78,5 +77,4 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 	 * @created 25.03.2013
 	 */
 	QContainer getRoot();
-
 }
