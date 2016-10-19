@@ -138,8 +138,9 @@ public class TestExecutor {
 		}
 		// finally update the groups
 		for (TestResult group : groups.keySet()) {
-			Type type = BuildResult.getOverallResult(groups.getValues(group));
-			group.setSummary(new Message(type));
+			Message summarizedResult = TestingUtils.getSummarizedResult(
+					groups.getValues(group).toArray(new TestResult[0]));
+			group.setSummary(summarizedResult);
 		}
 	}
 

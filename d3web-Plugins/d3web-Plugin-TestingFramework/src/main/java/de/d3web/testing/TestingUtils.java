@@ -20,13 +20,14 @@ package de.d3web.testing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
-import com.denkbares.strings.Strings;
 import de.d3web.testing.Message.Type;
 
 /**
@@ -50,38 +51,47 @@ public class TestingUtils {
 		}
 	}
 
-	public static Message getSummarizedResult(TestResult testResult) {
+	public static Message getSummarizedResult(TestResult... testResults) {
 		// return error if we have no test objects
-		if (testResult.getSuccessfullyTestedObjects() == 0
-				&& testResult.getTestObjectsWithUnexpectedOutcome().isEmpty()) {
-			return new Message(Type.ERROR, "No test objects found.");
+		Map<Type, MultiMap<String, String>> summaryByType = new HashMap<>();
+		for (TestResult testResult : testResults) {
+			if (testResult.getSuccessfullyTestedObjects() == 0
+					&& testResult.getTestObjectsWithUnexpectedOutcome().isEmpty()) {
+				return new Message(Type.ERROR, "No test objects found for " + testResult.getTestName());
+			}
+			for (String testObjectName : testResult.getTestObjectsWithUnexpectedOutcome()) {
+				Message test = testResult.getMessageForTestObject(testObjectName);
+				if (test == null) {
+					return new Message(Type.ERROR, "No message found for test '" + testResult.getTestName() + "' and object '" + testObjectName + "'");
+				}
+				summaryByType.computeIfAbsent(test.getType(), k -> new DefaultMultiMap<>())
+						.put(testResult.getTestName(), testObjectName);
+			}
 		}
-		MultiMap<Type, String> typeToObject = new DefaultMultiMap<>();
-		for (String testObjectName : testResult.getTestObjectsWithUnexpectedOutcome()) {
-			Message test = testResult.getMessageForTestObject(testObjectName);
-			if (test == null) {
-				typeToObject.put(null, testObjectName);
+		MultiMap<String, String> errorTests = summaryByType.computeIfAbsent(Type.ERROR, k -> new DefaultMultiMap<>());
+		if (!errorTests.isEmpty()) {
+			return new Message(Type.ERROR, "Error" + getVerbalization(errorTests));
+		}
+		MultiMap<String, String> failedTests = summaryByType.computeIfAbsent(Type.FAILURE, k -> new DefaultMultiMap<>());
+		if (!failedTests.isEmpty()) {
+			return new Message(Type.FAILURE, "Failure" + getVerbalization(failedTests));
+		}
+		return new Message(Message.Type.SUCCESS);
+	}
+
+	private static String getVerbalization(MultiMap<String, String> objects) {
+		StringBuilder builder = new StringBuilder(objects.size() > 1 ? "s: " : ": ");
+		for (String testName : objects.keySet()) {
+			builder.append(" test '").append(testName).append("'");
+			Set<String> values = objects.getValues(testName);
+			if (values.size() > 1) {
+				builder.append(", objects ").append(values);
 			}
 			else {
-				typeToObject.put(test.getType(), testObjectName);
+				builder.append(", object '").append(values.iterator().next()).append("'");
 			}
 		}
-		Set<String> nullTestObjects = typeToObject.getValues(null);
-		if (!nullTestObjects.isEmpty()) {
-			return new Message(Type.ERROR, "No message found for test object"
-					+ (nullTestObjects.size() > 1 ? "s " : " ") + Strings.concat(", ", nullTestObjects));
-		}
-		Set<String> errorTestObjects = typeToObject.getValues(Type.ERROR);
-		if (!errorTestObjects.isEmpty()) {
-			return new Message(Type.ERROR, "Test error for test object"
-					+ (errorTestObjects.size() > 1 ? "s " : " ") + Strings.concat(", ", errorTestObjects));
-		}
-		Set<String> failedTestObjects = typeToObject.getValues(Type.FAILURE);
-		if (!failedTestObjects.isEmpty()) {
-			return new Message(Type.FAILURE, "Test failure for test object"
-					+ (failedTestObjects.size() > 1 ? "s " : " ") + Strings.concat(", ", failedTestObjects));
-		}
-		return new Message(Message.Type.SUCCESS, "Test successful for all test objects");
+		return builder.toString();
 	}
 
 	public static void updateSummary(TestResult result) {
