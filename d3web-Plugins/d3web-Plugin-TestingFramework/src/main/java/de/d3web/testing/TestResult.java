@@ -198,7 +198,10 @@ public class TestResult implements Comparable<TestResult> {
 			try {
 				throw new Exception();
 			} catch (Exception e) {
-				Log.warning("Summary message of type ERROR without text was set to test result with the following stack:\n" + Strings.getStackTrace(e));
+				String stackTrace = Strings.getStackTrace(e);
+				// we are not interested if if the message is empty in persisted build results
+				if (stackTrace.contains("de.d3web.testing.BuildResultPersistenceHandler.fromXML")) return;
+				Log.warning("Summary message of type ERROR without text was set to test result with the following stack:\n" + stackTrace);
 			}
 		}
 	}
