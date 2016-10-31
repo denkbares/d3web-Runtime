@@ -560,10 +560,11 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Groups all solutions into the closest parent solution that has set the property {@link
-	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If a solution has no
-	 * such parent, or the group id in the specified list, the returned MultiMap contains an entry
-	 * with both, key an value of that solution. Additionally there are entries where the key is the
-	 * grouping solution of each (non-group) solution and the values are the specified solutions.
+	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If a solution has no such
+	 * parent, or the group is in the specified list of solutions, the returned MultiMap contains an
+	 * entry with both, key an value of that solution. Additionally there are entries where the key
+	 * is the grouping solution of each (non-group) solution and the values are the specified
+	 * solutions.
 	 * <p/>
 	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the
 	 * group of the first solution. Additionally the values are also in the order of the specified
