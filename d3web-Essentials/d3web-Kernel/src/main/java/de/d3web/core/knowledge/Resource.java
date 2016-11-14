@@ -24,10 +24,12 @@ import java.io.InputStream;
 
 /**
  * Interface to keep references to binaries in the knowledge base.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public interface Resource {
+
+	String FAVICON_PATH = "favIcon.png";
 
 	/**
 	 * @return the size of the data of this resource
@@ -36,7 +38,7 @@ public interface Resource {
 
 	/**
 	 * Returns the input stream of the specified resource.
-	 * <p>
+	 * <p/>
 	 * <b>Note:</b><br>
 	 * The input stream may create a write lock to the whole knowledge base
 	 * archive the resource is contained in. Therefore make sure to close the
@@ -52,7 +54,7 @@ public interface Resource {
 	 *   in.close();
 	 * }
 	 * </pre></code>
-	 * 
+	 *
 	 * @return the InputStream to read the data of this resource
 	 * @throws IOException if the stream cannot be provided
 	 */
@@ -64,7 +66,7 @@ public interface Resource {
 	 * the same file separator character ("/") with no respect to the underlying
 	 * file systems or operating system. The path is considered to be case
 	 * insensitive.
-	 * 
+	 *
 	 * @return the relative path of the resource (no leading "/")
 	 */
 	String getPathName();
