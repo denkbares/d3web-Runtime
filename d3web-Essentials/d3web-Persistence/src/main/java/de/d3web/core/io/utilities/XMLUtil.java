@@ -23,11 +23,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -41,34 +38,18 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.denkbares.progress.ProgressInputStream;
 import com.denkbares.progress.ProgressListener;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Log;
 import com.denkbares.utils.Triple;
+import com.denkbares.utils.XMLUtils;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.knowledge.InfoStore;
@@ -487,27 +468,7 @@ public final class XMLUtil {
 	 * @throws IOException if the class is not supported
 	 */
 	public static Object getPrimitiveValue(String textContent, String clazz) throws IOException {
-		if (clazz.equals(String.class.getName())) {
-			return textContent;
-		}
-		else if (clazz.equals(Integer.class.getName())) {
-			return Integer.parseInt(textContent);
-		}
-		else if (clazz.equals(Double.class.getName())) {
-			return Double.parseDouble(textContent);
-		}
-		else if (clazz.equals(Boolean.class.getName())) {
-			return Boolean.parseBoolean(textContent);
-		}
-		else if (clazz.equals(URL.class.getName())) {
-			return new URL(textContent);
-		}
-		else if (clazz.equals(Float.class.getName())) {
-			return Float.parseFloat(textContent);
-		}
-		else {
-			throw new IOException("Class " + clazz + " is not supported");
-		}
+		return XMLUtils.getPrimitiveValue(textContent, clazz);
 	}
 
 	/**
@@ -529,7 +490,7 @@ public final class XMLUtil {
 	 * @return the children of the given element as a normal {@link java.util.List}
 	 */
 	public static List<Element> getChildren(Element element) {
-		return getElementList(element.getChildNodes());
+		return XMLUtils.getChildren(element);
 	}
 
 	/**
@@ -540,13 +501,7 @@ public final class XMLUtil {
 	 * text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list) {
-		List<Element> col = new ArrayList<>(list.getLength());
-		for (int i = 0; i < list.getLength(); i++) {
-			if (list.item(i) instanceof Element) {
-				col.add((Element) list.item(i));
-			}
-		}
-		return col;
+		return XMLUtils.getElementList(list);
 	}
 
 	/**
@@ -560,20 +515,7 @@ public final class XMLUtil {
 	 * text nodes etc.
 	 */
 	public static List<Element> getElementList(NodeList list, String... nodeNames) {
-		List<Element> col = new ArrayList<>();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node item = list.item(i);
-			if (item instanceof Element) {
-				for (String nodeName : nodeNames) {
-					if (item.getNodeName().equalsIgnoreCase(nodeName)) {
-						col.add((Element) item);
-						break;
-					}
-				}
-			}
-		}
-
-		return col;
+		return XMLUtils.getElementList(list, nodeNames);
 	}
 
 	/**
@@ -764,16 +706,7 @@ public final class XMLUtil {
 	 * the XML parser cannot be configured
 	 */
 	public static Document streamToDocument(InputStream stream, EntityResolver resolver) throws IOException {
-		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-		DocumentBuilder parser;
-		try {
-			parser = fac.newDocumentBuilder();
-			if (resolver != null) parser.setEntityResolver(resolver);
-			return parser.parse(new InputSource(stream));
-		}
-		catch (ParserConfigurationException | SAXException e) {
-			throw new IOException(e);
-		}
+		return XMLUtils.streamToDocument(stream, resolver);
 	}
 
 	/**
@@ -784,9 +717,7 @@ public final class XMLUtil {
 	 * @throws IOException when an error occurs
 	 */
 	public static Document fileToDocument(File file) throws IOException {
-		try (InputStream in = new FileInputStream(file)) {
-			return streamToDocument(in);
-		}
+		return XMLUtils.fileToDocument(file);
 	}
 
 	/**
@@ -812,15 +743,7 @@ public final class XMLUtil {
 	 * @throws IOException when an error occurs
 	 */
 	public static Document createEmptyDocument() throws IOException {
-		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		try {
-			builder = fac.newDocumentBuilder();
-		}
-		catch (ParserConfigurationException e) {
-			throw new IOException(e.getMessage());
-		}
-		return builder.newDocument();
+		return XMLUtils.createEmptyDocument();
 	}
 
 	/**
@@ -831,27 +754,7 @@ public final class XMLUtil {
 	 * @throws IOException when an error occurs
 	 */
 	public static void writeDocumentToOutputStream(Document doc, OutputStream stream) throws IOException {
-		Source source = new DOMSource(doc);
-		Result result = new StreamResult(stream);
-		Transformer transformer;
-		try {
-			transformer = TransformerFactory.newInstance().newTransformer();
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-			if (doc.getXmlEncoding() == null) {
-				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			}
-			else {
-				transformer.setOutputProperty(OutputKeys.ENCODING, doc.getXmlEncoding());
-			}
-			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-			transformer.transform(source, result);
-		}
-		catch (TransformerFactoryConfigurationError | TransformerException e) {
-			throw new IOException(e.getMessage());
-		}
-
+		XMLUtils.documentToStream(doc, stream);
 	}
 
 	/**
@@ -926,12 +829,7 @@ public final class XMLUtil {
 	 * @created 25.01.2014
 	 */
 	public static void writeStrings(Element element, String tagName, String... values) {
-		if (values == null) return;
-		for (String value : values) {
-			Element node = element.getOwnerDocument().createElement(tagName);
-			node.setTextContent(value);
-			element.appendChild(node);
-		}
+		XMLUtils.writeStrings(element, tagName, values);
 	}
 
 	/**
@@ -945,12 +843,7 @@ public final class XMLUtil {
 	 * @created 25.01.2014
 	 */
 	public static void writeEnums(Element element, String tagName, Enum<?>... values) {
-		if (values == null) return;
-		for (Enum<?> value : values) {
-			Element node = element.getOwnerDocument().createElement(tagName);
-			node.setTextContent(value.name());
-			element.appendChild(node);
-		}
+		XMLUtils.writeEnums(element, tagName, values);
 	}
 
 	/**
@@ -963,12 +856,7 @@ public final class XMLUtil {
 	 * @created 25.01.2014
 	 */
 	public static String[] readStrings(Element element, String tagName) {
-		List<String> result = new ArrayList<>(10);
-		List<Element> list = getElementList(element.getChildNodes(), tagName);
-		for (Element node : list) {
-			result.add(node.getTextContent());
-		}
-		return result.toArray(new String[result.size()]);
+		return XMLUtils.readStrings(element, tagName);
 	}
 
 	/**
@@ -982,20 +870,10 @@ public final class XMLUtil {
 	 * @created 25.01.2014
 	 */
 	public static <T extends Enum<T>> T[] readEnums(Element element, String tagName, Class<T> clazz) {
-		String[] names = readStrings(element, tagName);
-		@SuppressWarnings("unchecked")
-		T[] values = (T[]) Array.newInstance(clazz, names.length);
-		for (int i = 0; i < names.length; i++) {
-			values[i] = Enum.valueOf(clazz, names[i]);
-		}
-		return values;
+		return XMLUtils.readEnums(element, tagName, clazz);
 	}
 
 	public static String getElementAsString(Element element) {
-		DOMImplementationLS implementation = (DOMImplementationLS) element.getOwnerDocument()
-				.getImplementation();
-		LSSerializer lsSerializer = implementation.createLSSerializer();
-		lsSerializer.getDomConfig().setParameter("xml-declaration", false);
-		return lsSerializer.writeToString(element);
+		return XMLUtils.getStringRepresentation(element);
 	}
 }
