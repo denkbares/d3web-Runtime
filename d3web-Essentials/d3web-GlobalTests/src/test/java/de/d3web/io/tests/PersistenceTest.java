@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 
 import com.denkbares.plugin.test.InitPluginManager;
 import com.denkbares.strings.Strings;
@@ -41,9 +42,8 @@ import de.d3web.io.tests.utils.PersistenceHelper;
 /**
  * Saves a jar-File to a KnowledgeBase and reloads it. Original and Reloaded
  * should be similar.
- * 
+ *
  * @author Johannes Dienst
- * 
  */
 public class PersistenceTest extends XMLTestCase {
 
@@ -113,15 +113,13 @@ public class PersistenceTest extends XMLTestCase {
 	/**
 	 * Diffs all files from originalFolder with the reloaded ones. 1.
 	 * File-Existing-Test 2. File-Content-Test
-	 * 
-	 * @throws Exception
 	 */
 	public void testForEquality() throws Exception {
-
+		XMLUnit.setIgnoreWhitespace(true);
 		// Test if Errors occurred
-		PersistenceHelper h = new PersistenceHelper(_excludedFileTypes, _excludedFolders);
-		h.testFileExisting(_originalFolder, _reloadedFolder);
-		ArrayList<String[]> err = h.getErrors();
+		PersistenceHelper helper = new PersistenceHelper(_excludedFileTypes, _excludedFolders);
+		helper.testFileExisting(_originalFolder, _reloadedFolder);
+		ArrayList<String[]> err = helper.getErrors();
 		StringBuffer message = new StringBuffer("Missing Files:\n\r");
 		for (String[] m : err) {
 			message.append(m[0]).append(" missing in ").append(m[1]).append(" or in reloaded-Folder").append("\n\r");
@@ -129,16 +127,14 @@ public class PersistenceTest extends XMLTestCase {
 		assertEquals(message.toString(), 0, err.size());
 
 		// Test if files are similar
-		ArrayList<File[]> pairs = h.getPairs();
+		ArrayList<File[]> pairs = helper.getPairs();
 		Diff diff;
 		DetailedDiff df;
 		BufferedReader org;
 		BufferedReader rel;
-		int actual = 0;
+		int actual;
 		for (File[] p : pairs) {
-			message = new StringBuffer("Differences found in " +
-					p[0].getName() + "::" + p[0].getAbsolutePath() +
-					" (Without Properties):\n\r");
+			message = new StringBuffer("Differences found in " + p[0].getName() + "::" + p[0].getAbsolutePath() + " (Without Properties):\n\r");
 			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0]), "UTF-8"));
 			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1]), "UTF-8"));
 
