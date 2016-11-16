@@ -44,6 +44,7 @@ import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -832,19 +833,20 @@ public final class XMLUtil {
 	public static void writeDocumentToOutputStream(Document doc, OutputStream stream) throws IOException {
 		Source source = new DOMSource(doc);
 		Result result = new StreamResult(stream);
-		Transformer xformer;
+		Transformer transformer;
 		try {
-			xformer = TransformerFactory.newInstance().newTransformer();
-			xformer.setOutputProperty("method", "xml");
+			transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			if (doc.getXmlEncoding() == null) {
-				xformer.setOutputProperty("encoding", "UTF-8");
+				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			}
 			else {
-				xformer.setOutputProperty("encoding", doc.getXmlEncoding());
+				transformer.setOutputProperty(OutputKeys.ENCODING, doc.getXmlEncoding());
 			}
-			xformer.setOutputProperty("omit-xml-declaration", "no");
-			xformer.setOutputProperty("indent", "yes");
-			xformer.transform(source, result);
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			transformer.transform(source, result);
 		}
 		catch (TransformerFactoryConfigurationError | TransformerException e) {
 			throw new IOException(e.getMessage());
