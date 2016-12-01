@@ -23,14 +23,14 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 
 /**
  * AbnormalityInterval has
- * 
+ * <p>
  * lowerBoundary, upperBoundary, value & type type specifies if and which
  * endpoints of the interval are included or not CLOSED_... means lowerBoundary
  * is included, OPEN_... means lowerBoundary is not included ..._CLOSED and
  * ..._OPEN analogous
- * 
+ * <p>
  * Abnormality offers
- * 
+ * <p>
  * interferesWith(AbnormalityInterval) to check if two intervals overlap or
  * connects contains(double) to check if a double lies between upperBoundary and
  * upperBoundary isRightOpen() to check if the upperBoundary is not included
@@ -38,7 +38,7 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval;
  */
 public class AbnormalityInterval extends NumericalInterval {
 
-	private double value;
+	private final double value;
 
 	public AbnormalityInterval(
 			double lowerBoundary,
@@ -52,31 +52,24 @@ public class AbnormalityInterval extends NumericalInterval {
 		this.value = value;
 	}
 
+	public AbnormalityInterval(NumericalInterval interval, double value) {
+		super(interval);
+		this.value = value;
+	}
+
 	@Override
 	public String toString() {
-		return "AbnormalityInterval"
-				+ " ("
-				+ AbnormalityUtils.convertValueToConstantString(value)
-				+ "): "
-				+ (isLeftOpen() ? "(" : "[")
-				+ getLeft()
-				+ ", "
-				+ getRight()
-				+ (isRightOpen() ? ")" : "]");
+		return super.toString() + " : "
+				+ AbnormalityUtils.toAbnormalityValueString(value);
 	}
 
 	/**
-	 * @return
+	 * Returns the abnormality value of this interval. The abnormality value is a value
+	 * between 0.0 and 1.0, where 0.0 is normal and 1.0 is abnormal.
+	 *
+	 * @return the abnormality value
 	 */
 	public double getValue() {
 		return value;
 	}
-
-	/**
-	 * @param d
-	 */
-	public void setValue(double d) {
-		value = d;
-	}
-
 }

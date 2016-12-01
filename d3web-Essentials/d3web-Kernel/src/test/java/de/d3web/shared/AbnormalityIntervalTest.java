@@ -19,10 +19,6 @@
 
 package de.d3web.shared;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,8 +26,11 @@ import de.d3web.core.knowledge.terminology.info.NumericalInterval.IntervalExcept
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityInterval;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 /**
- * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 27.08.2010
  */
@@ -51,16 +50,15 @@ public class AbnormalityIntervalTest {
 	 */
 	@Test
 	public void testToString() {
-		assertThat(abnormalityInterval.toString(), is("AbnormalityInterval (A2): [3.0, 7.0]"));
+		assertThat(abnormalityInterval.toString(), is("[3.0 7.0] : A2"));
 		AbnormalityInterval openIntervals = new AbnormalityInterval(8.9, 11.3,
 				Abnormality.A4, true, true);
-		assertThat(openIntervals.toString(), is("AbnormalityInterval (A4): (8.9, 11.3)"));
+		assertThat(openIntervals.toString(), is("(8.9 11.3) : A4"));
 	}
 
 	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityInterval#AbnormalityInterval(double, double, double, boolean, boolean)}
-	 * .
+	 * Test method for {@link de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityInterval#AbnormalityInterval(double,
+	 * double, double, boolean, boolean)} .
 	 */
 	@Test(expected = IntervalException.class)
 	public void testAbnormalityIntervalThrowsIntervalException() {
@@ -68,13 +66,10 @@ public class AbnormalityIntervalTest {
 	}
 
 	/**
-	 * Test method for {@link AbnormalityInterval#getValue()} and
-	 * {@link AbnormalityInterval#setValue(double)}.
+	 * Test method for {@link AbnormalityInterval#getValue()}.
 	 */
 	@Test
 	public void testGetAndSetValue() {
 		assertThat(abnormalityInterval.getValue(), is(equalTo(Abnormality.A2)));
-		abnormalityInterval.setValue(Abnormality.A4);
-		assertThat(abnormalityInterval.getValue(), is(equalTo(Abnormality.A4)));
 	}
 }

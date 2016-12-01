@@ -27,17 +27,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import de.d3web.core.extensions.KernelExtensionPoints;
-import de.d3web.core.knowledge.InfoStore;
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Log;
+import de.d3web.core.extensions.KernelExtensionPoints;
+import de.d3web.core.knowledge.InfoStore;
 
 /**
  * Represents a Property. Properties can only be created by extending the
  * extension point "Property"
- *
+ * <p>
  * For more information about the xml markup, see plugin.xml of
  * d3web-Plugin-ExtensionPoints
  *
@@ -48,6 +48,7 @@ public final class Property<T> {
 
 	private static final Map<String, Property<?>> properties = new HashMap<>();
 	private static final Map<String, Property<?>> synonyms = new HashMap<>();
+
 	static {
 		parseProperties();
 	}
@@ -133,7 +134,7 @@ public final class Property<T> {
 			}
 			catch (IllegalArgumentException | NoSuchMethodException e) {
 				Log.severe("cannot parse/initialize property default value: " +
-								this.name + " = " + this.defaultValueString, e);
+						this.name + " = " + this.defaultValueString, e);
 				// do noting here, leave defaultValue on null
 			}
 		}
@@ -153,8 +154,8 @@ public final class Property<T> {
 	 * When specifying the default value in the plugin.xml, the stored class
 	 * must define the prerequisites defined in {@link #parseValue(String)}.
 	 *
-	 * @created 31.10.2010
 	 * @return the default value of this property
+	 * @created 31.10.2010
 	 * @see #setDefaultValue(T)
 	 * @see #parseValue(String)
 	 */
@@ -181,8 +182,8 @@ public final class Property<T> {
 	/**
 	 * Returns the class of all data to be stored in this property.
 	 *
-	 * @created 28.10.2010
 	 * @return the class of the data stored in this property
+	 * @created 28.10.2010
 	 */
 	public Class<T> getStoredClass() {
 		initStoredClass();
@@ -191,20 +192,17 @@ public final class Property<T> {
 
 	/**
 	 * Returns the Property with the specified name.
-	 *
+	 * <p>
 	 * This method will not generate Properties lazy, it only returns Properties
 	 * defined in a plugin. The class specified has to be identical with the
 	 * plugin definition, otherwise an ClassCastException is thrown.
 	 *
-	 * @created 07.10.2010
 	 * @param name specified name of the {@link Property}
-	 * @return {@link Property} if a property with this name is defined, null
-	 *         otherwise
-	 *
-	 * @throws NoSuchElementException if there is no property defined with that
-	 *         name
-	 * @throws ClassCastException if the specified class instance is not
-	 *         identical with the class specified in the plugin definition
+	 * @return {@link Property} if a property with this name is defined, null otherwise
+	 * @throws NoSuchElementException if there is no property defined with that name
+	 * @throws ClassCastException if the specified class instance is not identical with the class
+	 * specified in the plugin definition
+	 * @created 07.10.2010
 	 */
 	@SuppressWarnings("unchecked")
 	public static <StorageType> Property<StorageType> getProperty(String name, Class<StorageType> storedClass) throws NoSuchElementException, ClassCastException {
@@ -220,17 +218,14 @@ public final class Property<T> {
 
 	/**
 	 * Returns the Property with the specified name.
-	 *
+	 * <p>
 	 * This method will not generate Properties lazy, it only returns Properties
 	 * defined in a Plugin.
 	 *
-	 * @created 07.10.2010
 	 * @param name specified name of the {@link Property}
-	 * @return {@link Property} if a property with this name is defined, null
-	 *         otherwise
-	 *
-	 * @throws NoSuchElementException if there is no property defined with that
-	 *         name
+	 * @return {@link Property} if a property with this name is defined, null otherwise
+	 * @throws NoSuchElementException if there is no property defined with that name
+	 * @created 07.10.2010
 	 */
 	@SuppressWarnings("unchecked")
 	public static Property<Object> getUntypedProperty(String name) throws NoSuchElementException {
@@ -269,12 +264,11 @@ public final class Property<T> {
 	 * IllegalArgumentException is thrown, containing the original exception as
 	 * its cause.
 	 *
-	 *
-	 * @created 31.10.2010
 	 * @param string the string to be parsed
 	 * @return the resulting value
 	 * @throws NoSuchMethodException there is no appropriate parse method found
 	 * @throws IllegalArgumentException if any parse exception occurred
+	 * @created 31.10.2010
 	 */
 	public T parseValue(String string) throws NoSuchMethodException, IllegalArgumentException {
 		// use string directly if T == String
@@ -284,6 +278,7 @@ public final class Property<T> {
 		if (String.class.isAssignableFrom(clazz)) return castToStoredValue(string);
 		// lets parse enums case insensitive
 		if (Enum.class.isAssignableFrom(clazz)) {
+			//noinspection unchecked
 			Enum value = Strings.parseEnum(string, (Class) clazz);
 			if (value == null) {
 				throw new IllegalArgumentException("'" + string + "' is not a valid value for property " + getName());
@@ -311,7 +306,7 @@ public final class Property<T> {
 		}
 		catch (IllegalAccessException e) {
 			// must not happen, cause we do not use a constructor method
-			throw new IllegalStateException();
+			throw new IllegalStateException("cannot create property value", e);
 		}
 	}
 
@@ -319,8 +314,8 @@ public final class Property<T> {
 	 * Returns if this property have the ability to parse String representations
 	 * into a value of this property.
 	 *
-	 * @created 02.11.2010
 	 * @return if this property can be parsed from a String
+	 * @created 02.11.2010
 	 */
 	public boolean canParseValue() {
 		// use string directly if T == String
@@ -334,10 +329,7 @@ public final class Property<T> {
 			Method method = clazz.getMethod("valueOf", String.class);
 			return Modifier.isPublic(method.getModifiers());
 		}
-		catch (SecurityException e) {
-			return false;
-		}
-		catch (NoSuchMethodException e) {
+		catch (SecurityException | NoSuchMethodException e) {
 			return false;
 		}
 	}
@@ -372,10 +364,10 @@ public final class Property<T> {
 	 * by its original name or its synonym name. This method may be used to
 	 * provide backward compatibility when renaming properties.
 	 *
-	 * @created 20.08.2012
-	 * @param otherName the synonym name of the property (usually the old /
-	 *        original name of the property)
+	 * @param otherName the synonym name of the property (usually the old / original name of the
+	 * property)
 	 * @param property the property to add the synonym for
+	 * @created 20.08.2012
 	 */
 	private static void addSynonymProperty(String otherName, Property<?> property) {
 		synonyms.put(otherName.toLowerCase(), property);
@@ -388,11 +380,10 @@ public final class Property<T> {
 	/**
 	 * Returns a Collection of all plugged Properties
 	 *
-	 * @created 07.10.2010
 	 * @return Collection of all plugged Properties
+	 * @created 07.10.2010
 	 */
 	public static Collection<Property<?>> getAllProperties() {
 		return properties.values();
 	}
-
 }

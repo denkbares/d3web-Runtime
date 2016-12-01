@@ -23,6 +23,7 @@ package de.d3web.core.knowledge.terminology.info.abnormality;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -166,5 +167,42 @@ public class AbnormalityNum implements Abnormality {
 				new AbnormalityInterval(lowerBoundary, upperBoundary, abnormality, leftOpen,
 						rightOpen);
 		setAbnormality(qnum, ai);
+	}
+
+	/**
+	 * Parsed the abnormality based on the specified string representation. The string
+	 * representation is compatible to the result of the {@link #toString()} method.
+	 * <p>
+	 * The String representation is a ";" separated list of numeric intervals followed by ":" and
+	 * the numeric abnormality value (0..01 or A0...A5), like:
+	 * <pre>
+	 * &lt;interval&gt; : &lt;value&gt; ; ... ; &lt;interval&gt; : &lt;value&gt;
+	 * </pre>
+	 * The interval is as defined in {@link NumericalInterval#valueOf(String)}.
+	 *
+	 * @param text the text to be parsed
+	 * @return the parsed abnormality
+	 */
+	public static AbnormalityNum valueOf(String text) {
+		AbnormalityNum result = new AbnormalityNum();
+		for (String part : text.split(";")) {
+			int splitIndex = part.lastIndexOf(':');
+			if (splitIndex == -1) {
+				throw new IllegalArgumentException(part +
+						" does not contain a ':' to separate interval and abnormality value");
+			}
+
+			String interval = Strings.trim(part.substring(0, splitIndex));
+			String value = Strings.trim(part.substring(splitIndex + 1));
+			result.addValue(new AbnormalityInterval(
+					NumericalInterval.valueOf(interval),
+					AbnormalityUtils.parseAbnormalityValue(value)));
+		}
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return Strings.concat("; ", intervals);
 	}
 }

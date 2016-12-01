@@ -20,6 +20,11 @@
 
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A Numerical Interval <BR>
  * Represents a numerical interval with a left and a right border. <BR>
@@ -29,19 +34,8 @@ package de.d3web.core.knowledge.terminology.info;
  */
 public class NumericalInterval implements Comparable<NumericalInterval> {
 
-	public static class IntervalException extends IllegalArgumentException {
-
-		private static final long serialVersionUID = -6464032113971663071L;
-
-		public IntervalException(String s) {
-			super(s);
-		}
-
-	}
-
 	private final double left;
 	private final double right;
-
 	private final boolean leftOpen;
 	private final boolean rightOpen;
 
@@ -50,6 +44,10 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		this.right = right;
 		this.leftOpen = leftOpen;
 		this.rightOpen = rightOpen;
+	}
+
+	public NumericalInterval(NumericalInterval other) {
+		this(other.left, other.right, other.leftOpen, other.rightOpen);
 	}
 
 	/**
@@ -76,13 +74,9 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	 * Checks whether value is contained in Interval
 	 */
 	public boolean contains(double value) {
-		if (left < value && value < right) {
-			return true;
-		}
-		if (value == left && !isLeftOpen()) {
-			return true;
-		}
-		return value == right && !isRightOpen();
+		return (left < value && value < right)
+				|| (value == left && !isLeftOpen())
+				|| (value == right && !isRightOpen());
 	}
 
 	public final double getLeft() {
@@ -134,8 +128,8 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		if (other.getLeft() == this.getRight()) {
 			return !(this.isRightOpen() || other.isLeftOpen());
 		}
+		// if the intervals do not have their bound separated, they will intersect
 		return true;
-
 	}
 
 	public NumericalInterval intersect(NumericalInterval other) {
@@ -167,13 +161,9 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		else {
 			rightVal = max.right;
 			rightOpen = max.isRightOpen();
-
 		}
 
-		NumericalInterval result = new NumericalInterval(max.left, rightVal, max.isLeftOpen(),
-				rightOpen);
-		return result;
-
+		return new NumericalInterval(max.left, rightVal, max.isLeftOpen(), rightOpen);
 	}
 
 	/**
@@ -201,23 +191,31 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		}
 
 		return true;
-
 	}
 
 	public boolean isEmpty() {
 		return (right < left) || (left == right && (leftOpen || rightOpen));
 	}
 
+	private static final Pattern PARTS = Pattern.compile(
+			"\\s*([()\\[\\]]\\s*[^\\s]+)\\s+([^\\s]+\\s*[()\\[\\]])\\s*");
+
 	public static NumericalInterval valueOf(String string) {
-		string = string.replace(",", ".");
-		String[] split = string.split(" +");
-		String leftSide = split[0].trim();
-		String rightSide = split[1].trim();
-		double left = Double.parseDouble(leftSide.substring(1));
-		double right = Double.parseDouble(rightSide.substring(0, rightSide.length() - 1));
+		Matcher matcher = PARTS.matcher(string);
+		if (!matcher.matches()) {
+			throw new IllegalArgumentException("unexpected interval format: " + string);
+		}
+
+		String leftSide = matcher.group(1);
+		String rightSide = matcher.group(2);
+		double left = Double.parseDouble(leftSide.substring(1).trim().replace(",", "."));
+		double right = Double.parseDouble(
+				rightSide.substring(0, rightSide.length() - 1).trim().replace(",", "."));
 
 		boolean leftOpen;
-		if (leftSide.startsWith("]") || leftSide.startsWith("("))leftOpen = true;
+		if (leftSide.startsWith("]") || leftSide.startsWith("(")) {
+			leftOpen = true;
+		}
 		else if (leftSide.startsWith("[")) {
 			leftOpen = false;
 		}
@@ -226,7 +224,9 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		}
 
 		boolean rightOpen;
-		if (rightSide.endsWith("[") || rightSide.endsWith(")"))rightOpen = true;
+		if (rightSide.endsWith("[") || rightSide.endsWith(")")) {
+			rightOpen = true;
+		}
 		else if (rightSide.endsWith("]")) {
 			rightOpen = false;
 		}
@@ -235,29 +235,13 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		}
 
 		return new NumericalInterval(left, right, leftOpen, rightOpen);
-
 	}
 
 	@Override
 	public String toString() {
-		String str;
-		if (leftOpen) {
-			str = "]";
-		}
-		else {
-			str = "[";
-		}
-
-		str += left + " " + right;
-
-		if (rightOpen) {
-			str += "[";
-		}
-		else {
-			str += "]";
-		}
-
-		return str;
+		return (leftOpen ? "(" : "[") +
+				left + " " + right +
+				(rightOpen ? ")" : "]");
 	}
 
 	@Override
@@ -266,7 +250,7 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 	}
 
 	@Override
-	public int compareTo(NumericalInterval ni) {
+	public int compareTo(@NotNull NumericalInterval ni) {
 		if (left < ni.left) {
 			return -1;
 		}
@@ -291,4 +275,12 @@ public class NumericalInterval implements Comparable<NumericalInterval> {
 		}
 	}
 
+	public static class IntervalException extends IllegalArgumentException {
+
+		private static final long serialVersionUID = -6464032113971663071L;
+
+		public IntervalException(String s) {
+			super(s);
+		}
+	}
 }

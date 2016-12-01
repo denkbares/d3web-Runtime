@@ -30,12 +30,11 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit test for {@link NumericalInterval}
- * 
+ *
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 27.08.2010
  */
 public class NumericalIntervalTest {
-
 
 	/**
 	 * Test method for
@@ -114,7 +113,6 @@ public class NumericalIntervalTest {
 
 		assertThat(NumericalInterval.valueOf("(4  5)"),
 				is(new NumericalInterval(4, 5, true, true)));
-
 	}
 
 	@Test
@@ -160,7 +158,7 @@ public class NumericalIntervalTest {
 	@Test
 	public void testToString() {
 		assertThat(parse("[4, 7]").toString(), is("[4.0 7.0]"));
-		assertThat(new NumericalInterval(6.1, 8.3, true, true).toString(), is("]6.1 8.3["));
+		assertThat(new NumericalInterval(6.1, 8.3, true, true).toString(), is("(6.1 8.3)"));
 	}
 
 	@Test
@@ -208,7 +206,6 @@ public class NumericalIntervalTest {
 		assertThat(parse("(4, 7)").contains(parse("[4, 7)")), is(false));
 		assertThat(parse("(4, 7)").contains(parse("(4, 7]")), is(false));
 		assertThat(parse("(4, 7]").contains(parse("[4, 7)")), is(false));
-
 	}
 
 	@Test
@@ -223,7 +220,6 @@ public class NumericalIntervalTest {
 		assertThat(parse("(4, 4]").isEmpty(), is(true));
 		assertThat(parse("(4, 4)").isEmpty(), is(true));
 		assertThat(parse("[Infinity, -Infinity]").isEmpty(), is(true));
-
 	}
 
 	@Test
@@ -276,7 +272,5 @@ public class NumericalIntervalTest {
 		else throw new IllegalArgumentException(s);
 
 		return new NumericalInterval(left, right, leftOpen, rightOpen);
-
 	}
-
 }

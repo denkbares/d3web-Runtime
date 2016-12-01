@@ -28,6 +28,8 @@ import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.denkbares.strings.StringFragment;
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -109,8 +111,8 @@ public class DefaultAbnormality implements Abnormality {
 	/**
 	 * Sets the Abnormality of the Question for the given the Value
 	 *
-	 * @param question    Question
-	 * @param value       Value
+	 * @param question Question
+	 * @param value Value
 	 * @param abnormality Abnormality
 	 * @created 25.06.2010
 	 */
@@ -125,33 +127,43 @@ public class DefaultAbnormality implements Abnormality {
 	}
 
 	/**
-	 * Gets the abnormality for the given value for the given question. If an abnormality was set for the question, this
-	 * method will always return an abnormality. If non was set specifically for the given value, {@link
-	 * Abnormality#A5} will be returned.
-	 * However, if not abnormality was set of any value of the given question, <tt>null</tt> will be returned.
+	 * Gets the abnormality for the given value for the given question. If an abnormality was set
+	 * for the question, this method will always return an abnormality. If non was set specifically
+	 * for the given value, {@link Abnormality#A5} will be returned. However, if not abnormality was
+	 * set of any value of the given question, <tt>null</tt> will be returned.
 	 *
 	 * @param question the question with the abnormality
-	 * @param value    the value to the abnormality for
-	 * @return the abnormality for the given question and value, can be null
-	 * was set
+	 * @param value the value to the abnormality for
+	 * @return the abnormality for the given question and value, can be null was set
 	 */
 	public static @Nullable Double getAbnormality(Question question, Value value) {
-		DefaultAbnormality abnormality = question.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
+		DefaultAbnormality abnormality = question.getInfoStore()
+				.getValue(BasicProperties.DEFAULT_ABNORMALITY);
 		if (abnormality == null) {
 			return null;
 		}
 		return abnormality.getValue(value);
 	}
 
+	/**
+	 * Parses the abnormality from the given string representation. The String representation is a
+	 * ";"-separated list of <code>&lt;choice-id&gt;:&lt;value&gt</code>. Spaces in between the
+	 * individual separators are allowed. The abnormality value after the ':' can be as specified in
+	 * {@link AbnormalityUtils#parseAbnormalityValue(String)}.
+	 *
+	 * @param s the string representation
+	 * @return the parsed abnormality
+	 */
 	public static DefaultAbnormality valueOf(String s) {
 		DefaultAbnormality defaultAbnormality = new DefaultAbnormality();
-		String[] abnormalities = s.split(";");
-		for (String abnormalityString : abnormalities) {
+		for (StringFragment part : Strings.splitUnquoted(s, ";")) {
+			String abnormalityString = part.toString();
 			if (abnormalityString.trim().isEmpty()) continue;
 			int lastColon = abnormalityString.lastIndexOf(":");
-			double abnormality = Double.parseDouble(abnormalityString.substring(lastColon + 1)
-					.replace(",", ".").trim());
-			ChoiceID choiceID = new ChoiceID(abnormalityString.substring(0, lastColon).trim());
+			String valueString = abnormalityString.substring(lastColon + 1);
+			double abnormality = AbnormalityUtils.parseAbnormalityValue(valueString);
+			ChoiceID choiceID = new ChoiceID(Strings.unquote(
+					abnormalityString.substring(0, lastColon).trim()));
 			defaultAbnormality.addValue(new ChoiceValue(choiceID), abnormality);
 		}
 		return defaultAbnormality;
