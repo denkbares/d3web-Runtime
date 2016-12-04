@@ -25,6 +25,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionDate;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
@@ -163,48 +164,105 @@ public class BasicProperties {
 	public static final Property<DateDisplay> DATE_DISPLAY = Property.getProperty("dateDisplay", DateDisplay.class);
 
 	/**
+	 * Allows to specify the desired display type of num questions.
+	 */
+	public static final Property<NumDisplay> NUM_DISPLAY = Property.getProperty("numDisplay", NumDisplay.class);
+
+	/**
 	 * Used for Diagnosis. Specified how the solution should be displayed to the user
 	 */
 	public static final Property<SolutionDisplay> SOLUTION_DISPLAY = Property.getProperty(
 			"solutionDisplay", SolutionDisplay.class);
 
 	/**
+	 * Allows to specify the desired number of digits of numeric questions. "0" means only integer
+	 * numbers, negative value means a maximum of the specified digits, but less are allowed.
+	 *
+	 * @see #getDigits(QuestionNum)
+	 */
+	public static final Property<Integer> DIGITS = Property.getProperty("digits", Integer.class);
+
+	/**
 	 * Return the desired display type for the specified date question. The date display type is
 	 * defined by the property "dateDisplay" for the date question. If there is no such property,
-	 * the "dateDisplay" of the questions knowledge base object will be used as the default value.
-	 * If there is no such knowledge base specific default value, the type DATE is used.
+	 * the "dateDisplay" of the question's knowledge base object will be used as the default value.
+	 * If there is no such knowledge base specific default value, the type {@link DateDisplay#date}
+	 * is used.
 	 *
 	 * @param question the question to get the date format for
 	 * @return the questions date format
 	 * @created 20.08.2012
 	 */
 	public static DateDisplay getDateDisplay(QuestionDate question) {
-		DateDisplay prompt = question.getInfoStore().getValue(DATE_DISPLAY);
-		if (prompt == null) {
-			prompt = question.getKnowledgeBase().getInfoStore().getValue(DATE_DISPLAY);
+		DateDisplay display = question.getInfoStore().getValue(DATE_DISPLAY);
+		if (display == null) {
+			display = question.getKnowledgeBase().getInfoStore().getValue(DATE_DISPLAY);
 		}
-		if (prompt == null) {
-			prompt = DateDisplay.date;
+		return (display == null) ? DateDisplay.date : display;
+	}
+
+	/**
+	 * Return the desired display type for the specified numeric question. The numeric display type
+	 * is defined by the property "numDisplay" for the numeric question. If there is no such
+	 * property, the "numDisplay" of the question's knowledge base object will be used as the
+	 * default value. If there is no such knowledge base specific default value, the type {@link
+	 * NumDisplay#normal} is used.
+	 *
+	 * @param question the question to get the date format for
+	 * @return the questions date format
+	 * @created 20.08.2012
+	 */
+	public static NumDisplay getNumDisplay(QuestionNum question) {
+		NumDisplay display = question.getInfoStore().getValue(NUM_DISPLAY);
+		if (display == null) {
+			display = question.getKnowledgeBase().getInfoStore().getValue(NUM_DISPLAY);
 		}
-		return prompt;
+		return (display == null) ? NumDisplay.normal : display;
 	}
 
 	/**
 	 * Return the desired display type for the specified solution. The solution display type is
 	 * defined by the property "solutionDisplay" for the solution. If there is no such property, the
-	 * "solutionDisplay" of the questions knowledge base object will be used as the default value.
-	 * If there is no such knowledge base specific default value, the type NORMAL is used.
+	 * "solutionDisplay" of the question's knowledge base object will be used as the default value.
+	 * If there is no such knowledge base specific default value, the type {@link
+	 * SolutionDisplay#normal} is used.
 	 *
 	 * @param solution the solution to get the display type for
 	 * @return the solution display type
 	 * @created 11.10.2015
 	 */
 	public static SolutionDisplay getSolutionDisplay(Solution solution) {
-		SolutionDisplay displayType = solution.getInfoStore().getValue(SOLUTION_DISPLAY);
-		if (displayType == null) {
-			displayType = solution.getKnowledgeBase().getInfoStore().getValue(SOLUTION_DISPLAY);
+		SolutionDisplay display = solution.getInfoStore().getValue(SOLUTION_DISPLAY);
+		if (display == null) {
+			display = solution.getKnowledgeBase().getInfoStore().getValue(SOLUTION_DISPLAY);
 		}
-		return (displayType == null) ? SolutionDisplay.normal : displayType;
+		return (display == null) ? SolutionDisplay.normal : display;
+	}
+
+	/**
+	 * Return the desired fractional digits for the specified numeric question. Zero indicated that
+	 * the value should be displayed without fractional digits. A positive number indicates a fixed
+	 * number of digits to be used, even if they are not required to correctly display the value,
+	 * e.g. "17.50" instead of "17.5" for 2 digits. A negative number indicates that a dynamic
+	 * number of digits should be used, but not more that the specified (absolute) digits parameter
+	 * tells, e.g. für digits = -2: 17.126 &rarr; "17.13", but 17.1 &rarr; "17.1" (instead of
+	 * "17.10" for digits = +2).
+	 * <p>
+	 * The fractional digits are defined by the property "digits" for the numeric question. If there
+	 * is no such property, the "digits" of the question's knowledge base object will be used as the
+	 * default value. If there is no such knowledge base specific default value, {@link
+	 * Integer#MIN_VALUE}. is used, to indicate that the digits should be used as required.
+	 *
+	 * @param question the question to get the date format for
+	 * @return the questions date format
+	 * @created 20.08.2012
+	 */
+	public static int getDigits(QuestionNum question) {
+		Integer digits = question.getInfoStore().getValue(DIGITS);
+		if (digits == null) {
+			digits = question.getKnowledgeBase().getInfoStore().getValue(DIGITS);
+		}
+		return (digits == null) ? Integer.MIN_VALUE : digits;
 	}
 
 	public static boolean isAbstract(Question question) {

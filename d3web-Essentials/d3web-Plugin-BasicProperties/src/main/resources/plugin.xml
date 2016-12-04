@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin id="d3web-BasicProperties" version="1.0">
-	
+
 	<requires>
 		<import plugin-id="d3web-Kernel-ExtensionPoints" />
 	</requires>
-	
+
 	<runtime>
 		<library id="de.d3web" path="." type="code">
 			<export prefix="*" />
 		</library>
 	</runtime>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="cost">
 		<parameter id="name" value="cost" />
@@ -22,7 +22,7 @@
 		<parameter id="instanceof" value="java.lang.Double" />
 		<parameter id="default" value="1.0" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="unit">
 		<parameter id="name" value="unit" />
@@ -32,7 +32,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="abstractionQuestion">
 		<parameter id="name" value="abstractionQuestion" />
@@ -43,7 +43,7 @@
 		<parameter id="instanceof" value="java.lang.Boolean" />
 		<parameter id="default" value="false" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="apriori">
 		<parameter id="name" value="apriori" />
@@ -53,7 +53,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Float" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="range">
 		<parameter id="name" value="range" />
@@ -63,7 +63,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.NumericalInterval" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="INIT">
 		<parameter id="name" value="INIT" />
@@ -73,7 +73,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="unknownVisible">
 		<parameter id="name" value="unknownVisible" />
@@ -83,7 +83,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Boolean" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="unknownPrompt">
 		<parameter id="name" value="unknownPrompt" />
@@ -94,7 +94,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="version">
 		<parameter id="name" value="version" />
@@ -104,7 +104,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="status">
 		<parameter id="name" value="status" />
@@ -114,7 +114,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="affiliation">
 		<parameter id="name" value="affiliation" />
@@ -124,7 +124,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="author">
 		<parameter id="name" value="author" />
@@ -134,7 +134,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="filename">
 		<parameter id="name" value="filename" />
@@ -154,7 +154,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.util.Date" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="description">
 		<parameter id="name" value="description" />
@@ -164,7 +164,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="prompt">
 		<parameter id="name" value="prompt" />
@@ -174,7 +174,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="link">
 		<parameter id="name" value="link" />
@@ -184,7 +184,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="abnormality">
 		<parameter id="name" value="abnormality" />
@@ -194,7 +194,7 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality" />
 	</extension>
-	
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="abnormalityNum">
 		<parameter id="name" value="abnormalityNum" />
@@ -216,6 +216,16 @@
 	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="numDisplay">
+		<parameter id="name" value="numDisplay" />
+		<parameter id="description" value="Represents the display type of numeric questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.NumDisplay" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
 		id="solutionDisplay">
 		<parameter id="name" value="solutionDisplay" />
 		<parameter id="description" value="Represents the display type of solutions." />
@@ -225,4 +235,13 @@
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.SolutionDisplay" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
+		id="digits">
+		<parameter id="name" value="digits" />
+		<parameter id="description" value="Represents the number of fractional digits of a numeric question. Zero indicated that the value should be displayed without fractional digits. A positive number indicates a fixed number of digits to be used, even if they are not required to correctly display the value, e.g. '17.50' instead of '17.5' for 2 digits. A negative number indicates that a dynamic number of digits should be used, but not more that the specified (absolute) digits parameter tells, e.g. für digits = -2: 17.126 → '17.13', but 17.1 → '17.1' (instead of '17.10' for digits = +2)." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Integer" />
+	</extension>
 </plugin>
