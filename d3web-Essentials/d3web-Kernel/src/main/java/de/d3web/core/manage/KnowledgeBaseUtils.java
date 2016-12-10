@@ -54,6 +54,7 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
+import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.knowledge.terminology.info.SolutionDisplay;
 import de.d3web.core.session.QuestionValue;
@@ -253,7 +254,13 @@ public final class KnowledgeBaseUtils {
 		 * match in case insensitive mode. We only return it, if the match is not ambiguous, meaning
 		 * there isn't any other choice that could also match.
 		 */
-		CASE_INSENSITIVE_IF_NO_CONFLICT
+		CASE_INSENSITIVE_IF_NO_CONFLICT,
+
+		/**
+		 * Matching any choice name or any prompt in any language case insensitive. Exact (case
+		 * sensitive) matches to the name are preferred, then the first choice that matches.
+		 */
+		ANY_PROMPT
 	}
 
 	/**
@@ -271,7 +278,22 @@ public final class KnowledgeBaseUtils {
 				|| answerText == null) {
 			return null;
 		}
-		if (matching == Matching.CASE_INSENSITIVE_IF_NO_CONFLICT) {
+
+		if (matching == Matching.CASE_SENSITIVE) {
+			for (Choice choice : question.getAllAlternatives()) {
+				if (answerText.equals(choice.getName())) {
+					return choice;
+				}
+			}
+		}
+		else if (matching == Matching.CASE_INSENSITIVE) {
+			for (Choice choice : question.getAllAlternatives()) {
+				if (answerText.equalsIgnoreCase(choice.getName())) {
+					return choice;
+				}
+			}
+		}
+		else if (matching == Matching.CASE_INSENSITIVE_IF_NO_CONFLICT) {
 			List<Choice> caseInsensitiveMatches = new ArrayList<>();
 			for (Choice choice : question.getAllAlternatives()) {
 				if (answerText.equals(choice.getName())) {
@@ -283,15 +305,25 @@ public final class KnowledgeBaseUtils {
 			}
 			if (caseInsensitiveMatches.size() == 1) return caseInsensitiveMatches.get(0);
 		}
-		else {
+		else if (matching == Matching.ANY_PROMPT) {
+			Choice match = null;
 			for (Choice choice : question.getAllAlternatives()) {
-				if (matching == Matching.CASE_SENSITIVE && answerText.equals(choice.getName())) {
+				if (answerText.equals(choice.getName())) {
 					return choice;
 				}
-				if (matching == Matching.CASE_INSENSITIVE && answerText.equalsIgnoreCase(choice.getName())) {
-					return choice;
+				if (match != null) continue;
+				if (answerText.equalsIgnoreCase(choice.getName())) {
+					match = choice;
+					continue;
+				}
+				for (String prompt : choice.getInfoStore().entries(MMInfo.PROMPT).values()) {
+					if (answerText.equalsIgnoreCase(choice.getName())) {
+						match = choice;
+						break;
+					}
 				}
 			}
+			return match;
 		}
 		return null;
 	}
