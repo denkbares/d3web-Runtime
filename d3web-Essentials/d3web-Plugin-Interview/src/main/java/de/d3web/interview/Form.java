@@ -18,6 +18,7 @@
  */
 package de.d3web.interview;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.interview.measure.Measurement;
 
 /**
  * A Form groups interview items, which should be presented at the same time to the user.
@@ -77,4 +79,18 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 	 * @created 25.03.2013
 	 */
 	QContainer getRoot();
+
+	/**
+	 * Returns a list of all measurements that are associated with this form.
+	 *
+	 * @return the measurements of the current form.
+	 */
+	default List<Measurement> getMeasurements() {
+		List<Measurement> result = new ArrayList<>();
+		for (Question question : getActiveQuestions()) {
+			Measurement measurement = question.getInfoStore().getValue(Measurement.MEASUREMENT);
+			if (measurement != null) result.add(measurement);
+		}
+		return result;
+	}
 }
