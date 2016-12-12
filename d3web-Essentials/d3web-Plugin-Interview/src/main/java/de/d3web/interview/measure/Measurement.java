@@ -173,12 +173,12 @@ public class Measurement {
 	 * @param measurand the measured value identifier, will be mapped to a question
 	 * @param rawValue the value that has been measured
 	 */
-	public void applyValue(Session session, PSMethod solver, String measurand, Object rawValue) {
+	public void applyValue(Session session, String measurand, Object rawValue) {
 		try {
-			applyValueStrict(session, solver, measurand, rawValue);
+			applyValueStrict(session, measurand, rawValue);
 		}
 		catch (IllegalArgumentException e) {
-			applyValueStrict(session, solver, measurand, Unknown.getInstance());
+			applyValueStrict(session, measurand, Unknown.getInstance());
 		}
 	}
 
@@ -206,16 +206,29 @@ public class Measurement {
 	 * @param measurand the measured value identifier, will be mapped to a question
 	 * @param rawValue the value that has been measured
 	 */
-	public void applyValueStrict(Session session, PSMethod solver, String measurand, Object rawValue) {
+	public void applyValueStrict(Session session, String measurand, Object rawValue) {
+		// check if we have a question for the measurand to be applied
 		Question question = session.getKnowledgeBase().getManager()
 				.searchQuestion(mapping.get(measurand));
 		if (question == null) return;
+
+		// check if we have a null value, then remove existing answer
+		PSMethod solver = getPSMethod(session);
 		if (rawValue == null) {
 			session.getBlackboard().removeValueFact(question, solver);
 		}
+
+		// otherwise convert raw value to question value and set the value
 		Value value = toValue(question, rawValue);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		session.getBlackboard().addValueFact(fact);
+	}
+
+	private PSMethod getPSMethod(Session session) {
+		// query for measurement solver
+		PSMethodMeasurement solver = session.getPSMethodInstance(PSMethodMeasurement.class);
+		assert solver != null : "missing problem solver in session: PSMethodMeasurement";
+		return solver;
 	}
 
 	private Value toValue(Question question, Object rawValue) {
