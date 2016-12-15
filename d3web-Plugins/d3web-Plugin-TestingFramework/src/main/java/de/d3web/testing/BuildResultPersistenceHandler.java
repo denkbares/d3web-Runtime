@@ -76,9 +76,9 @@ public class BuildResultPersistenceHandler {
 		document.appendChild(root);
 
 		// set namespaces for xsd
-		root.setAttribute(XMLNS, DENKBARES);
-		root.setAttribute(XMLNS_XSI, XML_SCHEM_NAMESPACE);
-		root.setAttribute(XSI_SCHEMA_LOCATION, DENKBARES + " " + RESULT_SCHEMA_FILE);
+//		root.setAttribute(XMLNS, DENKBARES);
+//		root.setAttribute(XMLNS_XSI, XML_SCHEM_NAMESPACE);
+//		root.setAttribute(XSI_SCHEMA_LOCATION, DENKBARES + "/" + RESULT_SCHEMA_FILE);
 
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
