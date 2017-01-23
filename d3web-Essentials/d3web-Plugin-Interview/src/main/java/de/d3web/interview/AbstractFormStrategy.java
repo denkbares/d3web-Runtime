@@ -65,7 +65,7 @@ public abstract class AbstractFormStrategy implements FormStrategy {
 	}
 
 	@Override
-	public List<Form> getForm(InterviewObject object, Session session) {
+	public List<Form> getForms(InterviewObject object, Session session) {
 		return Collections.singletonList(new DefaultForm(object.getName(), object, session));
 	}
 }

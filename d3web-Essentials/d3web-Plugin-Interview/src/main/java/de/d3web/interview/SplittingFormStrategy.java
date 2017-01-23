@@ -5,6 +5,8 @@
 package de.d3web.interview;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +74,7 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 	private List<SplitForm> split(Form completeForm) {
 		LinkedList<List<Question>> groups = new LinkedList<>();
 		Question previous = null;
-		for (Question question : completeForm.getActiveQuestions()) {
+		for (Question question : completeForm.getPotentialQuestions()) {
 			// check if (first/next) group is required
 			if ((previous == null) || splitter.requireSplit(previous, question)) {
 				groups.add(new ArrayList<>());
@@ -81,18 +83,23 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 			previous = question;
 		}
 
-		// and build the forms out of it
+		// prepare the currently active questions
+		HashSet<Question> active = new HashSet<>(completeForm.getActiveQuestions());
+
+		// and build the forms out of it,
 		List<SplitForm> result = new ArrayList<>(groups.size());
 		int groupNumber = 1;
 		for (List<Question> questions : groups) {
+			// if there is no active question, skip form
+			if (Collections.disjoint(active, questions)) continue;
 			result.add(new SplitForm(completeForm, groupNumber++, groups.size(), questions));
 		}
 		return result;
 	}
 
 	@Override
-	public List<Form> getForm(InterviewObject object, Session session) {
-		return delegate.getForm(object, session).stream()
+	public List<Form> getForms(InterviewObject object, Session session) {
+		return delegate.getForms(object, session).stream()
 				.map(this::split).flatMap(List::stream).collect(Collectors.toList());
 	}
 
@@ -107,13 +114,13 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 		private final Form delegate;
 		private final int groupNumber;
 		private final int totalGroupCount;
-		private final List<Question> activeQuestions;
+		private final List<Question> potentialQuestions;
 
-		public SplitForm(Form delegate, int groupNumber, int totalGroupCount, List<Question> activeQuestions) {
+		public SplitForm(Form delegate, int groupNumber, int totalGroupCount, List<Question> potentialQuestions) {
 			this.delegate = delegate;
 			this.groupNumber = groupNumber;
 			this.totalGroupCount = totalGroupCount;
-			this.activeQuestions = activeQuestions;
+			this.potentialQuestions = potentialQuestions;
 		}
 
 		@NotNull
@@ -138,12 +145,20 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 
 		@Override
 		public boolean isEmpty() {
-			return activeQuestions.isEmpty();
+			return getActiveQuestions().isEmpty();
 		}
 
 		@Override
 		public List<Question> getActiveQuestions() {
-			return activeQuestions;
+			HashSet<Question> allowed = new HashSet<>(delegate.getActiveQuestions());
+			return potentialQuestions.stream()
+					.filter(allowed::contains)
+					.collect(Collectors.toList());
+		}
+
+		@Override
+		public List<Question> getPotentialQuestions() {
+			return potentialQuestions;
 		}
 
 		@Override

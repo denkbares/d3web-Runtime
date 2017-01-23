@@ -88,6 +88,11 @@ public final class EmptyForm implements Form {
 	}
 
 	@Override
+	public List<Question> getPotentialQuestions() {
+		return Collections.emptyList();
+	}
+
+	@Override
 	public QContainer getRoot() {
 		return null;
 	}

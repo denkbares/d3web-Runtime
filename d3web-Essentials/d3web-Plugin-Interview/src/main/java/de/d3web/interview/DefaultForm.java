@@ -32,6 +32,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.blackboard.Blackboard;
 
 public class DefaultForm implements Form {
 
@@ -93,12 +94,20 @@ public class DefaultForm implements Form {
 	@Override
 	public List<Question> getActiveQuestions() {
 		List<Question> result = new LinkedList<>();
-		collectActiveQuestions(interviewObject, result);
+		collectQuestions(interviewObject, false, result);
 		return result;
 	}
 
-	private void collectActiveQuestions(InterviewObject interviewObject, List<Question> activeQuestions) {
-		if (session.getBlackboard().getIndication(interviewObject).isContraIndicated()) {
+	@Override
+	public List<Question> getPotentialQuestions() {
+		List<Question> result = new LinkedList<>();
+		collectQuestions(interviewObject, true, result);
+		return result;
+	}
+
+	private void collectQuestions(InterviewObject interviewObject, boolean all, List<Question> activeQuestions) {
+		Blackboard blackboard = session.getBlackboard();
+		if (blackboard.getIndication(interviewObject).isContraIndicated()) {
 			return;
 		}
 		if (interviewObject instanceof Question) {
@@ -106,21 +115,21 @@ public class DefaultForm implements Form {
 			if (activeQuestions.contains(interviewObject)) {
 				return;
 			}
+			// add the question
 			activeQuestions.add((Question) interviewObject);
+			// and add all follow-up questions if they are explicitly indicated
 			for (TerminologyObject to : interviewObject.getChildren()) {
 				if (to instanceof InterviewObject
-						&& session.getBlackboard()
-						.getIndication((InterviewObject) to)
-						.isRelevant()) {
-					collectActiveQuestions((InterviewObject) to, activeQuestions);
+						&& (all || blackboard.getIndication((InterviewObject) to).isRelevant())) {
+					collectQuestions((InterviewObject) to, all, activeQuestions);
 				}
 			}
 		}
 		else if (interviewObject instanceof QContainer) {
-			QContainer qcon = (QContainer) interviewObject;
-			for (TerminologyObject to : qcon.getChildren()) {
+			// add all children of a qcontainer, regardless is indicated or not
+			for (TerminologyObject to : interviewObject.getChildren()) {
 				if (to instanceof InterviewObject) {
-					collectActiveQuestions((InterviewObject) to, activeQuestions);
+					collectQuestions((InterviewObject) to, all, activeQuestions);
 				}
 			}
 		}

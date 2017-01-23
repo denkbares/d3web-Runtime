@@ -72,6 +72,15 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 	List<Question> getActiveQuestions();
 
 	/**
+	 * Returns all questions that this form might possibly have. The list of the active questions
+	 * is always a sub-set of this list.
+	 *
+	 * @return a List of active objects
+	 * @created 25.03.2013
+	 */
+	List<Question> getPotentialQuestions();
+
+	/**
 	 * Can be used to access the root QASet of the Form. If the form contains
 	 * only a question, null is returned
 	 *

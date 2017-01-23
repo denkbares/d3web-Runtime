@@ -49,7 +49,7 @@ public class SingleQuestionFormStrategyWrapper implements FormStrategy {
 	}
 
 	@Override
-	public List<Form> getForm(InterviewObject object, Session session) {
+	public List<Form> getForms(InterviewObject object, Session session) {
 		return wrappedStrategy.getActiveQuestions(object, session).stream()
 				.map(question -> new DefaultForm(question.getName(), question, session))
 				.collect(Collectors.toList());

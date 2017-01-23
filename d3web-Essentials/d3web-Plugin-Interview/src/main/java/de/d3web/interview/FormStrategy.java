@@ -52,12 +52,12 @@ public interface FormStrategy extends de.d3web.core.session.interviewmanager.For
 	 * @return the forms created
 	 * @created 15.04.2013
 	 */
-	List<Form> getForm(InterviewObject object, Session session);
+	List<Form> getForms(InterviewObject object, Session session);
 
 	/**
 	 * Returns all the questions to be asked for the specified interview objects. These are the
 	 * questions that will be contained in the forms that would be created by {@link
-	 * #getForm(InterviewObject, Session)}.
+	 * #getForms(InterviewObject, Session)}.
 	 *
 	 * @param object the interview objects to be answered
 	 * @param session the session to answer the questions for
@@ -65,7 +65,7 @@ public interface FormStrategy extends de.d3web.core.session.interviewmanager.For
 	 * @created 15.04.2013
 	 */
 	default List<Question> getActiveQuestions(InterviewObject object, Session session) {
-		return getForm(object, session).stream()
+		return getForms(object, session).stream()
 				.map(Form::getActiveQuestions).flatMap(List::stream)
 				.distinct().collect(Collectors.toList());
 	}
