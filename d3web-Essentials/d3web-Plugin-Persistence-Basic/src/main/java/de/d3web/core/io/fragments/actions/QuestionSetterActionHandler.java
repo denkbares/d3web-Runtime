@@ -50,7 +50,7 @@ import de.d3web.core.session.values.Unknown;
  * Handles the two default successors ActionAddValue and ActionSetValue of
  * ActionQuestionSetter. Other successors must have their own FragementHandler
  * with a higher priority
- * 
+ *
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBase> {
@@ -154,32 +154,33 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 		questionNode.setAttribute("name", questionId);
 		element.appendChild(questionNode);
 		Element valuesNode = persistence.getDocument().createElement("Values");
-		if (action.getValue() instanceof Value) {
+		Object value = action.getValue();
+		if (value instanceof Value) {
 			String name = "";
 			Element valueNode = persistence.getDocument().createElement("Value");
-			if (action.getValue() instanceof ChoiceValue) {
-				ChoiceValue cv = (ChoiceValue) (action.getValue());
+			if (value instanceof ChoiceValue) {
+				ChoiceValue cv = (ChoiceValue) value;
 				Choice choice = cv.getChoice((QuestionChoice) question);
 				valueNode.setAttribute("type", "answer");
 				name = choice.getName();
 			}
-			else if (action.getValue() instanceof NumValue) {
-				NumValue numValue = (NumValue) action.getValue();
+			else if (value instanceof NumValue) {
+				NumValue numValue = (NumValue) value;
 				name = Double.toString(numValue.getDouble());
 				valueNode.setAttribute("type", "num");
 			}
-			else if (action.getValue() instanceof DateValue) {
-				DateValue dateValue = (DateValue) action.getValue();
+			else if (value instanceof DateValue) {
+				DateValue dateValue = (DateValue) value;
 				name = Long.toString(dateValue.getDate().getTime());
 				valueNode.setAttribute("type", "date");
 			}
-			else if (action.getValue() instanceof TextValue) {
-				TextValue textValue = (TextValue) action.getValue();
+			else if (value instanceof TextValue) {
+				TextValue textValue = (TextValue) value;
 				name = textValue.getText();
 				valueNode.setAttribute("type", "text");
 			}
-			else if (action.getValue() instanceof MultipleChoiceValue) {
-				MultipleChoiceValue mcv = (MultipleChoiceValue) (action.getValue());
+			else if (value instanceof MultipleChoiceValue) {
+				MultipleChoiceValue mcv = (MultipleChoiceValue) value;
 				for (ChoiceID cid : mcv.getChoiceIDs()) {
 					Element choiceElement = persistence.getDocument().createElement("choice");
 					choiceElement.setAttribute("name", cid.getText());
@@ -188,7 +189,7 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 				valueNode.setAttribute("type", "mcanswer");
 			}
 			else {
-				name = ((Value) (action.getValue())).getValue().toString();
+				name = ((Value) value).getValue().toString();
 				valueNode.setAttribute("type", "answer");// backward
 															// compatibility ->
 															// unknown
@@ -197,8 +198,8 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 			valuesNode.appendChild(valueNode);
 		}
 		else {
-			if (action.getValue() instanceof Object[]) {
-				Object[] list = (Object[]) action.getValue();
+			if (value instanceof Object[]) {
+				Object[] list = (Object[]) value;
 				for (Object o : list) {
 					if (o instanceof Choice) {
 						Choice a = (Choice) o;
@@ -220,7 +221,7 @@ public class QuestionSetterActionHandler implements FragmentHandler<KnowledgeBas
 			}
 			else {
 				Element valueNode = persistence.getDocument().createElement("Value");
-				valueNode.appendChild(persistence.writeFragment(action.getValue()));
+				valueNode.appendChild(persistence.writeFragment(value));
 				valueNode.setAttribute("type", "evaluatable");
 				valuesNode.appendChild(valueNode);
 			}
