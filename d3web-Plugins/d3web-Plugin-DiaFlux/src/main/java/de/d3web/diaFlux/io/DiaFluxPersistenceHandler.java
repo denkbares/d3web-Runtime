@@ -22,12 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
@@ -35,7 +37,6 @@ import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.diaFlux.flow.Edge;
@@ -91,7 +92,9 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		if (flowSet != null) {
 			float cur = 0;
 			int max = getEstimatedSize(kb);
-			for (Flow flow : flowSet.getFlows()) {
+			List<Flow> flows = new ArrayList<>(flowSet.getFlows());
+			flows.sort(Comparator.comparing(Flow::getName));
+			for (Flow flow : flows) {
 				ksNode.appendChild(writeFlow(flow, persistence));
 				listener.updateProgress(++cur / max, "Saving knowledge base: DiaFlux");
 			}
