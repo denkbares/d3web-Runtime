@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.Indication;
@@ -35,8 +36,11 @@ import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
@@ -51,12 +55,11 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.protocol.CalculatedTargetEntry;
-import com.denkbares.utils.Log;
 import de.d3web.xcl.XCLUtils;
 
 /**
  * CaseObject for CostBenefit
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class CostBenefitCaseObject implements SessionObject {
@@ -118,8 +121,8 @@ public class CostBenefitCaseObject implements SessionObject {
 		currentPathIndex++;
 		Log.fine("next qcontianer: "
 				+ (currentPathIndex >= currentSequence.length
-						? null
-						: currentSequence[currentPathIndex]));
+				? null
+				: currentSequence[currentPathIndex]));
 	}
 
 	/**
@@ -186,9 +189,9 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	/**
 	 * Returns the questions, having a negative influence on the sprint group.
-	 * 
-	 * @created 16.12.2013
+	 *
 	 * @return Set containing the conflicting objects (Questions)
+	 * @created 16.12.2013
 	 */
 	public Set<TerminologyObject> getConflictingObjects() {
 		return Collections.unmodifiableSet(conflictingObjects);
@@ -216,7 +219,7 @@ public class CostBenefitCaseObject implements SessionObject {
 		// (or no current one has been activated yet)
 		if (this.getCurrentPathIndex() == -1
 				|| CostBenefitUtil.isDone(currentSequence[this.getCurrentPathIndex()],
-						session)) {
+				session)) {
 			this.incCurrentPathIndex();
 			if (this.getCurrentPathIndex() >= currentSequence.length) {
 				this.resetPath();
@@ -230,7 +233,7 @@ public class CostBenefitCaseObject implements SessionObject {
 			// undone? all others should be made undone earlier
 			for (int i = 0; i < this.getCurrentPathIndex(); i++) {
 				if (currentSequence[0] == qc) {
-					makeOKQuestionsUndone(qc, session);
+					retractQuestions(qc, session);
 				}
 			}
 			if (!new Node(qc, null).isApplicable(session)) {
@@ -260,34 +263,59 @@ public class CostBenefitCaseObject implements SessionObject {
 		}
 	}
 
-	private void makeOKQuestionsUndone(TerminologyObject container, Session session) {
+	/**
+	 * Retracts a subset of the questions of the specified container within the specified session.
+	 * All questions that are retractable (mostly "ok"-questions) will be retracted, all others will
+	 * remain untouched.
+	 *
+	 * @param container the container to retract the contained questions
+	 * @param session the session to work on
+	 */
+	private void retractQuestions(TerminologyObject container, Session session) {
 		for (TerminologyObject nob : container.getChildren()) {
-			// if ok-question
-			if (nob instanceof QuestionOC) {
-				QuestionOC qoc = (QuestionOC) nob;
-				List<Choice> choices = qoc.getAllAlternatives();
-				if (choices.size() == 1
-						&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
+			if (nob instanceof Question) {
+				Question question = (Question) nob;
+				if (isRetractableQuestion(question)) {
 					Blackboard blackboard = session.getBlackboard();
-					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(qoc))) {
-						Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(qoc);
+					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(question))) {
+						Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(question);
 						for (PSMethod contributing : contributingPSMethods) {
-							blackboard.removeValueFact(blackboard.getValueFact(qoc, contributing));
+							blackboard.removeValueFact(blackboard.getValueFact(question, contributing));
 						}
 					}
 				}
 			}
-			makeOKQuestionsUndone(nob, session);
+			retractQuestions(nob, session);
 		}
+	}
+
+	/**
+	 * Returns true if the specified question should be retracted by the cots/benefit problem solver
+	 * to prepare the qContainer to be re-asked. Usually all "ok"-questions and always visible
+	 * questions will be retracted.
+	 *
+	 * @param question the question to be checked for retracting
+	 * @return true if the question should be retracted
+	 */
+	private boolean isRetractableQuestion(Question question) {
+		if (question instanceof QuestionOC) {
+			if (question instanceof QuestionZC) return true;
+			List<Choice> choices = ((QuestionOC) question).getAllAlternatives();
+			if (choices.size() == 1
+					&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
+				return true;
+			}
+		}
+		return BasicProperties.isAlwaysVisible(question);
 	}
 
 	/**
 	 * Activates a ready-made path by indicating its questionnaires and storing
 	 * it into the specified case object
-	 * 
-	 * @created 08.03.2011
+	 *
 	 * @param psmethod the ps method
 	 * @param path the path to be activated
+	 * @created 08.03.2011
 	 */
 	public void activatePath(Path path, PSMethod psmethod) {
 		Collection<QContainer> qContainers = path.getPath();
@@ -296,7 +324,7 @@ public class CostBenefitCaseObject implements SessionObject {
 		List<Fact> facts = new LinkedList<>();
 		for (QContainer qContainer : qContainers) {
 			currentSequence[i] = qContainer;
-			makeOKQuestionsUndone(currentSequence[i], session);
+			retractQuestions(currentSequence[i], session);
 			Fact fact = FactFactory.createFact(qContainer,
 					new Indication(State.MULTIPLE_INDICATED, i), new Object(), psmethod);
 			facts.add(fact);
@@ -313,9 +341,9 @@ public class CostBenefitCaseObject implements SessionObject {
 	 * Returns if the undiscriminated solutions have changed since the last use
 	 * of the search algorithm. This indicates that a new search should be
 	 * performed to adapt to the new diagnostic situation.
-	 * 
-	 * @created 08.03.2011
+	 *
 	 * @return if the undiscriminated solutions have been changed
+	 * @created 08.03.2011
 	 */
 	public boolean hasChangedUndiscriminatedSolutions() {
 		// if the current set of undiscriminated solutions is null
@@ -366,12 +394,12 @@ public class CostBenefitCaseObject implements SessionObject {
 	private void checkWatchedQContainers() {
 		if ((searchModel.getBestCostBenefitTarget() != null)
 				&& !Collections.disjoint(watchedQContainers,
-						searchModel.getBestCostBenefitTarget().getQContainers())) {
+				searchModel.getBestCostBenefitTarget().getQContainers())) {
 			List<Solution> sprintGroup = XCLUtils.getSprintGroup(session);
 			session.getProtocol().addEntry(
 					new CalculatedTargetEntry(searchModel.getBestCostBenefitTarget(),
 							searchModel.getTargets(), new Date(
-									session.getPropagationManager().getPropagationTime()),
+							session.getPropagationManager().getPropagationTime()),
 							sprintGroup));
 		}
 	}
