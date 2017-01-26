@@ -42,8 +42,8 @@ public class PSMethodMeasurement implements PSMethod {
 
 	@Override
 	public double getPriority() {
-		// little less priority than PSMethodUserSelected
-		return 1;
+		// little les priority than PSMethodUserSelected
+		return 3;
 	}
 
 	@Override
