@@ -64,7 +64,7 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 	boolean isEmpty();
 
 	/**
-	 * Returns all active questions of this form
+	 * Returns all active (visible) questions of this form
 	 *
 	 * @return a List of active objects
 	 * @created 25.03.2013

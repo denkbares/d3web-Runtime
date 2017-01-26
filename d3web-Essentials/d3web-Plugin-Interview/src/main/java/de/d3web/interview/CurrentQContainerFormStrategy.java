@@ -20,15 +20,16 @@
 package de.d3web.interview;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.utils.Log;
 
 /**
  * This class always creates a new {@link Form} that contains the
@@ -36,15 +37,14 @@ import com.denkbares.utils.Log;
  * This {@link QContainer} is not a non-terminal QContainer (i.e., it does not
  * contain other {@link QContainer} instances) and it contains at least one
  * unanswered but active question.
- * 
+ * <p>
  * For Dialog implementations: Please use helper methods in {@link Interview} to
  * find out, whether a {@link Question} or follow-up {@link Question} is active
  * or not.
- * 
+ *
  * @author joba
- * 
  */
-public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
+public class CurrentQContainerFormStrategy implements FormStrategy {
 
 	@Override
 	public Form nextForm(List<InterviewObject> agendaEntries, Session session) {
@@ -69,18 +69,28 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 		}
 	}
 
+	@Override
+	public boolean isActive(Question question, Session session) {
+		return new FormStrategyUtils(session).isActive(question);
+	}
+
+	@Override
+	public boolean isForcedActive(Question question, Session session) {
+		return new FormStrategyUtils(session).isForcedActive(question);
+	}
+
 	/**
 	 * Staring with the specified {@link QContainer}, recursively find the next
 	 * {@link QContainer} instance, that only contains {@link Question}
 	 * instances (i.e., a terminal {@link QContainer}) and that contains active
 	 * questions with respect to the specified {@link Session} instance.
-	 * 
+	 *
 	 * @param container the specified {@link QContainer}
 	 * @param session the specified session
 	 * @return an active {@link QContainer} instance
 	 */
 	private QContainer retrieveNextUnfinishedQContainer(QContainer container,
-			Session session) {
+														Session session) {
 		if (isTerminalQContainer(container)
 				&& hasActiveQuestions(container, session)) {
 			return container;
@@ -107,18 +117,19 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 	 * Checks, whether the specified container contains active (follow-up)
 	 * questions or direct child questions, that have no value with respect to
 	 * the specified {@link Session} instance.
-	 * 
+	 *
 	 * @param container the specified {@link QContainer} instance
 	 * @param session the specified {@link Session} instance
-	 * @return true, when it contains an unanswered direct question or an active
-	 *         (possible follow-up) question
+	 * @return true, when it contains an unanswered direct question or an active (possible
+	 * follow-up) question
 	 */
 	private boolean hasActiveQuestions(QContainer container, Session session) {
+		FormStrategyUtils utils = new FormStrategyUtils(session);
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		for (TerminologyObject child : container.getChildren()) {
 			if (child instanceof Question) {
 				Question question = (Question) child;
-				if (hasValueUndefined(question, session)) {
+				if (utils.hasValueUndefined(question)) {
 					return true;
 				}
 				else {
@@ -158,4 +169,8 @@ public class CurrentQContainerFormStrategy extends AbstractFormStrategy {
 		return true;
 	}
 
+	@Override
+	public List<Form> getForms(InterviewObject object, Session session) {
+		return Collections.singletonList(new DefaultForm(object.getName(), object, session));
+	}
 }

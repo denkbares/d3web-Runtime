@@ -28,7 +28,7 @@ import de.d3web.core.session.Session;
  * @author Volker Belli (denkbares GmbH)
  * @created 25.08.2016
  */
-public class SplittingFormStrategy extends AbstractFormStrategy {
+public class SplittingFormStrategy implements FormStrategy {
 
 	private final FormStrategy delegate;
 	private final FormSplitter splitter;
@@ -52,8 +52,9 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 		if (groups.size() == 1) return completeForm;
 
 		// and build the forms out of it, until a not completely answered form is available
+		FormStrategyUtils utils = new FormStrategyUtils(session);
 		for (SplitForm form : groups) {
-			if (hasAnyValueUndefined(form.getActiveQuestions(), session)) {
+			if (utils.hasAnyValueUndefined(form.getActiveQuestions())) {
 				return form;
 			}
 		}
@@ -61,6 +62,16 @@ public class SplittingFormStrategy extends AbstractFormStrategy {
 		// otherwise, if completely answered, there is something unexpected, so use the original form.
 		Log.warning("The form is already answered, check behaviour of: " + delegate);
 		return completeForm;
+	}
+
+	@Override
+	public boolean isActive(Question question, Session session) {
+		return delegate.isActive(question, session);
+	}
+
+	@Override
+	public boolean isForcedActive(Question question, Session session) {
+		return delegate.isForcedActive(question, session);
 	}
 
 	/**

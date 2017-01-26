@@ -69,4 +69,14 @@ public class SingleQuestionFormStrategyWrapper implements FormStrategy {
 		}
 		return EmptyForm.getInstance();
 	}
+
+	@Override
+	public boolean isActive(Question question, Session session) {
+		return wrappedStrategy.isActive(question, session);
+	}
+
+	@Override
+	public boolean isForcedActive(Question question, Session session) {
+		return wrappedStrategy.isForcedActive(question, session);
+	}
 }

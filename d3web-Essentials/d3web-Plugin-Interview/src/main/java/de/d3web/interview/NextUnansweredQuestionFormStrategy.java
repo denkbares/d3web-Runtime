@@ -20,6 +20,7 @@
 package de.d3web.interview;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,7 +45,7 @@ import static de.d3web.core.session.values.UndefinedValue.isUndefinedValue;
  *
  * @author joba
  */
-public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
+public class NextUnansweredQuestionFormStrategy implements FormStrategy {
 
 	@Override
 	public Form nextForm(List<InterviewObject> agendaEntries, Session session) {
@@ -52,6 +53,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			return EmptyForm.getInstance();
 		}
 		else {
+			FormStrategyUtils utils = new FormStrategyUtils(session);
 			Blackboard blackboard = session.getBlackboard();
 			for (InterviewObject object : agendaEntries) {
 				if (object instanceof Question) {
@@ -71,7 +73,7 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 				}
 				else if (object instanceof QASet) {
 					Collection<TerminologyObject> traversedQuestions = new HashSet<>();
-					Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object, session, traversedQuestions);
+					Question nextQuestion = retrieveNextQuestionToBeAnswered((QASet) object, traversedQuestions, utils);
 					if (nextQuestion == null) {
 						return EmptyForm.getInstance();
 					}
@@ -82,6 +84,16 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 		}
 	}
 
+	@Override
+	public boolean isActive(Question question, Session session) {
+		return new FormStrategyUtils(session).isActive(question);
+	}
+
+	@Override
+	public boolean isForcedActive(Question question, Session session) {
+		return new FormStrategyUtils(session).isForcedActive(question);
+	}
+
 	/**
 	 * Traverses in a depth-first-search all children of the specified
 	 * {@link QASet} and returns the first question, that has no value assigned
@@ -89,13 +101,12 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 * then null is returned.
 	 *
 	 * @param qaset the specified {@link QASet}
-	 * @param session the specified session
 	 * @param traversedObjects objects traversed already to avoid loops
+	 * @param utils a utils instance, containing the session
 	 * @return the first {@link Question} instance, that is a child of the specified {@link QASet}
 	 * and is not answered; null otherwise
 	 */
-	private Question retrieveNextQuestionToBeAnswered(QASet qaset,
-													  Session session, Collection<TerminologyObject> traversedObjects) { // NOSONAR
+	private Question retrieveNextQuestionToBeAnswered(QASet qaset, Collection<TerminologyObject> traversedObjects, FormStrategyUtils utils) { // NOSONAR
 		// Termination of recursive traversal: Required for possibly cyclic
 		// question hierarchies
 		if (traversedObjects.contains(qaset)) {
@@ -111,23 +122,23 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 			// Return question, when it is directly located in a questionnaire
 			// and has not been answered.
 			if (isDirectQContainerQuestion(question) &&
-					hasValueUndefined(question, session)) {
+					utils.hasValueUndefined(question)) {
 				return question;
 			}
 			// Return question, when it is not directly located in a
 			// questionnaire but is
 			// active on agenda (follow-up question).
 			else if (isNotDirectQContainerQuestion(question) &&
-					hasValueUndefined(question, session)
-					&& session.getBlackboard().getIndication(question).isRelevant()) {
+					utils.hasValueUndefined(question)
+					&& utils.isIndicated(question)) {
 				return question;
 			}
 			// Recursively traverse for finding follow-up questions and check
 			// these, whether they are active on agenda
 			else {
 				for (TerminologyObject child : question.getChildren()) {
-					Question nextqaset = retrieveNextQuestionToBeAnswered((QASet) child, session,
-							traversedObjects);
+					Question nextqaset = retrieveNextQuestionToBeAnswered(
+							(QASet) child, traversedObjects, utils);
 					if (nextqaset != null) {
 						return nextqaset;
 					}
@@ -140,8 +151,8 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 		else if (qaset instanceof QContainer) {
 			TerminologyObject[] children = qaset.getChildren();
 			for (TerminologyObject terminologyObject : children) {
-				Question nextqaset = retrieveNextQuestionToBeAnswered((QASet) terminologyObject,
-						session, traversedObjects);
+				Question nextqaset = retrieveNextQuestionToBeAnswered(
+						(QASet) terminologyObject, traversedObjects, utils);
 				if (nextqaset != null) {
 					return nextqaset;
 				}
@@ -175,5 +186,10 @@ public class NextUnansweredQuestionFormStrategy extends AbstractFormStrategy {
 	 */
 	private boolean isNotDirectQContainerQuestion(Question question) {
 		return !isDirectQContainerQuestion(question);
+	}
+
+	@Override
+	public List<Form> getForms(InterviewObject object, Session session) {
+		return Collections.singletonList(new DefaultForm(object.getName(), object, session));
 	}
 }

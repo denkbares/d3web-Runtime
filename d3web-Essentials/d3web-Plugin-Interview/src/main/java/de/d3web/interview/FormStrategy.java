@@ -55,6 +55,30 @@ public interface FormStrategy extends de.d3web.core.session.interviewmanager.For
 	List<Form> getForms(InterviewObject object, Session session);
 
 	/**
+	 * Returns true if the question is an active question in any of this FormStrategy's Forms,
+	 * either being relevant (directly or indirectly indicated, e.g. being a root question in an
+	 * indicated container), or forced to be active by the property "visible == always".
+	 *
+	 * @param question the question to be checked
+	 * @return if the question is not relevant but forced to be active
+	 * @see de.d3web.core.knowledge.terminology.info.BasicProperties#VISIBLE
+	 * @see de.d3web.core.knowledge.terminology.info.Visible#always
+	 */
+	boolean isActive(Question question, Session session);
+
+	/**
+	 * Returns true if (and only if) the question is an active question in any of this
+	 * FormStrategy's Forms, despite being not relevant (not indicated), but it is forced to be
+	 * active by the property "visible == always".
+	 *
+	 * @param question the question to be checked
+	 * @return if the question is not relevant but forced to be active
+	 * @see de.d3web.core.knowledge.terminology.info.BasicProperties#VISIBLE
+	 * @see de.d3web.core.knowledge.terminology.info.Visible#always
+	 */
+	boolean isForcedActive(Question question, Session session);
+
+	/**
 	 * Returns all the questions to be asked for the specified interview objects. These are the
 	 * questions that will be contained in the forms that would be created by {@link
 	 * #getForms(InterviewObject, Session)}.

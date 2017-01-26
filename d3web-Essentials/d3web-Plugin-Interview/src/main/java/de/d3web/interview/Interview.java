@@ -89,5 +89,4 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	 */
 	@Override
 	boolean isActive(InterviewObject interviewObject);
-
 }
