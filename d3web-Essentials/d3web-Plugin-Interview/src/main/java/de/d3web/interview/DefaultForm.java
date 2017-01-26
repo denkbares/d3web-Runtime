@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -105,11 +106,16 @@ public class DefaultForm implements Form {
 		return result;
 	}
 
+	@SuppressWarnings("Duplicates")
 	private void collectQuestions(InterviewObject interviewObject, boolean all, List<Question> activeQuestions) {
+		// never show explicitly excluded items
 		Blackboard blackboard = session.getBlackboard();
 		if (blackboard.getIndication(interviewObject).isContraIndicated()) {
 			return;
 		}
+		// never show items marked as "never visible"
+		if (BasicProperties.isNeverVisible(interviewObject)) return;
+
 		if (interviewObject instanceof Question) {
 			// prevent cycles
 			if (activeQuestions.contains(interviewObject)) {
@@ -117,11 +123,15 @@ public class DefaultForm implements Form {
 			}
 			// add the question
 			activeQuestions.add((Question) interviewObject);
+
 			// and add all follow-up questions if they are explicitly indicated
 			for (TerminologyObject to : interviewObject.getChildren()) {
-				if (to instanceof InterviewObject
-						&& (all || blackboard.getIndication((InterviewObject) to).isRelevant())) {
-					collectQuestions((InterviewObject) to, all, activeQuestions);
+				if (to instanceof InterviewObject) {
+					InterviewObject object = (InterviewObject) to;
+					if (all || blackboard.getIndication(object).isRelevant()
+							|| BasicProperties.isAlwaysVisible(object)) {
+						collectQuestions(object, all, activeQuestions);
+					}
 				}
 			}
 		}

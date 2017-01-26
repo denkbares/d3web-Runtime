@@ -21,6 +21,7 @@ package de.d3web.core.knowledge.terminology.info;
 import java.util.Date;
 
 import de.d3web.core.knowledge.InfoStore;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -66,6 +67,13 @@ public class BasicProperties {
 	 */
 	public static final Property<Boolean> ABSTRACTION_QUESTION = Property.getProperty(
 			"abstractionQuestion", Boolean.class);
+
+	/**
+	 * Used for Questions. Marks a Question as abstraction question (derived) or not. Boolean.TRUE
+	 * means, it is a abstraction question, all other values means, it is not.
+	 */
+	public static final Property<Visible> VISIBLE = Property.getProperty(
+			"visible", Visible.class);
 
 	/**
 	 * Used for Diagnosis. Saves the apriori probability of a diagnosis
@@ -265,9 +273,43 @@ public class BasicProperties {
 		return (digits == null) ? Integer.MIN_VALUE : digits;
 	}
 
+	/**
+	 * Returns true if the question is an abstraction question and therefore should not been
+	 * answered manually by the user.
+	 *
+	 * @param question the question to be checked
+	 * @return true if the question is an abstraction question
+	 */
 	public static boolean isAbstract(Question question) {
 		Boolean value = question.getInfoStore().getValue(ABSTRACTION_QUESTION);
 		return (value != null) && value;
+	}
+
+	/**
+	 * Returns true if the question or qContainer should be always visible, if the enclosing
+	 * qContainer is visible, regardless of it relevance (indication state).
+	 *
+	 * @param object the question to be checked
+	 * @return true if the question should always be visible
+	 */
+	public static boolean isAlwaysVisible(InterviewObject object) {
+		Visible value = object.getInfoStore().getValue(VISIBLE);
+		return value == Visible.always;
+	}
+
+	/**
+	 * Returns true if the question or qContainer should be never visible, regardless of its
+	 * relevance (indication state) or of the enclosing qContainer is relevance.
+	 * <p>
+	 * Note: For a qContainer to be "never visible" the whole subtree never becomes visible, except
+	 * a sub-qcontainer becomes relevant itself. Then this sub-qContainer is treated independently.
+	 *
+	 * @param question the question to be checked
+	 * @return true if the question should never be visible
+	 */
+	public static boolean isNeverVisible(InterviewObject question) {
+		Visible value = question.getInfoStore().getValue(VISIBLE);
+		return value == Visible.never;
 	}
 
 	/**
