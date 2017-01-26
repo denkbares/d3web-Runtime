@@ -213,15 +213,41 @@ public class Measurement {
 		if (question == null) return;
 
 		// check if we have a null value, then remove existing answer
-		PSMethod solver = getPSMethod(session);
 		if (rawValue == null) {
-			session.getBlackboard().removeValueFact(question, solver);
+			removeFact(session, question);
 		}
 
 		// otherwise convert raw value to question value and set the value
 		Value value = toValue(question, rawValue);
+		addFact(session, question, value);
+	}
+
+	/**
+	 * Method to be called to add a fact for a measured value to a mapped question. The method may
+	 * be overwritten to add special facts or fact sources/solvers.
+	 *
+	 * @param session the session to set the fact in
+	 * @param question the question to be set
+	 * @param value the measured value to be set
+	 * @see #removeFact(Session, Question)
+	 */
+	protected void addFact(Session session, Question question, Value value) {
+		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		session.getBlackboard().addValueFact(fact);
+	}
+
+	/**
+	 * Method to be called to remove a fact for a measured value to a mapped question. The method
+	 * may be overwritten to remove special facts the previously have been added by {@link
+	 * #addFact(Session, Question, Value)}.
+	 *
+	 * @param session the session to set the fact in
+	 * @param question the question to be set
+	 * @see #addFact(Session, Question, Value)
+	 */
+	protected void removeFact(Session session, Question question) {
+		session.getBlackboard().removeValueFact(question, getPSMethod(session));
 	}
 
 	private PSMethod getPSMethod(Session session) {
