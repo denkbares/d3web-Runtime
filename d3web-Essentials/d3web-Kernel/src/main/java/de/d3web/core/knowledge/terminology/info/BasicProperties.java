@@ -32,6 +32,8 @@ import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.DynamicAbnormality;
+import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 /**
@@ -363,5 +365,25 @@ public class BasicProperties {
 
 		// if not return empty abnormality
 		return EMPTY_ABNORMALITY;
+	}
+
+	/**
+	 * Returns an abnormality object for the specified question. The method works for any question,
+	 * regardless of the type of abnormality defined for the question. The method never returns
+	 * null. If no abnormality is specified, an empty abnormality is returned. If the abnormality is
+	 * a dynamic abnormality it will automatically be evaluated according to the session, and the
+	 * static abnormality is returned.
+	 *
+	 * @param question the question to get the abnormality for
+	 * @param session the session to evaluate dynamic abnormalities against
+	 * @return the (static) abnormality object
+	 * @see de.d3web.core.knowledge.terminology.info.abnormality.DynamicAbnormality
+	 */
+	public static Abnormality getAbnormality(Question question, Session session) {
+		Abnormality abnormality = getAbnormality(question);
+		if (abnormality instanceof DynamicAbnormality) {
+			abnormality = ((DynamicAbnormality) abnormality).eval(session);
+		}
+		return abnormality;
 	}
 }

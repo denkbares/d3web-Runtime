@@ -33,7 +33,7 @@ import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
 
 /**
  * Handles the AbnormalityNum
- * 
+ *
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class AbnormalityNumHandler implements FragmentHandler<KnowledgeBase> {
@@ -86,5 +86,4 @@ public class AbnormalityNumHandler implements FragmentHandler<KnowledgeBase> {
 		element.appendChild(persistence.writeFragment(abnormalityNum.getIntervals()));
 		return element;
 	}
-
 }
