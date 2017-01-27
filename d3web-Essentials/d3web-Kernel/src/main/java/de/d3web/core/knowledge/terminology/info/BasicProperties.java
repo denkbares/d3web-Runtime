@@ -18,23 +18,15 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
-import java.util.Date;
-
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.terminology.QASet;
-import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.QuestionDate;
-import de.d3web.core.knowledge.terminology.QuestionNum;
-import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
-import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
-import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
-import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
-import de.d3web.core.knowledge.terminology.info.abnormality.DynamicAbnormality;
+import de.d3web.core.knowledge.terminology.*;
+import de.d3web.core.knowledge.terminology.info.abnormality.*;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+
+import java.util.Date;
 
 /**
  * A collection of basic Properties for d3web
@@ -149,6 +141,13 @@ public class BasicProperties {
 	public static final Property<DefaultAbnormality> DEFAULT_ABNORMALITY = Property.getProperty(
 			"abnormality",
 			DefaultAbnormality.class);
+
+    /**
+     * @see DynamicAbnormality
+     */
+    public static final Property<DynamicAbnormality> DYNAMIC_ABNORMALITY = Property.getProperty(
+            "abnormalityDynamic",
+            DynamicAbnormality.class);
 
 	/**
 	 * @deprecated replaced by {@link #DEFAULT_ABNORMALITY}
@@ -362,6 +361,10 @@ public class BasicProperties {
 		// if not, test for numeric abnormality
 		abnormality = infoStore.getValue(ABNORMALITY_NUM);
 		if (abnormality != null) return abnormality;
+
+        // if not, test for dynamic abnormality
+		abnormality = infoStore.getValue(DYNAMIC_ABNORMALITY);
+        if (abnormality != null) return abnormality;
 
 		// if not return empty abnormality
 		return EMPTY_ABNORMALITY;
