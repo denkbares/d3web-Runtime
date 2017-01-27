@@ -21,6 +21,7 @@ package de.d3web.interview;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -101,5 +102,20 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 			if (measurement != null) result.add(measurement);
 		}
 		return result;
+	}
+
+	/**
+	 * Returns the question that has the specified measurement within this form, or null if
+	 * no potential question of this form has the specified measurement.
+	 *
+	 * @param measurement the measurement to search the question for
+	 * @return the question containing the measurement
+	 */
+	default Question findQuestion(Measurement measurement) {
+		for (Question question : getPotentialQuestions()) {
+			Measurement qm = question.getInfoStore().getValue(Measurement.MEASUREMENT);
+			if (Objects.equals(qm, measurement)) return question;
+		}
+		return null;
 	}
 }
