@@ -55,7 +55,8 @@ import static de.d3web.core.manage.KnowledgeBaseUtils.Matching.ANY_PROMPT;
 public class Measurement {
 
 	/**
-	 * Property for Questions that define a measurement attached to the question.
+	 * Property for Questions that define a measurement attached to the question or a knowledge
+	 * base.
 	 *
 	 * @see Form#getMeasurements()
 	 */
