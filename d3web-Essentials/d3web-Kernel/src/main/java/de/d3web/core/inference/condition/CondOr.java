@@ -20,10 +20,10 @@
 
 package de.d3web.core.inference.condition;
 
-import java.util.List;
+import java.util.Collection;
 
-import de.d3web.core.session.Session;
 import com.denkbares.strings.Strings;
+import de.d3web.core.session.Session;
 
 /**
  * Implements an "OR"-condition, where at least one sub-condition has to be
@@ -36,7 +36,7 @@ public class CondOr extends NonTerminalCondition {
 	/**
 	 * Creates a new OR-condition with a list of disjunctive sub-conditions.
 	 */
-	public CondOr(List<Condition> terms) {
+	public CondOr(Collection<Condition> terms) {
 		super(terms);
 	}
 

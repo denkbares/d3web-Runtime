@@ -20,7 +20,7 @@
 
 package de.d3web.core.inference.condition;
 
-import java.util.List;
+import java.util.Collection;
 
 import de.d3web.core.session.Session;
 
@@ -45,7 +45,7 @@ public class CondMofN extends NonTerminalCondition {
 	 * @param min the number of minimal required conditions
 	 * @param max the number of maximal required conditions
 	 */
-	public CondMofN(List<Condition> terms, int min, int max) {
+	public CondMofN(Collection<Condition> terms, int min, int max) {
 		super(terms);
 		this.min = (min < 0 ? 0 : min);
 		this.max = max;

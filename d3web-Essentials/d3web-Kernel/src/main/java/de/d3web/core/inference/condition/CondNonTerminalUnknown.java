@@ -1,9 +1,9 @@
 package de.d3web.core.inference.condition;
 
-import java.util.List;
+import java.util.Collection;
 
-import de.d3web.core.session.Session;
 import com.denkbares.strings.Strings;
+import de.d3web.core.session.Session;
 
 /**
  * This Condition evaluates to true, if any of the nested {@link Condition}s throws the {@link UnknownAnswerException}.
@@ -18,7 +18,7 @@ public class CondNonTerminalUnknown extends NonTerminalCondition {
 	 *
 	 * @param terms a collection of {@link Condition} instances
 	 */
-	public CondNonTerminalUnknown(List<Condition> terms) {
+	public CondNonTerminalUnknown(Collection<Condition> terms) {
 		super(terms);
 	}
 

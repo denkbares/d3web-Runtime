@@ -27,15 +27,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.core.knowledge.TerminologyObject;
 import com.denkbares.utils.HashCodeUtils;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * Abstract condition for all non-terminal conditions. A non-terminal condition
  * is a container for other terminal or non-terminal sub-conditions. The
  * composite pattern is used for this. This class is the abstract class for a
  * "composite".
- * 
+ *
  * @author Michael Wolber, joba
  */
 public abstract class NonTerminalCondition implements Condition {
@@ -51,10 +51,10 @@ public abstract class NonTerminalCondition implements Condition {
 
 	/**
 	 * Creates a new non-terminal condition with the specified sub-conditions.
-	 * 
+	 *
 	 * @param conditions the specified sub-conditions
 	 */
-	public NonTerminalCondition(List<Condition> conditions) {
+	public NonTerminalCondition(Collection<Condition> conditions) {
 		terms = Collections.unmodifiableList(new ArrayList<>(conditions));
 		termSet = new HashSet<>(conditions);
 		// create hash code an cache it
@@ -76,9 +76,8 @@ public abstract class NonTerminalCondition implements Condition {
 	/**
 	 * Returns the list of {@link Condition} instances enclosed in this
 	 * {@link NonTerminalCondition}.
-	 * 
-	 * @return a list containing the conditions enclosed in this complex
-	 *         condition
+	 *
+	 * @return a list containing the conditions enclosed in this complex condition
 	 */
 	public List<Condition> getTerms() {
 		return terms;
