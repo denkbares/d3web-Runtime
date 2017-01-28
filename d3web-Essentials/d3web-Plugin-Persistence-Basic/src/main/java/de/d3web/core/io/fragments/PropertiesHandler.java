@@ -25,16 +25,16 @@ import java.util.NoSuchElementException;
 
 import org.w3c.dom.Element;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.terminology.info.Property;
-import com.denkbares.utils.Log;
 
 /**
  * Handler for properties
- * 
+ *
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
 public class PropertiesHandler {
@@ -43,6 +43,7 @@ public class PropertiesHandler {
 		return element.getNodeName().equals("Properties");
 	}
 
+	@SuppressWarnings("unchecked")
 	public InfoStore read(Persistence<?> persistence, Element element) throws IOException {
 		InfoStore infoStore = new DefaultInfoStore();
 		List<Element> proplist = XMLUtil.getElementList(element.getChildNodes());
@@ -58,7 +59,7 @@ public class PropertiesHandler {
 					name = prop.getAttributes().getNamedItem("descriptor").getNodeValue();
 				}
 
-				Property<?> property;
+				Property property;
 				try {
 					property = Property.getUntypedProperty(name);
 				}
@@ -69,17 +70,16 @@ public class PropertiesHandler {
 				String textContent = prop.getTextContent();
 				List<Element> elementList = XMLUtil.getElementList(prop.getChildNodes());
 				if (elementList.isEmpty() && !textContent.trim().equals("")) {
-					Object o = XMLUtil.getPrimitiveValue(textContent,
-							prop.getAttribute("class"));
+					Object o = XMLUtil.getPrimitiveValue(textContent, prop.getAttribute("class"));
 					infoStore.addValue(property, property.castToStoredValue(o));
 				}
 				else {
-					List<Element> childNodes = elementList;
-					if (childNodes.isEmpty()) {
+					if (elementList.isEmpty()
+							&& property.getStoredClass().isAssignableFrom(String.class)) {
 						infoStore.addValue(property, "");
 					}
-					else if (childNodes.size() == 1) {
-						infoStore.addValue(property, persistence.readFragment(childNodes.get(0)));
+					else if (elementList.size() == 1) {
+						infoStore.addValue(property, persistence.readFragment(elementList.get(0)));
 					}
 					else {
 						throw new IOException("Property must have exactly one child.");
