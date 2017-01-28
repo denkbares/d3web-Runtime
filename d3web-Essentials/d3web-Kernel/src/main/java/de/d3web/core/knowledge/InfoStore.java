@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
-import de.d3web.core.knowledge.terminology.info.Property;
 import com.denkbares.utils.Triple;
+import de.d3web.core.knowledge.terminology.info.Property;
 
 public interface InfoStore {
 
@@ -102,7 +102,7 @@ public interface InfoStore {
 	 * @throws ClassCastException if the value is not compatible with the property
 	 * @throws NullPointerException if the key or value is null
 	 */
-	void addValue(Property<?> key, Object value) throws ClassCastException;
+	<T> void addValue(Property<? super T> key, T value) throws ClassCastException;
 
 	/**
 	 * Adds a value to this InfoStore for the specified property. If the value is not compatible to

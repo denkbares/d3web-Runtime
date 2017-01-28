@@ -26,9 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.d3web.core.knowledge.terminology.info.Property;
 import com.denkbares.utils.Pair;
 import com.denkbares.utils.Triple;
+import de.d3web.core.knowledge.terminology.info.Property;
 
 public class DefaultInfoStore implements InfoStore {
 
@@ -136,7 +136,7 @@ public class DefaultInfoStore implements InfoStore {
 	}
 
 	@Override
-	public void addValue(Property<?> key, Object value) {
+	public <T> void addValue(Property<? super T> key, T value) {
 		addValue(key, NO_LANGUAGE, value);
 	}
 

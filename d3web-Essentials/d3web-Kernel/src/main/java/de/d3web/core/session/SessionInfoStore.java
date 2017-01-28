@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 /**
  * Special InfoStore for SessionHeaders, touches the defined SessionHeader when
  * something in the InfoStore changes.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 07.10.2010
  */
@@ -61,7 +61,7 @@ public class SessionInfoStore extends DefaultInfoStore {
 	}
 
 	@Override
-	public void addValue(Property<?> key, Object value) {
+	public <T> void addValue(Property<? super T> key, T value) {
 		super.addValue(key, value);
 		session.touch();
 	}
@@ -71,5 +71,4 @@ public class SessionInfoStore extends DefaultInfoStore {
 		super.addValue(key, language, value);
 		session.touch();
 	}
-
 }
