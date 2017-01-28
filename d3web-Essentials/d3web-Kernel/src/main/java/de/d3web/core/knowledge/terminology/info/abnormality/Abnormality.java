@@ -36,6 +36,21 @@ public interface Abnormality {
 	double A5 = 1;
 
 	/**
+	 * The maximum abnormality value for normal answers. All abnormalities below (or equal) this
+	 * limit is considered to be somewhat normal when displaying an answer to the user. The Value is
+	 * between A1 and A2, so that A0 and A1 are normal values, A2 and A3 and not defined if normal
+	 * or not, and A4 and A5 are displayed as abnormal values.
+	 */
+	double MAX_NORMAL_LIMIT = 0.1;
+	/**
+	 * The minimum abnormality value for abnormal answers. All abnormalities above (or equal) this
+	 * limit is considered to be somewhat abnormal when displaying an answer to the user. The value
+	 * is between A3 and A4, so that A0 and A1 are normal values, A2 and A3 and not defined if
+	 * normal or not, and A4 and A5 are displayed as abnormal values.
+	 */
+	double MIN_ABNORMAL_LIMIT = 0.4;
+
+	/**
 	 * Returns the value of the abnormality for the specified answer value, or the default
 	 * abnormality of {@link #A5} (1.0) if the abnormality is not explicitly defined in this
 	 * Abnormality. To check is a abnormality is explicitly defined, use {@link #isSet(Value)}.
