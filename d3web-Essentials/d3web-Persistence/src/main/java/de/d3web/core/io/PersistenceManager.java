@@ -19,17 +19,21 @@
  */
 package de.d3web.core.io;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +55,7 @@ import com.denkbares.plugin.PluginManager;
 import com.denkbares.progress.CombinedProgressListener;
 import com.denkbares.progress.DummyProgressListener;
 import com.denkbares.progress.ProgressListener;
+import com.denkbares.strings.Strings;
 import com.denkbares.utils.Log;
 import com.denkbares.utils.Streams;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -73,7 +78,8 @@ import de.d3web.plugin.PluginEntry;
  */
 public final class PersistenceManager {
 
-	public static final String MULTIMEDIA_PATH_PREFIX = "multimedia/";
+	private static final String MULTIMEDIA = "multimedia";
+	public static final String MULTIMEDIA_PATH_PREFIX = MULTIMEDIA + "/";
 	public static final String EXTENDS_PATH_PREFIX = "exports/";
 
 	public static final String EXTENDED_PLUGIN_ID = "KnowledgePersistenceExtensionPoints";
@@ -267,100 +273,113 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Loads a knowledge base from a specified ZIP file and notifies the
+	 * Loads a knowledge base from a specified ZIP file or a expanded directory and notifies the
 	 * specified listener about the working progress.
 	 *
-	 * @param file the specified ZIP {@link File} (usually a jar file)
+	 * @param file the specified ZIP {@link File} (usually a jar file), or a directory with content
 	 * @param listener the specified listener which should be notified about the load progress
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP
 	 * file
 	 * @throws IOException if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
-		try (ZipFile zipfile = new ZipFile(file)) {
-			KnowledgeBase kb = new KnowledgeBase();
-			List<ZipEntry> files = new LinkedList<>();
-			// pre-calculate the size of the files to be parsed
-			Enumeration<? extends ZipEntry> entries = zipfile.entries();
-			long size = 0;
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = entries.nextElement();
-				// ignore directories
-				if (entry.isDirectory()) continue;
-				// ignore unrequired files necessary for previous versions
-				// of persistence
-				if (notNeeded(entry)) continue;
-				// tread multimedia as size 1,
-				// because the are only registered and unpacked on demand
-				size += isMultimediaEntry(entry) ? 1 : entry.getSize();
-				files.add(entry);
-			}
-			CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
-			boolean parsedAnyFile = false;
-			for (Extension plugin : readerPlugins) {
-				for (ZipEntry entry : new LinkedList<>(files)) {
-					String name = entry.getName();
-					// checks if this entry can be parsed with this plugin
-					boolean canparse = false;
-					String filepattern = plugin.getParameter("filepattern");
-					String filename = plugin.getParameter("filename");
-					if (filepattern != null) {
-						if (name.matches(filepattern)) {
-							canparse = true;
-						}
-					}
-					if (filename != null) {
-						if (name.equals(filename)) {
-							canparse = true;
-						}
-					}
-					if (canparse) {
-						// if we can parse this entry
-						// we prepare the progress for the next step
-						cpl.next(entry.getSize());
-						cpl.updateProgress(0, "reading entry " + name);
-						// initialize the reader
-						KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
-						reader.read(this, kb, createInputStream(zipfile, entry), cpl);
-						// and mark this as done
-						files.remove(entry);
-						parsedAnyFile = true;
-					}
-				}
-			}
-
-			// if we not have parsed at least one file
-			// we assume that this is no valid knowledge base
-			if (!parsedAnyFile) {
-				throw new IOException("The parsed file appears not to be a valid knowledge base");
-			}
-
-			// finally scan all files in multimedia folder
-			// and add them to the knowledge base as resources
-			for (ZipEntry entry : files) {
-				String name = entry.getName();
-				if (isMultimediaEntry(entry)) {
-					// prepare progress for the next step,
-					// being "1" for multimedia
-					cpl.next(1);
-					cpl.updateProgress(0, "reading file " + name);
-					kb.addResouce(createResource(file, entry));
-					// we prepare the progress for the next step
-				}
-				else {
-					cpl.next(entry.getSize());
-					cpl.updateProgress(0, "reading file " + name);
-					if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
-						Log.warning("No parser for entry " + name +
-								" available. This file will be lost" +
-								" when saving the KnowledgeBase.");
-					}
-				}
-			}
-			// knowledge base loaded successfully
-			listener.updateProgress(1, "knowledge base loaded successfully");
-			return kb;
+		if (file.isDirectory()) {
+			return load(file.toPath(), listener);
 		}
+		else {
+			try (ZipFile zipfile = new ZipFile(file)) {
+				return loadZipFile(file, zipfile, listener);
+			}
+		}
+	}
+
+	/**
+	 * Loads a knowledge base from a specified ZIP file and notifies the
+	 * specified listener about the working progress.
+	 */
+	private KnowledgeBase loadZipFile(File file, ZipFile zipfile, ProgressListener listener) throws IOException {
+		KnowledgeBase kb = new KnowledgeBase();
+		List<ZipEntry> files = new LinkedList<>();
+		// pre-calculate the size of the files to be parsed
+		Enumeration<? extends ZipEntry> entries = zipfile.entries();
+		long size = 0;
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
+			// ignore directories
+			if (entry.isDirectory()) continue;
+			// ignore unrequired files necessary for previous versions
+			// of persistence
+			if (notNeeded(entry)) continue;
+			// tread multimedia as size 1,
+			// because the are only registered and unpacked on demand
+			size += isMultimediaEntry(entry) ? 1 : entry.getSize();
+			files.add(entry);
+		}
+		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
+		boolean parsedAnyFile = false;
+		for (Extension plugin : readerPlugins) {
+			for (ZipEntry entry : new LinkedList<>(files)) {
+				String name = entry.getName();
+				// checks if this entry can be parsed with this plugin
+				boolean canparse = false;
+				String filepattern = plugin.getParameter("filepattern");
+				String filename = plugin.getParameter("filename");
+				if (filepattern != null) {
+					if (name.matches(filepattern)) {
+						canparse = true;
+					}
+				}
+				if (filename != null) {
+					if (name.equals(filename)) {
+						canparse = true;
+					}
+				}
+				if (canparse) {
+					// if we can parse this entry
+					// we prepare the progress for the next step
+					cpl.next(entry.getSize());
+					cpl.updateProgress(0, "reading entry " + name);
+					// initialize the reader
+					KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
+					reader.read(this, kb, createInputStream(zipfile, entry), cpl);
+					// and mark this as done
+					files.remove(entry);
+					parsedAnyFile = true;
+				}
+			}
+		}
+
+		// if we not have parsed at least one file
+		// we assume that this is no valid knowledge base
+		if (!parsedAnyFile) {
+			throw new IOException("The parsed file appears not to be a valid knowledge base");
+		}
+
+		// finally scan all files in multimedia folder
+		// and add them to the knowledge base as resources
+		for (ZipEntry entry : files) {
+			String name = entry.getName();
+			if (isMultimediaEntry(entry)) {
+				// prepare progress for the next step,
+				// being "1" for multimedia
+				cpl.next(1);
+				cpl.updateProgress(0, "reading file " + name);
+				kb.addResouce(createResource(file, entry));
+				// we prepare the progress for the next step
+			}
+			else {
+				cpl.next(entry.getSize());
+				cpl.updateProgress(0, "reading file " + name);
+				if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
+					Log.warning("No parser for entry " + name +
+							" available. This file will be lost" +
+							" when saving the KnowledgeBase.");
+				}
+			}
+		}
+		// knowledge base loaded successfully
+		listener.updateProgress(1, "knowledge base loaded successfully");
+		return kb;
 	}
 
 	/**
@@ -381,6 +400,22 @@ public final class PersistenceManager {
 	}
 
 	/**
+	 * Creates an input stream for a specified path to handle decryption.
+	 * If there is no request for decryption, the original input stream for
+	 * that path is returned.
+	 *
+	 * @param path file to read from
+	 * @return the decrypted stream
+	 * @throws IOException if there is any io issue
+	 * @created 27.11.2013
+	 */
+	private InputStream createInputStream(Path path) throws IOException {
+		InputStream stream = new BufferedInputStream(Files.newInputStream(path));
+		if (cipher == null) return stream;
+		return new CipherInputStream(stream, cipher);
+	}
+
+	/**
 	 * Creates a decrypted resource for the specified zip entry. If there is no
 	 * request for decryption, the original zip input stream for that entry is
 	 * returned.
@@ -391,16 +426,43 @@ public final class PersistenceManager {
 	 * @throws IOException if there is any io issue
 	 * @created 27.11.2013
 	 */
-	private JarBinaryResource createResource(File file, ZipEntry entry) throws IOException {
+	private Resource createResource(File file, ZipEntry entry) throws IOException {
 		return new JarBinaryResource(entry, file, cipher);
 	}
 
+	/**
+	 * Creates a decrypted resource for the specified path. If there is no
+	 * request for decryption, the original zip input stream for that entry is
+	 * returned.
+	 *
+	 * @param path the file to be read
+	 * @return the decrypted resource
+	 * @throws IOException if there is any io issue
+	 * @created 27.11.2013
+	 */
+	private Resource createResource(Path path, String relativePath) throws IOException {
+		return new PathBinaryResource(path, relativePath, cipher);
+	}
+
 	private boolean isMultimediaEntry(ZipEntry entry) {
-		return entry.getName().toLowerCase().startsWith(MULTIMEDIA_PATH_PREFIX);
+		return Strings.startsWithIgnoreCase(entry.getName(), MULTIMEDIA_PATH_PREFIX);
 	}
 
 	/**
-	 * Returns the the specified entry is an unrequired file from a previous
+	 * Returns if the specified file path is an multimedia file. The relativePath must be relative
+	 * to the knowledge base root folder/zip, without leading "/".
+	 *
+	 * @param relativePath the path to be checked
+	 * @return if the file if a multimedia file
+	 * @created 18.06.2011
+	 */
+	private boolean isMultimedia(Path relativePath) {
+		return relativePath.getNameCount() > 0
+				&& relativePath.getName(0).toString().equalsIgnoreCase(MULTIMEDIA_PATH_PREFIX);
+	}
+
+	/**
+	 * Returns if the specified entry is an unrequired file from a previous
 	 * version of the persistence, that cannot be read any longer.
 	 *
 	 * @param entry the entry to be checked
@@ -408,10 +470,22 @@ public final class PersistenceManager {
 	 * @created 18.06.2011
 	 */
 	private boolean notNeeded(ZipEntry entry) {
-		String name = entry.getName();
-		return name.equalsIgnoreCase("KB-INF/Index.xml")
-				|| name.equalsIgnoreCase("CRS-INF/Index.xml")
-				|| name.equals("META-INF/MANIFEST.MF");
+		return notNeeded(entry.getName());
+	}
+
+	/**
+	 * Returns if the specified file path is an unrequired file from a previous version of the
+	 * persistence, that cannot be read any longer. The filePath must be relative to the knowledge
+	 * base root folder/zip, without leading "/".
+	 *
+	 * @param filePath the path to be checked
+	 * @return if the file should not be parsed
+	 * @created 18.06.2011
+	 */
+	private boolean notNeeded(String filePath) {
+		return filePath.equalsIgnoreCase("KB-INF/Index.xml")
+				|| filePath.equalsIgnoreCase("CRS-INF/Index.xml")
+				|| filePath.equals("META-INF/MANIFEST.MF");
 	}
 
 	/**
@@ -431,6 +505,108 @@ public final class PersistenceManager {
 			Manifest manifest = jarfile.getManifest();
 			return new KnowledgeBaseInfo(file, manifest);
 		}
+	}
+
+	/**
+	 * Loads a knowledge base from a specified path (folder).
+	 *
+	 * @param folder the specified path to load the knowledge base from
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified folder
+	 * @throws IOException if an error occurs during opening and reading the file
+	 */
+	public KnowledgeBase load(Path folder) throws IOException {
+		return load(folder, new DummyProgressListener());
+	}
+
+	/**
+	 * Loads a knowledge base from a specified path (folder) and notifies the
+	 * specified listener about the working progress.
+	 *
+	 * @param folder the specified path to load the knowledge base from
+	 * @param listener the specified listener which should be notified about the load progress
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified folder
+	 * @throws IOException if an error occurs during opening and reading the file
+	 */
+	public KnowledgeBase load(Path folder, ProgressListener listener) throws IOException {
+		if (!Files.isDirectory(folder)) {
+			throw new IOException("The knowledge base root is not a folder");
+		}
+
+		// pre-calculate the list of the contained, relevant files
+		List<Path> files = Files.walk(folder)
+				// ignore directories
+				.filter(Files::isRegularFile)
+				// ignore not-required files necessary for previous versions of persistence
+				.filter(p -> !notNeeded(folder.relativize(p).toString()))
+				.collect(Collectors.toList());
+
+		// pre-calculate the size of the files to be parsed (no Stream-implementation, due to IOExceptions)
+		long size = 0;
+		for (Path file : files) {
+			size += isMultimedia(folder.relativize(file)) ? 1 : Files.size(file);
+		}
+
+		KnowledgeBase kb = new KnowledgeBase();
+		CombinedProgressListener cpl = new CombinedProgressListener(size, listener);
+		boolean parsedAnyFile = false;
+		for (Extension plugin : readerPlugins) {
+			Iterator<Path> iterator = files.iterator();
+			while (iterator.hasNext()) {
+				Path file = iterator.next();
+				String name = folder.relativize(file).toString();
+
+				// checks if this entry can be parsed with this plugin
+				String filePattern = plugin.getParameter("filepattern");
+				String fileName = plugin.getParameter("filename");
+				boolean canParse = ((filePattern != null) && name.matches(filePattern))
+						|| ((fileName != null) && Strings.equalsIgnoreCase(name, fileName));
+				if (canParse) {
+					// if we can parse this entry
+					// we prepare the progress for the next step
+					cpl.next(Files.size(file));
+					cpl.updateProgress(0, "reading file " + name);
+					// initialize the reader
+					KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
+					reader.read(this, kb, createInputStream(file), cpl);
+					// and mark this as done
+					iterator.remove();
+					parsedAnyFile = true;
+				}
+			}
+		}
+
+		// if we not have parsed at least one file
+		// we assume that this is no valid knowledge base
+		if (!parsedAnyFile) {
+			throw new IOException("The parsed file appears not to be a valid knowledge base");
+		}
+
+		// finally scan all files in multimedia folder
+		// and add them to the knowledge base as resources
+		for (Path file : files) {
+			Path relativePath = folder.relativize(file);
+			String name = relativePath.toString();
+			if (isMultimedia(relativePath)) {
+				// prepare progress for the next step,
+				// being "1" for multimedia
+				cpl.next(1);
+				cpl.updateProgress(0, "reading file " + name);
+				kb.addResouce(createResource(file, name));
+			}
+			else {
+				// we prepare the progress for the next step
+				cpl.next(Files.size(file));
+				cpl.updateProgress(0, "reading file " + name);
+				if (!Strings.startsWithIgnoreCase(name, EXTENDS_PATH_PREFIX)) {
+					Log.warning("No parser for entry " + name + " available. " +
+							"The file will be lost when saving the KnowledgeBase.");
+				}
+			}
+		}
+
+		// knowledge base loaded successfully
+		listener.updateProgress(1, "Knowledge base loaded successfully");
+		return kb;
 	}
 
 	/**
