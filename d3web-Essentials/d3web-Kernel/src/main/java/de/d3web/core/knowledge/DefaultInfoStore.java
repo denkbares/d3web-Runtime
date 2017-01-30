@@ -19,9 +19,9 @@
 
 package de.d3web.core.knowledge;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,7 +39,7 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public Collection<Triple<Property<?>, Locale, Object>> entries() {
-		Collection<Triple<Property<?>, Locale, Object>> result = new LinkedList<>();
+		Collection<Triple<Property<?>, Locale, Object>> result = new ArrayList<>(this.entries.size());
 		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
 			result.add(new Triple<>(
 					entry.getKey().getA(),
@@ -150,8 +150,8 @@ public class DefaultInfoStore implements InfoStore {
 		}
 		if (!key.getStoredClass().isInstance(value)) {
 			throw new ClassCastException("value '" + value +
-							"' is not compatible with defined storage class "
-							+ key.getStoredClass());
+					"' is not compatible with defined storage class "
+					+ key.getStoredClass());
 		}
 		entries.put(createEntryKey(key, language), value);
 	}
@@ -160,5 +160,4 @@ public class DefaultInfoStore implements InfoStore {
 	public boolean isEmpty() {
 		return entries.isEmpty();
 	}
-
 }

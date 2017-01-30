@@ -67,6 +67,10 @@ public class Measurement {
 	private final Condition startCondition;
 	private final Condition stopCondition;
 
+	public Measurement(String identifier, Condition startCondition, Condition stopCondition) {
+		this(identifier, null, startCondition, stopCondition);
+	}
+
 	public Measurement(String identifier, Map<String, String> mapping, Condition startCondition, Condition stopCondition) {
 		this.identifier = identifier;
 		this.startCondition = startCondition;
