@@ -47,7 +47,6 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.TextProtocolEntry;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.Path;
@@ -272,16 +271,16 @@ public class CostBenefitCaseObject implements SessionObject {
 	 * @param session the session to work on
 	 */
 	private void retractQuestions(TerminologyObject container, Session session) {
+		Blackboard blackboard = session.getBlackboard();
 		for (TerminologyObject nob : container.getChildren()) {
 			if (nob instanceof Question) {
+				// restrict to retractable questions
 				Question question = (Question) nob;
-				if (isRetractableQuestion(question)) {
-					Blackboard blackboard = session.getBlackboard();
-					if (UndefinedValue.isNotUndefinedValue(blackboard.getValue(question))) {
-						Collection<PSMethod> contributingPSMethods = blackboard.getContributingPSMethods(question);
-						for (PSMethod contributing : contributingPSMethods) {
-							blackboard.removeValueFact(blackboard.getValueFact(question, contributing));
-						}
+				if (!isRetractableQuestion(question)) continue;
+				for (PSMethod contributing : blackboard.getContributingPSMethods(question)) {
+					// and also remove only facts from source solvers, not derived values
+					if (contributing.hasType(PSMethod.Type.source)) {
+						blackboard.removeValueFact(blackboard.getValueFact(question, contributing));
 					}
 				}
 			}
@@ -306,7 +305,7 @@ public class CostBenefitCaseObject implements SessionObject {
 				return true;
 			}
 		}
-		return BasicProperties.isAlwaysVisible(question);
+		return BasicProperties.isAlwaysVisible(question) && !BasicProperties.isAbstract(question);
 	}
 
 	/**
