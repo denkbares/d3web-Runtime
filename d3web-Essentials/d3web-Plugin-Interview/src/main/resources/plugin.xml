@@ -80,7 +80,7 @@
 		<parameter id="description"
 			value="Defines the measurement zu measure a question or a number of questions." />
 		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
+		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="de.d3web.interview.measure.Measurement" />
 	</extension>
