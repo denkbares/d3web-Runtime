@@ -37,7 +37,7 @@ import de.d3web.core.utilities.NamedObjectComparator;
  * <b>Note:<br>
  * This class is for internal purpose only. Until you do not provide an own
  * blackboard implementation, do not use this class directly! </b>
- * 
+ *
  * @author volker_belli
  */
 public class DefaultFactStorage implements FactStorage {
@@ -47,26 +47,21 @@ public class DefaultFactStorage implements FactStorage {
 	/**
 	 * Returns the {@link FactAggregator} for a specified terminology object. If
 	 * no such aggregator exists yet,a new one is created (lazy).
-	 * 
-	 * @created 01.05.2011
+	 *
 	 * @param termObject the object to access the aggregator for
 	 * @return the aggregator for the object
+	 * @created 01.05.2011
 	 */
 	private FactAggregator getAggregator(TerminologyObject termObject) {
-		FactAggregator aggregator = this.mediators.get(termObject);
-		if (aggregator == null) {
-			aggregator = new FactAggregator();
-			this.mediators.put(termObject, aggregator);
-		}
-		return aggregator;
+		return this.mediators.computeIfAbsent(termObject, k -> new FactAggregator());
 	}
 
 	/**
 	 * Returns a newly created deep copy of this object for building a fully
 	 * working copy of the current session.
-	 * 
-	 * @created 04.06.2012
+	 *
 	 * @return a deep copy of this object
+	 * @created 04.06.2012
 	 */
 	@Override
 	public DefaultFactStorage copy() {
@@ -116,19 +111,13 @@ public class DefaultFactStorage implements FactStorage {
 	@Override
 	public boolean hasFact(TerminologyObject termObject) {
 		FactAggregator aggregator = this.mediators.get(termObject);
-		if (aggregator != null) {
-			return !aggregator.isEmpty();
-		}
-		return false;
+		return aggregator != null && !aggregator.isEmpty();
 	}
 
 	@Override
 	public boolean hasFact(TerminologyObject termObject, PSMethod method) {
 		FactAggregator aggregator = this.mediators.get(termObject);
-		if (aggregator != null) {
-			return aggregator.hasFacts(method);
-		}
-		return false;
+		return aggregator != null && aggregator.hasFacts(method);
 	}
 
 	@Override
@@ -196,16 +185,16 @@ public class DefaultFactStorage implements FactStorage {
 	 * </ul>
 	 * <p>
 	 * This method may be helpful for debugging and testing purposes.
-	 * 
-	 * @created 03.09.2011
+	 *
 	 * @return the dumped information
+	 * @created 03.09.2011
 	 */
 	public String dump() {
 		List<TerminologyObject> objects = new ArrayList<>(mediators.keySet());
-		Collections.sort(objects, new NamedObjectComparator());
+		objects.sort(new NamedObjectComparator());
 		StringBuilder result = new StringBuilder();
 		for (TerminologyObject object : objects) {
-			FactAggregator aggregator = getAggregator(object);
+			FactAggregator aggregator = mediators.get(object);
 
 			// print object and merged fact
 			result.append(object).append("\t= ");
@@ -220,6 +209,7 @@ public class DefaultFactStorage implements FactStorage {
 				for (PSMethod psMethod : psMethods) {
 					Fact subFact = aggregator.getMergedFact(psMethod);
 					String subName = psMethod.getClass().getSimpleName();
+					assert subFact != null;
 					result.append(subName).append("=").append(subFact.getValue());
 					result.append(", ");
 				}
