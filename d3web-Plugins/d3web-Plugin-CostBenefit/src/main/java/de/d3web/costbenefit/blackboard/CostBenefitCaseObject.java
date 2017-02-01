@@ -40,7 +40,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
-import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
@@ -290,8 +289,8 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	/**
 	 * Returns true if the specified question should be retracted by the cots/benefit problem solver
-	 * to prepare the qContainer to be re-asked. Usually all "ok"-questions and always visible
-	 * questions will be retracted.
+	 * to prepare the qContainer to be re-asked. Usually all "ok"-questions questions will be
+	 * retracted.
 	 *
 	 * @param question the question to be checked for retracting
 	 * @return true if the question should be retracted
@@ -305,7 +304,7 @@ public class CostBenefitCaseObject implements SessionObject {
 				return true;
 			}
 		}
-		return BasicProperties.isAlwaysVisible(question) && !BasicProperties.isAbstract(question);
+		return false;
 	}
 
 	/**
