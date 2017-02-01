@@ -75,7 +75,7 @@ public interface Session extends SessionHeader {
 	 * The interview controls the dialog behavior of the session, i.e. the
 	 * indication of {@link Question} and {@link QContainer} instances.
 	 *
-	 * @return the acutal Interview or null if no interview is present
+	 * @return the actual Interview or null if no interview is present
 	 * @deprecated use Session.getSessionObject(PSMethodInterview)
 	 */
 	@Deprecated
@@ -83,7 +83,7 @@ public interface Session extends SessionHeader {
 
 	/**
 	 * The {@link Blackboard} manages all entered and all derived facts of this
-	 * {@link Session}.
+	 * Session.
 	 *
 	 * @return the blackboard instance used in this session
 	 */
