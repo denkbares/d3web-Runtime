@@ -20,9 +20,11 @@
 package de.d3web.core.knowledge;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.denkbares.strings.Locales;
 import com.denkbares.utils.Triple;
 import de.d3web.core.knowledge.terminology.info.Property;
 
@@ -55,6 +57,27 @@ public interface InfoStore {
 	 * @see Property#getDefaultValue()
 	 */
 	<StoredType> StoredType getValue(Property<StoredType> key, Locale language);
+
+	/**
+	 * Returns the value stored for the specified key with the first of the specified languages,
+	 * where the property is available for. The best matching language is detected as described in
+	 * {@link Locales#findBestLocale}.
+	 * <p>
+	 * If there is no such property at all, the properties default value is returned. If there is no
+	 * such default value defined, the declared default value of this property is returned (or null
+	 * if there is no default value defined).
+	 *
+	 * @param key the property to be accessed
+	 * @param preferenceList the languages to access the property, where the first is the most
+	 * preferred language
+	 * @return the value stored for that key and best matching language
+	 * @see Property#getDefaultValue()
+	 */
+	default <StoredType> StoredType getValue(Property<StoredType> key, List<Locale> preferenceList) {
+		Map<Locale, StoredType> entries = entries(key);
+		Locale locale = Locales.findBestLocale(preferenceList, entries.keySet());
+		return getValue(key, locale);
+	}
 
 	/**
 	 * Removes the stored item for the specified key and the default language {@link #NO_LANGUAGE}.
@@ -98,9 +121,9 @@ public interface InfoStore {
 	 *
 	 * @param key the property to store the value for
 	 * @param value the value to store
-	 * @created 28.10.2010
 	 * @throws ClassCastException if the value is not compatible with the property
 	 * @throws NullPointerException if the key or value is null
+	 * @created 28.10.2010
 	 */
 	<T> void addValue(Property<? super T> key, T value) throws ClassCastException;
 
@@ -114,9 +137,9 @@ public interface InfoStore {
 	 * @param value the value to store
 	 * @throws IllegalArgumentException if a language other than NO_LANGUAGE is specified for a non
 	 * multilingual property
-	 * @created 28.10.2010
 	 * @throws ClassCastException if the value is not compatible with the property
 	 * @throws NullPointerException if the key or value is null
+	 * @created 28.10.2010
 	 */
 	void addValue(Property<?> key, Locale language, Object value) throws ClassCastException;
 
@@ -145,5 +168,4 @@ public interface InfoStore {
 	 * @created 11.10.2010
 	 */
 	boolean isEmpty();
-
 }

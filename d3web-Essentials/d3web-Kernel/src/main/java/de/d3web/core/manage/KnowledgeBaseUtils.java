@@ -504,8 +504,9 @@ public final class KnowledgeBaseUtils {
 	 * within the knowledge base.
 	 * <p/>
 	 * Implementation note: <br> Because of searching every property within the whole knowledge base
-	 * it is a good idea to store and reused the result of this operation instead of calling this
-	 * method multiple times on the same knowledge base.
+	 * for all supported languages is a time consuming operation, it is a good idea to store and
+	 * reused the result of this operation instead of calling this method multiple times on the same
+	 * knowledge base.
 	 *
 	 * @param kb the knowledge base to be examined
 	 * @return the available locales
