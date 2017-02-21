@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.Plugin;
@@ -54,7 +55,7 @@ import de.d3web.plugin.PluginEntry;
  * The {@link DefaultSession} is the default implementation of {@link Session}.
  * Here, the {@link Blackboard}, and {@link PropagationManager} are managed,
  * that together represent the behavior of a {@link Session}.
- * 
+ *
  * @author joba
  * @see SessionObject
  */
@@ -81,18 +82,19 @@ public class DefaultSession implements Session {
 		this(id, knowledgebase, creationDate, true);
 	}
 
-	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean psm) {
+	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean addPSMethods) {
+		// for performance reasons, we can skip the init of the ps methods if no one should be added
+		this(id, knowledgebase, creationDate, addPSMethods, psm -> addPSMethods);
+	}
+
+	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, Predicate<PSMethod> psMethodFilter) {
+		this(id, knowledgebase, creationDate, true, psMethodFilter);
+	}
+
+	private DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean initMethods, Predicate<PSMethod> psMethodFilter) {
 		this.id = id;
-		Date checkedDate;
-		// check that we have a valid date
-		if (creationDate == null) {
-			checkedDate = new Date();
-		}
-		else {
-			checkedDate = creationDate;
-		}
-		this.created = checkedDate;
-		this.edited = checkedDate;
+		this.created = (creationDate == null) ? new Date() : creationDate;
+		this.edited = created;
 		this.kb = knowledgebase;
 
 		// create blackboard and register as listener to get fact changed
@@ -106,24 +108,34 @@ public class DefaultSession implements Session {
 
 		// Interview should be defined very late, since it uses blackboard
 		this.protocol = new DefaultProtocol();
-		if (psm) {
-			// register some common problem solving methods
-			// first add the methods
-			for (PSMethod method : SessionFactory.getDefaultPSMethods()) {
+
+		// register some common problem solving methods
+		// first add the methods
+		for (PSMethod method : SessionFactory.getDefaultPSMethods()) {
+			if (psMethodFilter.test(method)) {
 				addUsedPSMethod(method);
 			}
-			addPlugedPSMethods(knowledgebase);
 		}
-
+		if (initMethods) initPluggedPSMethods(knowledgebase);
+		addPlugedPSMethods(knowledgebase, psMethodFilter);
 	}
 
 	/**
 	 * Adds the PSMethods from Plugins
-	 * 
-	 * @created 24.09.2010
+	 *
 	 * @param knowledgebase {@link KnowledgeBase}
+	 * @created 24.09.2010
 	 */
-	private void addPlugedPSMethods(KnowledgeBase knowledgebase) {
+	private void addPlugedPSMethods(KnowledgeBase knowledgebase, Predicate<PSMethod> psMethodFilter) {
+		// adding preconfigured psmethods from the kb to the case
+		for (PSConfig psConfig : knowledgebase.getPsConfigs()) {
+			if (psMethodFilter.test(psConfig.getPsMethod())) {
+				checkStateAndInsertPSM(knowledgebase, psConfig);
+			}
+		}
+	}
+
+	private void initPluggedPSMethods(KnowledgeBase knowledgebase) {
 		// get PluginConfiguration
 		PluginConfig pc = PluginConfig.getPluginConfig(knowledgebase);
 		// add plugged PS with default config, only if none instance of this
@@ -160,13 +172,13 @@ public class DefaultSession implements Session {
 					e.getID(), e.getPluginID(), e.getPriority());
 			knowledgebase.addPSConfig(psConfig);
 		}
-		// adding preconfigured psmethods from the kb to the case
-		for (PSConfig psConfig : knowledgebase.getPsConfigs()) {
-			checkStateAndInsertPSM(knowledgebase, psConfig);
-		}
 	}
 
-	void initPSMethods() {
+	/**
+	 * After creating the session and configuring the PSMethods, it is required to call this method
+	 * to initialize the particular PSMethods for this session.
+	 */
+	protected void initPSMethods() {
 		// after adding the ps methods, we init inside a propagation,
 		// because it may also
 		// add facts to the blackboard that require the start date of the
@@ -241,7 +253,6 @@ public class DefaultSession implements Session {
 
 	/**
 	 * Adds a new PSMethod to the used PSMethods of this case and initializes it.
-	 * 
 	 */
 	private void addUsedPSMethod(PSMethod psmethod) {
 		touch();
@@ -252,8 +263,8 @@ public class DefaultSession implements Session {
 	}
 
 	/**
-	 * @return the unique and dynamic user case object for the specified
-	 *         (static) knowledge base object.
+	 * @return the unique and dynamic user case object for the specified (static) knowledge base
+	 * object.
 	 */
 	@Override
 	public <T extends SessionObject> T getSessionObject(SessionObjectSource<T> objectSource) {
@@ -304,7 +315,6 @@ public class DefaultSession implements Session {
 	@Override
 	public void touch() {
 		edited = new Date();
-
 	}
 
 	@Override
@@ -338,7 +348,7 @@ public class DefaultSession implements Session {
 
 	/**
 	 * Is used to sort PSMethods by priority
-	 * 
+	 *
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 01.02.2011
 	 */
@@ -363,7 +373,5 @@ public class DefaultSession implements Session {
 				return o1.getClass().toString().compareTo(o2.getClass().toString());
 			}
 		}
-
 	}
-
 }
