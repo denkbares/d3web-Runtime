@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
@@ -79,11 +78,10 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			// do not handle strategic changes
 			if (change.isStrategic() || !change.hasChanged()) continue;
 			TerminologyObject nob = change.getObject();
-			KnowledgeSlice ks = nob.getKnowledgeStore().getKnowledge(
+			XCLContributedModelSet xclSet = nob.getKnowledgeStore().getKnowledge(
 					XCLContributedModelSet.KNOWLEDGE_KIND);
-			if (ks != null) {
-				XCLContributedModelSet ms = (XCLContributedModelSet) ks;
-				for (XCLModel model : ms.getModels()) {
+			if (xclSet != null) {
+				for (XCLModel model : xclSet.getModels()) {
 					List<PropagationEntry> entries = modelsToUpdate.get(model);
 					if (entries == null) {
 						entries = new LinkedList<>();

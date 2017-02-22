@@ -254,15 +254,23 @@ public class StrategicSupportXCL implements StrategicSupport {
 	@Override
 	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
 		List<Solution> solutions = session.getBlackboard().getSolutions(State.ESTABLISHED);
-		if (!solutions.isEmpty()) {
-			return new HashSet<>(solutions);
+		if (solutions.isEmpty()) {
+			solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
 		}
-		solutions = session.getBlackboard().getSolutions(State.SUGGESTED);
-		if (!solutions.isEmpty()) {
-			return new HashSet<>(solutions);
+		if (solutions.isEmpty()) {
+			solutions = session.getBlackboard().getSolutions(State.UNCLEAR);
 		}
-		solutions = session.getBlackboard().getSolutions(State.UNCLEAR);
-		return new HashSet<>(solutions);
+		// make a hashset, because we require it for fast access
+		// during information gain calculation later on
+		// and remove all non-xcl solutions from the set meanwhile
+		HashSet<Solution> result = new HashSet<>();
+		for (Solution solution : solutions) {
+			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+			if (model != null) {
+				result.add(solution);
+			}
+		}
+		return result;
 	}
 
 	@Override
