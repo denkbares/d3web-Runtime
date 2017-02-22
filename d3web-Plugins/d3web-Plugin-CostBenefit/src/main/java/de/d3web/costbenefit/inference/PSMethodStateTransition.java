@@ -123,11 +123,10 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		/**
 		 * Default method to create a {@link StateTransitionFact}, it should be
 		 * used whenever possible
-		 * 
+		 *
 		 * @param cvs {@link ConditionalValueSetter} that has fired
 		 * @param session actual {@link Session}
-		 * @param terminologyObject {@link TerminologyObject} which value should
-		 *        be set
+		 * @param terminologyObject {@link TerminologyObject} which value should be set
 		 * @param value the Value that should be set
 		 */
 		public StateTransitionFact(ConditionalValueSetter cvs, Session session, TerminologyObject terminologyObject, Value value) {
@@ -140,10 +139,9 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		 * Creates a StateTransitionFact without a ConditionalValueSetter. This
 		 * method must not be used for values of final questions. Generally the
 		 * method using the {@link ConditionalValueSetter} should be preferred
-		 * 
+		 *
 		 * @param session actual {@link Session}
-		 * @param terminologyObject {@link TerminologyObject} which value should
-		 *        be set
+		 * @param terminologyObject {@link TerminologyObject} which value should be set
 		 * @param value the Value that should be set
 		 */
 		public StateTransitionFact(Session session, TerminologyObject terminologyObject, Value value) {
@@ -157,7 +155,6 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 			}
 			return psmInstance;
 		}
-
 	}
 
 	@Override
@@ -169,8 +166,9 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				CostBenefitUtil.addParentContainers(answeredQuestionnaires, object);
 			}
 		}
-		CostBenefitCaseObject cbCaseObject = session.getSessionObject(
-				session.getPSMethodInstance(PSMethodCostBenefit.class));
+		PSMethodCostBenefit costBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		if (costBenefit == null) return;
+		CostBenefitCaseObject cbCaseObject = session.getSessionObject(costBenefit);
 		QContainer qcontainer = cbCaseObject.getCurrentQContainer();
 		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
 		for (QContainer qcon : answeredQuestionnaires) {
@@ -212,7 +210,6 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 						sessionObject.qContainer = qcon;
 					}
 				}
-
 			}
 		}
 	}
@@ -231,7 +228,6 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 		private List<Fact> facts = new LinkedList<>();
 		private QContainer qContainer = null;
-
 	}
 
 	@Override
@@ -247,8 +243,9 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		// slow...
 		if (!(derivedObject instanceof Question)) return Collections.emptySet();
 		Set<TerminologyObject> result = new HashSet<>();
-		Collection<StateTransition> transitions = derivedObject.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND);
+		Collection<StateTransition> transitions = derivedObject.getKnowledgeBase()
+				.getAllKnowledgeSlicesFor(
+						StateTransition.KNOWLEDGE_KIND);
 		for (StateTransition stateTransition : transitions) {
 			List<ValueTransition> postTransitions = stateTransition.getPostTransitions();
 			for (ValueTransition valueTransition : postTransitions) {
@@ -279,5 +276,4 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		}
 		return Collections.emptySet();
 	}
-
 }
