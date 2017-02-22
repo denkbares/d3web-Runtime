@@ -27,14 +27,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.denkbares.collections.ConcatenateIterable;
+import com.denkbares.collections.MultiMap;
+import com.denkbares.collections.N2MMap;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
+import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -210,6 +218,16 @@ public class DiaFluxCaseObject implements SessionObject {
 	}
 
 	/**
+	 * Returns the solutions that have currently being suspected by the flux solver as the potential
+	 * solutions when the diagnosis has finished.
+	 *
+	 * @return the suspected solutions
+	 */
+	public Set<Solution> getSuspectedSolutions() {
+		return suspectedSolutions;
+	}
+
+	/**
 	 * Suspects all the potential solutions that might become established in the further interview
 	 * process. It also de-suspect all the solutions that are no longer in that list.
 	 */
@@ -242,10 +260,11 @@ public class DiaFluxCaseObject implements SessionObject {
 
 		// store the new set of solutions
 		suspectedSolutions = solutions;
+		potentialSuccessors = null;
 	}
 
 	private Set<Solution> findPotentialSolutions(Set<Node> startNodes) {
-		Set<Node> nodes = findPotentialNodes(startNodes);
+		Set<Node> nodes = findPotentialNodes(startNodes, null);
 		Set<Solution> solutions = new HashSet<>();
 		for (Node node : nodes) {
 			// if node rates a solution positively, add the solution,
@@ -264,7 +283,7 @@ public class DiaFluxCaseObject implements SessionObject {
 		return solutions;
 	}
 
-	private Set<Node> findPotentialNodes(Set<Node> openNodes) {
+	private Set<Node> findPotentialNodes(Set<Node> openNodes, MultiMap<Node, Node> traversal) {
 		Set<Node> closedNodes = new HashSet<>();
 		boolean preciseMode = (fluxSolver.getSuggestMode() == SuggestMode.precise);
 
@@ -279,6 +298,7 @@ public class DiaFluxCaseObject implements SessionObject {
 			// if the start node has not already been processed or is already active
 			if (node instanceof ComposedNode) {
 				StartNode calledNode = DiaFluxUtils.getCalledStartNode((ComposedNode) node);
+				if (traversal != null) traversal.put(node, calledNode);
 				if (!closedNodes.contains(calledNode) &&
 						!FluxSolver.isActiveNode(calledNode, session)) {
 					openNodes.add(calledNode);
@@ -288,11 +308,14 @@ public class DiaFluxCaseObject implements SessionObject {
 			if (node instanceof EndNode) {
 				for (FlowRun run : runs) {
 					for (Node startNode : new ConcatenateIterable<>(run.getStartNodes(), run.getActiveNodes())) {
-						if (closedNodes.contains(startNode)) continue;
-						if (!(startNode instanceof ComposedNode)) continue;
-						if (((ComposedNode) startNode).getCalledFlowName().equals(node.getFlow().getName())) {
-							openNodes.add(startNode);
-							continue loopOpenNodes;
+						if (startNode instanceof ComposedNode
+								&& ((ComposedNode) startNode).getCalledFlowName()
+								.equals(node.getFlow().getName())) {
+							if (traversal != null) traversal.put(node, startNode);
+							if (!closedNodes.contains(startNode)) {
+								openNodes.add(startNode);
+								continue loopOpenNodes;
+							}
 						}
 					}
 				}
@@ -312,6 +335,7 @@ public class DiaFluxCaseObject implements SessionObject {
 			for (Edge edge : node.getOutgoingEdges()) {
 				// skip next node if already processed
 				Node next = edge.getEndNode();
+				if (traversal != null) traversal.put(node, next);
 				if (closedNodes.contains(next)) continue;
 
 				// also skip all nodes that are already active
@@ -367,5 +391,121 @@ public class DiaFluxCaseObject implements SessionObject {
 			if (flowRun.isActivated(edge)) return true;
 		}
 		return false;
+	}
+
+	private N2MMap<Node, Node> potentialSuccessors = null;
+
+	/**
+	 * Returns a lazy created (cached) map of successors, leading from the undefined edges through
+	 * the potentially following graph.
+	 *
+	 * @return the
+	 */
+	private N2MMap<Node, Node> getPotentialSuccessors() {
+		if (potentialSuccessors == null) {
+			// we create all the potential nodes
+			Set<Node> startNodes = new HashSet<>();
+			for (Edge edge : undefinedEdges) {
+				startNodes.add(edge.getEndNode());
+			}
+			potentialSuccessors = new N2MMap<>();
+			Set<Node> nodes = findPotentialNodes(startNodes, potentialSuccessors);
+		}
+		return potentialSuccessors;
+	}
+
+	public Collection<Question> getDiscriminatingQuestions(Collection<Solution> solutions) {
+		if (Collections.disjoint(suspectedSolutions, solutions)) {
+			return Collections.emptySet();
+		}
+
+		// from the solutions, go backwards through the successors, collecting all nodes
+		Set<Node> targetNodes = solutions.stream()
+				.filter(suspectedSolutions::contains)
+				.flatMap(solution -> solution.getKnowledgeStore()
+						.getKnowledge(FluxSolver.DERIVING_NODES).getNodes().stream())
+				.collect(Collectors.toSet());
+
+		// select the questions out of the nodes' incoming edges
+		return findPotentialEdgesToNodes(targetNodes)
+				// get the conditions and their terminal objects
+				.map(Edge::getCondition).filter(Objects::nonNull)
+				.map(Condition::getTerminalObjects).flatMap(Collection::stream)
+				.filter(Question.class::isInstance)
+				.map(Question.class::cast).collect(Collectors.toSet());
+	}
+
+	/**
+	 * Returns the edges that may be walked through from the current flow run states towards the
+	 * specified nodes.
+	 */
+	private Stream<Edge> findPotentialEdgesToNodes(Collection<Node> targetNodes) {
+		// from the target nodes, go backwards through the successors, collecting all nodes
+		N2MMap<Node, Node> successors = getPotentialSuccessors();
+		Set<Node> traversed = new HashSet<>();
+		collectPredecessors(targetNodes, successors::getKeys, traversed);
+
+		// select the questions out of the nodes' incoming edges
+		return traversed.stream().map(Node::getIncomingEdges).flatMap(Collection::stream)
+				// test if the edge is an undefined one or if the start node is also traversed
+				// otherwise the edge is not relevant
+				.filter(edge -> undefinedEdges.contains(edge) || traversed.contains(edge.getStartNode()));
+	}
+
+	private void collectPredecessors(Collection<Node> nodes, Function<Node, Collection<Node>> predeccessors, Set<Node> result) {
+		for (Node node : nodes) {
+			if (result.add(node)) {
+				collectPredecessors(predeccessors.apply(node), predeccessors, result);
+			}
+		}
+	}
+
+	public double getInformationGain(Set<Question> questions, Collection<Solution> solutions) {
+		if (Collections.disjoint(suspectedSolutions, solutions)) {
+			return 0;
+		}
+		// we look backwards from each solution,
+		// collection all conditions on the specified questions,
+		// and create pots for equal conditions
+		// from the solutions, go backwards through the successors, collecting all nodes
+		// TODO: should not be calculated by collecting the conditions (leading to inprecise results). Instead the answer combinations leading to the solutions should be used. See XCL for further details
+		Map<Set<Condition>, Double> pots = new HashMap<>();
+		double undiscriminatedWeight = 0;
+		double totalWeight = 0;
+		for (Solution solution : solutions) {
+			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
+			double weight = (apriori == null) ? 1.0 : apriori.doubleValue();
+			totalWeight += weight;
+
+			Set<Condition> conditions = findOpenConditions(solution, questions);
+			if (conditions.isEmpty()) {
+				undiscriminatedWeight += weight;
+			}
+			else {
+				pots.merge(conditions, weight, Double::sum);
+			}
+		}
+
+		// calculate information gain
+		// Russel & Norvig p. 805
+		double sum = 0;
+		for (double weight : pots.values()) {
+			double p = (weight + undiscriminatedWeight) / totalWeight;
+			sum += (-1) * p * Math.log10(p) / Math.log10(2);
+		}
+		return sum;
+	}
+
+	private Set<Condition> findOpenConditions(Solution solution, Set<Question> questions) {
+		if (!suspectedSolutions.contains(solution)) return Collections.emptySet();
+		Collection<Node> targetNodes = solution.getKnowledgeStore()
+				.getKnowledge(FluxSolver.DERIVING_NODES).getNodes();
+
+		// select the questions out of the nodes' incoming edges
+		return findPotentialEdgesToNodes(targetNodes)
+				// get the conditions and their terminal objects
+				.map(Edge::getCondition).filter(Objects::nonNull)
+				.filter(c -> !Collections.disjoint(questions, c.getTerminalObjects()))
+				.collect(Collectors.toSet());
 	}
 }

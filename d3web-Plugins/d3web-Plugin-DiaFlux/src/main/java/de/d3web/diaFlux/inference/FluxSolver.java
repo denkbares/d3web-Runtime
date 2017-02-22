@@ -26,15 +26,24 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.Fact;
@@ -52,7 +61,6 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.NodeList;
 import de.d3web.diaFlux.flow.SnapshotNode;
 import de.d3web.diaFlux.flow.StartNode;
-import com.denkbares.utils.Log;
 
 /**
  * Problem solver to process the flowcharts of a knowledge base.
@@ -60,7 +68,7 @@ import com.denkbares.utils.Log;
  * @author Reinhard Hatko
  * @created 10.09.2009
  */
-public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<DiaFluxCaseObject> {
+public class FluxSolver implements PostHookablePSMethod, StrategicSupport, SessionObjectSource<DiaFluxCaseObject> {
 
 	public enum SuggestMode {
 		/**
@@ -192,7 +200,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * Adds support to a node. If the node is triggered, ie, was not active before, it gets
 	 * activated.
 	 *
-	 * @param node    the node to add support to
+	 * @param node the node to add support to
 	 * @param support a node or edge supporting the node
 	 * @created 03.09.2013
 	 */
@@ -214,7 +222,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	/**
 	 * Removes support from a node.
 	 *
-	 * @param node    the node to remove the support from
+	 * @param node the node to remove the support from
 	 * @param support a node or edge supporting the node
 	 * @created 03.09.2013
 	 */
@@ -255,7 +263,6 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 					deactivateEdge(edge, run, session);
 				}
 			}
-
 		}
 	}
 
@@ -277,7 +284,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * note that a node previously being active and then fixed by a snapshot is not considered to be
 	 * active any longer, even if its derived facts still persists.
 	 *
-	 * @param node    the node to be checked
+	 * @param node the node to be checked
 	 * @param session the session to check the node for
 	 * @return if the node is active in the session
 	 * @created 11.03.2013
@@ -291,7 +298,7 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 	 * note that a edge previously being active and then fixed by a snapshot is not considered to be
 	 * active any longer, even if its derived facts still persists.
 	 *
-	 * @param edge    the Edge to be checked
+	 * @param edge the Edge to be checked
 	 * @param session the session to check the node for
 	 * @return if the edge is active in the session
 	 * @created 11.03.2013
@@ -432,7 +439,9 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// composite node... go down, find exit node
 		else if (node instanceof ComposedNode && edge != null) {
 			for (EndNode endNode : flowRun.getActiveNodesOfClass(EndNode.class)) {
-				if (!endNode.getFlow().getName().equals(((ComposedNode) node).getCalledFlowName())) {
+				if (!endNode.getFlow()
+						.getName()
+						.equals(((ComposedNode) node).getCalledFlowName())) {
 					continue;
 				}
 				if (edge.getCondition() instanceof FlowchartProcessedCondition
@@ -648,11 +657,13 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 		// composite node... go down, find exit node
 		else if (node instanceof ComposedNode && edge != null) {
 			Flow calledFlow = DiaFluxUtils.getCalledFlow((ComposedNode) node);
-			for (EndNode endNode : calledFlow.getNodesOfClass(EndNode.class)) {
-				if (edge.getCondition() instanceof FlowchartProcessedCondition
-						|| endNode.getName()
-						.equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
-					getObjectsOfNode(session, endNode, null, visited, result);
+			if (calledFlow != null) {
+				for (EndNode endNode : calledFlow.getNodesOfClass(EndNode.class)) {
+					if (edge.getCondition() instanceof FlowchartProcessedCondition
+							|| endNode.getName()
+							.equals(((NodeActiveCondition) edge.getCondition()).getNodeName())) {
+						getObjectsOfNode(session, endNode, null, visited, result);
+					}
 				}
 			}
 		}
@@ -670,5 +681,25 @@ public class FluxSolver implements PostHookablePSMethod, SessionObjectSource<Dia
 
 		// add action formula values
 		result.addAll(node.getHookedObjects());
+	}
+
+	@Override
+	public Collection<Solution> getUndiscriminatedSolutions(Session session) {
+		return session.getSessionObject(this).getSuspectedSolutions();
+	}
+
+	@Override
+	public Collection<Question> getDiscriminatingQuestions(Collection<Solution> solutions, Session session) {
+		return session.getSessionObject(this).getDiscriminatingQuestions(solutions);
+	}
+
+	@Override
+	public double getInformationGain(Collection<? extends QASet> qasets, Collection<Solution> solutions, Session session) {
+		Set<Question> questions = Stream.concat(
+				qasets.stream().filter(Question.class::isInstance).map(Question.class::cast),
+				qasets.stream().filter(QContainer.class::isInstance).flatMap(qc ->
+						KnowledgeBaseUtils.getSuccessors(qc, Question.class).stream()))
+				.collect(Collectors.toSet());
+		return session.getSessionObject(this).getInformationGain(questions, solutions);
 	}
 }
