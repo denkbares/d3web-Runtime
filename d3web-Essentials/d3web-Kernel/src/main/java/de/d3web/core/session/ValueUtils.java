@@ -376,8 +376,8 @@ public final class ValueUtils {
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString, KnowledgeBaseUtils.Matching.CASE_INSENSITIVE_IF_NO_CONFLICT);
 		if (choice == null) {
-			throw new IllegalArgumentException("'" + valueString + "' is not a valid choice for question '" + question
-					.getName() + "'");
+			throw new IllegalArgumentException("'" + valueString +
+					"' is not a valid choice for question '" + question.getName() + "'");
 		}
 		if (question instanceof QuestionMC) {
 			return new MultipleChoiceValue(new ChoiceID(choice));
