@@ -20,9 +20,10 @@
 package de.d3web.core.knowledge;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.denkbares.strings.Locales;
 import com.denkbares.utils.Triple;
@@ -33,51 +34,24 @@ public interface InfoStore {
 	Locale NO_LANGUAGE = null;
 
 	/**
-	 * Returns the value stored for the specified key with language {@link #NO_LANGUAGE}. If there
-	 * is no such key for the {@link #NO_LANGUAGE}, the key's default value is returned. If there is
-	 * no such default value defined, the declared default value of this property is returned (or
-	 * null if there is no default value defined).
+	 * Returns the value stored for the specified key and language.
+	 * <p>
+	 * If no language is given, we try to return the default value for the given property (same as language {@link
+	 * #NO_LANGUAGE}). If this is not available, we check for any value with any language for the given property,
+	 * before we continue to the default value of the property itself (independent of the InfoStore). If this is not
+	 * defined, null is returned.
+	 * <p>
+	 * If one or more languages are given, we try to find the value with a language best matching the given and
+	 * available languages, as described in {@link Locales#findBestLocale}. If there aren't any language specific
+	 * values available in this store, again the default value for the given property is returned (same as language
+	 * {@link #NO_LANGUAGE}). If there is also no default value available in this store, again the default value of the
+	 * property itself is returned. If this is not defined, null is returned.
 	 *
 	 * @param key the property to be accessed
 	 * @return the value for that key
 	 * @see Property#getDefaultValue()
 	 */
-	<StoredType> StoredType getValue(Property<StoredType> key);
-
-	/**
-	 * Returns the value stored for the specified key with the specified language. If there is no
-	 * such language, it is tried to access the key with language {@link #NO_LANGUAGE}. If there is
-	 * no such item, the key's default value is returned. If there is no such default value defined,
-	 * the declared default value of this property is returned (or null if there is no default value
-	 * defined).
-	 *
-	 * @param key the property to be accessed
-	 * @param language the language to be accessed
-	 * @return the value stored for that key and language
-	 * @see Property#getDefaultValue()
-	 */
-	<StoredType> StoredType getValue(Property<StoredType> key, Locale language);
-
-	/**
-	 * Returns the value stored for the specified key with the first of the specified languages,
-	 * where the property is available for. The best matching language is detected as described in
-	 * {@link Locales#findBestLocale}.
-	 * <p>
-	 * If there is no such property at all, the properties default value is returned. If there is no
-	 * such default value defined, the declared default value of this property is returned (or null
-	 * if there is no default value defined).
-	 *
-	 * @param key the property to be accessed
-	 * @param preferenceList the languages to access the property, where the first is the most
-	 * preferred language
-	 * @return the value stored for that key and best matching language
-	 * @see Property#getDefaultValue()
-	 */
-	default <StoredType> StoredType getValue(Property<StoredType> key, List<Locale> preferenceList) {
-		Map<Locale, StoredType> entries = entries(key);
-		Locale locale = Locales.findBestLocale(preferenceList, entries.keySet());
-		return getValue(key, locale);
-	}
+	<StoredType> StoredType getValue(Property<StoredType> key, Locale... language);
 
 	/**
 	 * Removes the stored item for the specified key and the default language {@link #NO_LANGUAGE}.
@@ -90,7 +64,7 @@ public interface InfoStore {
 	/**
 	 * Removes the stored item for the specified key and the specified language.
 	 *
-	 * @param key the key to be removed
+	 * @param key      the key to be removed
 	 * @param language the language to be removed
 	 * @return if there was such a property
 	 */
@@ -108,7 +82,7 @@ public interface InfoStore {
 	/**
 	 * Check if there is a stored item for the specified key and the specified language.
 	 *
-	 * @param key the key to be removed
+	 * @param key      the key to be removed
 	 * @param language the language to be removed
 	 * @return if there is such a property
 	 */
@@ -119,9 +93,9 @@ public interface InfoStore {
 	 * the properties storage class, an ClassCastException is thrown. If there is already a value
 	 * for that property (and no language) is defined, it will be overwritten.
 	 *
-	 * @param key the property to store the value for
+	 * @param key   the property to store the value for
 	 * @param value the value to store
-	 * @throws ClassCastException if the value is not compatible with the property
+	 * @throws ClassCastException   if the value is not compatible with the property
 	 * @throws NullPointerException if the key or value is null
 	 * @created 28.10.2010
 	 */
@@ -132,13 +106,13 @@ public interface InfoStore {
 	 * the properties storage class, an ClassCastException is thrown. If there is already a value
 	 * for that property and the specified language is defined, it will be overwritten.
 	 *
-	 * @param key the property to store the value for
+	 * @param key      the property to store the value for
 	 * @param language the language to store the property for
-	 * @param value the value to store
+	 * @param value    the value to store
 	 * @throws IllegalArgumentException if a language other than NO_LANGUAGE is specified for a non
-	 * multilingual property
-	 * @throws ClassCastException if the value is not compatible with the property
-	 * @throws NullPointerException if the key or value is null
+	 *                                  multilingual property
+	 * @throws ClassCastException       if the value is not compatible with the property
+	 * @throws NullPointerException     if the key or value is null
 	 * @created 28.10.2010
 	 */
 	void addValue(Property<?> key, Locale language, Object value) throws ClassCastException;
@@ -149,7 +123,7 @@ public interface InfoStore {
 	 * @return All entries
 	 * @created 11.10.2010
 	 */
-	Collection<Triple<Property<?>, Locale, Object>> entries();
+	@NotNull Collection<Triple<Property<?>, Locale, Object>> entries();
 
 	/**
 	 * Returns all the entries that are available for the specified property, this info store has
@@ -159,7 +133,7 @@ public interface InfoStore {
 	 * @param key the property to get the entries for
 	 * @return the entries of the specified property
 	 */
-	<StoredType> Map<Locale, StoredType> entries(Property<StoredType> key);
+	@NotNull <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key);
 
 	/**
 	 * Returns true, if the collection is empty, false otherwise

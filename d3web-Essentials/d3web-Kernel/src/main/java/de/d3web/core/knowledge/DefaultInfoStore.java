@@ -20,13 +20,17 @@
 package de.d3web.core.knowledge;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.denkbares.utils.Pair;
+import org.jetbrains.annotations.NotNull;
+
+import com.denkbares.strings.Locales;
 import com.denkbares.utils.Triple;
 import de.d3web.core.knowledge.terminology.info.Property;
 
@@ -34,83 +38,75 @@ public class DefaultInfoStore implements InfoStore {
 
 	private static final String KEY_MUST_NOT_BE_NULL = "The key must not be null.";
 
-	private final Map<Pair<Property<?>, Locale>, Object> entries =
-			new HashMap<>();
+	private final Map<Property<?>, Map<Locale, Object>> entries = new HashMap<>();
 
 	@Override
+	@NotNull
 	public Collection<Triple<Property<?>, Locale, Object>> entries() {
-		Collection<Triple<Property<?>, Locale, Object>> result = new ArrayList<>(this.entries.size());
-		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
-			result.add(new Triple<>(
-					entry.getKey().getA(),
-					entry.getKey().getB(),
-					entry.getValue()));
-		}
-		return result;
-	}
-
-	@Override
-	public <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key) {
-		Map<Locale, StoredType> result = new HashMap<>();
-		for (Entry<Pair<Property<?>, Locale>, Object> entry : this.entries.entrySet()) {
-			if (entry.getKey().getA() == key) {
-				result.put(entry.getKey().getB(), key.castToStoredValue(entry.getValue()));
+		Collection<Triple<Property<?>, Locale, Object>> result = new ArrayList<>();
+		for (Entry<Property<?>, Map<Locale, Object>> entry : this.entries.entrySet()) {
+			for (Entry<Locale, Object> localeEntry : entry.getValue().entrySet()) {
+				result.add(new Triple<>(
+						entry.getKey(),
+						localeEntry.getKey(),
+						localeEntry.getValue()));
 			}
 		}
-		return result;
+		return Collections.unmodifiableCollection(result);
 	}
 
 	@Override
-	public <StoredType> StoredType getValue(Property<StoredType> key) {
+	@NotNull
+	public <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key) {
+		//noinspection unchecked
+		return Collections.unmodifiableMap((Map<Locale, StoredType>) entries.getOrDefault(key, Collections.emptyMap()));
+	}
+
+	@Override
+	public <StoredType> StoredType getValue(Property<StoredType> key, Locale... language) {
+
 		if (key == null) {
 			throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
 		}
-		// if not available check for entry with no language
-		StoredType value = getEntry(key, NO_LANGUAGE);
-		if (value != null) {
-			return value;
-		}
-		// if not available use default value or null
-		return key.getDefaultValue();
-	}
 
-	@Override
-	public <StoredType> StoredType getValue(Property<StoredType> key, Locale language) {
-		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
-		if (language != null) {
-			// check for entry
-			StoredType value = getEntry(key, language);
+		if (language == null) language = new Locale[0];
+
+		// fast check for no language at all
+		if (language.length == 0) {
+			StoredType value = getEntry(key, NO_LANGUAGE);
 			if (value != null) {
 				return value;
 			}
-			// Try to find the locale without variant
-			String variant = language.getVariant();
-			String country = language.getCountry();
-			if (variant != null && !variant.isEmpty()) {
-				value = getEntry(key, new Locale(language.getLanguage(), country));
-				if (value != null) {
-					return value;
-				}
-			}
-			// Try to find the locale without the country
-			if (country != null && !country.isEmpty()) {
-				value = getEntry(key, new Locale(language.getLanguage()));
-				if (value != null) {
-					return value;
-				}
+		}
+		// fast check for exactly one language
+		else if (language.length == 1) {
+			StoredType value = getEntry(key, language[0]);
+			if (value != null) {
+				return value;
 			}
 		}
-		// if not available use no-language method
-		return getValue(key);
+
+		// ok, lets see what we have and return best match
+		Collection<Locale> allAvailableLocales = getAvailableLocales(key);
+		Locale bestLocale = Locales.findBestLocale(Arrays.asList(language), allAvailableLocales);
+		StoredType value = getEntry(key, bestLocale);
+		if (value != null) {
+			return value;
+		}
+
+		// if nothing else available use default value or null
+		return key.getDefaultValue();
+	}
+
+	@NotNull
+	private <StoredType> Collection<Locale> getAvailableLocales(Property<StoredType> key) {
+		return entries.getOrDefault(key, Collections.emptyMap()).keySet();
 	}
 
 	private <StoredType> StoredType getEntry(Property<StoredType> key, Locale language) {
-		Object object = this.entries.get(createEntryKey(key, language));
-		return key.getStoredClass().cast(object);
-	}
-
-	private <StoredType> Pair<Property<?>, Locale> createEntryKey(Property<StoredType> key, Locale language) {
-		return new Pair<>(key, language);
+		Map<Locale, Object> localeObjectMap = this.entries.get(key);
+		if (localeObjectMap == null) return null;
+		return key.getStoredClass().cast(localeObjectMap.get(language));
 	}
 
 	@Override
@@ -122,7 +118,11 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public boolean remove(Property<?> key, Locale language) {
 		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
-		return (this.entries.remove(createEntryKey(key, language)) != null);
+		Map<Locale, Object> localeObjectMap = entries.get(key);
+		if (localeObjectMap == null) return false;
+		boolean removed = localeObjectMap.remove(language) != null;
+		if (removed && localeObjectMap.isEmpty()) entries.remove(key);
+		return removed;
 	}
 
 	@Override
@@ -132,7 +132,8 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public boolean contains(Property<?> key, Locale language) {
-		return this.entries.containsKey(createEntryKey(key, language));
+		Map<Locale, Object> localeObjectMap = this.entries.get(key);
+		return localeObjectMap != null && localeObjectMap.containsKey(language);
 	}
 
 	@Override
@@ -153,7 +154,8 @@ public class DefaultInfoStore implements InfoStore {
 					"' is not compatible with defined storage class "
 					+ key.getStoredClass());
 		}
-		entries.put(createEntryKey(key, language), value);
+		Map<Locale, Object> localeObjectMap = entries.computeIfAbsent(key, k -> new HashMap<>(4));
+		localeObjectMap.put(language, value);
 	}
 
 	@Override

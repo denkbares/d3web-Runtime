@@ -102,25 +102,8 @@ public class MMInfo {
 	 * @created 03.07.2012
 	 */
 	@NotNull
-	public static String[] getLinks(NamedObject object, Locale locale) {
+	public static String[] getLinks(NamedObject object, Locale... locale) {
 		return splitLinks(object.getInfoStore().getValue(MMInfo.LINK, locale));
-	}
-
-	/**
-	 * Returns the multimedia-links of the specified object. If no link property is found for the
-	 * locale or a parent (more common) locale, an empty array is returned. If the found link
-	 * property contains multiple links (separated by ";"), they will be split correctly and
-	 * returned as an array. Otherwise the returned array contains the single link.
-	 *
-	 * @param object the object to get the links for
-	 * @param preferenceList the languages to get the prompt for, where the first one is the most
-	 * preferred language
-	 * @return the links or an empty array
-	 * @created 03.07.2012
-	 */
-	@NotNull
-	public static String[] getLinks(NamedObject object, List<Locale> preferenceList) {
-		return splitLinks(object.getInfoStore().getValue(MMInfo.LINK, preferenceList));
 	}
 
 	/**
@@ -160,7 +143,7 @@ public class MMInfo {
 	 * @return the prompt or name if no prompt exists
 	 * @created 03.07.2012
 	 */
-	public static String getPrompt(NamedObject object, Locale locale) {
+	public static String getPrompt(NamedObject object, Locale... locale) {
 		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, locale);
 		if (prompt == null) {
 			prompt = object.getName();
@@ -168,24 +151,6 @@ public class MMInfo {
 		return prompt;
 	}
 
-	/**
-	 * Returns the prompt of the object for the specified name. If no prompt is found for the locale
-	 * or a parent (more common) locale, the object name is returned. Thus this method will always
-	 * return the name to be displayed for the specified object.
-	 *
-	 * @param object the object to get the prompt for
-	 * @param preferenceList the languages to get the prompt for, where the first one is the most
-	 * preferred language
-	 * @return the prompt or name if no prompt exists
-	 * @created 03.07.2012
-	 */
-	public static String getPrompt(NamedObject object, List<Locale> preferenceList) {
-		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, preferenceList);
-		if (prompt == null) {
-			prompt = object.getName();
-		}
-		return prompt;
-	}
 
 	/**
 	 * Return the prompt for the "unknown" alternative of a specific question. The prompt is defined
@@ -226,7 +191,7 @@ public class MMInfo {
 	 * @return the questions unknown prompt
 	 * @created 20.08.2012
 	 */
-	public static String getUnknownPrompt(Question question, List<Locale> preferenceList) {
+	public static String getUnknownPrompt(Question question, Locale... preferenceList) {
 		String prompt = question.getInfoStore().getValue(UNKNOWN_VERBALISATION, preferenceList);
 		if (prompt == null) {
 			prompt = question.getKnowledgeBase().getInfoStore()
@@ -247,21 +212,8 @@ public class MMInfo {
 	 * @return the description, or null if no description exists
 	 * @created 03.07.2012
 	 */
-	public static String getDescription(NamedObject object, Locale locale) {
+	public static String getDescription(NamedObject object, Locale... locale) {
 		return object.getInfoStore().getValue(MMInfo.DESCRIPTION, locale);
 	}
 
-	/**
-	 * Returns the description of the object for the specified name. If no description is found for
-	 * the locale or a parent (more common) locale, null is returned.
-	 *
-	 * @param object the object to get the description for
-	 * @param preferenceList the languages to get the description for, where the first one is the
-	 * most preferred language
-	 * @return the description, or null if no description exists
-	 * @created 03.07.2012
-	 */
-	public static String getDescription(NamedObject object, List<Locale> preferenceList) {
-		return object.getInfoStore().getValue(MMInfo.DESCRIPTION, preferenceList);
-	}
 }

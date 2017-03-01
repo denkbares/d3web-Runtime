@@ -49,14 +49,7 @@ public class StringPropertyFilter implements Filter {
 
 	@Override
 	public boolean accept(SessionRecord record) {
-		String value;
-		if (locale != null) {
-			value = record.getInfoStore().getValue(property, locale);
-		}
-		else {
-			value = record.getInfoStore().getValue(property);
-		}
-		if (value == null) return false;
-		return p.matcher(value).matches();
+		String value = record.getInfoStore().entries(property).get(locale);
+		return value != null && p.matcher(value).matches();
 	}
 }
