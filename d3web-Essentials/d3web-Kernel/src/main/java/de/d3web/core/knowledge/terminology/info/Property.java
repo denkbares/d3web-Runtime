@@ -142,8 +142,7 @@ public final class Property<T> {
 
 	/**
 	 * Returns the DefaultValue of this property. The default value will be
-	 * returned by the {@link InfoStore#getValue(Property)} and
-	 * {@link InfoStore#getValue(Property, java.util.Locale)} methods when no
+	 * returned by the method {@link InfoStore#getValue(Property, java.util.Locale...)} when no
 	 * explicit value has been specified.
 	 * <p>
 	 * The default value may be specified by either the plugin.xml using the
@@ -165,8 +164,7 @@ public final class Property<T> {
 
 	/**
 	 * Sets the default value of this property. The default value will be
-	 * returned by the {@link InfoStore#getValue(Property)} and
-	 * {@link InfoStore#getValue(Property, java.util.Locale)} methods when no
+	 * returned by the method {@link InfoStore#getValue(Property, java.util.Locale...)} methods when no
 	 * explicit value has been specified.
 	 * <p>
 	 * Instead of using this method, the default value may also be specified in
