@@ -54,7 +54,7 @@ public class DefaultInfoStore implements InfoStore {
 		}
 		if (singleLangEntries != null) {
 			for (Entry<Property<?>, Object> entry : this.singleLangEntries.entrySet()) {
-				result.add(new Triple<>(entry.getKey(), null, entry.getValue()));
+				result.add(new Triple<>(entry.getKey(), NO_LANGUAGE, entry.getValue()));
 			}
 		}
 		return Collections.unmodifiableCollection(result);
