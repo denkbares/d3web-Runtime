@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,32 +64,24 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	@NotNull
 	public <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key) {
-		if (key == null) {
-			throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
-		}
+		Objects.requireNonNull(key, KEY_MUST_NOT_BE_NULL);
 		if (key.isMultilingual() && multiLangEntries != null) {
 			//noinspection unchecked
-			return Collections.unmodifiableMap((Map<Locale, StoredType>) multiLangEntries.getOrDefault(key, Collections.emptyMap()));
+			return Collections.unmodifiableMap((Map<Locale, StoredType>)
+					multiLangEntries.getOrDefault(key, Collections.emptyMap()));
 		}
 		else if (!key.isMultilingual() && singleLangEntries != null) {
-			HashMap<Locale, StoredType> temp = new HashMap<>(4);
-			//noinspection unchecked
-			StoredType value = (StoredType) singleLangEntries.get(key);
+			StoredType value = key.castToStoredValue(singleLangEntries.get(key));
 			if (value != null) {
-				temp.put(null, value);
+				return Collections.singletonMap(NO_LANGUAGE, value);
 			}
-			return Collections.unmodifiableMap(temp);
 		}
 		return Collections.emptyMap();
 	}
 
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key, Locale... language) {
-
-		if (key == null) {
-			throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
-		}
-
+		Objects.requireNonNull(key, KEY_MUST_NOT_BE_NULL);
 		if (language == null) language = new Locale[0];
 
 		// fast check for no language at all
@@ -132,23 +125,23 @@ public class DefaultInfoStore implements InfoStore {
 		if (key.isMultilingual() && multiLangEntries != null) {
 			Map<Locale, Object> localeObjectMap = this.multiLangEntries.get(key);
 			if (localeObjectMap == null) return null;
-			return key.getStoredClass().cast(localeObjectMap.get(language));
+			return key.castToStoredValue(localeObjectMap.get(language));
 		}
 		else if (!key.isMultilingual() && singleLangEntries != null) {
-			return key.getStoredClass().cast(singleLangEntries.get(key));
+			return key.castToStoredValue(singleLangEntries.get(key));
 		}
 		return null;
 	}
 
 	@Override
 	public boolean remove(Property<?> key) {
-		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
+		Objects.requireNonNull(key, KEY_MUST_NOT_BE_NULL);
 		return remove(key, NO_LANGUAGE);
 	}
 
 	@Override
 	public boolean remove(Property<?> key, Locale language) {
-		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
+		Objects.requireNonNull(key, KEY_MUST_NOT_BE_NULL);
 		if (key.isMultilingual() && multiLangEntries != null) {
 			Map<Locale, Object> localeObjectMap = multiLangEntries.get(key);
 			if (localeObjectMap == null) return false;
@@ -169,7 +162,7 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public boolean contains(Property<?> key, Locale language) {
-		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
+		Objects.requireNonNull(key, KEY_MUST_NOT_BE_NULL);
 		if (key.isMultilingual() && multiLangEntries != null) {
 			Map<Locale, Object> localeObjectMap = this.multiLangEntries.get(key);
 			return localeObjectMap != null && localeObjectMap.containsKey(language);
@@ -187,8 +180,8 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public void addValue(Property<?> key, Locale language, Object value) {
-		if (value == null) throw new NullPointerException("The value must not be null.");
-		if (key == null) throw new NullPointerException(KEY_MUST_NOT_BE_NULL);
+		Objects.requireNonNull(value, "The value must not be null.");
+		Objects.requireNonNull(key, KEY_MUST_NOT_BE_NULL);
 		if (!key.getStoredClass().isInstance(value)) {
 			throw new ClassCastException("value '" + value + "' is not compatible with defined storage class "
 					+ key.getStoredClass());
