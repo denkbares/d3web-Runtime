@@ -592,11 +592,11 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Groups all solutions into the closest parent solution that has set the property {@link
-	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If a solution has no such
-	 * parent, or the group is in the specified list of solutions, the returned MultiMap contains an
-	 * entry with both, key an value of that solution. Additionally there are entries where the key
-	 * is the grouping solution of each (non-group) solution and the values are the specified
+	 * Groups all solutions into the closest parent solutions that have set the property {@link
+	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If any of the solutions
+	 * has no such parent, or the solution itself is such a group, the returned MultiMap contains
+	 * an entry with both, key an value of that solution. Additionally there are entries where the
+	 * key is the grouping solution of each (non-group) solution and the values are the specified
 	 * solutions.
 	 * <p/>
 	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the
@@ -615,6 +615,20 @@ public final class KnowledgeBaseUtils {
 			groupSolution(solution, groups);
 		}
 		return groups;
+	}
+
+	/**
+	 * Returns the closest grouping solution that will be the responsible group for this solution.
+	 * If the solution itself is a group, the method will return the solution itself. If the
+	 * solution is in no group at all, the method will also return this solution.
+	 *
+	 * @param solution the solution to be grouped
+	 * @return the solution
+	 */
+	public static Solution getGroup(Solution solution) {
+		MultiMap<Solution, Solution> group = new DefaultMultiMap<>();
+		groupSolution(solution, group);
+		return group.isEmpty() ? solution : group.keySet().iterator().next();
 	}
 
 	/**
