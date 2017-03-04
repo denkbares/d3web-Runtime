@@ -79,8 +79,6 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public <StoredType> StoredType getValue(Property<StoredType> key, Locale... language) {
 		keyMustNotBeNull(key);
-		if (language == null) language = new Locale[0];
-
 		// fast check for no language at all
 		if (language.length == 0) {
 			StoredType value = getEntry(key, NO_LANGUAGE);
@@ -121,7 +119,6 @@ public class DefaultInfoStore implements InfoStore {
 	@NotNull
 	private <StoredType> Map<Locale, Object> getAsMultiLingualMap(Property<StoredType> key) {
 		return asMap(entries.getOrDefault(key, Collections.emptyMap()));
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -132,6 +129,7 @@ public class DefaultInfoStore implements InfoStore {
 	private <StoredType> StoredType getEntry(Property<StoredType> key, Locale language) {
 		if (entries == null) return null;
 		if (key.isMultilingual()) {
+			if (language == null) language = NO_LANGUAGE;
 			return key.castToStoredValue(getAsMultiLingualMap(key).get(language));
 		}
 		else {
@@ -154,6 +152,7 @@ public class DefaultInfoStore implements InfoStore {
 		keyMustNotBeNull(key);
 		if (entries == null) return false;
 		if (key.isMultilingual()) {
+			if (language == null) language = NO_LANGUAGE;
 			Map<Locale, Object> localeObjectMap = asMap(entries.get(key));
 			if (localeObjectMap == null) return false;
 			boolean removed = localeObjectMap.remove(language) != null;
@@ -175,6 +174,7 @@ public class DefaultInfoStore implements InfoStore {
 		keyMustNotBeNull(key);
 		if (entries == null) return false;
 		if (key.isMultilingual()) {
+			if (language == null) language = NO_LANGUAGE;
 			return getAsMultiLingualMap(key).containsKey(language);
 		}
 		else {
@@ -189,8 +189,8 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public void addValue(Property<?> key, Locale language, Object value) {
-		Objects.requireNonNull(value, "The value must not be null.");
 		keyMustNotBeNull(key);
+		Objects.requireNonNull(value, "The value must not be null.");
 		if (!key.getStoredClass().isInstance(value)) {
 			throw new ClassCastException("value '" + value + "' is not compatible with defined storage class "
 					+ key.getStoredClass());
@@ -199,9 +199,10 @@ public class DefaultInfoStore implements InfoStore {
 			entries = new HashMap<>();
 		}
 		if (key.isMultilingual()) {
+			if (language == null) language = NO_LANGUAGE;
 			asMap(entries.computeIfAbsent(key, k -> new HashMap<>(4))).put(language, value);
 		}
-		else if (language == NO_LANGUAGE) {
+		else if (language == null || Objects.equals(language, NO_LANGUAGE)) {
 			entries.put(key, value);
 		}
 		else {

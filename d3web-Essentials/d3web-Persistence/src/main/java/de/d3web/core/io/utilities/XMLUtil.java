@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -535,7 +536,7 @@ public final class XMLUtil {
 				father.appendChild(entryElement);
 				entryElement.setAttribute("property", entry.getA().getName());
 				Locale language = entry.getB();
-				if (language != InfoStore.NO_LANGUAGE) {
+				if (!Objects.equals(language, InfoStore.NO_LANGUAGE)) {
 					entryElement.setAttribute("lang", language.toString());
 				}
 				try {
@@ -565,10 +566,10 @@ public final class XMLUtil {
 			}
 			// the next criteria is the locale
 			else if (arg0.getB() != arg1.getB()) {
-				if (arg0.getB() == InfoStore.NO_LANGUAGE) {
+				if (Objects.equals(arg0.getB(), InfoStore.NO_LANGUAGE)) {
 					return 1;
 				}
-				else if (arg1.getB() == InfoStore.NO_LANGUAGE) {
+				else if (Objects.equals(arg1.getB(), InfoStore.NO_LANGUAGE)) {
 					return -1;
 				}
 				else {
