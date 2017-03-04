@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -557,7 +556,7 @@ public final class XMLUtil {
 	public static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
 		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<>(
 				entries);
-		Collections.sort(ret, (arg0, arg1) -> {
+		ret.sort((arg0, arg1) -> {
 			if (arg0 == arg1) return 0;
 			// if the property is different, compare the names
 			//noinspection StringEquality

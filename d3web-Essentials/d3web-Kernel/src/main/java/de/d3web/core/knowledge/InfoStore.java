@@ -31,7 +31,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 
 public interface InfoStore {
 
-	Locale NO_LANGUAGE = null;
+	Locale NO_LANGUAGE = Locale.ROOT;
 
 	/**
 	 * Returns the value stored for the specified key and language.
