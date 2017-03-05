@@ -31,21 +31,20 @@ import de.d3web.core.knowledge.terminology.info.Property;
 
 public interface InfoStore {
 
-	Locale NO_LANGUAGE = Locale.ROOT;
-
 	/**
 	 * Returns the value stored for the specified key and language.
 	 * <p>
-	 * If no language is given, we try to return the default value for the given property (same as language {@link
-	 * #NO_LANGUAGE}). If this is not available, we check for any value with any language for the given property,
-	 * before we continue to the default value of the property itself (independent of the InfoStore). If this is not
-	 * defined, null is returned.
+	 * If no language is given, we try to return the default value for the given property (same as
+	 * language {@link Locale#ROOT}). If this is not available, we check for any value with any
+	 * language for the given property, before we continue to the default value of the property
+	 * itself (independent of the InfoStore). If this is not defined, null is returned.
 	 * <p>
-	 * If one or more languages are given, we try to find the value with a language best matching the given and
-	 * available languages, as described in {@link Locales#findBestLocale}. If there aren't any language specific
-	 * values available in this store, again the default value for the given property is returned (same as language
-	 * {@link #NO_LANGUAGE}). If there is also no default value available in this store, again the default value of the
-	 * property itself is returned. If this is not defined, null is returned.
+	 * If one or more languages are given, we try to find the value with a language best matching
+	 * the given and available languages, as described in {@link Locales#findBestLocale}. If there
+	 * aren't any language specific values available in this store, again the default value for the
+	 * given property is returned (same as language {@link Locale#ROOT}). If there is also no
+	 * default value available in this store, again the default value of the property itself is
+	 * returned. If this is not defined, null is returned.
 	 *
 	 * @param key the property to be accessed
 	 * @return the value for that key
@@ -54,25 +53,31 @@ public interface InfoStore {
 	<StoredType> StoredType getValue(Property<StoredType> key, Locale... language);
 
 	/**
-	 * Removes the stored item for the specified key and the default language {@link #NO_LANGUAGE}.
+	 * Removes the stored item(s) for the specified key. If it is a multi-language property, all the
+	 * languages that are stored for the specified key will be removed.
+	 * <p>
+	 * Note: If you only want to remove the non-language-tagged entry, use <code>remove(key,
+	 * Locale.ROOT)</code> instead.
 	 *
 	 * @param key the key to be removed
-	 * @return if there was such a property
+	 * @return if there was such a property and therefore at least one entry has been removed
+	 * @see #remove(Property, Locale)
 	 */
 	boolean remove(Property<?> key);
 
 	/**
 	 * Removes the stored item for the specified key and the specified language.
 	 *
-	 * @param key      the key to be removed
+	 * @param key the key to be removed
 	 * @param language the language to be removed
 	 * @return if there was such a property
 	 */
 	boolean remove(Property<?> key, Locale language);
 
 	/**
-	 * Check if there is a stored item for the specified key and the default language {@link
-	 * #NO_LANGUAGE}.
+	 * Check if there is a stored item for the specified key. For multi-language properties, it
+	 * returns true if there is an entry for at least one language, regardless if it is the ROOT
+	 * language or any other one.
 	 *
 	 * @param key the key to be removed
 	 * @return if there is such a property
@@ -82,7 +87,7 @@ public interface InfoStore {
 	/**
 	 * Check if there is a stored item for the specified key and the specified language.
 	 *
-	 * @param key      the key to be removed
+	 * @param key the key to be removed
 	 * @param language the language to be removed
 	 * @return if there is such a property
 	 */
@@ -91,11 +96,12 @@ public interface InfoStore {
 	/**
 	 * Adds a value to this InfoStore for the specified property. If the value is not compatible to
 	 * the properties storage class, an ClassCastException is thrown. If there is already a value
-	 * for that property (and no language) is defined, it will be overwritten.
+	 * for that property (and for the ROOT language, for multi-language properties) is defined, it
+	 * will be overwritten.
 	 *
-	 * @param key   the property to store the value for
+	 * @param key the property to store the value for
 	 * @param value the value to store
-	 * @throws ClassCastException   if the value is not compatible with the property
+	 * @throws ClassCastException if the value is not compatible with the property
 	 * @throws NullPointerException if the key or value is null
 	 * @created 28.10.2010
 	 */
@@ -106,13 +112,13 @@ public interface InfoStore {
 	 * the properties storage class, an ClassCastException is thrown. If there is already a value
 	 * for that property and the specified language is defined, it will be overwritten.
 	 *
-	 * @param key      the property to store the value for
+	 * @param key the property to store the value for
 	 * @param language the language to store the property for
-	 * @param value    the value to store
+	 * @param value the value to store
 	 * @throws IllegalArgumentException if a language other than NO_LANGUAGE is specified for a non
-	 *                                  multilingual property
-	 * @throws ClassCastException       if the value is not compatible with the property
-	 * @throws NullPointerException     if the key or value is null
+	 * multilingual property
+	 * @throws ClassCastException if the value is not compatible with the property
+	 * @throws NullPointerException if the key or value is null
 	 * @created 28.10.2010
 	 */
 	void addValue(Property<?> key, Locale language, Object value) throws ClassCastException;
@@ -127,7 +133,7 @@ public interface InfoStore {
 
 	/**
 	 * Returns all the entries that are available for the specified property, this info store has
-	 * values for. The set may return the null locale as a key {@link #NO_LANGUAGE} if there is an
+	 * values for. The set may return the ROOT locale as a key, if there is an
 	 * entry without a language.
 	 *
 	 * @param key the property to get the entries for

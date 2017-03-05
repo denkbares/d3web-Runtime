@@ -18,8 +18,6 @@
  */
 package de.d3web.core.io.utilities;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -29,7 +27,8 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.d3web.core.knowledge.InfoStore;
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.utils.Triple;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -44,8 +43,8 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import com.denkbares.plugin.test.InitPluginManager;
-import com.denkbares.utils.Triple;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * 
@@ -111,7 +110,7 @@ public class XMLUtilTest {
 	public void sortEntries() throws IOException {
 		InitPluginManager.init();
 		Triple<Property<?>, Locale, Object> triple1 = new Triple<>(
-				MMInfo.PROMPT, InfoStore.NO_LANGUAGE, "424");
+				MMInfo.PROMPT, Locale.ROOT, "424");
 		Triple<Property<?>, Locale, Object> triple2 = new Triple<>(
 				MMInfo.PROMPT, Locale.GERMAN, "34");
 		Triple<Property<?>, Locale, Object> triple3 = new Triple<>(

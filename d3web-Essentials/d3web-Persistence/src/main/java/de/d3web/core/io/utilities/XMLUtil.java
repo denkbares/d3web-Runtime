@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -46,6 +45,7 @@ import org.xml.sax.EntityResolver;
 
 import com.denkbares.progress.ProgressInputStream;
 import com.denkbares.progress.ProgressListener;
+import com.denkbares.strings.Locales;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Log;
 import com.denkbares.utils.Triple;
@@ -536,7 +536,7 @@ public final class XMLUtil {
 				father.appendChild(entryElement);
 				entryElement.setAttribute("property", entry.getA().getName());
 				Locale language = entry.getB();
-				if (!Objects.equals(language, InfoStore.NO_LANGUAGE)) {
+				if (!Locales.isEmpty(language)) {
 					entryElement.setAttribute("lang", language.toString());
 				}
 				try {
@@ -566,10 +566,10 @@ public final class XMLUtil {
 			}
 			// the next criteria is the locale
 			else if (arg0.getB() != arg1.getB()) {
-				if (Objects.equals(arg0.getB(), InfoStore.NO_LANGUAGE)) {
+				if (Locales.isEmpty(arg0.getB())) {
 					return 1;
 				}
-				else if (Objects.equals(arg1.getB(), InfoStore.NO_LANGUAGE)) {
+				else if (Locales.isEmpty(arg1.getB())) {
 					return -1;
 				}
 				else {

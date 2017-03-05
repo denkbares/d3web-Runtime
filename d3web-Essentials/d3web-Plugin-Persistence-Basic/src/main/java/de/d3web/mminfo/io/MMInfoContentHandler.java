@@ -87,7 +87,7 @@ public class MMInfoContentHandler extends DefaultHandler {
 				}
 			}
 			else {
-				this.currentLocale = InfoStore.NO_LANGUAGE;
+				this.currentLocale = Locale.ROOT;
 			}
 		}
 	}

@@ -35,6 +35,8 @@ import com.denkbares.strings.Locales;
 import com.denkbares.utils.Triple;
 import de.d3web.core.knowledge.terminology.info.Property;
 
+import static java.util.Locale.ROOT;
+
 public class DefaultInfoStore implements InfoStore {
 
 	private Map<Property<?>, Object> entries = null;
@@ -51,7 +53,7 @@ public class DefaultInfoStore implements InfoStore {
 				}
 			}
 			else {
-				result.add(new Triple<>(entry.getKey(), NO_LANGUAGE, entry.getValue()));
+				result.add(new Triple<>(entry.getKey(), ROOT, entry.getValue()));
 			}
 		}
 		return Collections.unmodifiableCollection(result);
@@ -70,7 +72,7 @@ public class DefaultInfoStore implements InfoStore {
 		else {
 			StoredType value = key.castToStoredValue(entries.get(key));
 			if (value != null) {
-				return Collections.singletonMap(NO_LANGUAGE, value);
+				return Collections.singletonMap(ROOT, value);
 			}
 		}
 		return Collections.emptyMap();
@@ -81,7 +83,7 @@ public class DefaultInfoStore implements InfoStore {
 		keyMustNotBeNull(key);
 		// fast check for no language at all
 		if (language.length == 0) {
-			StoredType value = getEntry(key, NO_LANGUAGE);
+			StoredType value = getEntry(key, ROOT);
 			if (value != null) {
 				return value;
 			}
@@ -96,6 +98,8 @@ public class DefaultInfoStore implements InfoStore {
 			if (value != null) {
 				return value;
 			}
+			// if not, for backward compatibility, handle if the language is null
+			if (language[0] == null) language = new Locale[] { ROOT };
 		}
 
 		// ok, lets see what we have and return best match
@@ -129,7 +133,7 @@ public class DefaultInfoStore implements InfoStore {
 	private <StoredType> StoredType getEntry(Property<StoredType> key, Locale language) {
 		if (entries == null) return null;
 		if (key.isMultilingual()) {
-			if (language == null) language = NO_LANGUAGE;
+			if (language == null) language = ROOT;
 			return key.castToStoredValue(getAsMultiLingualMap(key).get(language));
 		}
 		else {
@@ -140,7 +144,7 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public boolean remove(Property<?> key) {
 		keyMustNotBeNull(key);
-		return remove(key, NO_LANGUAGE);
+		return entries.remove(key) != null;
 	}
 
 	private void keyMustNotBeNull(Property<?> key) {
@@ -152,7 +156,7 @@ public class DefaultInfoStore implements InfoStore {
 		keyMustNotBeNull(key);
 		if (entries == null) return false;
 		if (key.isMultilingual()) {
-			if (language == null) language = NO_LANGUAGE;
+			if (language == null) language = ROOT;
 			Map<Locale, Object> localeObjectMap = asMap(entries.get(key));
 			if (localeObjectMap == null) return false;
 			boolean removed = localeObjectMap.remove(language) != null;
@@ -166,7 +170,8 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public boolean contains(Property<?> key) {
-		return contains(key, NO_LANGUAGE);
+		keyMustNotBeNull(key);
+		return entries.containsKey(key);
 	}
 
 	@Override
@@ -174,7 +179,7 @@ public class DefaultInfoStore implements InfoStore {
 		keyMustNotBeNull(key);
 		if (entries == null) return false;
 		if (key.isMultilingual()) {
-			if (language == null) language = NO_LANGUAGE;
+			if (language == null) language = ROOT;
 			return getAsMultiLingualMap(key).containsKey(language);
 		}
 		else {
@@ -184,7 +189,7 @@ public class DefaultInfoStore implements InfoStore {
 
 	@Override
 	public <T> void addValue(Property<? super T> key, T value) {
-		addValue(key, NO_LANGUAGE, value);
+		addValue(key, ROOT, value);
 	}
 
 	@Override
@@ -199,10 +204,10 @@ public class DefaultInfoStore implements InfoStore {
 			entries = new HashMap<>();
 		}
 		if (key.isMultilingual()) {
-			if (language == null) language = NO_LANGUAGE;
+			if (language == null) language = ROOT;
 			asMap(entries.computeIfAbsent(key, k -> new HashMap<>(4))).put(language, value);
 		}
-		else if (language == null || Objects.equals(language, NO_LANGUAGE)) {
+		else if (Locales.isEmpty(language)) {
 			entries.put(key, value);
 		}
 		else {

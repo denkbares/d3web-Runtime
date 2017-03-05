@@ -20,14 +20,12 @@ package de.d3web.core.knowledge.terminology.info;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.denkbares.strings.Strings;
-import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -92,18 +90,19 @@ public class MMInfo {
 
 	/**
 	 * Returns the multimedia-links of the specified object. If no link property is found for the
-	 * locale or a parent (more common) locale, an empty array is returned. If the found link
+	 * language or a parent (more common) locale, an empty array is returned. If the found link
 	 * property contains multiple links (separated by ";"), they will be split correctly and
 	 * returned as an array. Otherwise the returned array contains the single link.
 	 *
 	 * @param object the object to get the links for
-	 * @param locale the language to get the links for
+	 * @param language the language(s) to get the links for, where the first one is the most
+	 * preferred language
 	 * @return the links or an empty array
 	 * @created 03.07.2012
 	 */
 	@NotNull
-	public static String[] getLinks(NamedObject object, Locale... locale) {
-		return splitLinks(object.getInfoStore().getValue(MMInfo.LINK, locale));
+	public static String[] getLinks(NamedObject object, Locale... language) {
+		return splitLinks(object.getInfoStore().getValue(MMInfo.LINK, language));
 	}
 
 	/**
@@ -134,68 +133,42 @@ public class MMInfo {
 	}
 
 	/**
-	 * Returns the prompt of the object for the specified name. If no prompt is found for the locale
+	 * Returns the prompt of the object for the specified name. If no prompt is found for the language
 	 * or a parent (more common) locale, the object name is returned. Thus this method will always
 	 * return the name to be displayed for the specified object.
 	 *
 	 * @param object the object to get the prompt for
-	 * @param locale the language to get the prompt for
+	 * @param language the language(s) to get the prompt for, where the first one is the most
+	 * preferred language
 	 * @return the prompt or name if no prompt exists
 	 * @created 03.07.2012
 	 */
-	public static String getPrompt(NamedObject object, Locale... locale) {
-		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, locale);
+	public static String getPrompt(NamedObject object, Locale... language) {
+		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, language);
 		if (prompt == null) {
 			prompt = object.getName();
 		}
 		return prompt;
 	}
 
-
 	/**
 	 * Return the prompt for the "unknown" alternative of a specific question. The prompt is defined
 	 * by the property "unknownPrompt" for the question. If there is no such property, the
 	 * "unknownPrompt" of the questions knowledge base object will be used as the default value. If
 	 * there is no such knowledge base specific default value, "unknown" or "unbekannt" or something
-	 * similar is used, based on the specified locale. If locale is null, {@link
-	 * InfoStore#NO_LANGUAGE} is used.
+	 * similar is used, based on the specified locale.
 	 *
 	 * @param question the question to get the unknown prompt for
-	 * @param locale the language to get the prompt for or null
-	 * @return the questions unknown prompt
-	 * @created 20.08.2012
-	 */
-	public static String getUnknownPrompt(Question question, Locale locale) {
-		String prompt = question.getInfoStore().getValue(UNKNOWN_VERBALISATION, locale);
-		if (prompt == null) {
-			prompt = question.getKnowledgeBase().getInfoStore()
-					.getValue(UNKNOWN_VERBALISATION, locale);
-		}
-		if (prompt == null) {
-			prompt = "unknown";
-		}
-		return prompt;
-	}
-
-	/**
-	 * Return the prompt for the "unknown" alternative of a specific question. The prompt is defined
-	 * by the property "unknownPrompt" for the question. If there is no such property, the
-	 * "unknownPrompt" of the questions knowledge base object will be used as the default value. If
-	 * there is no such knowledge base specific default value, "unknown" or "unbekannt" or something
-	 * similar is used, based on the specified locale. If locale is null, {@link
-	 * InfoStore#NO_LANGUAGE} is used.
-	 *
-	 * @param question the question to get the unknown prompt for
-	 * @param preferenceList the languages to get the prompt for, where the first one is the most
+	 * @param language the language(s) to get the unknown prompt for, where the first one is the most
 	 * preferred language
 	 * @return the questions unknown prompt
 	 * @created 20.08.2012
 	 */
-	public static String getUnknownPrompt(Question question, Locale... preferenceList) {
-		String prompt = question.getInfoStore().getValue(UNKNOWN_VERBALISATION, preferenceList);
+	public static String getUnknownPrompt(Question question, Locale... language) {
+		String prompt = question.getInfoStore().getValue(UNKNOWN_VERBALISATION, language);
 		if (prompt == null) {
 			prompt = question.getKnowledgeBase().getInfoStore()
-					.getValue(UNKNOWN_VERBALISATION, preferenceList);
+					.getValue(UNKNOWN_VERBALISATION, language);
 		}
 		if (prompt == null) {
 			prompt = "unknown";
@@ -208,12 +181,13 @@ public class MMInfo {
 	 * the locale or a parent (more common) locale, null is returned.
 	 *
 	 * @param object the object to get the description for
-	 * @param locale the language to get the description for
+	 * @param language the language(s) to get the description for, where the first one is the most
+	 * preferred language
 	 * @return the description, or null if no description exists
 	 * @created 03.07.2012
 	 */
-	public static String getDescription(NamedObject object, Locale... locale) {
-		return object.getInfoStore().getValue(MMInfo.DESCRIPTION, locale);
+	public static String getDescription(NamedObject object, Locale... language) {
+		return object.getInfoStore().getValue(MMInfo.DESCRIPTION, language);
 	}
 
 }

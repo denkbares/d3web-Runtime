@@ -18,8 +18,6 @@
  */
 package de.d3web.diaFlux.test;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
@@ -57,12 +56,12 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
 
+import static org.junit.Assert.assertTrue;
+
 /**
- * 
  * @author Reinhard Hatko
  * @created 11.11.2010
  */
@@ -168,7 +167,6 @@ public class DiaFluxPersistenceTest {
 				"infostoretestvalue");
 
 		return kb;
-
 	}
 
 	@Test
@@ -178,7 +176,5 @@ public class DiaFluxPersistenceTest {
 		Assert.assertTrue("Infostore does not contain a description",
 				infoStore.contains(MMInfo.DESCRIPTION));
 		Assert.assertEquals("infostoretestvalue", infoStore.getValue(MMInfo.DESCRIPTION));
-
 	}
-
 }
