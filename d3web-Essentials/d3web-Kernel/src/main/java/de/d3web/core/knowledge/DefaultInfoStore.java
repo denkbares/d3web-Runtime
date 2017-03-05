@@ -144,6 +144,7 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public boolean remove(Property<?> key) {
 		keyMustNotBeNull(key);
+		if (entries == null) return false;
 		return entries.remove(key) != null;
 	}
 
@@ -171,6 +172,7 @@ public class DefaultInfoStore implements InfoStore {
 	@Override
 	public boolean contains(Property<?> key) {
 		keyMustNotBeNull(key);
+		if (entries == null) return false;
 		return entries.containsKey(key);
 	}
 
