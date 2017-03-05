@@ -555,8 +555,7 @@ public final class XMLUtil {
 	}
 
 	public static List<Triple<Property<?>, Locale, Object>> sortEntries(Collection<Triple<Property<?>, Locale, Object>> entries) {
-		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<>(
-				entries);
+		LinkedList<Triple<Property<?>, Locale, Object>> ret = new LinkedList<>(entries);
 		ret.sort((arg0, arg1) -> {
 			if (arg0 == arg1) return 0;
 			// if the property is different, compare the names
