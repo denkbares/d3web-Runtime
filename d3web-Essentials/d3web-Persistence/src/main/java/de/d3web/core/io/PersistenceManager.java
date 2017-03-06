@@ -597,7 +597,7 @@ public final class PersistenceManager {
 				// we prepare the progress for the next step
 				cpl.next(Files.size(file));
 				cpl.updateProgress(0, "reading file " + name);
-				if (!isExportFile(name) && !isHiddenInfoFile(name)) {
+				if (!isExportFile(name) && !isHiddenInfoFile(file)) {
 					Log.warning("No parser for entry " + name + " available. " +
 							"The file will be lost when saving the KnowledgeBase.");
 				}
@@ -613,7 +613,8 @@ public final class PersistenceManager {
 		return Strings.startsWithIgnoreCase(fileName, EXTENDS_PATH_PREFIX);
 	}
 
-	private boolean isHiddenInfoFile(String fileName) {
+	private boolean isHiddenInfoFile(Path file) {
+		String fileName = file.getFileName().toString();
 		return Strings.startsWithIgnoreCase(fileName, ".com.denkbares.contentHash.")
 				|| Strings.startsWithIgnoreCase(fileName, ".com.denkbares.compileInfo.");
 	}
