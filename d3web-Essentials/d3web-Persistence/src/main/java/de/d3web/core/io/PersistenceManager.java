@@ -665,6 +665,9 @@ public final class PersistenceManager {
 				if (!writerInfo.isRequired()) {
 					continue;
 				}
+				if (!writerInfo.getWriter().isWriterNeeded(knowledgeBase)) {
+					continue;
+				}
 				jarOutputStream.putNextEntry(writerInfo.createZipEntry());
 
 				cpl.next(writerInfo.getEstimatedSize());

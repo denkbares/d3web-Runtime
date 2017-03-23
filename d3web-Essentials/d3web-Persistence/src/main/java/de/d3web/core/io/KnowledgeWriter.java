@@ -26,7 +26,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * Interface for all writing persistence handlers.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public interface KnowledgeWriter {
@@ -34,26 +34,37 @@ public interface KnowledgeWriter {
 	/**
 	 * Writes the parts of the specified {@link KnowledgeBase} instance, that
 	 * this KnowledgeWriter can handle, into the {@link OutputStream}.
-	 * 
+	 *
 	 * @param persistenceManager the persistence manager responsible for writing
-	 * @param knowledgeBase the specified knowledge base in which the handled
-	 *        knowledge is included
-	 * @param stream the specified {@link OutputStream} to which the handled
-	 *        knowledge is written
-	 * @param listener the specified listener which will be notified during this
-	 *        operation, null is not accepted
-	 * 
-	 * @throws IOException when an IO expection ocurrs during the write action
+	 * @param knowledgeBase      the specified knowledge base in which the handled
+	 *                           knowledge is included
+	 * @param stream             the specified {@link OutputStream} to which the handled
+	 *                           knowledge is written
+	 * @param listener           the specified listener which will be notified during this
+	 *                           operation, null is not accepted
+	 * @throws IOException when an IO exception occurs during the write action
 	 */
 	void write(PersistenceManager persistenceManager, KnowledgeBase knowledgeBase, OutputStream stream, ProgressListener listener) throws IOException;
 
 	/**
 	 * The size of the knowledge--written by this {@link KnowledgeWriter}--is
 	 * valued by this method.
-	 * 
+	 *
 	 * @param knowledgeBase knowledge base containing the knowledge under
-	 *        estimation
+	 *                      estimation
 	 * @return the valued size of the write method
 	 */
-	int getEstimatedSize(KnowledgeBase knowledgeBase);
+	default int getEstimatedSize(KnowledgeBase knowledgeBase) {
+		return 1;
+	}
+
+	/**
+	 * Determines, whether the given knowledge base contains any knowledge for this {@link KnowledgeWriter} to be
+	 * written. If not, the file for this writer is not created.
+	 *
+	 * @param knowledgeBase the knowledge base for which we want to check whether knowledge is present
+	 */
+	default boolean isWriterNeeded(KnowledgeBase knowledgeBase) {
+		return true;
+	}
 }

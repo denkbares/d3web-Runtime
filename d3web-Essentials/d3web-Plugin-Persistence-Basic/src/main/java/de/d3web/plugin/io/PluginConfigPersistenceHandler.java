@@ -23,25 +23,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.denkbares.plugin.Plugin;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import com.denkbares.plugin.Plugin;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
-import com.denkbares.plugin.PluginManager;
 
 /**
  * A KnowledgeReader/Writer for the configuration of the extensions
@@ -109,7 +110,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		listener.updateProgress(0, "Saving plugin configuration");
 		float count = 1;
 		List<PluginEntry> entries = new LinkedList<>(getEntries(kb));
-		Collections.sort(entries, (o1, o2) -> o1.getPlugin().getPluginID().compareTo(o2.getPlugin().getPluginID()));
+		entries.sort(Comparator.comparing(o -> o.getPlugin().getPluginID()));
 		float max = entries.size();
 		for (PluginEntry conf : entries) {
 			Element pluginElement = doc.createElement(ELEMENT_PLUGIN);

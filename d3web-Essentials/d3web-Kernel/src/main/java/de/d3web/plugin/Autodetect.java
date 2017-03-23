@@ -32,5 +32,5 @@ public interface Autodetect {
 	/**
 	 * @return true, if the Plugin is needed, false otherwise
 	 */
-	boolean check(KnowledgeBase kb);
+	boolean check(KnowledgeBase knowledgeBase);
 }
