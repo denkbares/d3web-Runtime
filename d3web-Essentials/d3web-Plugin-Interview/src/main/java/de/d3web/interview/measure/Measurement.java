@@ -217,14 +217,15 @@ public class Measurement {
 				.searchQuestion(mapping.get(measurand));
 		if (question == null) return;
 
-		// check if we have a null value, then remove existing answer
 		if (rawValue == null) {
+			// if we have a null value, then remove existing answer
 			removeFact(session, question);
 		}
-
-		// otherwise convert raw value to question value and set the value
-		Value value = toValue(question, rawValue);
-		addFact(session, question, value);
+		else {
+			// otherwise convert raw value to question value and set the value
+			Value value = toValue(question, rawValue);
+			addFact(session, question, value);
+		}
 	}
 
 	/**
