@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -51,13 +52,14 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import com.denkbares.utils.Log;
+
+import static de.d3web.core.knowledge.Indication.State.INDICATED;
 
 /**
  * This is a 'marker' psmethod to represent all the initial values. Especially
  * used to add the initQASets to the QASetManager Creation date: (21.02.2002
  * 16:51:10)
- * 
+ *
  * @author Christian Betz
  */
 public class PSMethodInit implements PSMethod {
@@ -86,12 +88,11 @@ public class PSMethodInit implements PSMethod {
 
 			// init default indications
 			List<? extends QASet> initQuestions = session.getKnowledgeBase().getInitQuestions();
-			double index = -1.0;
+			int index = 1;
 			for (QASet object : initQuestions) {
 				Fact fact = FactFactory.createIndicationFact(
-						object, new Indication(Indication.State.INDICATED, index), this, this);
+						object, new Indication(INDICATED, -1.0 / index++), this, this);
 				session.getBlackboard().addInterviewFact(fact);
-				index += Double.MIN_VALUE;
 			}
 
 			// initialise all questions
@@ -118,13 +119,13 @@ public class PSMethodInit implements PSMethod {
 
 	/**
 	 * Returns the value represented by the string for the given question.
-	 * 
-	 * @created 20.09.2011
+	 *
 	 * @param q {@link Question}
 	 * @param property String of the init property
 	 * @return Value representing the string
-	 * @throws IllegalArgumentException it the property string is not correct
-	 *         for the given question
+	 * @throws IllegalArgumentException it the property string is not correct for the given
+	 * question
+	 * @created 20.09.2011
 	 */
 	public static Value getValue(Question q, String property) throws IllegalArgumentException {
 		if (property.equalsIgnoreCase("unknown")) {
