@@ -178,12 +178,12 @@ public class Measurement {
 	 * @param measurand the measured value identifier, will be mapped to a question
 	 * @param rawValue the value that has been measured
 	 */
-	public void applyValue(Session session, String measurand, Object rawValue) {
+	public Fact applyValue(Session session, String measurand, Object rawValue) {
 		try {
-			applyValueStrict(session, measurand, rawValue);
+			return applyValueStrict(session, measurand, rawValue);
 		}
 		catch (IllegalArgumentException e) {
-			applyValueStrict(session, measurand, Unknown.getInstance());
+			return applyValueStrict(session, measurand, Unknown.getInstance());
 		}
 	}
 
@@ -210,21 +210,23 @@ public class Measurement {
 	 * @param session the session to apply the value to
 	 * @param measurand the measured value identifier, will be mapped to a question
 	 * @param rawValue the value that has been measured
+	 * @return the value fact that has been applied, or null if not applied or removed
 	 */
-	public void applyValueStrict(Session session, String measurand, Object rawValue) {
+	public Fact applyValueStrict(Session session, String measurand, Object rawValue) {
 		// check if we have a question for the measurand to be applied
 		Question question = session.getKnowledgeBase().getManager()
 				.searchQuestion(mapping.get(measurand));
-		if (question == null) return;
+		if (question == null) return null;
 
 		if (rawValue == null) {
 			// if we have a null value, then remove existing answer
 			removeFact(session, question);
+			return null;
 		}
 		else {
 			// otherwise convert raw value to question value and set the value
 			Value value = toValue(question, rawValue);
-			addFact(session, question, value);
+			return addFact(session, question, value);
 		}
 	}
 
@@ -235,12 +237,14 @@ public class Measurement {
 	 * @param session the session to set the fact in
 	 * @param question the question to be set
 	 * @param value the measured value to be set
+	 * @return the fact that has been added
 	 * @see #removeFact(Session, Question)
 	 */
-	protected void addFact(Session session, Question question, Value value) {
+	protected Fact addFact(Session session, Question question, Value value) {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		session.getBlackboard().addValueFact(fact);
+		return fact;
 	}
 
 	/**

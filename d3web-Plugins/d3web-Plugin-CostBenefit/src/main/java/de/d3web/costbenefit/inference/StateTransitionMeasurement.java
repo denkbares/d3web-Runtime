@@ -32,9 +32,10 @@ public class StateTransitionMeasurement extends Measurement {
 	}
 
 	@Override
-	protected void addFact(Session session, Question question, Value value) {
+	protected Fact addFact(Session session, Question question, Value value) {
 		Fact fact = new PSMethodStateTransition.StateTransitionFact(session, question, value);
 		session.getBlackboard().addValueFact(fact);
+		return fact;
 	}
 
 	@Override
