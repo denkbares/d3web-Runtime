@@ -26,9 +26,8 @@ import de.d3web.core.session.Value;
 
 /**
  * This class represents a choice entered by a user during a dialog session.
- * 
+ *
  * @author joba
- * 
  */
 public class ChoiceValue implements QuestionValue {
 
@@ -36,9 +35,8 @@ public class ChoiceValue implements QuestionValue {
 
 	/**
 	 * Constructs a new ChoiceValue from a specified choice
-	 * 
-	 * @param choice the Choice for which a new ChoiceValue should be
-	 *        instantiated
+	 *
+	 * @param choice the Choice for which a new ChoiceValue should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public ChoiceValue(Choice choice) {
@@ -47,9 +45,8 @@ public class ChoiceValue implements QuestionValue {
 
 	/**
 	 * Constructs a new ChoiceValue from a specified choice text
-	 * 
-	 * @param text the choice text for which a new ChoiceValue should be
-	 *        instantiated
+	 *
+	 * @param text the choice text for which a new ChoiceValue should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public ChoiceValue(String text) {
@@ -58,9 +55,8 @@ public class ChoiceValue implements QuestionValue {
 
 	/**
 	 * Constructs a new ChoiceValue from a specified {@link ChoiceID}
-	 * 
-	 * @param choiceID the {@link ChoiceID} for which a new ChoiceValue should be
-	 *        instantiated
+	 *
+	 * @param choiceID the {@link ChoiceID} for which a new ChoiceValue should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public ChoiceValue(ChoiceID choiceID) {
@@ -82,6 +78,13 @@ public class ChoiceValue implements QuestionValue {
 		return choiceID;
 	}
 
+	/**
+	 * Returns the choice of the specified question that is reference by this choice value,
+	 * or null if the choice is not available in the specified question.
+	 *
+	 * @param question the question to get the choice from
+	 * @return the choice of this value, or null
+	 */
 	public Choice getChoice(QuestionChoice question) {
 		return choiceID.getChoice(question);
 	}
@@ -111,7 +114,7 @@ public class ChoiceValue implements QuestionValue {
 	 * important to notice, that this method also returns true, when a
 	 * {@link ChoiceValue} is compared with a {@link MultipleChoiceValue} and
 	 * both contain the same single choice.
-	 * 
+	 *
 	 * @author joba
 	 */
 	@Override
@@ -144,5 +147,4 @@ public class ChoiceValue implements QuestionValue {
 		// we do not know the other ChoiceValue instances
 		return 0;
 	}
-
 }

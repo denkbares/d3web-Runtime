@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
@@ -36,7 +38,7 @@ import de.d3web.core.session.Value;
 /**
  * This class represents the container for multiple values that can be given to
  * a {@link QuestionMC}.
- * 
+ *
  * @author joba (denkbares GmbH)
  * @created 07.04.2010
  */
@@ -47,8 +49,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	/**
 	 * Constructs a new MultipleChoiceValue
 	 *
-	 * @param choiceIDs the ChoiceID[] for which a new MultipleChoiceValue should
-	 *        be instantiated
+	 * @param choiceIDs the ChoiceID[] for which a new MultipleChoiceValue should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public MultipleChoiceValue(ChoiceID... choiceIDs) {
@@ -62,8 +63,8 @@ public class MultipleChoiceValue implements QuestionValue {
 	/**
 	 * Constructs a new MultipleChoiceValue
 	 *
-	 * @param choiceIDs the Collection of ChoiceID for which a new
-	 *        MultipleChoiceValue should be instantiated
+	 * @param choiceIDs the Collection of ChoiceID for which a new MultipleChoiceValue should be
+	 * instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public MultipleChoiceValue(Collection<ChoiceID> choiceIDs) {
@@ -102,7 +103,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	/**
 	 * Checks, if all choices are included in the other
 	 * {@link MultipleChoiceValue}.
-	 * 
+	 *
 	 * @param other another {@link MultipleChoiceValue}
 	 * @return true, if all choice values are contained in the other value
 	 * @author joba
@@ -116,10 +117,9 @@ public class MultipleChoiceValue implements QuestionValue {
 	 * Checks, if the choice(s) of the specified {@link Value} is contained in
 	 * this {@link MultipleChoiceValue}. The value may either be a
 	 * {@link ChoiceValue} or a {@link MultipleChoiceValue}
-	 * 
+	 *
 	 * @param value the ChoiceValue to be searched
-	 * @return true, if the specified choice value is contained as choice in
-	 *         this instance
+	 * @return true, if the specified choice value is contained as choice in this instance
 	 * @author joba, volker.belli
 	 * @date 08.04.2010
 	 */
@@ -138,10 +138,9 @@ public class MultipleChoiceValue implements QuestionValue {
 	/**
 	 * Checks, if the specified {@link Choice} is contained as choice in this
 	 * {@link MultipleChoiceValue}.
-	 * 
+	 *
 	 * @param choice the Choice to be searched
-	 * @return true, if the specified choice value is contained as choice in
-	 *         this instance
+	 * @return true, if the specified choice value is contained as choice in this instance
 	 * @author volker.belli
 	 * @date 08.04.2010
 	 */
@@ -152,10 +151,9 @@ public class MultipleChoiceValue implements QuestionValue {
 	/**
 	 * Checks, if the specified {@link ChoiceID} is contained as choice in this
 	 * {@link MultipleChoiceValue}.
-	 * 
+	 *
 	 * @param choiceID the ChoiceID to be searched
-	 * @return true, if the specified choice value is contained as choice in
-	 *         this instance
+	 * @return true, if the specified choice value is contained as choice in this instance
 	 * @author volker.belli
 	 * @date 08.04.2010
 	 */
@@ -164,8 +162,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	}
 
 	/**
-	 * @return the {@link Collection} of {@link ChoiceID}s of this multiple
-	 *         choice value
+	 * @return the {@link Collection} of {@link ChoiceID}s of this multiple choice value
 	 */
 	@Override
 	public Object getValue() {
@@ -188,7 +185,7 @@ public class MultipleChoiceValue implements QuestionValue {
 
 	public String getName() {
 		StringBuilder b = new StringBuilder();
-		for (Iterator<ChoiceID> iterator = choiceIDs.iterator(); iterator.hasNext();) {
+		for (Iterator<ChoiceID> iterator = choiceIDs.iterator(); iterator.hasNext(); ) {
 			ChoiceID choiceID = iterator.next();
 			b.append(choiceID.getText());
 			if (iterator.hasNext()) {
@@ -203,6 +200,15 @@ public class MultipleChoiceValue implements QuestionValue {
 		return choiceIDs.toString();
 	}
 
+	/**
+	 * Returns the choices of the specified question that are reference by this multiple choice
+	 * value. If any of the choices are not available in the specified question, an {@link
+	 * IllegalArgumentException} is thrown.
+	 *
+	 * @param question the question to get the choice from
+	 * @return the choice of this value
+	 */
+	@NotNull
 	public List<Choice> asChoiceList(QuestionChoice question) {
 		List<Choice> choices = new ArrayList<>(choiceIDs.size());
 		for (ChoiceID choiceID : choiceIDs) {
@@ -225,7 +231,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	 * important to notice, that this method also returns true, when a
 	 * {@link ChoiceValue} is compared with a {@link MultipleChoiceValue} and
 	 * both contain the same single choice.
-	 * 
+	 *
 	 * @author joba
 	 */
 	@Override

@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -898,6 +899,102 @@ public final class ValueUtils {
 		}
 		catch (ParseException ignore) {
 			throw new IllegalArgumentException("'" + timeZoneId + "' is not a valid time zone id");
+		}
+	}
+
+	/**
+	 * This method check is the specified value is compatible to the specified value object. If not,
+	 * false is returned. The value is assumed to be compatible, if it can be legally applied to the
+	 * value object as a fact.
+	 * <p>
+	 * Note that the method only checks if the core is capable to handle the object-value
+	 * combination well, not if the value should be applied to the object accoring to some
+	 * additional properties, e.g. is always allows Unknown to be applied to any question, even if
+	 * unknown is invisible, and also to apply each numeric value to a numeric question, even if the
+	 * value is out of the desired range limits.
+	 * <p>
+	 * For choice values, the method will check (!) if the particular choices are part of the
+	 * question, returning false if not.
+	 * <p>
+	 * The method is only capable to handle the question types and value types that comes with the
+	 * d3web core implementation. For all other question or value types, the method returns false.
+	 *
+	 * @param object the object to check the value against
+	 * @param value the value that should be checked
+	 * @return true if the value is compatible with the object
+	 */
+	public static boolean isCompatible(ValueObject object, Value value) {
+		// we check for an exception to avoid re-implementation
+		// we also not implement the conditions here, because this allows us to get a more
+		// specific error message in #requireCompatible.
+		try {
+			requireCompatible(object, value);
+			return true;
+		}
+		catch (IllegalArgumentException ignored) {
+			return false;
+		}
+	}
+
+	/**
+	 * This method check is the specified value is compatible to the specified value object. If not,
+	 * an {@link IllegalArgumentException} is thrown. The value is assumed to be compatible, if it
+	 * can be legally applied to the value object as a fact.
+	 * <p>
+	 * Note that the method only checks if the core is capable to handle the object-value
+	 * combination well, not if the value should be applied to the object accoring to some
+	 * additional properties, e.g. is always allows Unknown to be applied to any question, even if
+	 * unknown is invisible, and also to apply each numeric value to a numeric question, even if the
+	 * value is out of the desired range limits.
+	 * <p>
+	 * For choice values, the method will check (!) if the particular choices are part of the
+	 * question, throwing an {@link IllegalArgumentException} if not.
+	 * <p>
+	 * The method is only capable to handle the question types and value types that comes with the
+	 * d3web core implementation. For all other question or value types, the method also throws an
+	 * IllegalArgumentException.
+	 *
+	 * @param object the object to check the value against
+	 * @param value the value that should be checked
+	 * @throws IllegalArgumentException if the values are not compatible or we cannot decide if they
+	 * are compatible or not.
+	 */
+	public static void requireCompatible(ValueObject object, Value value) throws IllegalArgumentException {
+		if (value instanceof Unknown && object instanceof Question) {
+			// no tests required here
+		}
+		else if (value instanceof UndefinedValue && object instanceof Question) {
+			// no tests required here
+		}
+		else if (value instanceof Rating && object instanceof Solution) {
+			// no tests required here
+		}
+		else if (value instanceof MultipleChoiceValue && object instanceof QuestionMC) {
+			QuestionChoice question = (QuestionChoice) object;
+			MultipleChoiceValue val = (MultipleChoiceValue) value;
+			// will throw IllegalArgumentException if not compatible
+			val.asChoiceList(question);
+		}
+		else if (value instanceof ChoiceValue && object instanceof QuestionChoice) {
+			QuestionChoice question = (QuestionChoice) object;
+			ChoiceValue val = (ChoiceValue) value;
+			if (val.getChoice(question) == null) {
+				throw new IllegalArgumentException("Choice '" + val.getChoiceID() +
+						"' is not available in question " + object);
+			}
+		}
+		else if (value instanceof NumValue && object instanceof QuestionNum) {
+			// no tests required here
+		}
+		else if (value instanceof DateValue && object instanceof QuestionDate) {
+			// no tests required here
+		}
+		else if (value instanceof TextValue && object instanceof QuestionText) {
+			// no tests required here
+		}
+		else {
+			// no valid combination found (or combination not known) --> exception
+			throw new IllegalArgumentException(value + " is not a compatible value for " + object);
 		}
 	}
 }
