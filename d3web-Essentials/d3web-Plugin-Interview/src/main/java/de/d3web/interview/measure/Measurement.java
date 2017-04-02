@@ -14,6 +14,7 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
@@ -24,6 +25,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
@@ -108,6 +110,28 @@ public class Measurement {
 	}
 
 	/**
+	 * Returns true if the measurement only maps to questions where each of them already have a
+	 * valid answer, either comes from a problem solver of type {@link PSMethod.Type#source}, or if
+	 * the values are applied by this measurement.
+	 * <p>
+	 * Note that 'unknown' is assumed to be a valid answer if the unknown fact is applied by a
+	 * 'source' problem solver.
+	 *
+	 * @param session the session to detect
+	 * @return true if all mapped questions are already answered
+	 */
+	public boolean isFullyAnswered(Session session) {
+		TerminologyManager manager = session.getKnowledgeBase().getManager();
+		for (String questionName : mapping.values()) {
+			Question question = manager.searchQuestion(questionName);
+			if ((question != null) && !isAnswered(session, question)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Returns true if the starting condition is fulfilled for the specified session, or if no
 	 * starting condition is set at all (that means the measurement can always be started). Note
 	 * that the method does not consider if the measurement is already running or not.
@@ -170,13 +194,19 @@ public class Measurement {
 	 * value</td></tr> <tr><td>java.lang.Date</td><td>QuestionDate</td><td>the question will be
 	 * answered with the date value</td></tr> <tr><td>java.lang.String</td><td>QuestionChoice</td><td>the
 	 * question will be answered with the choice denoted by the string, if there is a matching
-	 * choice identifier or choice name of any language</td></tr> </table>
+	 * choice identifier or choice name of any language</td></tr> <tr><td>de.d3web.core.session.Value</td><td>Question</td><td>the
+	 * question will be answered with the specified value. The value must be compatible to the
+	 * question mapped by the measurand, otherwise the value is rejected, e.g. a TextValue cannot be
+	 * applied to a choice question.</td></tr> </table>
 	 * <p>
-	 * Any non-showed combination will result to unknown.
+	 * Any non-showed combination will result to unknown. Especially when the {@link Unknown}
+	 * singleton instance is specified as a raw value, it will apply 'unknown' to the question.
 	 *
 	 * @param session the session to apply the value to
 	 * @param measurand the measured value identifier, will be mapped to a question
 	 * @param rawValue the value that has been measured
+	 * @return the value fact that has been applied, also if unknown is applied due to an
+	 * incompatible value, or null if nothing is applied or a fact has been removed
 	 */
 	public Fact applyValue(Session session, String measurand, Object rawValue) {
 		try {
@@ -203,7 +233,10 @@ public class Measurement {
 	 * question will be answered with the choice denoted by the string, if there is a matching
 	 * choice identifier or choice name of any language</td></tr> <tr><td>java.lang.Number</td><td>QuestionChoice</td><td>the
 	 * question will be answered with the choice of the denoted index, where the first choice is "1"
-	 * and "0" is "unknown".</td></tr> </table>
+	 * and "0" is "unknown".</td></tr> <tr><td>de.d3web.core.session.Value</td><td>Question</td><td>the
+	 * question will be answered with the specified value. If the value is not compatible to the
+	 * questions mapped by the measurand (e.g. a TextValue is applied to a choice question), an
+	 * IllegalArgumentException is thrown.</td></tr> </table>
 	 * <p>
 	 * Any non-showed combination will result in an IllegalArgumentException.
 	 *
@@ -260,6 +293,26 @@ public class Measurement {
 		session.getBlackboard().removeValueFact(question, getPSMethod(session));
 	}
 
+	/**
+	 * Method to be called to check, if the specified question already has a
+	 * valid answer, either comes from a problem solver of type {@link PSMethod.Type#source}, or if
+	 * the value is applied by this measurement.
+	 * <p>
+	 * Note that 'unknown' is assumed to be a valid answer if the unknown fact is applied by a
+	 * 'source' problem solver.
+	 * <p>
+	 * The method
+	 * may be overwritten to handle special facts the previously have been added by {@link
+	 * #addFact(Session, Question, Value)}.
+	 *
+	 * @param session the session to detect
+	 * @return true if the question is already answered
+	 */
+	protected boolean isAnswered(Session session, Question question) {
+		Fact fact = session.getBlackboard().getValueFact(question);
+		return (fact != null) && fact.getPSMethod().hasType(PSMethod.Type.source);
+	}
+
 	private PSMethod getPSMethod(Session session) {
 		// query for measurement solver
 		PSMethodMeasurement solver = session.getPSMethodInstance(PSMethodMeasurement.class);
@@ -268,7 +321,10 @@ public class Measurement {
 	}
 
 	private Value toValue(Question question, Object rawValue) {
-		if (rawValue instanceof Value) return (Value) rawValue;
+		if (rawValue instanceof Value) {
+			ValueUtils.requireCompatible(question, (Value) rawValue);
+			return (Value) rawValue;
+		}
 		if ((question instanceof QuestionChoice) && (rawValue instanceof String)) {
 			String name = (String) rawValue;
 			Choice choice = KnowledgeBaseUtils.findChoice((QuestionChoice) question, name, ANY_PROMPT);

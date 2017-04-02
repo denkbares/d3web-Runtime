@@ -42,4 +42,11 @@ public class StateTransitionMeasurement extends Measurement {
 	protected void removeFact(Session session, Question question) {
 		// do nothing; state transitions cannot be removed
 	}
+
+	@Override
+	protected boolean isAnswered(Session session, Question question) {
+		// state transitions are never assumed to be answered,
+		// they can be measured every time, scanning for further changes
+		return false;
+	}
 }
