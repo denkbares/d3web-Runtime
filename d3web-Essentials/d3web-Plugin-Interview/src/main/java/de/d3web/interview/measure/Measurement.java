@@ -355,4 +355,14 @@ public class Measurement {
 		}
 		throw new IllegalArgumentException("cannot map measured value '" + rawValue + "' to question '" + question + "'");
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "{" +
+				"identifier='" + identifier + '\'' +
+				", mapping=" + mapping +
+				", startCondition=" + startCondition +
+				", stopCondition=" + stopCondition +
+				'}';
+	}
 }
