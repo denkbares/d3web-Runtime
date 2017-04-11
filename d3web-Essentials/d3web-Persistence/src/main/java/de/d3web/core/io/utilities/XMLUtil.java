@@ -32,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -114,7 +113,7 @@ public final class XMLUtil {
 	 * the question is null.
 	 *
 	 * @param parent Element where the question element should be appended
-	 * @param q Question which should be represented by the newly appended element
+	 * @param q      Question which should be represented by the newly appended element
 	 * @throws IOException if the question has no ID
 	 */
 	public static void appendQuestionLinkElement(Element parent, QASet q) throws IOException {
@@ -132,7 +131,7 @@ public final class XMLUtil {
 	 * Checks if the element has the specified element name and an attribute
 	 * type with the value typeToCheck
 	 *
-	 * @param element Element be checked
+	 * @param element     Element be checked
 	 * @param elementname element name to check
 	 * @param typeToCheck Value for the Attribute type
 	 * @return true, if the given element fulfills the requirements, false otherwise
@@ -148,7 +147,7 @@ public final class XMLUtil {
 	 * Checks if the element is named "Condition" and if has an attribute type
 	 * with the value typeToCheck
 	 *
-	 * @param element to be checked
+	 * @param element     to be checked
 	 * @param typeToCheck Value for the Attribute type
 	 * @return true, if the given element fulfills the requirements, false otherwise
 	 */
@@ -161,9 +160,9 @@ public final class XMLUtil {
 	 * type
 	 *
 	 * @param persistence the persistence to access the Document, where the Element should be
-	 * created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
+	 *                    created
+	 * @param nob         TerminologyObject, whose ID should be used
+	 * @param type        type of the condition
 	 * @return condition element
 	 */
 	public static Element writeCondition(Persistence<?> persistence, TerminologyObject nob, String type) {
@@ -174,8 +173,8 @@ public final class XMLUtil {
 	 * Creates a condition element with the id of the named object and the given
 	 * type
 	 *
-	 * @param doc Document, where the Element should be created
-	 * @param nob TerminologyObject, whose ID should be used
+	 * @param doc  Document, where the Element should be created
+	 * @param nob  TerminologyObject, whose ID should be used
 	 * @param type type of the condition
 	 * @return condition element
 	 */
@@ -196,9 +195,9 @@ public final class XMLUtil {
 	 * type and value
 	 *
 	 * @param persistence Persistence to access Document, where the Element should be created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
-	 * @param value value of the condition
+	 * @param nob         TerminologyObject, whose ID should be used
+	 * @param type        type of the condition
+	 * @param value       value of the condition
 	 * @return condition element
 	 */
 	public static Element writeCondition(Persistence<?> persistence, TerminologyObject nob, String type, String value) {
@@ -209,9 +208,9 @@ public final class XMLUtil {
 	 * Creates a condition element with the id of the named object, the given
 	 * type and value
 	 *
-	 * @param doc Document, where the Element should be created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
+	 * @param doc   Document, where the Element should be created
+	 * @param nob   TerminologyObject, whose ID should be used
+	 * @param type  type of the condition
 	 * @param value value of the condition
 	 * @return condition element
 	 */
@@ -228,10 +227,10 @@ public final class XMLUtil {
 	 * type and value. The value is stored in a child element.
 	 *
 	 * @param persistence the persistence to access the Document, where the Element should be
-	 * created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
-	 * @param value value of the condition
+	 *                    created
+	 * @param nob         TerminologyObject, whose ID should be used
+	 * @param type        type of the condition
+	 * @param value       value of the condition
 	 * @return condition element
 	 */
 	public static Element writeConditionWithValueNode(Persistence<?> persistence, TerminologyObject nob, String type, String value) throws IOException {
@@ -242,9 +241,9 @@ public final class XMLUtil {
 	 * Creates a condition element with the id of the named object, the given
 	 * type and value. The value is stored in a child element.
 	 *
-	 * @param doc Document, where the Element should be created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
+	 * @param doc   Document, where the Element should be created
+	 * @param nob   TerminologyObject, whose ID should be used
+	 * @param type  type of the condition
 	 * @param value value of the condition
 	 * @return condition element
 	 */
@@ -260,10 +259,10 @@ public final class XMLUtil {
 	 * newly created node.
 	 *
 	 * @param persistence the persistence to access the Document, where the Element should be
-	 * created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
-	 * @param value value of the condition
+	 *                    created
+	 * @param nob         TerminologyObject, whose ID should be used
+	 * @param type        type of the condition
+	 * @param value       value of the condition
 	 * @return condition element
 	 */
 	public static Element writeConditionWithValueNode(Persistence<?> persistence, TerminologyObject nob, String type, Element value) {
@@ -275,9 +274,9 @@ public final class XMLUtil {
 	 * type and value. The value node is inserted as a child element in the
 	 * newly created node.
 	 *
-	 * @param doc Document, where the Element should be created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
+	 * @param doc   Document, where the Element should be created
+	 * @param nob   TerminologyObject, whose ID should be used
+	 * @param type  type of the condition
 	 * @param value value of the condition
 	 * @return condition element
 	 */
@@ -291,13 +290,13 @@ public final class XMLUtil {
 	 * Creates a condition element with the id of the named object, the given
 	 * type and values
 	 *
-	 * @param doc Document, where the Element should be created
-	 * @param nob TerminologyObject, whose ID should be used
-	 * @param type type of the condition
+	 * @param doc   Document, where the Element should be created
+	 * @param nob   TerminologyObject, whose ID should be used
+	 * @param type  type of the condition
 	 * @param value answer of the condition
 	 * @return condition element
 	 * @throws IOException if one of the elements in values is neither a Choice nor a Unknown
-	 * Answer
+	 *                     Answer
 	 */
 	public static Element writeCondition(Document doc, TerminologyObject nob, String type,
 										 Value value) throws IOException {
@@ -341,8 +340,8 @@ public final class XMLUtil {
 	 * Creates a condition element with the specified type
 	 *
 	 * @param persistence the persistence to access the Document, where the Element should be
-	 * created
-	 * @param type type of the condition
+	 *                    created
+	 * @param type        type of the condition
 	 * @return condition element
 	 */
 	public static Element writeCondition(Persistence<?> persistence, String type) {
@@ -352,7 +351,7 @@ public final class XMLUtil {
 	/**
 	 * Creates a condition element with the specified type
 	 *
-	 * @param doc Document, where the Element should be created
+	 * @param doc  Document, where the Element should be created
 	 * @param type type of the condition
 	 * @return condition element
 	 */
@@ -366,7 +365,7 @@ public final class XMLUtil {
 	 * Appends an Element TargetQASets containing elements for the given qaSets
 	 *
 	 * @param element Element the TargetQASets Element should be appended
-	 * @param qaSets List of QASet being represented by the appended element
+	 * @param qaSets  List of QASet being represented by the appended element
 	 */
 	public static void appendTargetQASets(Element element, List<QASet> qaSets) {
 		Document doc = element.getOwnerDocument();
@@ -385,7 +384,7 @@ public final class XMLUtil {
 	 * Extract the qasets stored in the given element
 	 *
 	 * @param element Element representing the QASets
-	 * @param kb knowledge base containing the qasets
+	 * @param kb      knowledge base containing the qasets
 	 * @return List of represented QASets
 	 */
 	public static List<QASet> getTargetQASets(Element element, KnowledgeBase kb) {
@@ -408,7 +407,7 @@ public final class XMLUtil {
 	 * Adds the children of the TerminologyObject to the specified element
 	 *
 	 * @param namedObject TerminologyObject, whose children should be appended as Elements
-	 * @param element Element representing the namedObject, where the children will be appended
+	 * @param element     Element representing the namedObject, where the children will be appended
 	 */
 	public static void appendChildren(TerminologyObject namedObject, Element element) {
 		Document doc = element.getOwnerDocument();
@@ -427,9 +426,9 @@ public final class XMLUtil {
 	/**
 	 * Adds the children given from the xml structure to the TerminologyObject
 	 *
-	 * @param kb KnowledgeBase containing the children
+	 * @param kb          KnowledgeBase containing the children
 	 * @param namedObject where the children should be appended
-	 * @param element representing the namedObject and containing the children as childnodes
+	 * @param element     representing the namedObject and containing the children as childnodes
 	 */
 	public static void appendChildren(KnowledgeBase kb, TerminologyObject namedObject, Element element) throws IOException {
 		List<Element> children = null;
@@ -463,7 +462,7 @@ public final class XMLUtil {
 	 * Extracts primitive Values form a string
 	 *
 	 * @param textContent Sting containing the primitive value
-	 * @param clazz Name of the Class
+	 * @param clazz       Name of the Class
 	 * @return Extracted Value
 	 * @throws IOException if the class is not supported
 	 */
@@ -509,7 +508,7 @@ public final class XMLUtil {
 	 * list will only contain that elements of the NodeList that match the
 	 * specified node name. The name selection is case insensitive.
 	 *
-	 * @param list Nodelist containing all types of nodes (text nodes etc.)
+	 * @param list      Nodelist containing all types of nodes (text nodes etc.)
 	 * @param nodeNames the name of the elements to be selected (case insensitive)
 	 * @return a list containing all elements from nodelist, but not containing other nodes such as
 	 * text nodes etc.
@@ -522,13 +521,13 @@ public final class XMLUtil {
 	 * Appends all entries with the given autosave of the {@link InfoStore} to
 	 * the specified father. If autosave is null, all entries will be appended
 	 *
-	 * @param father {@link Element}
+	 * @param father    {@link Element}
 	 * @param infoStore {@link InfoStore}
-	 * @param autosave {@link Autosave}
+	 * @param autosave  {@link Autosave}
 	 * @throws IOException if a fragment cannot be read
 	 * @created 08.11.2010
 	 */
-	public static void appendInfoStoreEntries(Persistence<?> persistance, Element father, InfoStore infoStore, Autosave autosave) throws IOException {
+	public static void appendInfoStoreEntries(Persistence<?> persistence, Element father, InfoStore infoStore, Autosave autosave) throws IOException {
 		Document doc = father.getOwnerDocument();
 		for (Triple<Property<?>, Locale, Object> entry : sortEntries(infoStore.entries())) {
 			if (autosave == null || entry.getA().hasState(autosave)) {
@@ -540,7 +539,7 @@ public final class XMLUtil {
 					entryElement.setAttribute("lang", language.toString());
 				}
 				try {
-					entryElement.appendChild(persistance.writeFragment(entry.getC()));
+					entryElement.appendChild(persistence.writeFragment(entry.getC()));
 				}
 				catch (NoSuchFragmentHandlerException e) {
 					if (entry.getA().canParseValue()) {
@@ -594,11 +593,11 @@ public final class XMLUtil {
 		return ret;
 	}
 
-	public static void appendInfoStore(Persistence<?> persistance, Element idObjectElement, NamedObject idObject, Autosave autosave) throws IOException {
+	public static void appendInfoStore(Persistence<?> persistence, Element idObjectElement, NamedObject idObject, Autosave autosave) throws IOException {
 		InfoStore infoStore = idObject.getInfoStore();
 		if (infoStore != null && !infoStore.isEmpty()) {
 			Element infoStoreElement = idObjectElement.getOwnerDocument().createElement(INFO_STORE);
-			appendInfoStoreEntries(persistance, infoStoreElement, infoStore, autosave);
+			appendInfoStoreEntries(persistence, infoStoreElement, infoStore, autosave);
 			if (infoStoreElement.getChildNodes().getLength() > 0) {
 				idObjectElement.appendChild(infoStoreElement);
 			}
@@ -610,7 +609,7 @@ public final class XMLUtil {
 	 * entries to the infostore
 	 *
 	 * @param infoStore {@link InfoStore}
-	 * @param father {@link Element}
+	 * @param father    {@link Element}
 	 * @throws IOException if any property is known but cannot be read/parsed
 	 * @created 08.11.2010
 	 */
@@ -618,10 +617,8 @@ public final class XMLUtil {
 		for (Element child : getElementList(father.getChildNodes())) {
 			Property<Object> property;
 			String propertyName = child.getAttribute("property");
-			try {
-				property = Property.getUntypedProperty(propertyName);
-			}
-			catch (NoSuchElementException e) {
+			property = Property.getUntypedPropertyOrNull(propertyName);
+			if (property == null) {
 				logMissingProperty(persistence, propertyName);
 				continue;
 			}
@@ -667,7 +664,7 @@ public final class XMLUtil {
 	 * Logs a missing property to the console. It avoids two log entries for the same missing
 	 * property in the same persistence artifact.
 	 *
-	 * @param persistence the persistence currently used
+	 * @param persistence  the persistence currently used
 	 * @param propertyName the property that is missing
 	 */
 	public static void logMissingProperty(Persistence<?> persistence, String propertyName) {
@@ -688,7 +685,7 @@ public final class XMLUtil {
 	 * @param stream the XML input stream
 	 * @return Document the document created from the stream
 	 * @throws IOException if the stream cannot be read or does not contains valid XML content or
-	 * the XML parser cannot be configured
+	 *                     the XML parser cannot be configured
 	 */
 	public static Document streamToDocument(InputStream stream) throws IOException {
 		return streamToDocument(stream, null);
@@ -697,12 +694,12 @@ public final class XMLUtil {
 	/**
 	 * Creates an XML {@link Document} from the given {@link InputStream}.
 	 *
-	 * @param stream the XML input stream
+	 * @param stream   the XML input stream
 	 * @param resolver is a {@link EntityResolver} to specify how entities given in the {@link
-	 * Document} should be resolved
+	 *                 Document} should be resolved
 	 * @return Document the document created from the stream
 	 * @throws IOException if the stream cannot be read or does not contains valid XML content or
-	 * the XML parser cannot be configured
+	 *                     the XML parser cannot be configured
 	 */
 	public static Document streamToDocument(InputStream stream, EntityResolver resolver) throws IOException {
 		return XMLUtils.streamToDocument(stream, resolver);
@@ -723,9 +720,9 @@ public final class XMLUtil {
 	 * Creates an XML {@link Document} from the {@link File}, indicating the
 	 * parse progress.
 	 *
-	 * @param file the file to be read
+	 * @param file     the file to be read
 	 * @param progress the progress listener used to notify the progress
-	 * @param message the progress message to be used when notifying the progress
+	 * @param message  the progress message to be used when notifying the progress
 	 * @return Document the document created from the stream
 	 * @throws IOException when an error occurs
 	 */
@@ -748,7 +745,7 @@ public final class XMLUtil {
 	/**
 	 * Writes the Document to the given OutputStream
 	 *
-	 * @param doc input document
+	 * @param doc    input document
 	 * @param stream outout stream
 	 * @throws IOException when an error occurs
 	 */
@@ -824,7 +821,7 @@ public final class XMLUtil {
 	 *
 	 * @param element the element to add the tag(s) to
 	 * @param tagName the name of the tag(s) to be created
-	 * @param values the string values to add
+	 * @param values  the string values to add
 	 * @created 25.01.2014
 	 */
 	public static void writeStrings(Element element, String tagName, String... values) {
@@ -838,7 +835,7 @@ public final class XMLUtil {
 	 *
 	 * @param element the element to add the tag(s) to
 	 * @param tagName the name of the tag(s) to be created
-	 * @param values the string values to add
+	 * @param values  the string values to add
 	 * @created 25.01.2014
 	 */
 	public static void writeEnums(Element element, String tagName, Enum<?>... values) {

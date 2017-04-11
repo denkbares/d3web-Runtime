@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
 import com.denkbares.strings.Strings;
@@ -221,20 +224,43 @@ public final class Property<T> {
 	 * defined in a Plugin.
 	 *
 	 * @param name specified name of the {@link Property}
-	 * @return {@link Property} if a property with this name is defined, null otherwise
+	 * @return {@link Property} if a property with this name is defined
 	 * @throws NoSuchElementException if there is no property defined with that name
 	 * @created 07.10.2010
 	 */
 	@SuppressWarnings("unchecked")
+	@NotNull
 	public static Property<Object> getUntypedProperty(String name) throws NoSuchElementException {
-		String key = name.toLowerCase();
-		Property<?> property = properties.get(key);
-		if (property == null) property = synonyms.get(key);
+		Property<?> property = getProperty(name);
 		if (property == null) {
 			throw new NoSuchElementException("unknown property " + name);
 		}
-		property.initStoredClass();
 		return (Property<Object>) property;
+	}
+
+	/**
+	 * Returns the Property with the specified name or null, if no such property exists.
+	 * <p>
+	 * This method will not generate Properties lazy, it only returns Properties
+	 * defined in a Plugin.
+	 *
+	 * @param name specified name of the {@link Property}
+	 * @return {@link Property} if a property with this name is defined, null otherwise
+	 * @created 07.10.2010
+	 */
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public static Property<Object> getUntypedPropertyOrNull(String name) {
+		Property<?> property = getProperty(name);
+		return (Property<Object>) property;
+	}
+
+	private static Property<?> getProperty(String name) {
+		String key = name.toLowerCase();
+		Property<?> property = properties.get(key);
+		if (property == null) property = synonyms.get(key);
+		if (property != null) property.initStoredClass();
+		return property;
 	}
 
 	/**
