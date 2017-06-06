@@ -45,6 +45,8 @@ public class SingleAlternativeTest extends KBTest {
 			List<Choice> allAlternatives = questionChoice.getAllAlternatives();
 			if (allAlternatives.size() != 1) continue;
 
+			if (acceptedSingleAlternatives.contains(questionChoice.getName())) continue;
+
 			Choice choice = allAlternatives.get(0);
 			if (acceptedSingleAlternatives.contains(choice.getName())) continue;
 			Map<Locale, String> entries = choice.getInfoStore().entries(MMInfo.PROMPT);
