@@ -168,7 +168,7 @@ public class BuildResultPersistenceHandler {
 			return BuildResultPersistenceHandler.fromXML(document);
 		}
 		catch (ParseException | ParserConfigurationException | SAXException e) {
-			throw new IOException("internal xml error");
+			throw new IOException("internal xml error", e);
 		}
 	}
 
