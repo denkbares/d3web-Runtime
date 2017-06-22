@@ -114,7 +114,7 @@ public class BuildResultPersistenceHandler {
 			// write unexpected messages
 			writeMessages(document, result, test, result.getTestObjectsWithUnexpectedOutcome());
 
-			writeSummary(document, result, test);
+			writeSummary(document, result, test, build.isVerbosePersistence());
 		}
 
 		return document;
@@ -137,13 +137,24 @@ public class BuildResultPersistenceHandler {
 		}
 	}
 
-	private static void writeSummary(Document document, TestResult result, Element parent) {
+	private static void writeSummary(Document document, TestResult result, Element parent, boolean verbosePersistence) {
 		// new: append summary message if available
 		Message summary = result.getSummary();
 		if (summary != null) {
 			Element messageElement = document.createElement(MESSAGE);
 			messageElement.setAttribute(TYPE, summary.getType().toString());
-			messageElement.setAttribute(TEXT, summary.getText());
+			String text = summary.getText();
+			Test<?> test = TestManager.findTest(result.getTestName());
+			if (test != null && verbosePersistence) {
+				String description = "Test description: " + test.getDescription();
+				if (Strings.isBlank(text)) {
+					text = description;
+				}
+				else {
+					text += "\n" + description;
+				}
+			}
+			messageElement.setAttribute(TEXT, text);
 			messageElement.setAttribute(SUMMARY, "true");
 			parent.appendChild(messageElement);
 		}
