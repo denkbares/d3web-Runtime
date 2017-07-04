@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
@@ -41,7 +42,6 @@ import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowSet;
 import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
-import com.denkbares.utils.Log;
 
 /**
  * @author Reinhard Hatko
@@ -307,11 +307,7 @@ public final class DiaFluxUtils {
 	}
 
 	private static void addFlow(Map<Flow, Collection<ComposedNode>> result, Flow calledFlow) {
-		Collection<ComposedNode> flows = result.get(calledFlow);
-		if (flows == null) {
-			flows = new HashSet<>();
-			result.put(calledFlow, flows);
-		}
+		Collection<ComposedNode> flows = result.computeIfAbsent(calledFlow, k -> new HashSet<>());
 	}
 
 	private static void addCall(Map<Flow, Collection<ComposedNode>> result, Flow callingFlow, ComposedNode calledNode) {

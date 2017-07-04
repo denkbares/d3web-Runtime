@@ -234,7 +234,10 @@ public class DiaFluxCaseObject implements SessionObject {
 	public void updateSuspectedSolutions() {
 		Set<Node> startNodes = new HashSet<>();
 		for (Edge edge : undefinedEdges) {
-			startNodes.add(edge.getEndNode());
+			Node endNode = edge.getEndNode();
+			if (endNode != null) { // robustness for incomplete flows
+				startNodes.add(endNode);
+			}
 		}
 
 		Set<Solution> solutions = findPotentialSolutions(startNodes);
@@ -299,7 +302,7 @@ public class DiaFluxCaseObject implements SessionObject {
 			if (node instanceof ComposedNode) {
 				StartNode calledNode = DiaFluxUtils.getCalledStartNode((ComposedNode) node);
 				if (traversal != null) traversal.put(node, calledNode);
-				if (!closedNodes.contains(calledNode) &&
+				if (calledNode != null && !closedNodes.contains(calledNode) &&
 						!FluxSolver.isActiveNode(calledNode, session)) {
 					openNodes.add(calledNode);
 				}
