@@ -30,9 +30,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.denkbares.utils.Log;
+import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
+import de.d3web.diaFlux.flow.ActionNode;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.DiaFluxElement;
@@ -44,9 +47,10 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.flow.StartNode;
 
 /**
+ * Utils methods for DiaFlux objects.
+ * 
  * @author Reinhard Hatko
- *         <p>
- *         Created: 07.08.2010
+ * Created: 07.08.2010
  */
 public final class DiaFluxUtils {
 
@@ -145,7 +149,6 @@ public final class DiaFluxUtils {
 		}
 
 		return result;
-
 	}
 
 	public static Flow findFlow(KnowledgeBase kb, String flowName) {
@@ -175,7 +178,6 @@ public final class DiaFluxUtils {
 
 		Log.severe(("Node '" + nodeName + "' not found."));
 		return null;
-
 	}
 
 	public static DiaFluxElement findObjectById(Flow flow, String id) {
@@ -200,7 +202,6 @@ public final class DiaFluxUtils {
 		if (flow == null) return null;
 		List<StartNode> startNodes = flow.getStartNodes();
 		return findNode(startNodes, startNodeName);
-
 	}
 
 	/**
@@ -289,7 +290,6 @@ public final class DiaFluxUtils {
 
 		Flow callingFlow = nodes.get(0).getFlow();
 		return createFlowStructure(new HashMap<>(), callingFlow);
-
 	}
 
 	private static Map<Flow, Collection<ComposedNode>> createFlowStructure(Map<Flow, Collection<ComposedNode>> result, Flow callingFlow) {
@@ -303,7 +303,6 @@ public final class DiaFluxUtils {
 		}
 
 		return result;
-
 	}
 
 	private static void addFlow(Map<Flow, Collection<ComposedNode>> result, Flow calledFlow) {
@@ -315,4 +314,14 @@ public final class DiaFluxUtils {
 		flows.add(calledNode);
 	}
 
+	public static TerminologyObject getAssignedObject(Node node) {
+		if (node instanceof ActionNode) {
+			PSAction action = ((ActionNode) node).getAction();
+			List<? extends TerminologyObject> objects = action.getBackwardObjects();
+			if (!objects.isEmpty()) {
+				return objects.get(0);
+			}
+		}
+		return null;
+	}
 }
