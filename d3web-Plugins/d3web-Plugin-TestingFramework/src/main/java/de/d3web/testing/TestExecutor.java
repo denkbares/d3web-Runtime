@@ -57,7 +57,7 @@ public class TestExecutor {
 	 * Here the number of (parllel) threads are configured that will be used to execute the testing
 	 * tasks.
 	 */
-	private static final int NUMBER_OF_PARALLEL_THREADS = 2;
+	private static final int DEFAULT_NUMBER_OF_PARALLEL_THREADS = 2;
 
 	private final Collection<TestObjectProvider> objectProviders;
 	private final List<TestSpecification<?>> specifications;
@@ -79,14 +79,15 @@ public class TestExecutor {
 		return build;
 	}
 
-	/**
-	 * Creates a TestExecutor with the given task list and TestObjectProvider.
-	 */
 	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener) {
+		this(providers, specifications, listener, DEFAULT_NUMBER_OF_PARALLEL_THREADS);
+	}
+
+	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, int numberOfThreads) {
 		this.objectProviders = providers;
 		this.specifications = specifications;
 		this.progressListener = listener;
-		this.executor = Executors.newFixedThreadPool(NUMBER_OF_PARALLEL_THREADS);
+		this.executor = Executors.newFixedThreadPool(numberOfThreads);
 		this.build = new BuildResult();
 	}
 
@@ -299,10 +300,8 @@ public class TestExecutor {
 				}
 				catch (RejectedExecutionException e) {
 					// it is possible that the executor is shut down during or
-					// before adding the tests to the executor... we just catch
-					// it
-					Log.warning("Rejected execution of " + callableTest.specification.getTestName()
-							+ ": " + callableTest.testObjectName);
+					// before adding the tests to the executor... we just catch it
+					Log.warning("Rejected execution of " + callableTest.specification.getTestName() + ": " + callableTest.testObjectName);
 				}
 
 				try {
