@@ -34,7 +34,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 /**
  * The {@link TerminologyManager} provides convinient methods to access or
  * search for elements of a {@link KnowledgeBase} instance.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 12.01.2011
  */
@@ -50,7 +50,7 @@ public class TerminologyManager {
 
 	/**
 	 * Creates a new manager for the specified {@link KnowledgeBase} instance.
-	 * 
+	 *
 	 * @param knowledgeBase the specified {@link KnowledgeBase} instance
 	 */
 	public TerminologyManager(KnowledgeBase knowledgeBase) {
@@ -60,9 +60,9 @@ public class TerminologyManager {
 	/**
 	 * Inserts the specified {@link TerminologyObject} instance into the
 	 * {@link KnowledgeBase}.
-	 * 
-	 * @created 06.05.2011
+	 *
 	 * @param object the specified {@link TerminologyObject} instance
+	 * @created 06.05.2011
 	 */
 	public void putTerminologyObject(TerminologyObject object) {
 		if (object.getName() == null) {
@@ -97,10 +97,10 @@ public class TerminologyManager {
 	/**
 	 * Deletes a terminology object from the knowledge base. Exception thrown:
 	 * An object cannot be removed, if it has children or parent relations.
-	 * 
+	 * <p>
 	 * Do not call this method directly, use
 	 * TerminologyObject.removeFromKnowledgeBase().
-	 * 
+	 *
 	 * @param object the object to be removed
 	 */
 	public void remove(TerminologyObject object) {
@@ -118,9 +118,9 @@ public class TerminologyManager {
 
 	/**
 	 * Returns all {@link Solution} instances stored in this knowledge base.
-	 * 
+	 *
 	 * @return list of all {@link Solution} instances contained in this
-	 *         {@link KnowledgeBase}
+	 * {@link KnowledgeBase}
 	 */
 	public List<Solution> getSolutions() {
 		return getObjects(Solution.class);
@@ -128,9 +128,9 @@ public class TerminologyManager {
 
 	/**
 	 * Returns all questionnaires contained in this {@link KnowledgeBase}.
-	 * 
+	 *
 	 * @return an unmodifiable {@link List} of all {@link QContainer} instances
-	 *         contained in this {@link KnowledgeBase}
+	 * contained in this {@link KnowledgeBase}
 	 */
 	public List<QContainer> getQContainers() {
 		return getObjects(QContainer.class);
@@ -140,7 +140,7 @@ public class TerminologyManager {
 	 * Returns the (flattened) {@link List} of all {@link Question} instances
 	 * represented in this knowledge base. The returned list may be
 	 * unmodifiable.
-	 * 
+	 *
 	 * @return list of all questions contained in this KnowledgeBase
 	 */
 	public List<Question> getQuestions() {
@@ -151,9 +151,9 @@ public class TerminologyManager {
 	 * Returns the (flattened) {@link List} of all {@link TerminologyObject}
 	 * instances represented in this knowledge base being an instance of the
 	 * specified class. The returned list is unmodifiable.
-	 * 
+	 *
 	 * @return list of all TerminologyObjects of a certain type contained in
-	 *         this KnowledgeBase
+	 * this KnowledgeBase
 	 */
 	public <T extends TerminologyObject> List<T> getObjects(Class<T> clazz) {
 		List<T> questions = new ArrayList<>();
@@ -167,16 +167,14 @@ public class TerminologyManager {
 
 	/**
 	 * Tries to find a {@link Solution} instance with the specified unique name.
-	 * 
+	 *
 	 * @return a {@link Solution} instance with the specified unique name;
-	 *         <code>null</code> if none found
+	 * <code>null</code> if none found
 	 */
 	public Solution searchSolution(String id) {
-		if (objectNameMap.containsKey(id)) {
-			NamedObject o = objectNameMap.get(id);
-			if (o instanceof Solution) {
-				return (Solution) o;
-			}
+		NamedObject o = objectNameMap.get(id);
+		if (o instanceof Solution) {
+			return (Solution) o;
 		}
 		return null;
 	}
@@ -184,16 +182,14 @@ public class TerminologyManager {
 	/**
 	 * Tries to find a {@link QASet} instance (questions, questionnaires) with
 	 * the specified unique name.
-	 * 
+	 *
 	 * @return a {@link QASet} instance with the specified unique name;
-	 *         <code>null</code> if none found
+	 * <code>null</code> if none found
 	 */
 	public QASet searchQASet(String id) {
-		if (objectNameMap.containsKey(id)) {
-			NamedObject o = objectNameMap.get(id);
-			if (o instanceof QASet) {
-				return (QASet) o;
-			}
+		NamedObject o = objectNameMap.get(id);
+		if (o instanceof QASet) {
+			return (QASet) o;
 		}
 		return null;
 	}
@@ -201,10 +197,10 @@ public class TerminologyManager {
 	/**
 	 * Tries to retrieve an terminology object with the specified name, that is
 	 * contained in this knowledge base.
-	 * 
+	 *
 	 * @param name the specified name
 	 * @return the terminology object with the specified identifier;
-	 *         <code>null</code> if none found
+	 * <code>null</code> if none found
 	 */
 	public TerminologyObject search(String name) {
 		return objectNameMap.get(name);
@@ -214,12 +210,12 @@ public class TerminologyManager {
 	 * Tries to retrieve an terminology object with the specified name and
 	 * class, that is contained in this knowledge base. If no object found with
 	 * these criteria, null is returned.
-	 * 
-	 * @param name the specified name
+	 *
+	 * @param name    the specified name
 	 * @param toClass the class the returned {@link TerminologyObject} needs to
-	 *        have
+	 *                have
 	 * @return the terminology object with the specified identifier;
-	 *         <code>null</code> if none found
+	 * <code>null</code> if none found
 	 */
 	public <T> T search(String name, Class<T> toClass) {
 		TerminologyObject terminologyObject = objectNameMap.get(name);
@@ -232,16 +228,14 @@ public class TerminologyManager {
 	/**
 	 * Tries to find a {@link QContainer} instance with the specified unique
 	 * name.
-	 * 
+	 *
 	 * @return a {@link QContainer} instance with the specified unique name;
-	 *         <code>null</code> if none found
+	 * <code>null</code> if none found
 	 */
 	public QContainer searchQContainer(String name) {
-		if (objectNameMap.containsKey(name)) {
-			NamedObject o = objectNameMap.get(name);
-			if (o instanceof QContainer) {
-				return (QContainer) o;
-			}
+		NamedObject o = objectNameMap.get(name);
+		if (o instanceof QContainer) {
+			return (QContainer) o;
 		}
 		return null;
 	}
@@ -249,7 +243,7 @@ public class TerminologyManager {
 	/**
 	 * Tries to find a terminology object (solutions, questions, questionnaires)
 	 * with the specified name.
-	 * 
+	 *
 	 * @param name the specified name of the searched terminology object
 	 * @return the search terminology object; <code>null</code> if none found
 	 * @deprecated use {@link #search(String)} instead
@@ -262,16 +256,14 @@ public class TerminologyManager {
 	/**
 	 * Tries to find a {@link Question} instance with the specified unique
 	 * identifier.
-	 * 
+	 *
 	 * @param name the unique identifier of the search {@link Question}
 	 * @return the searched question; <code>null</code> if none found
 	 */
 	public Question searchQuestion(String name) {
-		if (objectNameMap.containsKey(name)) {
-			NamedObject o = objectNameMap.get(name);
-			if (o instanceof Question) {
-				return (Question) o;
-			}
+		NamedObject o = objectNameMap.get(name);
+		if (o instanceof Question) {
+			return (Question) o;
 		}
 		return null;
 	}
@@ -279,7 +271,7 @@ public class TerminologyManager {
 	/**
 	 * Returns all question/questionnaires stored in this {@link KnowledgeBase}
 	 * instance.
-	 * 
+	 *
 	 * @return all question/questionnaires contained in this knowledge base
 	 */
 	public List<QASet> getQASets() {
@@ -295,10 +287,10 @@ public class TerminologyManager {
 	/**
 	 * Returns all {@link TerminologyObject} instances contained in the
 	 * corresponding {@link KnowledgeBase}.
-	 * 
-	 * @created 06.05.2011
+	 *
 	 * @return all {@link TerminologyObject} instances contained in the
-	 *         corresponding {@link KnowledgeBase}
+	 * corresponding {@link KnowledgeBase}
+	 * @created 06.05.2011
 	 */
 	public Collection<TerminologyObject> getAllTerminologyObjects() {
 		return Collections.unmodifiableCollection(objectNameMap.values());
@@ -321,11 +313,10 @@ public class TerminologyManager {
 	 * For performance reasons and due to building the indexes on demand and
 	 * re-index if the terminology of the knowledge base changes, you should
 	 * avoid to call this method during building the knowledge base.
-	 * 
-	 * 
-	 * @created 17.03.2013
+	 *
 	 * @param object the object to get the index for
 	 * @return the index of the object in its particular tree
+	 * @created 17.03.2013
 	 */
 	public int getTreeIndex(TerminologyObject object) {
 		return getIndexer(object).getIndex(object);

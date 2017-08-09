@@ -155,7 +155,7 @@ public class KnowledgeBase implements NamedObject {
 
 	private static List<QASet> sortByValue(final Map<QASet, Integer> map) {
 		List<QASet> result = new LinkedList<>(map.keySet());
-		Collections.sort(result, (o1, o2) -> {
+		result.sort((o1, o2) -> {
 			Integer prio1 = map.get(o1);
 			Integer prio2 = map.get(o2);
 			return prio1.compareTo(prio2);
