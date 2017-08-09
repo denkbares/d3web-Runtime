@@ -20,6 +20,7 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 	}
 
 	public Collection<Flow> getFlows() {
-		return map.values();
+		return Collections.unmodifiableCollection(map.values());
 	}
 
 	public boolean isEmpty() {

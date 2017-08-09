@@ -43,11 +43,6 @@ public final class FlowFactory {
 	 * Creates a Flow instance with the supplied nodes and edges. Furthermore creates the EdgeMap KnowledgeSlices and
 	 * attaches them to the according TerminologyObjects.
 	 *
-	 * @param knowledgeBase
-	 * @param name
-	 * @param nodes
-	 * @param edges
-	 * @return
 	 */
 	public static Flow createFlow(KnowledgeBase knowledgeBase, String name, List<Node> nodes, List<Edge> edges) {
 
