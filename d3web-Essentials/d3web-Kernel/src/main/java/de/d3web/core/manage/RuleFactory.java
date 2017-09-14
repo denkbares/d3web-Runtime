@@ -22,8 +22,11 @@ package de.d3web.core.manage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.formula.FormulaElement;
@@ -104,6 +107,15 @@ public final class RuleFactory {
 		setRuleParams(rule, action, condition, exceptionCondition);
 		return rule;
 	}
+
+	public static Collection<Rule> createRules(List<PSAction> actions, Condition condition, Condition exceptionCondition, Class<? extends PSMethodRulebased> psMethodContext) {
+		Set<Rule> result = new HashSet<>();
+		for (PSAction action : actions) {
+			result.add(createRule(action, condition, exceptionCondition, psMethodContext));
+		}
+		return result;
+	}
+
 
 	public static Rule createHeuristicPSRule(
 			Solution solution,
