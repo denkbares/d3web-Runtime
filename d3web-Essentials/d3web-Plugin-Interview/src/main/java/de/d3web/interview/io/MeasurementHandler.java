@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.w3c.dom.Element;
 
+import com.denkbares.strings.Strings;
 import com.denkbares.utils.XMLUtils;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.Persistence;
@@ -27,8 +28,7 @@ import de.d3web.interview.measure.Measurement;
  * @created 09.06.16
  */
 public class MeasurementHandler implements FragmentHandler<KnowledgeBase> {
-
-	private static final String ELEMENT = "measurement";
+	protected static final String ELEMENT = "measurement";
 	private static final String ATTR_IDENTIFIER = "identifier";
 
 	private static final String ELEMENT_START = "start";
@@ -38,9 +38,15 @@ public class MeasurementHandler implements FragmentHandler<KnowledgeBase> {
 	private static final String ATTR_MEASURAND = "measurand";
 	private static final String ATTR_QUESTION = "question";
 
+	/**
+	 * Classes inheriting this class should set a type attribute that uniquely identifies them.
+	 * In addition, a lower priority should ensure that canWrite is called on the subclass.
+	 */
+	protected static final String ATTR_TYPE = "type";
+
 	@Override
 	public boolean canRead(Element element) {
-		return element.getNodeName().equals(ELEMENT);
+		return element.getNodeName().equals(ELEMENT) && Strings.isBlank(element.getAttribute(ATTR_TYPE));
 	}
 
 	@Override

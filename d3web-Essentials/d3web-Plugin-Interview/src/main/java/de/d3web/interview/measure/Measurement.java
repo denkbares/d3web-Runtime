@@ -320,7 +320,7 @@ public class Measurement {
 		return solver;
 	}
 
-	private Value toValue(Question question, Object rawValue) {
+	protected Value toValue(Question question, Object rawValue) {
 		if (rawValue instanceof Value) {
 			ValueUtils.requireCompatible(question, (Value) rawValue);
 			return (Value) rawValue;
