@@ -4,6 +4,7 @@
 
 package de.d3web.interview.measure;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,7 +78,9 @@ public class Measurement {
 		this.identifier = identifier;
 		this.startCondition = startCondition;
 		this.stopCondition = stopCondition;
-		if (mapping != null) this.mapping.putAll(mapping);
+		if (mapping != null) {
+			this.mapping.putAll(mapping);
+		}
 	}
 
 	/**
@@ -107,6 +110,22 @@ public class Measurement {
 	 */
 	public Condition getStopCondition() {
 		return stopCondition;
+	}
+
+	/**
+	 * To be called when the measurement is started.
+	 *
+	 * @param session the running session
+	 */
+	public void start(Session session) {
+	}
+
+	/**
+	 * To be called when the measurement is stopped.
+	 *
+	 * @param session the running session
+	 */
+	public void stop(Session session) {
 	}
 
 	/**
@@ -202,13 +221,13 @@ public class Measurement {
 	 * Any non-showed combination will result to unknown. Especially when the {@link Unknown}
 	 * singleton instance is specified as a raw value, it will apply 'unknown' to the question.
 	 *
-	 * @param session the session to apply the value to
+	 * @param session   the session to apply the value to
 	 * @param measurand the measured value identifier, will be mapped to a question
-	 * @param rawValue the value that has been measured
+	 * @param rawValue  the value that has been measured
 	 * @return the value fact that has been applied, also if unknown is applied due to an
 	 * incompatible value, or null if nothing is applied or a fact has been removed
 	 */
-	public Fact applyValue(Session session, String measurand, Object rawValue) {
+	public Collection<Fact> applyValue(Session session, String measurand, Object rawValue) {
 		try {
 			return applyValueStrict(session, measurand, rawValue);
 		}
@@ -240,16 +259,18 @@ public class Measurement {
 	 * <p>
 	 * Any non-showed combination will result in an IllegalArgumentException.
 	 *
-	 * @param session the session to apply the value to
+	 * @param session   the session to apply the value to
 	 * @param measurand the measured value identifier, will be mapped to a question
-	 * @param rawValue the value that has been measured
+	 * @param rawValue  the value that has been measured
 	 * @return the value fact that has been applied, or null if not applied or removed
 	 */
-	public Fact applyValueStrict(Session session, String measurand, Object rawValue) {
+	public Collection<Fact> applyValueStrict(Session session, String measurand, Object rawValue) {
 		// check if we have a question for the measurand to be applied
 		Question question = session.getKnowledgeBase().getManager()
 				.searchQuestion(mapping.get(measurand));
-		if (question == null) return null;
+		if (question == null) {
+			return null;
+		}
 
 		if (rawValue == null) {
 			// if we have a null value, then remove existing answer
@@ -267,17 +288,17 @@ public class Measurement {
 	 * Method to be called to add a fact for a measured value to a mapped question. The method may
 	 * be overwritten to add special facts or fact sources/solvers.
 	 *
-	 * @param session the session to set the fact in
+	 * @param session  the session to set the fact in
 	 * @param question the question to be set
-	 * @param value the measured value to be set
+	 * @param value    the measured value to be set
 	 * @return the fact that has been added
 	 * @see #removeFact(Session, Question)
 	 */
-	protected Fact addFact(Session session, Question question, Value value) {
+	protected Collection<Fact> addFact(Session session, Question question, Value value) {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		session.getBlackboard().addValueFact(fact);
-		return fact;
+		return Collections.singletonList(fact);
 	}
 
 	/**
@@ -285,7 +306,7 @@ public class Measurement {
 	 * may be overwritten to remove special facts the previously have been added by {@link
 	 * #addFact(Session, Question, Value)}.
 	 *
-	 * @param session the session to set the fact in
+	 * @param session  the session to set the fact in
 	 * @param question the question to be set
 	 * @see #addFact(Session, Question, Value)
 	 */
@@ -313,7 +334,7 @@ public class Measurement {
 		return (fact != null) && fact.getPSMethod().hasType(PSMethod.Type.source);
 	}
 
-	private PSMethod getPSMethod(Session session) {
+	protected PSMethod getPSMethod(Session session) {
 		// query for measurement solver
 		PSMethodMeasurement solver = session.getPSMethodInstance(PSMethodMeasurement.class);
 		assert solver != null : "missing problem solver in session: PSMethodMeasurement";
@@ -328,12 +349,16 @@ public class Measurement {
 		if ((question instanceof QuestionChoice) && (rawValue instanceof String)) {
 			String name = (String) rawValue;
 			Choice choice = KnowledgeBaseUtils.findChoice((QuestionChoice) question, name, ANY_PROMPT);
-			if (choice != null) return new ChoiceValue(choice);
+			if (choice != null) {
+				return new ChoiceValue(choice);
+			}
 			throw new IllegalArgumentException("no choice " + rawValue);
 		}
 		if ((question instanceof QuestionChoice) && (rawValue instanceof Number)) {
 			int index = ((Number) rawValue).intValue();
-			if (index == 0) return Unknown.getInstance();
+			if (index == 0) {
+				return Unknown.getInstance();
+			}
 			List<Choice> choices = ((QuestionChoice) question).getAllAlternatives();
 			if (index >= 1 && index <= choices.size()) {
 				return new ChoiceValue(choices.get(index - 1));
