@@ -129,6 +129,15 @@ public class Measurement {
 	}
 
 	/**
+	 * Returns relevant measurement variables for a given session that may be relevant
+	 *
+	 * @return List of measurement variable values, or an empty list if none are available
+	 */
+	public Map<String, Object> getMeasurementVariables(Session session) {
+		return Collections.emptyMap();
+	}
+
+	/**
 	 * Returns true if the measurement only maps to questions where each of them already have a
 	 * valid answer, either comes from a problem solver of type {@link PSMethod.Type#source}, or if
 	 * the values are applied by this measurement.
