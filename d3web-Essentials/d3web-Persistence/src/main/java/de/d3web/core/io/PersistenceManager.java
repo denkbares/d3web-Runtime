@@ -553,7 +553,7 @@ public final class PersistenceManager {
 			Iterator<Path> iterator = files.iterator();
 			while (iterator.hasNext()) {
 				Path file = iterator.next();
-				String name = folder.relativize(file).toString();
+				String name = folder.relativize(file).toString().replace(File.separatorChar, '/');
 
 				// checks if this entry can be parsed with this plugin
 				String filePattern = plugin.getParameter("filepattern");
