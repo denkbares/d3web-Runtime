@@ -278,13 +278,13 @@ public class Measurement {
 		Question question = session.getKnowledgeBase().getManager()
 				.searchQuestion(mapping.get(measurand));
 		if (question == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		if (rawValue == null) {
 			// if we have a null value, then remove existing answer
 			removeFact(session, question);
-			return null;
+			return Collections.emptyList();
 		}
 		else {
 			// otherwise convert raw value to question value and set the value
