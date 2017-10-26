@@ -28,7 +28,6 @@ import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.diaFlux.inference.FluxSolver;
 import de.d3web.diaFlux.inference.ForcingSetQuestionAction;
@@ -45,8 +44,7 @@ public class ActionNode extends AbstractNode {
 
 		Condition preCondition = ConditionTrue.INSTANCE;
 		if (action instanceof ActionRepeatedIndication) {
-			Question question = (Question) ((ActionRepeatedIndication) action).getQASets().get(0);
-			preCondition = new CondRepeatedAnswered(question);
+			preCondition = CondRepeatedAnswered.create(((ActionRepeatedIndication) action).getQASets());
 		}
 		else if (action instanceof ActionSetQuestion) {
 			action = new ForcingSetQuestionAction((ActionSetQuestion) action);
