@@ -29,22 +29,28 @@ import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 
 /**
  * Handels {@link NextUnansweredQuestionFormStrategy}
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
  */
 public class NextUnansweredQuestionFormStrategyHandler implements FragmentHandler<KnowledgeBase> {
 
 	private static final String ELEMENT_NAME = "NextUnansweredQuestionFormStrategy";
+	private static final String GROUP_ATTRIBUTE = "groupTopLevelQuestion";
 
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
-		return new NextUnansweredQuestionFormStrategy();
+		NextUnansweredQuestionFormStrategy object = new NextUnansweredQuestionFormStrategy();
+		object.setGroupTopLevelQuestions(Boolean.valueOf(element.getAttribute(GROUP_ATTRIBUTE)));
+		return object;
 	}
 
 	@Override
 	public Element write(Object object, Persistence<KnowledgeBase> persistence) throws IOException {
 		Element element = persistence.getDocument().createElement(ELEMENT_NAME);
+		if (((NextUnansweredQuestionFormStrategy) object).isGroupTopLevelQuestions()) {
+			element.setAttribute(GROUP_ATTRIBUTE, String.valueOf(true));
+		}
 		return element;
 	}
 
@@ -57,5 +63,4 @@ public class NextUnansweredQuestionFormStrategyHandler implements FragmentHandle
 	public boolean canWrite(Object object) {
 		return object instanceof NextUnansweredQuestionFormStrategy;
 	}
-
 }
