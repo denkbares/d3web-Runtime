@@ -31,9 +31,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSConfig;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -325,6 +328,22 @@ public class KnowledgeBase implements NamedObject {
 		// the list is sorted
 		Collections.sort(psConfigs);
 		return Collections.unmodifiableList(psConfigs);
+	}
+
+	/**
+	 * Returns the configurations for the given ps method class, if it exists. Null otherwise.
+	 *
+	 * @return the configurations for the given ps method class, or null if does not exist.
+	 */
+	@Nullable
+	public PSConfig getPsConfig(Class<? extends PSMethod> psMethodClass) {
+		// the list is sorted
+		for (PSConfig psConfig : psConfigs) {
+			if (psMethodClass.isInstance(psConfig.getPsMethod())) {
+				return psConfig;
+			}
+		}
+		return null;
 	}
 
 	/**
