@@ -217,27 +217,27 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
-	 * question, that has the specified case sensitive text as answer text.
+	 * question, that has the specified answer name/id (not prompt).
 	 *
 	 * @param question the specified question
-	 * @param answerText the requested answer text
+	 * @param answerName the requested answer name/id
 	 * @return null, if no answer found for specified params
 	 */
-	public static Choice findChoice(QuestionChoice question, String answerText) {
-		return findChoice(question, answerText, true);
+	public static Choice findChoice(QuestionChoice question, String answerName) {
+		return findChoice(question, answerName, true);
 	}
 
 	/**
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
-	 * question, that has the specified text as answer text.
+	 * question, that has the specified answer name/id (not prompt).
 	 *
 	 * @param question the specified question
-	 * @param answerText the requested answer text
+	 * @param answerName the requested answer name/id
 	 * @param caseSensitive decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
-	public static Choice findChoice(QuestionChoice question, String answerText, boolean caseSensitive) {
-		return findChoice(question, answerText, caseSensitive ? Matching.CASE_SENSITIVE : Matching.CASE_INSENSITIVE);
+	public static Choice findChoice(QuestionChoice question, String answerName, boolean caseSensitive) {
+		return findChoice(question, answerName, caseSensitive ? Matching.CASE_SENSITIVE : Matching.CASE_INSENSITIVE);
 	}
 
 	public enum Matching {
@@ -265,30 +265,30 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
-	 * question, that has the specified text as answer text.
+	 * question, that has the specified answer name/id (not prompt).
 	 *
 	 * @param question the specified question
-	 * @param answerText the requested answer text
+	 * @param answerName the requested answer name/id
 	 * @param matching decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
-	public static Choice findChoice(QuestionChoice question, String answerText, Matching matching) {
+	public static Choice findChoice(QuestionChoice question, String answerName, Matching matching) {
 		if (question == null
 				|| question.getAllAlternatives() == null
-				|| answerText == null) {
+				|| answerName == null) {
 			return null;
 		}
 
 		if (matching == Matching.CASE_SENSITIVE) {
 			for (Choice choice : question.getAllAlternatives()) {
-				if (answerText.equals(choice.getName())) {
+				if (answerName.equals(choice.getName())) {
 					return choice;
 				}
 			}
 		}
 		else if (matching == Matching.CASE_INSENSITIVE) {
 			for (Choice choice : question.getAllAlternatives()) {
-				if (answerText.equalsIgnoreCase(choice.getName())) {
+				if (answerName.equalsIgnoreCase(choice.getName())) {
 					return choice;
 				}
 			}
@@ -296,10 +296,10 @@ public final class KnowledgeBaseUtils {
 		else if (matching == Matching.CASE_INSENSITIVE_IF_NO_CONFLICT) {
 			List<Choice> caseInsensitiveMatches = new ArrayList<>();
 			for (Choice choice : question.getAllAlternatives()) {
-				if (answerText.equals(choice.getName())) {
+				if (answerName.equals(choice.getName())) {
 					return choice;
 				}
-				else if (answerText.equalsIgnoreCase(choice.getName())) {
+				else if (answerName.equalsIgnoreCase(choice.getName())) {
 					caseInsensitiveMatches.add(choice);
 				}
 			}
@@ -308,16 +308,16 @@ public final class KnowledgeBaseUtils {
 		else if (matching == Matching.ANY_PROMPT) {
 			Choice match = null;
 			for (Choice choice : question.getAllAlternatives()) {
-				if (answerText.equals(choice.getName())) {
+				if (answerName.equals(choice.getName())) {
 					return choice;
 				}
 				if (match != null) continue;
-				if (answerText.equalsIgnoreCase(choice.getName())) {
+				if (answerName.equalsIgnoreCase(choice.getName())) {
 					match = choice;
 					continue;
 				}
 				for (String prompt : choice.getInfoStore().entries(MMInfo.PROMPT).values()) {
-					if (answerText.equalsIgnoreCase(choice.getName())) {
+					if (answerName.equalsIgnoreCase(choice.getName())) {
 						match = choice;
 						break;
 					}
@@ -495,7 +495,7 @@ public final class KnowledgeBaseUtils {
 	 * @see TerminologyHierarchyComparator
 	 */
 	public static void sortTerminologyObjects(List<? extends TerminologyObject> unsorted) {
-		Collections.sort(unsorted, new TerminologyHierarchyComparator());
+		unsorted.sort(new TerminologyHierarchyComparator());
 	}
 
 	/**
