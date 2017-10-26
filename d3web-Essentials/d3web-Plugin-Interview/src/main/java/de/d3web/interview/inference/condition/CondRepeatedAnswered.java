@@ -18,9 +18,18 @@
  */
 package de.d3web.interview.inference.condition;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondQuestion;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.knowledge.Indication;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.values.Unknown;
@@ -31,7 +40,7 @@ import de.d3web.interview.inference.PSMethodInterview;
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
  * answered with {@link Unknown} AFTER it was indicated, ie a value has
  * been set after the latest indication of the question.
- * 
+ *
  * @author Reinhard Hatko
  * @created 02.03.2011
  */
@@ -39,11 +48,28 @@ public class CondRepeatedAnswered extends CondQuestion {
 
 	/**
 	 * Creates a new CondRepeatedAnswered object for the given {@link Question}.
-	 * 
+	 *
 	 * @param question the given question
 	 */
 	public CondRepeatedAnswered(Question question) {
 		super(question);
+	}
+
+	public static Condition create(Collection<? extends TerminologyObject> objects) {
+		List<Condition> conditions = new ArrayList<>();
+		for (TerminologyObject object : objects) {
+			if (object instanceof QContainer) {
+				conditions.add(create(Arrays.asList(object.getChildren())));
+			}
+			else if (object instanceof Question) {
+				conditions.add(new CondRepeatedAnswered((Question) object));
+			}
+			else {
+				throw new IllegalArgumentException("Unsupported object type " + object);
+			}
+		}
+
+		return conditions.size() == 1 ? conditions.get(0) : new CondAnd(conditions);
 	}
 
 	@Override
@@ -52,8 +78,8 @@ public class CondRepeatedAnswered extends CondQuestion {
 		return session.getBlackboard().getIndication(getQuestion()).hasState(
 				Indication.State.REPEATED_INDICATED)
 				&& !interview.getInterviewAgenda().hasState(
-						getQuestion(),
-						de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState.ACTIVE);
+				getQuestion(),
+				de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState.ACTIVE);
 	}
 
 	@Override
