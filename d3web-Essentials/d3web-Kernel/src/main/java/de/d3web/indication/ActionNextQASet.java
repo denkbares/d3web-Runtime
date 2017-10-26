@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.denkbares.utils.EqualsUtils;
+import com.denkbares.utils.HashCodeUtils;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
@@ -31,8 +33,6 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import com.denkbares.utils.EqualsUtils;
-import com.denkbares.utils.HashCodeUtils;
 
 /**
  * This abstract class is representing the Action of an indication. Specialize
@@ -99,7 +99,7 @@ public abstract class ActionNextQASet extends PSAction {
 	 * @param qasets the specified list of {@link QASet} instances
 	 */
 	public void setQASets(QASet... qasets) {
-		this.qasets = new ArrayList<>();
+		this.qasets = new ArrayList<>(qasets.length);
 		Collections.addAll(this.qasets, qasets);
 	}
 
