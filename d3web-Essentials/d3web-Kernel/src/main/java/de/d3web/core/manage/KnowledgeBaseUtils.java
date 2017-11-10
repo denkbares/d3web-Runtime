@@ -140,7 +140,7 @@ public final class KnowledgeBaseUtils {
 	 * objects will be contained only once at its first occurrence. The specified terminologyObject
 	 * is always the first element of this list.
 	 *
-	 * @param <T> the type of the ancestors to be found
+	 * @param <T>    the type of the ancestors to be found
 	 * @param parent the leaf where the search starts
 	 * @param typeOf the class of the ancestors to be found
 	 * @return the ancestors of the given {@link TerminologyObject}
@@ -187,9 +187,9 @@ public final class KnowledgeBaseUtils {
 	 * within this sub-tree) will be contained only once at its first occurrence. The specified
 	 * terminologyObject is always the first element of this list.
 	 *
-	 * @param <T> the type of the successors to be found
+	 * @param <T>               the type of the successors to be found
 	 * @param terminologyObject the root of the sub-tree to be specified
-	 * @param typeOf the class of the successors to be found
+	 * @param typeOf            the class of the successors to be found
 	 * @return the depth-first search tree items
 	 * @created 04.05.2011
 	 */
@@ -219,7 +219,7 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified answer name/id (not prompt).
 	 *
-	 * @param question the specified question
+	 * @param question   the specified question
 	 * @param answerName the requested answer name/id
 	 * @return null, if no answer found for specified params
 	 */
@@ -231,8 +231,8 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified answer name/id (not prompt).
 	 *
-	 * @param question the specified question
-	 * @param answerName the requested answer name/id
+	 * @param question      the specified question
+	 * @param answerName    the requested answer name/id
 	 * @param caseSensitive decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
@@ -267,9 +267,9 @@ public final class KnowledgeBaseUtils {
 	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
 	 * question, that has the specified answer name/id (not prompt).
 	 *
-	 * @param question the specified question
+	 * @param question   the specified question
 	 * @param answerName the requested answer name/id
-	 * @param matching decides whether to search case sensitive or not
+	 * @param matching   decides whether to search case sensitive or not
 	 * @return null, if no answer found for specified params
 	 */
 	public static Choice findChoice(QuestionChoice question, String answerName, Matching matching) {
@@ -352,7 +352,7 @@ public final class KnowledgeBaseUtils {
 	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
 	 * choice).
 	 *
-	 * @param question the question to create the value for
+	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
 	 * @created 23.09.2013
@@ -371,7 +371,7 @@ public final class KnowledgeBaseUtils {
 	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
 	 * choice).
 	 *
-	 * @param question the question to create the value for
+	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
 	 * @return the created value
 	 * @created 23.09.2013
@@ -650,7 +650,7 @@ public final class KnowledgeBaseUtils {
 	 * <p/>
 	 * If multiple states are specified, the solutions are ordered by the order of these states.
 	 *
-	 * @param session the session to get the solutions from
+	 * @param session        the session to get the solutions from
 	 * @param solutionStates the states of the solutions to be fetched
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
@@ -701,30 +701,35 @@ public final class KnowledgeBaseUtils {
 	 *
 	 * @param session the session to apply the init values to
 	 * @param answers the values to be set where the keys are the question names and the values are
-	 * the answers
+	 *                the answers
 	 * @throws IllegalArgumentException if the answers not match the session's knowledge base
 	 */
 	public static void setInitAnswers(Session session, Map<String, String> answers) {
 		KnowledgeBase base = session.getKnowledgeBase();
-		for (Map.Entry<String, String> answer : answers.entrySet()) {
-			// find the question to be set
-			Question question = assertQuestion(base, answer.getKey());
+		session.getPropagationManager().openPropagation(session.getCreationDate().getTime());
+		try {
+			for (Map.Entry<String, String> answer : answers.entrySet()) {
+				// find the question to be set
+				Question question = assertQuestion(base, answer.getKey());
 
-			// create a value object for the question
-			String valueString = answer.getValue();
-			Value value = ValueUtils.createValue(question, valueString);
-			if (value == null) {
-				throw new IllegalArgumentException("question '" + question + "'" +
-						" is assigned an invalid value: " + valueString);
+				// create a value object for the question
+				String valueString = answer.getValue();
+				Value value = ValueUtils.createValue(question, valueString);
+				if (value == null) {
+					throw new IllegalArgumentException("question '" + question + "'" +
+							" is assigned an invalid value: " + valueString);
+				}
+
+				// set the value into the created session
+				// use init-solver to create hidden values that are not edited by the user
+				PSMethodInit psm = PSMethodInit.getInstance();
+				Fact fact = FactFactory.createFact(question, value, psm, psm);
+				session.getBlackboard().addValueFact(fact);
+				session.getProtocol().addEntry(new FactProtocolEntry(
+						session.getPropagationManager().getPropagationTime(), fact));
 			}
-
-			// set the value into the created session
-			// use init-solver to create hidden values that are not edited by the user
-			PSMethodInit psm = PSMethodInit.getInstance();
-			Fact fact = FactFactory.createFact(question, value, psm, psm);
-			session.getBlackboard().addValueFact(fact);
-			session.getProtocol().addEntry(new FactProtocolEntry(
-					session.getPropagationManager().getPropagationTime(), fact));
+		} finally {
+			session.getPropagationManager().commitPropagation();
 		}
 	}
 
@@ -732,7 +737,7 @@ public final class KnowledgeBaseUtils {
 	 * Returns the question of the specified name from the specified knowledge base. If the question
 	 * does not exists, an {@link IllegalArgumentException} is thrown.
 	 *
-	 * @param base the knowledge base to get the question for
+	 * @param base         the knowledge base to get the question for
 	 * @param questionName the name of the question
 	 * @return the question
 	 * @throws IllegalArgumentException if the question is not in the knowledge base
