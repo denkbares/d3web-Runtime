@@ -26,6 +26,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -39,6 +41,8 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -77,19 +81,18 @@ public final class ValueUtils {
 	 */
 	public enum TimeZoneDisplayMode {
 		/**
-		 * The time zone will not be appended. This can be used, if the time zone is handled or
-		 * rendered independently from the String.
+		 * The time zone will not be appended. This can be used, if the time zone is handled or rendered independently
+		 * from the String.
 		 */
 		NEVER,
 		/**
-		 * The time zone will always be appended. This should be used for example for persistence
-		 * purposes, where the date is written and ready by the system.
+		 * The time zone will always be appended. This should be used for example for persistence purposes, where the
+		 * date is written and ready by the system.
 		 */
 		ALWAYS,
 		/**
-		 * The time zone will only be appended, if it is not the same as the default time zone of
-		 * the current JVM. This is can be used, if the string is displayed to the user without much
-		 * other processing.
+		 * The time zone will only be appended, if it is not the same as the default time zone of the current JVM. This
+		 * is can be used, if the string is displayed to the user without much other processing.
 		 */
 		IF_NOT_DEFAULT
 	}
@@ -199,8 +202,7 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Checks whether the given time zone id is valid for the other DateFormats used to parse dates
-	 * in this util class.
+	 * Checks whether the given time zone id is valid for the other DateFormats used to parse dates in this util class.
 	 *
 	 * @param timeZoneId the time zone id to check
 	 * @return true if the time zone id is valid, false if not
@@ -223,8 +225,9 @@ public final class ValueUtils {
 		List<SimpleDateFormat> dateFormatsWithoutTimeZone = getDateFormatsWithoutTimeZone(null);
 		for (int i = 0; i < dateFormatsWithTimeZone.size() || i < dateFormatsWithoutTimeZone.size(); i++) {
 			if (i < dateFormatsWithTimeZone.size()) dateFormats.add(dateFormatsWithTimeZone.get(i));
-			if (i < dateFormatsWithoutTimeZone.size())
+			if (i < dateFormatsWithoutTimeZone.size()) {
 				dateFormats.add(dateFormatsWithoutTimeZone.get(i));
+			}
 		}
 		String[] result = new String[dateFormats.size()];
 		int index = 0;
@@ -235,21 +238,20 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * The format returned here should be used when saving DateValues to be able to parse the date
-	 * with the static method {@link ValueUtils#createDateValue(QuestionDate, String)}. Be aware
-	 * that {@link SimpleDateFormat}s are not thread safe, although you will get a new instance of
-	 * the format every time you call this method.
+	 * The format returned here should be used when saving DateValues to be able to parse the date with the static
+	 * method {@link ValueUtils#createDateValue(QuestionDate, String)}. Be aware that {@link SimpleDateFormat}s are not
+	 * thread safe, although you will get a new instance of the format every time you call this method.
 	 */
 	public static SimpleDateFormat getDefaultDateFormat() {
 		return (SimpleDateFormat) DATE_FORMAT_WITH_TIME_ZONE.clone();
 	}
 
 	/**
-	 * Creates a {@link Value} for a {@link Question}. If the given String is no valid
-	 * representation for a Value for the given Question, an IllegalArgumentException is thrown.
+	 * Creates a {@link Value} for a {@link Question}. If the given String is no valid representation for a Value for
+	 * the given Question, an IllegalArgumentException is thrown.
 	 *
 	 * @param terminologyObject the terminologyObject for which the {@link Value} is created
-	 * @param valueString a String representation of the {@link Value} to be created
+	 * @param valueString       a String representation of the {@link Value} to be created
 	 * @return a {@link Value} representing the given valueString, cannot be <tt>null</tt>!
 	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 * @created 11.08.2012
@@ -267,11 +269,10 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates an appropriate Solution value for the given String.<br/> If the String is parsable as
-	 * a double, a {@link HeuristicRating} with that score is returned.<br/> If the String matches
-	 * one of the {@link Score} symbols (e.g. P7, N7...) a {@link HeuristicRating} with that score
-	 * is returned.<br> If the String matches any of the solutions states (like established,
-	 * suggested...), a Rating for the given {@link Rating.State} is returned.
+	 * Creates an appropriate Solution value for the given String.<br/> If the String is parsable as a double, a {@link
+	 * HeuristicRating} with that score is returned.<br/> If the String matches one of the {@link Score} symbols (e.g.
+	 * P7, N7...) a {@link HeuristicRating} with that score is returned.<br> If the String matches any of the solutions
+	 * states (like established, suggested...), a Rating for the given {@link Rating.State} is returned.
 	 *
 	 * @param valueString the String representation of the solution value
 	 * @return a {@link Rating} representing the given valueString, cannot be <tt>null</tt>!
@@ -291,10 +292,10 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link Value} for a {@link Question}. If the given String is no valid
-	 * representation for a Value for the given Question, an IllegalArgumentException is thrown.
+	 * Creates a {@link Value} for a {@link Question}. If the given String is no valid representation for a Value for
+	 * the given Question, an IllegalArgumentException is thrown.
 	 *
-	 * @param question the question for which the {@link Value} is created
+	 * @param question    the question for which the {@link Value} is created
 	 * @param valueString a String representation of the {@link Value} to be created
 	 * @return a {@link Value} representing the given valueString, cannot be <tt>null</tt>!
 	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
@@ -361,17 +362,16 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link ChoiceValue} for a {@link QuestionChoice}. If the given String is no valid
-	 * representation for a Value for the given Question, an IllegalArgumentException is thrown.
-	 * This method also creates {@link ChoiceValue}s for {@link QuestionMC}s. To get a {@link
-	 * MultipleChoiceValue}, use the method {@link #handleExistingValue(TerminologyObject, Value,
-	 * Value)}, which will merge a {@link ChoiceValue} with an existing {@link ChoiceValue} or
-	 * {@link MultipleChoiceValue} to a new {@link MultipleChoiceValue}.
+	 * Creates a {@link ChoiceValue} for a {@link QuestionChoice}. If the given String is no valid representation for a
+	 * Value for the given Question, an IllegalArgumentException is thrown. This method also creates {@link
+	 * ChoiceValue}s for {@link QuestionMC}s. To get a {@link MultipleChoiceValue}, use the method {@link
+	 * #handleExistingValue(TerminologyObject, Value, Value)}, which will merge a {@link ChoiceValue} with an existing
+	 * {@link ChoiceValue} or {@link MultipleChoiceValue} to a new {@link MultipleChoiceValue}.
 	 *
-	 * @param question the question for which the {@link Value} is created
+	 * @param question    the question for which the {@link Value} is created
 	 * @param valueString a String representation of the {@link Value} to be created
-	 * @return a {@link Value} or <tt>null</tt> if the given String is no valid representation for a
-	 * Value for the given Question
+	 * @return a {@link Value} or <tt>null</tt> if the given String is no valid representation for a Value for the given
+	 * Question
 	 * @created 11.08.2012
 	 */
 	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
@@ -389,16 +389,14 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Handles the value for normal interview behavior depending on the existing value. If
-	 * <tt>value</tt> and <tt>existingValue</tt> are equal, Unknown is returned. In case of {@link
-	 * QuestionMC}, <tt>value</tt> and <tt>existingValue</tt> are merged into a {@link
-	 * MultipleChoiceValue}. If the existing {@link Value} already contains the new <tt>value</tt>,
-	 * the new value will be removed from the {@link MultipleChoiceValue}. <p/> In all the other
-	 * cases, the value is just returned without changing it.
+	 * Handles the value for normal interview behavior depending on the existing value. If <tt>value</tt> and
+	 * <tt>existingValue</tt> are equal, Unknown is returned. In case of {@link QuestionMC}, <tt>value</tt> and
+	 * <tt>existingValue</tt> are merged into a {@link MultipleChoiceValue}. If the existing {@link Value} already
+	 * contains the new <tt>value</tt>, the new value will be removed from the {@link MultipleChoiceValue}. <p/> In all
+	 * the other cases, the value is just returned without changing it.
 	 *
-	 * @param object the {@link TerminologyObject} belonging to <tt>value</tt> and
-	 * <tt>existingValue</tt>
-	 * @param value the value to handel in context to the existingValue
+	 * @param object        the {@link TerminologyObject} belonging to <tt>value</tt> and <tt>existingValue</tt>
+	 * @param value         the value to handel in context to the existingValue
 	 * @param existingValue the existingValue to handle in context to the value
 	 * @return a value taking into account the given <tt>value</tt> and <tt>existingValue</tt>
 	 */
@@ -419,38 +417,37 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using XOR
-	 * (exclusive disjunction), meaning that return value will contain all choices from the given
-	 * values, except those that were in both given values. If you also want those choices present
-	 * in both given values, use method {@link #mergeChoiceValuesOR(QuestionMC, Value...)}.
+	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using XOR (exclusive disjunction),
+	 * meaning that return value will contain all choices from the given values, except those that were in both given
+	 * values. If you also want those choices present in both given values, use method {@link
+	 * #mergeChoiceValuesOR(QuestionMC, Value...)}.
 	 * <p>
-	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the
-	 * are of another type, an IllegalArgumentException is thrown.
+	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the are of another type,
+	 * an IllegalArgumentException is thrown.
 	 *
 	 * @param questionMC the question to which the values belong
-	 * @param values the values to merge
+	 * @param values     the values to merge
 	 * @return a {@link MultipleChoiceValue} with the xor merged choices from value1 and value2
-	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue}
-	 * or {@link MultipleChoiceValue}
+	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue} or {@link
+	 *                                  MultipleChoiceValue}
 	 */
 	public static MultipleChoiceValue mergeChoiceValuesXOR(QuestionMC questionMC, Value... values) {
 		return mergeChoiceValues(questionMC, ValueUtils::xorMerge, values);
 	}
 
 	/**
-	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using OR
-	 * (disjunction), meaning that return value will contain all choices from the given values. If
-	 * you don't want those choices present in both given values, use method {@link
-	 * #mergeChoiceValuesXOR(QuestionMC, Value...)}.
+	 * Merges two values into one {@link MultipleChoiceValue}. The merging is done using OR (disjunction), meaning that
+	 * return value will contain all choices from the given values. If you don't want those choices present in both
+	 * given values, use method {@link #mergeChoiceValuesXOR(QuestionMC, Value...)}.
 	 * <p>
-	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the
-	 * are of another type, an IllegalArgumentException is thrown.
+	 * The argument values can either be {@link ChoiceValue} or {@link MultipleChoiceValue}. If the are of another type,
+	 * an IllegalArgumentException is thrown.
 	 *
 	 * @param questionMC the question to which the values belong
-	 * @param values the values to merge
+	 * @param values     the values to merge
 	 * @return a {@link MultipleChoiceValue} with the merged choices from value1 and value2
-	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue}
-	 * or {@link MultipleChoiceValue}
+	 * @throws IllegalArgumentException if the argument Values are not of type {@link ChoiceValue} or {@link
+	 *                                  MultipleChoiceValue}
 	 */
 	public static MultipleChoiceValue mergeChoiceValuesOR(QuestionMC questionMC, Value... values) {
 		return mergeChoiceValues(questionMC, ValueUtils::orMerge, values);
@@ -529,6 +526,28 @@ public final class ValueUtils {
 		}
 	}
 
+	/**
+	 * Returns all the choices of the specified value. If the question is a non-choice-question, or the value is not a
+	 * (multiple) choice value, an empty list is returned.
+	 *
+	 * @param question the question to get the value's choices for
+	 * @param value    the value to get the choices from
+	 * @return the choices of the value, if there are any
+	 */
+	@NotNull
+	public static Collection<Choice> getChoices(Question question, Value value) {
+		if (question instanceof QuestionChoice) {
+			QuestionChoice questionChoice = (QuestionChoice) question;
+			if (value instanceof ChoiceValue) {
+				return Collections.singleton(((ChoiceValue) value).getChoice(questionChoice));
+			}
+			else if (value instanceof MultipleChoiceValue) {
+				return ((MultipleChoiceValue) value).asChoiceList(questionChoice);
+			}
+		}
+		return Collections.emptyList();
+	}
+
 	public static String getVerbalization(TerminologyObject object, Value value, Locale lang) {
 		if (object instanceof Question) {
 			return getVerbalization((Question) object, value, lang);
@@ -568,33 +587,29 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will
-	 * return the duration since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string
-	 * (@see DateValue#getDateVerbalization()), which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans.
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration since
+	 * unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateVerbalization()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
 	 */
 	public static String getDateOrDurationVerbalization(Date date) {
 		return getDateOrDurationVerbalization(null, date, false);
 	}
 
 	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will
-	 * return the duration since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string
-	 * (@see DateValue#getDateVerbalization()), which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans.
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration since
+	 * unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateVerbalization()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
 	 */
 	public static String getDateOrDurationVerbalization(QuestionDate question, Date date) {
 		return getDateOrDurationVerbalization(question, date, false);
 	}
 
 	/**
-	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will
-	 * return the duration since unix time 0, e.g. 1d 2h 40min. Else, it will return the date string
-	 * (@see DateValue#getDateVerbalization()), which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans.
+	 * If the date is within plus/minus one year of unix time 0 (1970-01-01), this method will return the duration since
+	 * unix time 0, e.g. 1d 2h 40min. Else, it will return the date string (@see DateValue#getDateVerbalization()),
+	 * which can be parsed with {@link DateValue#createDateValue(String)} and is also properly readable for humans.
 	 *
-	 * @param appendDateString if set to true, the actual date string will be appended in
-	 * parenthesis
+	 * @param appendDateString if set to true, the actual date string will be appended in parenthesis
 	 */
 	public static String getDateOrDurationVerbalization(QuestionDate question, Date date, boolean appendDateString) {
 		long time = date.getTime();
@@ -611,9 +626,8 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. The String will
-	 * contain the time zone ID of the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
 	 *
 	 * @param value the value for which we want the date string
 	 */
@@ -622,9 +636,8 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. The String will
-	 * contain the time zone ID of the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
 	 *
 	 * @param date the date for which we want the string
 	 */
@@ -633,11 +646,10 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. The String will
-	 * contain the time zone ID of the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
 	 *
-	 * @param date the date for which we want the string
+	 * @param date         the date for which we want the string
 	 * @param timeZoneMode decides whether the used TimeZone should be appended to the string
 	 */
 	public static String getDateVerbalization(Date date, TimeZoneDisplayMode timeZoneMode) {
@@ -645,11 +657,10 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. The String will
-	 * contain the time zone ID of the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. The String will contain the time zone ID of the JVM.
 	 *
-	 * @param value the value for which we want the date string
+	 * @param value        the value for which we want the date string
 	 * @param timeZoneMode decides whether the used TimeZone should be appended to the string
 	 */
 	public static String getDateVerbalization(DateValue value, TimeZoneDisplayMode timeZoneMode) {
@@ -657,14 +668,12 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. If the given
-	 * question has no defined TimeZone (via Property UNIT), the date will use the local TimeZone of
-	 * the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. If the given question has no defined TimeZone (via Property UNIT), the date
+	 * will use the local TimeZone of the JVM.
 	 *
-	 * @param question the corresponding question for this value (will be used to retrieve
-	 * TimeZone)
-	 * @param value the value for which we want the date string
+	 * @param question     the corresponding question for this value (will be used to retrieve TimeZone)
+	 * @param value        the value for which we want the date string
 	 * @param timeZoneMode decides whether the used TimeZone should be appended to the string
 	 */
 	public static String getDateVerbalization(QuestionDate question, DateValue value, TimeZoneDisplayMode timeZoneMode) {
@@ -672,31 +681,26 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. If the given
-	 * question has no defined TimeZone (via Property UNIT), the date will use the local TimeZone of
-	 * the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. If the given question has no defined TimeZone (via Property UNIT), the date
+	 * will use the local TimeZone of the JVM.
 	 *
-	 * @param question the corresponding question for this value (will be used to retrieve
-	 * TimeZone)
-	 * @param value the value for which we want the date string
+	 * @param question     the corresponding question for this value (will be used to retrieve TimeZone)
+	 * @param value        the value for which we want the date string
 	 * @param timeZoneMode decides whether the used TimeZone should be appended to the string
-	 * @param trim decides whether trailing zeros should be trimmed using ({@link
-	 * #trimTime(String)})
+	 * @param trim         decides whether trailing zeros should be trimmed using ({@link #trimTime(String)})
 	 */
 	public static String getDateVerbalization(QuestionDate question, DateValue value, TimeZoneDisplayMode timeZoneMode, boolean trim) {
 		return getDateVerbalization(getTimeZone(question), value.getDate(), timeZoneMode, trim);
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. If the given
-	 * question has no defined TimeZone (via Property UNIT), the date will use the local TimeZone of
-	 * the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. If the given question has no defined TimeZone (via Property UNIT), the date
+	 * will use the local TimeZone of the JVM.
 	 *
-	 * @param question the corresponding question for this value (will be used to retrieve
-	 * TimeZone)
-	 * @param date the date for which we want the string
+	 * @param question     the corresponding question for this value (will be used to retrieve TimeZone)
+	 * @param date         the date for which we want the string
 	 * @param timeZoneMode decides whether the used TimeZone should be appended to the string
 	 */
 	public static String getDateVerbalization(QuestionDate question, Date date, TimeZoneDisplayMode timeZoneMode) {
@@ -704,13 +708,12 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. If the given
-	 * question has no defined TimeZone (via Property UNIT), the date will use the local TimeZone of
-	 * the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. If the given question has no defined TimeZone (via Property UNIT), the date
+	 * will use the local TimeZone of the JVM.
 	 *
-	 * @param timeZone the TimeZone in which the date should be verbalized
-	 * @param date the date which should be verbalized
+	 * @param timeZone     the TimeZone in which the date should be verbalized
+	 * @param date         the date which should be verbalized
 	 * @param timeZoneMode decides whether the used TimeZone ID should be appended to the string
 	 */
 	public static String getDateVerbalization(TimeZone timeZone, Date date, TimeZoneDisplayMode timeZoneMode) {
@@ -718,16 +721,14 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the date as String in a format which can be parsed with {@link
-	 * DateValue#createDateValue(String)} and is also properly readable for humans. If the given
-	 * question has no defined TimeZone (via Property UNIT), the date will use the local TimeZone of
-	 * the JVM.
+	 * Returns the date as String in a format which can be parsed with {@link DateValue#createDateValue(String)} and is
+	 * also properly readable for humans. If the given question has no defined TimeZone (via Property UNIT), the date
+	 * will use the local TimeZone of the JVM.
 	 *
-	 * @param timeZone the TimeZone in which the date should be verbalized
-	 * @param date the date which should be verbalized
+	 * @param timeZone     the TimeZone in which the date should be verbalized
+	 * @param date         the date which should be verbalized
 	 * @param timeZoneMode decides whether the used TimeZone ID should be appended to the string
-	 * @param trim decides whether trailing zeros should be trimmed using ({@link
-	 * #trimTime(String)})
+	 * @param trim         decides whether trailing zeros should be trimmed using ({@link #trimTime(String)})
 	 */
 	public static String getDateVerbalization(TimeZone timeZone, Date date, TimeZoneDisplayMode timeZoneMode, boolean trim) {
 		String dateString;
@@ -758,13 +759,9 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * If the given date string ends with trailing zeros from the time, those zeros will
-	 * be trimmed correctly. Trims milli seconds, seconds, and hours with minutes.<p/>
-	 * Example:
-	 * <ul>
-	 * <li>2000-01-01 15:44:32.000 -> 2000-01-01 15:44:32</li>
-	 * <li>2000-01-01 15:44:00.000 -> 2000-01-01 15:44</li>
-	 * <li>2000-01-01 00:00:00.000 -> 2000-01-01</li>
+	 * If the given date string ends with trailing zeros from the time, those zeros will be trimmed correctly. Trims
+	 * milli seconds, seconds, and hours with minutes.<p/> Example: <ul> <li>2000-01-01 15:44:32.000 -> 2000-01-01
+	 * 15:44:32</li> <li>2000-01-01 15:44:00.000 -> 2000-01-01 15:44</li> <li>2000-01-01 00:00:00.000 -> 2000-01-01</li>
 	 * </ul>
 	 *
 	 * @param dateString the date verbalization to trim
@@ -781,13 +778,13 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link DateValue} from a given String. If the String comes with a time zone, that
-	 * time zone will be used to parse the date. If no time zone is given, we check the question, if
-	 * a time zone is given there using the property UNIT. If yes, that time zone will be used to
-	 * parse the date. If no, the time zone of the JVM will be used. To be parseable, the String has
-	 * to come in one of the available {@link DateFormat} from {@link DateValue#getAllowedFormatStrings()}.
+	 * Creates a {@link DateValue} from a given String. If the String comes with a time zone, that time zone will be
+	 * used to parse the date. If no time zone is given, we check the question, if a time zone is given there using the
+	 * property UNIT. If yes, that time zone will be used to parse the date. If no, the time zone of the JVM will be
+	 * used. To be parseable, the String has to come in one of the available {@link DateFormat} from {@link
+	 * DateValue#getAllowedFormatStrings()}.
 	 *
-	 * @param question the question for which the DateValue should be used
+	 * @param question   the question for which the DateValue should be used
 	 * @param dateString the date string to parse
 	 * @return the parsed DateValue, cannot be <tt>null</tt>!
 	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
@@ -798,15 +795,14 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link DateValue} from a given String. If no time zone is given in the String, the
-	 * time zone of the local JVM will be used. To be parseable, the String has to come in one of
-	 * the available {@link DateFormat} from {@link DateValue#getAllowedFormatStrings()}.
+	 * Creates a {@link DateValue} from a given String. If no time zone is given in the String, the time zone of the
+	 * local JVM will be used. To be parseable, the String has to come in one of the available {@link DateFormat} from
+	 * {@link DateValue#getAllowedFormatStrings()}.
 	 * <p>
-	 * <b>Attention:</b> If the corresponding question is available while calling the method, you
-	 * should instead use {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if
-	 * your String does not contain a TimeZone identifier. Having the Question available will use a
-	 * specified time zone of the question's UNIT property if given and if the String does not
-	 * provide one. If the dateString always has an appended time zone, there will be no
+	 * <b>Attention:</b> If the corresponding question is available while calling the method, you should instead use
+	 * {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if your String does not contain a TimeZone
+	 * identifier. Having the Question available will use a specified time zone of the question's UNIT property if given
+	 * and if the String does not provide one. If the dateString always has an appended time zone, there will be no
 	 * difference.
 	 *
 	 * @param dateString the value to parse
@@ -819,13 +815,12 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Creates a {@link DateValue} from a given String. If the String comes with a time zone, that
-	 * time zone will be used to parse the date. If no time zone is given in the String, the
-	 * timeZone attribute will be used. If that isn't given either, the default time zone of the JVM
-	 * is used. To be parseable, the String has to come in one of the available {@link DateFormat}
-	 * from {@link DateValue#getAllowedFormatStrings()}.
+	 * Creates a {@link DateValue} from a given String. If the String comes with a time zone, that time zone will be
+	 * used to parse the date. If no time zone is given in the String, the timeZone attribute will be used. If that
+	 * isn't given either, the default time zone of the JVM is used. To be parseable, the String has to come in one of
+	 * the available {@link DateFormat} from {@link DateValue#getAllowedFormatStrings()}.
 	 *
-	 * @param timeZone the timeZone to be used if the the dateString does not contain one
+	 * @param timeZone   the timeZone to be used if the the dateString does not contain one
 	 * @param dateString the value to parse
 	 * @return the parsed DateValue
 	 * @created 13.04.2015
@@ -862,8 +857,8 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns the TimeZone object based on the time zone id specified for the given question using
-	 * the MMInfo.UNIT property.
+	 * Returns the TimeZone object based on the time zone id specified for the given question using the MMInfo.UNIT
+	 * property.
 	 */
 	public static TimeZone getTimeZone(QuestionDate question) {
 		TimeZone timeZone = null;
@@ -877,9 +872,8 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * Returns a time zone for a timeZoneId, which is compatible with the z pattern of the
-	 * SimpleDateFormat. Every timeZoneId that can be understood by the z pattern can also be
-	 * understood by this method.
+	 * Returns a time zone for a timeZoneId, which is compatible with the z pattern of the SimpleDateFormat. Every
+	 * timeZoneId that can be understood by the z pattern can also be understood by this method.
 	 *
 	 * @param timeZoneId the id of the wanted time zone
 	 * @return the wanted time zone object or null, if the id is invalid
@@ -903,24 +897,22 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * This method check is the specified value is compatible to the specified value object. If not,
-	 * false is returned. The value is assumed to be compatible, if it can be legally applied to the
-	 * value object as a fact.
+	 * This method check is the specified value is compatible to the specified value object. If not, false is returned.
+	 * The value is assumed to be compatible, if it can be legally applied to the value object as a fact.
 	 * <p>
-	 * Note that the method only checks if the core is capable to handle the object-value
-	 * combination well, not if the value should be applied to the object accoring to some
-	 * additional properties, e.g. is always allows Unknown to be applied to any question, even if
-	 * unknown is invisible, and also to apply each numeric value to a numeric question, even if the
-	 * value is out of the desired range limits.
+	 * Note that the method only checks if the core is capable to handle the object-value combination well, not if the
+	 * value should be applied to the object accoring to some additional properties, e.g. is always allows Unknown to be
+	 * applied to any question, even if unknown is invisible, and also to apply each numeric value to a numeric
+	 * question, even if the value is out of the desired range limits.
 	 * <p>
-	 * For choice values, the method will check (!) if the particular choices are part of the
-	 * question, returning false if not.
+	 * For choice values, the method will check (!) if the particular choices are part of the question, returning false
+	 * if not.
 	 * <p>
-	 * The method is only capable to handle the question types and value types that comes with the
-	 * d3web core implementation. For all other question or value types, the method returns false.
+	 * The method is only capable to handle the question types and value types that comes with the d3web core
+	 * implementation. For all other question or value types, the method returns false.
 	 *
 	 * @param object the object to check the value against
-	 * @param value the value that should be checked
+	 * @param value  the value that should be checked
 	 * @return true if the value is compatible with the object
 	 */
 	public static boolean isCompatible(ValueObject object, Value value) {
@@ -937,27 +929,25 @@ public final class ValueUtils {
 	}
 
 	/**
-	 * This method check is the specified value is compatible to the specified value object. If not,
-	 * an {@link IllegalArgumentException} is thrown. The value is assumed to be compatible, if it
-	 * can be legally applied to the value object as a fact.
+	 * This method check is the specified value is compatible to the specified value object. If not, an {@link
+	 * IllegalArgumentException} is thrown. The value is assumed to be compatible, if it can be legally applied to the
+	 * value object as a fact.
 	 * <p>
-	 * Note that the method only checks if the core is capable to handle the object-value
-	 * combination well, not if the value should be applied to the object accoring to some
-	 * additional properties, e.g. is always allows Unknown to be applied to any question, even if
-	 * unknown is invisible, and also to apply each numeric value to a numeric question, even if the
-	 * value is out of the desired range limits.
+	 * Note that the method only checks if the core is capable to handle the object-value combination well, not if the
+	 * value should be applied to the object accoring to some additional properties, e.g. is always allows Unknown to be
+	 * applied to any question, even if unknown is invisible, and also to apply each numeric value to a numeric
+	 * question, even if the value is out of the desired range limits.
 	 * <p>
-	 * For choice values, the method will check (!) if the particular choices are part of the
-	 * question, throwing an {@link IllegalArgumentException} if not.
+	 * For choice values, the method will check (!) if the particular choices are part of the question, throwing an
+	 * {@link IllegalArgumentException} if not.
 	 * <p>
-	 * The method is only capable to handle the question types and value types that comes with the
-	 * d3web core implementation. For all other question or value types, the method also throws an
-	 * IllegalArgumentException.
+	 * The method is only capable to handle the question types and value types that comes with the d3web core
+	 * implementation. For all other question or value types, the method also throws an IllegalArgumentException.
 	 *
 	 * @param object the object to check the value against
-	 * @param value the value that should be checked
-	 * @throws IllegalArgumentException if the values are not compatible or we cannot decide if they
-	 * are compatible or not.
+	 * @param value  the value that should be checked
+	 * @throws IllegalArgumentException if the values are not compatible or we cannot decide if they are compatible or
+	 *                                  not.
 	 */
 	public static void requireCompatible(ValueObject object, Value value) throws IllegalArgumentException {
 		if (value instanceof Unknown && object instanceof Question) {
