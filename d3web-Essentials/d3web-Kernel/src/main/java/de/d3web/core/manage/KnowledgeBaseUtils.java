@@ -658,7 +658,9 @@ public final class KnowledgeBaseUtils {
 		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(
 				MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
 		for (State state : solutionStates) {
-			for (Solution solution : session.getBlackboard().getSolutions(state)) {
+			List<Solution> solutions = session.getBlackboard().getSolutions(state);
+			solutions.sort(new SolutionComparator(session));
+			for (Solution solution : solutions) {
 				groupSolution(solution, groups);
 			}
 		}
