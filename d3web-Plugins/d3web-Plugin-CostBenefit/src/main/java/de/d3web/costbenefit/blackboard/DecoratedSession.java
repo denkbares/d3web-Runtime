@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 denkbares GmbH, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -48,7 +48,7 @@ import de.d3web.core.session.protocol.Protocol;
  * The session itself decorates an existing session, like a glass panel. You can
  * read the values from the session decorated one and overwrite them by setting
  * new facts.
- * 
+ *
  * @author volker_belli
  * @created 16.09.2011
  */
@@ -70,9 +70,9 @@ public class DecoratedSession implements Session {
 	/**
 	 * Returns the original root session that is decorated by this
 	 * {@link DecoratedSession} and a series of other DecoratedSessions.
-	 * 
-	 * @created 04.06.2012
+	 *
 	 * @return the original root session
+	 * @created 04.06.2012
 	 */
 	public Session getRootSession() {
 		return this.rootSession;
@@ -179,6 +179,15 @@ public class DecoratedSession implements Session {
 			}
 
 			@Override
+			public long getPropagationTimeOfNoReturn() {
+				return time;
+			}
+
+			@Override
+			public void setPropagationTimeOfNoReturn(long timeOfNoReturn) {
+			}
+
+			@Override
 			public void commitPropagation() {
 			}
 
@@ -213,5 +222,4 @@ public class DecoratedSession implements Session {
 	public <T extends SessionObject> T getSessionObject(SessionObjectSource<T> item) {
 		throw new UnsupportedOperationException();
 	}
-
 }

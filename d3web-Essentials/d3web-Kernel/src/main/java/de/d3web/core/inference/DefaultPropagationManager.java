@@ -32,11 +32,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
-import com.denkbares.utils.Log;
 
 public class DefaultPropagationManager implements PropagationManager {
 
@@ -130,11 +130,13 @@ public class DefaultPropagationManager implements PropagationManager {
 	private List<PSMethodHandler> psHandlers = null;
 	private volatile boolean terminated = false;
 	private int recursiveCounter = 0;
-	private long propagationTime = 0;
+	private long propagationTime;
+	private long timeOfNoReturn;
 
 	public DefaultPropagationManager(Session session) {
 		this.session = session;
 		this.propagationTime = session.getCreationDate().getTime();
+		this.timeOfNoReturn = this.propagationTime;
 	}
 
 	private void initHandlers() {
@@ -409,6 +411,16 @@ public class DefaultPropagationManager implements PropagationManager {
 	@Override
 	public long getPropagationTime() {
 		return propagationTime;
+	}
+
+	@Override
+	public long getPropagationTimeOfNoReturn() {
+		return this.timeOfNoReturn;
+	}
+
+	@Override
+	public void setPropagationTimeOfNoReturn(long time) {
+		this.timeOfNoReturn = time;
 	}
 
 	/**

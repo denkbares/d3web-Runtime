@@ -334,6 +334,9 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 		Collection<SnapshotNode> enteredSnapshots = caseObject.getActivatedSnapshots();
 		if (enteredSnapshots.isEmpty()) return;
 
+		// since we have snapshot nodes, the session state is changed in a way that cannot be revered fully
+		session.getPropagationManager().setPropagationTimeOfNoReturn(session.getPropagationManager().getPropagationTime());
+
 		Collection<FlowRun> snappyFlows = getFlowRunsWithEnteredSnapshot(
 				enteredSnapshots, caseObject);
 
