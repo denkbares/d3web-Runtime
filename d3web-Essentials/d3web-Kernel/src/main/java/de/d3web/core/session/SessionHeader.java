@@ -70,6 +70,11 @@ public interface SessionHeader extends NamedObject {
 	 */
 	Date getCreationDate();
 
+	/**
+	 * Returns the id of the session
+	 *
+	 * @return the id of the session
+	 */
 	@Override
 	String getId();
 
