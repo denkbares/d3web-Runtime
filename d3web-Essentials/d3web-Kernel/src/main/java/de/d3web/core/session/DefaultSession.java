@@ -255,7 +255,6 @@ public class DefaultSession implements Session {
 	 * Adds a new PSMethod to the used PSMethods of this case and initializes it.
 	 */
 	private void addUsedPSMethod(PSMethod psmethod) {
-		touch();
 		if (usedPSMethods.contains(psmethod)) {
 			return;
 		}
