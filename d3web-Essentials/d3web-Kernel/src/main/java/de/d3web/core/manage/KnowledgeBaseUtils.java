@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -660,11 +660,15 @@ public final class KnowledgeBaseUtils {
 		for (State state : solutionStates) {
 			List<Solution> solutions = session.getBlackboard().getSolutions(state);
 			solutions.sort(new SolutionComparator(session));
-			for (Solution solution : solutions) {
-				groupSolution(solution, groups);
-			}
+			groupSolutions(groups, solutions);
 		}
 		return groups;
+	}
+
+	public static void groupSolutions(MultiMap<Solution, Solution> groups, List<Solution> solutions) {
+		for (Solution solution : solutions) {
+			groupSolution(solution, groups);
+		}
 	}
 
 	private static void groupSolution(Solution solution, MultiMap<Solution, Solution> groups) {
@@ -730,7 +734,8 @@ public final class KnowledgeBaseUtils {
 				session.getProtocol().addEntry(new FactProtocolEntry(
 						session.getPropagationManager().getPropagationTime(), fact));
 			}
-		} finally {
+		}
+		finally {
 			session.getPropagationManager().commitPropagation();
 		}
 	}
