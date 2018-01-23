@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Default implementation of Protocol
@@ -44,6 +45,7 @@ public class DefaultProtocol implements Protocol {
 
 	@Override
 	public void addEntry(ProtocolEntry entry) {
+		Objects.requireNonNull(entry);
 		int index = this.entries.size();
 		// if the stored entry is later, we reduce the index to store at
 		for (; index > 0; index--) {
