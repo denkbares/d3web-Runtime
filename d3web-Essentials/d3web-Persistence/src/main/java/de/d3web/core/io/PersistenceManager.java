@@ -57,6 +57,7 @@ import com.denkbares.progress.DummyProgressListener;
 import com.denkbares.progress.ProgressListener;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Log;
+import com.denkbares.utils.Stopwatch;
 import com.denkbares.utils.Streams;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
@@ -298,6 +299,7 @@ public final class PersistenceManager {
 	 * specified listener about the working progress.
 	 */
 	private KnowledgeBase loadZipFile(File file, ZipFile zipfile, ProgressListener listener) throws IOException {
+		Stopwatch stopwatch = new Stopwatch();
 		KnowledgeBase kb = new KnowledgeBase();
 		List<ZipEntry> files = new LinkedList<>();
 		// pre-calculate the size of the files to be parsed
@@ -379,6 +381,7 @@ public final class PersistenceManager {
 		}
 		// knowledge base loaded successfully
 		listener.updateProgress(1, "knowledge base loaded successfully");
+		stopwatch.log("Loaded knowledge base " + file.getPath());
 		return kb;
 	}
 
@@ -528,6 +531,7 @@ public final class PersistenceManager {
 	 * @throws IOException if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(Path folder, ProgressListener listener) throws IOException {
+		Stopwatch stopwatch = new Stopwatch();
 		if (!Files.isDirectory(folder)) {
 			throw new IOException("The knowledge base root is not a folder");
 		}
@@ -606,6 +610,7 @@ public final class PersistenceManager {
 
 		// knowledge base loaded successfully
 		listener.updateProgress(1, "Knowledge base loaded successfully");
+		stopwatch.log("Loaded knowledge base " + folder);
 		return kb;
 	}
 
