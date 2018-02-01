@@ -1,10 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.uniwue.d3web</groupId>
 	<artifactId>d3web</artifactId>
-	<version>12.0-SNAPSHOT</version>
+	<version>12.0-rc1</version>
 	<packaging>pom</packaging>
 
 	<description>Open source d3web parent</description>
@@ -186,82 +186,82 @@
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Kernel</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Persistence</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-BasicProperties</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-Interview</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-Persistence-Basic</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-Persistence-ExtensionPoints</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-SessionPersistence-Basic</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-TestCase</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-SessionPersistence</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-CostBenefit</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-DiaFlux</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-TestingFramework</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-XCL</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 			<dependency>
 				<groupId>de.uniwue.d3web</groupId>
 				<artifactId>d3web-Plugin-Tests</artifactId>
-				<version>${d3web.version}</version>
+				<version>12.0-rc1</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
