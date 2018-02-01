@@ -25,27 +25,22 @@
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-Utils</artifactId>
-			<version>${denkbares.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-PluginManager</artifactId>
-			<version>${denkbares.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-Kernel-ExtensionPoints</artifactId>
-			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-BasicProperties</artifactId>
-			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
-			<version>1.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

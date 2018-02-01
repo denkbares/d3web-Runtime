@@ -24,17 +24,14 @@
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-PluginManager</artifactId>
-			<version>${denkbares.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.denkbares</groupId>
 			<artifactId>denkbares-Utils</artifactId>
-			<version>${denkbares.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>${d3web.version}</version>
 		</dependency>
 	</dependencies>
 </project>

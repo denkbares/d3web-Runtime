@@ -34,12 +34,10 @@
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Persistence</artifactId>
-			<version>${d3web.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.uniwue.d3web</groupId>
 			<artifactId>d3web-Plugin-SessionPersistence-ExtensionPoints</artifactId>
-			<version>${d3web.version}</version>
 		</dependency>
 	</dependencies>
 </project>
