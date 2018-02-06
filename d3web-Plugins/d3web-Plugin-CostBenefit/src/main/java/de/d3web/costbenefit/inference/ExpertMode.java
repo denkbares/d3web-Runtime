@@ -52,31 +52,21 @@ public class ExpertMode implements SessionObject {
 	private final Session session;
 
 	/**
-	 * @use PSMethodCostBenefit.PERMANENTLY_RELEVANT
+	 * @see PSMethodCostBenefit#PERMANENTLY_RELEVANT
 	 */
 	@Deprecated
 	public static final Property<Boolean> PERMANENTLY_RELEVANT = PSMethodCostBenefit.PERMANENTLY_RELEVANT;
-
-	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = new SessionObjectSource<ExpertMode>() {
-
-		@Override
-		public ExpertMode createSessionObject(Session session) {
-			// check if it is allowed to create such an object
-			if (getPSMethodCostBenefit(session) == null) {
-				throw new IllegalStateException(
-						"ExpertMode cannot be used if session does not contain the cost benefit strategic solver");
-			}
-			return new ExpertMode(session);
-		}
+	static final Comparator<Target> BENEFIT_COMPARATOR = (target1, target2) -> {
+		// sort by the costs of the target (sort descending)
+		return (int) Math.signum(target2.getBenefit() - target1.getBenefit());
 	};
-
-	static final Comparator<Target> BENEFIT_COMPARATOR = new Comparator<Target>() {
-
-		@Override
-		public int compare(Target target1, Target target2) {
-			// sort by the costs of the target (sort descending)
-			return (int) Math.signum(target2.getBenefit() - target1.getBenefit());
+	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = session -> {
+		// check if it is allowed to create such an object
+		if (getPSMethodCostBenefit(session) == null) {
+			throw new IllegalStateException(
+					"ExpertMode cannot be used if session does not contain the cost benefit strategic solver");
 		}
+		return new ExpertMode(session);
 	};
 
 	private ExpertMode(Session session) {
@@ -91,12 +81,23 @@ public class ExpertMode implements SessionObject {
 	 * @created 07.03.2011
 	 * @param session the session to get the expert mode instance for
 	 * @return the ExpertMode instance
-	 * @throws AbortException if no path towards the target could be found
 	 * @throws IllegalStateException if no cost benefit strategic solver is
 	 *         available in the specified session
 	 */
 	public static ExpertMode getExpertMode(Session session) {
 		return session.getSessionObject(EXPERT_MODE_SOURCE);
+	}
+
+	private static PSMethodCostBenefit getPSMethodCostBenefit(Session session) {
+		return session.getPSMethodInstance(PSMethodCostBenefit.class);
+	}
+
+	private CostBenefitCaseObject getCostBenefitCaseObject(PSMethodCostBenefit psm) {
+		return session.getSessionObject(psm);
+	}
+
+	private PSMethodCostBenefit getPSMethodCostBenefit() {
+		return getPSMethodCostBenefit(session);
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class ExpertMode implements SessionObject {
 	 * are based on the latest search of the cost benefit underlying search
 	 * algorithm. Due to already answered test steps the minimal path may have
 	 * become no longer applicable.
-	 * 
+	 *
 	 * @created 07.03.2011
 	 * @return the list of all alternative targets sorted by their benefit
 	 */
@@ -126,21 +127,8 @@ public class ExpertMode implements SessionObject {
 		result.remove(currentTarget);
 
 		// sort the list regarding to their benefit to become our result
-		Collections.sort(result, BENEFIT_COMPARATOR);
+		result.sort(BENEFIT_COMPARATOR);
 		return Collections.unmodifiableList(result);
-	}
-
-	private CostBenefitCaseObject getCostBenefitCaseObject(PSMethodCostBenefit psm) {
-		return session.getSessionObject(psm);
-	}
-
-	private PSMethodCostBenefit getPSMethodCostBenefit() {
-		return getPSMethodCostBenefit(session);
-	}
-
-	private static PSMethodCostBenefit getPSMethodCostBenefit(Session session) {
-		PSMethodCostBenefit psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
-		return psm;
 	}
 
 	/**
