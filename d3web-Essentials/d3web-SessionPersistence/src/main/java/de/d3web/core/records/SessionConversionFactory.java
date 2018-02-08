@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -44,12 +44,14 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
  * Factory to create a Session out of a SessionRecord and vice versa.
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 15.09.2010
  */
@@ -63,12 +65,12 @@ public final class SessionConversionFactory {
 
 	/**
 	 * Converts a SessionRecord to a Session
-	 * 
-	 * @created 05.08.2011
+	 *
 	 * @param knowledgeBase {@link KnowledgeBase}
-	 * @param source {@link SessionRecord}
+	 * @param source        {@link SessionRecord}
 	 * @return {@link Session}
 	 * @throws IOException
+	 * @created 05.08.2011
 	 */
 	public static Session copyToSession(KnowledgeBase knowledgeBase, SessionRecord source) throws IOException {
 		DefaultSession target = SessionFactory.createSession(source.getId(),
@@ -139,10 +141,10 @@ public final class SessionConversionFactory {
 
 	/**
 	 * Converts a {@link Session} to a {@link SessionRecord}.
-	 * 
-	 * @created 05.08.2011
+	 *
 	 * @param source the session to be converted
 	 * @return the created session record
+	 * @created 05.08.2011
 	 */
 	public static SessionRecord copyToSessionRecord(Session source) {
 		return copyToSessionRecord(source, false);
@@ -150,12 +152,12 @@ public final class SessionConversionFactory {
 
 	/**
 	 * Converts a {@link Session} to a {@link SessionRecord}.
-	 * 
-	 * @created 05.08.2011
-	 * @param source the session to be converted
+	 *
+	 * @param source      the session to be converted
 	 * @param createNewID specified if the record should be decoupled from the
-	 *        session be creating a new (unique) id
+	 *                    session be creating a new (unique) id
 	 * @return the created session record
+	 * @created 05.08.2011
 	 */
 	public static SessionRecord copyToSessionRecord(Session source, boolean createNewID) {
 		DefaultSessionRecord target =
@@ -210,6 +212,45 @@ public final class SessionConversionFactory {
 			}
 
 		}
+		target.touch(source.getLastChangeDate());
+		return target;
+	}
+
+	/**
+	 * Loading Session from SessionRecord by replaying Protocol
+	 *
+	 * @param knowledgeBase {@link KnowledgeBase}
+	 * @param source {@link SessionRecord}
+	 * @return {@link Session}
+	 */
+	public static Session replayToSession(KnowledgeBase knowledgeBase, SessionRecord source) {
+		DefaultSession target = SessionFactory.createSession(source.getId(),
+				knowledgeBase, source.getCreationDate());
+		target.setName(source.getName());
+		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
+
+		// Search psmethods of session
+		Map<String, PSMethod> psMethods = new HashMap<>();
+		for (PSMethod psm : target.getPSMethods()) {
+			psMethods.put(psm.getClass().getName(), psm);
+		}
+
+		List<FactProtocolEntry> protocolHistory = source.getProtocol().getProtocolHistory(FactProtocolEntry.class);
+		for (FactProtocolEntry entry : protocolHistory) {
+			target.getPropagationManager().openPropagation(entry.getDate().getTime());
+			try {
+				PSMethod psMethod = psMethods.get(entry.getSolvingMethodClassName());
+				Fact fact = FactFactory.createFact(knowledgeBase.getManager()
+						.search(entry.getTerminologyObjectName()), entry.getValue(), psMethod, psMethod);
+				target.getBlackboard().addValueFact(fact);
+			}
+			finally {
+				target.getPropagationManager().commitPropagation();
+			}
+		}
+
+		// this must be the last operation to overwrite all touches within
+		// propagation
 		target.touch(source.getLastChangeDate());
 		return target;
 	}
