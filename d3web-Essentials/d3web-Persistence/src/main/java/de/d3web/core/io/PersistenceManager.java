@@ -461,7 +461,7 @@ public final class PersistenceManager {
 	 */
 	private boolean isMultimedia(Path relativePath) {
 		return relativePath.getNameCount() > 0
-				&& relativePath.getName(0).toString().equalsIgnoreCase(MULTIMEDIA_PATH_PREFIX);
+				&& relativePath.getName(0).toString().equalsIgnoreCase(MULTIMEDIA);
 	}
 
 	/**
