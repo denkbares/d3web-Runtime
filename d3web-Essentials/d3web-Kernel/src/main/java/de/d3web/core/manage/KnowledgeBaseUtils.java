@@ -84,8 +84,7 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * @return a newly creates knowledge base with one root Solution (P000) and one root QContainer
-	 * (Q000).
+	 * @return a newly creates knowledge base with one root Solution (P000) and one root QContainer (Q000).
 	 */
 	public static KnowledgeBase createKnowledgeBase() {
 		KnowledgeBase knowledgeBase = new KnowledgeBase();
@@ -123,9 +122,8 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Collects all ancestors starting from the specified object. Duplicate objects will be
-	 * contained only once at its first occurrence. The specified terminologyObject is always the
-	 * first element of this list.
+	 * Collects all ancestors starting from the specified object. Duplicate objects will be contained only once at its
+	 * first occurrence. The specified terminologyObject is always the first element of this list.
 	 *
 	 * @param terminologyObject the leaf of the sub-tree to be specified
 	 * @return the ancestors of the given {@link TerminologyObject}
@@ -136,9 +134,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Collects all tree ancestors of a specified type starting from the specified object. Duplicate
-	 * objects will be contained only once at its first occurrence. The specified terminologyObject
-	 * is always the first element of this list.
+	 * Collects all tree ancestors of a specified type starting from the specified object. Duplicate objects will be
+	 * contained only once at its first occurrence. The specified terminologyObject is always the first element of this
+	 * list.
 	 *
 	 * @param <T>    the type of the ancestors to be found
 	 * @param parent the leaf where the search starts
@@ -168,10 +166,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Collects all tree successors starting from the specified object. The objects are collected in
-	 * a depth first order. Duplicate objects (having multiple parents within this sub-tree) will be
-	 * contained only once at its first occurrence. The specified terminologyObject is always the
-	 * first element of this list.
+	 * Collects all tree successors starting from the specified object. The objects are collected in a depth first
+	 * order. Duplicate objects (having multiple parents within this sub-tree) will be contained only once at its first
+	 * occurrence. The specified terminologyObject is always the first element of this list.
 	 *
 	 * @param terminologyObject the root of the sub-tree to be specified
 	 * @return the depth-first search tree items
@@ -182,10 +179,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Collects all tree successors of a specified type starting from the specified object. The
-	 * objects are collected in a depth first order. Duplicate objects (having multiple parents
-	 * within this sub-tree) will be contained only once at its first occurrence. The specified
-	 * terminologyObject is always the first element of this list.
+	 * Collects all tree successors of a specified type starting from the specified object. The objects are collected in
+	 * a depth first order. Duplicate objects (having multiple parents within this sub-tree) will be contained only once
+	 * at its first occurrence. The specified terminologyObject is always the first element of this list.
 	 *
 	 * @param <T>               the type of the successors to be found
 	 * @param terminologyObject the root of the sub-tree to be specified
@@ -216,8 +212,8 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
-	 * question, that has the specified answer name/id (not prompt).
+	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified question, that has the
+	 * specified answer name/id (not prompt).
 	 *
 	 * @param question   the specified question
 	 * @param answerName the requested answer name/id
@@ -228,8 +224,8 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
-	 * question, that has the specified answer name/id (not prompt).
+	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified question, that has the
+	 * specified answer name/id (not prompt).
 	 *
 	 * @param question      the specified question
 	 * @param answerName    the requested answer name/id
@@ -250,22 +246,22 @@ public final class KnowledgeBaseUtils {
 		 */
 		CASE_INSENSITIVE,
 		/**
-		 * Matching is first tried case sensitive. If no match is found, we check if we can find a
-		 * match in case insensitive mode. We only return it, if the match is not ambiguous, meaning
-		 * there isn't any other choice that could also match.
+		 * Matching is first tried case sensitive. If no match is found, we check if we can find a match in case
+		 * insensitive mode. We only return it, if the match is not ambiguous, meaning there isn't any other choice that
+		 * could also match.
 		 */
 		CASE_INSENSITIVE_IF_NO_CONFLICT,
 
 		/**
-		 * Matching any choice name or any prompt in any language case insensitive. Exact (case
-		 * sensitive) matches to the name are preferred, then the first choice that matches.
+		 * Matching any choice name or any prompt in any language case insensitive. Exact (case sensitive) matches to
+		 * the name are preferred, then the first choice that matches.
 		 */
 		ANY_PROMPT
 	}
 
 	/**
-	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified
-	 * question, that has the specified answer name/id (not prompt).
+	 * Retrieves the AnswerChoice object contained in the alternatives list of the specified question, that has the
+	 * specified answer name/id (not prompt).
 	 *
 	 * @param question   the specified question
 	 * @param answerName the requested answer name/id
@@ -343,14 +339,12 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Creates a question value from a case sensitive string representation of the value. If the
-	 * specified string does not represent a valid value of that question, null is returned. This
-	 * may happen e.g. if the denoted choice is not available or for a numeric question if the
-	 * string is not a valid double representation.
+	 * Creates a question value from a case sensitive string representation of the value. If the specified string does
+	 * not represent a valid value of that question, null is returned. This may happen e.g. if the denoted choice is not
+	 * available or for a numeric question if the string is not a valid double representation.
 	 * <p/>
-	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED" (if there is no such
-	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
-	 * choice).
+	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED" (if there is no such choice). The method
+	 * created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such choice).
 	 *
 	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
@@ -362,14 +356,13 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Creates a question value from a string representation of the value. You may specify if the
-	 * values are matched case sensitive or not. If the specified string does not represent a valid
-	 * value of that question, null is returned. This may happen e.g. if the denoted choice is not
-	 * available or for a numeric question if the string is not a valid double representation.
+	 * Creates a question value from a string representation of the value. You may specify if the values are matched
+	 * case sensitive or not. If the specified string does not represent a valid value of that question, null is
+	 * returned. This may happen e.g. if the denoted choice is not available or for a numeric question if the string is
+	 * not a valid double representation.
 	 * <p/>
-	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED" (if there is no such
-	 * choice). The method created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such
-	 * choice).
+	 * The method created the undefined value for "Ma_Undefined" or "UNDEFINED" (if there is no such choice). The method
+	 * created the unknown for "MaU", "-?-" or "UNKNOWN" (if there is no such choice).
 	 *
 	 * @param question    the question to create the value for
 	 * @param valueString the string representation of the value
@@ -499,14 +492,12 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its containing {@link
-	 * NamedObject}s). It will return every {@link Locale} that is used for at least one property
-	 * within the knowledge base.
+	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its containing {@link NamedObject}s). It will
+	 * return every {@link Locale} that is used for at least one property within the knowledge base.
 	 * <p/>
-	 * Implementation note: <br> Because of searching every property within the whole knowledge base
-	 * for all supported languages is a time consuming operation, it is a good idea to store and
-	 * reused the result of this operation instead of calling this method multiple times on the same
-	 * knowledge base.
+	 * Implementation note: <br> Because of searching every property within the whole knowledge base for all supported
+	 * languages is a time consuming operation, it is a good idea to store and reused the result of this operation
+	 * instead of calling this method multiple times on the same knowledge base.
 	 *
 	 * @param kb the knowledge base to be examined
 	 * @return the available locales
@@ -544,10 +535,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Generates a unique id of the given object, based on its position in the object tree. The id
-	 * only contains digits and -, e.g. 0-1-5-12-2. It can for example be easily used in HTML
-	 * element attributes. Uniqueness is only given, if all objects of the knowledge base are
-	 * successors of the root elements (QASet or Solution).
+	 * Generates a unique id of the given object, based on its position in the object tree. The id only contains digits
+	 * and -, e.g. 0-1-5-12-2. It can for example be easily used in HTML element attributes. Uniqueness is only given,
+	 * if all objects of the knowledge base are successors of the root elements (QASet or Solution).
 	 *
 	 * @param object the object for which we want the id
 	 * @return the uniqe id
@@ -557,9 +547,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Generates the position of the object in the object tree as a List of ints. The first int
-	 * specifies, whether the object is successor of the RootQASet (0) or the RootSolution (1).
-	 * Following ints are the positions in the list of children in the respective parent.
+	 * Generates the position of the object in the object tree as a List of ints. The first int specifies, whether the
+	 * object is successor of the RootQASet (0) or the RootSolution (1). Following ints are the positions in the list of
+	 * children in the respective parent.
 	 *
 	 * @param object the object for which we want the position
 	 * @return the position of the object in the tree
@@ -593,17 +583,15 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Groups all solutions into the closest parent solutions that have set the property {@link
-	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If any of the solutions
-	 * has no such parent, or the solution itself is such a group, the returned MultiMap contains
-	 * an entry with both, key an value of that solution. Additionally there are entries where the
-	 * key is the grouping solution of each (non-group) solution and the values are the specified
-	 * solutions.
+	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If any of the solutions has no such parent,
+	 * or the solution itself is such a group, the returned MultiMap contains an entry with both, key an value of that
+	 * solution. Additionally there are entries where the key is the grouping solution of each (non-group) solution and
+	 * the values are the specified solutions.
 	 * <p/>
-	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the
-	 * group of the first solution. Additionally the values are also in the order of the specified
-	 * solution, that means if a solution s1 is before a solution s2 in the specified list, the
-	 * groups of s1 is before the group of s2, and if both are in the same group, then s1 is in the
-	 * values of that group before s2.
+	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the group of the first
+	 * solution. Additionally the values are also in the order of the specified solution, that means if a solution s1 is
+	 * before a solution s2 in the specified list, the groups of s1 is before the group of s2, and if both are in the
+	 * same group, then s1 is in the values of that group before s2.
 	 *
 	 * @param solutions the solutions to get the groups for
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
@@ -618,9 +606,9 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Returns the closest grouping solution that will be the responsible group for this solution.
-	 * If the solution itself is a group, the method will return the solution itself. If the
-	 * solution is in no group at all, the method will also return this solution.
+	 * Returns the closest grouping solution that will be the responsible group for this solution. If the solution
+	 * itself is a group, the method will return the solution itself. If the solution is in no group at all, the method
+	 * will also return this solution.
 	 *
 	 * @param solution the solution to be grouped
 	 * @return the solution
@@ -632,43 +620,73 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Fetches the solutions with the specified state(s) form the session. Groups all solutions into
-	 * the closest parent solution that has set the property {@link BasicProperties#SOLUTION_DISPLAY}
-	 * to {@link SolutionDisplay#group}. If a solution of a specified rating state has no such
-	 * parent, the returned map contains an entry with that solution as the key and value. If a
-	 * grouping solution itself is has one of the specified rating states, the returned MultiMap
-	 * will also contain an entry with both, key an value is that solution. Additionally there are
-	 * entries where the key is the grouping solution of each (non-group) solution and the values
-	 * are the fetched solutions of the specified states.
+	 * Fetches the solutions with the specified state(s) form the session. Groups all solutions into the closest parent
+	 * solution that has set the property {@link BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If
+	 * a solution of a specified rating state has no such parent, the returned map contains an entry with that solution
+	 * as the key and value. If a grouping solution itself is has one of the specified rating states, the returned
+	 * MultiMap will also contain an entry with both, key an value is that solution. Additionally there are entries
+	 * where the key is the grouping solution of each (non-group) solution and the values are the fetched solutions of
+	 * the specified states.
 	 * <p/>
-	 * The order of the solutions (highest rated solution comes first) is preserved. The first group
-	 * (when iterating the keys) is the the group of the first (highest rated) solution.
-	 * Additionally the values are also in the order of the fetched solution, that means if a
-	 * solution s1 is before a solution s2 in the specified list, the groups of s1 is before the
-	 * group of s2, and if both are in the same group, then s1 is in the values of that group before
-	 * s2.
-	 * <p/>
-	 * If multiple states are specified, the solutions are ordered by the order of these states.
+	 * The order of the solutions (highest rated solution comes first) is preserved. The first group (when iterating the
+	 * keys) is the the group of the first (highest rated) solution. Additionally the values are also in the order of
+	 * the fetched solution, that means if a solution s1 is before a solution s2 in the specified list, the groups of s1
+	 * is before the group of s2, and if both are in the same group, then s1 is in the values of that group before s2.
 	 *
 	 * @param session        the session to get the solutions from
 	 * @param solutionStates the states of the solutions to be fetched
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
 	public static MultiMap<Solution, Solution> getGroupedSolutions(Session session, State... solutionStates) {
-		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(
-				MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
+		SolutionComparator sorting = new SolutionComparator(session);
+		List<Solution> solutions = new ArrayList<>();
 		for (State state : solutionStates) {
-			List<Solution> solutions = session.getBlackboard().getSolutions(state);
-			solutions.sort(new SolutionComparator(session));
-			groupSolutions(groups, solutions);
+			solutions.addAll(session.getBlackboard().getSolutions(state));
 		}
-		return groups;
+
+		// single sorting of the solutions before grouping is enough,
+		// because the tree-index (used as fine-sorting) is stable for groups and group-items
+		solutions.sort(sorting);
+		return groupSolutions(solutions);
 	}
 
-	public static void groupSolutions(MultiMap<Solution, Solution> groups, List<Solution> solutions) {
-		for (Solution solution : solutions) {
-			groupSolution(solution, groups);
+	/**
+	 * Fetches the solutions with the specified state(s) form the session. Groups all solutions into the closest parent
+	 * solution that has set the property {@link BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If
+	 * a solution of a specified rating state has no such parent, the returned map contains an entry with that solution
+	 * as the key and value. If a grouping solution itself is has one of the specified rating states, the returned
+	 * MultiMap will also contain an entry with both, key an value is that solution. Additionally there are entries
+	 * where the key is the grouping solution of each (non-group) solution and the values are the fetched solutions of
+	 * the specified states.
+	 * <p/>
+	 * The order of the solutions is according to the specified sorting. The first group (when iterating the keys) is
+	 * the the group of the first (highest rated) solution. Additionally the values are also in the order of the fetched
+	 * solution, that means if a solution s1 is before a solution s2 in the specified list, the groups of s1 is before
+	 * the group of s2, and if both are in the same group, then s1 is in the values of that group before s2.
+	 *
+	 * @param session        the session to get the solutions from
+	 * @param sorting        the sorting of the solutions
+	 * @param solutionStates the states of the solutions to be fetched
+	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
+	 */
+	public static MultiMap<Solution, Solution> getGroupedSolutions(Session session, SolutionComparator sorting, State... solutionStates) {
+		List<Solution> solutions = new ArrayList<>();
+		for (State state : solutionStates) {
+			solutions.addAll(session.getBlackboard().getSolutions(state));
 		}
+
+		solutions.sort(sorting);
+		return sortGroups(groupSolutions(solutions), sorting);
+	}
+
+	@NotNull
+	private static MultiMap<Solution, Solution> sortGroups(MultiMap<Solution, Solution> groups, SolutionComparator sorting) {
+		// resorting of the groups is required, because the group sorting is slightly different
+		// (use best groupd children, but the fine-sorting based on the group itself)
+		MultiMap<Solution, Solution> sorted = new DefaultMultiMap<>(MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
+		groups.keySet().stream().sorted((g1, g2) -> sorting.compareGroups(g1, g2, groups)).forEach(key ->
+				sorted.putAll(key, groups.getValues(key)));
+		return sorted;
 	}
 
 	private static void groupSolution(Solution solution, MultiMap<Solution, Solution> groups) {
@@ -700,14 +718,13 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Adds a set of init answers to the specified session. The answers usually will not appear in
-	 * the user's interview as they are set as the init problem solver. If any of the answers value
-	 * string could not been decoded to a valid question value or any of the answers target
-	 * questions could not been found, an IllegalArgumentException is thrown
+	 * Adds a set of init answers to the specified session. The answers usually will not appear in the user's interview
+	 * as they are set as the init problem solver. If any of the answers value string could not been decoded to a valid
+	 * question value or any of the answers target questions could not been found, an IllegalArgumentException is
+	 * thrown
 	 *
 	 * @param session the session to apply the init values to
-	 * @param answers the values to be set where the keys are the question names and the values are
-	 *                the answers
+	 * @param answers the values to be set where the keys are the question names and the values are the answers
 	 * @throws IllegalArgumentException if the answers not match the session's knowledge base
 	 */
 	public static void setInitAnswers(Session session, Map<String, String> answers) {
@@ -741,8 +758,8 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Returns the question of the specified name from the specified knowledge base. If the question
-	 * does not exists, an {@link IllegalArgumentException} is thrown.
+	 * Returns the question of the specified name from the specified knowledge base. If the question does not exists, an
+	 * {@link IllegalArgumentException} is thrown.
 	 *
 	 * @param base         the knowledge base to get the question for
 	 * @param questionName the name of the question
@@ -760,8 +777,7 @@ public final class KnowledgeBaseUtils {
 	}
 
 	/**
-	 * Returns the name of the knowledge base (for the root language), or the id if no name is
-	 * specified.
+	 * Returns the name of the knowledge base (for the root language), or the id if no name is specified.
 	 *
 	 * @param base the knowledge base to get the name for
 	 * @return the name or id of the knowledge base
