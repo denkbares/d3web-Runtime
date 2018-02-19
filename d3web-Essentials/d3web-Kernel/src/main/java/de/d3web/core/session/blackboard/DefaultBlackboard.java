@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
@@ -39,11 +40,11 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
- * The Blackboard manages all dynamic values created within the case and
- * propagated throughout the inference system.
+ * The Blackboard manages all dynamic values created within the case and propagated throughout the inference system.
  *
  * @author volker_belli
  */
@@ -52,8 +53,10 @@ public class DefaultBlackboard implements Blackboard {
 	private final Session session;
 	private FactStorage valueStorage;
 	private FactStorage interviewStorage;
-	private boolean sourceRecording = true;
 	private final List<BlackboardListener> listeners = new LinkedList<>();
+
+	private boolean sourceRecording = true;
+	private FactProtocolEntry recent = null;
 
 	@Override
 	public boolean isSourceRecording() {
@@ -77,8 +80,7 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	/**
-	 * Creates a new default blackboard by an existing one, sharing the fact
-	 * storages.
+	 * Creates a new default blackboard by an existing one, sharing the fact storages.
 	 *
 	 * @param session             the session to construct this blackboard for
 	 * @param factStoragesToShare the blackboard to share the fact storages
@@ -116,9 +118,16 @@ public class DefaultBlackboard implements Blackboard {
 		// add the arriving fact to the protocol
 		// if it was entered by a source psmethod
 		if (isSourceRecording() && psMethod != null && psMethod.hasType(Type.source)) {
-			FactProtocolEntry protocolEntry = new FactProtocolEntry(session.getPropagationManager()
-					.getPropagationTime(), fact);
-			getSession().getProtocol().addEntry(protocolEntry);
+			// remove (replace) recent entry if we record the same object for the same problem solver
+			Protocol protocol = getSession().getProtocol();
+			if (recent != null &&
+					Objects.equals(recent.getTerminologyObjectName(), fact.getTerminologyObject().getName()) &&
+					Objects.equals(recent.getSolvingMethodClassName(), fact.getPSMethod().getClass().getName())) {
+				protocol.removeEntry(recent);
+			}
+			// add the new entry as the recent one
+			recent = new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact);
+			protocol.addEntry(recent);
 		}
 	}
 
@@ -156,9 +165,8 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	/**
-	 * Removes all value facts with the specified source from this blackboard
-	 * for the specified terminology object. If no such fact exists in the
-	 * blackboard, this method has no effect.
+	 * Removes all value facts with the specified source from this blackboard for the specified terminology object. If
+	 * no such fact exists in the blackboard, this method has no effect.
 	 *
 	 * @param terminologyObject the terminology object to remove the value facts from
 	 * @param source            the fact source to be removed
@@ -425,7 +433,5 @@ public class DefaultBlackboard implements Blackboard {
 	@Override
 	public Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject) {
 		return this.getInterviewStorage().getAllFacts(terminologyObject);
-
 	}
-
 }

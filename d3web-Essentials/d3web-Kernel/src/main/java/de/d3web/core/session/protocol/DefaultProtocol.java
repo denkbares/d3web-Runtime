@@ -86,6 +86,10 @@ public class DefaultProtocol implements Protocol {
 
 	@Override
 	public boolean removeEntry(ProtocolEntry entry) {
-		return entries.remove(entry);
+		// search from end, because we usually edit the last entries
+		int index = entries.lastIndexOf(entry);
+		if (index == -1) return false;
+		entries.remove(index);
+		return true;
 	}
 }
