@@ -4,12 +4,14 @@
 
 package de.d3web.interview.measure;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
@@ -209,9 +211,9 @@ public class Measurement {
 	}
 
 	/**
-	 * The method applies a measured raw value to a question, by answering the question for the
-	 * specified problem solver. The specified measurand is mapped to the actual question of the
-	 * session's knowledge base. The raw value is mapped to an answer, according to the type of the
+	 * The method applies measured raw values to a set of question, by answering the question for the
+	 * specified problem solver. The specified measurands are mapped to the actual questions of the
+	 * session's knowledge base. The raw values are mapped to an answer, according to the type of the
 	 * question. The following value mappings are supported:
 	 * <p>
 	 * <table> <tr><th>rawValue</th><th>Question</th><th>Result</th></tr>
@@ -227,64 +229,56 @@ public class Measurement {
 	 * question mapped by the measurand, otherwise the value is rejected, e.g. a TextValue cannot be
 	 * applied to a choice question.</td></tr> </table>
 	 * <p>
-	 * Any non-showed combination will result to unknown. Especially when the {@link Unknown}
+	 * Any unlisted combination will result in unknown. Especially when the {@link Unknown}
 	 * singleton instance is specified as a raw value, it will apply 'unknown' to the question.
 	 *
 	 * @param session   the session to apply the value to
-	 * @param measurand the measured value identifier, will be mapped to a question
-	 * @param rawValue  the value that has been measured
+	 * @param values  a map of measurands to values to set in the knowledge base
+	 * @param isStopped  true, if the measurement should terminate and consider setting preliminary values
 	 * @return the value fact that has been applied, also if unknown is applied due to an
 	 * incompatible value, or null if nothing is applied or a fact has been removed
 	 */
-	public Collection<Fact> applyValue(Session session, String measurand, Object rawValue) {
+	public Collection<Fact> applyValues(Session session, Map<String, Object> values, boolean isStopped) {
+		try {
+			return applyValuesStrict(session, values, isStopped);
+		}
+		catch (IllegalArgumentException ex) {
+			return applyValuesStrict(session, values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> Unknown.getInstance())), isStopped);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	public Collection<Fact> applyValuesStrict(Session session, Map<String, Object> values, boolean isStopped) {
+		final List<Fact> facts = new ArrayList<>();
+
+		for (Map.Entry<String, Object> value : values.entrySet()) {
+			final Fact f = applyValueStrict(session, value.getKey(), value.getValue());
+			if (f != null) facts.add(f);
+		}
+
+		return facts;
+	}
+
+	protected Fact applyValue(Session session, String measurand, Object rawValue) {
 		try {
 			return applyValueStrict(session, measurand, rawValue);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			return applyValueStrict(session, measurand, Unknown.getInstance());
 		}
 	}
 
-	/**
-	 * The method applies a measured raw value to a question, by answering the question for the
-	 * specified problem solver. The specified measurand is mapped to the actual question of the
-	 * session's knowledge base. The raw value is mapped to an answer, according to the type of the
-	 * question. The following value mappings are supported:
-	 * <p>
-	 * <table> <tr><th>rawValue</th><th>Question</th><th>Result</th></tr>
-	 * <tr><td>null</td><td>any</td><td>the question will be undefined, by removing any previously
-	 * measured value</td></tr> <tr><td>java.lang.Number</td><td>QuestionNum</td><td>the question
-	 * will be answered with the numeric value</td></tr> <tr><td>java.lang.Object</td><td>QuestionText</td><td>the
-	 * question will be answered with the string representation {@link #toString()} of the
-	 * value</td></tr> <tr><td>java.lang.Date</td><td>QuestionDate</td><td>the question will be
-	 * answered with the date value</td></tr> <tr><td>java.lang.String</td><td>QuestionChoice</td><td>the
-	 * question will be answered with the choice denoted by the string, if there is a matching
-	 * choice identifier or choice name of any language</td></tr> <tr><td>java.lang.Number</td><td>QuestionChoice</td><td>the
-	 * question will be answered with the choice of the denoted index, where the first choice is "1"
-	 * and "0" is "unknown".</td></tr> <tr><td>de.d3web.core.session.Value</td><td>Question</td><td>the
-	 * question will be answered with the specified value. If the value is not compatible to the
-	 * questions mapped by the measurand (e.g. a TextValue is applied to a choice question), an
-	 * IllegalArgumentException is thrown.</td></tr> </table>
-	 * <p>
-	 * Any non-showed combination will result in an IllegalArgumentException.
-	 *
-	 * @param session   the session to apply the value to
-	 * @param measurand the measured value identifier, will be mapped to a question
-	 * @param rawValue  the value that has been measured
-	 * @return the value fact that has been applied, or null if not applied or removed
-	 */
-	public Collection<Fact> applyValueStrict(Session session, String measurand, Object rawValue) {
+	protected Fact applyValueStrict(Session session, String measurand, Object rawValue) {
 		// check if we have a question for the measurand to be applied
 		Question question = session.getKnowledgeBase().getManager()
 				.searchQuestion(mapping.get(measurand));
 		if (question == null) {
-			return Collections.emptyList();
+			return null;
 		}
 
 		if (rawValue == null) {
 			// if we have a null value, then remove existing answer
 			removeFact(session, question);
-			return Collections.emptyList();
+			return null;
 		}
 		else {
 			// otherwise convert raw value to question value and set the value
@@ -303,11 +297,11 @@ public class Measurement {
 	 * @return the fact that has been added
 	 * @see #removeFact(Session, Question)
 	 */
-	protected Collection<Fact> addFact(Session session, Question question, Value value) {
+	protected Fact addFact(Session session, Question question, Value value) {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		session.getBlackboard().addValueFact(fact);
-		return Collections.singletonList(fact);
+		return fact;
 	}
 
 	/**

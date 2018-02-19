@@ -4,8 +4,6 @@
 
 package de.d3web.costbenefit.inference;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 import de.d3web.core.inference.condition.Condition;
@@ -34,10 +32,10 @@ public class StateTransitionMeasurement extends Measurement {
 	}
 
 	@Override
-	protected Collection<Fact> addFact(Session session, Question question, Value value) {
+	protected Fact addFact(Session session, Question question, Value value) {
 		Fact fact = new PSMethodStateTransition.StateTransitionFact(session, question, value);
 		session.getBlackboard().addValueFact(fact);
-		return Collections.singletonList(fact);
+		return fact;
 	}
 
 	@Override
