@@ -4,6 +4,7 @@
 
 package de.d3web.costbenefit.inference;
 
+import java.util.Date;
 import java.util.Map;
 
 import de.d3web.core.inference.condition.Condition;
@@ -35,6 +36,7 @@ public class StateTransitionMeasurement extends Measurement {
 	protected Fact addFact(Session session, Question question, Value value) {
 		Fact fact = new PSMethodStateTransition.StateTransitionFact(session, question, value);
 		session.getBlackboard().addValueFact(fact);
+		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 		return fact;
 	}
 

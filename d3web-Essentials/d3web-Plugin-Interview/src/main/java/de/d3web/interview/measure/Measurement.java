@@ -301,6 +301,7 @@ public class Measurement {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		session.getBlackboard().addValueFact(fact);
+		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 		return fact;
 	}
 
@@ -315,6 +316,7 @@ public class Measurement {
 	 */
 	protected void removeFact(Session session, Question question) {
 		session.getBlackboard().removeValueFact(question, getPSMethod(session));
+		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 	}
 
 	/**
