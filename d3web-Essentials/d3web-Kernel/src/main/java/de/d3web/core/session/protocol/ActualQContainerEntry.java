@@ -18,6 +18,7 @@
  */
 package de.d3web.core.session.protocol;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -58,4 +59,11 @@ public class ActualQContainerEntry implements ProtocolEntry {
 		return qContainer;
 	}
 
+	@Override
+	public String toString() {
+		return "[" +
+				DateFormat.getInstance().format(getDate()) +
+				"] " +
+				getQContainerName();
+	}
 }
