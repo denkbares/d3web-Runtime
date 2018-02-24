@@ -124,9 +124,9 @@ public interface PropagationManager {
 
 	/**
 	 * Returns the propagation time of no return. Facts that were set/propagated
-	 * before that time cannot be guaranteed to change in the same way or cause
-	 * the same changes to other facts as they would, if they were not yet set,
-	 * or set after that time. If you want to change facts set before that time,
+	 * at that time or earlier cannot be guaranteed to change in the same way or
+	 * cause the same changes to other facts as they would, if they were  set
+	 * after that time. If you want to change facts set at that time or before,
 	 * it is recommended to just create a new session and replay the protocol to
 	 * just before the facts were first set.
 	 *
