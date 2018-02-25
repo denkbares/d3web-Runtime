@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -356,7 +356,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * <b>Do not call this method directly! It will be called by the case to propagate facts updated
 	 * into the case.</b>
 	 *
-	 * @param object the object that has been updated
+	 * @param object   the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 */
 	@Override
@@ -374,7 +374,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	 * <b>Do not call this method directly! It will be called by the case to propagate facts updated
 	 * into the case.</b>
 	 *
-	 * @param object the object that has been updated
+	 * @param object   the object that has been updated
 	 * @param oldValue the old value of the object within the case
 	 * @param psMethod the PSMethod the fact will be propagated to
 	 */
@@ -420,7 +420,10 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	@Override
 	public void setPropagationTimeOfNoReturn(long time) {
-		this.timeOfNoReturn = time;
+		if (this.timeOfNoReturn != time) {
+			this.timeOfNoReturn = time;
+			Log.fine("Setting propagation time of no return to " + time);
+		}
 	}
 
 	/**
