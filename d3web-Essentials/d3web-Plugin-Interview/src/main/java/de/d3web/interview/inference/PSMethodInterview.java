@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
@@ -37,7 +38,6 @@ import de.d3web.interview.DefaultInterview;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
-import com.denkbares.utils.Log;
 
 /**
  * This PSMethod is used to notify the {@link Interview} of new facts added to the {@link Session}, i.e., new
@@ -70,8 +70,8 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 			 */
 			Collection<InterviewObject> objects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
 			Logger logger = Log.logger();
-			if (logger.isLoggable(Level.FINE)) {
-				logger.fine("Agenda (" + changes.size() + " changes): " + objects);
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Agenda (" + changes.size() + " changes): " + objects);
 			}
 		}
 	}

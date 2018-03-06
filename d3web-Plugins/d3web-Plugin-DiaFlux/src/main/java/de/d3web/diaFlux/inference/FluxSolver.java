@@ -118,10 +118,20 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 		this.suggestMode = suggestMode;
 	}
 
+	public static void start(Session session, StartNode startNode) {
+		Log.finer("Activating start node '" + startNode.getName() + "' of flow '"
+				+ startNode.getFlow().getName() + "'.");
+
+		FlowRun run = new FlowRun();
+		run.addStartNode(startNode);
+		DiaFluxUtils.getDiaFluxCaseObject(session).addRun(run);
+		addSupport(startNode, null, run, session);
+	}
+
 	@Override
 	public void init(Session session) {
 		if (!DiaFluxUtils.isFlowCase(session)) return;
-		Log.fine("Initializing FluxSolver with case: " + session);
+		Log.finer("Initializing FluxSolver with case: " + session);
 
 		try {
 			session.getPropagationManager().openPropagation();
@@ -135,20 +145,10 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 		}
 	}
 
-	public static void start(Session session, StartNode startNode) {
-		Log.fine("Activating start node '" + startNode.getName() + "' of flow '"
-				+ startNode.getFlow().getName() + "'.");
-
-		FlowRun run = new FlowRun();
-		run.addStartNode(startNode);
-		DiaFluxUtils.getDiaFluxCaseObject(session).addRun(run);
-		addSupport(startNode, null, run, session);
-	}
-
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		if (!DiaFluxUtils.isFlowCase(session)) return;
-		Log.fine("Start propagating: " + changes);
+		Log.finer("Start propagating: " + changes);
 
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 		List<FlowRun> runs = caseObject.getRuns();
@@ -193,7 +193,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 		}
 
 		caseObject.updateSuspectedSolutions();
-		Log.fine("Finished propagating.");
+		Log.finer("Finished propagating.");
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 				enteredSnapshots, caseObject);
 
 		// log debug output
-		Log.fine("Taking snapshots: " + snappyFlows);
+		Log.finer("Taking snapshots: " + snappyFlows);
 
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<>();
