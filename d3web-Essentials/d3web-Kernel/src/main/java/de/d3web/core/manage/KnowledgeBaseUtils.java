@@ -597,12 +597,33 @@ public final class KnowledgeBaseUtils {
 	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
 	 */
 	public static MultiMap<Solution, Solution> groupSolutions(Collection<Solution> solutions) {
-		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(
-				MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
+		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
 		for (Solution solution : solutions) {
 			groupSolution(solution, groups);
 		}
 		return groups;
+	}
+
+	/**
+	 * Groups all solutions into the closest parent solutions that have set the property {@link
+	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If any of the solutions has no such parent,
+	 * or the solution itself is such a group, the returned MultiMap contains an entry with both, key an value of that
+	 * solution. Additionally there are entries where the key is the grouping solution of each (non-group) solution and
+	 * the values are the specified solutions.
+	 * <p/>
+	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the group of the first
+	 * solution. Additionally the values are also in the order of the specified solution, that means if a solution s1 is
+	 * before a solution s2 in the specified list, the groups of s1 is before the group of s2, and if both are in the
+	 * same group, then s1 is in the values of that group before s2.
+	 *
+	 * @param solutions the solutions to get the groups for
+	 * @param sorting   the comparator by which to sort the returned solutions and groups
+	 * @return a MultiMap with grouping solutions as keys and the specified solutions as values.
+	 */
+	public static MultiMap<Solution, Solution> groupSolutions(Collection<Solution> solutions, SolutionComparator sorting) {
+		List<Solution> currentSolutions = new ArrayList<>(solutions);
+		currentSolutions.sort(sorting);
+		return sortGroups(groupSolutions(currentSolutions), sorting);
 	}
 
 	/**
