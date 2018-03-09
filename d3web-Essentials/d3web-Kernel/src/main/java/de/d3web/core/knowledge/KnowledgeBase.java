@@ -325,8 +325,6 @@ public class KnowledgeBase implements NamedObject {
 	 * @return the list of problem-solver configurations sorted by priority
 	 */
 	public List<PSConfig> getPsConfigs() {
-		// the list is sorted
-		Collections.sort(psConfigs);
 		return Collections.unmodifiableList(psConfigs);
 	}
 
@@ -354,6 +352,7 @@ public class KnowledgeBase implements NamedObject {
 	 */
 	public void addPSConfig(PSConfig psConfig) {
 		psConfigs.add(psConfig);
+		Collections.sort(psConfigs);
 	}
 
 	/**
