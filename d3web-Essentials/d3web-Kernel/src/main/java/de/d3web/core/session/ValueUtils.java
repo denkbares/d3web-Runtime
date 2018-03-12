@@ -574,11 +574,17 @@ public final class ValueUtils {
 			return getDateOrDurationVerbalization((QuestionDate) question, ((DateValue) value).getDate());
 		}
 		else if (value instanceof NumValue) {
-			int digits = Math.abs(question.getInfoStore().getValue(BasicProperties.DIGITS));
-			String unit = question.getInfoStore().getValue(MMInfo.UNIT, lang);
-			double shift = Math.pow(10, digits);
+			// round value to digits, if specified
 			double val = ((NumValue) value).getDouble();
-			String numText = NumberFormat.getInstance(lang).format(Math.round(val * shift) / shift);
+			Integer optionalDigits = question.getInfoStore().getValue(BasicProperties.DIGITS);
+			if (optionalDigits != null) {
+				int digits = Math.abs(optionalDigits);
+				double shift = Math.pow(10, digits);
+				val = Math.round(val * shift) / shift;
+			}
+			// and format the result string
+			String unit = question.getInfoStore().getValue(MMInfo.UNIT, lang);
+			String numText = NumberFormat.getInstance(lang).format(val);
 			return Strings.isBlank(unit) ? numText : (numText + " " + unit);
 		}
 		else if (value instanceof Unknown) {
