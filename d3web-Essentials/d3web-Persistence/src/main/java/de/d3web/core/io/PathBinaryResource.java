@@ -29,7 +29,7 @@ public class PathBinaryResource implements Resource {
 
 	public PathBinaryResource(Path file, String relativePath, Cipher cipher) throws IOException {
 		this.file = file;
-		this.entryPath = relativePath;
+		this.entryPath = relativePath.replace("\\", "/");
 		this.size = Files.size(file);
 		this.cipher = cipher;
 	}
