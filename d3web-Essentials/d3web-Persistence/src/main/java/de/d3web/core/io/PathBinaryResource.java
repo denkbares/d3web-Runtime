@@ -31,8 +31,7 @@ public class PathBinaryResource implements Resource {
 	 * Creates a new Resources.
 	 *
 	 * @param file         the file from which to read the input stream
-	 * @param relativePath the relative path this resource will have inside the knowledge base,
-	 *                     has to start with {@link PersistenceManager#MULTIMEDIA_PATH_PREFIX}
+	 * @param relativePath the relative path this resource will have inside the knowledge base
 	 * @param cipher       an optional cipher to encrypt the resource
 	 * @throws IOException if the file cannot be read
 	 */
@@ -53,7 +52,7 @@ public class PathBinaryResource implements Resource {
 
 	@Override
 	public String getPathName() {
-		return entryPath.substring(PersistenceManager.MULTIMEDIA_PATH_PREFIX.length());
+		return entryPath;
 	}
 
 	@Override

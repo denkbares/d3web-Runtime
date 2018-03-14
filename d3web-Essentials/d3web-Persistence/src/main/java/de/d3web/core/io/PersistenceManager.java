@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -68,10 +68,9 @@ import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 
 /**
- * This class provides the management features to load and save
- * {@link KnowledgeBase} instances to a file system. This manager stores the
- * {@link KnowledgeBase} instance in a compressed file, that contains knowledge
- * base items as XML files together with additional resources.
+ * This class provides the management features to load and save {@link KnowledgeBase} instances to a file system. This
+ * manager stores the {@link KnowledgeBase} instance in a compressed file, that contains knowledge base items as XML
+ * files together with additional resources.
  * <p>
  * Access this class via the singleton <code>getInstance()</code> method.
  *
@@ -141,8 +140,7 @@ public final class PersistenceManager {
 		}
 
 		/**
-		 * Returns the name of the knowledge base, as specified in the manifest
-		 * file.
+		 * Returns the name of the knowledge base, as specified in the manifest file.
 		 *
 		 * @return the name of the knowledge base
 		 * @created 17.04.2011
@@ -152,8 +150,7 @@ public final class PersistenceManager {
 		}
 
 		/**
-		 * Returns the description text of the knowledge base, as specified in
-		 * the manifest file.
+		 * Returns the description text of the knowledge base, as specified in the manifest file.
 		 *
 		 * @return the description of the knowledge base
 		 * @created 17.04.2011
@@ -163,8 +160,7 @@ public final class PersistenceManager {
 		}
 
 		/**
-		 * Returns the author's name of this knowledge base, as specified in the
-		 * manifest file.
+		 * Returns the author's name of this knowledge base, as specified in the manifest file.
 		 *
 		 * @return the author of the knowledge base
 		 * @created 17.04.2011
@@ -174,8 +170,7 @@ public final class PersistenceManager {
 		}
 
 		/**
-		 * Returns the date of this knowledge base, as specified in the manifest
-		 * file.
+		 * Returns the date of this knowledge base, as specified in the manifest file.
 		 *
 		 * @return the date of the knowledge base
 		 * @created 17.04.2011
@@ -224,9 +219,8 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Method to force the plugins to be updated. Usually it is not required to
-	 * call this method manually, because this will done by the persistence
-	 * manager of their own.
+	 * Method to force the plugins to be updated. Usually it is not required to call this method manually, because this
+	 * will done by the persistence manager of their own.
 	 *
 	 * @created 28.11.2013
 	 */
@@ -238,8 +232,7 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Method to access the singleton instance of this
-	 * {@link PersistenceManager}.
+	 * Method to access the singleton instance of this {@link PersistenceManager}.
 	 *
 	 * @return the instance of this {@link PersistenceManager}
 	 */
@@ -251,21 +244,16 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Method to create a instance of a {@link PersistenceManager} that
-	 * reads/writes encrypted knowledge base files. The encryption of each
-	 * content item is done by the specified cipher. The cipher need to be fully
-	 * initialized. The entry names of the knowledge base jar file are not
-	 * encrypted at all.
+	 * Method to create a instance of a {@link PersistenceManager} that reads/writes encrypted knowledge base files. The
+	 * encryption of each content item is done by the specified cipher. The cipher need to be fully initialized. The
+	 * entry names of the knowledge base jar file are not encrypted at all.
 	 * <p>
-	 * When loading a knowledge base, the Cipher also must not been modified or
-	 * reinitialized during the lifetime of the knowledge base, because the
-	 * persistence manager may be used later on to reload/encrypt some
-	 * additional data as they are required, e.g. multimedia content stored in
-	 * the knowledge base file.
+	 * When loading a knowledge base, the Cipher also must not been modified or reinitialized during the lifetime of the
+	 * knowledge base, because the persistence manager may be used later on to reload/encrypt some additional data as
+	 * they are required, e.g. multimedia content stored in the knowledge base file.
 	 * <p>
-	 * Please not that the same {@link PersistenceManager} usually cannot be
-	 * used used for read and write, because the specified cipher is either
-	 * initialized for encryption or decryption mode.
+	 * Please not that the same {@link PersistenceManager} usually cannot be used used for read and write, because the
+	 * specified cipher is either initialized for encryption or decryption mode.
 	 *
 	 * @return the instance of this encrypting/encrypting {@link PersistenceManager}
 	 */
@@ -274,13 +262,12 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Loads a knowledge base from a specified ZIP file or a expanded directory and notifies the
-	 * specified listener about the working progress.
+	 * Loads a knowledge base from a specified ZIP file or a expanded directory and notifies the specified listener
+	 * about the working progress.
 	 *
-	 * @param file the specified ZIP {@link File} (usually a jar file), or a directory with content
+	 * @param file     the specified ZIP {@link File} (usually a jar file), or a directory with content
 	 * @param listener the specified listener which should be notified about the load progress
-	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP
-	 * file
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP file
 	 * @throws IOException if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file, ProgressListener listener) throws IOException {
@@ -295,8 +282,7 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Loads a knowledge base from a specified ZIP file and notifies the
-	 * specified listener about the working progress.
+	 * Loads a knowledge base from a specified ZIP file and notifies the specified listener about the working progress.
 	 */
 	private KnowledgeBase loadZipFile(File file, ZipFile zipfile, ProgressListener listener) throws IOException {
 		Stopwatch stopwatch = new Stopwatch();
@@ -386,12 +372,11 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Creates an input stream for a specified zip entry to handle decryption.
-	 * If there is no request for decryption, the original zip input stream for
-	 * that entry is returned.
+	 * Creates an input stream for a specified zip entry to handle decryption. If there is no request for decryption,
+	 * the original zip input stream for that entry is returned.
 	 *
 	 * @param zipfile the zip file to read from
-	 * @param entry the entry to be read
+	 * @param entry   the entry to be read
 	 * @return the decrypted stream
 	 * @throws IOException if there is any io issue
 	 * @created 27.11.2013
@@ -403,9 +388,8 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Creates an input stream for a specified path to handle decryption.
-	 * If there is no request for decryption, the original input stream for
-	 * that path is returned.
+	 * Creates an input stream for a specified path to handle decryption. If there is no request for decryption, the
+	 * original input stream for that path is returned.
 	 *
 	 * @param path file to read from
 	 * @return the decrypted stream
@@ -419,11 +403,10 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Creates a decrypted resource for the specified zip entry. If there is no
-	 * request for decryption, the original zip input stream for that entry is
-	 * returned.
+	 * Creates a decrypted resource for the specified zip entry. If there is no request for decryption, the original zip
+	 * input stream for that entry is returned.
 	 *
-	 * @param file the zip file to read from
+	 * @param file  the zip file to read from
 	 * @param entry the entry to be read
 	 * @return the decrypted resource
 	 * @throws IOException if there is any io issue
@@ -434,9 +417,8 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Creates a decrypted resource for the specified path. If there is no
-	 * request for decryption, the original zip input stream for that entry is
-	 * returned.
+	 * Creates a decrypted resource for the specified path. If there is no request for decryption, the original zip
+	 * input stream for that entry is returned.
 	 *
 	 * @param path the file to be read
 	 * @return the decrypted resource
@@ -444,7 +426,8 @@ public final class PersistenceManager {
 	 * @created 27.11.2013
 	 */
 	private Resource createResource(Path path, String relativePath) throws IOException {
-		return new PathBinaryResource(path, relativePath, cipher);
+		return new PathBinaryResource(path,
+				relativePath.replace('\\', '/').substring(PersistenceManager.MULTIMEDIA_PATH_PREFIX.length()), cipher);
 	}
 
 	private boolean isMultimediaEntry(ZipEntry entry) {
@@ -452,8 +435,8 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Returns if the specified file path is an multimedia file. The relativePath must be relative
-	 * to the knowledge base root folder/zip, without leading "/".
+	 * Returns if the specified file path is an multimedia file. The relativePath must be relative to the knowledge base
+	 * root folder/zip, without leading "/".
 	 *
 	 * @param relativePath the path to be checked
 	 * @return if the file if a multimedia file
@@ -465,8 +448,8 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Returns if the specified entry is an unrequired file from a previous
-	 * version of the persistence, that cannot be read any longer.
+	 * Returns if the specified entry is an unrequired file from a previous version of the persistence, that cannot be
+	 * read any longer.
 	 *
 	 * @param entry the entry to be checked
 	 * @return if the entry should not be parsed
@@ -477,9 +460,8 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Returns if the specified file path is an unrequired file from a previous version of the
-	 * persistence, that cannot be read any longer. The filePath must be relative to the knowledge
-	 * base root folder/zip, without leading "/".
+	 * Returns if the specified file path is an unrequired file from a previous version of the persistence, that cannot
+	 * be read any longer. The filePath must be relative to the knowledge base root folder/zip, without leading "/".
 	 *
 	 * @param filePath the path to be checked
 	 * @return if the file should not be parsed
@@ -495,8 +477,7 @@ public final class PersistenceManager {
 	 * Loads a knowledge base from the specified ZIP file.
 	 *
 	 * @param file the specified ZIP {@link File} (usually a jar file)
-	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP
-	 * file
+	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP file
 	 * @throws IOException if an error occurs during opening and reading the file
 	 */
 	public KnowledgeBase load(File file) throws IOException {
@@ -522,10 +503,10 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Loads a knowledge base from a specified path (folder) and notifies the
-	 * specified listener about the working progress.
+	 * Loads a knowledge base from a specified path (folder) and notifies the specified listener about the working
+	 * progress.
 	 *
-	 * @param folder the specified path to load the knowledge base from
+	 * @param folder   the specified path to load the knowledge base from
 	 * @param listener the specified listener which should be notified about the load progress
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified folder
 	 * @throws IOException if an error occurs during opening and reading the file
@@ -625,13 +606,12 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Saves the knowledge base to the specified {@link File}. The file is a
-	 * compressed ZIP containing different XML files and resources comprising
-	 * the knowledge base.
+	 * Saves the knowledge base to the specified {@link File}. The file is a compressed ZIP containing different XML
+	 * files and resources comprising the knowledge base.
 	 *
 	 * @param knowledgeBase the specified knowledge base to be saved
-	 * @param file the specified file to which the knowledge base should be stored
-	 * @param listener listener which should be informed about the progress of the save operation
+	 * @param file          the specified file to which the knowledge base should be stored
+	 * @param listener      listener which should be informed about the progress of the save operation
 	 * @throws IOException if an error occurs during saving the files
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file, ProgressListener listener) throws IOException {
@@ -722,8 +702,10 @@ public final class PersistenceManager {
 		// delete old backup file
 		bakfile.delete();
 		// backup original file, if it exists
-		if (file.exists() && !file.renameTo(bakfile)) throw new IOException(
-				"Cannot override existing knowledge base file");
+		if (file.exists() && !file.renameTo(bakfile)) {
+			throw new IOException(
+					"Cannot override existing knowledge base file");
+		}
 		// override original file
 		if (!tempfile.renameTo(file)) {
 			// if not successful, restore backup and delete created output file
@@ -759,12 +741,11 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Saves the specified {@link KnowledgeBase} instance to the specified
-	 * {@link File}. During this process, a temporary file is created. If the
-	 * process is successful, the temporary file replaces the input file.
+	 * Saves the specified {@link KnowledgeBase} instance to the specified {@link File}. During this process, a
+	 * temporary file is created. If the process is successful, the temporary file replaces the input file.
 	 *
 	 * @param knowledgeBase the specified {@link KnowledgeBase} instance to be saved to the file
-	 * @param file the specified {@link File} in which the knowledge base is written
+	 * @param file          the specified {@link File} in which the knowledge base is written
 	 * @throws IOException if an error occurs, an IO Exception is thrown
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file) throws IOException {
