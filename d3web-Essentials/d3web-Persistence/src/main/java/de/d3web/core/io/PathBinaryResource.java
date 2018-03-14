@@ -27,6 +27,15 @@ public class PathBinaryResource implements Resource {
 	private final Path file;
 	private final Cipher cipher;
 
+	/**
+	 * Creates a new Resources.
+	 *
+	 * @param file         the file from which to read the input stream
+	 * @param relativePath the relative path this resource will have inside the knowledge base,
+	 *                     has to start with {@link PersistenceManager#MULTIMEDIA_PATH_PREFIX}
+	 * @param cipher       an optional cipher to encrypt the resource
+	 * @throws IOException if the file cannot be read
+	 */
 	public PathBinaryResource(Path file, String relativePath, Cipher cipher) throws IOException {
 		this.file = file;
 		this.entryPath = relativePath.replace("\\", "/");
