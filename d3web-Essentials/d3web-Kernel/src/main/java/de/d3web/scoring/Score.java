@@ -36,39 +36,34 @@ import de.d3web.core.knowledge.terminology.Solution;
  */
 public final class Score implements Comparable<Object> {
 
-	public static final Score P7 = new Score(999, 1, "P7");
-	public static final Score P6 = new Score(80, 1, "P6");
-	public static final Score P5x = new Score(50, 1, "P5x");
-	public static final Score P5 = new Score(40, 1.8, "P5");
-	public static final Score P4 = new Score(20, 1.4, "P4");
-	public static final Score P3 = new Score(10, 1.2, "P3");
-	public static final Score P2 = new Score(5, 1.1, "P2");
-	public static final Score P1 = new Score(2, 1, "P1");
-	public static final Score N7 = new Score(Double.NEGATIVE_INFINITY, 0, "N7");
-	public static final Score N6 = new Score(-80, 0, "N6");
-	public static final Score N5x = new Score(-50, 0, "N5x");
-	public static final Score N5 = new Score(-40, -40, "N5");
-	public static final Score N4 = new Score(-20, -20, "N4");
-	public static final Score N3 = new Score(-10, -10, "N3");
-	public static final Score N2 = new Score(-5, -5, "N2");
-	public static final Score N1 = new Score(-2, 0, "N1");
-	public static final List<Score> APRIORI = Arrays.asList(P5, P4, P3, P2, N2, N3, N4, N5);
+	public static final Score P7 = new Score(999, "P7");
+	public static final Score P6 = new Score(80, "P6");
+	public static final Score P5x = new Score(50, "P5x");
+	public static final Score P5 = new Score(40, "P5");
+	public static final Score P4 = new Score(20, "P4");
+	public static final Score P3 = new Score(10, "P3");
+	public static final Score P2 = new Score(5, "P2");
+	public static final Score P1 = new Score(2, "P1");
+	public static final Score N7 = new Score(Double.NEGATIVE_INFINITY, "N7");
+	public static final Score N6 = new Score(-80, "N6");
+	public static final Score N5x = new Score(-50, "N5x");
+	public static final Score N5 = new Score(-40, "N5");
+	public static final Score N4 = new Score(-20, "N4");
+	public static final Score N3 = new Score(-10, "N3");
+	public static final Score N2 = new Score(-5, "N2");
+	public static final Score N1 = new Score(-2, "N1");
 	private static final List<Score> allScores = Arrays.asList(P7, P6, P5x, P5, P4, P3, P2, P1, N1, N2, N3, N4, N5, N5x, N6, N7);
 
 	private final String symbol;
 	private final double score;
-	private final double aPriori;
 
 	/**
 	 * Creates a new score given to a diagnosis with a fixed amount of points
 	 * and an symbolic name.
-	 * 
-	 * @param theAPriori is the score a Diagnosis has as "offset". If it is
-	 *        &lt;0, it will be added, otherwise multiplied with theScore.
+	 *
 	 */
-	private Score(double theScore, double theAPriori, String symbol) {
+	private Score(double theScore, String symbol) {
 		score = theScore;
-		aPriori = theAPriori;
 		this.symbol = symbol;
 	}
 
@@ -127,10 +122,6 @@ public final class Score implements Comparable<Object> {
 		}
 		Score other = (Score) obj;
 		return other.getScore() == getScore();
-	}
-
-	public double getAPriori() {
-		return aPriori;
 	}
 
 	public double getScore() {

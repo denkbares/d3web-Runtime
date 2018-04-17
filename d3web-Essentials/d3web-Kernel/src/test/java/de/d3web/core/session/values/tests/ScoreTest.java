@@ -26,7 +26,5 @@ public class ScoreTest {
 		Collections.sort(sortedScores);
 
 		assertEquals(allScores, sortedScores);
-
-		assertEquals(1, Score.P7.getAPriori(), 0);
 	}
 }
