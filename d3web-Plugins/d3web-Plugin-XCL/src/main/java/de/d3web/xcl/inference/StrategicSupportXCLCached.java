@@ -296,9 +296,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		// calculate the total weight
 		float totalWeight = 0;
 		for (Solution solution : solutions) {
-			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
-			float weight = (apriori == null) ? 1f : apriori.floatValue();
-			totalWeight += weight;
+			totalWeight += solution.getInfoStore().getValue(BasicProperties.APRIORI);
 		}
 
 		// use cache and return

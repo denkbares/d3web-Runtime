@@ -30,12 +30,12 @@ import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.scoring.HeuristicRating;
-import de.d3web.scoring.Score;
 
 /**
  * Heuristic problem-solver which adds scores to diagnoses on the basis of
@@ -110,16 +110,17 @@ public final class PSMethodHeuristic extends PSMethodRulebased {
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-
 		HeuristicRating[] ratings = new HeuristicRating[facts.length];
 		for (int i = 0; i < facts.length; i++) {
 			ratings[i] = (HeuristicRating) facts[i].getValue();
 		}
-		Solution terminologyObject = (Solution) facts[0].getTerminologyObject();
-		Score aprioriProbability = terminologyObject.getAprioriProbability();
-		Value value = HeuristicRating.add(aprioriProbability, ratings);
 
-		return new DefaultFact(terminologyObject, value, this, this);
+		// we apply the aprioi rating, if available
+		Solution solution = (Solution) facts[0].getTerminologyObject();
+		float apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
+		Value value = HeuristicRating.add(apriori, ratings);
+
+		return new DefaultFact(solution, value, this, this);
 	}
 
 	@Override

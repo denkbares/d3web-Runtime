@@ -88,9 +88,7 @@ public class InformationPots<K> {
 	 * @param answers all answers for all relevant questions
 	 */
 	public void addWeights(Solution solution, ArrayList<? extends Collection<K>> answers) {
-		Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
-		float weight = (apriori == null) ? 1f : apriori.floatValue();
-		addWeights(weight, answers);
+		addWeights(solution.getInfoStore().getValue(BasicProperties.APRIORI), answers);
 	}
 
 	/**

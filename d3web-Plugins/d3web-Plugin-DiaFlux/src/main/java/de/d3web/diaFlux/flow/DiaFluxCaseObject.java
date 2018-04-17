@@ -476,8 +476,7 @@ public class DiaFluxCaseObject implements SessionObject {
 		double undiscriminatedWeight = 0;
 		double totalWeight = 0;
 		for (Solution solution : solutions) {
-			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
-			double weight = (apriori == null) ? 1.0 : apriori.doubleValue();
+			double weight = solution.getInfoStore().getValue(BasicProperties.APRIORI);
 			totalWeight += weight;
 
 			Set<Condition> conditions = findOpenConditions(solution, questions);

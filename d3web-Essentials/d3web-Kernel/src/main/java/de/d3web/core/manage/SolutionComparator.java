@@ -9,6 +9,7 @@ import java.util.Comparator;
 import com.denkbares.collections.MultiMap;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.scoring.HeuristicRating;
 
@@ -43,14 +44,23 @@ public class SolutionComparator implements Comparator<Solution> {
 	}
 
 	private int compareRating(Solution o1, Solution o2) {
+		// compare the rating (states), and return if different
 		Rating rating1 = session.getBlackboard().getRating(o1);
 		Rating rating2 = session.getBlackboard().getRating(o2);
 		int comparison = rating2.compareTo(rating1);
-		if (comparison == 0 && rating1 instanceof HeuristicRating && rating2 instanceof HeuristicRating) {
+		if (comparison != 0) return comparison;
+
+		// otherwise, compare heuristic rating (if available)
+		if (rating1 instanceof HeuristicRating && rating2 instanceof HeuristicRating) {
 			// solutions with higher score should also be shown higher
 			comparison = -Double.compare(((HeuristicRating) rating1).getScore(), ((HeuristicRating) rating2).getScore());
+			if (comparison != 0) return comparison;
 		}
-		return comparison;
+
+		// otherwise, compare a-priory rating
+		return Float.compare(
+				o1.getInfoStore().getValue(BasicProperties.APRIORI),
+				o2.getInfoStore().getValue(BasicProperties.APRIORI));
 	}
 
 	private static int compareTreeIndex(Solution o1, Solution o2) {

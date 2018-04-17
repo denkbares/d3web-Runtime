@@ -28,7 +28,6 @@ import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.Property.Autosave;
-import de.d3web.scoring.Score;
 
 /**
  * FragmentHanler for Diagnosis Children are ignored, hierarchies are
@@ -51,11 +50,7 @@ public class SolutionsHandler implements FragmentHandler<KnowledgeBase> {
 	@Override
 	public Object read(Element element, Persistence<KnowledgeBase> persistence) throws IOException {
 		String id = element.getAttribute("name");
-		String apriori = element.getAttribute("aPriProb");
 		Solution diag = new Solution(persistence.getArtifact(), id);
-		if (apriori != null) {
-			diag.setAprioriProbability(XMLUtil.getScore(apriori));
-		}
 		PropertiesHandler ph = new PropertiesHandler();
 		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {
 			if (child.getNodeName().equals(XMLUtil.INFO_STORE)) {
@@ -73,10 +68,6 @@ public class SolutionsHandler implements FragmentHandler<KnowledgeBase> {
 		Solution diag = (Solution) object;
 		Element element = persistence.getDocument().createElement("Diagnosis");
 		element.setAttribute("name", diag.getName());
-		Score apriori = diag.getAprioriProbability();
-		if (apriori != null) {
-			element.setAttribute("aPriProb", apriori.getSymbol());
-		}
 		XMLUtil.appendInfoStore(persistence, element, diag, Autosave.basic);
 		return element;
 	}

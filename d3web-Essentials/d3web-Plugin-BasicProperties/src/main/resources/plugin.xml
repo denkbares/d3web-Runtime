@@ -25,16 +25,14 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="unit">
 		<parameter id="name" value="unit" />
-		<parameter id="description"
-			value="Specifies the unit of the value of a numerical question." />
+		<parameter id="description" value="Specifies the unit of the value of a numerical question." />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property"
-		id="abstractionQuestion">
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="abstractionQuestion">
 		<parameter id="name" value="abstractionQuestion" />
 		<parameter id="description"
 			value="Marks a question as abstraction question (if 'true') or not (if 'false'). Abstraction questions are going to be derived by the knowledge base itself, instead of answered by the user or any other external source." />
@@ -53,6 +51,7 @@
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Float" />
+		<parameter id="default" value="1.0" />
 	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="range">
@@ -62,8 +61,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof"
-			value="de.d3web.core.knowledge.terminology.info.NumericalInterval" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.NumericalInterval" />
 	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="INIT">
@@ -137,8 +135,7 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="filename">
 		<parameter id="name" value="filename" />
-		<parameter id="description"
-			value="Specifies the desired filename of a knowledge base to be downloaded." />
+		<parameter id="description" value="Specifies the desired filename of a knowledge base to be downloaded." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -157,8 +154,7 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="description">
 		<parameter id="name" value="description" />
-		<parameter id="description"
-			value="Specifies the description text of any object within the knowledge base." />
+		<parameter id="description" value="Specifies the description text of any object within the knowledge base." />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
@@ -192,20 +188,17 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof"
-			value="de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality" />
 	</extension>
 
-    <extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="abnormalityDynamic">
-        <parameter id="name" value="abnormalityDynamic" />
-        <parameter id="description"
-                   value="Specifies the dynamic abnormality of different values of a question." />
-        <parameter id="multilingual" value="false" />
-        <parameter id="autosave" value="basic" />
-        <parameter id="priority" value="5" />
-        <parameter id="instanceof"
-                   value="de.d3web.core.knowledge.terminology.info.abnormality.DynamicAbnormality" />
-    </extension>
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="abnormalityDynamic">
+		<parameter id="name" value="abnormalityDynamic" />
+		<parameter id="description" value="Specifies the dynamic abnormality of different values of a question." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.DynamicAbnormality" />
+	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="abnormalityNum">
 		<parameter id="name" value="abnormalityNum" />
@@ -213,8 +206,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof"
-			value="de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum" />
 	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="dateDisplay">
@@ -250,8 +242,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof"
-			value="de.d3web.core.knowledge.terminology.info.SolutionDisplay" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.SolutionDisplay" />
 	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="digits">

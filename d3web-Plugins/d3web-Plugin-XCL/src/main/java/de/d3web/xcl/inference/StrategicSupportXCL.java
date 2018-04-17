@@ -111,8 +111,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 			// and add solution probabilities to these pots
 			List<List<Condition>> combinations = getCombinations(new LinkedList<>(
 					conditionsForQuestions));
-			Number apriori = solution.getInfoStore().getValue(BasicProperties.APRIORI);
-			float weight = (apriori == null) ? 1f : apriori.floatValue();
+			float weight = solution.getInfoStore().getValue(BasicProperties.APRIORI);
 			totalweight += weight;
 			for (List<Condition> pot : combinations) {
 				Float count = map.get(pot);

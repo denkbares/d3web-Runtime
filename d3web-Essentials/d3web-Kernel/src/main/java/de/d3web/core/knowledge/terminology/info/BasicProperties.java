@@ -78,7 +78,9 @@ public class BasicProperties {
 			"visible", Visible.class);
 
 	/**
-	 * Used for Diagnosis. Saves the apriori probability of a diagnosis
+	 * Used for Diagnosis. Saves the apriori probability of a diagnosis, relative to the default probability. A value of
+	 * 2.0 means that the solution will occur twice as often as others, and a value of 0.5 means that the solution has
+	 * the half probability. The default value if 1.0, so getting this property always returns a number.
 	 */
 	public static final Property<Float> APRIORI = Property.getProperty(
 			"apriori", Float.class);
