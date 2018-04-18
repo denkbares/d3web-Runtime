@@ -185,7 +185,7 @@ public class ExpertMode implements SessionObject {
 	 *         reached with the cheapest path
 	 * @throws AbortException if no path to a target could be calculated
 	 */
-	public Target selectCheapestTarget(List<QContainer> qContainers) throws AbortException {
+	public Target selectCheapestTarget(Collection<QContainer> qContainers) throws AbortException {
 		Target[] targets = new Target[qContainers.size()];
 		int i = 0;
 		for (QContainer qContainer : qContainers) {
