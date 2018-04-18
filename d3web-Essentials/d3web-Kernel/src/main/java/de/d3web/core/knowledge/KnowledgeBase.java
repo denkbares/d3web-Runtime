@@ -65,7 +65,7 @@ public class KnowledgeBase implements NamedObject {
 
 	// stores all qasets contained in the init questionnaires together with
 	// their respective priority
-	private Map<QASet, Integer> initQuestions;
+	private final Map<QASet, Integer> initQuestions = new HashMap<>();
 
 	private final List<Resource> resouces = new ArrayList<>();
 
@@ -105,7 +105,6 @@ public class KnowledgeBase implements NamedObject {
 	 * {@link KnowledgeBaseUtils} instead).
 	 */
 	public KnowledgeBase() {
-		initQuestions = new HashMap<>();
 	}
 
 	/**
