@@ -279,12 +279,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		List<StrategicSupport> strategicSupports = CostBenefitUtil.getStrategicSupports(session);
 		for (StrategicSupport strategicSupport : strategicSupports) {
 			// calculate the targets from the strategic support items
-			Collection<Solution> solutions = strategicSupport
-					.getUndiscriminatedSolutions(session);
-			Collection<Question> discriminatingQuestions = strategicSupport
-					.getDiscriminatingQuestions(solutions, session);
-			Collection<Target> targets = targetFunction.getTargets(session,
-					discriminatingQuestions, solutions, strategicSupport);
+			Collection<Solution> solutions = strategicSupport.getUndiscriminatedSolutions(session);
+			Collection<Question> discriminatingQuestions = strategicSupport.getDiscriminatingQuestions(solutions, session);
+			Collection<Target> targets = targetFunction.getTargets(session, discriminatingQuestions, solutions, strategicSupport);
 			Set<QContainer> blockedQContainers = searchModel.getBlockedQContainers();
 			for (Target target : targets) {
 				boolean skipTarget = false;

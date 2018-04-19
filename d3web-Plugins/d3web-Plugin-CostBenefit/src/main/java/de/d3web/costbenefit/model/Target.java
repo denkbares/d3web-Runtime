@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -23,13 +23,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 
 /**
- * A Target is a List of QContainer with a combined benefit and a (minimal) path
- * which contains all QContainers in this list.
- * 
+ * A Target is a List of QContainer with a combined benefit and a (minimal) path which contains all QContainers in this
+ * list.
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class Target implements Comparable<Target> {
@@ -41,7 +43,7 @@ public class Target implements Comparable<Target> {
 
 	/**
 	 * Creates a new Target with a specified QContainer to be reached.
-	 * 
+	 *
 	 * @param targetContainer the QContainer to be reached
 	 */
 	public Target(QContainer targetContainer) {
@@ -51,7 +53,7 @@ public class Target implements Comparable<Target> {
 
 	/**
 	 * Creates a new Target with a set of specified QContainer to be reached.
-	 * 
+	 *
 	 * @param targetContainers the QContainers to be reached
 	 */
 	public Target(Collection<QContainer> targetContainers) {
@@ -68,6 +70,7 @@ public class Target implements Comparable<Target> {
 	}
 
 	@Override
+	@SuppressWarnings({ "CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod" })
 	protected Target clone() {
 		Target copy = new Target(qContainers);
 		copy.benefit = this.benefit;
@@ -76,9 +79,8 @@ public class Target implements Comparable<Target> {
 	}
 
 	/**
-	 * Checks if this Target is reached by the specified path. It is reached,
-	 * when all QContainers are in the path.
-	 * 
+	 * Checks if this Target is reached by the specified path. It is reached, when all QContainers are in the path.
+	 *
 	 * @param path the path to be checked
 	 * @return if the path covers the target
 	 */
@@ -96,73 +98,65 @@ public class Target implements Comparable<Target> {
 	}
 
 	/**
-	 * Returns the benefit calculated for this target. The benefit is the
-	 * information gain that is assumed to receive when the {@link QContainer}s
-	 * of this target will have been answered.
-	 * 
-	 * @created 07.03.2011
+	 * Returns the benefit calculated for this target. The benefit is the information gain that is assumed to receive
+	 * when the {@link QContainer}s of this target will have been answered.
+	 *
 	 * @return the target's benefit
+	 * @created 07.03.2011
 	 */
 	public double getBenefit() {
 		return benefit;
 	}
 
 	/**
-	 * Sets the benefit if this target. See {@link #getBenefit()} for more
-	 * details on benefit.
-	 * 
-	 * @created 07.03.2011
+	 * Sets the benefit if this target. See {@link #getBenefit()} for more details on benefit.
+	 *
 	 * @param benefit the benefit calculated for this target
+	 * @created 07.03.2011
 	 */
 	public void setBenefit(double benefit) {
 		this.benefit = benefit;
 	}
 
 	/**
-	 * Returns the minimal path calculated for this target. The minimal path is
-	 * the "least-cost" path that covers all QContainers contained in this
-	 * target. The paths of the targets are calculated during executing the
-	 * search algorithm of the cost/benefit calculations. Please note that the
-	 * search algorithm will not necessarily calculate such paths for all
-	 * targets. This does <b>not</b> mean that no such path exists.
-	 * 
+	 * Returns the minimal path calculated for this target. The minimal path is the "least-cost" path that covers all
+	 * QContainers contained in this target. The paths of the targets are calculated during executing the search
+	 * algorithm of the cost/benefit calculations. Please note that the search algorithm will not necessarily calculate
+	 * such paths for all targets. This does <b>not</b> mean that no such path exists.
+	 *
+	 * @return the minimal path of this target or null if not such path has been calculated
 	 * @created 07.03.2011
-	 * @return the minimal path of this target or null if not such path has been
-	 *         calculated
 	 */
 	public Path getMinPath() {
 		return minPath;
 	}
 
 	/**
-	 * Sets the minimal path towards that target. See {@link #getMinPath()} for
-	 * more details about minimal paths.
-	 * 
-	 * @created 07.03.2011
+	 * Sets the minimal path towards that target. See {@link #getMinPath()} for more details about minimal paths.
+	 *
 	 * @param minPath the minPath to be set
+	 * @created 07.03.2011
 	 */
 	public void setMinPath(Path minPath) {
 		this.minPath = minPath;
 	}
 
 	/**
-	 * Returns the static costs of all {@link QContainer}s included in this
-	 * target. Please note that additional costs may be required for that target
-	 * when preparing the state for the transition model. This the costs of the
-	 * minimal path are usually higher than this costs.
-	 * 
-	 * @created 07.03.2011
+	 * Returns the static costs of all {@link QContainer}s included in this target. Please note that additional costs
+	 * may be required for that target when preparing the state for the transition model. This the costs of the minimal
+	 * path are usually higher than this costs.
+	 *
 	 * @return the cost of this target
+	 * @created 07.03.2011
 	 */
 	public double getCosts() {
 		return costs;
 	}
 
 	/**
-	 * Returns the cost per benefit of that target. The result is calculated
-	 * based on the actual minimal path. If no such path is available, the costs
-	 * are assumed to be extraordinary high, returning {@link Float#MAX_VALUE}.
-	 * 
+	 * Returns the cost per benefit of that target. The result is calculated based on the actual minimal path. If no
+	 * such path is available, the costs are assumed to be extraordinary high, returning {@link Float#MAX_VALUE}.
+	 *
 	 * @return the cost per benefit ratio
 	 */
 	public double getCostBenefit() {
@@ -174,9 +168,9 @@ public class Target implements Comparable<Target> {
 
 	/**
 	 * Returns the list of {@link QContainer}s to be reached in this target.
-	 * 
-	 * @created 07.03.2011
+	 *
 	 * @return the QContainers of this target
+	 * @created 07.03.2011
 	 */
 	public List<QContainer> getQContainers() {
 		return Collections.unmodifiableList(qContainers);
@@ -195,24 +189,16 @@ public class Target implements Comparable<Target> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		Target other = (Target) obj;
-		if (qContainers == null) {
-			if (other.qContainers != null) return false;
-		}
-		else if (!qContainers.equals(other.qContainers)) return false;
-		return true;
+		return qContainers.equals(other.qContainers);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((qContainers == null) ? 0 : qContainers.hashCode());
-		return result;
+		return 31 + qContainers.hashCode();
 	}
 
 	@Override
-	public int compareTo(Target o) {
-		if (o == null) return 1;
+	public int compareTo(@NotNull Target o) {
 		double benefitdifference = this.benefit - o.benefit;
 		if (benefitdifference > 0.0) {
 			return 1;
