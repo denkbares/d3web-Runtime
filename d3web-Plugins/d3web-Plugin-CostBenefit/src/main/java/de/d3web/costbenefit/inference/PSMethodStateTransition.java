@@ -74,7 +74,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				// facts which set final questions have highest priority, if
 				// they are set by permanently relevant test steps
 				if (stf.getTerminologyObject().getInfoStore().getValue(
-						PSMethodCostBenefit.FINAL_QUESTION)
+						CostBenefitProperties.FINAL_QUESTION)
 						&& isPartOfPermanentlyRelevantQContainer(stf.cvs.getCondition())) {
 					return stf;
 				}
@@ -93,7 +93,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 			// for reloaded facts of final questions the maxvalue is set, so
 			// they can only be overwritten by permanently relevant QContainers
 			else if (fact.getTerminologyObject().getInfoStore().getValue(
-					PSMethodCostBenefit.FINAL_QUESTION)) {
+					CostBenefitProperties.FINAL_QUESTION)) {
 				maxFact = fact;
 				maxNumber = Integer.MAX_VALUE;
 			}

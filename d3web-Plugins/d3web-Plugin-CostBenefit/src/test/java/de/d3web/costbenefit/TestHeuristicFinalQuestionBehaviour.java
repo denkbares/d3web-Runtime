@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -38,14 +39,13 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
-import de.d3web.costbenefit.inference.PSMethodCostBenefit;
+import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.inference.astar.AStarPath;
 import de.d3web.costbenefit.inference.astar.DividedTransitionHeuristic;
 import de.d3web.costbenefit.inference.astar.State;
 import de.d3web.costbenefit.model.SearchModel;
-import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests the behavior of the heuristics in combination with final questions
@@ -75,7 +75,7 @@ public class TestHeuristicFinalQuestionBehaviour {
 		ChoiceValue value = new ChoiceValue(choice);
 		nonfinalQuestion.addAlternative(choice);
 		finalQuestion.addAlternative(choice);
-		finalQuestion.getInfoStore().addValue(PSMethodCostBenefit.FINAL_QUESTION, true);
+		finalQuestion.getInfoStore().addValue(CostBenefitProperties.FINAL_QUESTION, true);
 		QContainer transition = new QContainer(kb, "transitionalQContainer");
 		QContainer target = new QContainer(kb, "target");
 		LinkedList<ValueTransition> transitions = new LinkedList<>();

@@ -23,16 +23,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import com.denkbares.utils.Log;
 
 /**
  * Extends the path of the sub {@link SearchAlgorithm} by adding specially
@@ -47,13 +46,6 @@ public class PathExtender implements SearchAlgorithm {
 	private KnowledgeBase kb = null;
 	private List<QContainer> qcontainersToAdd = new LinkedList<>();
 
-	/**
-	 * This property should not be used anymore. It is replaced by the
-	 * KnowledgeSlice {@link ComfortBenefit}
-	 */
-	@Deprecated
-	public static final Property<Boolean> comfortBenefit = Property.getProperty("comfortBenefit",
-			Boolean.class);
 
 	public PathExtender(SearchAlgorithm algorithm) {
 		subalgorithm = algorithm;
@@ -69,7 +61,8 @@ public class PathExtender implements SearchAlgorithm {
 			kb = session.getKnowledgeBase();
 			qcontainersToAdd = new LinkedList<>();
 			for (QContainer qcon : kb.getManager().getQContainers()) {
-				if (qcon.getInfoStore().getValue(comfortBenefit)
+				//noinspection deprecation
+				if (qcon.getInfoStore().getValue(CostBenefitProperties.COMFORT_BENEFIT)
 						|| qcon.getKnowledgeStore().getKnowledge(ComfortBenefit.KNOWLEDGE_KIND) != null) {
 					qcontainersToAdd.add(qcon);
 				}
@@ -90,15 +83,14 @@ public class PathExtender implements SearchAlgorithm {
 					for (int i = 0; i < path.getPath().size(); i++) {
 						// check if the qcontainer is applicable
 						if (CostBenefitUtil.isApplicable(qconToInclude, copiedSession)) {
-							// check if the dynamic costs are lower or equal to
-							// the static costs
+							// check if the dynamic costs are lower or equal to the static costs
 							if (costFunction.getCosts(qconToInclude, copiedSession) <= staticCosts) {
 								// apply new QContainer
 								Session extendedSession = CostBenefitUtil.createSearchCopy(copiedSession);
 								applyQContainer(qconToInclude, extendedSession);
 								if (CostBenefitUtil.checkPath(path.getPath(), extendedSession, i,
 										true)) {
-									path = getNewPath(i, qconToInclude, path, session);
+									path = getNewPath(i, qconToInclude, path);
 									break;
 								}
 							}
@@ -120,12 +112,10 @@ public class PathExtender implements SearchAlgorithm {
 		stateTransition.fire(extendedSession);
 	}
 
-	private Path getNewPath(int position, QContainer qconToInclude, Path path, Session session) {
+	private Path getNewPath(int position, QContainer qconToInclude, Path path) {
 		List<QContainer> qContainers = new LinkedList<>(path.getPath());
 		qContainers.add(position, qconToInclude);
-		ExtendedPath newPath = new ExtendedPath(qContainers, path.getCosts(),
-				path.getNegativeCosts());
-		return newPath;
+		return new ExtendedPath(qContainers, path.getCosts(), path.getNegativeCosts());
 	}
 
 	private static final class ExtendedPath implements Path {

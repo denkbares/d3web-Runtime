@@ -24,14 +24,15 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
+import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
-import com.denkbares.utils.Log;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search
@@ -70,7 +71,7 @@ public class SearchModel {
 			QContainer qcontainer = st.getQcontainer();
 			if (!blockedQContainers.contains(qcontainer)) {
 				Boolean targetOnly = qcontainer.getInfoStore().getValue(
-						PSMethodCostBenefit.TARGET_ONLY);
+						CostBenefitProperties.TARGET_ONLY);
 				if (!targetOnly) {
 					transitionalStateTransitions.add(st);
 				}

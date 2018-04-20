@@ -59,6 +59,7 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.inference.ComfortBenefit;
+import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
@@ -346,7 +347,7 @@ public final class CostBenefitUtil {
 	 */
 	public static boolean hasPermanentlyRelevantParent(TerminologyObject termObject) {
 		for (TerminologyObject parent : KnowledgeBaseUtils.getAncestors(termObject)) {
-			if (parent.getInfoStore().getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
+			if (parent.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
 				return true;
 			}
 		}
@@ -480,13 +481,14 @@ public final class CostBenefitUtil {
 			// ignore permanently relevant QContainer
 			if (st.getQcontainer()
 					.getInfoStore()
-					.getValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT)) continue;
+					.getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) continue;
 			setNormalValues(copiedSession, st.getQcontainer(), new Object());
 			List<Fact> facts = st.fire(copiedSession);
 			for (Fact fact : facts) {
 				if (fact.getTerminologyObject() instanceof Question
 						&& fact.getTerminologyObject().getInfoStore().getValue(
-						PSMethodCostBenefit.FINAL_QUESTION)) {
+						CostBenefitProperties.FINAL_QUESTION)) {
+					//noinspection SuspiciousMethodCalls
 					Set<Value> set = result.get(fact.getTerminologyObject());
 					if (set == null) {
 						set = new HashSet<>();

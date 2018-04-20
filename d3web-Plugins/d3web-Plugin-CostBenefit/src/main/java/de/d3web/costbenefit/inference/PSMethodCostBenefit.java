@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -52,7 +52,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
@@ -74,9 +73,8 @@ import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
 
 /**
- * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as
- * cheap as possible. This is configurable with a TargetFunction, a CostFunction
- * and a SearchAlgorithm.
+ * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as cheap as possible. This is configurable with
+ * a TargetFunction, a CostFunction and a SearchAlgorithm.
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
@@ -90,39 +88,22 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private boolean manualMode = false;
 	private WatchSet watchSet;
 
-	/**
-	 * Marks a Question indicating that the value of the question cannot be
-	 * changed, once it has left the init value.
-	 */
-	public static final Property<Boolean> FINAL_QUESTION = Property.getProperty("finalQuestion",
-			Boolean.class);
-
-	public static final Property<Boolean> TARGET_ONLY = Property.getProperty(
-			"targetOnly", Boolean.class);
-
-	/**
-	 * Can be used to mark QContainers, that are permanently relevant.
-	 *
-	 * @see ExpertMode#getApplicablePermanentlyRelevantQContainers()
-	 */
-	public static final Property<Boolean> PERMANENTLY_RELEVANT = Property.getProperty(
-			"permanentlyRelevant", Boolean.class);
-
 	public double getStrategicBenefitFactor() {
 		return strategicBenefitFactor;
 	}
 
 	/**
-	 * Sets the strategicBenefitFactor, if it is set to 0, no strategic benefit
-	 * is added
+	 * Sets the strategicBenefitFactor, if it is set to 0, no strategic benefit is added
 	 *
 	 * @param strategicBenefitFactor the factor to set
 	 * @throws IllegalArgumentException if the factor is lower than 0
 	 * @created 08.05.2012
 	 */
 	public void setStrategicBenefitFactor(double strategicBenefitFactor) {
-		if (strategicBenefitFactor < 0.0) throw new IllegalArgumentException(
-				"Strategic benefit factor must be 0 or greater");
+		if (strategicBenefitFactor < 0.0) {
+			throw new IllegalArgumentException(
+					"Strategic benefit factor must be 0 or greater");
+		}
 		this.strategicBenefitFactor = strategicBenefitFactor;
 	}
 
@@ -156,15 +137,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * Calculates a new path to a specific target. The method also selects the
-	 * calculated path into the interview. The method ensures that the path will
-	 * be followed as long as possible.
+	 * Calculates a new path to a specific target. The method also selects the calculated path into the interview. The
+	 * method ensures that the path will be followed as long as possible.
 	 * <p>
-	 * Due to changing indications, this method should only be called inside a
-	 * propagation frame.
+	 * Due to changing indications, this method should only be called inside a propagation frame.
 	 *
 	 * @param caseObject the case object to select the path for
-	 * @param targets the targets for the path to be calculated
+	 * @param targets    the targets for the path to be calculated
 	 * @throws AbortException if no path could been established towards the specified target
 	 * @created 08.03.2011
 	 */
@@ -210,7 +189,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				else {
 					// remove permanently relevant QContainer from blocked
 					// qcontainers if it is selected as target manually
-					if (qContainer.getInfoStore().getValue(PERMANENTLY_RELEVANT)) {
+					if (qContainer.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
 						searchModel.getBlockedQContainers().remove(qContainer);
 					}
 				}
@@ -263,10 +242,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * Initializes the search model of this cost benefit case object to search
-	 * for the best cost benefit target. All possible questions to discriminate
-	 * are taken into account. Questions (or questionnaires) being
-	 * contra-indicated are left out from this search.
+	 * Initializes the search model of this cost benefit case object to search for the best cost benefit target. All
+	 * possible questions to discriminate are taken into account. Questions (or questionnaires) being contra-indicated
+	 * are left out from this search.
 	 *
 	 * @param caseObject the case object to be initialized for searching
 	 * @created 08.03.2011
@@ -447,7 +425,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private static List<Question> getFinalQuestions(Session session) {
 		List<Question> finalQuestions = new LinkedList<>();
 		for (Question question : session.getKnowledgeBase().getManager().getQuestions()) {
-			Boolean value = question.getInfoStore().getValue(FINAL_QUESTION);
+			Boolean value = question.getInfoStore().getValue(CostBenefitProperties.FINAL_QUESTION);
 			if (value) {
 				finalQuestions.add(question);
 			}
@@ -456,8 +434,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * Calculates a set of all QContainers, which are blocked by final questions
-	 * or contra indicated or permanently relevant
+	 * Calculates a set of all QContainers, which are blocked by final questions or contra indicated or permanently
+	 * relevant
 	 *
 	 * @param session actual session
 	 * @return set of blocked QContainers
@@ -468,16 +446,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * Calculates a set of all QContainers, which are blocked by final
-	 * questions. There are two flags to specify, if contraindicated or
-	 * permanentlyrelevant TS should also be returned as blocked, even if they
-	 * are not blocked by final questions
+	 * Calculates a set of all QContainers, which are blocked by final questions. There are two flags to specify, if
+	 * contraindicated or permanentlyrelevant TS should also be returned as blocked, even if they are not blocked by
+	 * final questions
 	 *
-	 * @param session actual session
-	 * @param includeContraindicated if true, contraindicated QContainers are included in the
-	 * returned set
-	 * @param includePermanentlyRelevant if true, permanently relevant QContainers are included in
-	 * the returned set
+	 * @param session                    actual session
+	 * @param includeContraindicated     if true, contraindicated QContainers are included in the returned set
+	 * @param includePermanentlyRelevant if true, permanently relevant QContainers are included in the returned set
 	 * @return set of blocked QContainers
 	 * @created 01.03.2014
 	 */
@@ -502,7 +477,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 			if (includePermanentlyRelevant
 					&& stateTransition.getQcontainer().getInfoStore().getValue(
-					PSMethodCostBenefit.PERMANENTLY_RELEVANT)) {
+					CostBenefitProperties.PERMANENTLY_RELEVANT)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
@@ -522,8 +497,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * Calculates a map of all values of final questions, being different from
-	 * their initial value respectively undefined
+	 * Calculates a map of all values of final questions, being different from their initial value respectively
+	 * undefined
 	 *
 	 * @param session specified session
 	 * @return a map of all final questions to their values being set in the specified session
@@ -532,7 +507,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public static Map<Question, Value> getFinalValues(Session session) {
 		Map<Question, Value> finalValues = new HashMap<>();
 		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
-			if (q.getInfoStore().getValue(FINAL_QUESTION)) {
+			if (q.getInfoStore().getValue(CostBenefitProperties.FINAL_QUESTION)) {
 				// check if q has not the init value
 				String initString = q.getInfoStore().getValue(BasicProperties.INIT);
 				Value initValue = initString == null
@@ -621,8 +596,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	/**
-	 * NOTE: Modifying the {@link WatchSet} only affects newly created session,
-	 * sessions being created before setting this set are not affected
+	 * NOTE: Modifying the {@link WatchSet} only affects newly created session, sessions being created before setting
+	 * this set are not affected
 	 *
 	 * @return the actual watchset or null, if none is defined
 	 * @created 17.09.2014
@@ -634,8 +609,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	/**
 	 * Sets a set of watched QContainers
 	 * <p>
-	 * NOTE: This method only affects newly created session, sessions being
-	 * created before setting this set are not affected
+	 * NOTE: This method only affects newly created session, sessions being created before setting this set are not
+	 * affected
 	 *
 	 * @created 17.09.2014
 	 */

@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -51,6 +52,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
+import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.ExpertMode;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -62,7 +64,6 @@ import de.d3web.costbenefit.inference.astar.TPHeuristic;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.inference.PSMethodXCL;
 
@@ -136,7 +137,7 @@ public class PropertiesTest {
 		indicator.addAlternative(notWorks);
 		valueStateWorks = new ChoiceValue(works);
 		valueStateNotWorks = new ChoiceValue(notWorks);
-		indicator.getInfoStore().addValue(PSMethodCostBenefit.FINAL_QUESTION, true);
+		indicator.getInfoStore().addValue(CostBenefitProperties.FINAL_QUESTION, true);
 
 		first = new QContainer(kb, FIRST_NAME);
 		q1 = new QuestionOC(first, "Q1");
@@ -189,7 +190,7 @@ public class PropertiesTest {
 		new StateTransition(new CondOr(Arrays.asList(new CondEqual(state, valueStateA),
 				new CondEqual(state, valueStateB))), Arrays.asList(vt4, vtWork4),
 				permanentlyRelevant);
-		permanentlyRelevant.getInfoStore().addValue(PSMethodCostBenefit.PERMANENTLY_RELEVANT, true);
+		permanentlyRelevant.getInfoStore().addValue(CostBenefitProperties.PERMANENTLY_RELEVANT, true);
 		permanentlyRelevant.getInfoStore().addValue(BasicProperties.COST, 0.1);
 
 		target = new QContainer(kb, "Target");
@@ -221,7 +222,7 @@ public class PropertiesTest {
 				vt3works),
 				targetOnly);
 		targetOnly.getInfoStore().addValue(BasicProperties.COST, 1.0);
-		targetOnly.getInfoStore().addValue(PSMethodCostBenefit.TARGET_ONLY, true);
+		targetOnly.getInfoStore().addValue(CostBenefitProperties.TARGET_ONLY, true);
 
 		s1 = new Solution(kb, "S1");
 		s2 = new Solution(kb, "S2");
@@ -342,17 +343,17 @@ public class PropertiesTest {
 		KnowledgeBase reloadedKB = PersistenceManager.getInstance().load(file);
 		QContainer reloadedFirst = reloadedKB.getManager().searchQContainer(FIRST_NAME);
 		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(
-				PSMethodCostBenefit.PERMANENTLY_RELEVANT));
-		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY));
+				CostBenefitProperties.PERMANENTLY_RELEVANT));
+		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY));
 		QContainer reloadedPermanentlyRelevant = reloadedKB.getManager().searchQContainer(
 				PERMANENTLY_NAME);
 		Assert.assertTrue(reloadedPermanentlyRelevant.getInfoStore().getValue(
-				PSMethodCostBenefit.PERMANENTLY_RELEVANT));
+				CostBenefitProperties.PERMANENTLY_RELEVANT));
 		QContainer reloadedTargetOnly = reloadedKB.getManager().searchQContainer(TARGET_ONLY_NAME);
 		Assert.assertFalse(reloadedTargetOnly.getInfoStore().getValue(
-				PSMethodCostBenefit.PERMANENTLY_RELEVANT));
+				CostBenefitProperties.PERMANENTLY_RELEVANT));
 		Assert.assertTrue(reloadedTargetOnly.getInfoStore().getValue(
-				PSMethodCostBenefit.TARGET_ONLY));
+				CostBenefitProperties.TARGET_ONLY));
 	}
 
 }
