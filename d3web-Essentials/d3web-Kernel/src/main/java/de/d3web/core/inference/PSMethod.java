@@ -49,7 +49,7 @@ public interface PSMethod {
 	 */
 	enum Type {
 		/**
-		 * a source psm adds facts and does not react on other facts, e.g.
+		 * a source psm adds facts not derived from other facts, e.g.
 		 * PSMetodUserSelected
 		 */
 		source,
