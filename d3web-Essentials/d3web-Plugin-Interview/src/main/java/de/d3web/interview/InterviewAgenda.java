@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -32,9 +32,8 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.interview.indication.IndicationComparator;
 
 /**
- * The InterviewAgenda represents the Interview Objects, which should appear
- * next in the interview.
- * 
+ * The InterviewAgenda represents the Interview Objects, which should appear next in the interview.
+ *
  * @author Joachim Baumeister (denkbares GmbH)
  */
 public final class InterviewAgenda implements de.d3web.core.session.interviewmanager.InterviewAgenda {
@@ -90,7 +89,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 			result = prime
 					* result
 					+ ((interviewObject == null) ? 0 : interviewObject
-							.hashCode());
+					.hashCode());
 			result = prime * result + ((interviewState == null) ? 0 : interviewState.hashCode());
 			return result;
 		}
@@ -148,7 +147,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 
 	/**
 	 * Appends an {@link InterviewObject} to the agenda
-	 * 
+	 *
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public final void append(InterviewObject interviewObject, Indication indication) {
@@ -172,9 +171,9 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 
 	/**
 	 * Deactivates all entries of the interviewObject
-	 * 
-	 * @created 14.05.2013
+	 *
 	 * @param interviewObject the object to deactivate
+	 * @created 14.05.2013
 	 */
 	public void deactivate(InterviewObject interviewObject) {
 		for (AgendaEntry entry : this.agenda) {
@@ -186,9 +185,9 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 
 	/**
 	 * Deactivates the first active entry of the {@link InterviewObject}
-	 * 
-	 * @created 15.05.2013
+	 *
 	 * @param interviewObject the object to deactivate
+	 * @created 15.05.2013
 	 */
 	public void deactivateFirst(InterviewObject interviewObject) {
 		for (AgendaEntry entry : this.agenda) {
@@ -223,7 +222,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 
 	/**
 	 * Activates the first occurency of an {@link InterviewObject} on the agenda
-	 * 
+	 *
 	 * @param interviewObject {@link InterviewObject}
 	 */
 	public void activate(InterviewObject interviewObject) {
@@ -232,10 +231,10 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 
 	/**
 	 * Activates the entry with the specified object an indication
-	 * 
-	 * @created 14.05.2013
+	 *
 	 * @param interviewObject {@link InterviewObject}
-	 * @param indication {@link Indication}
+	 * @param indication      {@link Indication}
+	 * @created 14.05.2013
 	 */
 	public void activate(InterviewObject interviewObject, Indication indication) {
 		AgendaEntry entry = findAgendaEntry(interviewObject, indication);
@@ -263,9 +262,8 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	/**
-	 * Checks, whether an entry -- that is also indicated -- is available on the
-	 * agenda.
-	 * 
+	 * Checks, whether an entry -- that is also indicated -- is available on the agenda.
+	 *
 	 * @return false, when the agenda contains at least one entry that is ACTIVE
 	 */
 	public boolean isEmpty() {
@@ -278,9 +276,8 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	/**
-	 * Checks, if the specified {@link InterviewObject} instance is placed on
-	 * the agenda (independent from its state).
-	 * 
+	 * Checks, if the specified {@link InterviewObject} instance is placed on the agenda (independent from its state).
+	 *
 	 * @param interviewObject the specified {@link InterviewObject} instance
 	 * @return true, if the specified object is on the agenda
 	 */
@@ -294,16 +291,15 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	/**
-	 * Returns if the specified interview object is on the agenda and has the
-	 * specified state.
+	 * Returns if the specified interview object is on the agenda and has the specified state.
 	 * <p>
-	 * The method returns false (!) for any object not being on the agenda, even
-	 * if checking for the state {@link InterviewState#INACTIVE}.
-	 * 
-	 * @created 10.03.2011
+	 * The method returns false (!) for any object not being on the agenda, even if checking for the state {@link
+	 * InterviewState#INACTIVE}.
+	 *
 	 * @param interviewObject the object to be checked
-	 * @param state the state to be expected
+	 * @param state           the state to be expected
 	 * @return if the object is on the agenda and has the expected state
+	 * @created 10.03.2011
 	 */
 	@Override
 	public boolean hasState(InterviewObject interviewObject, InterviewState state) {
@@ -316,11 +312,12 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	/**
-	 * Gives the (unmodifiable) list of currently active objects on the agenda.
-	 * 
-	 * @return an immutable list of the objects that are currently active on the
-	 *         agenda
+	 * Gives the (unmodifiable) list of currently active objects on the agenda. Returns an empty list if the agenda is
+	 * empty.
+	 *
+	 * @return an immutable list of the objects that are currently active on the agenda
 	 */
+	@NotNull
 	public List<InterviewObject> getCurrentlyActiveObjects() {
 		Collections.sort(this.agenda);
 		// organize if required
@@ -332,5 +329,4 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 		}
 		return Collections.unmodifiableList(objects);
 	}
-
 }
