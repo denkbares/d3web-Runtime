@@ -34,6 +34,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.costbenefit.CostBenefitUtil;
+import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
@@ -210,7 +211,7 @@ public class AStarExplanationComponent {
 		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
 			QContainer qcontainer = st.getQcontainer();
-			Boolean targetOnly = qcontainer.getInfoStore().getValue(PSMethodCostBenefit.TARGET_ONLY);
+			Boolean targetOnly = qcontainer.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
 			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
 				stateTransitions.add(st);
 			}

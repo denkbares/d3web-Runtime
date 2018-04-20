@@ -33,6 +33,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import com.denkbares.utils.Log;
+import com.denkbares.utils.Pair;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -43,6 +45,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
+import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -50,8 +53,6 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
-import com.denkbares.utils.Log;
-import com.denkbares.utils.Pair;
 
 /**
  * Algorithm which uses A* to find pathes to the targets
@@ -101,7 +102,7 @@ public class AStar {
 	 * @deprecated use PSMethodCostBenefit.TARGET_ONLY
 	 */
 	@Deprecated
-	public static final Property<Boolean> TARGET_ONLY = PSMethodCostBenefit.TARGET_ONLY;
+	public static final Property<Boolean> TARGET_ONLY = CostBenefitProperties.TARGET_ONLY;
 
 	// some information about the current search
 	private final transient long initTime;
@@ -343,7 +344,7 @@ public class AStar {
 	private void installNode(Node newFollower) {
 		updateTargets(newFollower.getPath());
 		Boolean targetOnly = newFollower.getPath().getQContainer().getInfoStore().getValue(
-				PSMethodCostBenefit.TARGET_ONLY);
+				CostBenefitProperties.TARGET_ONLY);
 		if (targetOnly) {
 			// do not add this node to our pathes, it cannot be reused because
 			// the last QContainer can not be used to establish preconditions
