@@ -61,10 +61,10 @@ public class MMInfo {
 
 	/**
 	 * <b>Applies to</b>:<br> Question, KnowledgeBase
-	 * <p>
-	 * <b>Documentation</b>:<br> Specifies how the answer 'unknown' should be displayed to the user. If this property is
-	 * specified for the knowledge base it represents the default value for all questions. See also 'unknownVisible' to
-	 * specify if 'unknown' is available to the user at all.
+	 *
+	 * <b>Documentation</b>:<br> Specifies how the answer 'unknown' should be displayed to the user. If this property
+	 * is specified for the knowledge base it represents the default value for all questions. See also 'unknownVisible'
+	 * to specify if 'unknown' is available to the user at all.
 	 */
 	public static final Property<String> UNKNOWN_VERBALISATION = Property.getProperty(
 			"unknownPrompt", String.class);
@@ -143,6 +143,27 @@ public class MMInfo {
 			prompt = object.getName();
 		}
 		return prompt;
+	}
+
+	/**
+	 * Sets the prompt for the specified object and the specified language.
+	 *
+	 * @param object   the object to set the prompt for
+	 * @param language the language(s) to set the prompt for
+	 * @param prompt   the prompt to be set
+	 */
+	public static void setPrompt(NamedObject object, Locale language, String prompt) {
+		object.getInfoStore().addValue(MMInfo.PROMPT, language, prompt);
+	}
+
+	/**
+	 * Sets the default-language prompt for the specified object.
+	 *
+	 * @param object the object to set the prompt for
+	 * @param prompt the prompt to be set
+	 */
+	public static void setPrompt(NamedObject object, String prompt) {
+		setPrompt(object, Locale.ROOT, prompt);
 	}
 
 	/**
