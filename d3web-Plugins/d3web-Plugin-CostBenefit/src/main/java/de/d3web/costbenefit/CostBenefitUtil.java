@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -91,10 +91,9 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Creates a session that has the same value facts as the specified session,
-	 * without any problem or strategic solver. Neither interview facts, nor
-	 * {@link SessionObject}s, nor the interview agenda, nor the protocol will
-	 * be copied.
+	 * Creates a session that has the same value facts as the specified session, without any problem or strategic
+	 * solver. Neither interview facts, nor {@link SessionObject}s, nor the interview agenda, nor the protocol will be
+	 * copied.
 	 *
 	 * @param session the session to be copied
 	 * @return the created copy with value facts only
@@ -152,51 +151,45 @@ public final class CostBenefitUtil {
 		session.getPropagationManager().commitPropagation();
 	}
 
-	/**
-	 * @param set if true, the default values of all unanswered questions are returned, if false
-	 * additionally the values of the answered questions from the blackboard are returned
-	 */
-	private static Map<Question, Value> answerGetterAndSetter(Session session, QContainer qContainer, boolean set) {
-		List<QuestionOC> questions = new LinkedList<>();
-		for (Question q : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
-			if (q instanceof QuestionOC) {
-				questions.add((QuestionOC) q);
-			}
-		}
+	private static Map<Question, Value> getExpectedValues(Session session, QContainer qContainer) {
+		// get all one choice questions to set the values for,
+		// and build a map of the expected values
+		Map<Question, Value> expectedValues = new HashMap<>();
 		Blackboard blackboard = session.getBlackboard();
-		Map<Question, Value> expectedmap = new HashMap<>();
-		for (QuestionOC q : questions) {
-			Value value = blackboard.getValue(q);
-			if (UndefinedValue.isUndefinedValue(value)) {
-				DefaultAbnormality abnormality = q.getInfoStore().getValue(
-						BasicProperties.DEFAULT_ABNORMALITY);
-				if (abnormality == null) {
-					if (set) {
-						Log.info("no normal value for question " + q);
-					}
-					continue;
-				}
-				List<Choice> alternatives = q.getAllAlternatives();
-				for (Choice a : alternatives) {
-					ChoiceValue avalue = new ChoiceValue(a);
-					if (abnormality.getValue(avalue) == Abnormality.A0) {
-						expectedmap.put(q, avalue);
-						break;
-					}
-				}
+		for (Question question : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
+			// skip all non-oc questions and already answered questions
+			if (!(question instanceof QuestionOC)) continue;
+			Value value = blackboard.getValue(question);
+			if (!UndefinedValue.isUndefinedValue(value)) continue;
+			QuestionOC questionOC = (QuestionOC) question;
+
+			// if question has only one choice, use the choice
+			List<Choice> alternatives = questionOC.getAllAlternatives();
+			if (alternatives.size() == 1) {
+				expectedValues.put(questionOC, new ChoiceValue(alternatives.get(0)));
+				continue;
 			}
-			else {
-				if (!set) {
-					expectedmap.put(q, value);
+
+			// if no abnormality is defined, warn and skip
+			DefaultAbnormality abnormality = questionOC.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
+			if (abnormality == null) {
+				Log.info("no normal value for question " + questionOC);
+				continue;
+			}
+
+			// otherwise us the first normal alternative
+			for (Choice choice : alternatives) {
+				if (abnormality.getValue(choice) == Abnormality.A0) {
+					expectedValues.put(questionOC, new ChoiceValue(choice));
+					break;
 				}
 			}
 		}
-		return expectedmap;
+		return expectedValues;
 	}
 
 	/**
-	 * Collects a list of all {@link QuestionOC}, being child of the defined
-	 * QContainer
+	 * Collects a list of all {@link QuestionOC}, being child of the defined QContainer
 	 *
 	 * @param qContainer defined QContainer
 	 * @return List of QuestionOC
@@ -218,31 +211,23 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Ensures that all questions of the given QContainer are answered. For
-	 * unanswered Questions the expected values are set.
+	 * Ensures that all questions of the given QContainer are answered. For unanswered Questions the expected values are
+	 * set.
 	 *
-	 * @param session the Session where the values should be set
+	 * @param session    the Session where the values should be set
 	 * @param qContainer {@link QContainer}
-	 * @param source of the created Facts
+	 * @param source     of the created Facts
 	 * @return all Facts that are used to set the values
 	 */
 	public static List<Fact> setNormalValues(Session session, QContainer qContainer, Object source) {
-		Map<Question, Value> valuesToSet = answerGetterAndSetter(session, qContainer, true);
+		Map<Question, Value> valuesToSet = getExpectedValues(session, qContainer);
 		List<Fact> facts = new LinkedList<>();
-		PSMethod psmCostBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		PSMethod psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		if (psm == null) psm = new PSMethodCostBenefit();
 		try {
 			session.getPropagationManager().openPropagation();
 			for (Question q : valuesToSet.keySet()) {
-				// Fact fact = new DefaultFact(q, valuesToSet.get(q), this,
-				// (psmCostBenefit == null) ? new PSMethodCostBenefit() :
-				// psmCostBenefit);
-
-				PSMethod psMethod = (psmCostBenefit == null)
-						? new PSMethodCostBenefit()
-						: psmCostBenefit;
-
-				Fact fact = FactFactory.createFact(q, valuesToSet.get(q), source, psMethod);
-
+				Fact fact = FactFactory.createFact(q, valuesToSet.get(q), source, psm);
 				session.getBlackboard().addValueFact(fact);
 				facts.add(fact);
 			}
@@ -266,28 +251,7 @@ public final class CostBenefitUtil {
 		return interview.getFormStrategy();
 	}
 
-	/*
-	 * private static class CoveringSession extends DefaultSession {
-	 * 
-	 * public CoveringSession(DefaultSession coveredSession) { super(null,
-	 * coveredSession.getKnowledgeBase(), new Date(), false, false);
-	 * DefaultBlackboard coveredBlackboard = (DefaultBlackboard)
-	 * coveredSession.getBlackboard(); setBlackboard(new
-	 * CoveringBlackboard(this, coveredBlackboard)); } }
-	 * 
-	 * private static class CoveringBlackboard extends DefaultBlackboard {
-	 * 
-	 * public CoveringBlackboard(CoveringSession thisSession, DefaultBlackboard
-	 * coveredBlackboard) { super(thisSession, new
-	 * CoveringFactStorage(coveredBlackboard.getValueStorage()), new
-	 * CoveringFactStorage(coveredBlackboard.getInterviewStorage())); } }
-	 * 
-	 * private static class CoveringFactStorage extends FactStorage {
-	 * 
-	 * public CoveringFactStorage(FactStorage factStorage) { super(); } }
-	 */
-	public static void addParentContainers(Set<QContainer> targets,
-										   TerminologyObject q) {
+	public static void addParentContainers(Set<QContainer> targets, TerminologyObject q) {
 		for (TerminologyObject qaset : q.getParents()) {
 			if (qaset instanceof QContainer) {
 				targets.add((QContainer) qaset);
@@ -297,10 +261,10 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Checks, if all questions, contained in the specified {@link QASet} have a
-	 * value assigned to them in the specified session.
+	 * Checks, if all questions, contained in the specified {@link QASet} have a value assigned to them in the specified
+	 * session.
 	 *
-	 * @param qaset the qaset to be checked
+	 * @param qaset   the qaset to be checked
 	 * @param session the specified session
 	 * @return if the qaset is fully answered
 	 */
@@ -315,9 +279,8 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Offers easy access to the AStarAlgorithm even if it is capsuled with the
-	 * path extender. If no AStar is used in the {@link PSMethodCostBenefit},
-	 * null is returned
+	 * Offers easy access to the AStarAlgorithm even if it is capsuled with the path extender. If no AStar is used in
+	 * the {@link PSMethodCostBenefit}, null is returned
 	 *
 	 * @param psMethodCostBenefit specified PSMethod
 	 * @return configured instance of AStarAlgorithm or null, if another algorithm is used.
@@ -355,8 +318,7 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Calculates a set of questions, having negative affects on the solutions
-	 * size of the current solutions
+	 * Calculates a set of questions, having negative affects on the solutions size of the current solutions
 	 *
 	 * @created 13.12.2013
 	 */
@@ -373,8 +335,7 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Returns a set of all objects, having a negative influence on the sprint
-	 * group.
+	 * Returns a set of all objects, having a negative influence on the sprint group.
 	 * <p>
 	 * Note: This method is only updated, if a QContainer is completed.
 	 *
@@ -394,14 +355,13 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Checks if the path is applicable in the actual session from the actual
-	 * position.
+	 * Checks if the path is applicable in the actual session from the actual position.
 	 *
-	 * @param path actual path
-	 * @param session specified session
-	 * @param position actual position in the path
-	 * @param sessionIsCopy if the flag is set to true, the specified session is modified in this
-	 * method, should only be used if an copied session is used
+	 * @param path          actual path
+	 * @param session       specified session
+	 * @param position      actual position in the path
+	 * @param sessionIsCopy if the flag is set to true, the specified session is modified in this method, should only be
+	 *                      used if an copied session is used
 	 * @return true if the path is applicable in the session
 	 * @created 26.02.2014
 	 */
@@ -423,7 +383,7 @@ public final class CostBenefitUtil {
 	/**
 	 * Checks if a qcontainer is applicable in the actual session
 	 *
-	 * @param qcon QContainer
+	 * @param qcon    QContainer
 	 * @param session Session
 	 * @return true if the qcontainer is applicable
 	 * @created 26.02.2014
@@ -465,9 +425,8 @@ public final class CostBenefitUtil {
 	}
 
 	/**
-	 * Calculates all values of final questions that can be reached in the
-	 * actual session by setting the normal values in a QContainer (if no values
-	 * are set)
+	 * Calculates all values of final questions that can be reached in the actual session by setting the normal values
+	 * in a QContainer (if no values are set)
 	 *
 	 * @param session actual Session
 	 * @return Map representing the result
@@ -481,7 +440,9 @@ public final class CostBenefitUtil {
 			// ignore permanently relevant QContainer
 			if (st.getQcontainer()
 					.getInfoStore()
-					.getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) continue;
+					.getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+				continue;
+			}
 			setNormalValues(copiedSession, st.getQcontainer(), new Object());
 			List<Fact> facts = st.fire(copiedSession);
 			for (Fact fact : facts) {

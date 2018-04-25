@@ -78,7 +78,6 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 
 	@Override
 	public Fact mergeFacts(Fact[] facts) {
-
 		return facts[0];
 	}
 

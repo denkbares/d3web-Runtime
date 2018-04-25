@@ -70,6 +70,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private Set<Target> discriminatingTargets = new HashSet<>();
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
+	private boolean manualMode = false;
 	private Set<TerminologyObject> conflictingObjects = new HashSet<>();
 	private QContainer unreachedTarget = null;
 	private final Set<QContainer> watchedQContainers = new HashSet<>();
@@ -183,6 +184,28 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void setAbortedManuallySetTarget(boolean abortedManuallySetTarget) {
 		this.abortedManuallySetTarget = abortedManuallySetTarget;
+	}
+
+	/**
+	 * Returns true if the manual mode is turned on. In manual mode no paths were calculated automatically. Instead, the
+	 * already calculated paths were completed as usual, but requiring to have other strategic solvers to append
+	 * additional interview items, or manually starts the calculation for a new path.
+	 *
+	 * @return if manual mode is turned on
+	 */
+	public boolean isManualMode() {
+		return manualMode;
+	}
+
+	/**
+	 * Turns on/off the manual mode. In manual mode no paths were calculated automatically. Instead, the already
+	 * calculated paths were completed as usual, but requiring to have other strategic solvers to append additional
+	 * interview items, or manually starts the calculation for a new path.
+	 *
+	 * @param manualMode true if manual mode should be turned on
+	 */
+	public void setManualMode(boolean manualMode) {
+		this.manualMode = manualMode;
 	}
 
 	/**

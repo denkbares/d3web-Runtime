@@ -130,10 +130,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				caseObject.addWatch(qcon);
 			}
 		}
-		// session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).getInterviewAgenda().setAgendaSortingStrategy(
-		// new CostBenefitAgendaSortingStrategy(caseObject));
-		// calculateNewPath(caseObject);
-		// activateNextQContainer(caseObject);
 	}
 
 	/**
@@ -638,10 +634,24 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		this.solutionsRater = solutionsRater;
 	}
 
+	/**
+	 * Returns true if the manual mode is turned on. In manual mode no paths were calculated automatically. Instead, the
+	 * already calculated paths were completed as usual, but requiring to have other strategic solvers to append
+	 * additional interview items, or manually starts the calculation for a new path.
+	 *
+	 * @return if manual mode is turned on
+	 */
 	public boolean isManualMode() {
 		return manualMode;
 	}
 
+	/**
+	 * Turns on/off the manual mode. In manual mode no paths were calculated automatically. Instead, the already
+	 * calculated paths were completed as usual, but requiring to have other strategic solvers to append additional
+	 * interview items, or manually starts the calculation for a new path.
+	 *
+	 * @param manualMode true if manual mode should be turned on
+	 */
 	public void setManualMode(boolean manualMode) {
 		this.manualMode = manualMode;
 	}
@@ -685,18 +695,15 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	@Override
 	public void postPropagate(Session session, Collection<PropagationEntry> entries) {
 		CostBenefitCaseObject sessionObject = session.getSessionObject(this);
-		if (!isManualMode() && !sessionObject.isAbortedManuallySetTarget()) {
+		if (!isManualMode() && !sessionObject.isManualMode() && !sessionObject.isAbortedManuallySetTarget()) {
 			// target was manually set and the path was reset before it was
 			// finished -> try to calculate to the target again
-			if (sessionObject.getUndiscriminatedSolutions() == null
-					&& sessionObject.getUnreachedTarget() != null) {
+			if (sessionObject.getUndiscriminatedSolutions() == null && sessionObject.getUnreachedTarget() != null) {
 				try {
-					calculateNewPathTo(sessionObject,
-							new Target(sessionObject.getUnreachedTarget()));
+					calculateNewPathTo(sessionObject, new Target(sessionObject.getUnreachedTarget()));
 				}
 				catch (AbortException e) {
-					// if no path could be calculated, switch to manual
-					// calculation
+					// if no path could be calculated, switch to manual calculation
 					sessionObject.resetPath();
 					calculateNewPath(sessionObject);
 				}

@@ -62,6 +62,9 @@ import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
 public class ExpertMode implements SessionObject {
 
 	private final Session session;
+	private final PSMethodCostBenefit psm;
+	private final CostBenefitCaseObject pso;
+
 	private MultiMap<Question, CondEqual> adapterStates = null;
 
 	static final Comparator<Target> BENEFIT_COMPARATOR = (target1, target2) -> {
@@ -71,15 +74,18 @@ public class ExpertMode implements SessionObject {
 
 	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = session -> {
 		// check if it is allowed to create such an object
-		if (getPSMethodCostBenefit(session) == null) {
+		PSMethodCostBenefit psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		if (psm == null) {
 			throw new IllegalStateException(
 					"ExpertMode cannot be used if session does not contain the cost benefit strategic solver");
 		}
-		return new ExpertMode(session);
+		return new ExpertMode(session, psm);
 	};
 
-	private ExpertMode(Session session) {
+	private ExpertMode(Session session, PSMethodCostBenefit psm) {
 		this.session = session;
+		this.psm = psm;
+		this.pso = session.getSessionObject(psm);
 	}
 
 	/**
@@ -95,18 +101,6 @@ public class ExpertMode implements SessionObject {
 		return session.getSessionObject(EXPERT_MODE_SOURCE);
 	}
 
-	private static PSMethodCostBenefit getPSMethodCostBenefit(Session session) {
-		return session.getPSMethodInstance(PSMethodCostBenefit.class);
-	}
-
-	private CostBenefitCaseObject getCostBenefitCaseObject(PSMethodCostBenefit psm) {
-		return session.getSessionObject(psm);
-	}
-
-	private PSMethodCostBenefit getPSMethodCostBenefit() {
-		return getPSMethodCostBenefit(session);
-	}
-
 	/**
 	 * Returns a list of all alternative targets that can be suggested to the user. The list is sorted by the targets
 	 * benefit, regardless to the costs they may induce.
@@ -119,9 +113,6 @@ public class ExpertMode implements SessionObject {
 	 * @created 07.03.2011
 	 */
 	public List<Target> getAlternativeTargets() {
-		PSMethodCostBenefit psm = getPSMethodCostBenefit();
-		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
-
 		// create a list of all targets
 		List<Target> result = new ArrayList<>(pso.getDiscriminatingTargets());
 
@@ -214,8 +205,6 @@ public class ExpertMode implements SessionObject {
 	 * @see Target
 	 */
 	public void selectTarget(Target target) throws AbortException {
-		PSMethodCostBenefit psm = getPSMethodCostBenefit();
-		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
@@ -242,8 +231,6 @@ public class ExpertMode implements SessionObject {
 		for (QContainer qContainer : qContainers) {
 			targets[i++] = new Target(qContainer);
 		}
-		PSMethodCostBenefit psm = getPSMethodCostBenefit();
-		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
@@ -291,13 +278,8 @@ public class ExpertMode implements SessionObject {
 	 * @created 08.03.2011
 	 */
 	public Target getCurrentTarget() {
-		PSMethodCostBenefit psm = getPSMethodCostBenefit();
-		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
-
 		SearchModel searchModel = pso.getSearchModel();
-		if (searchModel == null) return null;
-
-		return searchModel.getBestCostBenefitTarget();
+		return (searchModel == null) ? null : searchModel.getBestCostBenefitTarget();
 	}
 
 	/**
@@ -319,8 +301,6 @@ public class ExpertMode implements SessionObject {
 	 * @created 09.03.2011
 	 */
 	public void selectBestSequence() {
-		PSMethodCostBenefit psm = getPSMethodCostBenefit();
-		CostBenefitCaseObject pso = getCostBenefitCaseObject(psm);
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
@@ -352,5 +332,37 @@ public class ExpertMode implements SessionObject {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Returns true if the manual mode is turned on. In manual mode no paths were calculated automatically. Instead, the
+	 * already calculated paths were completed as usual, but requiring to have other strategic solvers to append
+	 * additional interview items, or manually starts the calculation for a new path.
+	 *
+	 * @return if manual mode is turned on
+	 */
+	public boolean isManualMode() {
+		return psm.isManualMode() || pso.isManualMode();
+	}
+
+	/**
+	 * Turns on/off the manual mode. In manual mode no paths were calculated automatically. Instead, the already
+	 * calculated paths were completed as usual, but requiring to have other strategic solvers to append additional
+	 * interview items, or manually starts the calculation for a new path.
+	 * <p>
+	 * If the man ual mode is turned off (and no path has been selected yet), the method also ensures that a path is
+	 * tried to be calculated (immediately, or after the current propagation).
+	 *
+	 * @param manualMode true if manual mode should be turned on
+	 */
+	public void setManualMode(boolean manualMode) {
+		boolean wasManualMode = isManualMode();
+		pso.setManualMode(manualMode);
+
+		// if it has changed from manual to automatic (including considering the psm flag),
+		// fire propagation to calculate path if no propagation is already open
+		if (wasManualMode && !isManualMode() && !pso.hasCurrentSequence()) {
+			psm.calculateNewPath(pso);
+		}
 	}
 }
