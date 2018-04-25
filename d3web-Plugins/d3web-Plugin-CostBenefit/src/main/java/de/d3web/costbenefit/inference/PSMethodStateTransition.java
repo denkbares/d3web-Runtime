@@ -216,7 +216,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 	@Override
 	public boolean hasType(Type type) {
-		return type == Type.problem;
+		return type == Type.source;
 	}
 
 	@Override
