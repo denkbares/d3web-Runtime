@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -19,56 +19,35 @@
 
 package de.d3web.shared;
 
+import java.util.Set;
+
+import org.junit.Test;
+
+import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
+import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
+import de.d3web.core.session.values.ChoiceID;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import de.d3web.core.knowledge.terminology.Choice;
-import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
-import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.values.ChoiceValue;
-import de.d3web.core.session.values.NumValue;
-import de.d3web.core.session.values.TextValue;
-
 /**
  * Unit test for {@link DefaultAbnormality}
- * 
+ *
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 26.08.2010
  */
 public class AbnormalityTest {
 
-	DefaultAbnormality abnormality;
+	DefaultAbnormality abnormality = new DefaultAbnormality();
 
-	Value valueOne;
-	Value valueTwo;
-	Value valueThree;
-
-	/**
-	 * 
-	 * @created 26.08.2010
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		abnormality = new DefaultAbnormality();
-
-		valueOne = new TextValue("textValue");
-		valueTwo = new NumValue(0.49);
-
-		Choice choice = new Choice("choiceID");
-		valueThree = new ChoiceValue(choice);
-	}
+	ChoiceValue valueOne = new ChoiceValue("value1");
+	MultipleChoiceValue valueTwo = new MultipleChoiceValue(new ChoiceID("two"), new ChoiceID("2"));
+	ChoiceValue valueThree = new ChoiceValue("value3");
 
 	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#getValue(de.d3web.core.session.Value)}
-	 * .
+	 * Test method for {@link DefaultAbnormality#getValue(de.d3web.core.session.Value)}.
 	 */
 	@Test
 	public void testAddGetValue() {
@@ -87,11 +66,8 @@ public class AbnormalityTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#isSet(de.d3web.core.session.Value)}
-	 * and
-	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#getAnswerSet()}
-	 * .
+	 * Test method for {@link DefaultAbnormality#isSet(de.d3web.core.session.Value)} and {@link
+	 * DefaultAbnormality#getChoicesSet()} .
 	 */
 	@Test
 	public void testIsSetAndAnswerEnumeration() {
@@ -108,20 +84,9 @@ public class AbnormalityTest {
 		assertThat(abnormality.isSet(valueOne), is(true));
 		assertThat(abnormality.isSet(valueTwo), is(true));
 		// now where all the values are set, assert the abnormalitySet
-		Set<Value> abnormalitySet = abnormality.getAnswerSet();
-		assertThat(abnormalitySet.contains(valueOne), is(true));
-		assertThat(abnormalitySet.contains(valueThree), is(true));
-		assertThat(abnormalitySet.contains(valueTwo), is(true));
+		Set<ChoiceID> abnormalitySet = abnormality.getChoicesSet();
+		assertThat(abnormalitySet.contains(valueOne.getChoiceID()), is(true));
+		assertThat(abnormalitySet.contains(valueThree.getChoiceID()), is(true));
+		assertThat(abnormalitySet.containsAll(valueTwo.getChoiceIDs()), is(true));
 	}
-
-	/**
-	 * Test method for
-	 * {@link de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality#setAbnormality(de.d3web.core.knowledge.terminology.Question, de.d3web.core.session.Value, double)}
-	 * .
-	 */
-	@Test
-	public void testSetAbnormality() {
-		// TODO
-	}
-
 }

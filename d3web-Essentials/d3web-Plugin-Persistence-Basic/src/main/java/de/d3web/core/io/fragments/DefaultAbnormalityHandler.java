@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -20,7 +20,6 @@
 package de.d3web.core.io.fragments;
 
 import java.io.IOException;
-import java.util.Set;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,13 +33,12 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityUtils;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 
 /**
  * Handles the Abnormality
- * 
+ *
  * @author Norman Brümmer, Markus Friedrich (denkbares GmbH)
  */
 public class DefaultAbnormalityHandler implements FragmentHandler<KnowledgeBase> {
@@ -103,14 +101,10 @@ public class DefaultAbnormalityHandler implements FragmentHandler<KnowledgeBase>
 		Element element = persistence.getDocument().createElement(NODENAME);
 		DefaultAbnormality abnormality = (DefaultAbnormality) object;
 		Element valuesNode = persistence.getDocument().createElement("values");
-		Set<Value> answers = abnormality.getAnswerSet();
-		// while (answers.hasMoreElements()) {
-		for (Value answer : answers) {
-			// Value answer = answers.nextElement();
+		for (ChoiceID answer : abnormality.getChoicesSet()) {
 			Element abnormalityElement = persistence.getDocument().createElement("abnormality");
-			abnormalityElement.setAttribute("ID", ValueUtils.getID_or_Value(answer));
-			abnormalityElement.setAttribute(
-					"value",
+			abnormalityElement.setAttribute("ID", answer.getText());
+			abnormalityElement.setAttribute("value",
 					AbnormalityUtils.convertValueToConstantString(abnormality.getValue(answer)));
 			valuesNode.appendChild(abnormalityElement);
 		}
@@ -118,5 +112,4 @@ public class DefaultAbnormalityHandler implements FragmentHandler<KnowledgeBase>
 
 		return element;
 	}
-
 }
