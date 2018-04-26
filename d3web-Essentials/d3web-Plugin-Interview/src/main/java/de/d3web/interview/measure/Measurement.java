@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -41,17 +42,16 @@ import de.d3web.interview.Form;
 import static de.d3web.core.manage.KnowledgeBaseUtils.Matching.ANY_PROMPT;
 
 /**
- * Describes a measurement that may be executed during a running session. The measurement is a
- * property of a (potentially abstract) question that represents the measurement, because usually
- * there is some visual feedback on the user interface for the measurement, e.g. indicating the user
- * that a measurement is performed, or showing the measured value.
+ * Describes a measurement that may be executed during a running session. The measurement is a property of a
+ * (potentially abstract) question that represents the measurement, because usually there is some visual feedback on the
+ * user interface for the measurement, e.g. indicating the user that a measurement is performed, or showing the measured
+ * value.
  * <p>
- * The measurement has a starting condition that must evaluate to true to start the measurement. The
- * user interface itself may decide to automatically start the measurement, or let it manually be
- * started through the user. In the latter case, the start condition is often some special answer of
- * the question this measurement instance is located at. Additionally the measurement has a stop
- * condition, so that the user interface should stop the measurement if that condition is true. The
- * stop condition might be the inverted start condition, but it not necessarily is (e.g. starting
+ * The measurement has a starting condition that must evaluate to true to start the measurement. The user interface
+ * itself may decide to automatically start the measurement, or let it manually be started through the user. In the
+ * latter case, the start condition is often some special answer of the question this measurement instance is located
+ * at. Additionally the measurement has a stop condition, so that the user interface should stop the measurement if that
+ * condition is true. The stop condition might be the inverted start condition, but it not necessarily is (e.g. starting
  * requires some adaptation performed, where the measurement stops at some special measured value).
  *
  * @author Volker Belli (denkbares GmbH)
@@ -60,8 +60,7 @@ import static de.d3web.core.manage.KnowledgeBaseUtils.Matching.ANY_PROMPT;
 public class Measurement {
 
 	/**
-	 * Property for Questions that define a measurement attached to the question or a knowledge
-	 * base.
+	 * Property for Questions that define a measurement attached to the question or a knowledge base.
 	 *
 	 * @see Form#getMeasurements()
 	 */
@@ -86,8 +85,8 @@ public class Measurement {
 	}
 
 	/**
-	 * Some unique identifier for the measurement. The string often contains the configuration
-	 * parameters of the measurement to be performed.
+	 * Some unique identifier for the measurement. The string often contains the configuration parameters of the
+	 * measurement to be performed.
 	 *
 	 * @return the identifier and/or configuration string of the measurement
 	 */
@@ -105,8 +104,8 @@ public class Measurement {
 	}
 
 	/**
-	 * The condition when the (already running) measurement should be stopped at, as soon as the
-	 * condition evaluates to false
+	 * The condition when the (already running) measurement should be stopped at, as soon as the condition evaluates to
+	 * false
 	 *
 	 * @return the condition when to stop the measurement
 	 */
@@ -140,12 +139,11 @@ public class Measurement {
 	}
 
 	/**
-	 * Returns true if the measurement only maps to questions where each of them already have a
-	 * valid answer, either comes from a problem solver of type {@link PSMethod.Type#source}, or if
-	 * the values are applied by this measurement.
+	 * Returns true if the measurement only maps to questions where each of them already have a valid answer, either
+	 * comes from a problem solver of type {@link PSMethod.Type#source}, or if the values are applied by this
+	 * measurement.
 	 * <p>
-	 * Note that 'unknown' is assumed to be a valid answer if the unknown fact is applied by a
-	 * 'source' problem solver.
+	 * Note that 'unknown' is assumed to be a valid answer if the unknown fact is applied by a 'source' problem solver.
 	 *
 	 * @param session the session to detect
 	 * @return true if all mapped questions are already answered
@@ -162,9 +160,9 @@ public class Measurement {
 	}
 
 	/**
-	 * Returns true if the starting condition is fulfilled for the specified session, or if no
-	 * starting condition is set at all (that means the measurement can always be started). Note
-	 * that the method does not consider if the measurement is already running or not.
+	 * Returns true if the starting condition is fulfilled for the specified session, or if no starting condition is set
+	 * at all (that means the measurement can always be started). Note that the method does not consider if the
+	 * measurement is already running or not.
 	 *
 	 * @param session the session to be checked
 	 * @return if the measurement can be started
@@ -179,10 +177,10 @@ public class Measurement {
 	}
 
 	/**
-	 * Returns true if the stop condition is fulfilled for the specified session. If no condition is
-	 * specified, the method returns false (in contrast to {@link #canStart(Session)}), because that
-	 * means that the measurement should not be stopped automatically. Note that the method does not
-	 * consider if the measurement is currently running or not.
+	 * Returns true if the stop condition is fulfilled for the specified session. If no condition is specified, the
+	 * method returns false (in contrast to {@link #canStart(Session)}), because that means that the measurement should
+	 * not be stopped automatically. Note that the method does not consider if the measurement is currently running or
+	 * not.
 	 *
 	 * @param session the session to be checked
 	 * @return if the measurement can be stopped
@@ -197,8 +195,8 @@ public class Measurement {
 	}
 
 	/**
-	 * Returns the mapping from measurand names to the actual question names to be measured. Note
-	 * that the measurand names very much depends on the actual measurement implementation.
+	 * Returns the mapping from measurand names to the actual question names to be measured. Note that the measurand
+	 * names very much depends on the actual measurement implementation.
 	 *
 	 * @return the mapping from the measurand names to the question names
 	 */
@@ -211,39 +209,39 @@ public class Measurement {
 	}
 
 	/**
-	 * The method applies measured raw values to a set of question, by answering the question for the
-	 * specified problem solver. The specified measurands are mapped to the actual questions of the
-	 * session's knowledge base. The raw values are mapped to an answer, according to the type of the
-	 * question. The following value mappings are supported:
-	 * <p>
+	 * The method applies measured raw values to a set of question, by answering the question for the specified problem
+	 * solver. The specified measurands are mapped to the actual questions of the session's knowledge base. The raw
+	 * values are mapped to an answer, according to the type of the question. The following value mappings are
+	 * supported:
+	 *
 	 * <table> <tr><th>rawValue</th><th>Question</th><th>Result</th></tr>
 	 * <tr><td>null</td><td>any</td><td>the question will be undefined, by removing any previously
-	 * measured value</td></tr> <tr><td>java.lang.Number</td><td>QuestionNum</td><td>the question
-	 * will be answered with the numeric value</td></tr> <tr><td>java.lang.Object</td><td>QuestionText</td><td>the
-	 * question will be answered with the string representation {@link #toString()} of the
-	 * value</td></tr> <tr><td>java.lang.Date</td><td>QuestionDate</td><td>the question will be
-	 * answered with the date value</td></tr> <tr><td>java.lang.String</td><td>QuestionChoice</td><td>the
-	 * question will be answered with the choice denoted by the string, if there is a matching
-	 * choice identifier or choice name of any language</td></tr> <tr><td>de.d3web.core.session.Value</td><td>Question</td><td>the
-	 * question will be answered with the specified value. The value must be compatible to the
-	 * question mapped by the measurand, otherwise the value is rejected, e.g. a TextValue cannot be
-	 * applied to a choice question.</td></tr> </table>
+	 * measured value</td></tr> <tr><td>java.lang.Number</td><td>QuestionNum</td><td>the question will be answered with
+	 * the numeric value</td></tr> <tr><td>java.lang.Object</td><td>QuestionText</td><td>the question will be answered
+	 * with the string representation {@link #toString()} of the value</td></tr> <tr><td>java.lang.Date</td><td>QuestionDate</td><td>the
+	 * question will be answered with the date value</td></tr> <tr><td>java.lang.String</td><td>QuestionChoice</td><td>the
+	 * question will be answered with the choice denoted by the string, if there is a matching choice identifier or
+	 * choice name of any language</td></tr> <tr><td>de.d3web.core.session.Value</td><td>Question</td><td>the question
+	 * will be answered with the specified value. The value must be compatible to the question mapped by the measurand,
+	 * otherwise the value is rejected, e.g. a TextValue cannot be applied to a choice question.</td></tr> </table>
 	 * <p>
-	 * Any unlisted combination will result in unknown. Especially when the {@link Unknown}
-	 * singleton instance is specified as a raw value, it will apply 'unknown' to the question.
+	 * Any unlisted combination will result in unknown. Especially when the {@link Unknown} singleton instance is
+	 * specified as a raw value, it will apply 'unknown' to the question.
 	 *
 	 * @param session   the session to apply the value to
-	 * @param values  a map of measurands to values to set in the knowledge base
-	 * @param isStopped  true, if the measurement should terminate and consider setting preliminary values
-	 * @return the value fact that has been applied, also if unknown is applied due to an
-	 * incompatible value, or null if nothing is applied or a fact has been removed
+	 * @param values    a map of measurands to values to set in the knowledge base
+	 * @param isStopped true, if the measurement should terminate and consider setting preliminary values
+	 * @return the value fact that has been applied, also if unknown is applied due to an incompatible value, or null if
+	 * nothing is applied or a fact has been removed
 	 */
 	public Collection<Fact> applyValues(Session session, Map<String, Object> values, boolean isStopped) {
 		try {
 			return applyValuesStrict(session, values, isStopped);
 		}
 		catch (IllegalArgumentException ex) {
-			return applyValuesStrict(session, values.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> Unknown.getInstance())), isStopped);
+			return applyValuesStrict(session, values.entrySet()
+					.stream()
+					.collect(Collectors.toMap(Map.Entry::getKey, e -> Unknown.getInstance())), isStopped);
 		}
 	}
 
@@ -262,7 +260,8 @@ public class Measurement {
 	protected Fact applyValue(Session session, String measurand, Object rawValue) {
 		try {
 			return applyValueStrict(session, measurand, rawValue);
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			return applyValueStrict(session, measurand, Unknown.getInstance());
 		}
 	}
@@ -288,8 +287,8 @@ public class Measurement {
 	}
 
 	/**
-	 * Method to be called to add a fact for a measured value to a mapped question. The method may
-	 * be overwritten to add special facts or fact sources/solvers.
+	 * Method to be called to add a fact for a measured value to a mapped question. The method may be overwritten to add
+	 * special facts or fact sources/solvers.
 	 *
 	 * @param session  the session to set the fact in
 	 * @param question the question to be set
@@ -306,9 +305,8 @@ public class Measurement {
 	}
 
 	/**
-	 * Method to be called to remove a fact for a measured value to a mapped question. The method
-	 * may be overwritten to remove special facts the previously have been added by {@link
-	 * #addFact(Session, Question, Value)}.
+	 * Method to be called to remove a fact for a measured value to a mapped question. The method may be overwritten to
+	 * remove special facts the previously have been added by {@link #addFact(Session, Question, Value)}.
 	 *
 	 * @param session  the session to set the fact in
 	 * @param question the question to be set
@@ -320,16 +318,13 @@ public class Measurement {
 	}
 
 	/**
-	 * Method to be called to check, if the specified question already has a
-	 * valid answer, either comes from a problem solver of type {@link PSMethod.Type#source}, or if
-	 * the value is applied by this measurement.
+	 * Method to be called to check, if the specified question already has a valid answer, either comes from a problem
+	 * solver of type {@link PSMethod.Type#source}, or if the value is applied by this measurement.
 	 * <p>
-	 * Note that 'unknown' is assumed to be a valid answer if the unknown fact is applied by a
-	 * 'source' problem solver.
+	 * Note that 'unknown' is assumed to be a valid answer if the unknown fact is applied by a 'source' problem solver.
 	 * <p>
-	 * The method
-	 * may be overwritten to handle special facts the previously have been added by {@link
-	 * #addFact(Session, Question, Value)}.
+	 * The method may be overwritten to handle special facts the previously have been added by {@link #addFact(Session,
+	 * Question, Value)}.
 	 *
 	 * @param session the session to detect
 	 * @return true if the question is already answered
@@ -389,8 +384,8 @@ public class Measurement {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "{" +
-				"identifier='" + identifier + '\'' +
-				", mapping=" + mapping +
+				"identifier='" + Strings.ellipsis(identifier, 64) + '\'' +
+				", mapping=" + Strings.ellipsis(mapping.toString(), 64) +
 				", startCondition=" + startCondition +
 				", stopCondition=" + stopCondition +
 				'}';
