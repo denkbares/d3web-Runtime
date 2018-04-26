@@ -421,8 +421,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private static List<Question> getFinalQuestions(Session session) {
 		List<Question> finalQuestions = new LinkedList<>();
 		for (Question question : session.getKnowledgeBase().getManager().getQuestions()) {
-			Boolean value = question.getInfoStore().getValue(CostBenefitProperties.FINAL_QUESTION);
-			if (value) {
+			if (CostBenefitProperties.isCheckOnce(question)) {
 				finalQuestions.add(question);
 			}
 		}
@@ -503,7 +502,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public static Map<Question, Value> getFinalValues(Session session) {
 		Map<Question, Value> finalValues = new HashMap<>();
 		for (Question q : session.getKnowledgeBase().getManager().getQuestions()) {
-			if (q.getInfoStore().getValue(CostBenefitProperties.FINAL_QUESTION)) {
+			if (CostBenefitProperties.isCheckOnce(q)) {
 				// check if q has not the init value
 				String initString = q.getInfoStore().getValue(BasicProperties.INIT);
 				Value initValue = initString == null

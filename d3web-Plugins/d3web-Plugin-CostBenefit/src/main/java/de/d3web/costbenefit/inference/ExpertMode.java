@@ -26,21 +26,17 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
+import com.denkbares.collections.MultiMaps;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
-import de.d3web.core.knowledge.TerminologyManager;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
@@ -66,6 +62,7 @@ public class ExpertMode implements SessionObject {
 	private final CostBenefitCaseObject pso;
 
 	private MultiMap<Question, CondEqual> adapterStates = null;
+	private List<Question> systemStates = null;
 
 	static final Comparator<Target> BENEFIT_COMPARATOR = (target1, target2) -> {
 		// sort by the costs of the target (sort descending)
@@ -125,23 +122,41 @@ public class ExpertMode implements SessionObject {
 		return Collections.unmodifiableList(result);
 	}
 
-	private void initAdapterStates() {
-		if (adapterStates != null) return;
+	private void initStates() {
+		if (systemStates != null) return;
 
-		// TODO: here some hard-coded stuff (convention) is used to detect the adaptation states. Replace by properties
-		Pattern devicePattern = Pattern.compile("(target_state_questionnaire#adaptation_\\w+)_X\\d+", Pattern.CASE_INSENSITIVE);
-		adapterStates = new DefaultMultiMap<>();
-		TerminologyManager manager = session.getKnowledgeBase().getManager();
-		QContainer states = manager.searchQContainer("target_state_questionnaire");
-		for (TerminologyObject stateObject : states.getChildren()) {
-			Question stateQuestion = (Question) stateObject;
-			Matcher matcher = devicePattern.matcher(stateQuestion.getName());
-			if (matcher.matches()) {
-				Value stateValue = KnowledgeBaseUtils.findValue(stateQuestion, stateQuestion.getName() + "#integriert");
-				Question adapterQuestion = manager.searchQuestion(matcher.group(1));
-				adapterStates.put(adapterQuestion, new CondEqual(stateQuestion, stateValue));
+		systemStates = new ArrayList<>();
+		adapterStates = new DefaultMultiMap<>(MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
+
+		for (Question stateQuestion : CostBenefitProperties.getStateQuestions(session.getKnowledgeBase())) {
+			switch (CostBenefitProperties.getUUTState(stateQuestion)) {
+				// handle device states, mapping the devices to the adapter
+				case measurementDevice:
+					Value stateValue = CostBenefitProperties.getIntegratedValue(stateQuestion);
+					Question adapterQuestion = CostBenefitProperties.getAdapterState(stateQuestion);
+					adapterStates.put(adapterQuestion, new CondEqual(stateQuestion, stateValue));
+					break;
+
+				// skip adapters (processed with devices) and mechanical checks
+				case mechanicalCheck:
+				case measurementAdapter:
+					break;
+
+				// otherwise use as normal system state
+				case status:
+				case checkOnce:
+					systemStates.add(stateQuestion);
+					break;
 			}
 		}
+	}
+
+	/**
+	 * Returns a list of all state questions that represents the states of the "unit under test".
+	 */
+	public Collection<Question> getSystemStates() {
+		initStates();
+		return Collections.unmodifiableList(systemStates);
 	}
 
 	/**
@@ -149,7 +164,7 @@ public class ExpertMode implements SessionObject {
 	 * number of test steps that measures through the adapter, using {@link #getTargetsForAdapterState(Question)}.
 	 */
 	public Collection<Question> getAdapterStates() {
-		initAdapterStates();
+		initStates();
 		return Collections.unmodifiableSet(adapterStates.keySet());
 	}
 
@@ -162,7 +177,7 @@ public class ExpertMode implements SessionObject {
 	 * @return the target test steps for the adapter
 	 */
 	public Set<QContainer> getTargetsForAdapterState(Question adapterStateQuestion) {
-		initAdapterStates();
+		initStates();
 		Set<CondEqual> states = adapterStates.getValues(adapterStateQuestion);
 		Set<QContainer> targets = new HashSet<>();
 		for (QContainer target : session.getKnowledgeBase().getManager().getQContainers()) {

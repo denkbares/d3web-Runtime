@@ -446,9 +446,7 @@ public final class CostBenefitUtil {
 			setNormalValues(copiedSession, st.getQcontainer(), new Object());
 			List<Fact> facts = st.fire(copiedSession);
 			for (Fact fact : facts) {
-				if (fact.getTerminologyObject() instanceof Question
-						&& fact.getTerminologyObject().getInfoStore().getValue(
-						CostBenefitProperties.FINAL_QUESTION)) {
+				if (CostBenefitProperties.isCheckOnce(fact.getTerminologyObject())) {
 					//noinspection SuspiciousMethodCalls
 					Set<Value> set = result.get(fact.getTerminologyObject());
 					if (set == null) {
