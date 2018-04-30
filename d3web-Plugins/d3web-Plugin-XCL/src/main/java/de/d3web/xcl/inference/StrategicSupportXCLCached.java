@@ -179,11 +179,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 					if (solutions.contains(model.getSolution())) {
 						for (XCLRelation relation : model.getCoveringRelations(q)) {
 							if (relation.hasType(XCLRelationType.contradicted)) {
-								Set<XCLRelation> conditions = excludingQuestions.get(q);
-								if (conditions == null) {
-									conditions = new HashSet<>();
-									excludingQuestions.put(q, conditions);
-								}
+								Set<XCLRelation> conditions = excludingQuestions.computeIfAbsent(q, k -> new HashSet<>());
 								conditions.add(relation);
 							}
 						}
