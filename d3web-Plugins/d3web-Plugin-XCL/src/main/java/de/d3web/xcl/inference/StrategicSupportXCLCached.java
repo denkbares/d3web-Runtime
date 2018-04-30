@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -202,15 +202,13 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		if (questions.isEmpty()) return 0;
 
 		InformationPots<Condition> pots = new InformationPots<>();
-
-		Map<Question, Set<XCLRelation>> excludingQuestions =
-				getExcludingQuestion(solutions, questions);
+		Map<Question, Set<XCLRelation>> excludingQuestions = getExcludingQuestion(solutions, questions);
 
 		Set<XCLModel> coveringModels = new HashSet<>();
 		// collect models of the specified solutions, covering the questions
 		for (Question q : questions) {
-			XCLContributedModelSet knowledge = q.getKnowledgeStore().getKnowledge(
-					XCLContributedModelSet.KNOWLEDGE_KIND);
+			XCLContributedModelSet knowledge = q.getKnowledgeStore()
+					.getKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND);
 			if (knowledge == null) continue;
 			for (XCLModel model : knowledge.getModels()) {
 				if (solutions.contains(model.getSolution())) {
@@ -220,14 +218,14 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		}
 
 		for (XCLModel model : coveringModels) {
-			ArrayList<Set<Condition>> conditionsForQuestions =
-					new ArrayList<>(questions.size());
+			ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<>(questions.size());
 			for (Question q : questions) {
 				Set<Condition> set = null;
 				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
 				for (XCLRelation r : coveringRelations) {
 					if (r.hasType(XCLRelationType.contradicted)) {
-						set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
+						// maybe slightly incorrect, but have a better behaviour for multiple non-covered choices
+//						set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
 					}
 					else {
 						set = lazyAddAll(set, getExtractedOrs(r));
@@ -241,11 +239,10 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
 				if (excludingRelations != null) {
 					for (XCLRelation r : excludingRelations) {
-						if (coveringRelations != null && coveringRelations.contains(r)) {
+						if (coveringRelations.contains(r)) {
 							continue;
 						}
-						set = lazyAddAll(set, filterForeignConditions(q,
-								getExtractedOrs(r)));
+						set = lazyAddAll(set, filterForeignConditions(q, getExtractedOrs(r)));
 					}
 				}
 				conditionsForQuestions.add(set);
@@ -258,8 +255,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 		// finally we add all the solutions that are not covered at all
 		float allWeight = getTotalWeight(solutions);
-		ArrayList<Set<Condition>> conditionsForQuestions =
-				new ArrayList<>(questions.size());
+		ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<>(questions.size());
 		for (Question q : questions) {
 			Set<Condition> set = NULL_SET;
 			Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
@@ -309,15 +305,13 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			Collections.singletonList((Condition) null)));
 
 	/**
-	 * Adds item to a source set that may be null and returns the resulting set.
-	 * The specified source set is used destructively. If the source set is null
-	 * a new one will be created. Otherwise the specified one may be altered and
-	 * returned. For optimization reasons, we also consider the
-	 * {@link #NULL_SET} to be specified, that is a unmodifiable set containing
-	 * exactly one value 'null'.
+	 * Adds item to a source set that may be null and returns the resulting set. The specified source set is used
+	 * destructively. If the source set is null a new one will be created. Otherwise the specified one may be altered
+	 * and returned. For optimization reasons, we also consider the {@link #NULL_SET} to be specified, that is a
+	 * unmodifiable set containing exactly one value 'null'.
 	 *
 	 * @param source the source set to be changed
-	 * @param items the items to be added
+	 * @param items  the items to be added
 	 * @return the resulting set, may be the source one or a newly created one
 	 * @created 27.05.2012
 	 */
@@ -337,8 +331,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	private final Map<Condition, Collection<Condition>> negatedExtractedOrCache = new HashMap<>();
 
 	/**
-	 * Returns the extracted ors for the condition of a specified xcl relation.
-	 * It is only created on demand, otherwise a cached value is returned.
+	 * Returns the extracted ors for the condition of a specified xcl relation. It is only created on demand, otherwise
+	 * a cached value is returned.
 	 */
 	private Collection<Condition> getExtractedOrs(XCLRelation r) {
 		Condition condition = r.getConditionedFinding();
@@ -353,9 +347,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	/**
-	 * Returns the extracted ors for the negated condition of a specified xcl
-	 * relation. It is only created on demand, otherwise a cached value is
-	 * returned.
+	 * Returns the extracted ors for the negated condition of a specified xcl relation. It is only created on demand,
+	 * otherwise a cached value is returned.
 	 */
 	private Collection<Condition> getNegatedExtractedOrs(XCLRelation r) {
 		Condition condition = r.getConditionedFinding();

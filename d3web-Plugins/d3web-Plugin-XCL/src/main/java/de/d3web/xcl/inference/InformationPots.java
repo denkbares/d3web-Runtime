@@ -143,11 +143,15 @@ public class InformationPots<K> {
 		// calculate information gain
 		// Russel & Norvig p. 805
 		double sum = 0;
+		double all = 0;
 		for (WeightSum weight : map.values()) {
 			double p = (double) weight.value / totalWeight;
 			sum += (-1) * p * Math.log10(p) / Math.log10(2);
+			all += weight.value;
 		}
-		return sum;
+		// because the pots are not disjoint (if excluding relations),
+		// we have to normalize to the total value of all pots (because probability does not sum to 1.0)
+		return sum * (totalWeight / all);
 	}
 
 	/**
