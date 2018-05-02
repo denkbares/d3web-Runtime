@@ -67,6 +67,8 @@ import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 
+import static com.denkbares.utils.Files.*;
+
 /**
  * This class provides the management features to load and save {@link KnowledgeBase} instances to a file system. This
  * manager stores the {@link KnowledgeBase} instance in a compressed file, that contains knowledge base items as XML
@@ -700,21 +702,25 @@ public final class PersistenceManager {
 		}
 		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", "UTF-8"));
 		// delete old backup file
-		bakfile.delete();
+		if (!recursiveDelete(bakfile)) {
+			Log.warning("Unable to delete old backup file: " + bakfile.getCanonicalPath());
+		}
 		// backup original file, if it exists
 		if (file.exists() && !file.renameTo(bakfile)) {
 			throw new IOException(
-					"Cannot override existing knowledge base file");
+					"Cannot rename existing knowledge base file while trying to create backup: "
+							+ file.getCanonicalPath() + " -> " + bakfile.getCanonicalPath());
 		}
 		// override original file
 		if (!tempfile.renameTo(file)) {
 			// if not successful, restore backup and delete created output file
 			if (bakfile.exists()) bakfile.renameTo(file);
-			tempfile.delete();
-			throw new IOException("Cannot rename temporary file");
+			recursiveDelete(tempfile);
+			throw new IOException("Cannot rename temporary file: "
+					+ tempfile.getCanonicalPath() + " -> " + file.getCanonicalPath());
 		}
 		// if successful backup is not needed any more
-		bakfile.delete();
+		recursiveDelete(bakfile);
 	}
 
 	private PluginConfig getUpdatedPluginConfig(KnowledgeBase knowledgeBase) {
@@ -780,7 +786,7 @@ public final class PersistenceManager {
 
 		public boolean isRequired() {
 			Autodetect autodetect =
-					pluginConfig.getPluginEntry(plugin.getPluginID()).getAutodetect();
+					pluginConfig.getPluginEntry(plugin.getExtendedPluginID()).getAutodetect();
 			return (autodetect == null) || autodetect.check(pluginConfig.getKnowledgeBase());
 		}
 
