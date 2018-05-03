@@ -59,15 +59,6 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="ActualQContainerExecutor">
-		<parameter id="class" value="de.d3web.core.session.builder.ActualQContainerExecutor" />
-		<parameter id="entryClass" value="de.d3web.core.session.protocol.ActualQContainerEntry" />
-		<parameter id="name" value="ActualQContainerExecutor" />
-		<parameter id="description" value="Manually adds the previously answered QContainer to the interview agenda." />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="3" />
-	</extension>
-
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="FactProtocolExecutor">
 		<parameter id="class" value="de.d3web.core.session.builder.FactProtocolExecutor" />
 		<parameter id="entryClass" value="de.d3web.core.session.protocol.FactProtocolEntry" />
