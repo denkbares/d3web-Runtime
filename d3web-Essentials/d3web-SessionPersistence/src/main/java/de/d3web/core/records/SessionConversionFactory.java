@@ -44,8 +44,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
-import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -222,33 +220,6 @@ public final class SessionConversionFactory {
 	 * @return {@link Session}
 	 */
 	public static Session replayToSession(KnowledgeBase knowledgeBase, SessionRecord source) {
-		DefaultSession target = SessionFactory.createSession(source.getId(), knowledgeBase, source.getCreationDate());
-		target.setName(source.getName());
-		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
-
-		// Search psmethods of session
-		Map<String, PSMethod> psMethods = new HashMap<>();
-		for (PSMethod psm : target.getPSMethods()) {
-			psMethods.put(psm.getClass().getName(), psm);
-		}
-
-		List<FactProtocolEntry> protocolHistory = source.getProtocol().getProtocolHistory(FactProtocolEntry.class);
-		for (FactProtocolEntry entry : protocolHistory) {
-			target.getPropagationManager().openPropagation(entry.getDate().getTime());
-			try {
-				PSMethod psMethod = psMethods.get(entry.getSolvingMethodClassName());
-				Fact fact = FactFactory.createFact(knowledgeBase.getManager()
-						.search(entry.getTerminologyObjectName()), entry.getValue(), psMethod, psMethod);
-				target.getBlackboard().addValueFact(fact);
-			}
-			finally {
-				target.getPropagationManager().commitPropagation();
-			}
-		}
-
-		// this must be the last operation to overwrite all touches within
-		// propagation
-		target.touch(source.getLastChangeDate());
-		return target;
+		return source.newSessionBuilder(knowledgeBase).build();
 	}
 }
