@@ -28,7 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -163,6 +165,29 @@ public final class KnowledgeBaseUtils {
 		for (TerminologyObject parent : terminologyObject.getParents()) {
 			collectAncestors(parent, visited, result, typeOf);
 		}
+	}
+
+	/**
+	 * Tests if the specified parent is a ancestor of the specified child. if the specified parent is equal to the
+	 * specified child the method return true.
+	 *
+	 * @param parent the root of the sub-tree to be checked
+	 * @param child  the successor to be checked if it is in the sub-tree
+	 * @return true, if child is a successor of parent
+	 */
+	public static boolean isAncestorOf(TerminologyObject parent, TerminologyObject child) {
+		return isAncestorOf(parent, child, new HashSet<>());
+	}
+
+	private static boolean isAncestorOf(TerminologyObject parent, TerminologyObject child, Set<TerminologyObject> visited) {
+		// if we reached the parent, we found it
+		if (Objects.equals(child, parent)) return true;
+
+		// if already visited terminate (to avoid cyclic loops)
+		if (!visited.add(child)) return false;
+
+		// process its parents recursively
+		return Stream.of(child.getParents()).anyMatch(item -> isAncestorOf(parent, item, visited));
 	}
 
 	/**

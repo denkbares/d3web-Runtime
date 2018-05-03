@@ -32,6 +32,7 @@ public class KernelExtensionPoints {
 	public static final String EXTENSIONPOINT_PSMETHOD = "PSMethod";
 	public static final String EXTENSIONPOINT_AUTODETECT = "Autodetect";
 	public static final String EXTENSIONPOINT_NAMED_OBJECT_FINDER = "NamedObjectFinder";
+	public static final String EXTENSIONPOINT_PROTOCOL_EXECUTOR = "ProtocolExecutor";
 
 	private KernelExtensionPoints() {
 	}

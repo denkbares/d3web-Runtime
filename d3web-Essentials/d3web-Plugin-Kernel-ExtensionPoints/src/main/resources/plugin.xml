@@ -1,6 +1,5 @@
-<?xml version="1.0" ?>
-<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<!-- This plugin only defines extension points for the core structure of d3web. -->
+<?xml version="1.0" ?><!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0"
+	"http://jpf.sourceforge.net/plugin_1_0.dtd"><!-- This plugin only defines extension points for the core structure of d3web. -->
 <plugin id="d3web-Kernel-ExtensionPoints" version="1.0">
 
 	<extension-point id="PSMethod">
@@ -10,7 +9,7 @@
 		<parameter-def id="version" />
 		<parameter-def id="priority" type="number" />
 	</extension-point>
-	
+
 	<extension-point id="Autodetect">
 		<parameter-def id="class" />
 		<parameter-def id="name" />
@@ -18,7 +17,7 @@
 		<parameter-def id="version" />
 		<parameter-def id="priority" type="number" />
 	</extension-point>
-	
+
 	<extension-point id="Property">
 		<parameter-def id="name" />
 		<!-- defines a deprecated name of the property which may also be used to access the property -->
@@ -30,11 +29,11 @@
 		<parameter-def id="autosave" />
 		<parameter-def id="priority" type="number" />
 		<!-- defines the class of stores instances -->
-		<parameter-def id="instanceof" /> 
+		<parameter-def id="instanceof" />
 		<!-- defines an optional default value -->
-		<parameter-def id="default" multiplicity="none-or-one" /> 
+		<parameter-def id="default" multiplicity="none-or-one" />
 	</extension-point>
-	
+
 	<extension-point id="NamedObjectFinder">
 		<parameter-def id="class" />
 		<parameter-def id="name" />
@@ -42,15 +41,40 @@
 		<parameter-def id="version" />
 		<parameter-def id="priority" type="number" />
 	</extension-point>
-	
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="NamedObjectFinder"
-		id="KnowledgeBaseFinder">
-		<parameter id="class"
-			value="de.d3web.core.manage.KnowledgeBaseFinder"/>
+
+	<extension-point id="ProtocolExecutor">
+		<parameter-def id="class" />
+		<parameter-def id="entryClass" />
+		<parameter-def id="name" />
+		<parameter-def id="description" />
+		<parameter-def id="version" />
+		<parameter-def id="priority" type="number" />
+	</extension-point>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="NamedObjectFinder" id="KnowledgeBaseFinder">
+		<parameter id="class" value="de.d3web.core.manage.KnowledgeBaseFinder" />
 		<parameter id="name" value="KnowledgeBaseFinder" />
 		<parameter id="description" value="NamedObjectFinder for the KB" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
-	
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="ActualQContainerExecutor">
+		<parameter id="class" value="de.d3web.core.session.builder.ActualQContainerExecutor" />
+		<parameter id="entryClass" value="de.d3web.core.session.protocol.ActualQContainerEntry" />
+		<parameter id="name" value="ActualQContainerExecutor" />
+		<parameter id="description" value="Manually adds the previously answered QContainer to the interview agenda." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="3" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="FactProtocolExecutor">
+		<parameter id="class" value="de.d3web.core.session.builder.FactProtocolExecutor" />
+		<parameter id="entryClass" value="de.d3web.core.session.protocol.FactProtocolEntry" />
+		<parameter id="name" value="FactProtocolExecutor" />
+		<parameter id="description" value="Answers the questions with the previous value." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="7" />
+	</extension>
+
 </plugin>

@@ -336,6 +336,7 @@ public class DefaultSession implements Session {
 		return name;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
