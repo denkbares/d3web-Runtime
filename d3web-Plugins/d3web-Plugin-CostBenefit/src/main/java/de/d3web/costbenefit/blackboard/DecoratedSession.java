@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationListener;
 import de.d3web.core.inference.PropagationManager;
@@ -39,15 +41,12 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.Protocol;
 
 /**
- * This class represents a minimal Session that is capable to provide basic
- * capabilities to evaluate conditions on it and add facts to the session. This
- * session does not have any problem solver or functional propagation manager.
- * It also does not provide a protocol or any reliable master data information
- * (change date, create date, name, id, etc).
+ * This class represents a minimal Session that is capable to provide basic capabilities to evaluate conditions on it
+ * and add facts to the session. This session does not have any problem solver or functional propagation manager. It
+ * also does not provide a protocol or any reliable master data information (change date, create date, name, id, etc).
  * <p>
- * The session itself decorates an existing session, like a glass panel. You can
- * read the values from the session decorated one and overwrite them by setting
- * new facts.
+ * The session itself decorates an existing session, like a glass panel. You can read the values from the session
+ * decorated one and overwrite them by setting new facts.
  *
  * @author volker_belli
  * @created 16.09.2011
@@ -59,7 +58,7 @@ public class DecoratedSession implements Session {
 	private final Blackboard blackboard;
 	private final Session rootSession;
 
-	public DecoratedSession(Session other) {
+	public DecoratedSession(@NotNull Session other) {
 		this.knowledgeBase = other.getKnowledgeBase();
 		this.blackboard = new DecoratedBlackboard(this, (DefaultBlackboard) other.getBlackboard());
 		this.rootSession = (other instanceof DecoratedSession)
@@ -68,12 +67,13 @@ public class DecoratedSession implements Session {
 	}
 
 	/**
-	 * Returns the original root session that is decorated by this
-	 * {@link DecoratedSession} and a series of other DecoratedSessions.
+	 * Returns the original root session that is decorated by this {@link DecoratedSession} and a series of other
+	 * DecoratedSessions.
 	 *
 	 * @return the original root session
 	 * @created 04.06.2012
 	 */
+	@NotNull
 	public Session getRootSession() {
 		return this.rootSession;
 	}
@@ -103,12 +103,17 @@ public class DecoratedSession implements Session {
 
 	@Override
 	public String getId() {
-		return "{decorated-session}";
+		return "{decorated-session:" + rootSession.getId() + "}";
 	}
 
 	@Override
 	public String getName() {
-		return getId();
+		return rootSession.getName();
+	}
+
+	@Override
+	public void setName(String name) {
+		rootSession.setName(name);
 	}
 
 	@Override

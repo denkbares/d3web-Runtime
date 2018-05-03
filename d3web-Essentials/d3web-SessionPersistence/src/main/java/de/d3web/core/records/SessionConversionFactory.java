@@ -154,8 +154,7 @@ public final class SessionConversionFactory {
 	 * Converts a {@link Session} to a {@link SessionRecord}.
 	 *
 	 * @param source      the session to be converted
-	 * @param createNewID specified if the record should be decoupled from the
-	 *                    session be creating a new (unique) id
+	 * @param createNewID specified if the record should be decoupled from the session be creating a new (unique) id
 	 * @return the created session record
 	 * @created 05.08.2011
 	 */
@@ -210,7 +209,6 @@ public final class SessionConversionFactory {
 				Value value = interviewFact.getValue();
 				target.addInterviewFact(new FactRecord(object, null, value));
 			}
-
 		}
 		target.touch(source.getLastChangeDate());
 		return target;
@@ -220,12 +218,11 @@ public final class SessionConversionFactory {
 	 * Loading Session from SessionRecord by replaying Protocol
 	 *
 	 * @param knowledgeBase {@link KnowledgeBase}
-	 * @param source {@link SessionRecord}
+	 * @param source        {@link SessionRecord}
 	 * @return {@link Session}
 	 */
 	public static Session replayToSession(KnowledgeBase knowledgeBase, SessionRecord source) {
-		DefaultSession target = SessionFactory.createSession(source.getId(),
-				knowledgeBase, source.getCreationDate());
+		DefaultSession target = SessionFactory.createSession(source.getId(), knowledgeBase, source.getCreationDate());
 		target.setName(source.getName());
 		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 
@@ -254,5 +251,4 @@ public final class SessionConversionFactory {
 		target.touch(source.getLastChangeDate());
 		return target;
 	}
-
 }

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -48,7 +48,6 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.TextProtocolEntry;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.StateTransition;
-import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
@@ -231,8 +230,8 @@ public class CostBenefitCaseObject implements SessionObject {
 	}
 
 	/**
-	 * This method is just for refreshing the path of the CaseObject, the Facts
-	 * get pushed into the blackboard by calculateNewPath
+	 * This method is just for refreshing the path of the CaseObject, the Facts get pushed into the blackboard by
+	 * calculateNewPath
 	 */
 	public void activateNextQContainer() {
 		if (currentSequence == null) return;
@@ -285,12 +284,11 @@ public class CostBenefitCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Retracts a subset of the questions of the specified container within the specified session.
-	 * All questions that are retractable (mostly "ok"-questions) will be retracted, all others will
-	 * remain untouched.
+	 * Retracts a subset of the questions of the specified container within the specified session. All questions that
+	 * are retractable (mostly "ok"-questions) will be retracted, all others will remain untouched.
 	 *
 	 * @param container the container to retract the contained questions
-	 * @param session the session to work on
+	 * @param session   the session to work on
 	 */
 	private void retractQuestions(TerminologyObject container, Session session) {
 		Blackboard blackboard = session.getBlackboard();
@@ -311,9 +309,8 @@ public class CostBenefitCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns true if the specified question should be retracted by the cots/benefit problem solver
-	 * to prepare the qContainer to be re-asked. Usually all "ok"-questions questions will be
-	 * retracted.
+	 * Returns true if the specified question should be retracted by the cots/benefit problem solver to prepare the
+	 * qContainer to be re-asked. Usually all "ok"-questions questions will be retracted.
 	 *
 	 * @param question the question to be checked for retracting
 	 * @return true if the question should be retracted
@@ -331,19 +328,17 @@ public class CostBenefitCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Activates a ready-made path by indicating its questionnaires and storing
-	 * it into the specified case object
+	 * Activates a ready-made path by indicating its questionnaires and storing it into the specified case object
 	 *
 	 * @param psmethod the ps method
-	 * @param path the path to be activated
+	 * @param path     the path to be activated
 	 * @created 08.03.2011
 	 */
-	public void activatePath(Path path, PSMethod psmethod) {
-		Collection<QContainer> qContainers = path.getPath();
-		QContainer[] currentSequence = new QContainer[qContainers.size()];
+	public void activatePath(Collection<QContainer> path, PSMethod psmethod) {
+		QContainer[] currentSequence = new QContainer[path.size()];
 		int i = 0;
 		List<Fact> facts = new LinkedList<>();
-		for (QContainer qContainer : qContainers) {
+		for (QContainer qContainer : path) {
 			currentSequence[i] = qContainer;
 			retractQuestions(currentSequence[i], session);
 			Fact fact = FactFactory.createFact(qContainer,
@@ -359,9 +354,8 @@ public class CostBenefitCaseObject implements SessionObject {
 	}
 
 	/**
-	 * Returns if the undiscriminated solutions have changed since the last use
-	 * of the search algorithm. This indicates that a new search should be
-	 * performed to adapt to the new diagnostic situation.
+	 * Returns if the undiscriminated solutions have changed since the last use of the search algorithm. This indicates
+	 * that a new search should be performed to adapt to the new diagnostic situation.
 	 *
 	 * @return if the undiscriminated solutions have been changed
 	 * @created 08.03.2011
@@ -413,15 +407,13 @@ public class CostBenefitCaseObject implements SessionObject {
 	}
 
 	private void checkWatchedQContainers() {
-		if ((searchModel.getBestCostBenefitTarget() != null)
-				&& !Collections.disjoint(watchedQContainers,
-				searchModel.getBestCostBenefitTarget().getQContainers())) {
-			List<Solution> sprintGroup = XCLUtils.getSprintGroup(session);
-			session.getProtocol().addEntry(
-					new CalculatedTargetEntry(searchModel.getBestCostBenefitTarget(),
-							searchModel.getTargets(), new Date(
-							session.getPropagationManager().getPropagationTime()),
-							sprintGroup));
-		}
+		if (searchModel == null) return;
+		if (searchModel.getBestCostBenefitTarget() == null) return;
+		if (Collections.disjoint(watchedQContainers, searchModel.getBestCostBenefitTarget().getQContainers())) return;
+
+		List<Solution> sprintGroup = XCLUtils.getSprintGroup(session);
+		Date date = new Date(session.getPropagationManager().getPropagationTime());
+		session.getProtocol().addEntry(new CalculatedTargetEntry(
+				searchModel.getBestCostBenefitTarget(), searchModel.getTargets(), date, sprintGroup));
 	}
 }

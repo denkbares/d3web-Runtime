@@ -58,6 +58,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
+import de.d3web.core.session.builder.SessionBuilder;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
@@ -167,7 +168,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		else {
 			Path minPath = bestTarget.getMinPath();
 			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
-			caseObject.activatePath(minPath, this);
+			caseObject.activatePath(minPath.getPath(), this);
 			caseObject.activateNextQContainer();
 		}
 	}
@@ -226,7 +227,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
 			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
-			caseObject.activatePath(minPath, this);
+			caseObject.activatePath(minPath.getPath(), this);
 		}
 		caseObject.activateNextQContainer();
 	}
@@ -268,8 +269,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				if (skipTarget) {
 					continue;
 				}
-				double benefit = strategicSupport.getInformationGain(
-						target.getQContainers(), solutions, session);
+				double benefit = strategicSupport.getInformationGain(target.getQContainers(), solutions, session);
 				if (benefit == 0) continue;
 				searchModel.addTarget(target);
 				searchModel.maximizeBenefit(target, benefit);
@@ -408,13 +408,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 		}
 		for (Condition c : terms) {
-			Double value = conditionValueCache.get(c);
-			if (value == null) {
-				conditionValueCache.put(c, t.getBenefit() / t.getCosts());
-			}
-			else {
-				conditionValueCache.put(c, t.getBenefit() / t.getCosts() + value);
-			}
+			conditionValueCache.merge(c, t.getBenefit() / t.getCosts(), (a, b) -> b + a);
 		}
 	}
 
@@ -571,8 +565,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		if (!isAnyQuesionnaireDone) return;
 
 		// caseObject.activateNextQContainer();
-		QContainer qc =
-				caseObject.getCurrentSequence()[caseObject.getCurrentPathIndex()];
+		QContainer qc = caseObject.getCurrentSequence()[caseObject.getCurrentPathIndex()];
 		if (!new Node(qc, null).isApplicable(session)) {
 			caseObject.resetPath();
 		}
@@ -693,8 +686,19 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	@Override
 	public void postPropagate(Session session, Collection<PropagationEntry> entries) {
+		if (!SessionBuilder.isReplaying(session)) {
+			checkPath(session);
+		}
+	}
+
+	/**
+	 * Tests if a new path should be calculated automatically, or if an existing path should be updated automatically,
+	 * and calculates if appropriate.
+	 */
+	public void checkPath(Session session) {
 		CostBenefitCaseObject sessionObject = session.getSessionObject(this);
-		if (!isManualMode() && !sessionObject.isManualMode() && !sessionObject.isAbortedManuallySetTarget()) {
+		boolean manualMode = isManualMode() || sessionObject.isManualMode();
+		if (!manualMode && !sessionObject.isAbortedManuallySetTarget()) {
 			// target was manually set and the path was reset before it was
 			// finished -> try to calculate to the target again
 			if (sessionObject.getUndiscriminatedSolutions() == null && sessionObject.getUnreachedTarget() != null) {

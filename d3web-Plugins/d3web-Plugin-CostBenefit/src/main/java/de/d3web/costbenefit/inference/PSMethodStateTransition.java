@@ -41,6 +41,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.inference.PSMethodStateTransition.StateTransitionSessionObject;
@@ -73,8 +74,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				StateTransitionFact stf = (StateTransitionFact) fact;
 				// facts which set final questions have highest priority, if
 				// they are set by permanently relevant test steps
-				if (stf.getTerminologyObject().getInfoStore().getValue(
-						CostBenefitProperties.FINAL_QUESTION)
+				if (CostBenefitProperties.isCheckOnce(stf.getTerminologyObject())
 						&& isPartOfPermanentlyRelevantQContainer(stf.cvs.getCondition())) {
 					return stf;
 				}
@@ -92,8 +92,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 			}
 			// for reloaded facts of final questions the maxvalue is set, so
 			// they can only be overwritten by permanently relevant QContainers
-			else if (fact.getTerminologyObject().getInfoStore().getValue(
-					CostBenefitProperties.FINAL_QUESTION)) {
+			else if (CostBenefitProperties.isCheckOnce(fact.getTerminologyObject())) {
 				maxFact = fact;
 				maxNumber = Integer.MAX_VALUE;
 			}
@@ -121,13 +120,12 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		private final ConditionalValueSetter cvs;
 
 		/**
-		 * Default method to create a {@link StateTransitionFact}, it should be
-		 * used whenever possible
+		 * Default method to create a {@link StateTransitionFact}, it should be used whenever possible
 		 *
-		 * @param cvs {@link ConditionalValueSetter} that has fired
-		 * @param session actual {@link Session}
+		 * @param cvs               {@link ConditionalValueSetter} that has fired
+		 * @param session           actual {@link Session}
 		 * @param terminologyObject {@link TerminologyObject} which value should be set
-		 * @param value the Value that should be set
+		 * @param value             the Value that should be set
 		 */
 		public StateTransitionFact(ConditionalValueSetter cvs, Session session, TerminologyObject terminologyObject, Value value) {
 			super(terminologyObject, value, new Object(), findPSM(session));
@@ -136,13 +134,12 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		}
 
 		/**
-		 * Creates a StateTransitionFact without a ConditionalValueSetter. This
-		 * method must not be used for values of final questions. Generally the
-		 * method using the {@link ConditionalValueSetter} should be preferred
+		 * Creates a StateTransitionFact without a ConditionalValueSetter. This method must not be used for values of
+		 * final questions. Generally the method using the {@link ConditionalValueSetter} should be preferred
 		 *
-		 * @param session actual {@link Session}
+		 * @param session           actual {@link Session}
 		 * @param terminologyObject {@link TerminologyObject} which value should be set
-		 * @param value the Value that should be set
+		 * @param value             the Value that should be set
 		 */
 		public StateTransitionFact(Session session, TerminologyObject terminologyObject, Value value) {
 			this(new ConditionalValueSetter(value, null), session, terminologyObject, value);
@@ -192,9 +189,17 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 					KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
 							StateTransition.KNOWLEDGE_KIND);
 					if (ks != null) {
+						// fire the state transitions
 						StateTransition st = (StateTransition) ks;
 						sessionObject.facts = st.fire(session);
 						session.getPropagationManager().setPropagationTimeOfNoReturn(session.getPropagationManager().getPropagationTime());
+
+						// beacuse state transition is no longer a source PSM, manually add the fired transitions
+						for (Fact fact : sessionObject.facts) {
+							session.getProtocol().addEntry(
+									new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact));
+						}
+
 						// check if there are any changes to our remembered solutions
 						if (cbCaseObject.hasChangedUndiscriminatedSolutions()) {
 							cbCaseObject.resetPath();
@@ -217,7 +222,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 	@Override
 	public boolean hasType(Type type) {
-		return type == Type.source;
+		return type == Type.problem;
 	}
 
 	@Override

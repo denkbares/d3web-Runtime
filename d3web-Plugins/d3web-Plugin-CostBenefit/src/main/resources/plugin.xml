@@ -34,6 +34,15 @@
 		<parameter id="priority" value="5.5" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="CostBenefitProtocolExecutor">
+		<parameter id="class" value="de.d3web.costbenefit.session.protocol.CostBenefitProtocolExecutor" />
+		<parameter id="entryClass" value="de.d3web.costbenefit.session.protocol.CalculatedPathEntry" />
+		<parameter id="name" value="CostBenefitProtocolExecutor" />
+		<parameter id="description" value="Makes sure that a path is calculated after the protocol as been executed." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="10" />
+	</extension>
+
 	<extension plugin-id="KnowledgePersistenceExtensionPoints"
 		point-id="KnowledgeWriter" id="CostBenefitModelPersistenceHandler.Writer">
 		<parameter id="class"
