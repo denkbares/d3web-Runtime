@@ -51,6 +51,7 @@ public class SearchModel {
 	private final Session session;
 	private final Set<StateTransition> transitionalStateTransitions;
 	private final Set<QContainer> blockedQContainers;
+	private long duration = -1;
 
 	public SearchModel(Session session) {
 		this.session = session;
@@ -324,6 +325,14 @@ public class SearchModel {
 			}
 		}
 		return result;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 
 	private static class TargetComparator implements Comparator<Target> {

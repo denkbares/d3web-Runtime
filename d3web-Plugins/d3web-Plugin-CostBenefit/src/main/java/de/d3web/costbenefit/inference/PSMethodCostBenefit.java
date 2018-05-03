@@ -69,6 +69,7 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.Node;
+import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
@@ -156,7 +157,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		initializeSearchModelTo(caseObject, targets);
 		SearchModel searchModel = caseObject.getSearchModel();
 
-		searchAlgorithm.search(caseObject.getSession(), searchModel);
+		search(caseObject.getSession(), searchModel);
 
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
@@ -219,7 +220,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		SearchModel searchModel = caseObject.getSearchModel();
 		if (searchModel.getBestBenefit() != 0
 				&& solutionsRater.check(caseObject.getUndiscriminatedSolutions())) {
-			searchAlgorithm.search(session, searchModel);
+			search(session, searchModel);
 		}
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
@@ -230,6 +231,24 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			caseObject.activatePath(minPath.getPath(), this);
 		}
 		caseObject.activateNextQContainer();
+	}
+
+	private void search(Session session, SearchModel searchModel) {
+		// search and measure time
+		long startTime = System.currentTimeMillis();
+		searchAlgorithm.search(session, searchModel);
+		long duration = System.currentTimeMillis() - startTime;
+
+		// get the path
+		List<QContainer> path = Collections.emptyList();
+		if (searchModel.getBestCostBenefitTarget() != null
+				&& searchModel.getBestCostBenefitTarget().getMinPath() != null) {
+			path = searchModel.getBestCostBenefitTarget().getMinPath().getPath();
+		}
+
+		// store search result in protocol
+		long time = session.getPropagationManager().getPropagationTime();
+		session.getProtocol().addEntry(new CalculatedPathEntry(time, path, duration));
 	}
 
 	private boolean hasUnansweredQuestions(Session session) {

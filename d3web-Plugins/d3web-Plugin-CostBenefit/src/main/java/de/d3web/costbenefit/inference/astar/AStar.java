@@ -52,7 +52,6 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
 
 /**
  * Algorithm which uses A* to find pathes to the targets
@@ -181,21 +180,6 @@ public class AStar {
 				"init: " + initTime + "ms, " +
 				"#open: " + getOpenNodes().size() + ", " +
 				"#closed: " + getClosedNodes().size() + ")");
-		if (model.getBestCostBenefitTarget() != null
-				&& model.getBestCostBenefitTarget().getMinPath() != null) {
-			session.getProtocol().addEntry(
-					new CalculatedPathEntry(
-							session.getPropagationManager().getPropagationTime(),
-							model.getBestCostBenefitTarget().getMinPath().getPath(), time2
-									- time1));
-		}
-		else {
-			session.getProtocol().addEntry(
-					new CalculatedPathEntry(
-							session.getPropagationManager().getPropagationTime(),
-							Collections.emptyList(), time2
-									- time1));
-		}
 	}
 
 	private void removeInfiniteTargets() {
