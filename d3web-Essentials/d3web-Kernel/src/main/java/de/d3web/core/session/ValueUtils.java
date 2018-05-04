@@ -549,6 +549,24 @@ public final class ValueUtils {
 		return Collections.emptyList();
 	}
 
+	/**
+	 * Returns all the choice IDs of the specified value. If the value is not a (multiple) choice value, an empty list
+	 * is returned.
+	 *
+	 * @param value the value to get the choices from
+	 * @return the choices of the value, if there are any
+	 */
+	@NotNull
+	public static Collection<ChoiceID> getChoiceIDs(Value value) {
+		if (value instanceof ChoiceValue) {
+			return Collections.singleton(((ChoiceValue) value).getChoiceID());
+		}
+		else if (value instanceof MultipleChoiceValue) {
+			return ((MultipleChoiceValue) value).getChoiceIDs();
+		}
+		return Collections.emptyList();
+	}
+
 	public static String getVerbalization(TerminologyObject object, Value value, Locale lang) {
 		if (object instanceof Question) {
 			return getVerbalization((Question) object, value, lang);
@@ -773,7 +791,8 @@ public final class ValueUtils {
 	/**
 	 * If the given date string ends with trailing zeros from the time, those zeros will be trimmed correctly. Trims
 	 * milli seconds, seconds, and hours with minutes.<p/> Example: <ul> <li>2000-01-01 15:44:32.000 -> 2000-01-01
-	 * 15:44:32</li> <li>2000-01-01 15:44:00.000 -> 2000-01-01 15:44</li> <li>2000-01-01 00:00:00.000 -> 2000-01-01</li>
+	 * 15:44:32</li> <li>2000-01-01 15:44:00.000 -> 2000-01-01 15:44</li> <li>2000-01-01 00:00:00.000 ->
+	 * 2000-01-01</li>
 	 * </ul>
 	 *
 	 * @param dateString the date verbalization to trim
@@ -810,7 +829,7 @@ public final class ValueUtils {
 	 * Creates a {@link DateValue} from a given String. If no time zone is given in the String, the time zone of the
 	 * local JVM will be used. To be parseable, the String has to come in one of the available {@link DateFormat} from
 	 * {@link DateValue#getAllowedFormatStrings()}.
-	 * <p>
+	 *
 	 * <b>Attention:</b> If the corresponding question is available while calling the method, you should instead use
 	 * {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if your String does not contain a TimeZone
 	 * identifier. Having the Question available will use a specified time zone of the question's UNIT property if given
