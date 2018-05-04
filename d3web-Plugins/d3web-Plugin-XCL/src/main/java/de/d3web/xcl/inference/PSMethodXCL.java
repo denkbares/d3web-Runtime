@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -33,6 +33,8 @@ import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.ConditionCache;
+import de.d3web.core.inference.condition.DefaultConditionCache;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.Question;
@@ -93,9 +95,10 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		}
 
 		// update required xcl models / inference traces
+		ConditionCache cache = new DefaultConditionCache(session);
 		for (XCLModel model : modelsToUpdate.keySet()) {
 			List<PropagationEntry> entries = modelsToUpdate.get(model);
-			this.scoreAlgorithm.update(model, entries, session);
+			this.scoreAlgorithm.update(model, entries, cache);
 		}
 
 		// refresh the solutions states
@@ -103,7 +106,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	private void updateAnsweredWeight(Session session,
-			Collection<PropagationEntry> changes) {
+									  Collection<PropagationEntry> changes) {
 		XCLCaseObject caseObject = session.getSessionObject(this);
 		for (PropagationEntry entry : changes) {
 			if (entry.getObject() instanceof Question) {

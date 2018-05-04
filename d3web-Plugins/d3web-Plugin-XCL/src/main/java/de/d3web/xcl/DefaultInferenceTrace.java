@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -22,10 +22,8 @@ package de.d3web.xcl;
 import java.util.Collection;
 import java.util.HashSet;
 
-import de.d3web.core.inference.condition.NoAnswerException;
-import de.d3web.core.inference.condition.UnknownAnswerException;
+import de.d3web.core.inference.condition.ConditionCache;
 import de.d3web.core.knowledge.terminology.Rating;
-import de.d3web.core.session.Session;
 
 public class DefaultInferenceTrace implements InferenceTrace {
 
@@ -98,40 +96,33 @@ public class DefaultInferenceTrace implements InferenceTrace {
 		this.support = support;
 	}
 
-	/**
-	 * Recalculates the inference trace relations for this model and the given
-	 * case.
-	 * 
-	 * @param session the current case
-	 */
 	@Override
-	public void refreshRelations(XCLModel xclModel, Session session) {
-		evalRelations(session, xclModel.getRelations(), posRelations, negRelations);
-		evalRelations(session, xclModel.getNecessaryRelations(), reqPosRelations,
-				reqNegRelations);
-		evalRelations(session, xclModel.getContradictingRelations(), contrRelations, null);
-		evalRelations(session, xclModel.getSufficientRelations(), suffRelations, null);
+	public void refreshRelations(XCLModel xclModel, ConditionCache cache) {
+		evalRelations(cache, xclModel.getRelations(), posRelations, negRelations);
+		evalRelations(cache, xclModel.getNecessaryRelations(), reqPosRelations, reqNegRelations);
+		evalRelations(cache, xclModel.getContradictingRelations(), contrRelations, null);
+		evalRelations(cache, xclModel.getSufficientRelations(), suffRelations, null);
 	}
 
-	private void evalRelations(Session session, Collection<XCLRelation> source, Collection<XCLRelation> trueSet, Collection<XCLRelation> falseSet) {
+	private void evalRelations(ConditionCache cache, Collection<XCLRelation> source, Collection<XCLRelation> trueSet, Collection<XCLRelation> falseSet) {
+		if (source.isEmpty()) return;
+
 		// clear result sets
 		trueSet.clear();
 		if (falseSet != null) falseSet.clear();
 		// eval all relations
 		for (XCLRelation rel : source) {
-			try {
-				boolean b = rel.eval(session);
-				if (b) {
+			switch (cache.getResult(rel.getConditionedFinding())) {
+				case TRUE:
 					trueSet.add(rel);
-				}
-				else {
+					break;
+				case FALSE:
 					if (falseSet != null) falseSet.add(rel);
-				}
-			}
-			catch (NoAnswerException | UnknownAnswerException e) {
-				// do nothing
+					break;
+				// case UNDEFINED:
+				// case UNKNOWN:
+				// otherwise, do nothing
 			}
 		}
 	}
-
 }

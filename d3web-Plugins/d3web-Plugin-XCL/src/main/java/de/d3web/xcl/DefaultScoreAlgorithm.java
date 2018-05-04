@@ -22,6 +22,7 @@ package de.d3web.xcl;
 import java.util.Collection;
 
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.condition.ConditionCache;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.FactFactory;
@@ -120,9 +121,9 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 	}
 
 	@Override
-	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, Session session) {
-		InferenceTrace trace = xclModel.getInferenceTrace(session);
-		trace.refreshRelations(xclModel, session);
+	public void update(XCLModel xclModel, Collection<PropagationEntry> entries, ConditionCache cache) {
+		InferenceTrace trace = xclModel.getInferenceTrace(cache.getSession());
+		trace.refreshRelations(xclModel, cache);
 	}
 
 	private double computeScore(InferenceTrace trace) {
