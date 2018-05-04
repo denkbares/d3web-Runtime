@@ -29,8 +29,17 @@
 		<parameter id="priority" value="3" />
 	</extension>
 
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="InterviewPSConfigHandler">
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="FactProtocolExecutor:Measure">
+		<parameter id="class"
+			value="de.d3web.core.session.builder.FactProtocolExecutor(de.d3web.interview.measure.PSMethodMeasurement.class)" />
+		<parameter id="entryClass" value="de.d3web.core.session.protocol.FactProtocolEntry" />
+		<parameter id="name" value="FactProtocolExecutor:Measure" />
+		<parameter id="description" value="Answers the questions with the measured value." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="7" />
+	</extension>
+
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler" id="InterviewPSConfigHandler">
 		<parameter id="class" value="de.d3web.interview.io.InterviewPSConfigHandler" />
 		<parameter id="name" value="InterviewPSConfigHandler" />
 		<parameter id="description" value="Handler for PSConfigs of PSMethodInterview" />
@@ -38,8 +47,7 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="CondActiveHandler">
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler" id="CondActiveHandler">
 		<parameter id="class" value="de.d3web.interview.io.CondActiveHandler" />
 		<parameter id="name" value="CondActiveHandler" />
 		<parameter id="description" value="Handler for CondActives" />
@@ -49,8 +57,7 @@
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="NextUnansweredQuestionFormStrategyHandler">
-		<parameter id="class"
-			value="de.d3web.interview.io.NextUnansweredQuestionFormStrategyHandler" />
+		<parameter id="class" value="de.d3web.interview.io.NextUnansweredQuestionFormStrategyHandler" />
 		<parameter id="name" value="NextUnansweredQuestionFormStrategyHandler" />
 		<parameter id="description" value="Handler for NextUnansweredQuestionFormStrategy" />
 		<parameter id="version" value="1.0" />
@@ -77,16 +84,14 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="measurement">
 		<parameter id="name" value="measurement" />
-		<parameter id="description"
-			value="Defines the measurement zu measure a question or a number of questions." />
+		<parameter id="description" value="Defines the measurement zu measure a question or a number of questions." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="de.d3web.interview.measure.Measurement" />
 	</extension>
 
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="MeasurementHandler">
+	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler" id="MeasurementHandler">
 		<parameter id="class" value="de.d3web.interview.io.MeasurementHandler" />
 		<parameter id="name" value="MeasurementHandler" />
 		<parameter id="description" value="Handler for Measurements" />

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -69,7 +69,7 @@ import de.d3web.xcl.inference.PSMethodXCL;
 
 /**
  * Tests the usage of different properties
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 27.06.2012
  */
@@ -145,10 +145,9 @@ public class PropertiesTest {
 		q1.addAlternative(answer1);
 		valueAnswer1 = new ChoiceValue(answer1);
 		DefaultAbnormality.setAbnormality(q1, valueAnswer1, Abnormality.A0);
-		ValueTransition vt1 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
-				valueStateA, new CondEqual(q1, valueAnswer1))));
-		new StateTransition(new CondAnd(Collections.emptyList()), Collections.singletonList(vt1),
-				first);
+		ValueTransition vt1 = new ValueTransition(state, Collections.singletonList(
+				new ConditionalValueSetter(valueStateA, new CondEqual(q1, valueAnswer1))));
+		new StateTransition(new CondAnd(Collections.emptyList()), Collections.singletonList(vt1), first);
 		first.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
 		second = new QContainer(kb, SECOND_NAME);
@@ -160,10 +159,8 @@ public class PropertiesTest {
 		ValueTransition vt2 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateB, new CondEqual(q2, valueAnswer2))));
 		ValueTransition vtIndicator = new ValueTransition(indicator,
-				Collections.singletonList(new ConditionalValueSetter(valueStateWorks, new CondEqual(q2,
-						valueAnswer2))));
-		new StateTransition(new CondEqual(state, valueStateA), Arrays.asList(vt2, vtIndicator),
-				second);
+				Collections.singletonList(new ConditionalValueSetter(valueStateWorks, new CondEqual(q2, valueAnswer2))));
+		new StateTransition(new CondEqual(state, valueStateA), Arrays.asList(vt2, vtIndicator), second);
 		second.getInfoStore().addValue(BasicProperties.COST, 1.0);
 
 		permanentlyRelevant = new QContainer(kb, PERMANENTLY_NAME);
@@ -183,13 +180,10 @@ public class PropertiesTest {
 				valueStateB, new CondEqual(q4, choiceValue4)), new ConditionalValueSetter(
 				valueStateA, new CondEqual(q4, choiceValue5))));
 		ValueTransition vtWork4 = new ValueTransition(indicator, Arrays.asList(
-				new ConditionalValueSetter(
-						valueStateWorks, new CondEqual(q4, choiceValue4)),
-				new ConditionalValueSetter(
-						valueStateNotWorks, new CondEqual(q4, choiceValue5))));
+				new ConditionalValueSetter(valueStateWorks, new CondEqual(q4, choiceValue4)),
+				new ConditionalValueSetter(valueStateNotWorks, new CondEqual(q4, choiceValue5))));
 		new StateTransition(new CondOr(Arrays.asList(new CondEqual(state, valueStateA),
-				new CondEqual(state, valueStateB))), Arrays.asList(vt4, vtWork4),
-				permanentlyRelevant);
+				new CondEqual(state, valueStateB))), Arrays.asList(vt4, vtWork4), permanentlyRelevant);
 		permanentlyRelevant.getInfoStore().addValue(CostBenefitProperties.PERMANENTLY_RELEVANT, true);
 		permanentlyRelevant.getInfoStore().addValue(BasicProperties.COST, 0.1);
 
@@ -203,9 +197,7 @@ public class PropertiesTest {
 		valueAnswer52 = new ChoiceValue(answer52);
 		new QuestionNum(target, "Finish");
 		new StateTransition(new CondAnd(Arrays.asList(
-				new CondEqual(state, valueStateB),
-				new CondEqual(indicator, valueStateWorks))),
-				Collections.emptyList(), target);
+				new CondEqual(state, valueStateB), new CondEqual(indicator, valueStateWorks))), Collections.emptyList(), target);
 
 		targetOnly = new QContainer(kb, TARGET_ONLY_NAME);
 		q3 = new QuestionOC(targetOnly, "Q3");
@@ -216,11 +208,8 @@ public class PropertiesTest {
 		ValueTransition vt3 = new ValueTransition(state, Collections.singletonList(new ConditionalValueSetter(
 				valueStateB, new CondEqual(q3, valueAnswer3))));
 		ValueTransition vt3works = new ValueTransition(indicator,
-				Collections.singletonList(new ConditionalValueSetter(
-						valueStateWorks, new CondEqual(q3, valueAnswer3))));
-		new StateTransition(new CondAnd(Collections.emptyList()), Arrays.asList(vt3,
-				vt3works),
-				targetOnly);
+				Collections.singletonList(new ConditionalValueSetter(valueStateWorks, new CondEqual(q3, valueAnswer3))));
+		new StateTransition(new CondAnd(Collections.emptyList()), Arrays.asList(vt3, vt3works), targetOnly);
 		targetOnly.getInfoStore().addValue(BasicProperties.COST, 1.0);
 		targetOnly.getInfoStore().addValue(CostBenefitProperties.TARGET_ONLY, true);
 
@@ -266,17 +255,15 @@ public class PropertiesTest {
 		sequence = session.getSessionObject(cb).getCurrentSequence();
 		Assert.assertEquals(1, sequence.length);
 		Assert.assertEquals(targetOnly, sequence[0]);
-		Assert.assertEquals(
-				q3,
-				session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class)).nextForm().getActiveQuestions().get(
-						0));
+		Assert.assertEquals(q3,
+				session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class))
+						.nextForm().getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q3, valueAnswer3));
 		// after answering q3, target should be applicable
 		em.selectTarget(target);
 		sequence = session.getSessionObject(cb).getCurrentSequence();
 		Assert.assertEquals(1, sequence.length);
 		Assert.assertEquals(target, sequence[0]);
-
 	}
 
 	@Test
@@ -284,35 +271,48 @@ public class PropertiesTest {
 		Session session = SessionFactory.createSession(kb);
 		ExpertMode expertMode = ExpertMode.getExpertMode(session);
 		Assert.assertTrue(expertMode.getApplicablePermanentlyRelevantQContainers().isEmpty());
+
 		expertMode.selectTarget(first);
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q1, valueAnswer1));
 		Collection<QContainer> applicablePermanentlyRelevantQContainers = expertMode.getApplicablePermanentlyRelevantQContainers();
-		Assert.assertTrue(applicablePermanentlyRelevantQContainers.size() == 1);
-		Assert.assertEquals(permanentlyRelevant,
-				applicablePermanentlyRelevantQContainers.iterator().next());
+		Assert.assertEquals(1, applicablePermanentlyRelevantQContainers.size());
+		Assert.assertEquals(permanentlyRelevant, applicablePermanentlyRelevantQContainers.iterator().next());
+
 		expertMode.selectTarget(permanentlyRelevant);
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q4, choiceValue5));
 		SessionRecord record = SessionConversionFactory.copyToSessionRecord(session);
 		expertMode.selectTarget(second);
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q2, valueAnswer2));
 		Assert.assertEquals(valueStateB, session.getBlackboard().getValueFact(state).getValue());
-		Assert.assertEquals(valueStateNotWorks,
-				session.getBlackboard().getValueFact(indicator).getValue());
-		// check if the priority also works for reloaded sessions
-		// (StateTransitionFacts are converted to DefaultFacts when reloading a
-		// session)
-		Session reloadedSession = SessionConversionFactory.copyToSession(kb, record);
-		ExpertMode emReloaded = ExpertMode.getExpertMode(reloadedSession);
-		Assert.assertEquals(valueStateA,
-				reloadedSession.getBlackboard().getValueFact(state).getValue());
-		emReloaded.selectTarget(second);
-		reloadedSession.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(q2, valueAnswer2));
-		Assert.assertEquals(valueStateB,
-				reloadedSession.getBlackboard().getValueFact(state).getValue());
-		Assert.assertEquals(valueStateNotWorks,
-				reloadedSession.getBlackboard().getValueFact(indicator).getValue());
+		Assert.assertEquals(valueStateNotWorks, session.getBlackboard().getValueFact(indicator).getValue());
 
+		// test loading the session, using conversion factory
+		{
+			// check if the priority also works for reloaded sessions
+			// (StateTransitionFacts are converted to DefaultFacts when reloading a session)
+			Session reloadedSession = SessionConversionFactory.copyToSession(kb, record);
+			ExpertMode emReloaded = ExpertMode.getExpertMode(reloadedSession);
+			Assert.assertEquals(valueStateA, reloadedSession.getBlackboard().getValueFact(state).getValue());
+
+			emReloaded.selectTarget(second);
+			reloadedSession.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q2, valueAnswer2));
+			Assert.assertEquals(valueStateB, reloadedSession.getBlackboard().getValueFact(state).getValue());
+			Assert.assertEquals(valueStateNotWorks, reloadedSession.getBlackboard().getValueFact(indicator).getValue());
+		}
+
+		// test loading the session, using session builder replay
+		{
+			// check if the priority also works for reloaded sessions
+			// (StateTransitionFacts are converted to DefaultFacts when reloading a session)
+			Session reloadedSession = record.newSessionBuilder(kb).build();
+			ExpertMode emReloaded = ExpertMode.getExpertMode(reloadedSession);
+			Assert.assertEquals(valueStateA, reloadedSession.getBlackboard().getValueFact(state).getValue());
+
+			emReloaded.selectTarget(second);
+			reloadedSession.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(q2, valueAnswer2));
+			Assert.assertEquals(valueStateB, reloadedSession.getBlackboard().getValueFact(state).getValue());
+			Assert.assertEquals(valueStateNotWorks, reloadedSession.getBlackboard().getValueFact(indicator).getValue());
+		}
 	}
 
 	@Test
@@ -355,5 +355,4 @@ public class PropertiesTest {
 		Assert.assertTrue(reloadedTargetOnly.getInfoStore().getValue(
 				CostBenefitProperties.TARGET_ONLY));
 	}
-
 }

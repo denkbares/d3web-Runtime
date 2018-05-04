@@ -4,16 +4,11 @@
 
 package de.d3web.core.session.builder;
 
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import com.denkbares.collections.MultiMap;
-import com.denkbares.collections.MultiMaps;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -23,62 +18,64 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 
 /**
+ * Executes facts of a specific problem solver. This executer is usually instantiated for source solver, but may also be
+ * used by other solvers if they want their factrs to be simply re-added on loading.
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 03.05.2018
  */
-public class FactProtocolExecutor implements ProtocolExecutor<FactProtocolEntry> {
+public class FactProtocolExecutor<T extends PSMethod> implements ProtocolExecutor<FactProtocolEntry> {
 
-	private final Map<String, PSMethod> solvers = new HashMap<>();
+	private final Class<T> solverClass;
 	private SessionBuilder builder;
+	private T psm;
+
+	public FactProtocolExecutor(Class<T> solverClass) {
+		this.solverClass = solverClass;
+	}
+
+	public Class<T> getSolverClass() {
+		return solverClass;
+	}
 
 	@Override
 	public void prepare(SessionBuilder builder) {
 		this.builder = builder;
-		// prepare psmethods of session
-		for (PSMethod psm : builder.getSession().getPSMethods()) {
-			solvers.put(psm.getClass().getName(), psm);
-		}
+		// prepare psmethod of session
+		psm = builder.getSession().getPSMethodInstance(solverClass);
 	}
 
-	private PSMethod getSolver(FactProtocolEntry entry) {
-		String psmName = entry.getSolvingMethodClassName();
-		PSMethod psm = solvers.get(psmName);
-		if (psm == null) {
-			builder.warn("PSMethod is not available: " + psmName);
-		}
-		return psm;
+	private boolean canHandle(FactProtocolEntry entry) {
+		return Objects.equals(solverClass.getName(), entry.getSolvingMethodClassName());
 	}
 
 	@Override
 	public void handle(SessionBuilder builder, Date date, List<FactProtocolEntry> entries) {
+
+		List<FactProtocolEntry> subset = entries.stream().filter(this::canHandle).collect(Collectors.toList());
+		if (subset.isEmpty()) return;
+
 		Session session = builder.getSession();
 		TerminologyManager manager = session.getKnowledgeBase().getManager();
 
-		// group facts by problem solvers and execute them in order of their priority
-		MultiMap<PSMethod, FactProtocolEntry> bySolvers = entries.stream().collect(MultiMaps.toMultiMap(
-				this::getSolver, Function.identity(), MultiMaps.linkedFactory(), MultiMaps.linkedFactory()));
-		bySolvers.keySet().stream().filter(Objects::nonNull)
-				.sorted(Comparator.comparing(PSMethod::getPriority)).forEach(psm -> {
-
-			session.getPropagationManager().openPropagation(date.getTime());
-			try {
-				for (FactProtocolEntry entry : bySolvers.getValues(psm)) {
-					// determine object to be set
-					String name = entry.getTerminologyObjectName();
-					TerminologyObject object = manager.search(name);
-					if (object == null) {
-						builder.warn("Object not available, ignore value: " + name + " = " + entry.getValue());
-						continue;
-					}
-
-					// create and add fact to blackboard
-					Fact fact = FactFactory.createFact(object, entry.getValue(), psm, psm);
-					session.getBlackboard().addValueFact(fact);
+		session.getPropagationManager().openPropagation(date.getTime());
+		try {
+			for (FactProtocolEntry entry : subset) {
+				// determine object to be set
+				String name = entry.getTerminologyObjectName();
+				TerminologyObject object = manager.search(name);
+				if (object == null) {
+					builder.warn("Object not available, ignore value: " + name + " = " + entry.getValue());
+					continue;
 				}
+
+				// create and add fact to blackboard
+				Fact fact = FactFactory.createFact(object, entry.getValue(), psm, psm);
+				session.getBlackboard().addValueFact(fact);
 			}
-			finally {
-				session.getPropagationManager().commitPropagation();
-			}
-		});
+		}
+		finally {
+			session.getPropagationManager().commitPropagation();
+		}
 	}
 }

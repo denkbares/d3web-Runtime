@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
@@ -163,11 +162,14 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				CostBenefitUtil.addParentContainers(answeredQuestionnaires, object);
 			}
 		}
+
 		PSMethodCostBenefit costBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		if (costBenefit == null) return;
+
 		CostBenefitCaseObject cbCaseObject = session.getSessionObject(costBenefit);
 		QContainer qcontainer = cbCaseObject.getCurrentQContainer();
 		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
+		long time = session.getPropagationManager().getPropagationTime();
 		for (QContainer qcon : answeredQuestionnaires) {
 			if (CostBenefitUtil.isDone(qcon, session)) {
 				// if the qcontainer is the actual qcontainer of the sequence,
@@ -186,18 +188,15 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 					fire = true;
 				}
 				if (fire) {
-					KnowledgeSlice ks = qcon.getKnowledgeStore().getKnowledge(
-							StateTransition.KNOWLEDGE_KIND);
-					if (ks != null) {
+					StateTransition transition = qcon.getKnowledgeStore().getKnowledge(StateTransition.KNOWLEDGE_KIND);
+					if (transition != null) {
 						// fire the state transitions
-						StateTransition st = (StateTransition) ks;
-						sessionObject.facts = st.fire(session);
-						session.getPropagationManager().setPropagationTimeOfNoReturn(session.getPropagationManager().getPropagationTime());
+						sessionObject.facts = transition.fire(session);
+						session.getPropagationManager().setPropagationTimeOfNoReturn(time);
 
-						// beacuse state transition is no longer a source PSM, manually add the fired transitions
+						// because state transition is no longer a source PSM, manually add the fired transitions
 						for (Fact fact : sessionObject.facts) {
-							session.getProtocol().addEntry(
-									new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact));
+							session.getProtocol().addEntry(new FactProtocolEntry(time, fact));
 						}
 
 						// check if there are any changes to our remembered solutions
@@ -205,11 +204,11 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 							cbCaseObject.resetPath();
 							return;
 						}
-						else {
-							cbCaseObject.activateNextQContainer();
-						}
+
+						// otherwise proceed in path and remove old indication
+						cbCaseObject.activateNextQContainer();
 						for (Fact fact : cbCaseObject.getIndicatedFacts()) {
-							if (fact.getTerminologyObject() == st.getQcontainer()) {
+							if (fact.getTerminologyObject() == transition.getQcontainer()) {
 								session.getBlackboard().removeInterviewFact(fact);
 							}
 						}

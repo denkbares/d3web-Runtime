@@ -25,7 +25,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.knowledge.Indication;
@@ -44,6 +49,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.DefaultFact;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.builder.FactProtocolExecutor;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.UndefinedValue;
 
@@ -67,7 +73,6 @@ public final class SessionConversionFactory {
 	 * @param knowledgeBase {@link KnowledgeBase}
 	 * @param source        {@link SessionRecord}
 	 * @return {@link Session}
-	 * @throws IOException
 	 * @created 05.08.2011
 	 */
 	public static Session copyToSession(KnowledgeBase knowledgeBase, SessionRecord source) throws IOException {
@@ -123,7 +128,9 @@ public final class SessionConversionFactory {
 			}
 
 			// ignore all non-source facts
-			if (!psMethod.hasType(Type.source)) continue;
+			if (!isReplaySolver(psMethod)) {
+				continue;
+			}
 
 			// otherwise, create the fact and add it to our results
 			Value value = factRecord.getValue();
@@ -135,6 +142,29 @@ public final class SessionConversionFactory {
 			resultFacts.add(new DefaultFact(object, value, psMethod, psMethod));
 		}
 		return resultFacts;
+	}
+
+	/**
+	 * Returns true if the facts of the solver should be replayed. This method is for backward compatibility of loading
+	 * old protocols.
+	 *
+	 * @param psm the problem solver referenced in the fact record
+	 * @return true if the fact record should be restored "as source fact"
+	 */
+	public static boolean isReplaySolver(PSMethod psm) {
+		//noinspection unchecked
+		return psm.hasType(Type.source) ||
+				REPLAY_SOLVERS.stream().anyMatch(plugged -> plugged.isAssignableFrom(psm.getClass()));
+	}
+
+	private static final List<Class> REPLAY_SOLVERS = detectReplaySolvers();
+
+	private static List<Class> detectReplaySolvers() {
+		return Stream.of(PluginManager.getInstance()
+				.getExtensions(KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PROTOCOL_EXECUTOR))
+				.map(Extension::getNewInstance)
+				.filter(FactProtocolExecutor.class::isInstance).map(FactProtocolExecutor.class::cast)
+				.map(FactProtocolExecutor::getSolverClass).collect(Collectors.toList());
 	}
 
 	/**
