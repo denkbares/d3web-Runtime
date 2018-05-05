@@ -20,6 +20,8 @@ package de.d3web.core.knowledge.terminology.info;
 
 import java.util.Date;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -379,6 +381,7 @@ public class BasicProperties {
 	 * @param question the question to get the abnormality for
 	 * @return the abnormality object
 	 */
+	@NotNull
 	public static Abnormality getAbnormality(Question question) {
 		// first test for default abnormality
 		InfoStore infoStore = question.getInfoStore();
@@ -408,6 +411,7 @@ public class BasicProperties {
 	 * @return the (static) abnormality object
 	 * @see de.d3web.core.knowledge.terminology.info.abnormality.DynamicAbnormality
 	 */
+	@NotNull
 	public static Abnormality getAbnormality(Question question, Session session) {
 		Abnormality abnormality = getAbnormality(question);
 		if (abnormality instanceof DynamicAbnormality) {
