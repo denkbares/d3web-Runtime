@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.denkbares.strings.Strings;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
@@ -25,6 +27,7 @@ import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.QuestionText;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
@@ -36,6 +39,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.interview.Form;
 
@@ -266,6 +270,7 @@ public class Measurement {
 		}
 	}
 
+	@Nullable
 	protected Fact applyValueStrict(Session session, String measurand, Object rawValue) {
 		// check if we have a question for the measurand to be applied
 		Question question = session.getKnowledgeBase().getManager()
@@ -282,6 +287,7 @@ public class Measurement {
 		else {
 			// otherwise convert raw value to question value and set the value
 			Value value = toValue(question, rawValue);
+			if (value instanceof UndefinedValue) return null;
 			return addFact(session, question, value);
 		}
 	}
@@ -357,7 +363,7 @@ public class Measurement {
 		if ((question instanceof QuestionChoice) && (rawValue instanceof Number)) {
 			int index = ((Number) rawValue).intValue();
 			if (index == 0) {
-				return Unknown.getInstance();
+				return BasicProperties.isUnknownVisible(question) ? Unknown.getInstance() : UndefinedValue.getInstance();
 			}
 			List<Choice> choices = ((QuestionChoice) question).getAllAlternatives();
 			if (index >= 1 && index <= choices.size()) {
