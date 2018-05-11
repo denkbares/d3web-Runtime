@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 
 import com.denkbares.strings.Strings;
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -302,6 +303,7 @@ public class Measurement {
 	protected Fact addFact(Session session, Question question, Value value) {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
+		Log.fine("Applying measurement fact " + question.getName() + " = " + value);
 		session.getBlackboard().addValueFact(fact);
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 		return fact;
@@ -316,6 +318,7 @@ public class Measurement {
 	 * @see #addFact(Session, Question, Value)
 	 */
 	protected void removeFact(Session session, Question question) {
+		Log.fine("Removing measurement fact of question " + question.getName());
 		session.getBlackboard().removeValueFact(question, getPSMethod(session));
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 	}
