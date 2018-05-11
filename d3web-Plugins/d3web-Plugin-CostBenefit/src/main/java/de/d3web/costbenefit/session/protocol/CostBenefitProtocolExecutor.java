@@ -65,6 +65,7 @@ public class CostBenefitProtocolExecutor implements ProtocolExecutor<CalculatedP
 		}
 
 		// and activate the path as usual
+		pso.resetPath();
 		pso.activatePath(path, psm);
 		pso.activateNextQContainer();
 	}
