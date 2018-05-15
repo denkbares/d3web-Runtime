@@ -282,6 +282,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			for (PropagationListener listener : listeners) {
 				listener.propagationFinished(session, entries);
 			}
+			Log.fine("Propagation finished for propagation time " + getPropagationTime());
 		}
 	}
 
