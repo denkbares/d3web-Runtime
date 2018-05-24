@@ -39,7 +39,6 @@ import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Triple;
-import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -74,6 +73,7 @@ import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.core.utilities.TerminologyHierarchyComparator;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * Provides utility methods for {@link KnowledgeBase}
@@ -790,8 +790,7 @@ public final class KnowledgeBaseUtils {
 				}
 
 				// set the value into the created session
-				// use init-solver to create hidden values that are not edited by the user
-				PSMethodInit psm = PSMethodInit.getInstance();
+				PSMethodUserSelected psm = PSMethodUserSelected.getInstance();
 				Fact fact = FactFactory.createFact(question, value, psm, psm);
 				session.getBlackboard().addValueFact(fact);
 				session.getProtocol().addEntry(new FactProtocolEntry(
