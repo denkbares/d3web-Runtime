@@ -167,7 +167,9 @@ public class DefaultBlackboard implements Blackboard {
 	}
 
 	private void logRemoval(TerminologyObject terminologyObject, Value oldValue) {
-		if (terminologyObject.getName().endsWith("_connected") || (oldValue != null && oldValue.toString().endsWith("#integriert"))) {
+		if (terminologyObject instanceof Question &&
+				(terminologyObject.getName().endsWith("_connected")
+						|| (oldValue != null && oldValue.toString().endsWith("#integriert")))) {
 			Log.fine("Removed fact " + terminologyObject.getName() + " = " + oldValue, new Exception());
 		}
 	}
