@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.PropagationManager;
@@ -161,7 +162,14 @@ public class DefaultBlackboard implements Blackboard {
 	public void removeValueFact(Fact fact) {
 		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
 		this.getValueStorage().remove(fact);
+		logRemoval(fact.getTerminologyObject(), oldValue);
 		propagate(fact.getTerminologyObject(), oldValue, false);
+	}
+
+	private void logRemoval(TerminologyObject terminologyObject, Value oldValue) {
+		if (terminologyObject.getName().endsWith("_connected") || (oldValue != null && oldValue.toString().endsWith("#integriert"))) {
+			Log.fine("Removed fact " + terminologyObject.getName() + " = " + oldValue, new Exception());
+		}
 	}
 
 	/**
@@ -175,6 +183,7 @@ public class DefaultBlackboard implements Blackboard {
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().remove(terminologyObject, source);
+		logRemoval(terminologyObject, oldValue);
 		propagate(terminologyObject, oldValue, false);
 	}
 
