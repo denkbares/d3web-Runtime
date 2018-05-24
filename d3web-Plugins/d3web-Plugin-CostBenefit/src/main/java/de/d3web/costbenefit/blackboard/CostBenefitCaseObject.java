@@ -300,7 +300,9 @@ public class CostBenefitCaseObject implements SessionObject {
 				for (PSMethod contributing : blackboard.getContributingPSMethods(question)) {
 					// and also remove only facts from source solvers, not derived values
 					if (contributing.hasType(PSMethod.Type.source)) {
-						blackboard.removeValueFact(blackboard.getValueFact(question, contributing));
+						Fact valueFact = blackboard.getValueFact(question, contributing);
+						blackboard.removeValueFact(valueFact);
+						Log.fine("Removed fact for retractable question: " +  valueFact);
 					}
 				}
 			}
