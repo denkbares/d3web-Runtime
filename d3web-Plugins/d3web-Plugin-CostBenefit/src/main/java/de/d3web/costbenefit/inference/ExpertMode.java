@@ -35,16 +35,20 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
+import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
+import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class provides utility functions to enable an advanced user mode. Within that mode the user is enabled to also
@@ -283,6 +287,33 @@ public class ExpertMode implements SessionObject {
 	public void selectTarget(QContainer targetQuestionnaire) throws AbortException {
 		Target target = new Target(targetQuestionnaire);
 		selectTarget(target);
+	}
+
+	/**
+	 * Checks whether the currently active/displayed is currently touch by the user or not, meaning that the use has
+	 * started answering questions form it.
+	 *
+	 * @return true if the user started answering the current QContainer, false otherwise
+	 */
+	public boolean isCurrentQContainerUserTouched() {
+		PSMethodCostBenefit costBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		if (costBenefit == null) {
+			throw new IllegalStateException("Cannot use expert mode without using cost benefit problem solver");
+		}
+
+		CostBenefitCaseObject cbCaseObject = session.getSessionObject(costBenefit);
+		QContainer currentQContainer = cbCaseObject.getCurrentQContainer();
+		if (currentQContainer == null) {
+			// we are currently in the initialization phase of the session, setting system states
+			// the user does not answer these questions directly
+			return false;
+		}
+		for (TerminologyObject child : currentQContainer.getChildren()) {
+			if (!(child instanceof Question)) continue;
+			Value value = session.getBlackboard().getValue((ValueObject) child, PSMethodUserSelected.getInstance());
+			if (UndefinedValue.isNotUndefinedValue(value)) return true;
+		}
+		return false;
 	}
 
 	/**
