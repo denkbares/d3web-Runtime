@@ -146,12 +146,8 @@ public class SplittingFormStrategy implements FormStrategy {
 		@Override
 		public String getPrompt(Locale lang) {
 			String prompt = delegate.getPrompt(lang);
-			String suffixFormat = " (%d / %d)";
-			if (lang != null) {
-				if ("DE".equals(lang.getCountry())) suffixFormat = " (%d von %d)";
-				if ("EN".equals(lang.getCountry())) suffixFormat = " (%d of %d)";
-			}
-			return prompt + String.format(suffixFormat, groupNumber, totalGroupCount);
+			String suffixFormat = " #%d";
+			return prompt + String.format(suffixFormat, groupNumber);
 		}
 
 		@Override
