@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
@@ -40,7 +39,6 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.protocol.FactProtocolEntry;
-import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -56,7 +54,6 @@ public class DefaultBlackboard implements Blackboard {
 	private final List<BlackboardListener> listeners = new LinkedList<>();
 
 	private boolean sourceRecording = true;
-	private FactProtocolEntry recent = null;
 
 	@Override
 	public boolean isSourceRecording() {
@@ -118,16 +115,8 @@ public class DefaultBlackboard implements Blackboard {
 		// add the arriving fact to the protocol
 		// if it was entered by a source psmethod
 		if (isSourceRecording() && psMethod != null && psMethod.hasType(Type.source)) {
-			// remove (replace) recent entry if we record the same object for the same problem solver
-			Protocol protocol = getSession().getProtocol();
-			if (recent != null &&
-					Objects.equals(recent.getTerminologyObjectName(), fact.getTerminologyObject().getName()) &&
-					Objects.equals(recent.getSolvingMethodClassName(), fact.getPSMethod().getClass().getName())) {
-				protocol.removeEntry(recent);
-			}
-			// add the new entry as the recent one
-			recent = new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact);
-			protocol.addEntry(recent);
+			getSession().getProtocol()
+					.addEntry(new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact));
 		}
 	}
 
