@@ -316,7 +316,7 @@ public class Measurement {
 	/**
 	 * Assure that only the most recent measurement fact remains in the protocol.
 	 */
-	private void cleanUpProtocol(Session session, Question question, Fact fact) {
+	protected void cleanUpProtocol(Session session, Question question, Fact fact) {
 		Protocol protocol = session.getProtocol();
 		List<ProtocolEntry> protocolHistory = protocol.getProtocolHistory();
 		ProtocolEntry lastEntry = protocolHistory.get(protocolHistory.size() - 1);

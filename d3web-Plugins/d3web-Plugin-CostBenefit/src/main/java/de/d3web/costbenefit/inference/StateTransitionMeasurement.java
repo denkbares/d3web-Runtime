@@ -35,6 +35,7 @@ public class StateTransitionMeasurement extends Measurement {
 	@Override
 	protected Fact addFact(Session session, Question question, Value value) {
 		Fact fact = new PSMethodStateTransition.StateTransitionFact(session, question, value);
+		cleanUpProtocol(session, question, fact);
 		session.getBlackboard().addValueFact(fact);
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 		return fact;
