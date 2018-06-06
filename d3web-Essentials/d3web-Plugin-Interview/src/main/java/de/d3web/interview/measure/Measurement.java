@@ -35,6 +35,9 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.core.session.protocol.Protocol;
+import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.DateValue;
 import de.d3web.core.session.values.NumValue;
@@ -304,9 +307,26 @@ public class Measurement {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
 		Log.fine("Applying measurement fact " + question.getName() + " = " + value);
+		cleanUpProtocol(session, question, fact);
 		session.getBlackboard().addValueFact(fact);
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 		return fact;
+	}
+
+	/**
+	 * Assure that only the most recent measurement fact remains in the protocol.
+	 */
+	private void cleanUpProtocol(Session session, Question question, Fact fact) {
+		Protocol protocol = session.getProtocol();
+		List<ProtocolEntry> protocolHistory = protocol.getProtocolHistory();
+		ProtocolEntry lastEntry = protocolHistory.get(protocolHistory.size() - 1);
+		if (lastEntry instanceof FactProtocolEntry) {
+			FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
+			if (lastFactEntry.getTerminologyObjectName().equals(question.getName())
+					&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
+				protocol.removeEntry(lastEntry);
+			}
+		}
 	}
 
 	/**
