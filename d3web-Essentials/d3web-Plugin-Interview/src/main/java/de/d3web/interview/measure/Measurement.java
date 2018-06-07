@@ -35,6 +35,7 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.protocol.ActualQContainerEntry;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.protocol.ProtocolEntry;
@@ -306,26 +307,34 @@ public class Measurement {
 	protected Fact addFact(Session session, Question question, Value value) {
 		PSMethod solver = getPSMethod(session);
 		Fact fact = FactFactory.createFact(question, value, solver, solver);
-		Log.fine("Applying measurement fact " + question.getName() + " = " + value);
-		cleanUpProtocol(session, question, fact);
+		addFactToSession(session, fact);
+		return fact;
+	}
+
+	protected void addFactToSession(Session session, Fact fact) {
+		Log.fine("Applying measurement fact " + fact.getTerminologyObject().getName() + " = " + fact.getValue());
+		cleanUpProtocol(session, fact);
 		session.getBlackboard().addValueFact(fact);
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
-		return fact;
 	}
 
 	/**
 	 * Assure that only the most recent measurement fact remains in the protocol.
 	 */
-	protected void cleanUpProtocol(Session session, Question question, Fact fact) {
+	private void cleanUpProtocol(Session session, Fact fact) {
 		Protocol protocol = session.getProtocol();
 		List<ProtocolEntry> protocolHistory = protocol.getProtocolHistory();
-		ProtocolEntry lastEntry = protocolHistory.get(protocolHistory.size() - 1);
-		if (lastEntry instanceof FactProtocolEntry) {
-			FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
-			if (lastFactEntry.getTerminologyObjectName().equals(question.getName())
-					&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
-				protocol.removeEntry(lastEntry);
-			}
+		FactProtocolEntry lastFactEntry = null;
+		for (int i = protocolHistory.size() - 1; i >= 0; i--) {
+			ProtocolEntry entry = protocolHistory.get(i);
+			if (entry instanceof ActualQContainerEntry) continue;
+			lastFactEntry = (FactProtocolEntry) entry;
+			break;
+		}
+		if (lastFactEntry != null
+				&& lastFactEntry.getTerminologyObjectName().equals(fact.getTerminologyObject().getName())
+				&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
+			protocol.removeEntry(lastFactEntry);
 		}
 	}
 
