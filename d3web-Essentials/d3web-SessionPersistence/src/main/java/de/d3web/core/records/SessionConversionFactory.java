@@ -20,10 +20,8 @@ package de.d3web.core.records;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,6 +41,7 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Rating.State;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.session.DefaultSession;
+import de.d3web.core.session.PSMethodMapping;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.Value;
@@ -82,15 +81,12 @@ public final class SessionConversionFactory {
 		InfoStoreUtil.copyEntries(source.getInfoStore(), target.getInfoStore());
 
 		// Search psmethods of session
-		Map<String, PSMethod> psMethods = new HashMap<>();
-		for (PSMethod psm : target.getPSMethods()) {
-			psMethods.put(psm.getClass().getName(), psm);
-		}
+		PSMethodMapping mapping = target.getSessionObject(PSMethodMapping.getInstance());
 		target.getPropagationManager().openPropagation();
 		try {
-			List<Fact> valueFacts = getFacts(knowledgeBase, source.getValueFacts(), psMethods);
+			List<Fact> valueFacts = getFacts(knowledgeBase, source.getValueFacts(), mapping);
 			List<Fact> interviewFacts =
-					getFacts(knowledgeBase, source.getInterviewFacts(), psMethods);
+					getFacts(knowledgeBase, source.getInterviewFacts(), mapping);
 			for (Fact fact : valueFacts) {
 				target.getBlackboard().addValueFact(fact);
 			}
@@ -114,13 +110,13 @@ public final class SessionConversionFactory {
 		return target;
 	}
 
-	private static List<Fact> getFacts(KnowledgeBase kb, List<FactRecord> factRecords, Map<String, PSMethod> psMethods) throws IOException {
+	private static List<Fact> getFacts(KnowledgeBase kb, List<FactRecord> factRecords, PSMethodMapping psMethods) throws IOException {
 		List<Fact> resultFacts = new LinkedList<>();
 		for (FactRecord factRecord : factRecords) {
 			// ignore merged facts
 			String psm = factRecord.getPSM();
 			if (psm == null) continue;
-			PSMethod psMethod = psMethods.get(psm);
+			PSMethod psMethod = psMethods.getPSMethodForClassName(psm);
 
 			// ensure that problem solver exists
 			if (psMethod == null) {
