@@ -27,7 +27,6 @@ import de.d3web.core.session.protocol.FactProtocolEntry;
 public class FactProtocolExecutor<T extends PSMethod> implements ProtocolExecutor<FactProtocolEntry> {
 
 	private final Class<T> solverClass;
-	private SessionBuilder builder;
 	private T psm;
 
 	public FactProtocolExecutor(Class<T> solverClass) {
@@ -40,7 +39,6 @@ public class FactProtocolExecutor<T extends PSMethod> implements ProtocolExecuto
 
 	@Override
 	public void prepare(SessionBuilder builder) {
-		this.builder = builder;
 		// prepare psmethod of session
 		psm = builder.getSession().getPSMethodInstance(solverClass);
 	}
