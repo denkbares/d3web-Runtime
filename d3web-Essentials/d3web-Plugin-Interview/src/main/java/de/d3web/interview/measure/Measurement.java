@@ -324,16 +324,18 @@ public class Measurement {
 	private void cleanUpProtocol(Session session, Fact fact) {
 		Protocol protocol = session.getProtocol();
 		List<ProtocolEntry> protocolHistory = protocol.getProtocolHistory();
-		FactProtocolEntry lastFactEntry = null;
+		ProtocolEntry lastEntry = null;
 		for (int i = protocolHistory.size() - 1; i >= 0; i--) {
 			ProtocolEntry entry = protocolHistory.get(i);
 			if (entry instanceof ActualQContainerEntry) continue;
-			lastFactEntry = (FactProtocolEntry) entry;
+			lastEntry = entry;
 			break;
 		}
-		if (lastFactEntry != null
-				&& lastFactEntry.getTerminologyObjectName().equals(fact.getTerminologyObject().getName())
-				&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
+		if (!(lastEntry instanceof FactProtocolEntry)) return;
+		FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
+		if (lastFactEntry.getTerminologyObjectName()
+				.equals(fact.getTerminologyObject().getName()) && lastFactEntry.getSolvingMethodClassName()
+				.equals(fact.getPSMethod().getClass().getName())) {
 			protocol.removeEntry(lastFactEntry);
 		}
 	}
