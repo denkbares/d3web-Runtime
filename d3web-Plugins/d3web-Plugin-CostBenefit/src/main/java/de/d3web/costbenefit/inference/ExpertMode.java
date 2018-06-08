@@ -411,4 +411,11 @@ public class ExpertMode implements SessionObject {
 			psm.calculateNewPath(pso);
 		}
 	}
+
+	/**
+	 * Resets the aboard state of CB after a target could not be selected. Use this, if CB should again
+	 */
+	public void resetAfterAboard() {
+		pso.setAbortedManuallySetTarget(false);
+	}
 }
