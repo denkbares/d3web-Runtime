@@ -62,14 +62,16 @@ public class MeasurementHandler implements FragmentHandler<KnowledgeBase> {
 		Map<String, String> mapping = new HashMap<>();
 
 		for (Element child : XMLUtil.getElementList(element.getChildNodes())) {
-			if (child.getNodeName().equals(ELEMENT_START)) {
-				start = (Condition) persistence.readFragment(XMLUtils.getFirstChild(child));
-			}
-			else if (child.getNodeName().equals(ELEMENT_STOP)) {
-				stop = (Condition) persistence.readFragment(XMLUtils.getFirstChild(child));
-			}
-			else if (child.getNodeName().equals(ELEMENT_MAPPING)) {
-				mapping.put(child.getAttribute(ATTR_MEASURAND), child.getAttribute(ATTR_QUESTION));
+			switch (child.getNodeName()) {
+				case ELEMENT_START:
+					start = (Condition) persistence.readFragment(XMLUtils.getFirstChild(child));
+					break;
+				case ELEMENT_STOP:
+					stop = (Condition) persistence.readFragment(XMLUtils.getFirstChild(child));
+					break;
+				case ELEMENT_MAPPING:
+					mapping.put(child.getAttribute(ATTR_MEASURAND), child.getAttribute(ATTR_QUESTION));
+					break;
 			}
 		}
 
