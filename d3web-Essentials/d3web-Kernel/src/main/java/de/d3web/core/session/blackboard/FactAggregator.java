@@ -172,7 +172,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 		if (hasUniquePSMethod) {
 			// if we have only one PSMethod, merge all facts by this one
-			this.mergedFact = psm.mergeFacts(facts.toArray(new Fact[facts.size()]));
+			this.mergedFact = psm.mergeFacts(facts.toArray(new Fact[0]));
 			return;
 		}
 
@@ -181,17 +181,12 @@ final class FactAggregator implements Copyable<FactAggregator> {
 		Map<PSMethod, Collection<Fact>> factBoxes = new HashMap<>();
 		for (Fact fact : this.facts) {
 			PSMethod key = fact.getPSMethod();
-			Collection<Fact> box = factBoxes.get(key);
-			if (box == null) {
-				box = new ArrayList<>();
-				factBoxes.put(key, box);
-			}
-			box.add(fact);
+			factBoxes.computeIfAbsent(key, k -> new ArrayList<>()).add(fact);
 		}
 		// and collect them to single facts
 		List<Fact> mergedFacts = new ArrayList<>();
 		for (Collection<Fact> box : factBoxes.values()) {
-			Fact[] factArray = box.toArray(new Fact[box.size()]);
+			Fact[] factArray = box.toArray(new Fact[0]);
 			Fact newMergedFact = (factArray.length == 1)
 					? factArray[0] // if we only have one, no merge is required
 					: factArray[0].getPSMethod().mergeFacts(factArray);
@@ -296,7 +291,6 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	/**
 	 * Merges and returns all facts of one psmethod
 	 * 
-	 * @param psMethod
 	 * @return merged Fact
 	 */
 	public Fact getMergedFact(PSMethod psMethod) {
@@ -310,7 +304,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 			return psmfacts.get(0);
 		}
 		else if (psmfacts.size() > 1) {
-			return psMethod.mergeFacts(psmfacts.toArray(new Fact[psmfacts.size()]));
+			return psMethod.mergeFacts(psmfacts.toArray(new Fact[0]));
 		}
 		else {
 			return null;

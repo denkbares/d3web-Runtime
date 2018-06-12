@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
@@ -37,7 +38,6 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
-import com.denkbares.utils.Log;
 
 public final class Facts {
 
@@ -137,7 +137,7 @@ public final class Facts {
 	 *         specified
 	 */
 	public static Fact mergeIndicationFacts(List<Fact> facts) throws IllegalArgumentException {
-		return mergeIndicationFacts(facts.toArray(new Fact[facts.size()]));
+		return mergeIndicationFacts(facts.toArray(new Fact[0]));
 	}
 
 	/**
@@ -213,8 +213,8 @@ public final class Facts {
 				@SuppressWarnings("ConstantConditions")
 				NumValue num1 = (NumValue) resultValue;
 				NumValue num2 = (NumValue) value;
-				Number d1 = (Number) num1.getValue();
-				Number d2 = (Number) num2.getValue();
+				Number d1 = num1.getValue();
+				Number d2 = num2.getValue();
 				double sum = d1.doubleValue() + d2.doubleValue();
 				resultValue = new NumValue(sum);
 			}
