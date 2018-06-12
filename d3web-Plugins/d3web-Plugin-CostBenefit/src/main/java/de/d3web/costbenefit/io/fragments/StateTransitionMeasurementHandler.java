@@ -25,7 +25,7 @@ public class StateTransitionMeasurementHandler extends MeasurementHandler {
 
 	@Override
 	public boolean canRead(Element element) {
-		return super.canRead(element) && TYPE.equals(element.getAttribute(XMLUtil.TYPE));
+		return element.getNodeName().equals(ELEMENT) && TYPE.equals(element.getAttribute(XMLUtil.TYPE));
 	}
 
 	@Override
