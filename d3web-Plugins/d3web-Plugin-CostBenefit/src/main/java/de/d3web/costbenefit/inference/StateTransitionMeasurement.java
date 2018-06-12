@@ -6,6 +6,8 @@ package de.d3web.costbenefit.inference;
 
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
@@ -32,10 +34,8 @@ public class StateTransitionMeasurement extends Measurement {
 	}
 
 	@Override
-	protected Fact addFact(Session session, Question question, Value value) {
-		Fact fact = new PSMethodStateTransition.StateTransitionFact(session, question, value);
-		addFactToSession(session, fact);
-		return fact;
+	protected @NotNull Fact createFact(Session session, Question question, Value value) {
+		return new PSMethodStateTransition.StateTransitionFact(session, question, value);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.denkbares.strings.Strings;
@@ -305,17 +306,18 @@ public class Measurement {
 	 * @see #removeFact(Session, Question)
 	 */
 	protected Fact addFact(Session session, Question question, Value value) {
-		PSMethod solver = getPSMethod(session);
-		Fact fact = FactFactory.createFact(question, value, solver, solver);
-		addFactToSession(session, fact);
-		return fact;
-	}
-
-	protected void addFactToSession(Session session, Fact fact) {
+		Fact fact = createFact(session, question, value);
 		Log.fine("Applying measurement fact " + fact.getTerminologyObject().getName() + " = " + fact.getValue());
 		cleanUpProtocol(session, fact);
 		session.getBlackboard().addValueFact(fact);
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
+		return fact;
+	}
+
+	@NotNull
+	protected Fact createFact(Session session, Question question, Value value) {
+		PSMethod solver = getPSMethod(session);
+		return FactFactory.createFact(question, value, solver, solver);
 	}
 
 	/**
