@@ -30,7 +30,6 @@ import java.util.Set;
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
@@ -42,13 +41,13 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
+
+import static de.d3web.core.inference.PSMethod.Type.source;
 
 /**
  * This class provides utility functions to enable an advanced user mode. Within that mode the user is enabled to also
@@ -310,11 +309,9 @@ public class ExpertMode implements SessionObject {
 		}
 		for (TerminologyObject child : currentQContainer.getChildren()) {
 			if (!(child instanceof Question)) continue;
-			Fact valueFact = session.getBlackboard().getValueFact(child);
-			if (valueFact == null) continue;
-			if (UndefinedValue.isNotUndefinedValue(valueFact.getValue())
-					&& (valueFact.getPSMethod() == null
-					|| valueFact.getPSMethod().hasType(PSMethod.Type.source))) {
+			if (session.getBlackboard().getContributingPSMethods(child)
+					.stream()
+					.anyMatch(psMethod -> psMethod.hasType(source))) {
 				return true;
 			}
 		}
