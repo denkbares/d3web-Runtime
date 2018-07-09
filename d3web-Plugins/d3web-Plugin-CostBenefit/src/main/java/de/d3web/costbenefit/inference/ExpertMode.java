@@ -30,25 +30,25 @@ import java.util.Set;
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
+import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
-import de.d3web.indication.inference.PSMethodUserSelected;
 
 /**
  * This class provides utility functions to enable an advanced user mode. Within that mode the user is enabled to also
@@ -310,8 +310,13 @@ public class ExpertMode implements SessionObject {
 		}
 		for (TerminologyObject child : currentQContainer.getChildren()) {
 			if (!(child instanceof Question)) continue;
-			Value value = session.getBlackboard().getValue((ValueObject) child, PSMethodUserSelected.getInstance());
-			if (UndefinedValue.isNotUndefinedValue(value)) return true;
+			Fact valueFact = session.getBlackboard().getValueFact(child);
+			if (valueFact == null) continue;
+			if (UndefinedValue.isNotUndefinedValue(valueFact.getValue())
+					&& (valueFact.getPSMethod() == null
+					|| valueFact.getPSMethod().hasType(PSMethod.Type.source))) {
+				return true;
+			}
 		}
 		return false;
 	}
