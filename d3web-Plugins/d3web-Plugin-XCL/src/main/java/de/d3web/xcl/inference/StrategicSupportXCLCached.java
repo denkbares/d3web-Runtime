@@ -35,6 +35,7 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
 import de.d3web.core.inference.condition.CondOr;
 import de.d3web.core.inference.condition.Condition;
+import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
@@ -115,13 +116,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		// replace condequals of normal answers with null
 		else if (conditionedFinding instanceof CondEqual) {
 			CondEqual condEqual = (CondEqual) conditionedFinding;
-			DefaultAbnormality abnormalityStore = condEqual.getQuestion().getInfoStore().getValue(
-					BasicProperties.DEFAULT_ABNORMALITY);
-			double abnormality = Abnormality.A5;
-			if (abnormalityStore != null) {
-				abnormality = abnormalityStore.getValue(condEqual.getValue());
-			}
-			if (abnormality == Abnormality.A0) {
+			if (isNormalCovering(condEqual)) {
 				conds.add(null);
 			}
 			else {
@@ -131,6 +126,11 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		else {
 			conds.add(conditionedFinding);
 		}
+	}
+
+	private static boolean isNormalCovering(CondEqual condEqual) {
+		DefaultAbnormality store = condEqual.getQuestion().getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
+		return (store != null) && (store.getValue(condEqual.getValue()) == Abnormality.A0);
 	}
 
 	private static Collection<Question> getRelevantQuestions(Collection<? extends QASet> qasets, Session session) {
@@ -221,7 +221,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				for (XCLRelation r : coveringRelations) {
 					if (r.hasType(XCLRelationType.contradicted)) {
 						// maybe slightly incorrect, but have a better behaviour for multiple non-covered choices
-//						set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
+						set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
 					}
 					else {
 						set = lazyAddAll(set, getExtractedOrs(r));
@@ -332,14 +332,11 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 */
 	private Collection<Condition> getExtractedOrs(XCLRelation r) {
 		Condition condition = r.getConditionedFinding();
-		Collection<Condition> result = extractedOrCache.get(condition);
-		if (result == null) {
-			result = new HashSet<>();
+		return extractedOrCache.computeIfAbsent(condition, c -> {
+			Collection<Condition> result = new HashSet<>();
 			extractOrs(result, condition);
-			result = Collections.unmodifiableCollection(result);
-			extractedOrCache.put(condition, result);
-		}
-		return result;
+			return Collections.unmodifiableCollection(result);
+		});
 	}
 
 	/**
@@ -347,15 +344,39 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 * otherwise a cached value is returned.
 	 */
 	private Collection<Condition> getNegatedExtractedOrs(XCLRelation r) {
-		Condition condition = r.getConditionedFinding();
-		Collection<Condition> result = negatedExtractedOrCache.get(condition);
-		if (result == null) {
-			result = new HashSet<>();
-			extractOrs(result, new CondNot(condition));
-			result = Collections.unmodifiableCollection(result);
-			negatedExtractedOrCache.put(condition, result);
-		}
-		return result;
+		return negatedExtractedOrCache.computeIfAbsent(r.getConditionedFinding(), c -> {
+			Set<Condition> ors = new HashSet<>(getExtractedOrs(r));
+			boolean coversNormal = ors.remove(null);
+
+			// add all non-covered choices (as CondEquals) that are NOT (!) in the extracted ORs
+			Set<Condition> result = new HashSet<>();
+			c.getTerminalObjects().stream()
+					.filter(QuestionChoice.class::isInstance).map(QuestionChoice.class::cast).forEach(question -> {
+				for (Choice choice : question.getAllAlternatives()) {
+					// skip if choice is in or (use all non-covered choices to create negated covering)
+					CondEqual cond = new CondEqual(question, new ChoiceValue(choice));
+					if (ors.remove(cond)) continue;
+					// skip if normal values are covered and the choice is normal (to create negated covering)
+					if (coversNormal && isNormalCovering(cond)) continue;
+					// otherwise add the choice to the negated covering
+					result.add(cond);
+				}
+			});
+
+			// additionally add all remaining negated extracted ORs that are not CondEquals of any choices
+			// Killt das den fix von 2018 ?!
+			for (Condition other : ors) {
+				if (other instanceof CondNot) {
+					result.add(((CondNot) other).getOperand());
+				}
+				else {
+					result.add(new CondNot(other));
+				}
+			}
+
+			if (result.isEmpty() && coversNormal) result.add(new CondNot(new ConditionTrue()));
+			return Collections.unmodifiableCollection(result);
+		});
 	}
 
 	@Override
