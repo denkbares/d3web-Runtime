@@ -227,6 +227,15 @@
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.NumDisplay" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="questionDisplay">
+		<parameter id="name" value="questionDisplay" />
+		<parameter id="description" value="Allows to further configure the way a question is displayed in the interview." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.QuestionDisplay" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="choiceDisplay">
 		<parameter id="name" value="choiceDisplay" />
 		<parameter id="description" value="Represents the display type of choice questions." />

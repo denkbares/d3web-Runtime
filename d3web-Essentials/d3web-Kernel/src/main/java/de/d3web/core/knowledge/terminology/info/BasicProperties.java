@@ -179,6 +179,11 @@ public class BasicProperties {
 	public static final Property<AbnormalityNum> ABNORMALITIY_NUM = ABNORMALITY_NUM;
 
 	/**
+	 * Allows to specify the desired display type of a questions.
+	 */
+	public static final Property<QuestionDisplay> QUESTION_DISPLAY = Property.getProperty("questionDisplay", QuestionDisplay.class);
+
+	/**
 	 * Allows to specify the desired display type of date questions.
 	 */
 	public static final Property<DateDisplay> DATE_DISPLAY = Property.getProperty("dateDisplay", DateDisplay.class);
@@ -189,7 +194,7 @@ public class BasicProperties {
 	public static final Property<NumDisplay> NUM_DISPLAY = Property.getProperty("numDisplay", NumDisplay.class);
 
 	/**
-	 * Allows to specify the desired display type of choice questions.
+	 * Allows to specify the desired display type of the choices of a question.
 	 */
 	public static final Property<ChoiceDisplay> CHOICE_DISPLAY = Property.getProperty("choiceDisplay", ChoiceDisplay.class);
 
@@ -244,21 +249,41 @@ public class BasicProperties {
 	}
 
 	/**
-	 * Return the desired display type for the specified choice question. The choice display type is defined by the
-	 * property "choiceDisplay" for the choice question. If there is no such property, the "choiceDisplay" of the
-	 * question's knowledge base object will be used as the default value. If there is no such knowledge base specific
+	 * Return the desired display type for the choices of the specified choice question. The choice display type is
+	 * defined by the property "choiceDisplay" for the choice question. If there is no such property, the "choiceDisplay"
+	 * of the question's knowledge base object will be used as the default value. If there is no such knowledge base specific
 	 * default value, the type {@link ChoiceDisplay#normal} is used.
 	 *
 	 * @param question the question to get the choice display for
 	 * @return the questions display type
 	 * @created 28.01.2018
 	 */
+	@NotNull
 	public static ChoiceDisplay getChoiceDisplay(QuestionChoice question) {
 		ChoiceDisplay display = question.getInfoStore().getValue(CHOICE_DISPLAY);
 		if (display == null) {
 			display = question.getKnowledgeBase().getInfoStore().getValue(CHOICE_DISPLAY);
 		}
 		return (display == null) ? ChoiceDisplay.normal : display;
+	}
+
+	/**
+	 * Return the desired display type for the specified question. The question display type is defined by the
+	 * property "questionDisplay" for the question. If there is no such property, the "questionDisplay" of the
+	 * question's knowledge base object will be used as the default value. If there is no such knowledge base specific
+	 * default value, the type {@link QuestionDisplay#unspecified} is used.
+	 *
+	 * @param question the question to get the question display for
+	 * @return the questions display type
+	 * @created 28.01.2018
+	 */
+	@NotNull
+	public static QuestionDisplay getQuestionDisplay(Question question) {
+		QuestionDisplay display = question.getInfoStore().getValue(QUESTION_DISPLAY);
+		if (display == null) {
+			display = question.getKnowledgeBase().getInfoStore().getValue(QUESTION_DISPLAY);
+		}
+		return (display == null) ? QuestionDisplay.unspecified : display;
 	}
 
 	/**
@@ -271,6 +296,7 @@ public class BasicProperties {
 	 * @return the solution display type
 	 * @created 11.10.2015
 	 */
+	@NotNull
 	public static SolutionDisplay getSolutionDisplay(Solution solution) {
 		SolutionDisplay display = solution.getInfoStore().getValue(SOLUTION_DISPLAY);
 		if (display == null) {
