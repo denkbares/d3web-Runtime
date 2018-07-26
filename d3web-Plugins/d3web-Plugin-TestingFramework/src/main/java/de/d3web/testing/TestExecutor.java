@@ -64,7 +64,7 @@ public class TestExecutor {
 	private final ProgressListener progressListener;
 	private final BuildResult build;
 	private final HashMap<TestSpecification, TestResult> testResults = new HashMap<>();
-	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<String>());
+	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<>());
 	private final ExecutorService executor;
 	private Thread executorThread;
 
