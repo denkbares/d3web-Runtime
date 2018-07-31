@@ -2,11 +2,13 @@ package de.d3web.interview.inference.condition;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.TerminalCondition;
 import de.d3web.core.inference.condition.UnknownAnswerException;
@@ -18,7 +20,6 @@ import de.d3web.core.session.Session;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.strings.Strings;
 
 /**
  * Checks whether the given QASets are currently active or not.
@@ -62,7 +63,7 @@ public class CondActive extends TerminalCondition {
 	public CondActive(boolean exclusive, QASet... qaSets) {
 		super((TerminologyObject[]) qaSets);
 		if (qaSets.length == 0) throw new IllegalArgumentException("At least one QASet is needed for CondActive.");
-		if (Stream.of(qaSets).filter(qaSet -> qaSet == null).findAny().isPresent()) {
+		if (Stream.of(qaSets).anyMatch(Objects::isNull)) {
 			throw new NullPointerException("QASets cannot be null");
 		}
 		if (qaSets.length == 1) {
@@ -84,7 +85,7 @@ public class CondActive extends TerminalCondition {
 			}
 			// qaSets[0] instanceof Question
 			else {
-				if (Stream.of(qaSets).filter(qaSet -> qaSet instanceof QContainer).findAny().isPresent()) {
+				if (Stream.of(qaSets).anyMatch(QContainer.class::isInstance)) {
 					throw new IllegalArgumentException("If the condition should check the root QContainer and its" +
 							" questions, the root QContainer as to be the first in the arrays of QContainers");
 				}
