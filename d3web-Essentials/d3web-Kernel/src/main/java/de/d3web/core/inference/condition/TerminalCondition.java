@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -23,19 +23,30 @@ package de.d3web.core.inference.condition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import de.d3web.core.knowledge.TerminologyObject;
 
 /**
- * Abstract condition for all terminal conditions. A terminal condition contains
- * no sub-conditions, but represents a single proposition. The composite pattern
- * is used for this. This class is the abstract class for a "leaf".
+ * Abstract condition for all terminal conditions. A terminal condition contains no sub-conditions, but represents a
+ * single proposition. The composite pattern is used for this. This class is the abstract class for a "leaf".
  *
  * @author Michael Wolber, joba
  */
 public abstract class TerminalCondition implements Condition {
 
-	private final ArrayList<TerminologyObject> terminals = new ArrayList<>();
+	private final List<TerminologyObject> terminals;
+
+	/**
+	 * Creates a new terminal condition with the specified depending objects.
+	 *
+	 * @param terminal the object the condition depends on.
+	 */
+	public TerminalCondition(TerminologyObject terminal) {
+		terminals = Collections.singletonList(Objects.requireNonNull(terminal));
+	}
 
 	/**
 	 * Creates a new terminal condition with the specified depending objects.
@@ -43,8 +54,8 @@ public abstract class TerminalCondition implements Condition {
 	 * @param terminals the object(s) the condition depends on.
 	 */
 	public TerminalCondition(TerminologyObject... terminals) {
-		Collections.addAll(this.terminals, terminals);
-		this.terminals.trimToSize();
+		this.terminals = new ArrayList<>(terminals.length);
+		Stream.of(terminals).peek(Objects::requireNonNull).distinct().forEach(this.terminals::add);
 	}
 
 	/**
@@ -53,14 +64,13 @@ public abstract class TerminalCondition implements Condition {
 	 * @param terminals the object(s) the condition depends on.
 	 */
 	public TerminalCondition(Collection<? extends TerminologyObject> terminals) {
-		this.terminals.addAll(terminals);
-		this.terminals.trimToSize();
+		this.terminals = new ArrayList<>(terminals);
 	}
 
 	/**
-	 * Returns the one terminal object contained in this condition, for instance
-	 * a question constrained by a specific value.
-	 * 
+	 * Returns the one terminal object contained in this condition, for instance a question constrained by a specific
+	 * value.
+	 *
 	 * @return the terminal object of this condition
 	 */
 	@Override
@@ -84,5 +94,4 @@ public abstract class TerminalCondition implements Condition {
 		TerminalCondition other = (TerminalCondition) obj;
 		return terminals.equals(other.terminals);
 	}
-
 }
