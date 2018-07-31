@@ -71,22 +71,28 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 
-		// update total weight
-		updateAnsweredWeight(session, changes);
-
 		// find xcl models to be updated (and remember affecting changes)
 		Map<XCLModel, List<PropagationEntry>> modelsToUpdate = new HashMap<>();
+		List<PropagationEntry> answerChanges = new ArrayList<>();
 		for (PropagationEntry change : changes) {
 			// do not handle strategic changes
 			if (change.isStrategic() || !change.hasChanged()) continue;
 			TerminologyObject nob = change.getObject();
 			XCLContributedModelSet xclSet = nob.getKnowledgeStore().getKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND);
 			if (xclSet != null) {
+				// if object is a question, consider updated answer
+				if (change.getObject() instanceof Question) {
+					answerChanges.add(change);
+				}
+				// if object is contributing, update the referred models by the change
 				for (XCLModel model : xclSet.getModels()) {
 					modelsToUpdate.computeIfAbsent(model, k -> new ArrayList<>()).add(change);
 				}
 			}
 		}
+
+		// update total weight of answers
+		updateAnsweredWeight(session, answerChanges);
 
 		// update required xcl models / inference traces
 		ConditionCache cache = new DefaultConditionCache(session);
@@ -99,16 +105,25 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		this.scoreAlgorithm.refreshStates(modelsToUpdate.keySet(), session);
 	}
 
-	private void updateAnsweredWeight(Session session,
-									  Collection<PropagationEntry> changes) {
+	private void updateAnsweredWeight(Session session, Collection<PropagationEntry> changes) {
 		XCLCaseObject caseObject = session.getSessionObject(this);
 		for (PropagationEntry entry : changes) {
 			if (entry.getObject() instanceof Question) {
 				Question question = (Question) entry.getObject();
 
 				// update count of question
-				if (entry.hasOldValue()) caseObject.totalAnsweredCount--;
-				if (entry.hasNewValue()) caseObject.totalAnsweredCount++;
+				boolean hasOldValue = entry.hasOldValue();
+				boolean hasNewValue = entry.hasNewValue();
+				if (hasOldValue != hasNewValue) {
+					if (hasOldValue) {
+//						caseObject.totalAnsweredCount--;
+						caseObject.answeredQuestions.remove(question);
+					}
+					else {
+//						caseObject.totalAnsweredCount++;
+						caseObject.answeredQuestions.add(question);
+					}
+				}
 
 				// update abnormalities
 				Abnormality abnormality = getAbnormalitySlice(question);
@@ -148,7 +163,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 
 	public static class XCLCaseObject implements SessionObject {
 
-		private int totalAnsweredCount = 0;
+		private final Set<Question> answeredQuestions = new HashSet<>();
 		private double totalAnsweredAbnormality = 0.0;
 	}
 
@@ -157,8 +172,12 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 		return new XCLCaseObject();
 	}
 
+	public Set<Question> getAnsweredQuestions(Session session) {
+		return Collections.unmodifiableSet(session.getSessionObject(this).answeredQuestions);
+	}
+
 	public int getAnsweredQuestionsCount(Session session) {
-		return session.getSessionObject(this).totalAnsweredCount;
+		return session.getSessionObject(this).answeredQuestions.size();
 	}
 
 	public double getAnsweredQuestionsAbnormality(Session session) {
