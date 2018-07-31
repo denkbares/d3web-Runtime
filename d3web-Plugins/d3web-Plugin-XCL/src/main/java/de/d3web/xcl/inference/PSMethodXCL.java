@@ -20,11 +20,11 @@
 
 package de.d3web.xcl.inference;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,16 +80,10 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 			// do not handle strategic changes
 			if (change.isStrategic() || !change.hasChanged()) continue;
 			TerminologyObject nob = change.getObject();
-			XCLContributedModelSet xclSet = nob.getKnowledgeStore().getKnowledge(
-					XCLContributedModelSet.KNOWLEDGE_KIND);
+			XCLContributedModelSet xclSet = nob.getKnowledgeStore().getKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND);
 			if (xclSet != null) {
 				for (XCLModel model : xclSet.getModels()) {
-					List<PropagationEntry> entries = modelsToUpdate.get(model);
-					if (entries == null) {
-						entries = new LinkedList<>();
-						modelsToUpdate.put(model, entries);
-					}
-					entries.add(change);
+					modelsToUpdate.computeIfAbsent(model, k -> new ArrayList<>()).add(change);
 				}
 			}
 		}
