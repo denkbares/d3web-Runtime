@@ -354,12 +354,14 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Inserts a new problem-solver configuration.
+	 * Inserts a new problem-solver configuration. If a psConfig for the same problem solver class already exists, it
+	 * will be overwritten.
 	 *
 	 * @param psConfig the new problem-solver configuration
 	 * @created 15.04.2010
 	 */
 	public void addPSConfig(PSConfig psConfig) {
+		removePSConfig(getPsConfig(psConfig.getPsMethod().getClass()));
 		psConfigs.add(psConfig);
 		Collections.sort(psConfigs);
 	}
