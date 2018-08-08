@@ -31,11 +31,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import com.denkbares.plugin.Extension;
-import com.denkbares.plugin.Plugin;
-import com.denkbares.plugin.PluginManager;
 import com.denkbares.utils.Log;
-import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
@@ -48,8 +44,6 @@ import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.DefaultProtocol;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.plugin.Autodetect;
-import de.d3web.plugin.PluginConfig;
-import de.d3web.plugin.PluginEntry;
 
 /**
  * The {@link DefaultSession} is the default implementation of {@link Session}.
@@ -66,9 +60,9 @@ public class DefaultSession implements Session {
 
 	private final Map<SessionObjectSource<?>, SessionObject> dynamicStore;
 
-	private String id = null;
+	private final Protocol protocol;
 	private final Blackboard blackboard;
-	private Protocol protocol = new DefaultProtocol();
+	private String id;
 
 	private final Collection<PSMethod> usedPSMethods;
 
@@ -78,20 +72,14 @@ public class DefaultSession implements Session {
 	private String name;
 	private final InfoStore infoStore = new SessionInfoStore(this);
 
+
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate) {
-		this(id, knowledgebase, creationDate, true);
+		// for performance reasons, we can skip the init of the ps methods if no one should be added
+		this(id, knowledgebase, creationDate, psm -> true);
 	}
 
-	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean addPSMethods) {
-		// for performance reasons, we can skip the init of the ps methods if no one should be added
-		this(id, knowledgebase, creationDate, addPSMethods, psm -> addPSMethods);
-	}
 
 	protected DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, Predicate<PSMethod> psMethodFilter) {
-		this(id, knowledgebase, creationDate, true, psMethodFilter);
-	}
-
-	private DefaultSession(String id, KnowledgeBase knowledgebase, Date creationDate, boolean initMethods, Predicate<PSMethod> psMethodFilter) {
 		this.id = id;
 		this.created = (creationDate == null) ? new Date() : creationDate;
 		this.edited = created;
@@ -116,7 +104,6 @@ public class DefaultSession implements Session {
 				addUsedPSMethod(method);
 			}
 		}
-		if (initMethods) initPluggedPSMethods(knowledgebase);
 		addPlugedPSMethods(knowledgebase, psMethodFilter);
 	}
 
@@ -132,45 +119,6 @@ public class DefaultSession implements Session {
 			if (psMethodFilter.test(psConfig.getPsMethod())) {
 				checkStateAndInsertPSM(knowledgebase, psConfig);
 			}
-		}
-	}
-
-	private void initPluggedPSMethods(KnowledgeBase knowledgebase) {
-		// get PluginConfiguration
-		PluginConfig pc = PluginConfig.getPluginConfig(knowledgebase);
-		// add plugged PS with default config, only if none instance of this
-		// plugin was configured in the kb
-		// psMethods with state deactivated are not inserted
-		for (Extension e : PluginManager.getInstance().getExtensions(
-				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD)) {
-			PSMethod psMethod = (PSMethod) e.getNewInstance();
-			boolean found = false;
-			for (PSConfig psConfig : knowledgebase.getPsConfigs()) {
-				PSMethod psm = psConfig.getPsMethod();
-				if (psm == null || psMethod == null) {
-					continue;
-				}
-				if (psm.getClass().equals(psMethod.getClass())) {
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				continue;
-			}
-			// get PluginEntry, if none is found, one will be created
-			PluginEntry pluginEntry = pc.getPluginEntry(e.getPluginID());
-			if (pluginEntry == null) {
-				Plugin plugin = PluginManager.getInstance().getPlugin(e.getPluginID());
-				pluginEntry = new PluginEntry(plugin);
-				pc.addEntry(pluginEntry);
-			}
-			// get autodetect of the psMethod
-			Autodetect auto = pluginEntry.getAutodetect();
-			// add the newly created configuration
-			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto,
-					e.getID(), e.getPluginID(), e.getPriority());
-			knowledgebase.addPSConfig(psConfig);
 		}
 	}
 

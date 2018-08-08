@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -33,6 +33,10 @@ import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.Plugin;
+import com.denkbares.plugin.PluginManager;
+import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.PSConfig;
@@ -44,6 +48,9 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.plugin.Autodetect;
+import de.d3web.plugin.PluginConfig;
+import de.d3web.plugin.PluginEntry;
 
 /**
  * The KnowledgeBase stores all terminology objects (Question, Solution, etc.)
@@ -78,6 +85,8 @@ public class KnowledgeBase implements NamedObject {
 	private final TerminologyManager manager = new TerminologyManager(this);
 
 	private final KnowledgeStore knowledgeStore = new DefaultKnowledgeStore();
+
+	private boolean initializedPSMethods = false;
 
 	/**
 	 * @return the unique identifier of this KnowledgeBase instance.
@@ -258,8 +267,8 @@ public class KnowledgeBase implements NamedObject {
 	 * path folder separator used is always "/", independent from the underlying
 	 * file system.
 	 *
-	 * @created 15.04.2010
 	 * @param resource a new resource
+	 * @created 15.04.2010
 	 */
 	public void addResouce(Resource resource) {
 		this.resouces.add(resource);
@@ -269,8 +278,8 @@ public class KnowledgeBase implements NamedObject {
 	 * Removes a resource for this {@link KnowledgeBase} instance. A resource is
 	 * a multimedia file attached to the {@link KnowledgeBase}.
 	 *
-	 * @created 16.03.2011
 	 * @param resource a resource to be removed
+	 * @created 16.03.2011
 	 */
 	public void removeResouce(Resource resource) {
 		this.resouces.remove(resource);
@@ -324,6 +333,7 @@ public class KnowledgeBase implements NamedObject {
 	 * @return the list of problem-solver configurations sorted by priority
 	 */
 	public List<PSConfig> getPsConfigs() {
+		lazyInitPluggedPSMethods();
 		return Collections.unmodifiableList(psConfigs);
 	}
 
@@ -335,7 +345,7 @@ public class KnowledgeBase implements NamedObject {
 	@Nullable
 	public PSConfig getPsConfig(Class<? extends PSMethod> psMethodClass) {
 		// the list is sorted
-		for (PSConfig psConfig : psConfigs) {
+		for (PSConfig psConfig : getPsConfigs()) {
 			if (psMethodClass.isInstance(psConfig.getPsMethod())) {
 				return psConfig;
 			}
@@ -414,4 +424,44 @@ public class KnowledgeBase implements NamedObject {
 		return knowledgeStore;
 	}
 
+	private synchronized void lazyInitPluggedPSMethods() {
+		if (initializedPSMethods) return;
+		initializedPSMethods = true;
+		// get PluginConfiguration
+		PluginConfig pc = PluginConfig.getPluginConfig(this);
+		// add plugged PS with default config, only if none instance of this
+		// plugin was configured in the kb
+		// psMethods with state deactivated are not inserted
+		for (Extension e : PluginManager.getInstance().getExtensions(
+				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PSMETHOD)) {
+			PSMethod psMethod = (PSMethod) e.getNewInstance();
+			boolean found = false;
+			for (PSConfig psConfig : getPsConfigs()) {
+				PSMethod psm = psConfig.getPsMethod();
+				if (psm == null || psMethod == null) {
+					continue;
+				}
+				if (psm.getClass().equals(psMethod.getClass())) {
+					found = true;
+					break;
+				}
+			}
+			if (found) {
+				continue;
+			}
+			// get PluginEntry, if none is found, one will be created
+			PluginEntry pluginEntry = pc.getPluginEntry(e.getPluginID());
+			if (pluginEntry == null) {
+				Plugin plugin = PluginManager.getInstance().getPlugin(e.getPluginID());
+				pluginEntry = new PluginEntry(plugin);
+				pc.addEntry(pluginEntry);
+			}
+			// get autodetect of the psMethod
+			Autodetect auto = pluginEntry.getAutodetect();
+			// add the newly created configuration
+			PSConfig psConfig = new PSConfig(PSConfig.PSState.autodetect, psMethod, auto,
+					e.getID(), e.getPluginID(), e.getPriority());
+			addPSConfig(psConfig);
+		}
+	}
 }

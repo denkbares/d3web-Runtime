@@ -28,7 +28,7 @@ public class CopiedSession extends DefaultSession {
 	private final Session originalSession;
 
 	public CopiedSession(Session originalSession) {
-		super(null, originalSession.getKnowledgeBase(), new Date(), false);
+		super(null, originalSession.getKnowledgeBase(), new Date());
 		this.originalSession = originalSession;
 	}
 
