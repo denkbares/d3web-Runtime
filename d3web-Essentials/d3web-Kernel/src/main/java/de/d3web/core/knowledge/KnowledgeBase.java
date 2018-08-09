@@ -361,11 +361,17 @@ public class KnowledgeBase implements NamedObject {
 	 * @created 15.04.2010
 	 */
 	public void addPSConfig(PSConfig psConfig) {
-		if (psConfig != null && psConfig.getPsMethod() != null) {
+		if (psConfig == null) return;
+		PSMethod psMethod = psConfig.getPsMethod();
+
+		if (psMethod != null) {
 			removePSConfig(getPsConfig(psConfig.getPsMethod().getClass()));
 		}
 		psConfigs.add(psConfig);
 		Collections.sort(psConfigs);
+		if (psMethod != null) {
+			psMethod.init(this);
+		}
 	}
 
 	/**

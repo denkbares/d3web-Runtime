@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.terminology.Question;
@@ -33,7 +34,6 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.empiricaltesting.SequentialTestCase;
 import de.d3web.empiricaltesting.TestPersistence;
-import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.test.TestCaseTest;
 import de.d3web.testcase.model.TestCase;
 import de.d3web.testing.Message;
@@ -201,10 +201,10 @@ class LazyKnowledgeBase extends KnowledgeBase {
 		}
 
 		@Override
-		public Solution searchSolution(String solutionName) {
-			Solution solution = super.searchSolution(solutionName);
+		public Solution searchSolution(String name) {
+			Solution solution = super.searchSolution(name);
 			if (solution == null) {
-				solution = new Solution(knowledgeBase, solutionName);
+				solution = new Solution(knowledgeBase, name);
 			}
 			return solution;
 		}

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -32,8 +32,8 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
 
 /**
- * The {@link TerminologyManager} provides convinient methods to access or
- * search for elements of a {@link KnowledgeBase} instance.
+ * The {@link TerminologyManager} provides convinient methods to access or search for elements of a {@link
+ * KnowledgeBase} instance.
  *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 12.01.2011
@@ -58,59 +58,48 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Inserts the specified {@link TerminologyObject} instance into the
-	 * {@link KnowledgeBase}.
+	 * Inserts the specified {@link TerminologyObject} instance into the {@link KnowledgeBase}.
 	 *
 	 * @param object the specified {@link TerminologyObject} instance
 	 * @created 06.05.2011
 	 */
 	public void putTerminologyObject(TerminologyObject object) {
 		if (object.getName() == null) {
-			throw new IllegalStateException("TerminologyObject " + object
-					+ " has no assigned name.");
-		}
-		else if (objectNameMap.containsKey(object.getName())) {
-			if (objectNameMap.get(object.getName()) == object) {
-				// no need to insert the object twice
-				// but the order may have changed
-				clearIndexer(object);
-				return;
-			}
-			else {
-				throw new IllegalArgumentException(
-						"TerminologyObject "
-								+ object
-								+ " cannot be added, an Object with the same name is already contained in the knowledge base.");
-			}
+			throw new IllegalStateException("TerminologyObject has no assigned name: " + object);
 		}
 		if (object.getKnowledgeBase() != kb) {
-			throw new IllegalArgumentException(
-					"TerminologyObject "
-							+ object
-							+ " cannot be added, it belongs to another knowledge base.");
+			throw new IllegalArgumentException("TerminologyObject cannot be added, it belongs to another knowledge base: " + object);
 		}
-		// rebuild indexes for that object type
-		clearIndexer(object);
-		objectNameMap.put(object.getName(), object);
+
+		synchronized (kb) {
+			// rebuild indexes for that object type
+			objectNameMap.compute(object.getName(), (name, previous) -> {
+				// if there is an other object already added, signal error
+				if (previous != null && previous != object) {
+					throw new IllegalArgumentException("TerminologyObject cannot be added, " +
+							"an Object with the same name is already contained in the knowledge base: " + object);
+				}
+				// otherwise add the object and rebuild the index
+				clearIndexer(object);
+				return object;
+			});
+		}
 	}
 
 	/**
-	 * Deletes a terminology object from the knowledge base. Exception thrown:
-	 * An object cannot be removed, if it has children or parent relations.
+	 * Deletes a terminology object from the knowledge base. Exception thrown: An object cannot be removed, if it has
+	 * children or parent relations.
 	 * <p>
-	 * Do not call this method directly, use
-	 * TerminologyObject.removeFromKnowledgeBase().
+	 * Do not call this method directly, use TerminologyObject.removeFromKnowledgeBase().
 	 *
 	 * @param object the object to be removed
 	 */
 	public void remove(TerminologyObject object) {
-		if ((object.getChildren() != null) && (object.getChildren().length > 0)
-				|| (object.getParents() != null) && (object.getParents().length > 0)) {
-			throw new IllegalArgumentException(
-					object
-							+ " has some children or parents, that should be removed/relinked before deletion.");
+		if (object.getChildren().length > 0 || object.getParents().length > 0) {
+			throw new IllegalArgumentException(object + " has some children or parents, that should be removed/relinked before deletion.");
 		}
-		else {
+
+		synchronized (kb) {
 			clearIndexer(object);
 			objectNameMap.remove(object.getName());
 		}
@@ -119,8 +108,7 @@ public class TerminologyManager {
 	/**
 	 * Returns all {@link Solution} instances stored in this knowledge base.
 	 *
-	 * @return list of all {@link Solution} instances contained in this
-	 * {@link KnowledgeBase}
+	 * @return list of all {@link Solution} instances contained in this {@link KnowledgeBase}
 	 */
 	public List<Solution> getSolutions() {
 		return getObjects(Solution.class);
@@ -129,17 +117,15 @@ public class TerminologyManager {
 	/**
 	 * Returns all questionnaires contained in this {@link KnowledgeBase}.
 	 *
-	 * @return an unmodifiable {@link List} of all {@link QContainer} instances
-	 * contained in this {@link KnowledgeBase}
+	 * @return an unmodifiable {@link List} of all {@link QContainer} instances contained in this {@link KnowledgeBase}
 	 */
 	public List<QContainer> getQContainers() {
 		return getObjects(QContainer.class);
 	}
 
 	/**
-	 * Returns the (flattened) {@link List} of all {@link Question} instances
-	 * represented in this knowledge base. The returned list may be
-	 * unmodifiable.
+	 * Returns the (flattened) {@link List} of all {@link Question} instances represented in this knowledge base. The
+	 * returned list may be unmodifiable.
 	 *
 	 * @return list of all questions contained in this KnowledgeBase
 	 */
@@ -148,18 +134,18 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Returns the (flattened) {@link List} of all {@link TerminologyObject}
-	 * instances represented in this knowledge base being an instance of the
-	 * specified class. The returned list is unmodifiable.
+	 * Returns the (flattened) {@link List} of all {@link TerminologyObject} instances represented in this knowledge
+	 * base being an instance of the specified class. The returned list is unmodifiable.
 	 *
-	 * @return list of all TerminologyObjects of a certain type contained in
-	 * this KnowledgeBase
+	 * @return list of all TerminologyObjects of a certain type contained in this KnowledgeBase
 	 */
 	public <T extends TerminologyObject> List<T> getObjects(Class<T> clazz) {
 		List<T> questions = new ArrayList<>();
-		for (NamedObject o : objectNameMap.values()) {
-			if (clazz.isInstance(o)) {
-				questions.add(clazz.cast(o));
+		synchronized (kb) {
+			for (NamedObject o : objectNameMap.values()) {
+				if (clazz.isInstance(o)) {
+					questions.add(clazz.cast(o));
+				}
 			}
 		}
 		return Collections.unmodifiableList(questions);
@@ -171,8 +157,8 @@ public class TerminologyManager {
 	 * @return a {@link Solution} instance with the specified unique name;
 	 * <code>null</code> if none found
 	 */
-	public Solution searchSolution(String id) {
-		NamedObject o = objectNameMap.get(id);
+	public Solution searchSolution(String name) {
+		TerminologyObject o = search(name);
 		if (o instanceof Solution) {
 			return (Solution) o;
 		}
@@ -180,14 +166,13 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Tries to find a {@link QASet} instance (questions, questionnaires) with
-	 * the specified unique name.
+	 * Tries to find a {@link QASet} instance (questions, questionnaires) with the specified unique name.
 	 *
 	 * @return a {@link QASet} instance with the specified unique name;
 	 * <code>null</code> if none found
 	 */
-	public QASet searchQASet(String id) {
-		NamedObject o = objectNameMap.get(id);
+	public QASet searchQASet(String name) {
+		TerminologyObject o = search(name);
 		if (o instanceof QASet) {
 			return (QASet) o;
 		}
@@ -195,30 +180,29 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Tries to retrieve an terminology object with the specified name, that is
-	 * contained in this knowledge base.
+	 * Tries to retrieve an terminology object with the specified name, that is contained in this knowledge base.
 	 *
 	 * @param name the specified name
 	 * @return the terminology object with the specified identifier;
 	 * <code>null</code> if none found
 	 */
 	public TerminologyObject search(String name) {
-		return objectNameMap.get(name);
+		synchronized (kb) {
+			return objectNameMap.get(name);
+		}
 	}
 
 	/**
-	 * Tries to retrieve an terminology object with the specified name and
-	 * class, that is contained in this knowledge base. If no object found with
-	 * these criteria, null is returned.
+	 * Tries to retrieve an terminology object with the specified name and class, that is contained in this knowledge
+	 * base. If no object found with these criteria, null is returned.
 	 *
 	 * @param name    the specified name
-	 * @param toClass the class the returned {@link TerminologyObject} needs to
-	 *                have
+	 * @param toClass the class the returned {@link TerminologyObject} needs to have
 	 * @return the terminology object with the specified identifier;
 	 * <code>null</code> if none found
 	 */
 	public <T> T search(String name, Class<T> toClass) {
-		TerminologyObject terminologyObject = objectNameMap.get(name);
+		TerminologyObject terminologyObject = search(name);
 		if (toClass.isInstance(terminologyObject)) {
 			return toClass.cast(terminologyObject);
 		}
@@ -226,14 +210,13 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Tries to find a {@link QContainer} instance with the specified unique
-	 * name.
+	 * Tries to find a {@link QContainer} instance with the specified unique name.
 	 *
 	 * @return a {@link QContainer} instance with the specified unique name;
 	 * <code>null</code> if none found
 	 */
 	public QContainer searchQContainer(String name) {
-		NamedObject o = objectNameMap.get(name);
+		TerminologyObject o = search(name);
 		if (o instanceof QContainer) {
 			return (QContainer) o;
 		}
@@ -241,8 +224,7 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Tries to find a terminology object (solutions, questions, questionnaires)
-	 * with the specified name.
+	 * Tries to find a terminology object (solutions, questions, questionnaires) with the specified name.
 	 *
 	 * @param name the specified name of the searched terminology object
 	 * @return the search terminology object; <code>null</code> if none found
@@ -250,18 +232,17 @@ public class TerminologyManager {
 	 */
 	@Deprecated
 	public TerminologyObject searchObjectForName(String name) {
-		return this.objectNameMap.get(name);
+		return search(name);
 	}
 
 	/**
-	 * Tries to find a {@link Question} instance with the specified unique
-	 * identifier.
+	 * Tries to find a {@link Question} instance with the specified unique identifier.
 	 *
 	 * @param name the unique identifier of the search {@link Question}
 	 * @return the searched question; <code>null</code> if none found
 	 */
 	public Question searchQuestion(String name) {
-		NamedObject o = objectNameMap.get(name);
+		TerminologyObject o = search(name);
 		if (o instanceof Question) {
 			return (Question) o;
 		}
@@ -269,27 +250,18 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Returns all question/questionnaires stored in this {@link KnowledgeBase}
-	 * instance.
+	 * Returns all question/questionnaires stored in this {@link KnowledgeBase} instance.
 	 *
 	 * @return all question/questionnaires contained in this knowledge base
 	 */
 	public List<QASet> getQASets() {
-		List<QASet> qASets = new ArrayList<>();
-		for (NamedObject o : objectNameMap.values()) {
-			if (o instanceof QASet) {
-				qASets.add((QASet) o);
-			}
-		}
-		return qASets;
+		return getObjects(QASet.class);
 	}
 
 	/**
-	 * Returns all {@link TerminologyObject} instances contained in the
-	 * corresponding {@link KnowledgeBase}.
+	 * Returns all {@link TerminologyObject} instances contained in the corresponding {@link KnowledgeBase}.
 	 *
-	 * @return all {@link TerminologyObject} instances contained in the
-	 * corresponding {@link KnowledgeBase}
+	 * @return all {@link TerminologyObject} instances contained in the corresponding {@link KnowledgeBase}
 	 * @created 06.05.2011
 	 */
 	public Collection<TerminologyObject> getAllTerminologyObjects() {
@@ -297,22 +269,17 @@ public class TerminologyManager {
 	}
 
 	/**
-	 * Returns the index of the specific object in the knowledge base's object
-	 * tree. The index is counted in depth-first-search order. If an object is
-	 * connected to the tree at multiple places, the lowest index is used. The
-	 * root objects ({@link KnowledgeBase#getRootQASet()} and
-	 * {@link KnowledgeBase#getRootSolution()}) of the knowledge base starts
-	 * with index 0.
+	 * Returns the index of the specific object in the knowledge base's object tree. The index is counted in
+	 * depth-first-search order. If an object is connected to the tree at multiple places, the lowest index is used. The
+	 * root objects ({@link KnowledgeBase#getRootQASet()} and {@link KnowledgeBase#getRootSolution()}) of the knowledge
+	 * base starts with index 0.
 	 * <p>
-	 * If a object or its predecessors aren't connected to the knowledge base's
-	 * root objects, the root of these dangling trees get a number higher than
-	 * all objects in these trees. Within such a tree the depth-first-search
-	 * order is still preserved (as long as the objects aren't also added to
-	 * other dangling trees or the root tree).
+	 * If a object or its predecessors aren't connected to the knowledge base's root objects, the root of these dangling
+	 * trees get a number higher than all objects in these trees. Within such a tree the depth-first-search order is
+	 * still preserved (as long as the objects aren't also added to other dangling trees or the root tree).
 	 * <p>
-	 * For performance reasons and due to building the indexes on demand and
-	 * re-index if the terminology of the knowledge base changes, you should
-	 * avoid to call this method during building the knowledge base.
+	 * For performance reasons and due to building the indexes on demand and re-index if the terminology of the
+	 * knowledge base changes, you should avoid to call this method during building the knowledge base.
 	 *
 	 * @param object the object to get the index for
 	 * @return the index of the object in its particular tree
@@ -329,5 +296,4 @@ public class TerminologyManager {
 	private TreeIndexer getIndexer(TerminologyObject object) {
 		return (object instanceof Solution) ? solutionIndexer : questionIndexer;
 	}
-
 }

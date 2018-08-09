@@ -20,6 +20,8 @@
 
 package de.d3web.diaFlux.flow;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.DefaultKnowledgeStore;
 import de.d3web.core.knowledge.InfoStore;
@@ -61,11 +63,13 @@ public class SnapshotNode extends AbstractNode implements ValueObject {
 		return UndefinedValue.getInstance();
 	}
 
+	@NotNull
 	@Override
 	public TerminologyObject[] getParents() {
 		return new TerminologyObject[0];
 	}
 
+	@NotNull
 	@Override
 	public TerminologyObject[] getChildren() {
 		return new TerminologyObject[0];
