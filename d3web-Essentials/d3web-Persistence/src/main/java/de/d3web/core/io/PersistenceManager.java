@@ -367,6 +367,8 @@ public final class PersistenceManager {
 				}
 			}
 		}
+		kb.initPluggedPSMethods();
+
 		// knowledge base loaded successfully
 		listener.updateProgress(1, "knowledge base loaded successfully");
 		stopwatch.log("Loaded knowledge base " + file.getPath());
@@ -590,6 +592,7 @@ public final class PersistenceManager {
 				}
 			}
 		}
+		kb.initPluggedPSMethods();
 
 		// knowledge base loaded successfully
 		listener.updateProgress(1, "Knowledge base loaded successfully");
