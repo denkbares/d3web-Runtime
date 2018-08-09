@@ -35,13 +35,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.denkbares.progress.ProgressListener;
+import com.denkbares.utils.Log;
 import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.io.fragments.PropertiesHandler;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.InfoStoreUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -56,7 +57,6 @@ import de.d3web.indication.ActionSuppressAnswer;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.inference.PSMethodHeuristic;
-import com.denkbares.utils.Log;
 
 /**
  * PersistenceHandler for reading and writing basic knowledge Creation date:
@@ -279,8 +279,8 @@ public class BasicPersistenceHandler implements
 
 		Element qContainersElement = doc.createElement("QASets");
 		Map<TerminologyObject, Element> possibleParents = new HashMap<>();
-		List<QASet> qASets = kb.getManager().getQASets();
-		Collections.sort(qASets, new NamedObjectComparator());
+		List<QASet> qASets = new ArrayList<>(kb.getManager().getQASets());
+		qASets.sort(new NamedObjectComparator());
 		for (QASet qASet : qASets) {
 			listener.updateProgress(time++ / abstime, "Saving knowledge base: QASets");
 			Element qContainerElement = persistence.writeFragment(qASet);
