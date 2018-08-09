@@ -333,7 +333,7 @@ public class KnowledgeBase implements NamedObject {
 	 * @return the list of problem-solver configurations sorted by priority
 	 */
 	public List<PSConfig> getPsConfigs() {
-		lazyInitPluggedPSMethods();
+		initPluggedPSMethods();
 		return Collections.unmodifiableList(psConfigs);
 	}
 
@@ -434,7 +434,11 @@ public class KnowledgeBase implements NamedObject {
 		return knowledgeStore;
 	}
 
-	private synchronized void lazyInitPluggedPSMethods() {
+	/**
+	 * Initializes and adds all plugged PSMethods to this knowledge base when called. Only the first call of this method
+	 * on the knowledge base will have an effect, repeated calls will return without further change.
+	 */
+	public synchronized void initPluggedPSMethods() {
 		if (initializedPSMethods) return;
 		initializedPSMethods = true;
 		// get PluginConfiguration
