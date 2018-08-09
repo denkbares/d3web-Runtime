@@ -20,16 +20,18 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import de.d3web.core.knowledge.DefaultKnowledgeStore;
-import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.core.knowledge.KnowledgeStore;
-import de.d3web.core.knowledge.TerminologyObject;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
+
+import de.d3web.core.knowledge.DefaultKnowledgeStore;
+import de.d3web.core.knowledge.KnowledgeBase;
+import de.d3web.core.knowledge.KnowledgeStore;
+import de.d3web.core.knowledge.TerminologyObject;
 
 /**
  * AbstractTerminologyObject is parent of knowledge-base objects such as QASet,
@@ -74,7 +76,7 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 	private static final int BOUNDARY = 10;
 
 	/**
-	 * Creates a new {@link AbstractTerminologyObject} instance with a given
+	 * Creates a new AbstractTerminologyObject instance with a given
 	 * name and inserts the newly created object to the KnowledgeBase.
 	 * 
 	 * @param name the global name and identifier of the instance
@@ -92,31 +94,25 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 		kb.getManager().putTerminologyObject(this);
 	}
 
-	@Override
-	@Deprecated
-	public String getId() {
-		return getName();
-	}
-
 	/**
-	 * Appends the specified {@link AbstractTerminologyObject} as a child to the
+	 * Appends the specified AbstractTerminologyObject as a child to the
 	 * list of children. This object is also linked as a parent to the specified
 	 * child.
 	 * 
-	 * @param child a new child of this {@link AbstractTerminologyObject}
+	 * @param child a new child of this AbstractTerminologyObject
 	 */
 	protected void addChild(AbstractTerminologyObject child) {
 		addChild(child, children.size());
 	}
 
 	/**
-	 * Appends the specified {@link AbstractTerminologyObject} as a child to the
+	 * Appends the specified AbstractTerminologyObject as a child to the
 	 * list of children at the given position. This object is also linked as a parent
 	 * to the specified child.
 	 * 
 	 * @created 15.02.2011
-	 * @param child the child you want to add to this  {@link AbstractTerminologyObject}
-	 * @param pos the position you want to add the child in this {@link AbstractTerminologyObject}'s list of children
+	 * @param child the child you want to add to this  AbstractTerminologyObject
+	 * @param pos the position you want to add the child in this AbstractTerminologyObject's list of children
 	 */
 	protected void addChild(AbstractTerminologyObject child, int pos) {
 		if (!containsChild(child)) {
@@ -200,14 +196,16 @@ public abstract class AbstractTerminologyObject extends AbstractNamedObject impl
 		return name.hashCode();
 	}
 
+	@NotNull
 	@Override
 	public TerminologyObject[] getParents() {
-		return parents.toArray(new TerminologyObject[parents.size()]);
+		return parents.toArray(new TerminologyObject[0]);
 	}
 
+	@NotNull
 	@Override
 	public TerminologyObject[] getChildren() {
-		return children.toArray(new TerminologyObject[children.size()]);
+		return children.toArray(new TerminologyObject[0]);
 	}
 
 	@Override

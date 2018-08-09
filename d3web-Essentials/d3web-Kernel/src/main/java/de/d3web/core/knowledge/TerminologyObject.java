@@ -20,6 +20,8 @@
 
 package de.d3web.core.knowledge;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -43,6 +45,7 @@ public interface TerminologyObject extends NamedObject {
 	 * @created 06.05.2011
 	 * @return all parents of this object
 	 */
+	@NotNull
 	TerminologyObject[] getParents();
 
 	/**
@@ -52,6 +55,7 @@ public interface TerminologyObject extends NamedObject {
 	 * @created 06.05.2011
 	 * @return all children of this object
 	 */
+	@NotNull
 	TerminologyObject[] getChildren();
 
 	/**
