@@ -47,10 +47,14 @@ public class CostBenefitProperties {
 	@Deprecated
 	public static final Property<Boolean> COMFORT_BENEFIT = Property.getProperty("comfortBenefit", Boolean.class);
 
-//
-//	public static final Property<UUTState> UUT_STATE = Property.getProperty("uutState", UUTState.class);
+	/**
+	 * Property to mark a question to be a state question. This means the question represents a state of the "Unit Under
+	 * Test" (e.g. the machine). If the property is set, the question is a state question, otherwise it is a normal
+	 * question. The value of the property then identifies the type of the state.
+	 */
+	public static final Property<UUTState> UUT_STATE = Property.getProperty("uutState", UUTState.class);
 
-	enum UUTState {
+	public enum UUTState {
 		/**
 		 * "Normal" state question, that represents e.g. a switch position
 		 */
@@ -77,10 +81,12 @@ public class CostBenefitProperties {
 			// TODO: here some hard-coded stuff (convention) is used. Replace by adding UUT_STATE property to knowledge base
 			if (stateQuestion.getInfoStore().getValue(FINAL_QUESTION)) return checkOnce;
 			String name = stateQuestion.getName();
-			if (devicePattern.matcher(name).matches()) return measurementDevice;
-			if (adapterPattern.matcher(name).matches()) return measurementAdapter;
-			if (mechanicalPattern.matcher(name).matches()) return mechanicalCheck;
-			if (name.startsWith("target_state_questionnaire#")) return status;
+			if (name.startsWith("target_state_questionnaire#")) {
+				if (devicePattern.matcher(name).matches()) return measurementDevice;
+				if (adapterPattern.matcher(name).matches()) return measurementAdapter;
+				if (mechanicalPattern.matcher(name).matches()) return mechanicalCheck;
+				return status;
+			}
 			if (name.equals("positionTransitions")) return status;
 			return null;
 		}
@@ -90,8 +96,16 @@ public class CostBenefitProperties {
 	private static final Pattern adapterPattern = Pattern.compile("(target_state_questionnaire#adaptation_\\w+)", Pattern.CASE_INSENSITIVE);
 	private static final Pattern mechanicalPattern = Pattern.compile("(target_state_questionnaire#mechanicalCheck_\\w+)", Pattern.CASE_INSENSITIVE);
 
+	/**
+	 * Returns null if the question is not a state question, otherwise the type of the state is returned.
+	 *
+	 * @param stateQuestion the (potantial) state question to be checked
+	 * @return the type of the state or null for non-state questions
+	 */
 	public static UUTState getUUTState(Question stateQuestion) {
-		return UUTState.autoDetect(stateQuestion);
+		UUTState state = stateQuestion.getInfoStore().getValue(UUT_STATE);
+		// TODO: we may remove this, as soon as the UUT-State auto-detection is applied to the knowledge base on the Knowledge Designer export or the Knowledge Designer is no longer used
+		return (state == null) ? UUTState.autoDetect(stateQuestion) : state;
 	}
 
 	public static Collection<Question> getStateQuestions(KnowledgeBase base) {
@@ -103,11 +117,10 @@ public class CostBenefitProperties {
 	/**
 	 * Returns true if the specified question is a "Indicator" or "final question" state, that represents a checked
 	 * capability of the equipment. If this question once left its init value, it is assumed to be never changed within
-	 * the knowledge base.
+	 * the diagnostic session.
 	 */
 	public static boolean isCheckOnce(TerminologyObject stateQuestion) {
-		// TODO: replace by state property (or both) as soon as it exists
-		return (stateQuestion instanceof Question) && stateQuestion.getInfoStore().getValue(FINAL_QUESTION);
+		return (stateQuestion instanceof Question) && getUUTState((Question) stateQuestion) == UUTState.checkOnce;
 	}
 
 	/**
