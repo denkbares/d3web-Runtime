@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -29,18 +29,15 @@ public class Indication implements Value {
 		 */
 		CONTRA_INDICATED,
 		/**
-		 * An InterviewObject with this state is not indicated, it should not be
-		 * presented to the user
+		 * An InterviewObject with this state is not indicated, it should not be presented to the user
 		 */
 		NEUTRAL,
 		/**
-		 * An InterviewObject with this state should be presented to the user,
-		 * if it's parent is presented to the user
+		 * An InterviewObject with this state should be presented to the user, if it's parent is presented to the user
 		 */
 		RELEVANT,
 		/**
-		 * An InterviewObject with this state should be presented to the user,
-		 * even if it is already on the agenda
+		 * An InterviewObject with this state should be presented to the user, even if it is already on the agenda
 		 */
 		MULTIPLE_INDICATED,
 		/**
@@ -48,13 +45,13 @@ public class Indication implements Value {
 		 */
 		INDICATED,
 		/**
-		 * An InterviewObject with this state should be presented to the user,
-		 * it should be shown before elements only having the state INDICATED
+		 * An InterviewObject with this state should be presented to the user, it should be shown before elements only
+		 * having the state INDICATED
 		 */
 		INSTANT_INDICATED,
 		/**
-		 * An InterviewObject with this state should be presented to the user,
-		 * even if the user has already processed that element
+		 * An InterviewObject with this state should be presented to the user, even if the user has already processed
+		 * that element
 		 */
 		REPEATED_INDICATED
 
@@ -65,9 +62,9 @@ public class Indication implements Value {
 	private final double sorting;
 
 	/**
-	 * Creates a new indication value based on the string representation. The
-	 * string representation is case insensitive for backward compatibility.
-	 * 
+	 * Creates a new indication value based on the string representation. The string representation is case insensitive
+	 * for backward compatibility.
+	 *
 	 * @param name the name of the indication state
 	 */
 	public Indication(String name, double sorting) {
@@ -75,10 +72,9 @@ public class Indication implements Value {
 	}
 
 	/**
-	 * Creates a new indication value based on the indication state and sorting
-	 * rating
-	 * 
-	 * @param state the state of the new indication value
+	 * Creates a new indication value based on the indication state and sorting rating
+	 *
+	 * @param state   the state of the new indication value
 	 * @param sorting the rating of the sorting of the new indication
 	 */
 	public Indication(State state, double sorting) {
@@ -91,7 +87,7 @@ public class Indication implements Value {
 
 	/**
 	 * Returns the state's name of this indication value.
-	 * 
+	 *
 	 * @return the state's name
 	 */
 	public String getName() {
@@ -100,7 +96,7 @@ public class Indication implements Value {
 
 	/**
 	 * Returns the current {@link State} of this indication value.
-	 * 
+	 *
 	 * @return the current state
 	 */
 	public State getState() {
@@ -116,9 +112,8 @@ public class Indication implements Value {
 	}
 
 	/**
-	 * Returns whether the state of this indication equals to the specified
-	 * state.
-	 * 
+	 * Returns whether the state of this indication equals to the specified state.
+	 *
 	 * @param state the state to be checked
 	 * @return whether the state is equal to the specified one
 	 */
@@ -127,9 +122,8 @@ public class Indication implements Value {
 	}
 
 	/**
-	 * Returns whether the indication state signals that the interview element
-	 * should be asked to the user or not.
-	 * 
+	 * Returns whether the indication state signals that the interview element should be asked to the user or not.
+	 *
 	 * @return the relevance due to this interview state
 	 */
 	public boolean isRelevant() {
@@ -141,9 +135,20 @@ public class Indication implements Value {
 	}
 
 	/**
-	 * Returns whether the indication state signals that the interview element
-	 * is excluded to be asked.
-	 * 
+	 * Returns whether the indication state signals that the interview element should be asked to the user or not.
+	 *
+	 * @return the relevance due to this interview state
+	 */
+	public boolean isIndicated() {
+		return this.state == State.INDICATED
+				|| this.state == State.INSTANT_INDICATED
+				|| this.state == State.MULTIPLE_INDICATED
+				|| this.state == State.REPEATED_INDICATED;
+	}
+
+	/**
+	 * Returns whether the indication state signals that the interview element is excluded to be asked.
+	 *
 	 * @return whether the interview element is excluded from the interview
 	 */
 	public boolean isContraIndicated() {
