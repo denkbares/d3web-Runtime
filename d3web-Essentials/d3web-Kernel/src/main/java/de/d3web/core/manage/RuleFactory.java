@@ -155,7 +155,7 @@ public final class RuleFactory {
 		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionNextQASet ruleAction = new ActionIndication();
-		ruleAction.setQASets();
+		ruleAction.setQASets(qaSets);
 
 		setRuleParams(rule, ruleAction, condition, exceptionCondition);
 		return rule;
