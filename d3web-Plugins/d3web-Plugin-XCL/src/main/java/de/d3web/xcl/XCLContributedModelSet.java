@@ -28,7 +28,7 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
 
 /**
- * Stores XCLModels in one KnowledgeSlice. Its intension is to store the backward referenced xcl models from the {@link
+ * Stores XCLModels in one KnowledgeSlice. Its intention is to store the backward referenced xcl models from the {@link
  * TerminologyObject}s of the Conditions of the contained relations to the xcl model.
  *
  * @author Markus Friedrich (denkbares GmbH)
