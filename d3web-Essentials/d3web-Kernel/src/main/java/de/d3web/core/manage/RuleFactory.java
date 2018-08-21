@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -53,7 +53,7 @@ import de.d3web.scoring.inference.PSMethodHeuristic;
 
 /**
  * Factory to create various rules via the appropriate Factory-methods.
- * 
+ *
  * @author Joachim Baumeister
  */
 public final class RuleFactory {
@@ -84,7 +84,7 @@ public final class RuleFactory {
 	}
 
 	public static void createContraIndicationRule(Question question,
-			Condition condition) {
+												  Condition condition) {
 		createContraIndicationRule(
 				Arrays.asList(new QASet[] { question }),
 				condition);
@@ -115,7 +115,6 @@ public final class RuleFactory {
 		}
 		return result;
 	}
-
 
 	public static Rule createHeuristicPSRule(
 			Solution solution,
@@ -156,35 +155,22 @@ public final class RuleFactory {
 		Rule rule = new Rule(PSMethodStrategic.class);
 
 		ActionNextQASet ruleAction = new ActionIndication();
-		ruleAction.setQASets(qaSets);
+		ruleAction.setQASets();
 
 		setRuleParams(rule, ruleAction, condition, exceptionCondition);
 		return rule;
 	}
 
 	public static Rule createRelevantIndicationRule(QASet qaSet, Condition condition) {
-		Rule rule = new Rule(PSMethodStrategic.class);
-
-		ActionNextQASet ruleAction = new ActionRelevantIndication();
-		ruleAction.setQASets(qaSet);
-
-		setRuleParams(rule, ruleAction, condition, null);
-		return rule;
+		return createStrategicRule(new ActionRelevantIndication(qaSet), condition);
 	}
 
-	public static Rule createStrategicRule(
-			PSAction action,
-			Condition condition) {
+	public static Rule createStrategicRule(PSAction action, Condition condition) {
 		return createStrategicRule(action, condition, null);
 	}
 
-	public static Rule createStrategicRule(
-			PSAction action,
-			Condition condition,
-			Condition exceptionCondition) {
-
+	public static Rule createStrategicRule(PSAction action, Condition condition, Condition exceptionCondition) {
 		Rule rule = new Rule(PSMethodStrategic.class);
-
 		setRuleParams(rule, action, condition, exceptionCondition);
 		return rule;
 	}
@@ -316,7 +302,5 @@ public final class RuleFactory {
 		rule.setAction(action);
 		rule.setCondition(condition);
 		rule.setException(exceptionCondition);
-
 	}
-
 }

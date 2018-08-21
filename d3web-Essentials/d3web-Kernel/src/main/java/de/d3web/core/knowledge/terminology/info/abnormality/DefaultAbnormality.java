@@ -50,6 +50,26 @@ public class DefaultAbnormality implements Abnormality {
 	private final Map<ChoiceID, Double> abnormalities = new HashMap<>();
 
 	/**
+	 * This method sets the abnormality for the specified choice.
+	 *
+	 * @param choice      the choice to set the abnormality for
+	 * @param abnormality the abnormality to be set
+	 */
+	public void addValue(Choice choice, double abnormality) {
+		addValue(new ChoiceID(choice), abnormality);
+	}
+
+	/**
+	 * This method sets the abnormality for the specified choice.
+	 *
+	 * @param choice      the choice to set the abnormality for
+	 * @param abnormality the abnormality to be set
+	 */
+	public void addValue(ChoiceID choice, double abnormality) {
+		abnormalities.put(choice, abnormality);
+	}
+
+	/**
 	 * This method sets the abnormality for the choice(s) of the specified value.
 	 *
 	 * @param value       the choice value or multiple choice value to set the abnormality for
@@ -59,11 +79,11 @@ public class DefaultAbnormality implements Abnormality {
 		if (value instanceof MultipleChoiceValue) {
 			MultipleChoiceValue mcv = (MultipleChoiceValue) value;
 			for (ChoiceID cid : mcv.getChoiceIDs()) {
-				abnormalities.put(cid, abnormality);
+				addValue(cid, abnormality);
 			}
 		}
 		else if (value instanceof ChoiceValue) {
-			abnormalities.put(((ChoiceValue) value).getChoiceID(), abnormality);
+			addValue(((ChoiceValue) value).getChoiceID(), abnormality);
 		}
 		else {
 			throw new IllegalArgumentException("unsupported question value: " + value);
