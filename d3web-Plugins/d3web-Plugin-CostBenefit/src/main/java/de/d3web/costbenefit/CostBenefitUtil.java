@@ -32,8 +32,6 @@ import org.w3c.dom.Node;
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
-import de.d3web.core.inference.condition.CondAnd;
-import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -58,7 +56,6 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
-import de.d3web.costbenefit.inference.ComfortBenefit;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.PathExtender;
@@ -390,28 +387,11 @@ public final class CostBenefitUtil {
 	 */
 	public static boolean isApplicable(QContainer qcon, Session session) {
 		StateTransition stateTransition = StateTransition.getStateTransition(qcon);
-		ComfortBenefit comfort = qcon.getKnowledgeStore().getKnowledge(
-				ComfortBenefit.KNOWLEDGE_KIND);
-		Condition condition = null;
-		if (stateTransition != null && stateTransition.getActivationCondition() != null
-				&& comfort != null) {
-			List<Condition> conds = new LinkedList<>();
-			conds.add(stateTransition.getActivationCondition());
-			conds.add(comfort.getCondition());
-			condition = new CondAnd(conds);
+		// TODO: consider to check comfort-precondition of test steps, but only (!) if they are added for comfort purposes only (and not if they are required path elements)
+		if (stateTransition != null && stateTransition.getActivationCondition() != null) {
+			return Conditions.isTrue(stateTransition.getActivationCondition(), session);
 		}
-		else if (comfort != null) {
-			condition = comfort.getCondition();
-		}
-		else if (stateTransition != null && stateTransition.getActivationCondition() != null) {
-			condition = stateTransition.getActivationCondition();
-		}
-		if (condition != null) {
-			return Conditions.isTrue(condition, session);
-		}
-		else {
-			return true;
-		}
+		return true;
 	}
 
 	public static List<StrategicSupport> getStrategicSupports(Session session) {
