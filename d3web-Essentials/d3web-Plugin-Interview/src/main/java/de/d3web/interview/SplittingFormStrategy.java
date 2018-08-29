@@ -22,8 +22,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 
 /**
- * This implements a form strategy that decorates an existing one, but may split long forms
- * at defined places.
+ * This implements a form strategy that decorates an existing one, but may split long forms at defined places.
  *
  * @author Volker Belli (denkbares GmbH)
  * @created 25.08.2016
@@ -49,7 +48,7 @@ public class SplittingFormStrategy implements FormStrategy {
 		List<SplitForm> groups = split(completeForm);
 
 		// if not split at all, use the original (complete) form
-		if (groups.size() == 1) return completeForm;
+		if (groups.size() == 1) return groups.get(0);
 
 		// and build the forms out of it, until a not completely answered form is available
 		FormStrategyUtils utils = new FormStrategyUtils(session);
@@ -75,8 +74,8 @@ public class SplittingFormStrategy implements FormStrategy {
 	}
 
 	/**
-	 * Splits the specified (original) form into groups of questions. The order of the questions
-	 * is preserved. All active questions of the original form are in the returned list of groups.
+	 * Splits the specified (original) form into groups of questions. The order of the questions is preserved. All
+	 * active questions of the original form are in the returned list of groups.
 	 *
 	 * @param completeForm the form to be split
 	 * @return the returned list of active question groups
@@ -96,14 +95,14 @@ public class SplittingFormStrategy implements FormStrategy {
 
 		// prepare the currently active questions
 		HashSet<Question> active = new HashSet<>(completeForm.getActiveQuestions());
+		// if there is no active question, skip form
+		groups.removeIf(group -> Collections.disjoint(active, group));
 
-		// and build the forms out of it,
+		// and build the forms out of it
 		List<SplitForm> result = new ArrayList<>(groups.size());
 		int groupNumber = 1;
-		for (List<Question> questions : groups) {
-			// if there is no active question, skip form
-			if (Collections.disjoint(active, questions)) continue;
-			result.add(new SplitForm(completeForm, groupNumber++, groups.size(), questions));
+		for (List<Question> group : groups) {
+			result.add(new SplitForm(completeForm, groupNumber++, groups.size(), group));
 		}
 		return result;
 	}
@@ -137,7 +136,7 @@ public class SplittingFormStrategy implements FormStrategy {
 		@NotNull
 		@Override
 		public String getName() {
-			return (groupNumber == 1)
+			return (totalGroupCount == 1)
 					? delegate.getName()
 					: (delegate.getName() + "#" + groupNumber);
 		}
@@ -146,6 +145,7 @@ public class SplittingFormStrategy implements FormStrategy {
 		@Override
 		public String getPrompt(Locale lang) {
 			String prompt = delegate.getPrompt(lang);
+			if (totalGroupCount == 1) return prompt;
 			String suffixFormat = " #%d";
 			return prompt + String.format(suffixFormat, groupNumber);
 		}
@@ -212,7 +212,7 @@ public class SplittingFormStrategy implements FormStrategy {
 		 * Returns true if the from should be split between the two specified questions.
 		 *
 		 * @param previous the question before the potential split
-		 * @param next the question after the potential split
+		 * @param next     the question after the potential split
 		 * @return true if the form should be split in between
 		 */
 		boolean requireSplit(Question previous, Question next);
