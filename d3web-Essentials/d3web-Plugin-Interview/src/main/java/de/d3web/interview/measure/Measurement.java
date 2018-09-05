@@ -38,6 +38,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
 import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.core.session.protocol.MeasurementStartProtocolEntry;
 import de.d3web.core.session.protocol.Protocol;
 import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
@@ -326,19 +327,24 @@ public class Measurement {
 	private void cleanUpProtocol(Session session, Fact fact) {
 		Protocol protocol = session.getProtocol();
 		List<ProtocolEntry> protocolHistory = protocol.getProtocolHistory();
-		ProtocolEntry lastEntry = null;
 		for (int i = protocolHistory.size() - 1; i >= 0; i--) {
-			ProtocolEntry entry = protocolHistory.get(i);
-			if (entry instanceof ActualQContainerEntry) continue;
-			lastEntry = entry;
-			break;
-		}
-		if (!(lastEntry instanceof FactProtocolEntry)) return;
-		FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
-		if (lastFactEntry.getTerminologyObjectName()
-				.equals(fact.getTerminologyObject().getName()) && lastFactEntry.getSolvingMethodClassName()
-				.equals(fact.getPSMethod().getClass().getName())) {
-			protocol.removeEntry(lastFactEntry);
+			ProtocolEntry lastEntry = protocolHistory.get(i);
+			if (lastEntry instanceof ActualQContainerEntry) return;
+			if (lastEntry instanceof MeasurementStartProtocolEntry) {
+				MeasurementStartProtocolEntry mStartEntry = (MeasurementStartProtocolEntry) lastEntry;
+				String questionName = mapping.get(mStartEntry.getQuestionName());
+				if (questionName == null) continue;
+				if (questionName.equals(fact.getTerminologyObject().getName())) {
+					return;
+
+				}
+			}
+			if (!(lastEntry instanceof FactProtocolEntry)) continue;
+			FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
+			if (lastFactEntry.getTerminologyObjectName().equals(fact.getTerminologyObject().getName())
+					&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
+				protocol.removeEntry(lastFactEntry);
+			}
 		}
 	}
 
