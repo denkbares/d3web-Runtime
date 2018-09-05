@@ -13,7 +13,7 @@
 	</runtime>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DateHandler">
+		id="DateHandlerKB">
 		<parameter id="class"
 			value="de.d3web.core.io.fragments.DateHandler" />
 		<parameter id="name" value="DateHandler" />

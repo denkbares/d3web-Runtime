@@ -1,16 +1,24 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin id="d3web-SessionPersistence-Basic" version="1.0">
-	
+
 	<requires>
 		<import plugin-id="d3web-SessionPersistence-ExtensionPoints" />
 	</requires>
-	
+
 	<runtime>
 		<library id="de.d3web" path="." type="code">
 			<export prefix="*" />
 		</library>
 	</runtime>
+
+	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler" id="DateHandlerSession">
+		<parameter id="class" value="de.d3web.core.records.io.fragments.DateHandler" />
+		<parameter id="name" value="DateHandler" />
+		<parameter id="description" value="Handles Date (for example when used as a property)" />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="5" />
+	</extension>
 
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler" id="ChoiceValueHandler">
 		<parameter id="class" value="de.d3web.core.records.io.fragments.ChoiceValueHandler" />
