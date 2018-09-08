@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -66,7 +66,11 @@ public class BuildResultPersistenceHandler {
 	private static final String XML_SCHEM_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
 	private static final String XSI_SCHEMA_LOCATION = "xsi:schemaLocation";
 
-	public static Document toXML(BuildResult build) throws IOException, ParserConfigurationException {
+	public static Document toXML(BuildResult build) throws ParserConfigurationException {
+		return toXML(build, false);
+	}
+
+	public static Document toXML(BuildResult build, boolean failureOnly) throws ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.newDocument();
@@ -83,9 +87,17 @@ public class BuildResultPersistenceHandler {
 		// required Attributes
 		root.setAttribute(DURATION, String.valueOf(build.getBuildDuration()));
 		root.setAttribute(DATE, Strings.writeDate(build.getBuildDate()));
+		String buildResultName = build.getBuildResultName();
+		if (!Strings.isBlank(buildResultName)) {
+			root.setAttribute(NAME, buildResultName);
+		}
 
 		// add child results for single tests
 		for (TestResult result : build.getResults()) {
+
+			if (failureOnly && result.getSummary().getType() == Message.Type.SUCCESS) {
+				continue;
+			}
 
 			// create test item
 			Element test = document.createElement(TEST);
@@ -217,8 +229,8 @@ public class BuildResultPersistenceHandler {
 			// parse every single message
 			NodeList messageElements = test.getElementsByTagName(MESSAGE);
 			List<String> configParameters = TestParser.splitParameters(configuration);
-			Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
-			Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
+			Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<>());
+			Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<>());
 			Message summary = null;
 			for (int j = 0; j < messageElements.getLength(); j++) {
 				Element messageElement = (Element) messageElements.item(j);
@@ -253,14 +265,14 @@ public class BuildResultPersistenceHandler {
 			if (successfulTests > 0) {
 				// was stored non-verbose persistence
 				testResult = TestResult.createTestResult(testName,
-						configParameters.toArray(new String[configParameters.size()]),
+						configParameters.toArray(new String[0]),
 						unexpectedMessages, successfulTests, null);
 			}
 			else {
 				// was stored verbose persistence
 				verbosePersistence = true;
 				testResult = TestResult.createTestResult(testName,
-						configParameters.toArray(new String[configParameters.size()]),
+						configParameters.toArray(new String[0]),
 						unexpectedMessages, expectedMessages, null);
 			}
 			// backward compatibility: create summary as done before

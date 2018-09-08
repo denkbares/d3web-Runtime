@@ -59,6 +59,8 @@ public final class BuildResult {
 	 */
 	private int buildNumber = 0;
 
+	private String buildResultName = null;
+
 	private boolean verbosePersistence = false;
 
 	public BuildResult() {
@@ -82,6 +84,14 @@ public final class BuildResult {
 
 	public boolean isVerbosePersistence() {
 		return verbosePersistence;
+	}
+
+	public String getBuildResultName() {
+		return buildResultName;
+	}
+
+	public void setBuildResultName(String buildResultName) {
+		this.buildResultName = buildResultName;
 	}
 
 	/**
@@ -144,22 +154,16 @@ public final class BuildResult {
 			// build results are considered equal if containing the same test
 			// results (disregarding build date, duration, number..)
 			BuildResult other = (BuildResult) obj;
-			Set<TestResult> otherSet = new HashSet<>();
-			otherSet.addAll(other.getResults());
+			Set<TestResult> otherSet = new HashSet<>(other.getResults());
 
-			Set<TestResult> thisSet = new HashSet<>();
-			thisSet.addAll(this.getResults());
+			Set<TestResult> thisSet = new HashSet<>(this.getResults());
 
 			if (!(thisSet.size() == otherSet.size())) {
 				return false;
 			}
 
 			thisSet.removeAll(otherSet);
-			if (!thisSet.isEmpty()) {
-				return false;
-			}
-			// sets have equal size and contain same elements
-			return true;
+			return thisSet.isEmpty();
 		}
 		return false;
 	}
