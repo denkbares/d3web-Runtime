@@ -17,14 +17,9 @@
 	</properties>
 
 	<issueManagement>
-		<system>Phabricator</system>
-		<url>https://dev.denkbares.com/</url>
+		<system>GitHub</system>
+		<url>https://github.com/denkbares/d3web-Runtime/issues</url>
 	</issueManagement>
-
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>https://ci.denkbares.com/</url>
-	</ciManagement>
 
 	<licenses>
 		<license>
@@ -167,7 +162,6 @@
 				<version>1.3</version>
 			</dependency>
 
-
 			<dependency>
 				<groupId>com.denkbares</groupId>
 				<artifactId>denkbares-PluginManager</artifactId>
@@ -300,5 +294,4 @@
 		<name>Universität Würzburg</name>
 		<url>http://uni-wuerzburg.de/</url>
 	</organization>
-
 </project>
