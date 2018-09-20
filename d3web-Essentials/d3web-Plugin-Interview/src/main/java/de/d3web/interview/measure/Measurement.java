@@ -24,6 +24,7 @@ import de.d3web.core.inference.condition.NoAnswerException;
 import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -74,6 +75,15 @@ public class Measurement {
 	 * @see Form#getMeasurements()
 	 */
 	public static final Property<Measurement> MEASUREMENT = Property.getProperty("measurement", Measurement.class);
+
+	public static Measurement getMeasurement(NamedObject object) {
+		if (object == null) return null;
+		return object.getInfoStore().getValue(MEASUREMENT);
+	}
+
+	public static boolean hasMeasurement(NamedObject object) {
+		return getMeasurement(object) != null;
+	}
 
 	private final String identifier;
 	private final Map<String, String> mapping = new HashMap<>();
@@ -136,6 +146,14 @@ public class Measurement {
 	 * @param session the running session
 	 */
 	public void stop(Session session) {
+	}
+
+	/**
+	 * To be called when the measurement is in error.
+	 *
+	 * @param session the running session
+	 */
+	public void failure(Session session) {
 	}
 
 	/**
@@ -237,25 +255,36 @@ public class Measurement {
 	 * Any unlisted combination will result in unknown. Especially when the {@link Unknown} singleton instance is
 	 * specified as a raw value, it will apply 'unknown' to the question.
 	 *
-	 * @param session   the session to apply the value to
-	 * @param values    a map of measurands to values to set in the knowledge base
-	 * @param isStopped true, if the measurement should terminate and consider setting preliminary values
+	 * @param session the session to apply the value to
+	 * @param values  a map of measurands to values to set in the knowledge base
+	 * @param time    the propagation time with which the values should be applied to the session
 	 * @return the value fact that has been applied, also if unknown is applied due to an incompatible value, or null if
 	 * nothing is applied or a fact has been removed
 	 */
-	public Collection<Fact> applyValues(Session session, Map<String, Object> values, boolean isStopped) {
-		try {
-			return applyValuesStrict(session, values, isStopped);
+	public Collection<Fact> applyValues(Session session, Map<String, Object> values, long time) {
+		//noinspection SynchronizationOnLocalVariableOrMethodParameter
+		synchronized (session) {
+			session.getPropagationManager().openPropagation(time);
+			try {
+				return applyValuesStrict(session, values);
+			}
+			catch (IllegalArgumentException ex) {
+				return applyValuesStrict(session, values.entrySet()
+						.stream()
+						.collect(Collectors.toMap(Map.Entry::getKey, e -> Unknown.getInstance())));
+			}
+			catch (Throwable e) {
+				Log.severe("Applying measured readings threw an exception.", e);
+			}
+			finally {
+				session.getPropagationManager().commitPropagation();
+			}
 		}
-		catch (IllegalArgumentException ex) {
-			return applyValuesStrict(session, values.entrySet()
-					.stream()
-					.collect(Collectors.toMap(Map.Entry::getKey, e -> Unknown.getInstance())), isStopped);
-		}
+		return Collections.emptyList();
 	}
 
 	@SuppressWarnings("unused")
-	public Collection<Fact> applyValuesStrict(Session session, Map<String, Object> values, boolean isStopped) {
+	public Collection<Fact> applyValuesStrict(Session session, Map<String, Object> values) {
 		final List<Fact> facts = new ArrayList<>();
 
 		for (Map.Entry<String, Object> value : values.entrySet()) {
@@ -336,7 +365,6 @@ public class Measurement {
 				if (questionName == null) continue;
 				if (questionName.equals(fact.getTerminologyObject().getName())) {
 					return;
-
 				}
 			}
 			if (!(lastEntry instanceof FactProtocolEntry)) continue;
