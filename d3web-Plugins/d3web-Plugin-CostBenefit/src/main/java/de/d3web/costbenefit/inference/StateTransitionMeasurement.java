@@ -13,6 +13,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.interview.measure.Measurement;
 
 /**
@@ -36,6 +37,13 @@ public class StateTransitionMeasurement extends Measurement {
 	@Override
 	protected @NotNull Fact createFact(Session session, Question question, Value value) {
 		return new PSMethodStateTransition.StateTransitionFact(session, question, value);
+	}
+
+	@Override
+	protected Fact addFact(Session session, Question question, Value value) {
+		Fact fact = super.addFact(session, question, value);
+		session.getProtocol().addEntry(new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact));
+		return fact;
 	}
 
 	@Override
