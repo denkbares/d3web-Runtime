@@ -76,6 +76,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
+	private boolean replayingSession;
 
 	public CostBenefitCaseObject(Session session) {
 		this.session = session;
@@ -261,8 +262,9 @@ public class CostBenefitCaseObject implements SessionObject {
 				return;
 			}
 			// check if the rest of the path is applicable
-			else if (!CostBenefitUtil.checkPath(Arrays.asList(currentSequence), session,
-					this.getCurrentPathIndex(), false)) {
+			else if (!isReplayingSession()
+					&& !CostBenefitUtil.checkPath(Arrays.asList(currentSequence),
+					session, this.getCurrentPathIndex(), false)) {
 				this.resetPath();
 				return;
 			}
@@ -319,10 +321,8 @@ public class CostBenefitCaseObject implements SessionObject {
 		if (question instanceof QuestionOC) {
 			if (question instanceof QuestionZC) return true;
 			List<Choice> choices = ((QuestionOC) question).getAllAlternatives();
-			if (choices.size() == 1
-					&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches()) {
-				return true;
-			}
+			return choices.size() == 1
+					&& PATTERN_OK_CHOICE.matcher(choices.get(0).getName()).matches();
 		}
 		return false;
 	}
@@ -415,5 +415,21 @@ public class CostBenefitCaseObject implements SessionObject {
 		Date date = new Date(session.getPropagationManager().getPropagationTime());
 		session.getProtocol().addEntry(new CalculatedTargetEntry(
 				searchModel.getBestCostBenefitTarget(), searchModel.getTargets(), date, sprintGroup));
+	}
+
+	/**
+	 * Indicates whether we are currently in the process of loading/replaying a session, where we might want to handle
+	 * some cost benefit internals differently.
+	 */
+	public boolean isReplayingSession() {
+		return replayingSession;
+	}
+
+	/**
+	 * Indicates whether we are currently in the process of loading/replaying a session, where we might want to handle
+	 * some cost benefit internals differently.
+	 */
+	public void setReplayingSession(boolean replayingSession) {
+		this.replayingSession = replayingSession;
 	}
 }

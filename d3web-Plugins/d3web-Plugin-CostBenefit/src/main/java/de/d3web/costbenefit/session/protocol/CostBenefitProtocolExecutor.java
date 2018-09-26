@@ -34,6 +34,7 @@ public class CostBenefitProtocolExecutor implements ProtocolExecutor<CalculatedP
 		if (psm != null) {
 			this.pso = session.getSessionObject(psm);
 			pso.setUndiscriminatedSolutions(null);
+			pso.setReplayingSession(true);
 		}
 	}
 
@@ -73,6 +74,7 @@ public class CostBenefitProtocolExecutor implements ProtocolExecutor<CalculatedP
 	@Override
 	public void complete(SessionBuilder builder) {
 		if (psm == null) return;
+		pso.setReplayingSession(false);
 		psm.checkPath(session);
 	}
 }
