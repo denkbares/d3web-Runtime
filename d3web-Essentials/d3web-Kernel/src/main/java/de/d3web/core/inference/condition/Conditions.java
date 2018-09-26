@@ -41,10 +41,7 @@ public class Conditions {
 		try {
 			return condition.eval(session);
 		}
-		catch (NoAnswerException e) {
-			return false;
-		}
-		catch (UnknownAnswerException e) {
+		catch (NoAnswerException | UnknownAnswerException e) {
 			return false;
 		}
 	}
@@ -62,10 +59,7 @@ public class Conditions {
 		try {
 			return !condition.eval(session);
 		}
-		catch (NoAnswerException e) {
-			return false;
-		}
-		catch (UnknownAnswerException e) {
+		catch (NoAnswerException | UnknownAnswerException e) {
 			return false;
 		}
 	}
