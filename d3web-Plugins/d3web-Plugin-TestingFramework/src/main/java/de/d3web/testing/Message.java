@@ -88,6 +88,10 @@ public class Message implements Comparable<Message> {
 
 	public enum Type {
 		/**
+		 * The specific test has failed to read its pass criteria due to an minor failure.
+		 */
+		WARNING,
+		/**
 		 * The specific test has failed to read its pass criteria.
 		 */
 		FAILURE,

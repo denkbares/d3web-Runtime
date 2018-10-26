@@ -76,6 +76,10 @@ public class TestingUtils {
 		if (!failedTests.isEmpty()) {
 			return new Message(Type.FAILURE, "Failure" + getVerbalization(failedTests));
 		}
+		MultiMap<String, String> warningTests = summaryByType.computeIfAbsent(Type.WARNING, k -> new DefaultMultiMap<>());
+		if (!warningTests.isEmpty()){
+			return new Message(Type.WARNING, "Warning" + getVerbalization(warningTests));
+		}
 		return new Message(Message.Type.SUCCESS);
 	}
 

@@ -218,6 +218,9 @@ public final class BuildResult {
 			if (summary.getType() == Message.Type.FAILURE) {
 				overallResult = Message.Type.FAILURE;
 			}
+			if (summary.getType() == Message.Type.WARNING && overallResult == Message.Type.SUCCESS) {
+				overallResult = Message.Type.WARNING;
+			}
 		}
 		return overallResult;
 	}
