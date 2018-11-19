@@ -23,7 +23,7 @@ import de.d3web.core.session.Value;
 
 /**
  * This class contains a condition and an answer. If the condition is true and
- * no condition of a previous ConditionalValueSetter if the same ValueTransition
+ * no condition of a previous ConditionalValueSetter is the same ValueTransition
  * was true, this answer is set.
  * 
  * @author Markus Friedrich (denkbares GmbH)
