@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -76,37 +76,35 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	/**
-	 * Returns a set of all the {@link TerminologyObject}s that are covered by
-	 * this {@link XCLModel} with any type of {@link XCLRelation}.
-	 * 
-	 * @created 31.05.2012
+	 * Returns a set of all the {@link TerminologyObject}s that are covered by this {@link XCLModel} with any type of
+	 * {@link XCLRelation}.
+	 *
 	 * @return the covered terminology objects
+	 * @created 31.05.2012
 	 */
 	public Set<TerminologyObject> getCoveredSymptoms() {
 		return coveringRelations.keySet();
 	}
 
 	/**
-	 * Returns a set of all the {@link TerminologyObject}s that are covered by
-	 * this {@link XCLModel} with any type that is not
-	 * {@link XCLRelationType#contradicted}.
-	 * 
-	 * @created 31.05.2012
+	 * Returns a set of all the {@link TerminologyObject}s that are covered by this {@link XCLModel} with any type that
+	 * is not {@link XCLRelationType#contradicted}.
+	 *
 	 * @return the covered terminology objects
+	 * @created 31.05.2012
 	 */
 	public Set<TerminologyObject> getPositiveCoveredSymptoms() {
 		return positiveCoveredSymptoms;
 	}
 
 	/**
-	 * Returns all the {@link XCLRelation}s of any {@link XCLRelationType} that
-	 * are covering the specified {@link TerminologyObject} within this
-	 * {@link XCLModel}. If no relations are covering the specified object, an
-	 * empty set is returned.
-	 * 
-	 * @created 31.05.2012
+	 * Returns all the {@link XCLRelation}s of any {@link XCLRelationType} that are covering the specified {@link
+	 * TerminologyObject} within this {@link XCLModel}. If no relations are covering the specified object, an empty set
+	 * is returned.
+	 *
 	 * @param no the object to be covered
 	 * @return the covering relations
+	 * @created 31.05.2012
 	 */
 	public Set<XCLRelation> getCoveringRelations(TerminologyObject no) {
 		Set<XCLRelation> result = coveringRelations.get(no);
@@ -114,24 +112,24 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	public static void insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d) {
+										 Condition theCondition, Solution d) {
 		insertXCLRelation(kb, theCondition, d, XCLRelationType.explains);
 	}
 
 	public static void insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d, XCLRelationType type) {
+										 Condition theCondition, Solution d, XCLRelationType type) {
 		insertXCLRelation(kb, theCondition, d, type, 1);
 	}
 
 	public static void insertXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d, XCLRelationType type,
-			double weight) {
+										 Condition theCondition, Solution d, XCLRelationType type,
+										 double weight) {
 		insertAndReturnXCLRelation(kb, theCondition, d, type, weight);
 	}
 
 	public static XCLRelation insertAndReturnXCLRelation(KnowledgeBase kb,
-			Condition theCondition, Solution d, XCLRelationType type,
-			double weight) {
+														 Condition theCondition, Solution d, XCLRelationType type,
+														 double weight) {
 
 		// null checks
 		if (theCondition == null || d == null) {
@@ -164,7 +162,6 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 	public Rating getState(Session session) {
 		return getInferenceTrace(session).getState();
-
 	}
 
 	public boolean isConsiderOnlyRelevantRelations() {
@@ -177,39 +174,33 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	public boolean addRelation(XCLRelation relation) {
+		// add backward references from the terminal objects to this model
 		for (TerminologyObject nob : relation.getConditionedFinding().getTerminalObjects()) {
-			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(
-					XCLContributedModelSet.KNOWLEDGE_KIND);
-			if (set == null) {
-				set = new XCLContributedModelSet();
-				nob.getKnowledgeStore().addKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND,
-						set);
-			}
-			set.addModel(this);
+			nob.getKnowledgeStore()
+					.computeIfAbsent(XCLContributedModelSet.KNOWLEDGE_KIND, XCLContributedModelSet::new)
+					.addModel(this);
 		}
+		// and add the relation to the particular set of relations
 		switch (relation.getType()) {
-		case explains:
-			return addRelationTo(relation, relations);
-		case contradicted:
-			return addRelationTo(relation, contradictingRelations);
-		case requires:
-			return addRelationTo(relation, necessaryRelations);
-		case sufficiently:
-			return addRelationTo(relation, sufficientRelations);
+			case explains:
+				return addRelationTo(relation, relations);
+			case contradicted:
+				return addRelationTo(relation, contradictingRelations);
+			case requires:
+				return addRelationTo(relation, necessaryRelations);
+			case sufficiently:
+				return addRelationTo(relation, sufficientRelations);
 		}
 		return false;
 	}
 
 	public void removeRelation(XCLRelation rel) {
 		for (TerminologyObject nob : rel.getConditionedFinding().getTerminalObjects()) {
-			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(
-					XCLContributedModelSet.KNOWLEDGE_KIND);
+			XCLContributedModelSet set = nob.getKnowledgeStore().getKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND);
 			if (set != null) {
 				set.removeModel(this);
 				if (set.isEmpty()) {
-					nob.getKnowledgeStore().removeKnowledge(
-							XCLContributedModelSet.KNOWLEDGE_KIND,
-							set);
+					nob.getKnowledgeStore().removeKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND, set);
 				}
 			}
 		}
@@ -219,20 +210,11 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		sufficientRelations.remove(rel);
 	}
 
-	private boolean addRelationTo(XCLRelation relation,
-			Collection<XCLRelation> theRelations) {
-
+	private boolean addRelationTo(XCLRelation relation, Collection<XCLRelation> theRelations) {
 		theRelations.add(relation);
-
 		boolean isPositive = !relation.hasType(XCLRelationType.contradicted);
-		Collection<? extends TerminologyObject> terminalObjects = relation.getConditionedFinding().getTerminalObjects();
-		for (TerminologyObject no : terminalObjects) {
-			Set<XCLRelation> set = coveringRelations.get(no);
-			if (set == null) {
-				set = new HashSet<>();
-				coveringRelations.put(no, set);
-			}
-			set.add(relation);
+		for (TerminologyObject no : relation.getConditionedFinding().getTerminalObjects()) {
+			coveringRelations.computeIfAbsent(no, k -> new HashSet<>()).add(relation);
 			if (isPositive) positiveCoveredSymptoms.add(no);
 		}
 		return true;
@@ -251,24 +233,21 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	/**
-	 * Returns the established threshold of a Model, if it is not the default.
-	 * To get the threshold of the current session, use the instance of XCL:
-	 * instance.getScoreAlgorithm().getEstablishedThreshold(model)
-	 * 
+	 * Returns the established threshold of a Model, if it is not the default. To get the threshold of the current
+	 * session, use the instance of XCL: instance.getScoreAlgorithm().getEstablishedThreshold(model)
+	 *
+	 * @return the established threshold, if it is not the default, null otherwise
 	 * @created 29.06.2010
-	 * @return the established threshold, if it is not the default, null
-	 *         otherwise
 	 */
 	public Double getEstablishedThreshold() {
 		return establishedThreshold;
 	}
 
 	/**
-	 * Sets the EstablishedThreshold, if the value is smaller than 0, it is set
-	 * to the default value
-	 * 
-	 * @created 25.06.2010
+	 * Sets the EstablishedThreshold, if the value is smaller than 0, it is set to the default value
+	 *
 	 * @param establishedThreshold value of EstablishedThreshold
+	 * @created 25.06.2010
 	 */
 	public void setEstablishedThreshold(double establishedThreshold) {
 		if (establishedThreshold >= 0) {
@@ -280,23 +259,21 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	/**
-	 * Returns the suggested threshold of a Model, if it is not the default. To
-	 * get the threshold of the current session, use the instance of XCL:
-	 * instance.getScoreAlgorithm().getSuggestedThreshold(model)
-	 * 
-	 * @created 29.06.2010
+	 * Returns the suggested threshold of a Model, if it is not the default. To get the threshold of the current
+	 * session, use the instance of XCL: instance.getScoreAlgorithm().getSuggestedThreshold(model)
+	 *
 	 * @return the suggested threshold, if it is not the default, null otherwise
+	 * @created 29.06.2010
 	 */
 	public Double getSuggestedThreshold() {
 		return suggestedThreshold;
 	}
 
 	/**
-	 * Sets the SuggestedThreshold, if the value is smaller than 0, it is set to
-	 * the default value
-	 * 
-	 * @created 25.06.2010
+	 * Sets the SuggestedThreshold, if the value is smaller than 0, it is set to the default value
+	 *
 	 * @param suggestedThreshold value of SuggestedThreshold
+	 * @created 25.06.2010
 	 */
 	public void setSuggestedThreshold(double suggestedThreshold) {
 		if (suggestedThreshold >= 0) {
@@ -308,23 +285,21 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	}
 
 	/**
-	 * Returns the minimal support this Model must have, if it is not the
-	 * default. To get the minimal support of the current session, use the
-	 * instance of XCL: instance.getScoreAlgorithm().getMinSupport(model)
-	 * 
-	 * @created 29.06.2010
+	 * Returns the minimal support this Model must have, if it is not the default. To get the minimal support of the
+	 * current session, use the instance of XCL: instance.getScoreAlgorithm().getMinSupport(model)
+	 *
 	 * @return the minimal support, if it is not the default, null otherwise
+	 * @created 29.06.2010
 	 */
 	public Double getMinSupport() {
 		return minSupport;
 	}
 
 	/**
-	 * Sets the MinSupport, if the value is smaller than 0, it is set to the
-	 * default value
-	 * 
-	 * @created 25.06.2010
+	 * Sets the MinSupport, if the value is smaller than 0, it is set to the default value
+	 *
 	 * @param minSupport value of MinSupport
+	 * @created 25.06.2010
 	 */
 	public void setMinSupport(double minSupport) {
 		if (minSupport >= 0) {
