@@ -21,6 +21,7 @@
 package de.d3web.core.inference.condition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,6 +53,13 @@ public class CondOr extends NonTerminalCondition {
 	public CondOr(Collection<Condition> terms) {
 		super(terms);
 //		this.optimized = optimize(terms);
+	}
+
+	/**
+	 * Creates a new OR-condition with a list of disjunctive sub-conditions.
+	 */
+	public CondOr(Condition... terms) {
+		this(Arrays.asList(terms));
 	}
 
 	/**

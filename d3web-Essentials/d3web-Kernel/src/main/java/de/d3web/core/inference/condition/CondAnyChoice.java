@@ -22,7 +22,7 @@ import de.d3web.core.session.values.UndefinedValue;
  * <p>
  * Currently this condition cannot be persisted. It is used to optimize existing CondOr on-the-fly.
  *
- * @@author Volker Belli (denkbares GmbH)
+ * @author Volker Belli (denkbares GmbH)
  * @created 04.05.2018
  */
 public class CondAnyChoice extends CondQuestion {

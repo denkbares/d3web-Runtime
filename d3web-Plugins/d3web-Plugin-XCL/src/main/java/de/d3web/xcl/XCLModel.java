@@ -137,13 +137,8 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 		}
 
 		// insert XCL
-		XCLRelation relation;
-		XCLModel xclModel = d.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
-		if (xclModel == null) {
-			xclModel = new XCLModel(d);
-			d.getKnowledgeStore().addKnowledge(XCLModel.KNOWLEDGE_KIND, xclModel);
-		}
-		relation = new XCLRelation(theCondition, weight, type);
+		XCLModel xclModel = d.getKnowledgeStore().computeIfAbsent(KNOWLEDGE_KIND, () -> new XCLModel(d));
+		XCLRelation relation = new XCLRelation(theCondition, weight, type);
 		xclModel.addRelation(relation);
 		return relation;
 	}
