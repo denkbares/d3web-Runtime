@@ -21,8 +21,8 @@
 package de.d3web.core.manage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,23 +83,13 @@ public final class RuleFactory {
 		return rule;
 	}
 
-	public static void createContraIndicationRule(Question question,
-												  Condition condition) {
-		createContraIndicationRule(
-				Arrays.asList(new QASet[] { question }),
-				condition);
+	public static void createContraIndicationRule(QASet question, Condition condition) {
+		createContraIndicationRule(Collections.singletonList(question), condition);
 	}
 
-	public static Rule createHeuristicPSRule(
-			Solution solution,
-			Score score,
-			Condition condition) {
+	public static Rule createHeuristicPSRule(Solution solution, Score score, Condition condition) {
 
-		return createHeuristicPSRule(
-				solution,
-				score,
-				condition,
-				null);
+		return createHeuristicPSRule(solution, score, condition, null);
 	}
 
 	public static Rule createRule(PSAction action, Condition condition, Condition exceptionCondition, Class<? extends PSMethodRulebased> psMethodContext) {
