@@ -308,4 +308,15 @@
 		<parameter id="instanceof" value="java.lang.Boolean" />
 		<parameter id="default" value="false" />
 	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="systemStateParent">
+		<parameter id="name" value="systemStateParent" />
+		<parameter id="description"
+			value="Allows to specify the common system state question parent in a cost benefit knowledge base." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+		<parameter id="default" value="false" />
+	</extension>
 </plugin>
