@@ -10,8 +10,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QASet;
+import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
@@ -46,6 +50,26 @@ public class CostBenefitProperties {
 	 */
 	@Deprecated
 	public static final Property<Boolean> COMFORT_BENEFIT = Property.getProperty("comfortBenefit", Boolean.class);
+
+	/**
+	 * Allows to specify the common system state question parent in a cost benefit knowledge base.
+	 */
+	public static final Property<String> SYSTEM_STATE_PARENT = Property.getProperty("systemStateParent", String.class);
+
+	/**
+	 * Returns the common system state parent of this knowledge base. If non is defined, the root QContainer will be
+	 * returned.
+	 *
+	 * @param knowledgeBase the knowledge base for which the parent was defined, using SYSTEM_STATE_PARENT property
+	 * @return the common system state parent of the knowledge base
+	 */
+	@NotNull
+	public static QASet getSystemStateParent(KnowledgeBase knowledgeBase) {
+		String parentName = knowledgeBase.getInfoStore().getValue(SYSTEM_STATE_PARENT);
+		if (parentName == null) return knowledgeBase.getRootQASet();
+		QContainer qContainer = knowledgeBase.getManager().searchQContainer(parentName);
+		return qContainer == null ? knowledgeBase.getRootQASet() : qContainer;
+	}
 
 	/**
 	 * Property to mark a question to be a state question. This means the question represents a state of the "Unit Under
