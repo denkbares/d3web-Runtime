@@ -317,6 +317,5 @@
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
-		<parameter id="default" value="false" />
 	</extension>
 </plugin>
