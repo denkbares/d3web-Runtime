@@ -33,13 +33,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -136,6 +136,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		element.setAttribute("QID", vt.getQuestion().getName());
 		List<ConditionalValueSetter> setters = vt.getSetters();
 		for (ConditionalValueSetter cvs : setters) {
+			if (cvs == null) continue;
 			element.appendChild(getElement(persistence, cvs));
 		}
 		return element;
