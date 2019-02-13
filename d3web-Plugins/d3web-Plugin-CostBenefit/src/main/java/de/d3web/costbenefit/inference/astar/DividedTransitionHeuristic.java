@@ -509,6 +509,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		}
 		List<ConditionalValueSetter> setters = vt.getSetters();
 		for (ConditionalValueSetter cvs : setters) {
+			if (cvs == null) continue;
 			Condition condition = cvs.getCondition();
 			if (condition == null
 					|| Conditions.isTrue(cvs.getCondition(), sessionObject.answeredSession)) {
