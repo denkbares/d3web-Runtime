@@ -20,8 +20,8 @@
 
 package de.d3web.core.knowledge.terminology;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -53,7 +53,7 @@ public abstract class QuestionChoice extends Question {
 		Collections.addAll(alternatives, choices);
 	}
 
-	private final List<Choice> alternatives = new LinkedList<>();
+	private final List<Choice> alternatives = new ArrayList<>();
 
 	/**
 	 * Gives you all the answers (alternatives) and does not care about any
@@ -90,17 +90,24 @@ public abstract class QuestionChoice extends Question {
 	}
 
 	public void addAlternative(Choice answer) {
-		if ((answer != null) && (!getAllAlternatives().contains(answer))) {
+		if (answer != null && !hasChoice(answer)) {
 			alternatives.add(answer);
 			answer.setQuestion(this);
 		}
 	}
 
 	public void addAlternative(Choice answer, int pos) {
-		if ((answer != null) && (!getAllAlternatives().contains(answer))) {
+		if (answer != null && !hasChoice(answer)) {
 			alternatives.add(pos > alternatives.size() ? alternatives.size() : pos, answer);
 			answer.setQuestion(this);
 		}
+	}
+
+	private boolean hasChoice(Choice answer) {
+		for (Choice alternative : alternatives) {
+			if (answer.getName().equals(alternative.getName())) return true;
+		}
+		return false;
 	}
 
 	public boolean removeAlternative(Choice answer) {
