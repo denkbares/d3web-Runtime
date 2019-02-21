@@ -41,6 +41,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
@@ -156,6 +157,7 @@ public final class CostBenefitUtil {
 		for (Question question : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
 			// skip all non-oc questions and already answered questions
 			if (!(question instanceof QuestionOC)) continue;
+			if (question instanceof QuestionZC) continue;
 			Value value = blackboard.getValue(question);
 			if (!UndefinedValue.isUndefinedValue(value)) continue;
 			QuestionOC questionOC = (QuestionOC) question;
