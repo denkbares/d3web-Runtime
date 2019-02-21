@@ -134,6 +134,6 @@ public class CondOr extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		return "(" + Strings.concat(" OR ", getTerms()) + ")";
+		return Strings.concat(" OR ", getTerms());
 	}
 }
