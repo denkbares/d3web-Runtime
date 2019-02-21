@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <settings>
-	<plugins>
-		<plugin ID="KnowWE-Basic-Plugins" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-JSPWiki-Connector-jpf-plugin" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-CI4KE" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-Flowchart" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-QuickInterview" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-SemanticCore" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-Table" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-TestSuite" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-d3web" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-d3web-MarkupSet" autodetect="false" required="false"/>
-		<plugin ID="KnowWE-Plugin-d3web-basic" autodetect="false" required="false"/>
-		<plugin ID="KnowWEExtensionPoints" autodetect="false" required="false"/>
-		<plugin ID="KnowledgePersistenceBasicExtensions" autodetect="false" required="false"/>
-		<plugin ID="KnowledgePersistenceExtensionPoints" autodetect="false" required="false"/>
-		<plugin ID="d3web-BasicProperties" autodetect="false" required="false"/>
-		<plugin ID="d3web-CostBenefit" autodetect="true" required="false"/>
-		<plugin ID="d3web-DiaFlux" autodetect="false" required="false"/>
-		<plugin ID="d3web-Interview" autodetect="false" required="false"/>
-		<plugin ID="d3web-Kernel-ExtensionPoints" autodetect="false" required="false"/>
-		<plugin ID="d3web-Persistence-ImageQuestion" autodetect="false" required="false"/>
-		<plugin ID="d3web-Plugin-TestCase" autodetect="false" required="false"/>
-		<plugin ID="d3web-SessionPersistence-ExtensionPoints" autodetect="false" required="false"/>
-		<plugin ID="d3web-XCL" autodetect="true" required="false"/>
-		<plugin ID="knowledgePersistenceShared" autodetect="false" required="false"/>
-	</plugins>
-	<psmethods>
-		<psEntry extensionID="PSMethodInterview" pluginID="d3web-Interview" priority="3.0" state="autodetect"/>
-		<psEntry extensionID="PSMethodMeasurement" pluginID="d3web-Interview" priority="3.0" state="autodetect"/>
-		<psEntry extensionID="PSMethodXCL" pluginID="d3web-XCL" priority="5.0" state="autodetect">
-			<scoreAlgorithm name="DefaultScoreAlgorithm">
-				<defaultEstablishedThreshold value="0.8"/>
-				<defaultSuggestedThreshold value="0.3"/>
-				<minSupport value="0.01"/>
-			</scoreAlgorithm>
-		</psEntry>
-		<psEntry extensionID="PSMethodStateTransition" pluginID="d3web-CostBenefit" priority="5.5" state="autodetect"/>
-		<psEntry extensionID="PSMethodCostBenefit" manual="false" pluginID="d3web-CostBenefit" priority="6.0" state="autodetect" strategicBenefitFactor="0.0">
-			<targetFunction name="DefaultTargetFunction"/>
-			<searchAlgorithm multiCore="true" name="AStarSearchAlgorithm">
-				<heuristic name="TPHeuristic"/>
-				<abortStrategy increasingFactor="4.0" maxsteps="500000" name="DefaultAbortStrategy"/>
-			</searchAlgorithm>
-			<costFunction name="DefaultCostFunction"/>
-			<solutionRater name="DefaultSolutionRater"/>
-		</psEntry>
-		<psEntry extensionID="FluxSolver" pluginID="d3web-DiaFlux" priority="5.0" state="autodetect"/>
-	</psmethods>
+  <plugins>
+    <plugin ID="KnowWE-Basic-Plugins" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-JSPWiki-Connector-jpf-plugin" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-CI4KE" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-Flowchart" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-QuickInterview" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-SemanticCore" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-Table" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-TestSuite" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-d3web" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-d3web-MarkupSet" autodetect="false" required="false"/>
+    <plugin ID="KnowWE-Plugin-d3web-basic" autodetect="false" required="false"/>
+    <plugin ID="KnowWEExtensionPoints" autodetect="false" required="false"/>
+    <plugin ID="KnowledgePersistenceBasicExtensions" autodetect="false" required="false"/>
+    <plugin ID="KnowledgePersistenceExtensionPoints" autodetect="false" required="false"/>
+    <plugin ID="d3web-BasicProperties" autodetect="false" required="false"/>
+    <plugin ID="d3web-CostBenefit" autodetect="true" required="false"/>
+    <plugin ID="d3web-DiaFlux" autodetect="false" required="false"/>
+    <plugin ID="d3web-Interview" autodetect="false" required="false"/>
+    <plugin ID="d3web-Kernel-ExtensionPoints" autodetect="false" required="false"/>
+    <plugin ID="d3web-Persistence-ImageQuestion" autodetect="false" required="false"/>
+    <plugin ID="d3web-Plugin-TestCase" autodetect="false" required="false"/>
+    <plugin ID="d3web-SessionPersistence-ExtensionPoints" autodetect="false" required="false"/>
+    <plugin ID="d3web-XCL" autodetect="true" required="false"/>
+    <plugin ID="knowledgePersistenceShared" autodetect="false" required="false"/>
+  </plugins>
+  <psmethods>
+    <psEntry extensionID="PSMethodInterview" pluginID="d3web-Interview" priority="3.0" state="autodetect"/>
+    <psEntry extensionID="PSMethodMeasurement" pluginID="d3web-Interview" priority="3.0" state="autodetect"/>
+    <psEntry extensionID="PSMethodXCL" pluginID="d3web-XCL" priority="5.0" state="autodetect">
+      <scoreAlgorithm name="DefaultScoreAlgorithm">
+        <defaultEstablishedThreshold value="0.8"/>
+        <defaultSuggestedThreshold value="0.3"/>
+        <minSupport value="0.01"/>
+      </scoreAlgorithm>
+    </psEntry>
+    <psEntry extensionID="PSMethodStateTransition" pluginID="d3web-CostBenefit" priority="5.5" state="autodetect"/>
+    <psEntry extensionID="PSMethodCostBenefit" manual="false" pluginID="d3web-CostBenefit" priority="6.0" state="autodetect" strategicBenefitFactor="0.0">
+      <targetFunction name="DefaultTargetFunction"/>
+      <searchAlgorithm multiCore="true" name="AStarSearchAlgorithm">
+        <heuristic name="TPHeuristic"/>
+        <abortStrategy increasingFactor="4.0" maxsteps="500000" name="DefaultAbortStrategy"/>
+      </searchAlgorithm>
+      <costFunction name="DefaultCostFunction"/>
+      <solutionRater name="DefaultSolutionRater"/>
+    </psEntry>
+    <psEntry extensionID="FluxSolver" pluginID="d3web-DiaFlux" priority="5.0" state="autodetect"/>
+  </psmethods>
 </settings>

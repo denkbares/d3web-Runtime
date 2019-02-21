@@ -1,106 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="abstraction-rules">
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Mileage evaluation"/>
-<Values>
-<Value name="slightly increased" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition name="Num. Mileage evaluation" type="numLessEqual" value="130.0"/>
-<Condition name="Num. Mileage evaluation" type="numGreaterEqual" value="110.0"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Mileage evaluation"/>
-<Values>
-<Value name="normal" type="answer"/>
-</Values>
-</Action>
-<Condition name="Num. Mileage evaluation" type="numLess" value="110.0"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Mileage evaluation"/>
-<Values>
-<Value name="increased" type="answer"/>
-</Values>
-</Action>
-<Condition name="Num. Mileage evaluation" type="numGreater" value="130.0"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Exhaust pipe color evaluation"/>
-<Values>
-<Value name="normal" type="answer"/>
-</Values>
-</Action>
-<Condition type="or">
-<Condition name="Exhaust pipe color" type="equal" value="light grey"/>
-<Condition type="or">
-<Condition name="Exhaust pipe color" type="equal" value="grey"/>
-<Condition name="Exhaust pipe color" type="equal" value="brown"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Exhaust pipe color evaluation"/>
-<Values>
-<Value name="normal" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition name="Exhaust pipe color" type="equal" value="sooty black"/>
-<Condition name="Fuel" type="equal" value="diesel"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Exhaust pipe color evaluation"/>
-<Values>
-<Value name="abnormal" type="answer"/>
-</Values>
-</Action>
-<Condition type="and">
-<Condition name="Exhaust pipe color" type="equal" value="sooty black"/>
-<Condition name="Fuel" type="equal" value="unleaded gasoline"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionSetValue">
-<Question name="Num. Mileage evaluation"/>
-<Values>
-<Value type="evaluatable">
-<FormulaTerm type="*">
-<arg1>
-<FormulaTerm type="/">
-<arg1>
-<FormulaPrimitive type="QNumWrapper">
-<Value>Real mileage /100km</Value>
-</FormulaPrimitive>
-</arg1>
-<arg2>
-<FormulaPrimitive type="QNumWrapper">
-<Value>Average mileage /100km</Value>
-</FormulaPrimitive>
-</arg2>
-</FormulaTerm>
-</arg1>
-<arg2>
-<FormulaPrimitive type="FormulaNumber">
-<Value>100.0</Value>
-</FormulaPrimitive>
-</arg2>
-</FormulaTerm>
-</Value>
-</Values>
-</Action>
-<Condition type="and">
-<Condition name="Real mileage  /100km" type="known"/>
-<Condition name="Average mileage /100km" type="numGreater" value="0.0"/>
-</Condition>
-</KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Mileage evaluation"/>
+      <Values>
+        <Value name="normal" type="answer"/>
+      </Values>
+    </Action>
+    <Condition name="Num. Mileage evaluation" type="numLess" value="110.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Mileage evaluation"/>
+      <Values>
+        <Value name="slightly increased" type="answer"/>
+      </Values>
+    </Action>
+    <Condition type="and">
+      <Condition name="Num. Mileage evaluation" type="numLessEqual" value="130.0"/>
+      <Condition name="Num. Mileage evaluation" type="numGreaterEqual" value="110.0"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Mileage evaluation"/>
+      <Values>
+        <Value name="increased" type="answer"/>
+      </Values>
+    </Action>
+    <Condition name="Num. Mileage evaluation" type="numGreater" value="130.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Exhaust pipe color evaluation"/>
+      <Values>
+        <Value name="normal" type="answer"/>
+      </Values>
+    </Action>
+    <Condition type="or">
+      <Condition name="Exhaust pipe color" type="equal" value="light grey"/>
+      <Condition type="or">
+        <Condition name="Exhaust pipe color" type="equal" value="grey"/>
+        <Condition name="Exhaust pipe color" type="equal" value="brown"/>
+      </Condition>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Exhaust pipe color evaluation"/>
+      <Values>
+        <Value name="normal" type="answer"/>
+      </Values>
+    </Action>
+    <Condition type="and">
+      <Condition name="Exhaust pipe color" type="equal" value="sooty black"/>
+      <Condition name="Fuel" type="equal" value="diesel"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Exhaust pipe color evaluation"/>
+      <Values>
+        <Value name="abnormal" type="answer"/>
+      </Values>
+    </Action>
+    <Condition type="and">
+      <Condition name="Exhaust pipe color" type="equal" value="sooty black"/>
+      <Condition name="Fuel" type="equal" value="unleaded gasoline"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionSetValue">
+      <Question name="Num. Mileage evaluation"/>
+      <Values>
+        <Value type="evaluatable">
+          <FormulaTerm type="*">
+            <arg1>
+              <FormulaTerm type="/">
+                <arg1>
+                  <FormulaPrimitive type="QNumWrapper">
+                    <Value>Real mileage /100km</Value>
+                  </FormulaPrimitive>
+                </arg1>
+                <arg2>
+                  <FormulaPrimitive type="QNumWrapper">
+                    <Value>Average mileage /100km</Value>
+                  </FormulaPrimitive>
+                </arg2>
+              </FormulaTerm>
+            </arg1>
+            <arg2>
+              <FormulaPrimitive type="FormulaNumber">
+                <Value>100.0</Value>
+              </FormulaPrimitive>
+            </arg2>
+          </FormulaTerm>
+        </Value>
+      </Values>
+    </Action>
+    <Condition type="and">
+      <Condition name="Real mileage  /100km" type="known"/>
+      <Condition name="Average mileage /100km" type="numGreater" value="0.0"/>
+    </Condition>
+  </KnowledgeSlice>
 </KnowledgeBase>

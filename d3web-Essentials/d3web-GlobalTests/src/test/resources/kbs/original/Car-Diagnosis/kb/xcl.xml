@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="xclpattern">
-<KnowledgeSlices>
-<XCLModel SID="Clogged air filter  " considerOnlyRelevantRelations="true">
-<necessaryRelations>
-<relation ID="rel_0">
-<Condition name="Driving" type="equal" value="weak acceleration"/>
-</relation>
-</necessaryRelations>
-<sufficientRelations>
-<relation ID="rel_1">
-<Condition name="Air filter o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_2">
-<Condition name="Air filter o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="rel_3">
-<Condition name="Mileage evaluation" type="equal" value="increased"/>
-<weight>3.0</weight>
-</relation>
-<relation ID="rel_4">
-<Condition name="Exhaust pipe color evaluation" type="equal" value="abnormal"/>
-</relation>
-</Relations>
-</XCLModel>
-<XCLModel SID="Damaged idle speed system " considerOnlyRelevantRelations="true">
-<necessaryRelations>
-<relation ID="rel_5">
-<Condition name="Engine start" type="equal" value="engine barely starts"/>
-</relation>
-</necessaryRelations>
-<sufficientRelations>
-<relation ID="rel_6">
-<Condition name="Idle speed system o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_7">
-<Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="rel_8">
-<Condition name="Driving" type="equal" value="low idle speed"/>
-</relation>
-</Relations>
-</XCLModel>
-</KnowledgeSlices>
+  <KnowledgeSlices>
+    <XCLModel SID="Clogged air filter  " considerOnlyRelevantRelations="true">
+      <necessaryRelations>
+        <relation ID="rel_0">
+          <Condition name="Driving" type="equal" value="weak acceleration"/>
+        </relation>
+      </necessaryRelations>
+      <sufficientRelations>
+        <relation ID="rel_1">
+          <Condition name="Air filter o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_2">
+          <Condition name="Air filter o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation ID="rel_3">
+          <Condition name="Mileage evaluation" type="equal" value="increased"/>
+          <weight>3.0</weight>
+        </relation>
+        <relation ID="rel_4">
+          <Condition name="Exhaust pipe color evaluation" type="equal" value="abnormal"/>
+        </relation>
+      </Relations>
+    </XCLModel>
+    <XCLModel SID="Damaged idle speed system " considerOnlyRelevantRelations="true">
+      <necessaryRelations>
+        <relation ID="rel_5">
+          <Condition name="Engine start" type="equal" value="engine barely starts"/>
+        </relation>
+      </necessaryRelations>
+      <sufficientRelations>
+        <relation ID="rel_6">
+          <Condition name="Idle speed system o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_7">
+          <Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation ID="rel_8">
+          <Condition name="Driving" type="equal" value="low idle speed"/>
+        </relation>
+      </Relations>
+    </XCLModel>
+  </KnowledgeSlices>
 </KnowledgeBase>

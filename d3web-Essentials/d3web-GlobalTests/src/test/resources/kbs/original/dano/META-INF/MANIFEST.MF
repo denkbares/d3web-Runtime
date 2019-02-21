@@ -1,7 +1,7 @@
 Manifest-Version: 2.0
+Date: Fri Feb 22 00:01:42 CET 2019
+Author: null
+Name: null
 ID: null
-Author: Wolfgang Lotz (KE: Joachim Baumeister)
-Name: Digitalys 0.73 (Stand: Revision 2008-08-21)
-Date: Thu Feb 18 15:54:53 CET 2010
-User: Markus Friedrich
+User: Albrecht
 

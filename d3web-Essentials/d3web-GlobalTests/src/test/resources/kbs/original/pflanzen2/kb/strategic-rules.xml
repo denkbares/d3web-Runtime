@@ -1,182 +1,182 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="strategic-rules">
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Stengelhaare Besonderheiten"/>
-</TargetQASets>
-</Action>
-<Condition type="or">
-<Condition name="Stengelhaare" type="equal" value="deutlich behaart"/>
-<Condition name="Stengelhaare" type="equal" value="stark bis dicht behaart"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütenblätteranzahl"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp strahlig" type="equal" value="einzelne Blütenblätter gut abzählbar, nicht mehr als 15"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütenblätter gespalten"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp strahlig" type="equal" value="einzelne Blütenblätter gut abzählbar, nicht mehr als 15"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütentyp weitere"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp grob" type="equal" value="andere Blüten"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütentyp strahlig"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp grob" type="equal" value="strahlig, sternförmig"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütentyp glocken-, trichter-, becherförmig"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp grob" type="equal" value="glockenförmig, trichterförmig, becherförmig"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütentyp gespornt"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp grob" type="equal" value="gespornt"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütentyp Schmetterlingsblüte"/>
-</TargetQASets>
-</Action>
-<Condition type="not">
-<Condition type="or">
-<Condition name="Blütentyp grob" type="equal" value="strahlig, sternförmig"/>
-<Condition name="Blütentyp grob" type="equal" value="Schmetterlingsblüte"/>
-<Condition name="Blütentyp grob" type="equal" value="Lippenblüte, Rachenblüte"/>
-<Condition name="Blütentyp grob" type="equal" value="glockenförmig, trichterförmig, becherförmig"/>
-<Condition name="Blütentyp grob" type="equal" value="gespornt"/>
-<Condition name="Blütentyp grob" type="equal" value="andere Blüten"/>
-</Condition>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütentyp Lippenblüte"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütentyp grob" type="equal" value="Lippenblüte, Rachenblüte"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Döldchenanzahl"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütenstand Dolde" type="equal" value="echte doppelte Dolde"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Köpfchengröße"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütenstand" type="equal" value="Köpfchen"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütenstand Dolde"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütenstand" type="equal" value="Dolde oder Scheindolde"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Kelchfarbe"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition type="not">
-<Condition name="Blütenkelch" type="equal" value="fehlend (nur angeben wenn ganz sicher)"/>
-</Condition>
-<Condition name="Blütenkelch" type="equal" value="fehlend (nur angeben wenn ganz sicher)"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütenblattspaltenanzahl"/>
-</TargetQASets>
-</Action>
-<Condition type="or">
-<Condition name="Blütenblätter gespalten" type="equal" value="etwa bis zu 1/4 gespalten"/>
-<Condition name="Blütenblätter gespalten" type="equal" value="etwa bis zu 1/2 gespalten"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blütenblattrand gezackt"/>
-</TargetQASets>
-</Action>
-<Condition name="Blütenblätter gespalten" type="equal" value="nicht oder kaum gespalten, höchstens gezähnt"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blattform"/>
-</TargetQASets>
-</Action>
-<Condition type="or">
-<Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
-<Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-<Condition name="Blattunterteilung" type="equal" value="gefingert"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blattfingeranzahl"/>
-</TargetQASets>
-</Action>
-<Condition type="or">
-<Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
-<Condition name="Blattunterteilung" type="equal" value="gefingert"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blattfiedersymmetrie"/>
-</TargetQASets>
-</Action>
-<Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Blattfiederpaare"/>
-</TargetQASets>
-</Action>
-<Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-</KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Stengelhaare Besonderheiten"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="or">
+      <Condition name="Stengelhaare" type="equal" value="deutlich behaart"/>
+      <Condition name="Stengelhaare" type="equal" value="stark bis dicht behaart"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütenblätteranzahl"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp strahlig" type="equal" value="einzelne Blütenblätter gut abzählbar, nicht mehr als 15"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütenblätter gespalten"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp strahlig" type="equal" value="einzelne Blütenblätter gut abzählbar, nicht mehr als 15"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütentyp weitere"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp grob" type="equal" value="andere Blüten"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütentyp strahlig"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp grob" type="equal" value="strahlig, sternförmig"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütentyp glocken-, trichter-, becherförmig"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp grob" type="equal" value="glockenförmig, trichterförmig, becherförmig"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütentyp gespornt"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp grob" type="equal" value="gespornt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütentyp Schmetterlingsblüte"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="not">
+      <Condition type="or">
+        <Condition name="Blütentyp grob" type="equal" value="strahlig, sternförmig"/>
+        <Condition name="Blütentyp grob" type="equal" value="Schmetterlingsblüte"/>
+        <Condition name="Blütentyp grob" type="equal" value="Lippenblüte, Rachenblüte"/>
+        <Condition name="Blütentyp grob" type="equal" value="glockenförmig, trichterförmig, becherförmig"/>
+        <Condition name="Blütentyp grob" type="equal" value="gespornt"/>
+        <Condition name="Blütentyp grob" type="equal" value="andere Blüten"/>
+      </Condition>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütentyp Lippenblüte"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütentyp grob" type="equal" value="Lippenblüte, Rachenblüte"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Döldchenanzahl"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütenstand Dolde" type="equal" value="echte doppelte Dolde"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Köpfchengröße"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütenstand" type="equal" value="Köpfchen"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütenstand Dolde"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütenstand" type="equal" value="Dolde oder Scheindolde"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Kelchfarbe"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition type="not">
+        <Condition name="Blütenkelch" type="equal" value="fehlend (nur angeben wenn ganz sicher)"/>
+      </Condition>
+      <Condition name="Blütenkelch" type="equal" value="fehlend (nur angeben wenn ganz sicher)"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütenblattspaltenanzahl"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="or">
+      <Condition name="Blütenblätter gespalten" type="equal" value="etwa bis zu 1/4 gespalten"/>
+      <Condition name="Blütenblätter gespalten" type="equal" value="etwa bis zu 1/2 gespalten"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blütenblattrand gezackt"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blütenblätter gespalten" type="equal" value="nicht oder kaum gespalten, höchstens gezähnt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blattform"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="or">
+      <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+      <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
+      <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blattfingeranzahl"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="or">
+      <Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
+      <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blattfiedersymmetrie"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Blattfiederpaare"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
+  </KnowledgeSlice>
 </KnowledgeBase>

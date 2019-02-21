@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <MMInfos>
-<KnowledgeBase>
-<entry property="unknown_verbalisation">unknown</entry>
-</KnowledgeBase>
+  <KnowledgeBase>
+    <entry property="unknownPrompt">unknown</entry>
+  </KnowledgeBase>
 </MMInfos>

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.custommonkey.xmlunit.DetailedDiff;
@@ -52,7 +53,7 @@ public class PersistenceTest extends XMLTestCase {
 	final ArrayList<String> _excludedFolders;
 	final ArrayList<String> _excludedFileTypes;
 
-	public PersistenceTest(String name) throws Exception {
+	public PersistenceTest(String name) {
 		super(name);
 		_excludedFolders = new ArrayList<>();
 		_excludedFolders.add("CVS");
@@ -71,14 +72,13 @@ public class PersistenceTest extends XMLTestCase {
 			InitPluginManager.init();
 		}
 		catch (IOException e1) {
-			assertTrue("Error initialising plugin framework", false);
+			fail("Error initialising plugin framework");
 		}
 		// Clean the old reloaded dir
 		File fc = new File(_reloadedFolder);
 		if (!fc.exists()) fc.mkdir();
 		for (File v : fc.listFiles()) {
-			assertEquals("Error while deleting File: " + v.getName(),
-					true, PersistenceHelper.deleteRecursive(v));
+			assertTrue("Error while deleting File: " + v.getName(), PersistenceHelper.deleteRecursive(v));
 		}
 
 		// Read the Original KnowledgeBases from Directory
@@ -135,8 +135,8 @@ public class PersistenceTest extends XMLTestCase {
 		int actual;
 		for (File[] p : pairs) {
 			message = new StringBuffer("Differences found in " + p[0].getName() + "::" + p[0].getAbsolutePath() + " (Without Properties):\n\r");
-			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0]), "UTF-8"));
-			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1]), "UTF-8"));
+			org = new BufferedReader(new InputStreamReader(new FileInputStream(p[0]), StandardCharsets.UTF_8));
+			rel = new BufferedReader(new InputStreamReader(new FileInputStream(p[1]), StandardCharsets.UTF_8));
 
 			if (p[0].getName().endsWith(".xml")) {
 				diff = new Diff(org, rel);

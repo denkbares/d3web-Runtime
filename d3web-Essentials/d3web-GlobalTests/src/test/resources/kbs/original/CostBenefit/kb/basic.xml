@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="" system="d3web" type="basic">
-<InitQuestions/>
-<rootQASet>Q000</rootQASet>
-<rootSolution>P000</rootSolution>
-<QASets>
-<QContainer name="Q000"/>
-<QContainer name="TestStep">
-<Children>
-<Child name="TestStep question"/>
-</Children>
-</QContainer>
-<Question name="TestStep question" type="OC">
-<Answers>
-<Answer name="lighting" type="AnswerChoice"/>
-</Answers>
-<infoStore>
-<entry property="abnormality">
-<anormalities>
-<values>
-<abnormality ID="lighting" value="A0"/>
-</values>
-</anormalities>
-</entry>
-</infoStore>
-</Question>
-<QContainer name="TestStep2">
-<Children>
-<Child name="okQuestion"/>
-<Child name="TestStep2 question"/>
-</Children>
-</QContainer>
-<Question name="TestStep2 question" type="Num"/>
-<Question name="dummy" type="Num"/>
-<QContainer name="follower">
-<Children>
-<Child name="dummy"/>
-</Children>
-</QContainer>
-<Question name="okQuestion" type="OC">
-<Answers>
-<Answer name="ok" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="state" type="OC">
-<Answers>
-<Answer name="a" type="AnswerChoice"/>
-<Answer name="b" type="AnswerChoice"/>
-</Answers>
-</Question>
-</QASets>
-<Diagnoses>
-<Diagnosis name="P000"/>
-</Diagnoses>
-<KnowledgeSlices/>
+  <InitQuestions/>
+  <rootQASet>Q000</rootQASet>
+  <rootSolution>P000</rootSolution>
+  <QASets>
+    <QContainer name="Q000"/>
+    <QContainer name="TestStep">
+      <Children>
+        <Child name="TestStep question"/>
+      </Children>
+    </QContainer>
+    <Question name="TestStep question" type="OC">
+      <Answers>
+        <Answer name="lighting" type="AnswerChoice"/>
+      </Answers>
+      <infoStore>
+        <entry property="abnormality">
+          <anormalities>
+            <values>
+              <abnormality ID="lighting" value="A0"/>
+            </values>
+          </anormalities>
+        </entry>
+      </infoStore>
+    </Question>
+    <QContainer name="TestStep2">
+      <Children>
+        <Child name="okQuestion"/>
+        <Child name="TestStep2 question"/>
+      </Children>
+    </QContainer>
+    <Question name="TestStep2 question" type="Num"/>
+    <Question name="dummy" type="Num"/>
+    <QContainer name="follower">
+      <Children>
+        <Child name="dummy"/>
+      </Children>
+    </QContainer>
+    <Question name="okQuestion" type="OC">
+      <Answers>
+        <Answer name="ok" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="state" type="OC">
+      <Answers>
+        <Answer name="a" type="AnswerChoice"/>
+        <Answer name="b" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+  </QASets>
+  <Diagnoses>
+    <Diagnosis name="P000"/>
+  </Diagnoses>
+  <KnowledgeSlices/>
 </KnowledgeBase>

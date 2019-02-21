@@ -1,2218 +1,2218 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="strategic-rules">
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q99"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q98" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q101"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q98" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q100"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="ja"/>
-<Condition name="Question: Q99" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q97"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q96" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC15"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q96" type="equal" value="nein"/>
-<Condition name="Question: Q97" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q90"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q89" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSBrustschmerz"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q89" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q93"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q91"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q94"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="nein"/>
-<Condition name="Question: Q93" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC15"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="nein"/>
-<Condition name="Question: Q93" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q95"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="nein"/>
-<Condition name="Question: Q93" type="equal" value="nein"/>
-<Condition name="Question: Q94" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q92"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="ja"/>
-<Condition name="Question: Q91" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC16"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="ja"/>
-<Condition name="Question: Q91" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC16"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q89" type="equal" value="nein"/>
-<Condition name="Question: Q90" type="equal" value="ja"/>
-<Condition name="Question: Q91" type="equal" value="ja"/>
-<Condition name="Question: Q92" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q82"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q81" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q83"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSKreislauf"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q84"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSAtemprobleme"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q85"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-<Condition name="Question: Q84" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q88"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-<Condition name="Question: Q84" type="equal" value="nein"/>
-<Condition name="Question: Q85" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q86"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-<Condition name="Question: Q84" type="equal" value="nein"/>
-<Condition name="Question: Q85" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSVergiftung"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-<Condition name="Question: Q84" type="equal" value="nein"/>
-<Condition name="Question: Q85" type="equal" value="nein"/>
-<Condition name="Question: Q88" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q87"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-<Condition name="Question: Q84" type="equal" value="nein"/>
-<Condition name="Question: Q85" type="equal" value="ja"/>
-<Condition name="Question: Q86" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSVergiftung"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q81" type="equal" value="nein"/>
-<Condition name="Question: Q82" type="equal" value="nein"/>
-<Condition name="Question: Q83" type="equal" value="nein"/>
-<Condition name="Question: Q84" type="equal" value="nein"/>
-<Condition name="Question: Q85" type="equal" value="ja"/>
-<Condition name="Question: Q86" type="equal" value="nein"/>
-<Condition name="Question: Q87" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q79"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q78" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q80"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q78" type="equal" value="nein"/>
-<Condition name="Question: Q79" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC13"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q78" type="equal" value="nein"/>
-<Condition name="Question: Q79" type="equal" value="nein"/>
-<Condition name="Question: Q80" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q77"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q76" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC14"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q76" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC13"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q76" type="equal" value="nein"/>
-<Condition name="Question: Q77" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q73"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q72" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q74"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q72" type="equal" value="nein"/>
-<Condition name="Question: Q73" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC12"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q72" type="equal" value="nein"/>
-<Condition name="Question: Q73" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q75"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q72" type="equal" value="nein"/>
-<Condition name="Question: Q73" type="equal" value="ja"/>
-<Condition name="Question: Q74" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC12"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q72" type="equal" value="nein"/>
-<Condition name="Question: Q73" type="equal" value="ja"/>
-<Condition name="Question: Q74" type="equal" value="ja"/>
-<Condition name="Question: Q75" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q58"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q48" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q49"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q48" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q69"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q59"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q71"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="nein"/>
-<Condition name="Question: Q69" type="equal" value="Answer: Q69a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q70"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="nein"/>
-<Condition name="Question: Q69" type="equal" value="Answer: Q69a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q67"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q60"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q68"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="nein"/>
-<Condition name="Question: Q67" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q62"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-<Condition name="Question: Q60" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q61"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-<Condition name="Question: Q60" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q63"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-<Condition name="Question: Q60" type="equal" value="nein"/>
-<Condition name="Question: Q62" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q64"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-<Condition name="Question: Q60" type="equal" value="nein"/>
-<Condition name="Question: Q62" type="equal" value="ja"/>
-<Condition name="Question: Q63" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q65"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-<Condition name="Question: Q60" type="equal" value="nein"/>
-<Condition name="Question: Q62" type="equal" value="ja"/>
-<Condition name="Question: Q63" type="equal" value="nein"/>
-<Condition name="Question: Q64" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q66"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="nein"/>
-<Condition name="Question: Q58" type="equal" value="ja"/>
-<Condition name="Question: Q59" type="equal" value="ja"/>
-<Condition name="Question: Q60" type="equal" value="nein"/>
-<Condition name="Question: Q62" type="equal" value="ja"/>
-<Condition name="Question: Q63" type="equal" value="nein"/>
-<Condition name="Question: Q64" type="equal" value="nein"/>
-<Condition name="Question: Q65" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q54"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q50"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q55"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="nein"/>
-<Condition name="Question: Q54" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q56"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="nein"/>
-<Condition name="Question: Q54" type="equal" value="ja"/>
-<Condition name="Question: Q55" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q57"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="nein"/>
-<Condition name="Question: Q54" type="equal" value="ja"/>
-<Condition name="Question: Q55" type="equal" value="ja"/>
-<Condition name="Question: Q56" type="equal" value="Answer: Q56a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q51"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="ja"/>
-<Condition name="Question: Q50" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q52"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="ja"/>
-<Condition name="Question: Q50" type="equal" value="nein"/>
-<Condition name="Question: Q51" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q53"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q48" type="equal" value="ja"/>
-<Condition name="Question: Q49" type="equal" value="ja"/>
-<Condition name="Question: Q50" type="equal" value="nein"/>
-<Condition name="Question: Q51" type="equal" value="nein"/>
-<Condition name="Question: Q52" type="equal" value="Answer: Q52a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q46"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q43" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q44"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q43" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q47"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q43" type="equal" value="nein"/>
-<Condition name="Question: Q46" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q45"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q43" type="equal" value="ja"/>
-<Condition name="Question: Q44" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC11"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q42" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q41"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q40" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q38"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q37" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC10"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q37" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q39"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q37" type="equal" value="ja"/>
-<Condition name="Question: Q38" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC10"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q37" type="equal" value="ja"/>
-<Condition name="Question: Q38" type="equal" value="nein"/>
-<Condition name="Question: Q39" type="equal" value="Answer: Q39a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q35"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q34" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q36"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q34" type="equal" value="nein"/>
-<Condition name="Question: Q35" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC6"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q34" type="equal" value="nein"/>
-<Condition name="Question: Q35" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC6"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q34" type="equal" value="nein"/>
-<Condition name="Question: Q35" type="equal" value="nein"/>
-<Condition name="Question: Q36" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC11"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q34" type="equal" value="nein"/>
-<Condition name="Question: Q35" type="equal" value="nein"/>
-<Condition name="Question: Q36" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q33"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q32" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC7"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q32" type="equal" value="nein"/>
-<Condition name="Question: Q33" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC9"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q31" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC8"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q31" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q6"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q4"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q7"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q8"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q13"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a3"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q12"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q9"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
-<Condition name="Question: Q8" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC10"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
-<Condition name="Question: Q8" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q11"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
-<Condition name="Question: Q8" type="equal" value="nein"/>
-<Condition name="Question: Q9" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q10"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
-<Condition name="Question: Q8" type="equal" value="nein"/>
-<Condition name="Question: Q9" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q5"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a1"/>
-<Condition name="Question: Q4" type="equal" value="Answer: Q4a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC5"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q2" type="equal" value="Answer: Q2a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC4"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q2" type="equal" value="Answer: Q2a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q178"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q173"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q167"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q179"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a3"/>
-<Condition name="Question: Q178" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q175"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
-<Condition name="Question: Q173" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q174"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
-<Condition name="Question: Q173" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q176"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
-<Condition name="Question: Q173" type="equal" value="nein"/>
-<Condition name="Question: Q175" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q177"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
-<Condition name="Question: Q173" type="equal" value="nein"/>
-<Condition name="Question: Q175" type="equal" value="nein"/>
-<Condition name="Question: Q176" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q170"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
-<Condition name="Question: Q167" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q168"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
-<Condition name="Question: Q167" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q171"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
-<Condition name="Question: Q167" type="equal" value="nein"/>
-<Condition name="Question: Q170" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q172"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
-<Condition name="Question: Q167" type="equal" value="nein"/>
-<Condition name="Question: Q170" type="equal" value="nein"/>
-<Condition name="Question: Q171" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q169"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
-<Condition name="Question: Q167" type="equal" value="ja"/>
-<Condition name="Question: Q168" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q160"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q153" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q154"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q153" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q163"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="nein"/>
-<Condition name="Question: Q160" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q161"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="nein"/>
-<Condition name="Question: Q160" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q164"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="nein"/>
-<Condition name="Question: Q160" type="equal" value="nein"/>
-<Condition name="Question: Q163" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q165"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="nein"/>
-<Condition name="Question: Q160" type="equal" value="nein"/>
-<Condition name="Question: Q163" type="equal" value="nein"/>
-<Condition name="Question: Q164" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q162"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="nein"/>
-<Condition name="Question: Q160" type="equal" value="ja"/>
-<Condition name="Question: Q161" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q158"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="ja"/>
-<Condition name="Question: Q154" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q155"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="ja"/>
-<Condition name="Question: Q154" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q159"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="ja"/>
-<Condition name="Question: Q154" type="equal" value="nein"/>
-<Condition name="Question: Q158" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q156"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="ja"/>
-<Condition name="Question: Q154" type="equal" value="ja"/>
-<Condition name="Question: Q155" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q157"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q153" type="equal" value="ja"/>
-<Condition name="Question: Q154" type="equal" value="ja"/>
-<Condition name="Question: Q155" type="equal" value="nein"/>
-<Condition name="Question: Q156" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q22"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q16"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q23"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q29"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a3"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q28"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q24"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q30"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a3"/>
-<Condition name="Question: Q29" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q25"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
-<Condition name="Question: Q24" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC10"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
-<Condition name="Question: Q24" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q27"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
-<Condition name="Question: Q24" type="equal" value="nein"/>
-<Condition name="Question: Q25" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q26"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
-<Condition name="Question: Q22" type="equal" value="nein"/>
-<Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
-<Condition name="Question: Q24" type="equal" value="nein"/>
-<Condition name="Question: Q25" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q17"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
-<Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q18"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
-<Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
-<Condition name="Question: Q17" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q19"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
-<Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
-<Condition name="Question: Q17" type="equal" value="nein"/>
-<Condition name="Question: Q18" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q20"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
-<Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
-<Condition name="Question: Q17" type="equal" value="nein"/>
-<Condition name="Question: Q18" type="equal" value="nein"/>
-<Condition name="Question: Q19" type="equal" value="Answer: Q19a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q21"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
-<Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
-<Condition name="Question: Q17" type="equal" value="nein"/>
-<Condition name="Question: Q18" type="equal" value="nein"/>
-<Condition name="Question: Q19" type="equal" value="Answer: Q19a2"/>
-<Condition name="Question: Q20" type="equal" value="Answer: Q20a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q150"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a4"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q148"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSBewusstsein"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a5"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q151"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a4"/>
-<Condition name="Question: Q150" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q152"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a4"/>
-<Condition name="Question: Q150" type="equal" value="ja"/>
-<Condition name="Question: Q151" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q149"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a2"/>
-<Condition name="Question: Q148" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSKreislauf"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q147" type="equal" value="Answer: Q147a2"/>
-<Condition name="Question: Q148" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q146"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q145" type="equal" value="ja"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC19"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q145" type="equal" value="nein"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC19"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q145" type="equal" value="ja"/>
-<Condition name="Question: Q146" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q142"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q136"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q131"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q143"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a3"/>
-<Condition name="Question: Q142" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q144"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a3"/>
-<Condition name="Question: Q142" type="equal" value="nein"/>
-<Condition name="Question: Q143" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q139"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
-<Condition name="Question: Q136" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q137"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
-<Condition name="Question: Q136" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q141"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
-<Condition name="Question: Q136" type="equal" value="nein"/>
-<Condition name="Question: Q139" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q140"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
-<Condition name="Question: Q136" type="equal" value="nein"/>
-<Condition name="Question: Q139" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q138"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
-<Condition name="Question: Q136" type="equal" value="ja"/>
-<Condition name="Question: Q137" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q132"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-<Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q133"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-<Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
-<Condition name="Question: Q132" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q134"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-<Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
-<Condition name="Question: Q132" type="equal" value="nein"/>
-<Condition name="Question: Q133" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q135"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-<Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
-<Condition name="Question: Q132" type="equal" value="nein"/>
-<Condition name="Question: Q133" type="equal" value="nein"/>
-<Condition name="Question: Q134" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: KinderIntoxikation"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-<Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
-<Condition name="Question: Q132" type="equal" value="nein"/>
-<Condition name="Question: Q133" type="equal" value="nein"/>
-<Condition name="Question: Q134" type="equal" value="nein"/>
-<Condition name="Question: Q135" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q14"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
-<Condition name="Question: Q6" type="equal" value="nein"/>
-<Condition name="Question: Q7" type="equal" value="Answer: Q7a3"/>
-<Condition name="Question: Q13" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q126"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q116"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q109"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q127"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
-<Condition name="Question: Q126" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q128"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
-<Condition name="Question: Q126" type="equal" value="nein"/>
-<Condition name="Question: Q127" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q129"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
-<Condition name="Question: Q126" type="equal" value="nein"/>
-<Condition name="Question: Q127" type="equal" value="nein"/>
-<Condition name="Question: Q128" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q122"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q117"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q124"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
-<Condition name="Question: Q122" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q123"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
-<Condition name="Question: Q122" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q125"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
-<Condition name="Question: Q122" type="equal" value="nein"/>
-<Condition name="Question: Q124" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q118"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
-<Condition name="Question: Q117" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q119"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
-<Condition name="Question: Q117" type="equal" value="nein"/>
-<Condition name="Question: Q118" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q121"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
-<Condition name="Question: Q117" type="equal" value="nein"/>
-<Condition name="Question: Q118" type="equal" value="nein"/>
-<Condition name="Question: Q119" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q120"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
-<Condition name="Question: Q117" type="equal" value="nein"/>
-<Condition name="Question: Q118" type="equal" value="nein"/>
-<Condition name="Question: Q119" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSBrustschmerz"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
-<Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
-<Condition name="Question: Q117" type="equal" value="nein"/>
-<Condition name="Question: Q118" type="equal" value="nein"/>
-<Condition name="Question: Q119" type="equal" value="nein"/>
-<Condition name="Question: Q121" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q111"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-<Condition name="Question: Q109" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q110"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-<Condition name="Question: Q109" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q113"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-<Condition name="Question: Q109" type="equal" value="nein"/>
-<Condition name="Question: Q111" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q112"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-<Condition name="Question: Q109" type="equal" value="nein"/>
-<Condition name="Question: Q111" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q114"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-<Condition name="Question: Q109" type="equal" value="nein"/>
-<Condition name="Question: Q111" type="equal" value="nein"/>
-<Condition name="Question: Q113" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q115"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
-<Condition name="Question: Q109" type="equal" value="nein"/>
-<Condition name="Question: Q111" type="equal" value="nein"/>
-<Condition name="Question: Q113" type="equal" value="ja"/>
-<Condition name="Question: Q114" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q104"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q102"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q105"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="nein"/>
-<Condition name="Question: Q104" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC17"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="nein"/>
-<Condition name="Question: Q104" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q106"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="nein"/>
-<Condition name="Question: Q104" type="equal" value="ja"/>
-<Condition name="Question: Q105" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC17"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="nein"/>
-<Condition name="Question: Q104" type="equal" value="ja"/>
-<Condition name="Question: Q105" type="equal" value="ja"/>
-<Condition name="Question: Q106" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Question: Q103"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q98" type="equal" value="nein"/>
-<Condition name="Question: Q101" type="equal" value="ja"/>
-<Condition name="Question: Q102" type="equal" value="nein"/>
-</Condition>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC3"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a1"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: QC18"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a7"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LS_Psy"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a8"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LS_KN"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a6"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LS_AS"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a10"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSVergiftung"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a9"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSKreislauf"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a4"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSBrustschmerz"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a2"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSBewusstsein"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a5"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSAtemprobleme"/>
-</TargetQASets>
-</Action>
-<Condition name="Question: Q1" type="equal" value="Answer: Q1a3"/>
-</KnowledgeSlice>
-<KnowledgeSlice type="RuleComplex">
-<Action type="ActionIndication">
-<TargetQASets>
-<QASet name="Container: LSVergiftung"/>
-</TargetQASets>
-</Action>
-<Condition type="and">
-<Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
-<Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
-<Condition name="Question: Q132" type="equal" value="nein"/>
-<Condition name="Question: Q133" type="equal" value="nein"/>
-<Condition name="Question: Q134" type="equal" value="nein"/>
-<Condition name="Question: Q135" type="equal" value="nein"/>
-<Condition name="Question: KinderIntoxikation" type="equal" value="ja"/>
-</Condition>
-</KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q99"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q98" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q101"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q98" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q100"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="ja"/>
+      <Condition name="Question: Q99" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q97"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q96" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC15"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q96" type="equal" value="nein"/>
+      <Condition name="Question: Q97" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q90"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q89" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSBrustschmerz"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q89" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q93"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q91"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q94"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="nein"/>
+      <Condition name="Question: Q93" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC15"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="nein"/>
+      <Condition name="Question: Q93" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q95"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="nein"/>
+      <Condition name="Question: Q93" type="equal" value="nein"/>
+      <Condition name="Question: Q94" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q92"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="ja"/>
+      <Condition name="Question: Q91" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC16"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="ja"/>
+      <Condition name="Question: Q91" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC16"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q89" type="equal" value="nein"/>
+      <Condition name="Question: Q90" type="equal" value="ja"/>
+      <Condition name="Question: Q91" type="equal" value="ja"/>
+      <Condition name="Question: Q92" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q82"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q81" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q83"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSKreislauf"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q84"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSAtemprobleme"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q85"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+      <Condition name="Question: Q84" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q88"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+      <Condition name="Question: Q84" type="equal" value="nein"/>
+      <Condition name="Question: Q85" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q86"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+      <Condition name="Question: Q84" type="equal" value="nein"/>
+      <Condition name="Question: Q85" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSVergiftung"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+      <Condition name="Question: Q84" type="equal" value="nein"/>
+      <Condition name="Question: Q85" type="equal" value="nein"/>
+      <Condition name="Question: Q88" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q87"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+      <Condition name="Question: Q84" type="equal" value="nein"/>
+      <Condition name="Question: Q85" type="equal" value="ja"/>
+      <Condition name="Question: Q86" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSVergiftung"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q81" type="equal" value="nein"/>
+      <Condition name="Question: Q82" type="equal" value="nein"/>
+      <Condition name="Question: Q83" type="equal" value="nein"/>
+      <Condition name="Question: Q84" type="equal" value="nein"/>
+      <Condition name="Question: Q85" type="equal" value="ja"/>
+      <Condition name="Question: Q86" type="equal" value="nein"/>
+      <Condition name="Question: Q87" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q79"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q78" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q80"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q78" type="equal" value="nein"/>
+      <Condition name="Question: Q79" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC13"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q78" type="equal" value="nein"/>
+      <Condition name="Question: Q79" type="equal" value="nein"/>
+      <Condition name="Question: Q80" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q77"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q76" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC14"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q76" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC13"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q76" type="equal" value="nein"/>
+      <Condition name="Question: Q77" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q73"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q72" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q74"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q72" type="equal" value="nein"/>
+      <Condition name="Question: Q73" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC12"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q72" type="equal" value="nein"/>
+      <Condition name="Question: Q73" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q75"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q72" type="equal" value="nein"/>
+      <Condition name="Question: Q73" type="equal" value="ja"/>
+      <Condition name="Question: Q74" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC12"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q72" type="equal" value="nein"/>
+      <Condition name="Question: Q73" type="equal" value="ja"/>
+      <Condition name="Question: Q74" type="equal" value="ja"/>
+      <Condition name="Question: Q75" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q58"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q48" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q49"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q48" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q69"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q59"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q71"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="nein"/>
+      <Condition name="Question: Q69" type="equal" value="Answer: Q69a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q70"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="nein"/>
+      <Condition name="Question: Q69" type="equal" value="Answer: Q69a1"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q67"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q60"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q68"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="nein"/>
+      <Condition name="Question: Q67" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q62"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+      <Condition name="Question: Q60" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q61"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+      <Condition name="Question: Q60" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q63"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+      <Condition name="Question: Q60" type="equal" value="nein"/>
+      <Condition name="Question: Q62" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q64"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+      <Condition name="Question: Q60" type="equal" value="nein"/>
+      <Condition name="Question: Q62" type="equal" value="ja"/>
+      <Condition name="Question: Q63" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q65"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+      <Condition name="Question: Q60" type="equal" value="nein"/>
+      <Condition name="Question: Q62" type="equal" value="ja"/>
+      <Condition name="Question: Q63" type="equal" value="nein"/>
+      <Condition name="Question: Q64" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q66"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="nein"/>
+      <Condition name="Question: Q58" type="equal" value="ja"/>
+      <Condition name="Question: Q59" type="equal" value="ja"/>
+      <Condition name="Question: Q60" type="equal" value="nein"/>
+      <Condition name="Question: Q62" type="equal" value="ja"/>
+      <Condition name="Question: Q63" type="equal" value="nein"/>
+      <Condition name="Question: Q64" type="equal" value="nein"/>
+      <Condition name="Question: Q65" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q54"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q50"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q55"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="nein"/>
+      <Condition name="Question: Q54" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q56"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="nein"/>
+      <Condition name="Question: Q54" type="equal" value="ja"/>
+      <Condition name="Question: Q55" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q57"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="nein"/>
+      <Condition name="Question: Q54" type="equal" value="ja"/>
+      <Condition name="Question: Q55" type="equal" value="ja"/>
+      <Condition name="Question: Q56" type="equal" value="Answer: Q56a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q51"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="ja"/>
+      <Condition name="Question: Q50" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q52"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="ja"/>
+      <Condition name="Question: Q50" type="equal" value="nein"/>
+      <Condition name="Question: Q51" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q53"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q48" type="equal" value="ja"/>
+      <Condition name="Question: Q49" type="equal" value="ja"/>
+      <Condition name="Question: Q50" type="equal" value="nein"/>
+      <Condition name="Question: Q51" type="equal" value="nein"/>
+      <Condition name="Question: Q52" type="equal" value="Answer: Q52a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q46"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q43" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q44"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q43" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q47"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q43" type="equal" value="nein"/>
+      <Condition name="Question: Q46" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q45"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q43" type="equal" value="ja"/>
+      <Condition name="Question: Q44" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC11"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q42" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q41"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q40" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q38"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q37" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC10"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q37" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q39"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q37" type="equal" value="ja"/>
+      <Condition name="Question: Q38" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC10"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q37" type="equal" value="ja"/>
+      <Condition name="Question: Q38" type="equal" value="nein"/>
+      <Condition name="Question: Q39" type="equal" value="Answer: Q39a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q35"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q34" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q36"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q34" type="equal" value="nein"/>
+      <Condition name="Question: Q35" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC6"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q34" type="equal" value="nein"/>
+      <Condition name="Question: Q35" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC6"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q34" type="equal" value="nein"/>
+      <Condition name="Question: Q35" type="equal" value="nein"/>
+      <Condition name="Question: Q36" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC11"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q34" type="equal" value="nein"/>
+      <Condition name="Question: Q35" type="equal" value="nein"/>
+      <Condition name="Question: Q36" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q33"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q32" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC7"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q32" type="equal" value="nein"/>
+      <Condition name="Question: Q33" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC9"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q31" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC8"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q31" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q6"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q4"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q3" type="equal" value="Answer: Q3a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q7"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q8"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q13"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a3"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q12"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q9"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
+      <Condition name="Question: Q8" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC10"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
+      <Condition name="Question: Q8" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q11"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
+      <Condition name="Question: Q8" type="equal" value="nein"/>
+      <Condition name="Question: Q9" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q10"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a1"/>
+      <Condition name="Question: Q8" type="equal" value="nein"/>
+      <Condition name="Question: Q9" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q5"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a1"/>
+      <Condition name="Question: Q4" type="equal" value="Answer: Q4a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC5"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q2" type="equal" value="Answer: Q2a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC4"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q2" type="equal" value="Answer: Q2a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q178"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q166" type="equal" value="Answer: Q166a3"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q173"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q167"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q179"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a3"/>
+      <Condition name="Question: Q178" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q175"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
+      <Condition name="Question: Q173" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q174"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
+      <Condition name="Question: Q173" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q176"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
+      <Condition name="Question: Q173" type="equal" value="nein"/>
+      <Condition name="Question: Q175" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q177"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a2"/>
+      <Condition name="Question: Q173" type="equal" value="nein"/>
+      <Condition name="Question: Q175" type="equal" value="nein"/>
+      <Condition name="Question: Q176" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q170"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
+      <Condition name="Question: Q167" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q168"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
+      <Condition name="Question: Q167" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q171"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
+      <Condition name="Question: Q167" type="equal" value="nein"/>
+      <Condition name="Question: Q170" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q172"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
+      <Condition name="Question: Q167" type="equal" value="nein"/>
+      <Condition name="Question: Q170" type="equal" value="nein"/>
+      <Condition name="Question: Q171" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q169"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q166" type="equal" value="Answer: Q166a1"/>
+      <Condition name="Question: Q167" type="equal" value="ja"/>
+      <Condition name="Question: Q168" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q160"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q153" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q154"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q153" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q163"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="nein"/>
+      <Condition name="Question: Q160" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q161"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="nein"/>
+      <Condition name="Question: Q160" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q164"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="nein"/>
+      <Condition name="Question: Q160" type="equal" value="nein"/>
+      <Condition name="Question: Q163" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q165"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="nein"/>
+      <Condition name="Question: Q160" type="equal" value="nein"/>
+      <Condition name="Question: Q163" type="equal" value="nein"/>
+      <Condition name="Question: Q164" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q162"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="nein"/>
+      <Condition name="Question: Q160" type="equal" value="ja"/>
+      <Condition name="Question: Q161" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q158"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="ja"/>
+      <Condition name="Question: Q154" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q155"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="ja"/>
+      <Condition name="Question: Q154" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q159"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="ja"/>
+      <Condition name="Question: Q154" type="equal" value="nein"/>
+      <Condition name="Question: Q158" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q156"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="ja"/>
+      <Condition name="Question: Q154" type="equal" value="ja"/>
+      <Condition name="Question: Q155" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q157"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q153" type="equal" value="ja"/>
+      <Condition name="Question: Q154" type="equal" value="ja"/>
+      <Condition name="Question: Q155" type="equal" value="nein"/>
+      <Condition name="Question: Q156" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q22"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q16"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q23"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q29"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a3"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q28"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q24"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q30"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a3"/>
+      <Condition name="Question: Q29" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q25"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
+      <Condition name="Question: Q24" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC10"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
+      <Condition name="Question: Q24" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q27"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
+      <Condition name="Question: Q24" type="equal" value="nein"/>
+      <Condition name="Question: Q25" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q26"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a2"/>
+      <Condition name="Question: Q22" type="equal" value="nein"/>
+      <Condition name="Question: Q23" type="equal" value="Answer: Q23a1"/>
+      <Condition name="Question: Q24" type="equal" value="nein"/>
+      <Condition name="Question: Q25" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q17"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
+      <Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q18"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
+      <Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
+      <Condition name="Question: Q17" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q19"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
+      <Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
+      <Condition name="Question: Q17" type="equal" value="nein"/>
+      <Condition name="Question: Q18" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q20"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
+      <Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
+      <Condition name="Question: Q17" type="equal" value="nein"/>
+      <Condition name="Question: Q18" type="equal" value="nein"/>
+      <Condition name="Question: Q19" type="equal" value="Answer: Q19a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q21"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q15" type="equal" value="Answer: Q15a1"/>
+      <Condition name="Question: Q16" type="equal" value="Answer: Q16a2"/>
+      <Condition name="Question: Q17" type="equal" value="nein"/>
+      <Condition name="Question: Q18" type="equal" value="nein"/>
+      <Condition name="Question: Q19" type="equal" value="Answer: Q19a2"/>
+      <Condition name="Question: Q20" type="equal" value="Answer: Q20a1"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q150"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q147" type="equal" value="Answer: Q147a4"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q148"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q147" type="equal" value="Answer: Q147a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSBewusstsein"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q147" type="equal" value="Answer: Q147a5"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q151"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q147" type="equal" value="Answer: Q147a4"/>
+      <Condition name="Question: Q150" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q152"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q147" type="equal" value="Answer: Q147a4"/>
+      <Condition name="Question: Q150" type="equal" value="ja"/>
+      <Condition name="Question: Q151" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q149"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q147" type="equal" value="Answer: Q147a2"/>
+      <Condition name="Question: Q148" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSKreislauf"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q147" type="equal" value="Answer: Q147a2"/>
+      <Condition name="Question: Q148" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q146"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q145" type="equal" value="ja"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC19"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q145" type="equal" value="nein"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC19"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q145" type="equal" value="ja"/>
+      <Condition name="Question: Q146" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q142"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q130" type="equal" value="Answer: Q130a3"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q136"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q131"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q143"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a3"/>
+      <Condition name="Question: Q142" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q144"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a3"/>
+      <Condition name="Question: Q142" type="equal" value="nein"/>
+      <Condition name="Question: Q143" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q139"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
+      <Condition name="Question: Q136" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q137"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
+      <Condition name="Question: Q136" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q141"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
+      <Condition name="Question: Q136" type="equal" value="nein"/>
+      <Condition name="Question: Q139" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q140"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
+      <Condition name="Question: Q136" type="equal" value="nein"/>
+      <Condition name="Question: Q139" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q138"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a2"/>
+      <Condition name="Question: Q136" type="equal" value="ja"/>
+      <Condition name="Question: Q137" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q132"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+      <Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q133"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+      <Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
+      <Condition name="Question: Q132" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q134"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+      <Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
+      <Condition name="Question: Q132" type="equal" value="nein"/>
+      <Condition name="Question: Q133" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q135"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+      <Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
+      <Condition name="Question: Q132" type="equal" value="nein"/>
+      <Condition name="Question: Q133" type="equal" value="nein"/>
+      <Condition name="Question: Q134" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: KinderIntoxikation"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+      <Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
+      <Condition name="Question: Q132" type="equal" value="nein"/>
+      <Condition name="Question: Q133" type="equal" value="nein"/>
+      <Condition name="Question: Q134" type="equal" value="nein"/>
+      <Condition name="Question: Q135" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q14"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q3" type="equal" value="Answer: Q3a2"/>
+      <Condition name="Question: Q6" type="equal" value="nein"/>
+      <Condition name="Question: Q7" type="equal" value="Answer: Q7a3"/>
+      <Condition name="Question: Q13" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q126"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q116"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q109"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q127"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
+      <Condition name="Question: Q126" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q128"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
+      <Condition name="Question: Q126" type="equal" value="nein"/>
+      <Condition name="Question: Q127" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q129"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a3"/>
+      <Condition name="Question: Q126" type="equal" value="nein"/>
+      <Condition name="Question: Q127" type="equal" value="nein"/>
+      <Condition name="Question: Q128" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q122"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q117"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q124"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
+      <Condition name="Question: Q122" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q123"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
+      <Condition name="Question: Q122" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q125"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a2"/>
+      <Condition name="Question: Q122" type="equal" value="nein"/>
+      <Condition name="Question: Q124" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q118"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
+      <Condition name="Question: Q117" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q119"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
+      <Condition name="Question: Q117" type="equal" value="nein"/>
+      <Condition name="Question: Q118" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q121"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
+      <Condition name="Question: Q117" type="equal" value="nein"/>
+      <Condition name="Question: Q118" type="equal" value="nein"/>
+      <Condition name="Question: Q119" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q120"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
+      <Condition name="Question: Q117" type="equal" value="nein"/>
+      <Condition name="Question: Q118" type="equal" value="nein"/>
+      <Condition name="Question: Q119" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSBrustschmerz"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a2"/>
+      <Condition name="Question: Q116" type="equal" value="Answer: Q116a1"/>
+      <Condition name="Question: Q117" type="equal" value="nein"/>
+      <Condition name="Question: Q118" type="equal" value="nein"/>
+      <Condition name="Question: Q119" type="equal" value="nein"/>
+      <Condition name="Question: Q121" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q111"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+      <Condition name="Question: Q109" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q110"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+      <Condition name="Question: Q109" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q113"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+      <Condition name="Question: Q109" type="equal" value="nein"/>
+      <Condition name="Question: Q111" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q112"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+      <Condition name="Question: Q109" type="equal" value="nein"/>
+      <Condition name="Question: Q111" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q114"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+      <Condition name="Question: Q109" type="equal" value="nein"/>
+      <Condition name="Question: Q111" type="equal" value="nein"/>
+      <Condition name="Question: Q113" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q115"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q108" type="equal" value="Answer: Q108a1"/>
+      <Condition name="Question: Q109" type="equal" value="nein"/>
+      <Condition name="Question: Q111" type="equal" value="nein"/>
+      <Condition name="Question: Q113" type="equal" value="ja"/>
+      <Condition name="Question: Q114" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q104"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q102"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q105"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="nein"/>
+      <Condition name="Question: Q104" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC17"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="nein"/>
+      <Condition name="Question: Q104" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q106"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="nein"/>
+      <Condition name="Question: Q104" type="equal" value="ja"/>
+      <Condition name="Question: Q105" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC17"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="nein"/>
+      <Condition name="Question: Q104" type="equal" value="ja"/>
+      <Condition name="Question: Q105" type="equal" value="ja"/>
+      <Condition name="Question: Q106" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Question: Q103"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q98" type="equal" value="nein"/>
+      <Condition name="Question: Q101" type="equal" value="ja"/>
+      <Condition name="Question: Q102" type="equal" value="nein"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC3"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a1"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: QC18"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a7"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LS_Psy"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a8"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LS_KN"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a6"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LS_AS"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a10"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSVergiftung"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a9"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSKreislauf"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a4"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSBrustschmerz"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a2"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSBewusstsein"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a5"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSAtemprobleme"/>
+      </TargetQASets>
+    </Action>
+    <Condition name="Question: Q1" type="equal" value="Answer: Q1a3"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionIndication">
+      <TargetQASets>
+        <QASet name="Container: LSVergiftung"/>
+      </TargetQASets>
+    </Action>
+    <Condition type="and">
+      <Condition name="Question: Q130" type="equal" value="Answer: Q130a1"/>
+      <Condition name="Question: Q131" type="equal" value="Answer: Q131a2"/>
+      <Condition name="Question: Q132" type="equal" value="nein"/>
+      <Condition name="Question: Q133" type="equal" value="nein"/>
+      <Condition name="Question: Q134" type="equal" value="nein"/>
+      <Condition name="Question: Q135" type="equal" value="nein"/>
+      <Condition name="Question: KinderIntoxikation" type="equal" value="ja"/>
+    </Condition>
+  </KnowledgeSlice>
 </KnowledgeBase>

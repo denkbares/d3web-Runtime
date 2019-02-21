@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <MMInfos>
-<KnowledgeBase/>
-<idObject name="Loesung 0">
-<entry lang="en" property="prompt">Great Solution</entry>
-<entry lang="en_GB" property="prompt">Royal Solution</entry>
-<entry property="prompt">Super Lösung</entry>
-</idObject>
+  <KnowledgeBase/>
+  <idObject name="Loesung 0">
+    <entry lang="en" property="prompt">Great Solution</entry>
+    <entry lang="en_GB" property="prompt">Royal Solution</entry>
+    <entry property="prompt">Super Lösung</entry>
+  </idObject>
 </MMInfos>

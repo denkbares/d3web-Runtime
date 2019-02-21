@@ -1,7 +1,7 @@
 Manifest-Version: 2.0
-ID: Properties..Properties_KB
+Date: Fri Feb 22 00:01:42 CET 2019
 Author: null
 Name: null
-Date: Thu Nov 11 09:35:53 CET 2010
-User: markusfriedrich
+ID: Properties..Properties_KB
+User: Albrecht
 

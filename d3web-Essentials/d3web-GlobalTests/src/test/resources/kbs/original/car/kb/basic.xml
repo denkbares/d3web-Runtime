@@ -1,199 +1,199 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="Car-Diagnosis..Car-Diagnosis_KB" system="d3web" type="basic">
-<infoStore>
-<entry property="abstractionQuestion">true</entry>
-</infoStore>
-<InitQuestions>
-<Question name="General"/>
-<Question name="Observations"/>
-<Question name="Technical Examinations"/>
-</InitQuestions>
-<rootQASet>Q000</rootQASet>
-<rootSolution>P000</rootSolution>
-<QASets>
-<Question name="Air filter o.k.?" type="OC">
-<Answers>
-<Answer name="yes" type="AnswerChoice"/>
-<Answer name="no" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Air intake system o.k.?" type="OC">
-<Answers>
-<Answer name="yes" type="AnswerChoice"/>
-<Answer name="no" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Average mileage /100km" type="Num">
-<Children>
-<Child name="Num. Mileage evaluation"/>
-</Children>
-</Question>
-<Question name="Battery o.k.?" type="OC">
-<Answers>
-<Answer name="yes" type="AnswerChoice"/>
-<Answer name="no" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Driving" type="MC">
-<Answers>
-<Answer name="insufficient power on partial load" type="AnswerChoice"/>
-<Answer name="insufficient power on full load" type="AnswerChoice"/>
-<Answer name="unsteady idle speed" type="AnswerChoice"/>
-<Answer name="low idle speed" type="AnswerChoice"/>
-<Answer name="delayed take-off" type="AnswerChoice"/>
-<Answer name="weak acceleration" type="AnswerChoice"/>
-<Answer name="no /else" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Engine noises" type="OC">
-<Answers>
-<Answer name="knocking" type="AnswerChoice"/>
-<Answer name="ringing" type="AnswerChoice"/>
-<Answer name="no /else" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Engine start" type="OC">
-<Answers>
-<Answer name="engine barely starts" type="AnswerChoice"/>
-<Answer name="engine starts" type="AnswerChoice"/>
-<Answer name="does not start" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Exhaust fumes" type="OC">
-<Answers>
-<Answer name="black" type="AnswerChoice"/>
-<Answer name="blue" type="AnswerChoice"/>
-<Answer name="invisible" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Exhaust pipe color" type="OC">
-<Answers>
-<Answer name="brown" type="AnswerChoice"/>
-<Answer name="grey" type="AnswerChoice"/>
-<Answer name="light grey" type="AnswerChoice"/>
-<Answer name="sooty black" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Exhaust pipe color evaluation"/>
-</Children>
-</Question>
-<Question name="Exhaust pipe color evaluation" type="OC">
-<Answers>
-<Answer name="abnormal" type="AnswerChoice"/>
-<Answer name="normal" type="AnswerChoice"/>
-</Answers>
-<infoStore>
-<entry property="abstractionQuestion">true</entry>
-</infoStore>
-</Question>
-<Question name="Fuel" type="OC">
-<Answers>
-<Answer name="diesel" type="AnswerChoice"/>
-<Answer name="unleaded gasoline" type="AnswerChoice"/>
-</Answers>
-</Question>
-<QContainer name="General">
-<Children>
-<Child name="Make of car"/>
-<Child name="Year of construction"/>
-</Children>
-</QContainer>
-<Question name="Idle speed system o.k.?" type="OC">
-<Answers>
-<Answer name="yes" type="AnswerChoice"/>
-<Answer name="no" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Ignition timing o.k.?" type="OC">
-<Answers>
-<Answer name="yes" type="AnswerChoice"/>
-<Answer name="no" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Make of car" type="OC">
-<Answers>
-<Answer name="VW" type="AnswerChoice"/>
-<Answer name="Opel" type="AnswerChoice"/>
-<Answer name="Mercedes Benz" type="AnswerChoice"/>
-<Answer name="BMW" type="AnswerChoice"/>
-<Answer name="Porsche" type="AnswerChoice"/>
-<Answer name="Fiat" type="AnswerChoice"/>
-<Answer name="Toyota" type="AnswerChoice"/>
-<Answer name="Mazda" type="AnswerChoice"/>
-<Answer name="Other" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Mileage evaluation" type="OC">
-<Answers>
-<Answer name="slightly increased" type="AnswerChoice"/>
-<Answer name="normal" type="AnswerChoice"/>
-<Answer name="increased" type="AnswerChoice"/>
-</Answers>
-<infoStore>
-<entry property="abstractionQuestion">true</entry>
-</infoStore>
-</Question>
-<Question name="Num. Mileage evaluation" type="Num">
-<infoStore>
-<entry property="abstractionQuestion">true</entry>
-</infoStore>
-<Children>
-<Child name="Mileage evaluation"/>
-</Children>
-</Question>
-<QContainer name="Observations">
-<Children>
-<Child name="Exhaust fumes"/>
-<Child name="Exhaust pipe color"/>
-<Child name="Fuel"/>
-<Child name="Average mileage /100km"/>
-<Child name="Real mileage  /100km"/>
-<Child name="Engine noises"/>
-<Child name="Engine start"/>
-<Child name="Starter"/>
-<Child name="Driving"/>
-</Children>
-</QContainer>
-<QContainer name="Q000">
-<Children>
-<Child name="General"/>
-<Child name="Observations"/>
-<Child name="Technical Examinations"/>
-</Children>
-</QContainer>
-<Question name="Real mileage  /100km" type="Num"/>
-<Question name="Starter" type="OC">
-<Answers>
-<Answer name="does not turn over" type="AnswerChoice"/>
-<Answer name="turns over" type="AnswerChoice"/>
-</Answers>
-</Question>
-<QContainer name="Technical Examinations">
-<Children>
-<Child name="Idle speed system o.k.?"/>
-<Child name="Air intake system o.k.?"/>
-<Child name="Air filter o.k.?"/>
-<Child name="Ignition timing o.k.?"/>
-<Child name="Battery o.k.?"/>
-</Children>
-</QContainer>
-<Question name="Year of construction" type="Num"/>
-</QASets>
-<Diagnoses>
-<Diagnosis name="Bad ignition timing"/>
-<Diagnosis name="Clogged air filter"/>
-<Diagnosis name="Damaged idle speed system"/>
-<Diagnosis name="Empty battery"/>
-<Diagnosis name="Leaking air intake system"/>
-<Diagnosis name="P000">
-<Children>
-<Child name="Damaged idle speed system"/>
-<Child name="Leaking air intake system"/>
-<Child name="Clogged air filter"/>
-<Child name="Bad ignition timing"/>
-<Child name="Empty battery"/>
-</Children>
-</Diagnosis>
-</Diagnoses>
-<KnowledgeSlices/>
+  <infoStore>
+    <entry property="abstractionQuestion">true</entry>
+  </infoStore>
+  <InitQuestions>
+    <Question name="General"/>
+    <Question name="Observations"/>
+    <Question name="Technical Examinations"/>
+  </InitQuestions>
+  <rootQASet>Q000</rootQASet>
+  <rootSolution>P000</rootSolution>
+  <QASets>
+    <Question name="Air filter o.k.?" type="OC">
+      <Answers>
+        <Answer name="yes" type="AnswerChoice"/>
+        <Answer name="no" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Air intake system o.k.?" type="OC">
+      <Answers>
+        <Answer name="yes" type="AnswerChoice"/>
+        <Answer name="no" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Average mileage /100km" type="Num">
+      <Children>
+        <Child name="Num. Mileage evaluation"/>
+      </Children>
+    </Question>
+    <Question name="Battery o.k.?" type="OC">
+      <Answers>
+        <Answer name="yes" type="AnswerChoice"/>
+        <Answer name="no" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Driving" type="MC">
+      <Answers>
+        <Answer name="insufficient power on partial load" type="AnswerChoice"/>
+        <Answer name="insufficient power on full load" type="AnswerChoice"/>
+        <Answer name="unsteady idle speed" type="AnswerChoice"/>
+        <Answer name="low idle speed" type="AnswerChoice"/>
+        <Answer name="delayed take-off" type="AnswerChoice"/>
+        <Answer name="weak acceleration" type="AnswerChoice"/>
+        <Answer name="no /else" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Engine noises" type="OC">
+      <Answers>
+        <Answer name="knocking" type="AnswerChoice"/>
+        <Answer name="ringing" type="AnswerChoice"/>
+        <Answer name="no /else" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Engine start" type="OC">
+      <Answers>
+        <Answer name="engine barely starts" type="AnswerChoice"/>
+        <Answer name="engine starts" type="AnswerChoice"/>
+        <Answer name="does not start" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Exhaust fumes" type="OC">
+      <Answers>
+        <Answer name="black" type="AnswerChoice"/>
+        <Answer name="blue" type="AnswerChoice"/>
+        <Answer name="invisible" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Exhaust pipe color" type="OC">
+      <Answers>
+        <Answer name="brown" type="AnswerChoice"/>
+        <Answer name="grey" type="AnswerChoice"/>
+        <Answer name="light grey" type="AnswerChoice"/>
+        <Answer name="sooty black" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Exhaust pipe color evaluation"/>
+      </Children>
+    </Question>
+    <Question name="Exhaust pipe color evaluation" type="OC">
+      <Answers>
+        <Answer name="abnormal" type="AnswerChoice"/>
+        <Answer name="normal" type="AnswerChoice"/>
+      </Answers>
+      <infoStore>
+        <entry property="abstractionQuestion">true</entry>
+      </infoStore>
+    </Question>
+    <Question name="Fuel" type="OC">
+      <Answers>
+        <Answer name="diesel" type="AnswerChoice"/>
+        <Answer name="unleaded gasoline" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <QContainer name="General">
+      <Children>
+        <Child name="Make of car"/>
+        <Child name="Year of construction"/>
+      </Children>
+    </QContainer>
+    <Question name="Idle speed system o.k.?" type="OC">
+      <Answers>
+        <Answer name="yes" type="AnswerChoice"/>
+        <Answer name="no" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Ignition timing o.k.?" type="OC">
+      <Answers>
+        <Answer name="yes" type="AnswerChoice"/>
+        <Answer name="no" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Make of car" type="OC">
+      <Answers>
+        <Answer name="VW" type="AnswerChoice"/>
+        <Answer name="Opel" type="AnswerChoice"/>
+        <Answer name="Mercedes Benz" type="AnswerChoice"/>
+        <Answer name="BMW" type="AnswerChoice"/>
+        <Answer name="Porsche" type="AnswerChoice"/>
+        <Answer name="Fiat" type="AnswerChoice"/>
+        <Answer name="Toyota" type="AnswerChoice"/>
+        <Answer name="Mazda" type="AnswerChoice"/>
+        <Answer name="Other" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Mileage evaluation" type="OC">
+      <Answers>
+        <Answer name="slightly increased" type="AnswerChoice"/>
+        <Answer name="normal" type="AnswerChoice"/>
+        <Answer name="increased" type="AnswerChoice"/>
+      </Answers>
+      <infoStore>
+        <entry property="abstractionQuestion">true</entry>
+      </infoStore>
+    </Question>
+    <Question name="Num. Mileage evaluation" type="Num">
+      <infoStore>
+        <entry property="abstractionQuestion">true</entry>
+      </infoStore>
+      <Children>
+        <Child name="Mileage evaluation"/>
+      </Children>
+    </Question>
+    <QContainer name="Observations">
+      <Children>
+        <Child name="Exhaust fumes"/>
+        <Child name="Exhaust pipe color"/>
+        <Child name="Fuel"/>
+        <Child name="Average mileage /100km"/>
+        <Child name="Real mileage  /100km"/>
+        <Child name="Engine noises"/>
+        <Child name="Engine start"/>
+        <Child name="Starter"/>
+        <Child name="Driving"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Q000">
+      <Children>
+        <Child name="General"/>
+        <Child name="Observations"/>
+        <Child name="Technical Examinations"/>
+      </Children>
+    </QContainer>
+    <Question name="Real mileage  /100km" type="Num"/>
+    <Question name="Starter" type="OC">
+      <Answers>
+        <Answer name="does not turn over" type="AnswerChoice"/>
+        <Answer name="turns over" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <QContainer name="Technical Examinations">
+      <Children>
+        <Child name="Idle speed system o.k.?"/>
+        <Child name="Air intake system o.k.?"/>
+        <Child name="Air filter o.k.?"/>
+        <Child name="Ignition timing o.k.?"/>
+        <Child name="Battery o.k.?"/>
+      </Children>
+    </QContainer>
+    <Question name="Year of construction" type="Num"/>
+  </QASets>
+  <Diagnoses>
+    <Diagnosis name="Bad ignition timing"/>
+    <Diagnosis name="Clogged air filter"/>
+    <Diagnosis name="Damaged idle speed system"/>
+    <Diagnosis name="Empty battery"/>
+    <Diagnosis name="Leaking air intake system"/>
+    <Diagnosis name="P000">
+      <Children>
+        <Child name="Damaged idle speed system"/>
+        <Child name="Leaking air intake system"/>
+        <Child name="Clogged air filter"/>
+        <Child name="Bad ignition timing"/>
+        <Child name="Empty battery"/>
+      </Children>
+    </Diagnosis>
+  </Diagnoses>
+  <KnowledgeSlices/>
 </KnowledgeBase>

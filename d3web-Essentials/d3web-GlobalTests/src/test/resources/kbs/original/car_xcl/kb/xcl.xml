@@ -1,142 +1,142 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase system="d3web" type="xclpattern">
-<KnowledgeSlices>
-<XCLModel SID="Bad ignition timing" considerOnlyRelevantRelations="true">
-<necessaryRelations/>
-<sufficientRelations>
-<relation ID="rel_0">
-<Condition name="Ignition timing o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_1">
-<Condition name="Ignition timing o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="rel_2">
-<Condition name="Driving" type="equal" value="delayed take-off"/>
-</relation>
-<relation ID="rel_3">
-<Condition name="Driving" type="equal" value="unsteady idle speed"/>
-</relation>
-<relation ID="rel_4">
-<Condition type="or">
-<Condition name="Engine start" type="equal" value="does not start"/>
-<Condition name="Engine start" type="equal" value="engine barely starts"/>
-</Condition>
-</relation>
-<relation ID="rel_5">
-<Condition type="or">
-<Condition name="Engine noises" type="equal" value="ringing"/>
-<Condition name="Engine noises" type="equal" value="knocking"/>
-</Condition>
-</relation>
-<relation ID="rel_6">
-<Condition name="Driving" type="equal" value="weak acceleration"/>
-</relation>
-<relation ID="rel_7">
-<Condition name="Starter" type="equal" value="turns over"/>
-</relation>
-</Relations>
-</XCLModel>
-<XCLModel SID="Clogged air filter" considerOnlyRelevantRelations="true">
-<necessaryRelations/>
-<sufficientRelations>
-<relation ID="rel_8">
-<Condition name="Air filter o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_9">
-<Condition name="Air filter o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="rel_10">
-<Condition type="or">
-<Condition name="Mileage evaluation" type="equal" value="slightly increased"/>
-<Condition name="Mileage evaluation" type="equal" value="increased"/>
-</Condition>
-</relation>
-<relation ID="rel_11">
-<Condition name="Exhaust pipe color evaluation" type="equal" value="abnormal"/>
-</relation>
-<relation ID="rel_12">
-<Condition name="Fuel" type="equal" value="unleaded gasoline"/>
-</relation>
-<relation refID="rel_3"/>
-<relation refID="rel_4"/>
-<relation ID="rel_13">
-<Condition name="Exhaust fumes" type="equal" value="black"/>
-</relation>
-<relation refID="rel_6"/>
-<relation refID="rel_7"/>
-</Relations>
-</XCLModel>
-<XCLModel SID="Damaged idle speed system" considerOnlyRelevantRelations="true">
-<necessaryRelations/>
-<sufficientRelations>
-<relation ID="rel_14">
-<Condition name="Idle speed system o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_15">
-<Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="rel_16">
-<Condition name="Engine start" type="equal" value="engine barely starts"/>
-</relation>
-<relation refID="rel_3"/>
-<relation ID="rel_17">
-<Condition name="Driving" type="equal" value="low idle speed"/>
-</relation>
-</Relations>
-</XCLModel>
-<XCLModel SID="Empty battery" considerOnlyRelevantRelations="true">
-<necessaryRelations/>
-<sufficientRelations>
-<relation ID="rel_18">
-<Condition name="Battery o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_19">
-<Condition name="Battery o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation ID="rel_20">
-<Condition name="Starter" type="equal" value="does not turn over"/>
-</relation>
-<relation refID="rel_4"/>
-</Relations>
-</XCLModel>
-<XCLModel SID="Leaking air intake system" considerOnlyRelevantRelations="true">
-<necessaryRelations/>
-<sufficientRelations>
-<relation ID="rel_21">
-<Condition name="Air intake system o.k.?" type="equal" value="no"/>
-</relation>
-</sufficientRelations>
-<contradictingRelations>
-<relation ID="rel_22">
-<Condition name="Air intake system o.k.?" type="equal" value="yes"/>
-</relation>
-</contradictingRelations>
-<Relations>
-<relation refID="rel_10"/>
-<relation ID="rel_23">
-<Condition name="Driving" type="equal" value="insufficient power on full load"/>
-</relation>
-<relation refID="rel_3"/>
-<relation ID="rel_24">
-<Condition name="Driving" type="equal" value="insufficient power on partial load"/>
-</relation>
-</Relations>
-</XCLModel>
-</KnowledgeSlices>
+  <KnowledgeSlices>
+    <XCLModel SID="Bad ignition timing" considerOnlyRelevantRelations="true">
+      <necessaryRelations/>
+      <sufficientRelations>
+        <relation ID="rel_0">
+          <Condition name="Ignition timing o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_1">
+          <Condition name="Ignition timing o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation ID="rel_2">
+          <Condition name="Driving" type="equal" value="delayed take-off"/>
+        </relation>
+        <relation ID="rel_3">
+          <Condition name="Driving" type="equal" value="unsteady idle speed"/>
+        </relation>
+        <relation ID="rel_4">
+          <Condition type="or">
+            <Condition name="Engine start" type="equal" value="does not start"/>
+            <Condition name="Engine start" type="equal" value="engine barely starts"/>
+          </Condition>
+        </relation>
+        <relation ID="rel_5">
+          <Condition type="or">
+            <Condition name="Engine noises" type="equal" value="ringing"/>
+            <Condition name="Engine noises" type="equal" value="knocking"/>
+          </Condition>
+        </relation>
+        <relation ID="rel_6">
+          <Condition name="Driving" type="equal" value="weak acceleration"/>
+        </relation>
+        <relation ID="rel_7">
+          <Condition name="Starter" type="equal" value="turns over"/>
+        </relation>
+      </Relations>
+    </XCLModel>
+    <XCLModel SID="Clogged air filter" considerOnlyRelevantRelations="true">
+      <necessaryRelations/>
+      <sufficientRelations>
+        <relation ID="rel_8">
+          <Condition name="Air filter o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_9">
+          <Condition name="Air filter o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation ID="rel_10">
+          <Condition type="or">
+            <Condition name="Mileage evaluation" type="equal" value="slightly increased"/>
+            <Condition name="Mileage evaluation" type="equal" value="increased"/>
+          </Condition>
+        </relation>
+        <relation ID="rel_11">
+          <Condition name="Exhaust pipe color evaluation" type="equal" value="abnormal"/>
+        </relation>
+        <relation ID="rel_12">
+          <Condition name="Fuel" type="equal" value="unleaded gasoline"/>
+        </relation>
+        <relation refID="rel_3"/>
+        <relation refID="rel_4"/>
+        <relation ID="rel_13">
+          <Condition name="Exhaust fumes" type="equal" value="black"/>
+        </relation>
+        <relation refID="rel_6"/>
+        <relation refID="rel_7"/>
+      </Relations>
+    </XCLModel>
+    <XCLModel SID="Damaged idle speed system" considerOnlyRelevantRelations="true">
+      <necessaryRelations/>
+      <sufficientRelations>
+        <relation ID="rel_14">
+          <Condition name="Idle speed system o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_15">
+          <Condition name="Idle speed system o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation ID="rel_16">
+          <Condition name="Engine start" type="equal" value="engine barely starts"/>
+        </relation>
+        <relation refID="rel_3"/>
+        <relation ID="rel_17">
+          <Condition name="Driving" type="equal" value="low idle speed"/>
+        </relation>
+      </Relations>
+    </XCLModel>
+    <XCLModel SID="Empty battery" considerOnlyRelevantRelations="true">
+      <necessaryRelations/>
+      <sufficientRelations>
+        <relation ID="rel_18">
+          <Condition name="Battery o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_19">
+          <Condition name="Battery o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation ID="rel_20">
+          <Condition name="Starter" type="equal" value="does not turn over"/>
+        </relation>
+        <relation refID="rel_4"/>
+      </Relations>
+    </XCLModel>
+    <XCLModel SID="Leaking air intake system" considerOnlyRelevantRelations="true">
+      <necessaryRelations/>
+      <sufficientRelations>
+        <relation ID="rel_21">
+          <Condition name="Air intake system o.k.?" type="equal" value="no"/>
+        </relation>
+      </sufficientRelations>
+      <contradictingRelations>
+        <relation ID="rel_22">
+          <Condition name="Air intake system o.k.?" type="equal" value="yes"/>
+        </relation>
+      </contradictingRelations>
+      <Relations>
+        <relation refID="rel_10"/>
+        <relation ID="rel_23">
+          <Condition name="Driving" type="equal" value="insufficient power on full load"/>
+        </relation>
+        <relation refID="rel_3"/>
+        <relation ID="rel_24">
+          <Condition name="Driving" type="equal" value="insufficient power on partial load"/>
+        </relation>
+      </Relations>
+    </XCLModel>
+  </KnowledgeSlices>
 </KnowledgeBase>

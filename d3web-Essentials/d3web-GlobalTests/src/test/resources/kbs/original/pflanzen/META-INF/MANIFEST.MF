@@ -1,7 +1,7 @@
 Manifest-Version: 2.0
+Date: Fri Feb 22 00:01:42 CET 2019
+Author: null
+Name: null
 ID: null
-Author: 
-Name: Bestimmung krautiger Blütenpflanzen
-Date: Thu Feb 18 15:54:55 CET 2010
-User: Markus Friedrich
+User: Albrecht
 

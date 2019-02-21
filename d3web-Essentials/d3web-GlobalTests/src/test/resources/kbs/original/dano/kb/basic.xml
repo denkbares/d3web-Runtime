@@ -1,2028 +1,2028 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <KnowledgeBase id="" system="d3web" type="basic">
-<InitQuestions>
-<Question name="Container: QC1"/>
-</InitQuestions>
-<rootQASet>Container: Q000</rootQASet>
-<rootSolution>Solution: P000</rootSolution>
-<QASets>
-<QContainer name="Container: LSAtemprobleme">
-<Children>
-<Child name="Question: Q89"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LSBewusstsein">
-<Children>
-<Child name="Question: Q72"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LSBrustschmerz">
-<Children>
-<Child name="Question: Q31"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LSKreislauf">
-<Children>
-<Child name="Question: Q48"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LSVergiftung">
-<Children>
-<Child name="Question: Q166"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_AP">
-<Children>
-<Child name="Container: LSAtemprobleme"/>
-<Child name="Container: QC15"/>
-<Child name="Container: QC16"/>
-<Child name="Container: QC17"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_AS">
-<Children>
-<Child name="Question: Q108"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_BB">
-<Children>
-<Child name="Container: LSBewusstsein"/>
-<Child name="Container: QC12"/>
-<Child name="Container: QC13"/>
-<Child name="Container: QC14"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_BS">
-<Children>
-<Child name="Container: QC3"/>
-<Child name="Container: QC4"/>
-<Child name="Container: QC5"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_KN">
-<Children>
-<Child name="Question: Q130"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_Neur">
-<Children>
-<Child name="Container: QC18"/>
-<Child name="Container: QC19"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_Psy">
-<Children>
-<Child name="Question: Q153"/>
-</Children>
-</QContainer>
-<QContainer name="Container: LS_SB">
-<Children>
-<Child name="Container: LSBrustschmerz"/>
-<Child name="Container: QC6"/>
-<Child name="Container: QC7"/>
-<Child name="Container: QC8"/>
-<Child name="Container: QC9"/>
-<Child name="Container: QC10"/>
-<Child name="Container: QC11"/>
-</Children>
-</QContainer>
-<QContainer name="Container: Q000">
-<Children>
-<Child name="Container: QC1"/>
-<Child name="Container: QC2"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC1">
-<Children>
-<Child name="Question: Q1"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC10">
-<Children>
-<Child name="Question: Q43"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC11">
-<Children>
-<Child name="Question: Q32"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC12">
-<Children>
-<Child name="Question: Q76"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC13">
-<Children>
-<Child name="Question: Q81"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC14">
-<Children>
-<Child name="Question: Q78"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC15">
-<Children>
-<Child name="Question: Q98"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC16">
-<Children>
-<Child name="Question: Q96"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC17">
-<Children>
-<Child name="Question: Q107"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC18">
-<Children>
-<Child name="Question: Q145"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC19">
-<Children>
-<Child name="Question: Q147"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC2">
-<Children>
-<Child name="Container: LS_BS"/>
-<Child name="Container: LS_SB"/>
-<Child name="Container: LS_BB"/>
-<Child name="Container: LS_AP"/>
-<Child name="Container: LSKreislauf"/>
-<Child name="Container: LS_Psy"/>
-<Child name="Container: LSVergiftung"/>
-<Child name="Container: LS_Neur"/>
-<Child name="Container: LS_AS"/>
-<Child name="Container: LS_KN"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC3">
-<Children>
-<Child name="Question: Q2"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC4">
-<Children>
-<Child name="Question: Q15"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC5">
-<Children>
-<Child name="Question: Q3"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC6">
-<Children>
-<Child name="Question: Q42"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC7">
-<Children>
-<Child name="Question: Q40"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC8">
-<Children>
-<Child name="Question: Q37"/>
-</Children>
-</QContainer>
-<QContainer name="Container: QC9">
-<Children>
-<Child name="Question: Q34"/>
-</Children>
-</QContainer>
-<Question name="Question: KinderIntoxikation" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q1" type="OC">
-<Answers>
-<Answer name="Answer: Q1a1" type="AnswerChoice"/>
-<Answer name="Answer: Q1a2" type="AnswerChoice"/>
-<Answer name="Answer: Q1a3" type="AnswerChoice"/>
-<Answer name="Answer: Q1a4" type="AnswerChoice"/>
-<Answer name="Answer: Q1a5" type="AnswerChoice"/>
-<Answer name="Answer: Q1a6" type="AnswerChoice"/>
-<Answer name="Answer: Q1a7" type="AnswerChoice"/>
-<Answer name="Answer: Q1a8" type="AnswerChoice"/>
-<Answer name="Answer: Q1a9" type="AnswerChoice"/>
-<Answer name="Answer: Q1a10" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q10" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q100" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q101" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q102"/>
-<Child name="Question: Q104"/>
-</Children>
-</Question>
-<Question name="Question: Q102" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q103"/>
-</Children>
-</Question>
-<Question name="Question: Q103" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q104" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q105"/>
-</Children>
-</Question>
-<Question name="Question: Q105" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q106"/>
-</Children>
-</Question>
-<Question name="Question: Q106" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q107" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q108" type="OC">
-<Answers>
-<Answer name="Answer: Q108a1" type="AnswerChoice"/>
-<Answer name="Answer: Q108a2" type="AnswerChoice"/>
-<Answer name="Answer: Q108a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q109"/>
-<Child name="Question: Q116"/>
-<Child name="Question: Q126"/>
-</Children>
-</Question>
-<Question name="Question: Q109" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q110"/>
-<Child name="Question: Q111"/>
-</Children>
-</Question>
-<Question name="Question: Q11" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q110" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q111" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q112"/>
-<Child name="Question: Q113"/>
-</Children>
-</Question>
-<Question name="Question: Q112" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q113" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q114"/>
-</Children>
-</Question>
-<Question name="Question: Q114" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q115"/>
-</Children>
-</Question>
-<Question name="Question: Q115" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q116" type="OC">
-<Answers>
-<Answer name="Answer: Q116a1" type="AnswerChoice"/>
-<Answer name="Answer: Q116a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q117"/>
-<Child name="Question: Q122"/>
-</Children>
-</Question>
-<Question name="Question: Q117" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q118"/>
-</Children>
-</Question>
-<Question name="Question: Q118" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q119"/>
-</Children>
-</Question>
-<Question name="Question: Q119" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q120"/>
-<Child name="Question: Q121"/>
-</Children>
-</Question>
-<Question name="Question: Q12" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q120" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q121" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q122" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q123"/>
-<Child name="Question: Q124"/>
-</Children>
-</Question>
-<Question name="Question: Q123" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q124" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q125"/>
-</Children>
-</Question>
-<Question name="Question: Q125" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q126" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q127"/>
-</Children>
-</Question>
-<Question name="Question: Q127" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q128"/>
-</Children>
-</Question>
-<Question name="Question: Q128" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q129"/>
-</Children>
-</Question>
-<Question name="Question: Q129" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q13" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q14"/>
-</Children>
-</Question>
-<Question name="Question: Q130" type="OC">
-<Answers>
-<Answer name="Answer: Q130a1" type="AnswerChoice"/>
-<Answer name="Answer: Q130a2" type="AnswerChoice"/>
-<Answer name="Answer: Q130a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q131"/>
-<Child name="Question: Q136"/>
-<Child name="Question: Q142"/>
-</Children>
-</Question>
-<Question name="Question: Q131" type="OC">
-<Answers>
-<Answer name="Answer: Q131a1" type="AnswerChoice"/>
-<Answer name="Answer: Q131a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q132"/>
-</Children>
-</Question>
-<Question name="Question: Q132" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q133"/>
-</Children>
-</Question>
-<Question name="Question: Q133" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q134"/>
-</Children>
-</Question>
-<Question name="Question: Q134" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q135"/>
-</Children>
-</Question>
-<Question name="Question: Q135" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: KinderIntoxikation"/>
-</Children>
-</Question>
-<Question name="Question: Q136" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q137"/>
-<Child name="Question: Q139"/>
-</Children>
-</Question>
-<Question name="Question: Q137" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q138"/>
-</Children>
-</Question>
-<Question name="Question: Q138" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q139" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q140"/>
-<Child name="Question: Q141"/>
-</Children>
-</Question>
-<Question name="Question: Q14" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q140" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q141" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q142" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q143"/>
-</Children>
-</Question>
-<Question name="Question: Q143" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q144"/>
-</Children>
-</Question>
-<Question name="Question: Q144" type="OC">
-<Answers>
-<Answer name="Answer: Q144a1" type="AnswerChoice"/>
-<Answer name="Answer: Q144a2" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q145" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q146"/>
-</Children>
-</Question>
-<Question name="Question: Q146" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q147" type="OC">
-<Answers>
-<Answer name="Answer: Q147a1" type="AnswerChoice"/>
-<Answer name="Answer: Q147a2" type="AnswerChoice"/>
-<Answer name="Answer: Q147a3" type="AnswerChoice"/>
-<Answer name="Answer: Q147a4" type="AnswerChoice"/>
-<Answer name="Answer: Q147a5" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q148"/>
-<Child name="Question: Q150"/>
-</Children>
-</Question>
-<Question name="Question: Q148" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q149"/>
-</Children>
-</Question>
-<Question name="Question: Q149" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q15" type="OC">
-<Answers>
-<Answer name="Answer: Q15a1" type="AnswerChoice"/>
-<Answer name="Answer: Q15a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q16"/>
-<Child name="Question: Q22"/>
-</Children>
-</Question>
-<Question name="Question: Q150" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q151"/>
-</Children>
-</Question>
-<Question name="Question: Q151" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q152"/>
-</Children>
-</Question>
-<Question name="Question: Q152" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q153" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q154"/>
-<Child name="Question: Q160"/>
-</Children>
-</Question>
-<Question name="Question: Q154" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q155"/>
-<Child name="Question: Q158"/>
-</Children>
-</Question>
-<Question name="Question: Q155" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q156"/>
-</Children>
-</Question>
-<Question name="Question: Q156" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q157"/>
-</Children>
-</Question>
-<Question name="Question: Q157" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q158" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q159"/>
-</Children>
-</Question>
-<Question name="Question: Q159" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q16" type="OC">
-<Answers>
-<Answer name="Answer: Q16a1" type="AnswerChoice"/>
-<Answer name="Answer: Q16a2" type="AnswerChoice"/>
-<Answer name="Answer: Q16a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q17"/>
-</Children>
-</Question>
-<Question name="Question: Q160" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q161"/>
-<Child name="Question: Q163"/>
-</Children>
-</Question>
-<Question name="Question: Q161" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q162"/>
-</Children>
-</Question>
-<Question name="Question: Q162" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q163" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q164"/>
-</Children>
-</Question>
-<Question name="Question: Q164" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q165"/>
-</Children>
-</Question>
-<Question name="Question: Q165" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q166" type="OC">
-<Answers>
-<Answer name="Answer: Q166a1" type="AnswerChoice"/>
-<Answer name="Answer: Q166a2" type="AnswerChoice"/>
-<Answer name="Answer: Q166a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q167"/>
-<Child name="Question: Q173"/>
-<Child name="Question: Q178"/>
-</Children>
-</Question>
-<Question name="Question: Q167" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q168"/>
-<Child name="Question: Q170"/>
-</Children>
-</Question>
-<Question name="Question: Q168" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q169"/>
-</Children>
-</Question>
-<Question name="Question: Q169" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q17" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q18"/>
-</Children>
-</Question>
-<Question name="Question: Q170" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q171"/>
-</Children>
-</Question>
-<Question name="Question: Q171" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q172"/>
-</Children>
-</Question>
-<Question name="Question: Q172" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q173" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q174"/>
-<Child name="Question: Q175"/>
-</Children>
-</Question>
-<Question name="Question: Q174" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q175" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q176"/>
-</Children>
-</Question>
-<Question name="Question: Q176" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q177"/>
-</Children>
-</Question>
-<Question name="Question: Q177" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q178" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q179"/>
-</Children>
-</Question>
-<Question name="Question: Q179" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q18" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q19"/>
-</Children>
-</Question>
-<Question name="Question: Q19" type="OC">
-<Answers>
-<Answer name="Answer: Q19a1" type="AnswerChoice"/>
-<Answer name="Answer: Q19a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q20"/>
-</Children>
-</Question>
-<Question name="Question: Q2" type="OC">
-<Answers>
-<Answer name="Answer: Q2a1" type="AnswerChoice"/>
-<Answer name="Answer: Q2a2" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q20" type="OC">
-<Answers>
-<Answer name="Answer: Q20a1" type="AnswerChoice"/>
-<Answer name="Answer: Q20a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q21"/>
-</Children>
-</Question>
-<Question name="Question: Q21" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q22" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q23"/>
-</Children>
-</Question>
-<Question name="Question: Q23" type="OC">
-<Answers>
-<Answer name="Answer: Q23a1" type="AnswerChoice"/>
-<Answer name="Answer: Q23a2" type="AnswerChoice"/>
-<Answer name="Answer: Q23a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q24"/>
-<Child name="Question: Q28"/>
-<Child name="Question: Q29"/>
-</Children>
-</Question>
-<Question name="Question: Q24" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q25"/>
-</Children>
-</Question>
-<Question name="Question: Q25" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q26"/>
-<Child name="Question: Q27"/>
-</Children>
-</Question>
-<Question name="Question: Q26" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q27" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q28" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q29" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q30"/>
-</Children>
-</Question>
-<Question name="Question: Q3" type="OC">
-<Answers>
-<Answer name="Answer: Q3a1" type="AnswerChoice"/>
-<Answer name="Answer: Q3a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q4"/>
-<Child name="Question: Q6"/>
-</Children>
-</Question>
-<Question name="Question: Q30" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q31" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q32" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q33"/>
-</Children>
-</Question>
-<Question name="Question: Q33" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q34" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q35"/>
-</Children>
-</Question>
-<Question name="Question: Q35" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q36"/>
-</Children>
-</Question>
-<Question name="Question: Q36" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q37" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q38"/>
-</Children>
-</Question>
-<Question name="Question: Q38" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q39"/>
-</Children>
-</Question>
-<Question name="Question: Q39" type="OC">
-<Answers>
-<Answer name="Answer: Q39a1" type="AnswerChoice"/>
-<Answer name="Answer: Q39a2" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q4" type="OC">
-<Answers>
-<Answer name="Answer: Q4a1" type="AnswerChoice"/>
-<Answer name="Answer: Q4a2" type="AnswerChoice"/>
-<Answer name="Answer: Q4a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q5"/>
-</Children>
-</Question>
-<Question name="Question: Q40" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q41"/>
-</Children>
-</Question>
-<Question name="Question: Q41" type="OC">
-<Answers>
-<Answer name="Answer: Q41a1" type="AnswerChoice"/>
-<Answer name="Answer: Q41a2" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q42" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q43" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q44"/>
-<Child name="Question: Q46"/>
-</Children>
-</Question>
-<Question name="Question: Q44" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q45"/>
-</Children>
-</Question>
-<Question name="Question: Q45" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q46" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q47"/>
-</Children>
-</Question>
-<Question name="Question: Q47" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q48" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q49"/>
-<Child name="Question: Q58"/>
-</Children>
-</Question>
-<Question name="Question: Q49" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q50"/>
-<Child name="Question: Q54"/>
-</Children>
-</Question>
-<Question name="Question: Q5" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q50" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q51"/>
-</Children>
-</Question>
-<Question name="Question: Q51" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q52"/>
-</Children>
-</Question>
-<Question name="Question: Q52" type="OC">
-<Answers>
-<Answer name="Answer: Q52a1" type="AnswerChoice"/>
-<Answer name="Answer: Q52a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q53"/>
-</Children>
-</Question>
-<Question name="Question: Q53" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q54" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q55"/>
-</Children>
-</Question>
-<Question name="Question: Q55" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q56"/>
-</Children>
-</Question>
-<Question name="Question: Q56" type="OC">
-<Answers>
-<Answer name="Answer: Q56a1" type="AnswerChoice"/>
-<Answer name="Answer: Q56a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q57"/>
-</Children>
-</Question>
-<Question name="Question: Q57" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q58" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q59"/>
-<Child name="Question: Q69"/>
-</Children>
-</Question>
-<Question name="Question: Q59" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q60"/>
-<Child name="Question: Q67"/>
-</Children>
-</Question>
-<Question name="Question: Q6" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q7"/>
-</Children>
-</Question>
-<Question name="Question: Q60" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q61"/>
-<Child name="Question: Q62"/>
-</Children>
-</Question>
-<Question name="Question: Q61" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q62" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q63"/>
-</Children>
-</Question>
-<Question name="Question: Q63" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q64"/>
-</Children>
-</Question>
-<Question name="Question: Q64" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q65"/>
-</Children>
-</Question>
-<Question name="Question: Q65" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q66"/>
-</Children>
-</Question>
-<Question name="Question: Q66" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q67" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q68"/>
-</Children>
-</Question>
-<Question name="Question: Q68" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q69" type="OC">
-<Answers>
-<Answer name="Answer: Q69a1" type="AnswerChoice"/>
-<Answer name="Answer: Q69a2" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q70"/>
-<Child name="Question: Q71"/>
-</Children>
-</Question>
-<Question name="Question: Q7" type="OC">
-<Answers>
-<Answer name="Answer: Q7a1" type="AnswerChoice"/>
-<Answer name="Answer: Q7a2" type="AnswerChoice"/>
-<Answer name="Answer: Q7a3" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q8"/>
-<Child name="Question: Q12"/>
-<Child name="Question: Q13"/>
-</Children>
-</Question>
-<Question name="Question: Q70" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q71" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q72" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q73"/>
-</Children>
-</Question>
-<Question name="Question: Q73" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q74"/>
-</Children>
-</Question>
-<Question name="Question: Q74" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q75"/>
-</Children>
-</Question>
-<Question name="Question: Q75" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q76" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q77"/>
-</Children>
-</Question>
-<Question name="Question: Q77" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q78" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q79"/>
-</Children>
-</Question>
-<Question name="Question: Q79" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q80"/>
-</Children>
-</Question>
-<Question name="Question: Q8" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q9"/>
-</Children>
-</Question>
-<Question name="Question: Q80" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q81" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q82"/>
-</Children>
-</Question>
-<Question name="Question: Q82" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q83"/>
-</Children>
-</Question>
-<Question name="Question: Q83" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q84"/>
-</Children>
-</Question>
-<Question name="Question: Q84" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q85"/>
-</Children>
-</Question>
-<Question name="Question: Q85" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q86"/>
-<Child name="Question: Q88"/>
-</Children>
-</Question>
-<Question name="Question: Q86" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q87"/>
-</Children>
-</Question>
-<Question name="Question: Q87" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q88" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q89" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q90"/>
-</Children>
-</Question>
-<Question name="Question: Q9" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q10"/>
-<Child name="Question: Q11"/>
-</Children>
-</Question>
-<Question name="Question: Q90" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q91"/>
-<Child name="Question: Q93"/>
-</Children>
-</Question>
-<Question name="Question: Q91" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q92"/>
-</Children>
-</Question>
-<Question name="Question: Q92" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q93" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q94"/>
-</Children>
-</Question>
-<Question name="Question: Q94" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q95"/>
-</Children>
-</Question>
-<Question name="Question: Q95" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q96" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q97"/>
-</Children>
-</Question>
-<Question name="Question: Q97" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-</Question>
-<Question name="Question: Q98" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q99"/>
-<Child name="Question: Q101"/>
-</Children>
-</Question>
-<Question name="Question: Q99" type="OC">
-<Answers>
-<Answer name="ja" type="AnswerChoice"/>
-<Answer name="nein" type="AnswerChoice"/>
-</Answers>
-<Children>
-<Child name="Question: Q100"/>
-</Children>
-</Question>
-</QASets>
-<Diagnoses>
-<Diagnosis name="Solution: P000">
-<Children>
-<Child name="Solution: P1"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P1">
-<Children>
-<Child name="Solution: P2"/>
-<Child name="Solution: P21"/>
-<Child name="Solution: P30"/>
-<Child name="Solution: P48"/>
-<Child name="Solution: P59"/>
-<Child name="Solution: P68"/>
-<Child name="Solution: P84"/>
-<Child name="Solution: P99"/>
-<Child name="Solution: P104"/>
-<Child name="Solution: P116"/>
-<Child name="Solution: P130"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P10"/>
-<Diagnosis name="Solution: P100"/>
-<Diagnosis name="Solution: P101"/>
-<Diagnosis name="Solution: P102"/>
-<Diagnosis name="Solution: P103"/>
-<Diagnosis name="Solution: P104">
-<Children>
-<Child name="Solution: P105"/>
-<Child name="Solution: P106"/>
-<Child name="Solution: P107"/>
-<Child name="Solution: P108"/>
-<Child name="Solution: P109"/>
-<Child name="Solution: P110"/>
-<Child name="Solution: P111"/>
-<Child name="Solution: P50"/>
-<Child name="Solution: P41"/>
-<Child name="Solution: P112"/>
-<Child name="Solution: P113"/>
-<Child name="Solution: P114"/>
-<Child name="Solution: P115"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P105"/>
-<Diagnosis name="Solution: P106"/>
-<Diagnosis name="Solution: P107"/>
-<Diagnosis name="Solution: P108"/>
-<Diagnosis name="Solution: P109"/>
-<Diagnosis name="Solution: P11"/>
-<Diagnosis name="Solution: P110"/>
-<Diagnosis name="Solution: P111"/>
-<Diagnosis name="Solution: P112"/>
-<Diagnosis name="Solution: P113"/>
-<Diagnosis name="Solution: P114"/>
-<Diagnosis name="Solution: P115"/>
-<Diagnosis name="Solution: P116">
-<Children>
-<Child name="Solution: P117"/>
-<Child name="Solution: P118"/>
-<Child name="Solution: P119"/>
-<Child name="Solution: P120"/>
-<Child name="Solution: P54"/>
-<Child name="Solution: P121"/>
-<Child name="Solution: P122"/>
-<Child name="Solution: P123"/>
-<Child name="Solution: P124"/>
-<Child name="Solution: P125"/>
-<Child name="Solution: P126"/>
-<Child name="Solution: P127"/>
-<Child name="Solution: P128"/>
-<Child name="Solution: P129"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P117"/>
-<Diagnosis name="Solution: P118"/>
-<Diagnosis name="Solution: P119"/>
-<Diagnosis name="Solution: P12"/>
-<Diagnosis name="Solution: P120"/>
-<Diagnosis name="Solution: P121"/>
-<Diagnosis name="Solution: P122"/>
-<Diagnosis name="Solution: P123"/>
-<Diagnosis name="Solution: P124"/>
-<Diagnosis name="Solution: P125"/>
-<Diagnosis name="Solution: P126"/>
-<Diagnosis name="Solution: P127"/>
-<Diagnosis name="Solution: P128"/>
-<Diagnosis name="Solution: P129"/>
-<Diagnosis name="Solution: P13"/>
-<Diagnosis name="Solution: P130">
-<Children>
-<Child name="Solution: P131"/>
-<Child name="Solution: P132"/>
-<Child name="Solution: P133"/>
-<Child name="Solution: P134"/>
-<Child name="Solution: P135"/>
-<Child name="Solution: P136"/>
-<Child name="Solution: P137"/>
-<Child name="Solution: P138"/>
-<Child name="Solution: P139"/>
-<Child name="Solution: P140"/>
-<Child name="Solution: P141"/>
-<Child name="Solution: P142"/>
-<Child name="Solution: P143"/>
-<Child name="Solution: P144"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P131"/>
-<Diagnosis name="Solution: P132"/>
-<Diagnosis name="Solution: P133"/>
-<Diagnosis name="Solution: P134"/>
-<Diagnosis name="Solution: P135"/>
-<Diagnosis name="Solution: P136"/>
-<Diagnosis name="Solution: P137"/>
-<Diagnosis name="Solution: P138"/>
-<Diagnosis name="Solution: P139"/>
-<Diagnosis name="Solution: P14"/>
-<Diagnosis name="Solution: P140"/>
-<Diagnosis name="Solution: P141"/>
-<Diagnosis name="Solution: P142"/>
-<Diagnosis name="Solution: P143"/>
-<Diagnosis name="Solution: P144"/>
-<Diagnosis name="Solution: P15"/>
-<Diagnosis name="Solution: P16"/>
-<Diagnosis name="Solution: P17"/>
-<Diagnosis name="Solution: P18"/>
-<Diagnosis name="Solution: P19"/>
-<Diagnosis name="Solution: P2">
-<Children>
-<Child name="Solution: P3"/>
-<Child name="Solution: P4"/>
-<Child name="Solution: P5"/>
-<Child name="Solution: P6"/>
-<Child name="Solution: P7"/>
-<Child name="Solution: P8"/>
-<Child name="Solution: P9"/>
-<Child name="Solution: P10"/>
-<Child name="Solution: P11"/>
-<Child name="Solution: P12"/>
-<Child name="Solution: P13"/>
-<Child name="Solution: P14"/>
-<Child name="Solution: P15"/>
-<Child name="Solution: P16"/>
-<Child name="Solution: P17"/>
-<Child name="Solution: P18"/>
-<Child name="Solution: P19"/>
-<Child name="Solution: P20"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P20"/>
-<Diagnosis name="Solution: P21">
-<Children>
-<Child name="Solution: P22"/>
-<Child name="Solution: P23"/>
-<Child name="Solution: P24"/>
-<Child name="Solution: P25"/>
-<Child name="Solution: P26"/>
-<Child name="Solution: P27"/>
-<Child name="Solution: P28"/>
-<Child name="Solution: P17"/>
-<Child name="Solution: P29"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P22"/>
-<Diagnosis name="Solution: P23"/>
-<Diagnosis name="Solution: P24"/>
-<Diagnosis name="Solution: P25"/>
-<Diagnosis name="Solution: P26"/>
-<Diagnosis name="Solution: P27"/>
-<Diagnosis name="Solution: P28"/>
-<Diagnosis name="Solution: P29"/>
-<Diagnosis name="Solution: P3"/>
-<Diagnosis name="Solution: P30">
-<Children>
-<Child name="Solution: P31"/>
-<Child name="Solution: P32"/>
-<Child name="Solution: P33"/>
-<Child name="Solution: P34"/>
-<Child name="Solution: P35"/>
-<Child name="Solution: P36"/>
-<Child name="Solution: P37"/>
-<Child name="Solution: P38"/>
-<Child name="Solution: P39"/>
-<Child name="Solution: P40"/>
-<Child name="Solution: P41"/>
-<Child name="Solution: P42"/>
-<Child name="Solution: P43"/>
-<Child name="Solution: P44"/>
-<Child name="Solution: P45"/>
-<Child name="Solution: P46"/>
-<Child name="Solution: P47"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P31"/>
-<Diagnosis name="Solution: P32"/>
-<Diagnosis name="Solution: P33"/>
-<Diagnosis name="Solution: P34"/>
-<Diagnosis name="Solution: P35"/>
-<Diagnosis name="Solution: P36"/>
-<Diagnosis name="Solution: P37"/>
-<Diagnosis name="Solution: P38"/>
-<Diagnosis name="Solution: P39"/>
-<Diagnosis name="Solution: P4"/>
-<Diagnosis name="Solution: P40"/>
-<Diagnosis name="Solution: P41"/>
-<Diagnosis name="Solution: P42"/>
-<Diagnosis name="Solution: P43"/>
-<Diagnosis name="Solution: P44"/>
-<Diagnosis name="Solution: P45"/>
-<Diagnosis name="Solution: P46"/>
-<Diagnosis name="Solution: P47"/>
-<Diagnosis name="Solution: P48">
-<Children>
-<Child name="Solution: P49"/>
-<Child name="Solution: P50"/>
-<Child name="Solution: P51"/>
-<Child name="Solution: P52"/>
-<Child name="Solution: P53"/>
-<Child name="Solution: P54"/>
-<Child name="Solution: P55"/>
-<Child name="Solution: P56"/>
-<Child name="Solution: P57"/>
-<Child name="Solution: P58"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P49"/>
-<Diagnosis name="Solution: P5"/>
-<Diagnosis name="Solution: P50"/>
-<Diagnosis name="Solution: P51"/>
-<Diagnosis name="Solution: P52"/>
-<Diagnosis name="Solution: P53"/>
-<Diagnosis name="Solution: P54"/>
-<Diagnosis name="Solution: P55"/>
-<Diagnosis name="Solution: P56"/>
-<Diagnosis name="Solution: P57"/>
-<Diagnosis name="Solution: P58"/>
-<Diagnosis name="Solution: P59">
-<Children>
-<Child name="Solution: P60"/>
-<Child name="Solution: P61"/>
-<Child name="Solution: P62"/>
-<Child name="Solution: P63"/>
-<Child name="Solution: P64"/>
-<Child name="Solution: P65"/>
-<Child name="Solution: P25"/>
-<Child name="Solution: P23"/>
-<Child name="Solution: P42"/>
-<Child name="Solution: P66"/>
-<Child name="Solution: P67"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P6"/>
-<Diagnosis name="Solution: P60"/>
-<Diagnosis name="Solution: P61"/>
-<Diagnosis name="Solution: P62"/>
-<Diagnosis name="Solution: P63"/>
-<Diagnosis name="Solution: P64"/>
-<Diagnosis name="Solution: P65"/>
-<Diagnosis name="Solution: P66"/>
-<Diagnosis name="Solution: P67"/>
-<Diagnosis name="Solution: P68">
-<Children>
-<Child name="Solution: P69"/>
-<Child name="Solution: P70"/>
-<Child name="Solution: P71"/>
-<Child name="Solution: P72"/>
-<Child name="Solution: P53"/>
-<Child name="Solution: P36"/>
-<Child name="Solution: P73"/>
-<Child name="Solution: P74"/>
-<Child name="Solution: P75"/>
-<Child name="Solution: P76"/>
-<Child name="Solution: P77"/>
-<Child name="Solution: P26"/>
-<Child name="Solution: P78"/>
-<Child name="Solution: P79"/>
-<Child name="Solution: P80"/>
-<Child name="Solution: P81"/>
-<Child name="Solution: P82"/>
-<Child name="Solution: P83"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P69"/>
-<Diagnosis name="Solution: P7"/>
-<Diagnosis name="Solution: P70"/>
-<Diagnosis name="Solution: P71"/>
-<Diagnosis name="Solution: P72"/>
-<Diagnosis name="Solution: P73"/>
-<Diagnosis name="Solution: P74"/>
-<Diagnosis name="Solution: P75"/>
-<Diagnosis name="Solution: P76"/>
-<Diagnosis name="Solution: P77"/>
-<Diagnosis name="Solution: P78"/>
-<Diagnosis name="Solution: P79"/>
-<Diagnosis name="Solution: P8"/>
-<Diagnosis name="Solution: P80"/>
-<Diagnosis name="Solution: P81"/>
-<Diagnosis name="Solution: P82"/>
-<Diagnosis name="Solution: P83"/>
-<Diagnosis name="Solution: P84">
-<Children>
-<Child name="Solution: P85"/>
-<Child name="Solution: P86"/>
-<Child name="Solution: P87"/>
-<Child name="Solution: P88"/>
-<Child name="Solution: P89"/>
-<Child name="Solution: P90"/>
-<Child name="Solution: P91"/>
-<Child name="Solution: P92"/>
-<Child name="Solution: P93"/>
-<Child name="Solution: P94"/>
-<Child name="Solution: P95"/>
-<Child name="Solution: P96"/>
-<Child name="Solution: P97"/>
-<Child name="Solution: P98"/>
-</Children>
-</Diagnosis>
-<Diagnosis name="Solution: P85"/>
-<Diagnosis name="Solution: P86"/>
-<Diagnosis name="Solution: P87"/>
-<Diagnosis name="Solution: P88"/>
-<Diagnosis name="Solution: P89"/>
-<Diagnosis name="Solution: P9"/>
-<Diagnosis name="Solution: P90"/>
-<Diagnosis name="Solution: P91"/>
-<Diagnosis name="Solution: P92"/>
-<Diagnosis name="Solution: P93"/>
-<Diagnosis name="Solution: P94"/>
-<Diagnosis name="Solution: P95"/>
-<Diagnosis name="Solution: P96"/>
-<Diagnosis name="Solution: P97"/>
-<Diagnosis name="Solution: P98"/>
-<Diagnosis name="Solution: P99">
-<Children>
-<Child name="Solution: P50"/>
-<Child name="Solution: P52"/>
-<Child name="Solution: P100"/>
-<Child name="Solution: P101"/>
-<Child name="Solution: P69"/>
-<Child name="Solution: P102"/>
-<Child name="Solution: P103"/>
-</Children>
-</Diagnosis>
-</Diagnoses>
-<KnowledgeSlices/>
+  <InitQuestions>
+    <Question name="Container: QC1"/>
+  </InitQuestions>
+  <rootQASet>Container: Q000</rootQASet>
+  <rootSolution>Solution: P000</rootSolution>
+  <QASets>
+    <QContainer name="Container: LSAtemprobleme">
+      <Children>
+        <Child name="Question: Q89"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LSBewusstsein">
+      <Children>
+        <Child name="Question: Q72"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LSBrustschmerz">
+      <Children>
+        <Child name="Question: Q31"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LSKreislauf">
+      <Children>
+        <Child name="Question: Q48"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LSVergiftung">
+      <Children>
+        <Child name="Question: Q166"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_AP">
+      <Children>
+        <Child name="Container: LSAtemprobleme"/>
+        <Child name="Container: QC15"/>
+        <Child name="Container: QC16"/>
+        <Child name="Container: QC17"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_AS">
+      <Children>
+        <Child name="Question: Q108"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_BB">
+      <Children>
+        <Child name="Container: LSBewusstsein"/>
+        <Child name="Container: QC12"/>
+        <Child name="Container: QC13"/>
+        <Child name="Container: QC14"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_BS">
+      <Children>
+        <Child name="Container: QC3"/>
+        <Child name="Container: QC4"/>
+        <Child name="Container: QC5"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_KN">
+      <Children>
+        <Child name="Question: Q130"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_Neur">
+      <Children>
+        <Child name="Container: QC18"/>
+        <Child name="Container: QC19"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_Psy">
+      <Children>
+        <Child name="Question: Q153"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: LS_SB">
+      <Children>
+        <Child name="Container: LSBrustschmerz"/>
+        <Child name="Container: QC6"/>
+        <Child name="Container: QC7"/>
+        <Child name="Container: QC8"/>
+        <Child name="Container: QC9"/>
+        <Child name="Container: QC10"/>
+        <Child name="Container: QC11"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: Q000">
+      <Children>
+        <Child name="Container: QC1"/>
+        <Child name="Container: QC2"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC1">
+      <Children>
+        <Child name="Question: Q1"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC10">
+      <Children>
+        <Child name="Question: Q43"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC11">
+      <Children>
+        <Child name="Question: Q32"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC12">
+      <Children>
+        <Child name="Question: Q76"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC13">
+      <Children>
+        <Child name="Question: Q81"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC14">
+      <Children>
+        <Child name="Question: Q78"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC15">
+      <Children>
+        <Child name="Question: Q98"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC16">
+      <Children>
+        <Child name="Question: Q96"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC17">
+      <Children>
+        <Child name="Question: Q107"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC18">
+      <Children>
+        <Child name="Question: Q145"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC19">
+      <Children>
+        <Child name="Question: Q147"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC2">
+      <Children>
+        <Child name="Container: LS_BS"/>
+        <Child name="Container: LS_SB"/>
+        <Child name="Container: LS_BB"/>
+        <Child name="Container: LS_AP"/>
+        <Child name="Container: LSKreislauf"/>
+        <Child name="Container: LS_Psy"/>
+        <Child name="Container: LSVergiftung"/>
+        <Child name="Container: LS_Neur"/>
+        <Child name="Container: LS_AS"/>
+        <Child name="Container: LS_KN"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC3">
+      <Children>
+        <Child name="Question: Q2"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC4">
+      <Children>
+        <Child name="Question: Q15"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC5">
+      <Children>
+        <Child name="Question: Q3"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC6">
+      <Children>
+        <Child name="Question: Q42"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC7">
+      <Children>
+        <Child name="Question: Q40"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC8">
+      <Children>
+        <Child name="Question: Q37"/>
+      </Children>
+    </QContainer>
+    <QContainer name="Container: QC9">
+      <Children>
+        <Child name="Question: Q34"/>
+      </Children>
+    </QContainer>
+    <Question name="Question: KinderIntoxikation" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q1" type="OC">
+      <Answers>
+        <Answer name="Answer: Q1a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a3" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a4" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a5" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a6" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a7" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a8" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a9" type="AnswerChoice"/>
+        <Answer name="Answer: Q1a10" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q10" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q100" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q101" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q102"/>
+        <Child name="Question: Q104"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q102" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q103"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q103" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q104" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q105"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q105" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q106"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q106" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q107" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q108" type="OC">
+      <Answers>
+        <Answer name="Answer: Q108a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q108a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q108a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q109"/>
+        <Child name="Question: Q116"/>
+        <Child name="Question: Q126"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q109" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q110"/>
+        <Child name="Question: Q111"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q11" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q110" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q111" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q112"/>
+        <Child name="Question: Q113"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q112" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q113" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q114"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q114" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q115"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q115" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q116" type="OC">
+      <Answers>
+        <Answer name="Answer: Q116a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q116a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q117"/>
+        <Child name="Question: Q122"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q117" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q118"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q118" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q119"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q119" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q120"/>
+        <Child name="Question: Q121"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q12" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q120" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q121" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q122" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q123"/>
+        <Child name="Question: Q124"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q123" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q124" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q125"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q125" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q126" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q127"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q127" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q128"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q128" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q129"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q129" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q13" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q14"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q130" type="OC">
+      <Answers>
+        <Answer name="Answer: Q130a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q130a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q130a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q131"/>
+        <Child name="Question: Q136"/>
+        <Child name="Question: Q142"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q131" type="OC">
+      <Answers>
+        <Answer name="Answer: Q131a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q131a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q132"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q132" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q133"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q133" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q134"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q134" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q135"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q135" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: KinderIntoxikation"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q136" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q137"/>
+        <Child name="Question: Q139"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q137" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q138"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q138" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q139" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q140"/>
+        <Child name="Question: Q141"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q14" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q140" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q141" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q142" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q143"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q143" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q144"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q144" type="OC">
+      <Answers>
+        <Answer name="Answer: Q144a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q144a2" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q145" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q146"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q146" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q147" type="OC">
+      <Answers>
+        <Answer name="Answer: Q147a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q147a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q147a3" type="AnswerChoice"/>
+        <Answer name="Answer: Q147a4" type="AnswerChoice"/>
+        <Answer name="Answer: Q147a5" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q148"/>
+        <Child name="Question: Q150"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q148" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q149"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q149" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q15" type="OC">
+      <Answers>
+        <Answer name="Answer: Q15a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q15a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q16"/>
+        <Child name="Question: Q22"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q150" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q151"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q151" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q152"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q152" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q153" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q154"/>
+        <Child name="Question: Q160"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q154" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q155"/>
+        <Child name="Question: Q158"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q155" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q156"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q156" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q157"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q157" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q158" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q159"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q159" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q16" type="OC">
+      <Answers>
+        <Answer name="Answer: Q16a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q16a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q16a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q17"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q160" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q161"/>
+        <Child name="Question: Q163"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q161" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q162"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q162" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q163" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q164"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q164" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q165"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q165" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q166" type="OC">
+      <Answers>
+        <Answer name="Answer: Q166a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q166a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q166a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q167"/>
+        <Child name="Question: Q173"/>
+        <Child name="Question: Q178"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q167" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q168"/>
+        <Child name="Question: Q170"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q168" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q169"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q169" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q17" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q18"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q170" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q171"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q171" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q172"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q172" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q173" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q174"/>
+        <Child name="Question: Q175"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q174" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q175" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q176"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q176" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q177"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q177" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q178" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q179"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q179" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q18" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q19"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q19" type="OC">
+      <Answers>
+        <Answer name="Answer: Q19a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q19a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q20"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q2" type="OC">
+      <Answers>
+        <Answer name="Answer: Q2a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q2a2" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q20" type="OC">
+      <Answers>
+        <Answer name="Answer: Q20a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q20a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q21"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q21" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q22" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q23"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q23" type="OC">
+      <Answers>
+        <Answer name="Answer: Q23a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q23a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q23a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q24"/>
+        <Child name="Question: Q28"/>
+        <Child name="Question: Q29"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q24" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q25"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q25" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q26"/>
+        <Child name="Question: Q27"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q26" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q27" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q28" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q29" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q30"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q3" type="OC">
+      <Answers>
+        <Answer name="Answer: Q3a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q3a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q4"/>
+        <Child name="Question: Q6"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q30" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q31" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q32" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q33"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q33" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q34" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q35"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q35" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q36"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q36" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q37" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q38"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q38" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q39"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q39" type="OC">
+      <Answers>
+        <Answer name="Answer: Q39a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q39a2" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q4" type="OC">
+      <Answers>
+        <Answer name="Answer: Q4a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q4a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q4a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q5"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q40" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q41"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q41" type="OC">
+      <Answers>
+        <Answer name="Answer: Q41a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q41a2" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q42" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q43" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q44"/>
+        <Child name="Question: Q46"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q44" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q45"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q45" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q46" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q47"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q47" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q48" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q49"/>
+        <Child name="Question: Q58"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q49" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q50"/>
+        <Child name="Question: Q54"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q5" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q50" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q51"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q51" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q52"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q52" type="OC">
+      <Answers>
+        <Answer name="Answer: Q52a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q52a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q53"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q53" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q54" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q55"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q55" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q56"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q56" type="OC">
+      <Answers>
+        <Answer name="Answer: Q56a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q56a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q57"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q57" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q58" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q59"/>
+        <Child name="Question: Q69"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q59" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q60"/>
+        <Child name="Question: Q67"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q6" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q7"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q60" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q61"/>
+        <Child name="Question: Q62"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q61" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q62" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q63"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q63" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q64"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q64" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q65"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q65" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q66"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q66" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q67" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q68"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q68" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q69" type="OC">
+      <Answers>
+        <Answer name="Answer: Q69a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q69a2" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q70"/>
+        <Child name="Question: Q71"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q7" type="OC">
+      <Answers>
+        <Answer name="Answer: Q7a1" type="AnswerChoice"/>
+        <Answer name="Answer: Q7a2" type="AnswerChoice"/>
+        <Answer name="Answer: Q7a3" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q8"/>
+        <Child name="Question: Q12"/>
+        <Child name="Question: Q13"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q70" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q71" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q72" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q73"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q73" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q74"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q74" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q75"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q75" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q76" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q77"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q77" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q78" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q79"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q79" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q80"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q8" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q9"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q80" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q81" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q82"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q82" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q83"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q83" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q84"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q84" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q85"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q85" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q86"/>
+        <Child name="Question: Q88"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q86" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q87"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q87" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q88" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q89" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q90"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q9" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q10"/>
+        <Child name="Question: Q11"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q90" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q91"/>
+        <Child name="Question: Q93"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q91" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q92"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q92" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q93" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q94"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q94" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q95"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q95" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q96" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q97"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q97" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+    </Question>
+    <Question name="Question: Q98" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q99"/>
+        <Child name="Question: Q101"/>
+      </Children>
+    </Question>
+    <Question name="Question: Q99" type="OC">
+      <Answers>
+        <Answer name="ja" type="AnswerChoice"/>
+        <Answer name="nein" type="AnswerChoice"/>
+      </Answers>
+      <Children>
+        <Child name="Question: Q100"/>
+      </Children>
+    </Question>
+  </QASets>
+  <Diagnoses>
+    <Diagnosis name="Solution: P000">
+      <Children>
+        <Child name="Solution: P1"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P1">
+      <Children>
+        <Child name="Solution: P2"/>
+        <Child name="Solution: P21"/>
+        <Child name="Solution: P30"/>
+        <Child name="Solution: P48"/>
+        <Child name="Solution: P59"/>
+        <Child name="Solution: P68"/>
+        <Child name="Solution: P84"/>
+        <Child name="Solution: P99"/>
+        <Child name="Solution: P104"/>
+        <Child name="Solution: P116"/>
+        <Child name="Solution: P130"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P10"/>
+    <Diagnosis name="Solution: P100"/>
+    <Diagnosis name="Solution: P101"/>
+    <Diagnosis name="Solution: P102"/>
+    <Diagnosis name="Solution: P103"/>
+    <Diagnosis name="Solution: P104">
+      <Children>
+        <Child name="Solution: P105"/>
+        <Child name="Solution: P106"/>
+        <Child name="Solution: P107"/>
+        <Child name="Solution: P108"/>
+        <Child name="Solution: P109"/>
+        <Child name="Solution: P110"/>
+        <Child name="Solution: P111"/>
+        <Child name="Solution: P50"/>
+        <Child name="Solution: P41"/>
+        <Child name="Solution: P112"/>
+        <Child name="Solution: P113"/>
+        <Child name="Solution: P114"/>
+        <Child name="Solution: P115"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P105"/>
+    <Diagnosis name="Solution: P106"/>
+    <Diagnosis name="Solution: P107"/>
+    <Diagnosis name="Solution: P108"/>
+    <Diagnosis name="Solution: P109"/>
+    <Diagnosis name="Solution: P11"/>
+    <Diagnosis name="Solution: P110"/>
+    <Diagnosis name="Solution: P111"/>
+    <Diagnosis name="Solution: P112"/>
+    <Diagnosis name="Solution: P113"/>
+    <Diagnosis name="Solution: P114"/>
+    <Diagnosis name="Solution: P115"/>
+    <Diagnosis name="Solution: P116">
+      <Children>
+        <Child name="Solution: P117"/>
+        <Child name="Solution: P118"/>
+        <Child name="Solution: P119"/>
+        <Child name="Solution: P120"/>
+        <Child name="Solution: P54"/>
+        <Child name="Solution: P121"/>
+        <Child name="Solution: P122"/>
+        <Child name="Solution: P123"/>
+        <Child name="Solution: P124"/>
+        <Child name="Solution: P125"/>
+        <Child name="Solution: P126"/>
+        <Child name="Solution: P127"/>
+        <Child name="Solution: P128"/>
+        <Child name="Solution: P129"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P117"/>
+    <Diagnosis name="Solution: P118"/>
+    <Diagnosis name="Solution: P119"/>
+    <Diagnosis name="Solution: P12"/>
+    <Diagnosis name="Solution: P120"/>
+    <Diagnosis name="Solution: P121"/>
+    <Diagnosis name="Solution: P122"/>
+    <Diagnosis name="Solution: P123"/>
+    <Diagnosis name="Solution: P124"/>
+    <Diagnosis name="Solution: P125"/>
+    <Diagnosis name="Solution: P126"/>
+    <Diagnosis name="Solution: P127"/>
+    <Diagnosis name="Solution: P128"/>
+    <Diagnosis name="Solution: P129"/>
+    <Diagnosis name="Solution: P13"/>
+    <Diagnosis name="Solution: P130">
+      <Children>
+        <Child name="Solution: P131"/>
+        <Child name="Solution: P132"/>
+        <Child name="Solution: P133"/>
+        <Child name="Solution: P134"/>
+        <Child name="Solution: P135"/>
+        <Child name="Solution: P136"/>
+        <Child name="Solution: P137"/>
+        <Child name="Solution: P138"/>
+        <Child name="Solution: P139"/>
+        <Child name="Solution: P140"/>
+        <Child name="Solution: P141"/>
+        <Child name="Solution: P142"/>
+        <Child name="Solution: P143"/>
+        <Child name="Solution: P144"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P131"/>
+    <Diagnosis name="Solution: P132"/>
+    <Diagnosis name="Solution: P133"/>
+    <Diagnosis name="Solution: P134"/>
+    <Diagnosis name="Solution: P135"/>
+    <Diagnosis name="Solution: P136"/>
+    <Diagnosis name="Solution: P137"/>
+    <Diagnosis name="Solution: P138"/>
+    <Diagnosis name="Solution: P139"/>
+    <Diagnosis name="Solution: P14"/>
+    <Diagnosis name="Solution: P140"/>
+    <Diagnosis name="Solution: P141"/>
+    <Diagnosis name="Solution: P142"/>
+    <Diagnosis name="Solution: P143"/>
+    <Diagnosis name="Solution: P144"/>
+    <Diagnosis name="Solution: P15"/>
+    <Diagnosis name="Solution: P16"/>
+    <Diagnosis name="Solution: P17"/>
+    <Diagnosis name="Solution: P18"/>
+    <Diagnosis name="Solution: P19"/>
+    <Diagnosis name="Solution: P2">
+      <Children>
+        <Child name="Solution: P3"/>
+        <Child name="Solution: P4"/>
+        <Child name="Solution: P5"/>
+        <Child name="Solution: P6"/>
+        <Child name="Solution: P7"/>
+        <Child name="Solution: P8"/>
+        <Child name="Solution: P9"/>
+        <Child name="Solution: P10"/>
+        <Child name="Solution: P11"/>
+        <Child name="Solution: P12"/>
+        <Child name="Solution: P13"/>
+        <Child name="Solution: P14"/>
+        <Child name="Solution: P15"/>
+        <Child name="Solution: P16"/>
+        <Child name="Solution: P17"/>
+        <Child name="Solution: P18"/>
+        <Child name="Solution: P19"/>
+        <Child name="Solution: P20"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P20"/>
+    <Diagnosis name="Solution: P21">
+      <Children>
+        <Child name="Solution: P22"/>
+        <Child name="Solution: P23"/>
+        <Child name="Solution: P24"/>
+        <Child name="Solution: P25"/>
+        <Child name="Solution: P26"/>
+        <Child name="Solution: P27"/>
+        <Child name="Solution: P28"/>
+        <Child name="Solution: P17"/>
+        <Child name="Solution: P29"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P22"/>
+    <Diagnosis name="Solution: P23"/>
+    <Diagnosis name="Solution: P24"/>
+    <Diagnosis name="Solution: P25"/>
+    <Diagnosis name="Solution: P26"/>
+    <Diagnosis name="Solution: P27"/>
+    <Diagnosis name="Solution: P28"/>
+    <Diagnosis name="Solution: P29"/>
+    <Diagnosis name="Solution: P3"/>
+    <Diagnosis name="Solution: P30">
+      <Children>
+        <Child name="Solution: P31"/>
+        <Child name="Solution: P32"/>
+        <Child name="Solution: P33"/>
+        <Child name="Solution: P34"/>
+        <Child name="Solution: P35"/>
+        <Child name="Solution: P36"/>
+        <Child name="Solution: P37"/>
+        <Child name="Solution: P38"/>
+        <Child name="Solution: P39"/>
+        <Child name="Solution: P40"/>
+        <Child name="Solution: P41"/>
+        <Child name="Solution: P42"/>
+        <Child name="Solution: P43"/>
+        <Child name="Solution: P44"/>
+        <Child name="Solution: P45"/>
+        <Child name="Solution: P46"/>
+        <Child name="Solution: P47"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P31"/>
+    <Diagnosis name="Solution: P32"/>
+    <Diagnosis name="Solution: P33"/>
+    <Diagnosis name="Solution: P34"/>
+    <Diagnosis name="Solution: P35"/>
+    <Diagnosis name="Solution: P36"/>
+    <Diagnosis name="Solution: P37"/>
+    <Diagnosis name="Solution: P38"/>
+    <Diagnosis name="Solution: P39"/>
+    <Diagnosis name="Solution: P4"/>
+    <Diagnosis name="Solution: P40"/>
+    <Diagnosis name="Solution: P41"/>
+    <Diagnosis name="Solution: P42"/>
+    <Diagnosis name="Solution: P43"/>
+    <Diagnosis name="Solution: P44"/>
+    <Diagnosis name="Solution: P45"/>
+    <Diagnosis name="Solution: P46"/>
+    <Diagnosis name="Solution: P47"/>
+    <Diagnosis name="Solution: P48">
+      <Children>
+        <Child name="Solution: P49"/>
+        <Child name="Solution: P50"/>
+        <Child name="Solution: P51"/>
+        <Child name="Solution: P52"/>
+        <Child name="Solution: P53"/>
+        <Child name="Solution: P54"/>
+        <Child name="Solution: P55"/>
+        <Child name="Solution: P56"/>
+        <Child name="Solution: P57"/>
+        <Child name="Solution: P58"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P49"/>
+    <Diagnosis name="Solution: P5"/>
+    <Diagnosis name="Solution: P50"/>
+    <Diagnosis name="Solution: P51"/>
+    <Diagnosis name="Solution: P52"/>
+    <Diagnosis name="Solution: P53"/>
+    <Diagnosis name="Solution: P54"/>
+    <Diagnosis name="Solution: P55"/>
+    <Diagnosis name="Solution: P56"/>
+    <Diagnosis name="Solution: P57"/>
+    <Diagnosis name="Solution: P58"/>
+    <Diagnosis name="Solution: P59">
+      <Children>
+        <Child name="Solution: P60"/>
+        <Child name="Solution: P61"/>
+        <Child name="Solution: P62"/>
+        <Child name="Solution: P63"/>
+        <Child name="Solution: P64"/>
+        <Child name="Solution: P65"/>
+        <Child name="Solution: P25"/>
+        <Child name="Solution: P23"/>
+        <Child name="Solution: P42"/>
+        <Child name="Solution: P66"/>
+        <Child name="Solution: P67"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P6"/>
+    <Diagnosis name="Solution: P60"/>
+    <Diagnosis name="Solution: P61"/>
+    <Diagnosis name="Solution: P62"/>
+    <Diagnosis name="Solution: P63"/>
+    <Diagnosis name="Solution: P64"/>
+    <Diagnosis name="Solution: P65"/>
+    <Diagnosis name="Solution: P66"/>
+    <Diagnosis name="Solution: P67"/>
+    <Diagnosis name="Solution: P68">
+      <Children>
+        <Child name="Solution: P69"/>
+        <Child name="Solution: P70"/>
+        <Child name="Solution: P71"/>
+        <Child name="Solution: P72"/>
+        <Child name="Solution: P53"/>
+        <Child name="Solution: P36"/>
+        <Child name="Solution: P73"/>
+        <Child name="Solution: P74"/>
+        <Child name="Solution: P75"/>
+        <Child name="Solution: P76"/>
+        <Child name="Solution: P77"/>
+        <Child name="Solution: P26"/>
+        <Child name="Solution: P78"/>
+        <Child name="Solution: P79"/>
+        <Child name="Solution: P80"/>
+        <Child name="Solution: P81"/>
+        <Child name="Solution: P82"/>
+        <Child name="Solution: P83"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P69"/>
+    <Diagnosis name="Solution: P7"/>
+    <Diagnosis name="Solution: P70"/>
+    <Diagnosis name="Solution: P71"/>
+    <Diagnosis name="Solution: P72"/>
+    <Diagnosis name="Solution: P73"/>
+    <Diagnosis name="Solution: P74"/>
+    <Diagnosis name="Solution: P75"/>
+    <Diagnosis name="Solution: P76"/>
+    <Diagnosis name="Solution: P77"/>
+    <Diagnosis name="Solution: P78"/>
+    <Diagnosis name="Solution: P79"/>
+    <Diagnosis name="Solution: P8"/>
+    <Diagnosis name="Solution: P80"/>
+    <Diagnosis name="Solution: P81"/>
+    <Diagnosis name="Solution: P82"/>
+    <Diagnosis name="Solution: P83"/>
+    <Diagnosis name="Solution: P84">
+      <Children>
+        <Child name="Solution: P85"/>
+        <Child name="Solution: P86"/>
+        <Child name="Solution: P87"/>
+        <Child name="Solution: P88"/>
+        <Child name="Solution: P89"/>
+        <Child name="Solution: P90"/>
+        <Child name="Solution: P91"/>
+        <Child name="Solution: P92"/>
+        <Child name="Solution: P93"/>
+        <Child name="Solution: P94"/>
+        <Child name="Solution: P95"/>
+        <Child name="Solution: P96"/>
+        <Child name="Solution: P97"/>
+        <Child name="Solution: P98"/>
+      </Children>
+    </Diagnosis>
+    <Diagnosis name="Solution: P85"/>
+    <Diagnosis name="Solution: P86"/>
+    <Diagnosis name="Solution: P87"/>
+    <Diagnosis name="Solution: P88"/>
+    <Diagnosis name="Solution: P89"/>
+    <Diagnosis name="Solution: P9"/>
+    <Diagnosis name="Solution: P90"/>
+    <Diagnosis name="Solution: P91"/>
+    <Diagnosis name="Solution: P92"/>
+    <Diagnosis name="Solution: P93"/>
+    <Diagnosis name="Solution: P94"/>
+    <Diagnosis name="Solution: P95"/>
+    <Diagnosis name="Solution: P96"/>
+    <Diagnosis name="Solution: P97"/>
+    <Diagnosis name="Solution: P98"/>
+    <Diagnosis name="Solution: P99">
+      <Children>
+        <Child name="Solution: P50"/>
+        <Child name="Solution: P52"/>
+        <Child name="Solution: P100"/>
+        <Child name="Solution: P101"/>
+        <Child name="Solution: P69"/>
+        <Child name="Solution: P102"/>
+        <Child name="Solution: P103"/>
+      </Children>
+    </Diagnosis>
+  </Diagnoses>
+  <KnowledgeSlices/>
 </KnowledgeBase>
