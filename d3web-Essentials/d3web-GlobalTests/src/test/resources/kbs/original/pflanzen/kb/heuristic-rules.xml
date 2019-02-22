@@ -6056,6 +6056,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
     </Action>
@@ -6063,13 +6070,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6238,6 +6238,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
     </Action>
@@ -6245,13 +6252,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6381,6 +6381,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
     </Action>
@@ -6389,13 +6396,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6413,6 +6413,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
     </Action>
@@ -6420,13 +6427,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6615,6 +6615,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
     </Action>
@@ -6622,13 +6629,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6646,6 +6646,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Waldmeister (Galium odoratum)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Waldmeister (Galium odoratum)"/>
     </Action>
@@ -6653,13 +6660,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Waldmeister (Galium odoratum)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6674,6 +6674,13 @@
       <Diagnosis name="Waldmeister (Galium odoratum)"/>
     </Action>
     <Condition name="Stengelhöhe" type="equal" value="mehr als 150cm"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6688,13 +6695,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
     </Action>
@@ -6709,6 +6709,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Vogelmiere (Stellaria media)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Vogelmiere (Stellaria media)"/>
     </Action>
@@ -6716,13 +6723,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Vogelmiere (Stellaria media)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6747,6 +6747,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Sumpf-Dotterblume (Caltha palustris)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Sumpf-Dotterblume (Caltha palustris)"/>
     </Action>
@@ -6755,13 +6762,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Sumpf-Dotterblume (Caltha palustris)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6779,6 +6779,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
     </Action>
@@ -6786,13 +6793,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6867,6 +6867,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
     </Action>
@@ -6875,13 +6882,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6892,6 +6892,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
     </Action>
@@ -6900,13 +6907,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -6949,6 +6949,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
     </Action>
@@ -6956,13 +6963,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7043,6 +7043,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
     </Action>
@@ -7050,13 +7057,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7099,6 +7099,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
     </Action>
@@ -7106,13 +7113,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7187,6 +7187,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
     </Action>
@@ -7201,14 +7208,14 @@
       <Score value="N5"/>
       <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
     </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+    <Condition name="Stengelhöhe" type="equal" value="mehr als 150cm"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
+      <Score value="N6"/>
+      <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
     </Action>
-    <Condition name="Stengelhöhe" type="equal" value="mehr als 150cm"/>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7219,13 +7226,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7474,6 +7474,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
     </Action>
@@ -7482,13 +7489,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7499,6 +7499,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
     </Action>
@@ -7507,13 +7514,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7564,6 +7564,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
     </Action>
@@ -7572,13 +7579,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7608,6 +7608,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
     </Action>
@@ -7616,13 +7623,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7689,6 +7689,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Gelbstern (Gagea lutea)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gelbstern (Gagea lutea)"/>
     </Action>
@@ -7696,13 +7703,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Gelbstern (Gagea lutea)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7759,6 +7759,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gamander-Ehrenpreis (Veronica chamaedrys)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gamander-Ehrenpreis (Veronica chamaedrys)"/>
     </Action>
@@ -7766,13 +7773,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gamander-Ehrenpreis (Veronica chamaedrys)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7825,6 +7825,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
     </Action>
@@ -7832,13 +7839,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -7962,6 +7962,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
     </Action>
@@ -7969,13 +7976,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -8025,6 +8025,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Bach-Nelkenwurz (Geum rivale)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Bach-Nelkenwurz (Geum rivale)"/>
     </Action>
@@ -8033,13 +8040,6 @@
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="40 bis 60cm (kniehoch)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Bach-Nelkenwurz (Geum rivale)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -8159,6 +8159,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
+    </Action>
+    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
     </Action>
@@ -8166,13 +8173,6 @@
       <Condition name="Stengelhöhe" type="equal" value="10 bis 20cm (handlang)"/>
       <Condition name="Stengelhöhe" type="equal" value="20 bis 40cm (ellenlang)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
-    </Action>
-    <Condition name="Stengelhöhe" type="equal" value="100 bis 150cm (kindgross)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -9265,17 +9265,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
-    </Action>
-    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N1"/>
       <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
     </Action>
     <Condition name="Köpfchengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
+    </Action>
+    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -9317,17 +9317,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
-    </Action>
-    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
     </Action>
     <Condition name="Köpfchengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
+    </Action>
+    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -9387,17 +9387,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
-    </Action>
-    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N7"/>
       <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
     </Action>
     <Condition name="Köpfchengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
+    </Action>
+    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -9436,17 +9436,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
-    </Action>
-    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N7"/>
       <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
     </Action>
     <Condition name="Köpfchengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
+    </Action>
+    <Condition name="Köpfchengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -14018,13 +14018,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wirbeldost (Calamintha clinopodium)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Wirbeldost (Calamintha clinopodium)"/>
     </Action>
@@ -14047,7 +14040,7 @@
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
-      <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
+      <Diagnosis name="Wirbeldost (Calamintha clinopodium)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14075,7 +14068,7 @@
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
-      <Diagnosis name="Weiße Taubnessel (Lamium album)"/>
+      <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14102,8 +14095,8 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+      <Score value="N5"/>
+      <Diagnosis name="Weiße Taubnessel (Lamium album)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14130,8 +14123,8 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Schwarznessel (Ballota nigra)"/>
+      <Score value="N4"/>
+      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14159,7 +14152,7 @@
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
-      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
+      <Diagnosis name="Schwarznessel (Ballota nigra)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14186,8 +14179,8 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
+      <Score value="N5"/>
+      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14215,7 +14208,7 @@
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N2"/>
-      <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
+      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14242,8 +14235,8 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
+      <Score value="N2"/>
+      <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
@@ -14270,52 +14263,52 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe fehlt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe kürzer u. flach"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe lang u. gewölbt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Fam. Doldenblütler (Apiaceae)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe fehlt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Fam. Doldenblütler (Apiaceae)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe kürzer u. flach"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Fam. Doldenblütler (Apiaceae)"/>
-    </Action>
-    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe lang u. gewölbt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
+      <Score value="N5"/>
+      <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe fehlt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe kürzer u. flach"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Fam. Storchschnabelgewächse (Geraniaceae)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe lang u. gewölbt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Fam. Doldenblütler (Apiaceae)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe fehlt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Fam. Doldenblütler (Apiaceae)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe kürzer u. flach"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Fam. Doldenblütler (Apiaceae)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe lang u. gewölbt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -14337,6 +14330,13 @@
       <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
     </Action>
     <Condition name="Blütentyp Lippenblüte" type="equal" value="Unterlippe deutlich, Oberlippe lang u. gewölbt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
+    </Action>
+    <Condition name="Blütentyp Lippenblüte" type="equal" value="Unter- und Oberlippe verkürzt,  röhrenförmig (incl. Rachenblüte)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -19794,17 +19794,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -19836,17 +19836,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N4"/>
       <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -19949,17 +19949,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wiesen-Storchschnabel (Geranium pratense)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N1"/>
       <Diagnosis name="Wiesen-Storchschnabel (Geranium pratense)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Wiesen-Storchschnabel (Geranium pratense)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -19984,6 +19984,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
     </Action>
@@ -19992,13 +19999,6 @@
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
       <Condition name="Blütengröße" type="equal" value="15 bis 20mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Wiesen-Schlüsselblume (Primula veris)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20034,17 +20034,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N4"/>
       <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20075,14 +20075,14 @@
       <Score value="N3"/>
       <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20153,17 +20153,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N1"/>
       <Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20233,17 +20233,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20310,6 +20310,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
     </Action>
@@ -20318,13 +20325,6 @@
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
       <Condition name="Blütengröße" type="equal" value="15 bis 20mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20538,6 +20538,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
     </Action>
@@ -20545,13 +20552,6 @@
       <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20657,17 +20657,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20735,6 +20735,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
     </Action>
@@ -20742,13 +20749,6 @@
       <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20822,6 +20822,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
     </Action>
@@ -20830,13 +20837,6 @@
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
       <Condition name="Blütengröße" type="equal" value="15 bis 20mm (1Pfg, 2Pfg, 5Pfg, fingerbreit)"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20868,17 +20868,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20910,17 +20910,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -20959,6 +20959,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
     </Action>
@@ -20966,13 +20973,6 @@
       <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21036,17 +21036,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21154,17 +21154,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21206,17 +21206,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Kornblume (Centaurea cyanus)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N1"/>
       <Diagnosis name="Kornblume (Centaurea cyanus)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Kornblume (Centaurea cyanus)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21304,17 +21304,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N7"/>
       <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21339,6 +21339,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
     </Action>
@@ -21346,13 +21353,6 @@
       <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
       <Condition name="Blütengröße" type="equal" value="10 bis 15mm (Fingernagel, Hemdknopf) "/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21443,17 +21443,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21533,14 +21533,14 @@
       <Score value="N5"/>
       <Diagnosis name="Hohler Lerchensporn (Corydalis cava)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Hohler Lerchensporn (Corydalis cava)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21578,14 +21578,14 @@
       <Score value="N3"/>
       <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21613,17 +21613,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Gänseblümchen (Bellis perennis)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Gänseblümchen (Bellis perennis)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Gänseblümchen (Bellis perennis)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21659,17 +21659,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21697,17 +21697,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21780,17 +21780,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N1"/>
       <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -21966,17 +21966,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22049,17 +22049,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Gelbstern (Gagea lutea)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Gelbstern (Gagea lutea)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Gelbstern (Gagea lutea)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22224,14 +22224,14 @@
       <Score value="N3"/>
       <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22303,17 +22303,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N7"/>
       <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22341,17 +22341,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Echte Nelkenwurz (Geum urbanum)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Echte Nelkenwurz (Geum urbanum)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Echte Nelkenwurz (Geum urbanum)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22428,14 +22428,14 @@
       <Score value="N4"/>
       <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
+    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N4"/>
       <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
     </Action>
-    <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22494,17 +22494,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Bach-Nelkenwurz (Geum rivale)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Bach-Nelkenwurz (Geum rivale)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Bach-Nelkenwurz (Geum rivale)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22585,17 +22585,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -22630,17 +22630,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
-    </Action>
-    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N4"/>
       <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
     </Action>
     <Condition name="Blütengröße" type="equal" value="50 bis 80mm (4 Finger breit)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
+    </Action>
+    <Condition name="Blütengröße" type="equal" value="5 bis 10mm (Reißnagel, Bleistift)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -24867,6 +24867,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Vogelmiere (Stellaria media)"/>
+    </Action>
+    <Condition name="Blütenblätteranzahl" type="numGreaterEqual" value="11.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Vogelmiere (Stellaria media)"/>
     </Action>
@@ -24892,13 +24899,6 @@
       <Diagnosis name="Vogelmiere (Stellaria media)"/>
     </Action>
     <Condition name="Blütenblätteranzahl" type="numEqual" value="6.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Vogelmiere (Stellaria media)"/>
-    </Action>
-    <Condition name="Blütenblätteranzahl" type="numGreaterEqual" value="11.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -24953,17 +24953,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
-    </Action>
-    <Condition name="Blütenblätteranzahl" type="numLessEqual" value="4.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
     </Action>
     <Condition name="Blütenblätteranzahl" type="numEqual" value="4.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
+    </Action>
+    <Condition name="Blütenblätteranzahl" type="numLessEqual" value="4.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -25023,6 +25023,20 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
+    </Action>
+    <Condition name="Blütenblätteranzahl" type="numEqual" value="13.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
+    </Action>
+    <Condition name="Blütenblätteranzahl" type="numGreaterEqual" value="14.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
     </Action>
@@ -25033,21 +25047,7 @@
       <Score value="N1"/>
       <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
     </Action>
-    <Condition name="Blütenblätteranzahl" type="numEqual" value="13.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
-    </Action>
     <Condition name="Blütenblätteranzahl" type="numEqual" value="7.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
-    </Action>
-    <Condition name="Blütenblätteranzahl" type="numGreaterEqual" value="14.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27085,17 +27085,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27127,17 +27127,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27253,17 +27253,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N4"/>
       <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27346,6 +27346,16 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
+    </Action>
+    <Condition type="or">
+      <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+      <Condition name="Blattunterteilung" type="equal" value="fiederspaltig (tief +/- regelmäßig eingeschnitten, aber nicht bis zur Blattmitte)"/>
+    </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
     </Action>
@@ -27354,16 +27364,6 @@
       <Condition name="Blattunterteilung" type="equal" value="mehrfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
-    </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Wiesen-Pippau (Crepis biennis)"/>
-    </Action>
-    <Condition type="or">
-      <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
-      <Condition name="Blattunterteilung" type="equal" value="fiederspaltig (tief +/- regelmäßig eingeschnitten, aber nicht bis zur Blattmitte)"/>
     </Condition>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
@@ -27403,6 +27403,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
     </Action>
@@ -27410,13 +27417,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wiesen-Klee (Trifolium pratense)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27469,6 +27469,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
     </Action>
@@ -27476,13 +27483,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27539,6 +27539,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Weißer Steinklee (Melilotus alba)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Weißer Steinklee (Melilotus alba)"/>
     </Action>
@@ -27546,13 +27553,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Weißer Steinklee (Melilotus alba)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27593,6 +27593,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
     </Action>
@@ -27600,13 +27607,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Weiß-Klee (Trifolium repens)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27695,6 +27695,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
     </Action>
@@ -27704,13 +27711,6 @@
       <Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27737,17 +27737,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27779,17 +27779,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27856,14 +27856,14 @@
       <Score value="N2"/>
       <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
     </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
     </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27884,17 +27884,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Scharbockskraut (Ranunculus ficaria)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27926,6 +27926,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
     </Action>
@@ -27934,13 +27941,6 @@
       <Condition name="Blattunterteilung" type="equal" value="mehrfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -27983,13 +27983,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Margerite (Chrysanthemum leucanthemum)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Margerite (Chrysanthemum leucanthemum)"/>
     </Action>
@@ -27997,6 +27990,13 @@
       <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
       <Condition name="Blattunterteilung" type="equal" value="fiederspaltig (tief +/- regelmäßig eingeschnitten, aber nicht bis zur Blattmitte)"/>
     </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Margerite (Chrysanthemum leucanthemum)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28011,17 +28011,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28053,17 +28053,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28116,6 +28116,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Knoblauchsrauke (Alliaria petiolata)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Knoblauchsrauke (Alliaria petiolata)"/>
     </Action>
@@ -28125,13 +28132,6 @@
       <Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Knoblauchsrauke (Alliaria petiolata)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28220,17 +28220,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28262,6 +28262,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
     </Action>
@@ -28269,13 +28276,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28320,17 +28320,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28426,17 +28426,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Goldnessel (Lamium galeobdolon)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28468,6 +28468,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
     </Action>
@@ -28477,13 +28484,6 @@
       <Condition name="Blattunterteilung" type="equal" value="handförmig eingeschnitten"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28564,17 +28564,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gem. Hirtentäschel (Capsella bursa-pastoris)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28638,6 +28638,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
     </Action>
@@ -28645,13 +28652,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28717,17 +28717,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28791,6 +28791,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
     </Action>
@@ -28798,13 +28805,6 @@
       <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
       <Condition name="Blattunterteilung" type="equal" value="gefingert"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -28893,17 +28893,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -29007,17 +29007,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
-    </Action>
-    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
     </Action>
     <Condition name="Blattunterteilung" type="equal" value="einfache Form, ohne regelmässige Gliederung"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
+    </Action>
+    <Condition name="Blattunterteilung" type="equal" value="einfach gefiedert"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35494,21 +35494,21 @@
       <Score value="N5"/>
       <Diagnosis name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
+    <Condition type="or">
+      <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+      <Condition name="Blattform" type="equal" value="herzförmig"/>
+      <Condition name="Blattform" type="equal" value="nierenförmig"/>
+      <Condition name="Blattform" type="equal" value="pfeilförmig"/>
+      <Condition name="Blattform" type="equal" value="gelappt"/>
+      <Condition name="Blattform" type="equal" value="spatelig"/>
+    </Condition>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Zypressen-Wolfsmilch (Euphorbia cyparissias)"/>
     </Action>
-    <Condition type="or">
-      <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
-      <Condition name="Blattform" type="equal" value="herzförmig"/>
-      <Condition name="Blattform" type="equal" value="nierenförmig"/>
-      <Condition name="Blattform" type="equal" value="pfeilförmig"/>
-      <Condition name="Blattform" type="equal" value="gelappt"/>
-      <Condition name="Blattform" type="equal" value="spatelig"/>
-    </Condition>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35557,17 +35557,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35606,6 +35606,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
     </Action>
@@ -35615,13 +35622,6 @@
       <Condition name="Blattform" type="equal" value="herzförmig"/>
       <Condition name="Blattform" type="equal" value="nierenförmig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35697,17 +35697,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Wilde Möhre (Daucus carota)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wilde Möhre (Daucus carota)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Wilde Möhre (Daucus carota)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35760,17 +35760,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Wiesen-Storchschnabel (Geranium pratense)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Wiesen-Storchschnabel (Geranium pratense)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Wiesen-Storchschnabel (Geranium pratense)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35921,17 +35921,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wiesen-Salbei (Salvia pratensis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -35967,17 +35967,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Wiesen-Platterbse (Lathyrus pratensis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Wiesen-Platterbse (Lathyrus pratensis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Wiesen-Platterbse (Lathyrus pratensis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36077,17 +36077,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Wiesen-Löwenzahn (Taraxacum officinalis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36167,17 +36167,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wiesen-Kerbel (Anthriscus sylvestris)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Kerbel (Anthriscus sylvestris)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wiesen-Kerbel (Anthriscus sylvestris)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36230,6 +36230,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
     </Action>
@@ -36238,13 +36245,6 @@
       <Condition name="Blattform" type="equal" value="oval, eiförmig"/>
       <Condition name="Blattform" type="equal" value="oval, spitz zulaufend"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wiesen-Hornklee (Lotus corniculatus)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36303,14 +36303,14 @@
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36367,17 +36367,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Weißes Leimkraut (Silene alba)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Weißes Leimkraut (Silene alba)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Weißes Leimkraut (Silene alba)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36487,17 +36487,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Weiße Taubnessel (Lamium album)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Weiße Taubnessel (Lamium album)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Weiße Taubnessel (Lamium album)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36575,13 +36575,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Waldmeister (Galium odoratum)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Waldmeister (Galium odoratum)"/>
     </Action>
@@ -36592,6 +36585,13 @@
       <Condition name="Blattform" type="equal" value="pfeilförmig"/>
       <Condition name="Blattform" type="equal" value="gelappt"/>
     </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Waldmeister (Galium odoratum)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36651,17 +36651,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36784,6 +36784,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
     </Action>
@@ -36792,13 +36799,6 @@
       <Condition name="Blattform" type="equal" value="oval, eiförmig"/>
       <Condition name="Blattform" type="equal" value="nierenförmig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Stengelumfassende Taubnessel (Lamium amplexicaule)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36918,17 +36918,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Schopf-Hufeisenklee (Hippocrepis comosa)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -36977,17 +36977,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Schmalblättrige Wicke (Vicia angustifolia)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37086,17 +37086,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Scharfer Hahnenfuß (Ranunculus acris)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37195,17 +37195,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Ruprechtskraut (Geranium robertianum)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37261,17 +37261,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Rotes Leimkraut (Silene dioica)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Rotes Leimkraut (Silene dioica)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Rotes Leimkraut (Silene dioica)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37420,6 +37420,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
     </Action>
@@ -37427,13 +37434,6 @@
       <Condition name="Blattform" type="equal" value="rundlich"/>
       <Condition name="Blattform" type="equal" value="oval, eiförmig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37503,17 +37503,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Kriech. Fingerkraut (Potentilla reptans)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37572,14 +37572,14 @@
       <Score value="N5"/>
       <Diagnosis name="Kornblume (Centaurea cyanus)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Kornblume (Centaurea cyanus)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37636,17 +37636,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Knoblauchsrauke (Alliaria petiolata)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Knoblauchsrauke (Alliaria petiolata)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Knoblauchsrauke (Alliaria petiolata)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37750,17 +37750,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N4"/>
       <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37816,14 +37816,14 @@
       <Score value="N5"/>
       <Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
     </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37887,17 +37887,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Kahle Gänsekresse (Arabis glabra)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -37943,6 +37943,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
     </Action>
@@ -37950,13 +37957,6 @@
       <Condition name="Blattform" type="equal" value="rundlich"/>
       <Condition name="Blattform" type="equal" value="oval, eiförmig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Hopfenklee (Medicago lupulina)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38058,6 +38058,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
     </Action>
@@ -38067,13 +38074,6 @@
       <Condition name="Blattform" type="equal" value="oval, spitz zulaufend"/>
       <Condition name="Blattform" type="equal" value="spatelig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Heide-Günsel (Ajuga genevensis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38146,6 +38146,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
     </Action>
@@ -38154,13 +38161,6 @@
       <Condition name="Blattform" type="equal" value="oval, eiförmig"/>
       <Condition name="Blattform" type="equal" value="gelappt"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38216,17 +38216,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Große Sternmiere (Stellaria holostea)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38332,17 +38332,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Gem. Wegwarte (Cichorium intybus)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38388,17 +38388,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Gem. Stiefmütterchen (Viola tricolor)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Gem. Stiefmütterchen (Viola tricolor)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Gem. Stiefmütterchen (Viola tricolor)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38433,13 +38433,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
     </Action>
@@ -38451,6 +38444,13 @@
       <Condition name="Blattform" type="equal" value="gelappt"/>
       <Condition name="Blattform" type="equal" value="spatelig"/>
     </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38475,13 +38475,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Gem. Labkraut (Galium mollugo)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Gem. Labkraut (Galium mollugo)"/>
     </Action>
@@ -38492,6 +38485,13 @@
       <Condition name="Blattform" type="equal" value="pfeilförmig"/>
       <Condition name="Blattform" type="equal" value="gelappt"/>
     </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Gem. Labkraut (Galium mollugo)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38710,6 +38710,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
     </Action>
@@ -38717,13 +38724,6 @@
       <Condition name="Blattform" type="equal" value="rundlich"/>
       <Condition name="Blattform" type="equal" value="oval, eiförmig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Gelber Acker-Klee (Trifolium campestre)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38884,17 +38884,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Echtes Lungenkraut (Pulmonaria officinalis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -38919,13 +38919,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Echtes Labkraut (Galium verum)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Echtes Labkraut (Galium verum)"/>
     </Action>
@@ -38936,6 +38929,13 @@
       <Condition name="Blattform" type="equal" value="pfeilförmig"/>
       <Condition name="Blattform" type="equal" value="gelappt"/>
     </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Echtes Labkraut (Galium verum)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39144,17 +39144,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Busch-Windröschen (Anemone Nemorosa)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39264,17 +39264,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Acker-Witwenblume (Knautia arvensis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Acker-Witwenblume (Knautia arvensis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Acker-Witwenblume (Knautia arvensis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39330,17 +39330,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39396,17 +39396,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39452,17 +39452,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N1"/>
-      <Diagnosis name="Acker-Hornkraut (Cerastium arvense)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="rundlich"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Acker-Hornkraut (Cerastium arvense)"/>
     </Action>
     <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N1"/>
+      <Diagnosis name="Acker-Hornkraut (Cerastium arvense)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="rundlich"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39501,6 +39501,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N6"/>
+      <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
+    </Action>
+    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P2"/>
       <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
     </Action>
@@ -39510,13 +39517,6 @@
       <Condition name="Blattform" type="equal" value="oval, spitz zulaufend"/>
       <Condition name="Blattform" type="equal" value="herzförmig"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N6"/>
-      <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
-    </Action>
-    <Condition name="Blattform" type="equal" value="röhrig (innen hohl)"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -39671,17 +39671,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
-    </Action>
-    <Condition name="Blattfingeranzahl" type="numLessEqual" value="4.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
     </Action>
     <Condition name="Blattfingeranzahl" type="numGreaterEqual" value="10.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Kleiner Storchenschnabel (Geranium pusillum)"/>
+    </Action>
+    <Condition name="Blattfingeranzahl" type="numLessEqual" value="4.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40074,6 +40074,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
+    </Action>
+    <Condition name="Blattfiederpaare" type="numGreaterEqual" value="11.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N6"/>
       <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
     </Action>
@@ -40085,13 +40092,6 @@
       <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
     </Action>
     <Condition name="Blattfiederpaare" type="numEqual" value="3.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Zaun-Wicke (Vicia sepium)"/>
-    </Action>
-    <Condition name="Blattfiederpaare" type="numGreaterEqual" value="11.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40116,14 +40116,14 @@
       <Score value="N2"/>
       <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
     </Action>
-    <Condition name="Blattfiederpaare" type="numLessEqual" value="2.0"/>
+    <Condition name="Blattfiederpaare" type="numGreaterEqual" value="10.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
     </Action>
-    <Condition name="Blattfiederpaare" type="numGreaterEqual" value="10.0"/>
+    <Condition name="Blattfiederpaare" type="numLessEqual" value="2.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40404,17 +40404,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
-    </Action>
-    <Condition name="Blattfiederpaare" type="numLessEqual" value="3.0"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
     </Action>
     <Condition name="Blattfiederpaare" type="numGreaterEqual" value="13.0"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Bunte Kronwicke (Coronilla varia)"/>
+    </Action>
+    <Condition name="Blattfiederpaare" type="numLessEqual" value="3.0"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40514,17 +40514,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P1"/>
-      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P1"/>
+      <Diagnosis name="Wohlriech. Veilchen (Viola odorata)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40571,6 +40571,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N2"/>
+      <Diagnosis name="Wilde Möhre (Daucus carota)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P1"/>
       <Diagnosis name="Wilde Möhre (Daucus carota)"/>
     </Action>
@@ -40578,13 +40585,6 @@
       <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
       <Condition name="Blattbefestigung" type="equal" value="sitzend"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N2"/>
-      <Diagnosis name="Wilde Möhre (Daucus carota)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40618,17 +40618,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P1"/>
-      <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P1"/>
+      <Diagnosis name="Wiesen-Schaumkraut (Cardamine pratense)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40777,17 +40777,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Wiesen-Bocksbart (Tragopogon pratensis)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40836,17 +40836,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P1"/>
-      <Diagnosis name="Weißer Steinklee (Melilotus alba)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Weißer Steinklee (Melilotus alba)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P1"/>
+      <Diagnosis name="Weißer Steinklee (Melilotus alba)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40908,17 +40908,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Waldmeister (Galium odoratum)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Waldmeister (Galium odoratum)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Waldmeister (Galium odoratum)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -40946,14 +40946,14 @@
       <Score value="N3"/>
       <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Wald-Vergißmeinnicht (Myosotis sylvatica)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41098,17 +41098,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Schierlings-Reiherschnabel (Erodium cicutarium)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41182,13 +41182,6 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
     </Action>
@@ -41197,6 +41190,13 @@
       <Condition name="Blattbefestigung" type="equal" value="stengelumfassend"/>
       <Condition name="Blattbefestigung" type="equal" value="durchwachsen"/>
     </Condition>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Rote Taubnessel (Lamium purpureum)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41231,17 +41231,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Kriechender Günsel (Ajuga reptans)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41338,14 +41338,14 @@
       <Score value="N3"/>
       <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Kleine Traubenhyazinthe (Muscari botryoides)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41360,6 +41360,13 @@
       <Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="durchwachsen"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41367,13 +41374,6 @@
       <Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Klatschmohn (Papaver rhoeas)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41494,17 +41494,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P1"/>
-      <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P1"/>
+      <Diagnosis name="Großes Schöllkraut  (Chelidonium majus)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41608,6 +41608,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="P1"/>
       <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
     </Action>
@@ -41615,13 +41622,6 @@
       <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
       <Condition name="Blattbefestigung" type="equal" value="sitzend"/>
     </Condition>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gem. Schafgarbe (Achillea millefolium)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41639,17 +41639,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gem. Labkraut (Galium mollugo)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Gem. Labkraut (Galium mollugo)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gem. Labkraut (Galium mollugo)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41674,17 +41674,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Gem. Kreuzlabkraut (Crucita laevipes)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41743,14 +41743,14 @@
       <Score value="N3"/>
       <Diagnosis name="Gem. Beinwell (Symphytum officinale)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Gem. Beinwell (Symphytum officinale)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41778,14 +41778,14 @@
       <Score value="N3"/>
       <Diagnosis name="Gelbstern (Gagea lutea)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Gelbstern (Gagea lutea)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41835,13 +41835,6 @@
       <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="durchwachsen"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41852,6 +41845,13 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Efeu-Gundermann (Glechoma hederacea)"/>
     </Action>
@@ -41901,17 +41901,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N5"/>
-      <Diagnosis name="Echtes Labkraut (Galium verum)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Echtes Labkraut (Galium verum)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N5"/>
+      <Diagnosis name="Echtes Labkraut (Galium verum)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41933,6 +41933,13 @@
       <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="durchwachsen"/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N3"/>
+      <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41940,13 +41947,6 @@
       <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
-      <Score value="N3"/>
-      <Diagnosis name="Echter Steinklee (Melilotus officinalis)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -41978,17 +41978,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Duftlose Kamille (Matricaria inodora)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N5"/>
       <Diagnosis name="Duftlose Kamille (Matricaria inodora)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Duftlose Kamille (Matricaria inodora)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -42081,14 +42081,14 @@
       <Score value="N3"/>
       <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
+    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Acker-Vergißmeinnicht (Myosotis arvensis)"/>
     </Action>
-    <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -42113,17 +42113,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="N4"/>
-      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N3"/>
       <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="N4"/>
+      <Diagnosis name="Acker-Senf (Sinapis arvensis)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
@@ -42164,17 +42164,17 @@
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
-      <Score value="P2"/>
-      <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
-    </Action>
-    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
-  </KnowledgeSlice>
-  <KnowledgeSlice type="RuleComplex">
-    <Action type="ActionHeuristicPS">
       <Score value="N2"/>
       <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
     </Action>
     <Condition name="Blattbefestigung" type="equal" value="geöhrt "/>
+  </KnowledgeSlice>
+  <KnowledgeSlice type="RuleComplex">
+    <Action type="ActionHeuristicPS">
+      <Score value="P2"/>
+      <Diagnosis name="Acker-Ehrenpreis (Veronica persica)"/>
+    </Action>
+    <Condition name="Blattbefestigung" type="equal" value="gestielt"/>
   </KnowledgeSlice>
   <KnowledgeSlice type="RuleComplex">
     <Action type="ActionHeuristicPS">
