@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -33,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.inference.PSMethodRulebased;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.RuleSet;
@@ -41,7 +41,6 @@ import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 
@@ -64,7 +63,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		doc.appendChild(root);
 		List<Rule> rules = new ArrayList<>(getRules(kb));
 		// sort the rules
-		Collections.sort(rules, new RuleComparator());
+		rules.sort(new RuleComparator());
 		float count = 0;
 		for (Rule r : rules) {
 			Element element = persistence.writeFragment(r);
@@ -81,7 +80,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 				rules.addAll(rs.getRules());
 			}
 		}
-		catch (NoSuchElementException e) {
+		catch (NoSuchElementException ignore) {
 			// nothing todo, occurs when there is no rule of the psm in the kb
 		}
 		return rules;

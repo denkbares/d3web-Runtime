@@ -19,7 +19,6 @@
 package de.d3web.core.io.rules;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,14 +51,20 @@ public final class RuleComparator implements Comparator<Rule> {
 		comparator = compareIDObjectLists(backwardObjects, backwardObjects2);
 		if (comparator != 0) return comparator;
 		// actions contain the same idodjects, compare by toString
-		return o1.toString().compareTo(o2.toString());
+		String r1 = o1.toString();
+		String r2 = o2.toString();
+		// we first compare only the word characters to be more independent of the toString methods
+		comparator = r1.replaceAll("\\W", "").compareTo(r2.replaceAll("\\W", ""));
+		if (comparator != 0) return comparator;
+		// if we are still equal, try actual strings...
+		return r1.compareTo(r2);
 	}
 
 	public int compareIDObjectLists(Collection<? extends TerminologyObject> terminalObjects, Collection<? extends TerminologyObject> terminalObjects2) {
 		List<TerminologyObject> allTerminalObjects = new LinkedList<>();
 		allTerminalObjects.addAll(terminalObjects);
 		allTerminalObjects.addAll(terminalObjects2);
-		Collections.sort(allTerminalObjects, new NamedObjectComparator());
+		allTerminalObjects.sort(new NamedObjectComparator());
 		for (TerminologyObject o : allTerminalObjects) {
 			if (!terminalObjects.contains(o)) {
 				return -1;
