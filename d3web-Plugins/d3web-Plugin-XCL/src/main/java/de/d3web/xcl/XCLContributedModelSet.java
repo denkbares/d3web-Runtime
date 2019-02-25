@@ -26,6 +26,7 @@ import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
+import de.d3web.core.knowledge.terminology.Question;
 
 /**
  * Stores XCLModels in one KnowledgeSlice. Its intention is to store the backward referenced xcl models from the {@link
@@ -44,10 +45,9 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	private final List<XCLModel> models = new ArrayList<>();
 
 	/**
-	 * Returns the XCL models that covers the specified value object (usually a {@link
-	 * de.d3web.core.knowledge.terminology.Question}. This means it returns all {@link XCLModel}s that have at least one
-	 * {@link XCLRelation} that considers the value of the specified object. If no such model exists, an empty list is
-	 * returned.
+	 * Returns the XCL models that covers the specified value object, usually a {@link Question}. This means it returns
+	 * all {@link XCLModel}s that have at least one {@link XCLRelation} that considers the value of the specified
+	 * object. If no such model exists, an empty list is returned.
 	 *
 	 * @param coveredObject the question (or solution) that is covered by some XCL model(s)
 	 * @return the XCL models that covers the object
