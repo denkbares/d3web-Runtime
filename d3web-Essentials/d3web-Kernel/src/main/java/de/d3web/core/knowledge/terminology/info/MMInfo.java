@@ -178,6 +178,7 @@ public class MMInfo {
 	 * @return the questions unknown prompt
 	 * @created 20.08.2012
 	 */
+	@NotNull
 	public static String getUnknownPrompt(Question question, Locale... language) {
 		String prompt = question.getInfoStore().getValue(UNKNOWN_VERBALISATION, language);
 		if (prompt == null) {
