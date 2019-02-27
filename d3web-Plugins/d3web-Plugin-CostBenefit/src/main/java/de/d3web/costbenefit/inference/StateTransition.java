@@ -106,6 +106,17 @@ public class StateTransition implements KnowledgeSlice {
 	}
 
 	/**
+	 * Returns true if the state transition's precondition if matched and therefore this state transition can be applied
+	 * (fired) to the current session.
+	 *
+	 * @param session the session to check the precondition for
+	 * @return true, if the activation condition is null or matches the session's facts
+	 */
+	public boolean isApplicable(Session session) {
+		return (activationCondition == null) || Conditions.isTrue(activationCondition, session);
+	}
+
+	/**
 	 * Returns the StateTransition of the QContainer
 	 *
 	 * @param qcon QContainer

@@ -32,6 +32,7 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
@@ -166,55 +167,69 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		PSMethodCostBenefit costBenefit = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		if (costBenefit == null) return;
 
+		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
+
 		CostBenefitCaseObject cbCaseObject = session.getSessionObject(costBenefit);
 		QContainer qcontainer = cbCaseObject.getCurrentQContainer();
-		StateTransitionSessionObject sessionObject = session.getSessionObject(this);
+		if (qcontainer != null) {
+			// if the cost-benefit already deriving any path sequences, we no longer apply the init questionnaires
+			sessionObject.activeInitContainers.clear();
+		}
+
 		long time = session.getPropagationManager().getPropagationTime();
 		for (QContainer qcon : answeredQuestionnaires) {
-			if (CostBenefitUtil.isDone(qcon, session)) {
-				// if the qcontainer is the actual qcontainer of the sequence,
-				// fire its transitions
-				boolean fire = false;
-				if (qcon == qcontainer) {
-					fire = true;
+
+			// only apply to container that have a transition object
+			StateTransition transition = qcon.getKnowledgeStore().getKnowledge(StateTransition.KNOWLEDGE_KIND);
+			if (transition == null) continue;
+
+			// only if the container if fully answered
+			if (!CostBenefitUtil.isDone(qcon, session)) continue;
+
+			// if the qcontainer is the actual qcontainer of the sequence,
+			// fire its transitions
+			boolean fire = false;
+			if (qcon == qcontainer) {
+				fire = true;
+			}
+			// if the qcontainer was the last qcontainer fired, retract it's
+			// facts and fire the qcontainer again
+			else if (sessionObject.qContainer == qcon) {
+				// remove the old facts
+				for (Fact fact : sessionObject.facts) {
+					session.getBlackboard().removeValueFact(fact);
 				}
-				// if the qcontainer was the last qcontainer fired, retract it's
-				// facts and fire the qcontainer again
-				else if (sessionObject.qContainer == qcon) {
-					// remove the old facts
-					for (Fact fact : sessionObject.facts) {
-						session.getBlackboard().removeValueFact(fact);
+				fire = true;
+			}
+			// if the qcontainer is an init-container and the precondition applies
+			else if (sessionObject.activeInitContainers.contains(qcon) && transition.isApplicable(session)) {
+				fire = true;
+			}
+
+			if (fire) {
+				// fire the state transitions
+				sessionObject.facts = transition.fire(session);
+				session.getPropagationManager().setPropagationTimeOfNoReturn(time);
+
+				// because state transition is no longer a source PSM, manually add the fired transitions
+				for (Fact fact : sessionObject.facts) {
+					session.getProtocol().addEntry(new FactProtocolEntry(time, fact));
+				}
+
+				// check if there are any changes to our remembered solutions
+				if (cbCaseObject.hasChangedUndiscriminatedSolutions()) {
+					cbCaseObject.resetPath();
+					return;
+				}
+
+				// otherwise proceed in path and remove old indication
+				cbCaseObject.activateNextQContainer();
+				for (Fact fact : cbCaseObject.getIndicatedFacts()) {
+					if (fact.getTerminologyObject() == transition.getQcontainer()) {
+						session.getBlackboard().removeInterviewFact(fact);
 					}
-					fire = true;
 				}
-				if (fire) {
-					StateTransition transition = qcon.getKnowledgeStore().getKnowledge(StateTransition.KNOWLEDGE_KIND);
-					if (transition != null) {
-						// fire the state transitions
-						sessionObject.facts = transition.fire(session);
-						session.getPropagationManager().setPropagationTimeOfNoReturn(time);
-
-						// because state transition is no longer a source PSM, manually add the fired transitions
-						for (Fact fact : sessionObject.facts) {
-							session.getProtocol().addEntry(new FactProtocolEntry(time, fact));
-						}
-
-						// check if there are any changes to our remembered solutions
-						if (cbCaseObject.hasChangedUndiscriminatedSolutions()) {
-							cbCaseObject.resetPath();
-							return;
-						}
-
-						// otherwise proceed in path and remove old indication
-						cbCaseObject.activateNextQContainer();
-						for (Fact fact : cbCaseObject.getIndicatedFacts()) {
-							if (fact.getTerminologyObject() == transition.getQcontainer()) {
-								session.getBlackboard().removeInterviewFact(fact);
-							}
-						}
-						sessionObject.qContainer = qcon;
-					}
-				}
+				sessionObject.qContainer = qcon;
 			}
 		}
 	}
@@ -233,11 +248,18 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 		private List<Fact> facts = new LinkedList<>();
 		private QContainer qContainer = null;
+		private final Set<QContainer> activeInitContainers = new HashSet<>();
+
+		public StateTransitionSessionObject(Session session) {
+			for (QASet container : session.getKnowledgeBase().getInitQuestions()) {
+				if (container instanceof QContainer) activeInitContainers.add((QContainer) container);
+			}
+		}
 	}
 
 	@Override
 	public StateTransitionSessionObject createSessionObject(Session session) {
-		return new StateTransitionSessionObject();
+		return new StateTransitionSessionObject(session);
 	}
 
 	@Override
