@@ -35,7 +35,6 @@ import java.util.concurrent.Future;
 
 import com.denkbares.utils.Log;
 import com.denkbares.utils.Pair;
-import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -321,8 +320,7 @@ public class AStar {
 			return false;
 		}
 		// check if the precondition does hold
-		return stateTransition.getActivationCondition() == null
-				|| Conditions.isTrue(stateTransition.getActivationCondition(), actualSession);
+		return stateTransition.isApplicable(actualSession);
 	}
 
 	private void installNode(Node newFollower) {
