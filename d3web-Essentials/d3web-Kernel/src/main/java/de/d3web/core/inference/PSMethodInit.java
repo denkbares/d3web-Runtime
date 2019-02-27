@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -56,9 +56,8 @@ import de.d3web.core.session.values.Unknown;
 import static de.d3web.core.knowledge.Indication.State.INDICATED;
 
 /**
- * This is a 'marker' psmethod to represent all the initial values. Especially
- * used to add the initQASets to the QASetManager Creation date: (21.02.2002
- * 16:51:10)
+ * This is a 'marker' psmethod to represent all the initial values. Especially used to add the initQASets to the
+ * QASetManager Creation date: (21.02.2002 16:51:10)
  *
  * @author Christian Betz
  */
@@ -78,8 +77,7 @@ public class PSMethodInit implements PSMethod {
 	}
 
 	/**
-	 * Some space for initial methods of a PSMethod. Creation date: (21.02.2002
-	 * 16:51:10)
+	 * Some space for initial methods of a PSMethod. Creation date: (21.02.2002 16:51:10)
 	 */
 	@Override
 	public void init(Session session) {
@@ -120,11 +118,10 @@ public class PSMethodInit implements PSMethod {
 	/**
 	 * Returns the value represented by the string for the given question.
 	 *
-	 * @param q {@link Question}
+	 * @param q        {@link Question}
 	 * @param property String of the init property
 	 * @return Value representing the string
-	 * @throws IllegalArgumentException it the property string is not correct for the given
-	 * question
+	 * @throws IllegalArgumentException it the property string is not correct for the given question
 	 * @created 20.09.2011
 	 */
 	public static Value getValue(Question q, String property) throws IllegalArgumentException {
@@ -173,7 +170,7 @@ public class PSMethodInit implements PSMethod {
 				}
 			}
 			if (badIds.isEmpty()) {
-				return new MultipleChoiceValue(choices.toArray(new ChoiceID[choices.size()]));
+				return new MultipleChoiceValue(choices);
 			}
 			else {
 				throw new IllegalArgumentException("Cannot set initial value '" + property +
@@ -208,9 +205,6 @@ public class PSMethodInit implements PSMethod {
 		throw new IllegalArgumentException("QuestionType not supported yet.");
 	}
 
-	/**
-	 * @see PSMethod
-	 */
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 	}
