@@ -34,7 +34,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
@@ -43,11 +42,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import com.denkbares.strings.Locales;
 import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -567,7 +569,18 @@ public final class ValueUtils {
 		return Collections.emptyList();
 	}
 
-	public static String getVerbalization(TerminologyObject object, Value value, Locale lang) {
+	/**
+	 * Verbalizes the specified value for the specified object in the requested language. The language may be null, then
+	 * no prompts are used for the verbalization, but the {@link NamedObject#getName()} are used instead, e.g. for the
+	 * choices of a question.
+	 *
+	 * @param object the question to verbalize the value for
+	 * @param value  the value to be verbalized
+	 * @param lang   the language for the prompts, or null
+	 * @return the verbalized value
+	 */
+
+	public static String getVerbalization(TerminologyObject object, Value value, @Nullable Locale lang) {
 		if (object instanceof Question) {
 			return getVerbalization((Question) object, value, lang);
 		}
@@ -579,13 +592,24 @@ public final class ValueUtils {
 		}
 	}
 
-	public static String getVerbalization(Question question, Value value, Locale lang) {
+	/**
+	 * Verbalizes the specified value for the specified question in the requested language. The language may be null,
+	 * then no prompts are used for the verbalization, but the {@link NamedObject#getName()} are used instead, e.g. for
+	 * the choices of the question.
+	 *
+	 * @param question the question to verbalize the value for
+	 * @param value    the value to be verbalized
+	 * @param lang     the language for the prompts, or null
+	 * @return the verbalized value
+	 */
+	public static String getVerbalization(Question question, Value value, @Nullable Locale lang) {
 		if (value instanceof ChoiceValue) {
-			return MMInfo.getPrompt(((ChoiceValue) value).getChoice((QuestionChoice) question), lang);
+			Choice choice = ((ChoiceValue) value).getChoice((QuestionChoice) question);
+			return (lang == null) ? choice.getName() : MMInfo.getPrompt(choice, lang);
 		}
 		else if (value instanceof MultipleChoiceValue) {
 			return ((MultipleChoiceValue) value).asChoiceList((QuestionChoice) question).stream()
-					.map(c -> MMInfo.getPrompt(c, lang))
+					.map(choice -> (lang == null) ? choice.getName() : MMInfo.getPrompt(choice, lang))
 					.collect(Collectors.joining(", "));
 		}
 		else if (value instanceof DateValue) {
@@ -601,12 +625,13 @@ public final class ValueUtils {
 				val = Math.round(val * shift) / shift;
 			}
 			// and format the result string
-			String unit = question.getInfoStore().getValue(MMInfo.UNIT, lang);
-			String numText = NumberFormat.getInstance(lang).format(val);
+			Locale saveLang = (lang == null) ? Locale.getDefault() : lang;
+			String unit = question.getInfoStore().getValue(MMInfo.UNIT, saveLang);
+			String numText = NumberFormat.getInstance(saveLang).format(val);
 			return Strings.isBlank(unit) ? numText : (numText + " " + unit);
 		}
 		else if (value instanceof Unknown) {
-			return Objects.equals(lang.getLanguage(), Locale.GERMAN.getLanguage()) ? "unbekannt" : "unknown";
+			return Locales.isGerman(lang) ? "unbekannt" : "unknown";
 		}
 		else if (value instanceof UndefinedValue) {
 			return "--";

@@ -137,6 +137,7 @@ public class MMInfo {
 	 * @return the prompt or name if no prompt exists
 	 * @created 03.07.2012
 	 */
+	@NotNull
 	public static String getPrompt(NamedObject object, Locale... language) {
 		String prompt = object.getInfoStore().getValue(MMInfo.PROMPT, language);
 		if (prompt == null) {
