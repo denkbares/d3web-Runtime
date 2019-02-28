@@ -122,10 +122,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 			if (!indication.equals(other.indication)) {
 				return false;
 			}
-			else if (interviewState != other.interviewState) {
-				return false;
-			}
-			return true;
+			else return interviewState == other.interviewState;
 		}
 
 		@Override
@@ -326,6 +323,22 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 			if (entry.hasState(InterviewState.ACTIVE)) {
 				objects.add(entry.getInterviewObject());
 			}
+		}
+		return Collections.unmodifiableList(objects);
+	}
+
+	/**
+	 * Gives the (unmodifiable) list of currently objects on the agenda, regardless if they are active or not. Returns
+	 * an empty list if the agenda is empty.
+	 *
+	 * @return an immutable list of the objects that are currently on the agenda
+	 */
+	@NotNull
+	public List<InterviewObject> getAllObjects() {
+		Collections.sort(this.agenda);
+		List<InterviewObject> objects = new ArrayList<>();
+		for (AgendaEntry entry : this.agenda) {
+			objects.add(entry.getInterviewObject());
 		}
 		return Collections.unmodifiableList(objects);
 	}
