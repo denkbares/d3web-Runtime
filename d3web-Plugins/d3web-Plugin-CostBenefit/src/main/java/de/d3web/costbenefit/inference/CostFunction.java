@@ -32,9 +32,8 @@ public interface CostFunction {
 	/**
 	 * Calculates the costs of a qcontainer in dependency on session.
 	 * 
-	 * @param qcon
-	 * @param session
-	 * @return
 	 */
 	double getCosts(QContainer qcon, Session session);
+
+	double getStaticCosts(QContainer qcon);
 }

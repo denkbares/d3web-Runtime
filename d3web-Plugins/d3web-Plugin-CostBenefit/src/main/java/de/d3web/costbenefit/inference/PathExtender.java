@@ -27,7 +27,6 @@ import com.denkbares.utils.Log;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.model.Path;
@@ -35,7 +34,7 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 
 /**
- * Extends the path of the sub {@link SearchAlgorithm} by adding specially comfortBenefit {@link QContainer} to the
+ * Extends the path of the sub SearchAlgorithm by adding specially comfortBenefit {@link QContainer} to the
  * path, if it doesn't destroy the path
  *
  * @author Markus Friedrich (denkbares GmbH)
@@ -76,7 +75,7 @@ public class PathExtender implements SearchAlgorithm {
 		CostFunction costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 		if (path != null && !qcontainersToAdd.isEmpty()) {
 			for (QContainer qconToInclude : qcontainersToAdd) {
-				double staticCosts = qconToInclude.getInfoStore().getValue(BasicProperties.COST);
+				double staticCosts = costFunction.getStaticCosts(qconToInclude);
 				// if it is already in the path, do nothing
 				if (!path.contains(qconToInclude)) {
 					Session copiedSession = CostBenefitUtil.createSearchCopy(session);
@@ -106,6 +105,7 @@ public class PathExtender implements SearchAlgorithm {
 	}
 
 	private boolean isComfortApplicable(QContainer container, Session session) {
+		//noinspection deprecation
 		if (container.getInfoStore().getValue(CostBenefitProperties.COMFORT_BENEFIT)) return true;
 		ComfortBenefit comfort = container.getKnowledgeStore().getKnowledge(ComfortBenefit.KNOWLEDGE_KIND);
 		if (comfort == null) return false;

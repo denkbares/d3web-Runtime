@@ -35,7 +35,11 @@ public class DefaultCostFunction implements CostFunction {
 
 	@Override
 	public double getCosts(QContainer qcon, Session session) {
-		return qcon.getInfoStore().getValue(BasicProperties.COST);
+		return BasicProperties.getCost(qcon);
 	}
 
+	@Override
+	public double getStaticCosts(QContainer qcon) {
+		return BasicProperties.getCost(qcon);
+	}
 }
