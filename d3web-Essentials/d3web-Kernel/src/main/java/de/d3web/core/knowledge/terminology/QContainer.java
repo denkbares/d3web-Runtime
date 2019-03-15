@@ -61,7 +61,9 @@ public class QContainer extends QASet {
 	public boolean isQuestionOrHasQuestions() {
 		for (TerminologyObject child : this.getChildren()) {
 			if (child instanceof QASet) {
-				return ((QASet) child).isQuestionOrHasQuestions();
+				if (((QASet) child).isQuestionOrHasQuestions()) {
+					return true;
+				}
 			}
 		}
 		return false;
