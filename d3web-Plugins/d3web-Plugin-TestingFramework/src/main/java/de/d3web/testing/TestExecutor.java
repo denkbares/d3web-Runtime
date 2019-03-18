@@ -301,7 +301,7 @@ public class TestExecutor {
 				catch (RejectedExecutionException e) {
 					// it is possible that the executor is shut down during or
 					// before adding the tests to the executor... we just catch it
-					Log.warning("Rejected execution of " + callableTest.specification.getTestName() + ": " + callableTest.testObjectName);
+					Log.fine("Rejected execution of " + callableTest.specification.getTestName() + ": " + callableTest.testObjectName);
 				}
 
 				try {
