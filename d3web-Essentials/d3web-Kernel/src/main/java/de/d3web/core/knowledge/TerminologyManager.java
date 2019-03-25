@@ -21,10 +21,12 @@ package de.d3web.core.knowledge;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.denkbares.strings.NumberAwareComparator;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -38,7 +40,22 @@ import de.d3web.core.knowledge.terminology.Solution;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 12.01.2011
  */
+@SuppressWarnings("JavadocReference")
 public class TerminologyManager {
+
+	/**
+	 * Comparator to sort terminology objects in alphabetical order, considering in-line numbers
+	 */
+	public static final Comparator<TerminologyObject> ALPHABETICAL_ORDER =
+			Comparator.comparing(TerminologyObject::getName, NumberAwareComparator.CASE_INSENSITIVE);
+
+	/**
+	 * Comparator to sort terminology objects in their tree appearance order. This is, assume the tree is printed in a
+	 * text file, the order of the lines, when each object appears first.
+	 */
+	public static final Comparator<TerminologyObject> TREE_ORDER =
+			Comparator.comparing(object -> object.getKnowledgeBase().getManager().getTreeIndex(object),
+					Integer::compareTo);
 
 	/**
 	 * Hashes the objects for names (unique name assumption required)
