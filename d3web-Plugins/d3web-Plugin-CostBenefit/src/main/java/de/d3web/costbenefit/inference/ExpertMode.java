@@ -137,6 +137,7 @@ public class ExpertMode implements SessionObject {
 				case measurementDevice:
 					Value stateValue = CostBenefitProperties.getIntegratedValue(stateQuestion);
 					Question adapterQuestion = CostBenefitProperties.getAdapterState(stateQuestion);
+					if (adapterQuestion == null) break;
 					adapterStates.put(adapterQuestion, new CondEqual(stateQuestion, stateValue));
 					break;
 

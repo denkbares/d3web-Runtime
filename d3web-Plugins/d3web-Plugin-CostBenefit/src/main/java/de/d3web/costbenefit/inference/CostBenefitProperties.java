@@ -5,6 +5,7 @@
 package de.d3web.costbenefit.inference;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -17,10 +18,12 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
 /**
@@ -134,7 +137,17 @@ public class CostBenefitProperties {
 
 	public static Collection<Question> getStateQuestions(KnowledgeBase base) {
 		// TODO: here some hard-coded stuff (convention) is used. Replace by searching knowledge base for UUT state properties
-		return Stream.of(base.getManager().searchQContainer("target_state_questionnaire").getChildren())
+		QContainer systemStateParent;
+		String parentName = base.getInfoStore().getValue(SYSTEM_STATE_PARENT);
+		if (parentName != null) {
+			systemStateParent = base.getManager().searchQContainer(parentName);
+		}
+		else {
+			// backwards compatibility
+			systemStateParent = base.getManager().searchQContainer("target_state_questionnaire");
+		}
+		if (systemStateParent == null) return Collections.emptyList();
+		return Stream.of(systemStateParent.getChildren())
 				.filter(Question.class::isInstance).map(Question.class::cast).collect(Collectors.toList());
 	}
 
@@ -191,6 +204,9 @@ public class CostBenefitProperties {
 	public static Value getIntegratedValue(Question adapterOrDeviceStateQuestion) {
 		// TODO: here some hard-coded stuff (convention) is used. Replace by ???
 		QuestionValue value = KnowledgeBaseUtils.findValue(adapterOrDeviceStateQuestion, adapterOrDeviceStateQuestion.getName() + "#integriert");
+		if (value == null && adapterOrDeviceStateQuestion instanceof QuestionChoice) {
+			value = new ChoiceValue(((QuestionChoice) adapterOrDeviceStateQuestion).getAllAlternatives().get(0));
+		}
 		return UndefinedValue.isUndefinedValue(value) ? null : value;
 	}
 }
