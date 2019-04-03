@@ -261,6 +261,16 @@
 		<parameter id="default" value="false" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="potentialChoices">
+		<parameter id="name" value="potentialChoices" />
+		<parameter id="description"
+			value="Allows to specify potential choices for questions. These potential choices can for example be shown to the user so he may convert them to actual choices." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.ObjectNameList" />
+	</extension>
+
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="ManualTargetSelectionEntryHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.ManualTargetSelectionEntryHandler" />

@@ -19,6 +19,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.info.ObjectNameList;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.QuestionValue;
@@ -58,6 +59,17 @@ public class CostBenefitProperties {
 	 * Allows to specify the common system state question parent in a cost benefit knowledge base.
 	 */
 	public static final Property<String> SYSTEM_STATE_PARENT = Property.getProperty("systemStateParent", String.class);
+
+	/**
+	 * Allows to specify potential choices for questions. These potential choices can for example be shown to the user
+	 * so he may convert them to actual choices.
+	 */
+	public static final Property<ObjectNameList> POTENTIAL_CHOICES = Property.getProperty("potentialChoices", ObjectNameList.class);
+
+	public static ObjectNameList getPotentialChoices(Question question) {
+		ObjectNameList list = question.getInfoStore().getValue(POTENTIAL_CHOICES);
+		return list == null ? new ObjectNameList() : list;
+	}
 
 	/**
 	 * Returns the common system state parent of this knowledge base. If non is defined, the root QContainer will be
