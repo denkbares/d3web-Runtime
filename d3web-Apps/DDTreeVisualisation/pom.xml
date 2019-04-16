@@ -20,8 +20,8 @@
 			<artifactId>jung-visualization</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.lowagie</groupId>
-			<artifactId>itext</artifactId>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
