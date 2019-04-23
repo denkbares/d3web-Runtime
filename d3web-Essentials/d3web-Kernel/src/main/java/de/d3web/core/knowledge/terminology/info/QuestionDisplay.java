@@ -21,6 +21,11 @@ public enum QuestionDisplay {
 	 */
 	normal,
 	/**
+	 * Marks questions to be a hidden question. This is rarely required, e.g. for technical questions that should delay
+	 * the interview until the value of the question is set programmatically.
+	 */
+	hidden,
+	/**
 	 * Marks a question to be an activity, meaning an instruction to the user to perform and action (often a
 	 * QuestionChoice with just on answer "ok/next/continue".
 	 */
@@ -31,10 +36,9 @@ public enum QuestionDisplay {
 	 */
 	observation,
 	/**
-	 * Marks a question to be a temporary observation, meaning an instruction to the user to observe something to
-	 * answer the question. Temporary means, that the phenomenon is only observable for a short time, e.g. while an
-	 * activity is performed.
+	 * Marks a question to be a temporary observation, meaning an instruction to the user to observe something to answer
+	 * the question. Temporary means, that the phenomenon is only observable for a short time, e.g. while an activity is
+	 * performed.
 	 */
 	temporaryObservation,
-
 }
