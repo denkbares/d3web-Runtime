@@ -49,10 +49,9 @@ public class StateTransition implements KnowledgeSlice {
 	private final Condition activationCondition;
 	private final List<ValueTransition> postTransitions;
 	private final QContainer qcontainer;
-	private final double costs;
 
 	/**
-	 * Creates a new StateTransition for teh specified qcontainer. It automatically adds itself to the qcontainer.
+	 * Creates a new StateTransition for the specified qcontainer. It automatically adds itself to the qcontainer.
 	 *
 	 * @param activationCondition the condition required to use the qcontainer, or null if there is no precondition
 	 * @param postTransitions     the transition to be executed after the qcontainer has been answered
@@ -63,7 +62,6 @@ public class StateTransition implements KnowledgeSlice {
 		this.activationCondition = activationCondition;
 		this.postTransitions = postTransitions;
 		this.qcontainer = qcontainer;
-		this.costs = qcontainer.getInfoStore().getValue(BasicProperties.COST);
 		qcontainer.getKnowledgeStore().addKnowledge(KNOWLEDGE_KIND, this);
 	}
 
@@ -135,6 +133,6 @@ public class StateTransition implements KnowledgeSlice {
 	 * @created 02.06.2012
 	 */
 	public double getCosts() {
-		return costs;
+		return qcontainer.getInfoStore().getValue(BasicProperties.COST);
 	}
 }

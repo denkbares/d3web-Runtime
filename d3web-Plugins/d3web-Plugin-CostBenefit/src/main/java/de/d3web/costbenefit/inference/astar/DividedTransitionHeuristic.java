@@ -97,8 +97,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
 		Condition precondition = stateTransition.getActivationCondition();
-		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
-				this);
+		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
 		return estimatePathCosts(sessionObject, state, precondition)
 				+ calculateUnusedNegatives(sessionObject, path);
 	}
@@ -109,8 +108,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 	@Override
 	public void init(SearchModel model) {
-		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
-				this);
+		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
 		// check if no further initialization required
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
 		sessionObject.finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
@@ -339,8 +337,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 	private static CompiledCostsFunction compile(Condition cond, List<TerminologyObject> objects, Map<Question, Map<Value, Double>> targetMap) {
 		if (cond instanceof CondAnd) {
-			CompiledCostsFunction[] children =
-					getCompiledChildren((CondAnd) cond, objects, targetMap);
+			CompiledCostsFunction[] children = getCompiledChildren((CondAnd) cond, objects, targetMap);
 			// mark conds of the same question as conflicting
 			Map<Integer, CompiledCostsFunction> map = new HashMap<>();
 			for (CompiledCostsFunction function : children) {
@@ -404,14 +401,11 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				return new CompiledCondNotEqual(value, index, cheapest);
 			}
 			else {
-				throw new IllegalArgumentException("Can only handle CondNot with one CondEqual: "
-						+ cond);
+				throw new IllegalArgumentException("Can only handle CondNot with one CondEqual: " + cond);
 			}
 		}
 		else {
-			throw new IllegalArgumentException(
-					"Can only handle CondNot, CondAnd, CondOr or CondEqual: "
-							+ cond);
+			throw new IllegalArgumentException("Can only handle CondNot, CondAnd, CondOr or CondEqual: " + cond);
 		}
 	}
 
@@ -577,11 +571,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				Question stateQuestion = vt.getQuestion();
 				// is already finally set, cannot be changed
 				if (sessionObject.finalValues.containsKey(stateQuestion)) continue;
-				Map<Value, Double> questionMap = targetMap.get(stateQuestion);
-				if (questionMap == null) {
-					questionMap = new HashMap<>();
-					targetMap.put(stateQuestion, questionMap);
-				}
+				Map<Value, Double> questionMap = targetMap.computeIfAbsent(stateQuestion, k -> new HashMap<>());
 				Map<Question, Value> set = getQuestionSet(sessionObject, st, activationCondition);
 				double costs = calculateCosts(st, set.keySet(), stateQuestion);
 				for (Entry<Question, Value> entry : set.entrySet()) {

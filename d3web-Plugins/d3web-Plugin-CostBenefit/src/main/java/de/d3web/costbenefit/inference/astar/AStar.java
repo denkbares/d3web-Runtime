@@ -186,12 +186,10 @@ public class AStar {
 		for (Target target : new ArrayList<>(model.getTargets())) {
 			Heuristic heuristic = algorithm.getHeuristic();
 			QContainer qcontainer = target.getQContainers().get(0);
-			double distance =
-					heuristic.getDistance(model, startNode.getPath(), startNode.getState(),
-							qcontainer);
+			double distance = heuristic.getDistance(model, startNode.getPath(), startNode.getState(), qcontainer);
 			if (distance == Double.POSITIVE_INFINITY) {
 				model.removeTarget(target);
-				successors.remove(qcontainer);
+				successors.remove(StateTransition.getStateTransition(qcontainer));
 			}
 		}
 	}
@@ -454,8 +452,7 @@ public class AStar {
 					}
 				}
 				// adding the costs calculated by the heuristic
-				double distance = algorithm.getHeuristic().getDistance(model, path, state,
-						qContainer);
+				double distance = algorithm.getHeuristic().getDistance(model, path, state, qContainer);
 				costs += distance;
 				Pair<Path, QContainer> key = new Pair<>(path, qContainer);
 				hValueCache.put(key, distance);

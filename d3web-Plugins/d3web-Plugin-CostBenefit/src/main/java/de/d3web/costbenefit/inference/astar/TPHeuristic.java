@@ -592,8 +592,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 								}
 							}
 							Set<Value> coveredValues = coveredValueMap.get(candidateQuestion);
-							Set<Value> coveredCandidateValues = getCoveredValues(candidate).get(
-									candidateQuestion);
+							Set<Value> coveredCandidateValues = getCoveredValues(candidate).get(candidateQuestion);
 							if (coveredValues == null
 									|| Collections.disjoint(coveredValues, coveredCandidateValues)) {
 								conditionsToUse.add(candidate);
@@ -807,12 +806,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	private static Set<Value> getSet(Map<Question, Set<Value>> forbiddenValues, Question question) {
-		Set<Value> set = forbiddenValues.get(question);
-		if (set == null) {
-			set = new HashSet<>();
-			forbiddenValues.put(question, set);
-		}
-		return set;
+		return forbiddenValues.computeIfAbsent(question, k -> new HashSet<>());
 	}
 
 	private static List<ChoiceValue> getAllChoiceValues(QuestionChoice qc) {
