@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -236,51 +237,59 @@ public class CostBenefitCaseObject implements SessionObject {
 	 */
 	public void activateNextQContainer() {
 		if (currentSequence == null) return;
+
 		// only check if the current one is done
 		// (or no current one has been activated yet)
-		if (this.getCurrentPathIndex() == -1
-				|| CostBenefitUtil.isDone(currentSequence[this.getCurrentPathIndex()],
-				session)) {
-			this.incCurrentPathIndex();
-			if (this.getCurrentPathIndex() >= currentSequence.length) {
-				this.resetPath();
+		if (getCurrentPathIndex() == -1 || CostBenefitUtil.isDone(currentSequence[getCurrentPathIndex()], session)) {
+
+			// activate next qContainer by incrementing index
+			incCurrentPathIndex();
+
+			if (getCurrentPathIndex() >= currentSequence.length) {
+				resetPath();
 				return;
 			}
-			QContainer qc = currentSequence[this.getCurrentPathIndex()];
+			QContainer qc = currentSequence[getCurrentPathIndex()];
 			// normally ok questions are made undone when starting a sequence,
-			// but one item can occur more than once in a sequence, so it's
-			// questions have to be handled earlier.
-			// TODO maybe just make the questions of the previous container
-			// undone? all others should be made undone earlier
-			for (int i = 0; i < this.getCurrentPathIndex(); i++) {
-				if (currentSequence[0] == qc) {
-					retractQuestions(qc, session);
-				}
+			// but a qContainer can occur more than once in a sequence, so we just
+			// make the questions of the previous container undone
+			if (getCurrentPathIndex() > 0) {
+				retractQuestions(currentSequence[getCurrentPathIndex() - 1], session);
 			}
+
 			if (!new Node(qc, null).isApplicable(session)) {
-				this.resetPath();
+				resetPath();
 				return;
 			}
 			// check if the rest of the path is applicable
 			else if (!isReplayingSession()
 					&& !CostBenefitUtil.checkPath(Arrays.asList(currentSequence),
-					session, this.getCurrentPathIndex(), false)) {
+					session, getCurrentPathIndex(), false)) {
 				this.resetPath();
 				return;
 			}
-			// when activating the next qcontainer, which is applicable, check
+			// when activating the next qContainer, which is applicable, check
 			// if it is already done and fire state transition and move to next
 			// QContainer if necessary
 			if (CostBenefitUtil.isDone(qc, session)) {
 				StateTransition st = StateTransition.getStateTransition(qc);
 				if (st != null) st.fire(session);
-				// remove indication
-				for (Fact fact : this.getIndicatedFacts()) {
-					if (fact.getTerminologyObject() == qc) {
-						session.getBlackboard().removeInterviewFact(fact);
-					}
-				}
+				cleanupIndicationForQContainer(session, qc);
 				activateNextQContainer();
+			}
+		}
+	}
+
+	/**
+	 * Cleans up the first/current indication for the given qContainer.
+	 */
+	public void cleanupIndicationForQContainer(Session session, QContainer qContainer) {
+		for (Iterator<Fact> iterator = indicatedFacts.iterator(); iterator.hasNext(); ) {
+			Fact fact = iterator.next();
+			if (fact.getTerminologyObject() == qContainer) {
+				session.getBlackboard().removeInterviewFact(fact);
+				iterator.remove();
+				break;
 			}
 		}
 	}

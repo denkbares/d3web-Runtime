@@ -224,11 +224,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 				// otherwise proceed in path and remove old indication
 				cbCaseObject.activateNextQContainer();
-				for (Fact fact : cbCaseObject.getIndicatedFacts()) {
-					if (fact.getTerminologyObject() == transition.getQcontainer()) {
-						session.getBlackboard().removeInterviewFact(fact);
-					}
-				}
+				cbCaseObject.cleanupIndicationForQContainer(session, transition.getQcontainer());
 				sessionObject.qContainer = qcon;
 			}
 		}
