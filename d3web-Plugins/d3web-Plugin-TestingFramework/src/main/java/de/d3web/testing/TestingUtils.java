@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -22,12 +22,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
+import com.denkbares.strings.NumberAwareComparator;
+import com.denkbares.strings.Strings;
 import de.d3web.testing.Message.Type;
 
 /**
@@ -77,7 +79,7 @@ public class TestingUtils {
 			return new Message(Type.FAILURE, "Failure" + getVerbalization(failedTests));
 		}
 		MultiMap<String, String> warningTests = summaryByType.computeIfAbsent(Type.WARNING, k -> new DefaultMultiMap<>());
-		if (!warningTests.isEmpty()){
+		if (!warningTests.isEmpty()) {
 			return new Message(Type.WARNING, "Warning" + getVerbalization(warningTests));
 		}
 		return new Message(Message.Type.SUCCESS);
@@ -87,9 +89,19 @@ public class TestingUtils {
 		StringBuilder builder = new StringBuilder(objects.size() > 1 ? "s: " : ": ");
 		for (String testName : objects.keySet()) {
 			builder.append(" test '").append(testName).append("'");
-			Set<String> values = objects.getValues(testName);
+			List<String> values = new ArrayList<>(objects.getValues(testName));
+			values.sort(NumberAwareComparator.CASE_INSENSITIVE);
 			if (values.size() > 1) {
-				builder.append(", objects ").append(values);
+				if (objects.size() > 5) {
+					builder.append(", objects '")
+							.append(Strings.concat(", ", values.subList(0, 5)))
+							.append("... (")
+							.append(objects.size() - 3)
+							.append(" more objects)'");
+				}
+				else {
+					builder.append(", objects '").append(Strings.concat(", ", values)).append("'");
+				}
 			}
 			else {
 				builder.append(", object '").append(values.iterator().next()).append("'");
@@ -169,7 +181,6 @@ public class TestingUtils {
 			if (isIgnored(string, ignorePatterns)) {
 				result.remove(string);
 			}
-
 		}
 		return result;
 	}
