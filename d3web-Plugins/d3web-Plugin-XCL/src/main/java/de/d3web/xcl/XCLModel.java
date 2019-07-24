@@ -198,6 +198,26 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 					nob.getKnowledgeStore().removeKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND, set);
 				}
 			}
+			// cleanup map
+			Set<XCLRelation> xclRelationsOfObject = coveringRelations.get(nob);
+			if (xclRelationsOfObject != null) {
+				xclRelationsOfObject.remove(rel);
+				if (xclRelationsOfObject.isEmpty()) {
+					coveringRelations.remove(nob);
+				}
+
+				// cleanup positive cache
+				boolean anyPositive = false;
+				for (XCLRelation remainingRelation : xclRelationsOfObject) {
+					if (isPositive(remainingRelation)) {
+						anyPositive = true;
+						break;
+					}
+				}
+				if (!anyPositive) {
+					positiveCoveredSymptoms.remove(nob);
+				}
+			}
 		}
 		relations.remove(rel);
 		contradictingRelations.remove(rel);
@@ -207,12 +227,16 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 
 	private boolean addRelationTo(XCLRelation relation, Collection<XCLRelation> theRelations) {
 		theRelations.add(relation);
-		boolean isPositive = !relation.hasType(XCLRelationType.contradicted);
+		boolean isPositive = isPositive(relation);
 		for (TerminologyObject no : relation.getConditionedFinding().getTerminalObjects()) {
 			coveringRelations.computeIfAbsent(no, k -> new HashSet<>()).add(relation);
 			if (isPositive) positiveCoveredSymptoms.add(no);
 		}
 		return true;
+	}
+
+	private boolean isPositive(XCLRelation relation) {
+		return !relation.hasType(XCLRelationType.contradicted);
 	}
 
 	@Override
