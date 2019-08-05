@@ -328,4 +328,51 @@
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="noErrorSolution">
+		<parameter id="name" value="noErrorSolution" />
+		<parameter id="description" value="Allows to specify the no error solution of the knowledge base." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="testEquipmentAvailabilityParent">
+		<parameter id="name" value="testEquipmentAvailabilityParent" />
+		<parameter id="description"
+			value="Allows to specify the parent of the test equipment availability questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="adapterAvailabilityParent">
+		<parameter id="name" value="adapterAvailabilityParent" />
+		<parameter id="description" value="Allows to specify the parent of the adapter availability questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="interruptQContainer">
+		<parameter id="name" value="interruptQContainer" />
+		<parameter id="description" value="Allows to specify the interrupt QContainer." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="malfunctionType">
+		<parameter id="name" value="malfunctionType" />
+		<parameter id="description" value="Allows to specify the type of malfunction a question stands for. If no type is set for the question,
+			the question isn't a malfunction question." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.costbenefit.inference.CostBenefitProperties.MalfunctionType" />
+	</extension>
 </plugin>

@@ -76,9 +76,15 @@ public class CostBenefitProperties {
 	public static final Property<String> ADAPTER_AVAILABILITY_PARENT = Property.getProperty("adapterAvailabilityParent", String.class);
 
 	/**
-	 * Allows to specify the type of malfunction a question stands for. If no type is set for the question, the question isn't a malfunction question
+	 * Allows to specify the type of malfunction a question stands for. If no type is set for the question, the question
+	 * isn't a malfunction question
 	 */
 	public static final Property<MalfunctionType> MALFUNCTION_TYPE = Property.getProperty("malfunctionType", MalfunctionType.class);
+
+	/**
+	 * Allows to specify the interrupt QContainer.
+	 */
+	public static final Property<String> INTERRUPT_QCONTAINER = Property.getProperty("interruptQContainer", String.class);
 
 	public enum MalfunctionType {
 		basic, testEquipment
