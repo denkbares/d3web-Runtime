@@ -61,6 +61,30 @@ public class CostBenefitProperties {
 	public static final Property<String> SYSTEM_STATE_PARENT = Property.getProperty("systemStateParent", String.class);
 
 	/**
+	 * Allows to specify the no error solution of the knowledge base
+	 */
+	public static final Property<String> NO_ERROR_SOLUTION = Property.getProperty("noErrorSolution", String.class);
+
+	/**
+	 * Allows to specify the parent of the test equipment availability questions
+	 */
+	public static final Property<String> TEST_EQUIPMENT_AVAILABILITY_PARENT = Property.getProperty("testEquipmentAvailabilityParent", String.class);
+
+	/**
+	 * Allows to specify the parent of the adapter availability questions
+	 */
+	public static final Property<String> ADAPTER_AVAILABILITY_PARENT = Property.getProperty("adapterAvailabilityParent", String.class);
+
+	/**
+	 * Allows to specify the type of malfunction a question stands for. If no type is set for the question, the question isn't a malfunction question
+	 */
+	public static final Property<MalfunctionType> MALFUNCTION_TYPE = Property.getProperty("malfunctionType", MalfunctionType.class);
+
+	public enum MalfunctionType {
+		basic, testEquipment
+	}
+
+	/**
 	 * Allows to specify potential choices for questions. These potential choices can for example be shown to the user
 	 * so he may convert them to actual choices.
 	 */
