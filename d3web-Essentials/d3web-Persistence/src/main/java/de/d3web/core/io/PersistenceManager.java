@@ -567,7 +567,7 @@ public final class PersistenceManager {
 		// if we not have parsed at least one file
 		// we assume that this is no valid knowledge base
 		if (!parsedAnyFile) {
-			throw new IOException("The parsed file appears not to be a valid knowledge base");
+			throw new IOException("The parsed file appears not to be a valid knowledge base: " + folder);
 		}
 
 		// finally scan all files in multimedia folder
