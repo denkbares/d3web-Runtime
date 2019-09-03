@@ -36,12 +36,14 @@ import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -135,7 +137,9 @@ public class ExpertMode implements SessionObject {
 			switch (CostBenefitProperties.getUUTState(stateQuestion)) {
 				// handle device states, mapping the devices to the adapter
 				case measurementDevice:
+					// the following code only works for KnowledgeDesigner knowledge bases (SGP+CAN)
 					Value stateValue = CostBenefitProperties.getIntegratedValue(stateQuestion);
+					//noinspection deprecation
 					Question adapterQuestion = CostBenefitProperties.getAdapterState(stateQuestion);
 					if (adapterQuestion == null) break;
 					adapterStates.put(adapterQuestion, new CondEqual(stateQuestion, stateValue));
@@ -143,7 +147,11 @@ public class ExpertMode implements SessionObject {
 
 				// skip adapters (processed with devices) and mechanical checks
 				case mechanicalCheck:
+					break;
 				case measurementAdapter:
+					Choice adaptedChoice = CostBenefitProperties.getAdaptedChoice(stateQuestion);
+					if (adaptedChoice == null) break;
+					adapterStates.put(stateQuestion, new CondEqual(stateQuestion, new ChoiceValue(adaptedChoice)));
 					break;
 
 				// otherwise use as normal system state
@@ -173,7 +181,7 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
-	 * Returns all potential target test stepts that have the adapter integrated, that is referenced by the specified
+	 * Returns all potential target test steps that have the adapter integrated, that is referenced by the specified
 	 * adapter question. The question is usually one of the questions returned by {@link #getAdapterStates()}. Otherwise
 	 * the method returns an empty set of targets.
 	 *

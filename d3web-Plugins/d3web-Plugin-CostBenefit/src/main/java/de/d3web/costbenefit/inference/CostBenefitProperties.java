@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -52,6 +53,7 @@ public class CostBenefitProperties {
 	/**
 	 * This property should not be used anymore. It is replaced by the KnowledgeSlice {@link ComfortBenefit}
 	 */
+	@SuppressWarnings("DeprecatedIsStillUsed")
 	@Deprecated
 	public static final Property<Boolean> COMFORT_BENEFIT = Property.getProperty("comfortBenefit", Boolean.class);
 
@@ -85,6 +87,11 @@ public class CostBenefitProperties {
 	 * Allows to specify the interrupt QContainer.
 	 */
 	public static final Property<String> INTERRUPT_QCONTAINER = Property.getProperty("interruptQContainer", String.class);
+
+
+	public static final String CONNECT_UMD_CHOICE_NAME = "connect_umd"; // CBX
+	public static final String ADAPTED_CHOICE_NAME = "adapt"; // CBX
+	public static final String UMD_INTEGRATED_CHOICE_NAME = "#integriert"; // KnowledgeDesigner (SGP + CAN)
 
 	public enum MalfunctionType {
 		basic, testEquipment
@@ -185,7 +192,7 @@ public class CostBenefitProperties {
 			systemStateParent = base.getManager().searchQContainer(parentName);
 		}
 		else {
-			// backwards compatibility
+			// KnowledgeDesigner (SGP/CAN) backwards compatibility
 			systemStateParent = base.getManager().searchQContainer("target_state_questionnaire");
 		}
 		if (systemStateParent == null) return Collections.emptyList();
@@ -229,7 +236,11 @@ public class CostBenefitProperties {
 	 * Returns the measurement adapter of the specified measurement device, represented by the state question of the
 	 * device. If the specified question is not the state of a measurement device, or the device is not connected to a
 	 * measurement adapter, null is returned.
+	 *
+	 * @deprecated this method only works for the old KnowledgeDesigner knowledge bases, NOT for CBX!
 	 */
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@Deprecated
 	public static Question getAdapterState(Question deviceStateQuestion) {
 		// TODO: here some hard-coded stuff (convention) is used. Replace by UUT_STATE property and parent/child hierarchy
 		Matcher matcher = devicePattern.matcher(deviceStateQuestion.getName());
@@ -240,12 +251,24 @@ public class CostBenefitProperties {
 	}
 
 	/**
+	 * Returns the choice indicating that a adapter is adapted in regards to a given adapter state question.
+	 */
+	public static Choice getAdaptedChoice(Question stateQuestion) {
+		if (stateQuestion instanceof QuestionChoice && getUUTState(stateQuestion) == UUTState.measurementAdapter) {
+			return KnowledgeBaseUtils.findChoice((QuestionChoice) stateQuestion, ADAPTED_CHOICE_NAME);
+		}
+		return null;
+	}
+
+	/**
 	 * Returns the value that represents the integrated state of the specified adapter state or device state. The method
 	 * return null if there is no such value.
 	 */
 	public static Value getIntegratedValue(Question adapterOrDeviceStateQuestion) {
-		// TODO: here some hard-coded stuff (convention) is used. Replace by ???
-		QuestionValue value = KnowledgeBaseUtils.findValue(adapterOrDeviceStateQuestion, adapterOrDeviceStateQuestion.getName() + "#integriert");
+		QuestionValue value = KnowledgeBaseUtils.findValue(adapterOrDeviceStateQuestion, CONNECT_UMD_CHOICE_NAME);
+		if (value == null) { // SGP/CAN backwards compatibility
+			value = KnowledgeBaseUtils.findValue(adapterOrDeviceStateQuestion, adapterOrDeviceStateQuestion.getName() + UMD_INTEGRATED_CHOICE_NAME);
+		}
 		if (value == null && adapterOrDeviceStateQuestion instanceof QuestionChoice) {
 			value = new ChoiceValue(((QuestionChoice) adapterOrDeviceStateQuestion).getAllAlternatives().get(0));
 		}
