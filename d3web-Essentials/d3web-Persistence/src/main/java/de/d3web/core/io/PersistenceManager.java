@@ -478,7 +478,7 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Loads a knowledge base from the specified ZIP file.
+	 * Loads a knowledge base from the specified ZIP file or a expanded directory.
 	 *
 	 * @param file the specified ZIP {@link File} (usually a jar file)
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified ZIP file
