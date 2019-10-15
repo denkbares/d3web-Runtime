@@ -111,8 +111,9 @@ public final class FlowFactory {
 	 * Adds the Flow to the FlowSet KnowledgeSlice
 	 */
 	private static void insertIntoKB(Flow flow) {
-		flow.getKnowledgeBase().getKnowledgeStore().computeIfAbsent(FluxSolver.FLOW_SET, FlowSet::new).put(flow);
+		flow.getKnowledgeBase().getKnowledgeStore().computeIfAbsent(FluxSolver.FLOW_SET, FlowSet::new).addFlow(flow);
 	}
+
 
 	private static void linkEdge(Edge edge) {
 		// index them at the NamedObjects their condition contains
@@ -239,6 +240,9 @@ public final class FlowFactory {
 
 	/**
 	 * Adds a node from the flow. The method also automatically links the node to all terminology objects.
+	 * <p>
+	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
+	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
 	 * @param flow the flow to add the node to
 	 * @param node the node to be added
@@ -251,6 +255,9 @@ public final class FlowFactory {
 
 	/**
 	 * Removes a node from the flow. The method also automatically unlinks the node from all terminology objects.
+	 * <p>
+	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
+	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
 	 * @param node the node to be removed
 	 */
@@ -266,6 +273,9 @@ public final class FlowFactory {
 	/**
 	 * Adds all the specified nodes to the specified flowchart. After that, it also adds all edges that are connected to
 	 * any of these nodes to the flow. Both, nodes and edges, will be linked to all relevant terminology objects.
+	 * <p>
+	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
+	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
 	 * @param nodes the nodes to remove from the flow
 	 */
@@ -277,13 +287,18 @@ public final class FlowFactory {
 	}
 
 	/**
-	 * Removes all the specified nodes form the flowchart the nodes are added to. Before, it also removes all edges that
+	 * Removes all the specified nodes from the flowchart the nodes are added to. Before, it also removes all edges that
 	 * are connected to any of these nodes from the flow. Both, nodes and edges, will be unlinked from all terminology
 	 * objects before they are removed.
+	 * <p>
+	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
+	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
-	 * @param nodes the nodes to remove from the flow
+	 * @param nodesToRemove the nodes to remove from the flow
 	 */
-	public static void removeNodesAndConnectedEdges(Collection<? extends Node> nodes) {
+	public static void removeNodesAndConnectedEdges(Collection<? extends Node> nodesToRemove) {
+		// use a copy of nodes and edges to avoid concurrent modification
+		Set<Node> nodes = new HashSet<>(nodesToRemove);
 		Set<Edge> edges = new HashSet<>();
 		for (Node node : nodes) {
 			edges.addAll(node.getIncomingEdges());
@@ -291,5 +306,20 @@ public final class FlowFactory {
 		}
 		edges.forEach(FlowFactory::removeEdge);
 		nodes.forEach(FlowFactory::removeNode);
+	}
+
+	/**
+	 * Removes all the nodes and edges from the specified flowchart. Both, nodes and edges, will be unlinked from all
+	 * terminology objects before they are removed. After that, the flow is empty.
+	 * <p>
+	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
+	 * otherwise the caches of the FlowSet may not update correctly.
+	 *
+	 * @param flow the flow to remove all nodes and edges from
+	 */
+	public static void removeAllNodesAndEdges(Flow flow) {
+		removeNodesAndConnectedEdges(flow.getNodes());
+		assert flow.getNodes().isEmpty();
+		assert flow.getEdges().isEmpty();
 	}
 }
