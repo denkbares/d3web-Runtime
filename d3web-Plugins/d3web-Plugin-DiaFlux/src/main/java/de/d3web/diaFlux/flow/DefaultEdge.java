@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -20,72 +20,50 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.inference.condition.Condition;
 
 /**
  * @author Reinhard Hatko
- * 
  */
 public class DefaultEdge implements Edge {
 
+	private final String id;
 	private final Node startNode;
 	private final Node endNode;
 	private final Condition condition;
-	private final String id;
 
-	public DefaultEdge(String id, Node startNode, Node endNode, Condition condition) {
+	public DefaultEdge(String id, @NotNull Node startNode, @NotNull Node endNode, Condition condition) {
 
-		if (startNode == null) {
-			throw new IllegalArgumentException("startNode must not be null");
-		}
-		if (endNode == null) {
-			throw new IllegalArgumentException("endNode must not be null");
-		}
 		if (startNode.getFlow() != endNode.getFlow()) {
 			throw new IllegalArgumentException("Both nodes must be in the same flow.");
-
 		}
 		if (condition == null) {
 			throw new IllegalArgumentException("condition must not be null");
 		}
 
+		this.id = id;
 		this.startNode = startNode;
 		this.endNode = endNode;
 		this.condition = condition;
-		this.id = id;
+	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DefaultEdge)) return false;
+		DefaultEdge that = (DefaultEdge) o;
+		return Objects.equals(id, that.id) &&
+				Objects.equals(startNode, that.startNode) &&
+				Objects.equals(endNode, that.endNode);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((endNode == null) ? 0 : endNode.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((startNode == null) ? 0 : startNode.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		DefaultEdge other = (DefaultEdge) obj;
-		if (endNode == null) {
-			if (other.endNode != null) return false;
-		}
-		else if (!endNode.equals(other.endNode)) return false;
-		if (id == null) {
-			if (other.id != null) return false;
-		}
-		else if (!id.equals(other.id)) return false;
-		if (startNode == null) {
-			if (other.startNode != null) return false;
-		}
-		else if (!startNode.equals(other.startNode)) return false;
-		return true;
+		return Objects.hash(id, startNode, endNode);
 	}
 
 	@Override
@@ -93,11 +71,13 @@ public class DefaultEdge implements Edge {
 		return condition;
 	}
 
+	@NotNull
 	@Override
 	public Node getEndNode() {
 		return endNode;
 	}
 
+	@NotNull
 	@Override
 	public Node getStartNode() {
 		return startNode;
@@ -118,5 +98,4 @@ public class DefaultEdge implements Edge {
 	public String getID() {
 		return id;
 	}
-
 }

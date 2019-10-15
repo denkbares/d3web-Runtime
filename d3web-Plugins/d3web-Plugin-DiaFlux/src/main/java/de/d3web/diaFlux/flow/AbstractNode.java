@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -23,6 +23,9 @@ package de.d3web.diaFlux.flow;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
@@ -31,54 +34,62 @@ import de.d3web.core.session.Session;
 
 /**
  * Abstract Implementation of Node.
- * 
+ * <p>
  * Provides basic implementations of the methods
- * 
+ *
  * @author Reinhard Hatko
  * @created 08.08.2009
  */
 public abstract class AbstractNode implements Node {
 
-	private final List<Edge> outgoing;
-	private final List<Edge> incoming;
 	private final String id;
-	private Flow flow;
 	private final String name;
 
-	public AbstractNode(String id, String name) {
+	private Flow flow;
+	private final List<Edge> outgoing;
+	private final List<Edge> incoming;
 
+	public AbstractNode(String id, String name) {
 		this.id = id;
 		this.outgoing = new ArrayList<>();
 		this.incoming = new ArrayList<>();
 		this.name = name;
 	}
 
-	protected boolean addOutgoingEdge(Edge edge) {
-		if (edge == null) {
-			throw new IllegalArgumentException("edge must not be null");
+	protected void addOutgoingEdge(@NotNull Edge edge) {
+		if (!outgoing.contains(edge)) {
+			checkStartNode(edge);
+			outgoing.add(edge);
 		}
-
-		if (edge.getStartNode() != this) {
-			throw new IllegalArgumentException("edge '" + edge + "' does not start at: "
-					+ this);
-		}
-
-		return outgoing.add(edge);
-
 	}
 
-	protected boolean addIncomingEdge(Edge edge) {
-		if (edge == null) {
-			throw new IllegalArgumentException("edge must not be null");
-		}
+	protected boolean removeOutgoingEdge(@NotNull Edge edge) {
+		checkStartNode(edge);
+		return outgoing.remove(edge);
+	}
 
+	protected void addIncomingEdge(@NotNull Edge edge) {
+		if (!incoming.contains(edge)) {
+			checkEndNode(edge);
+			incoming.add(edge);
+		}
+	}
+
+	protected boolean removeIncomingEdge(@NotNull Edge edge) {
+		checkEndNode(edge);
+		return incoming.remove(edge);
+	}
+
+	private void checkStartNode(@NotNull Edge edge) {
+		if (edge.getStartNode() != this) {
+			throw new IllegalArgumentException("edge '" + edge + "' does not start at: " + this);
+		}
+	}
+
+	private void checkEndNode(@NotNull Edge edge) {
 		if (edge.getEndNode() != this) {
-			throw new IllegalArgumentException("edge '" + edge + "' does not end at: "
-					+ this);
+			throw new IllegalArgumentException("edge '" + edge + "' does not end at: " + this);
 		}
-
-		return incoming.add(edge);
-
 	}
 
 	@Override
@@ -98,10 +109,6 @@ public abstract class AbstractNode implements Node {
 
 	@Override
 	public void setFlow(Flow flow) {
-		if (flow == null) {
-			throw new IllegalArgumentException("Flow must not be null");
-		}
-
 		this.flow = flow;
 	}
 
@@ -117,12 +124,10 @@ public abstract class AbstractNode implements Node {
 
 	@Override
 	public void execute(Session session, FlowRun run) {
-
 	}
 
 	@Override
 	public void retract(Session session, FlowRun run) {
-
 	}
 
 	@Override
@@ -137,35 +142,20 @@ public abstract class AbstractNode implements Node {
 
 	@Override
 	public void takeSnapshot(Session session) {
+	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AbstractNode)) return false;
+		AbstractNode that = (AbstractNode) o;
+		return Objects.equals(id, that.id) &&
+				Objects.equals(flow, that.flow);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((flow == null) ? 0 : flow.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-
-		if (getClass() != obj.getClass()) return false;
-
-		AbstractNode other = (AbstractNode) obj;
-		if (flow == null) {
-			if (other.flow != null) return false;
-		}
-		else if (!flow.equals(other.flow)) return false;
-		if (id == null) {
-			if (other.id != null) return false;
-		}
-		else if (!id.equals(other.id)) return false;
-		return true;
+		return Objects.hash(id, flow);
 	}
 
 	@Override
@@ -179,6 +169,6 @@ public abstract class AbstractNode implements Node {
 
 	@Override
 	public void update(Session session, FlowRun run) {
-    	// by default, nothing to do here...
+		// by default, nothing to do here...
 	}
 }

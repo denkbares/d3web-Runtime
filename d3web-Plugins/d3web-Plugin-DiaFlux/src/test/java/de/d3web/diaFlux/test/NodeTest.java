@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -21,6 +21,7 @@ package de.d3web.diaFlux.test;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +37,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
- * 
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 11.11.2010
  */
@@ -44,7 +44,7 @@ public class NodeTest {
 
 	/**
 	 * Because Node is abstract, we need this Mock to instantiate a plain Node;
-	 * 
+	 *
 	 * @author Marc-Oliver Ochlast (denkbares GmbH)
 	 * @created 11.11.2010
 	 */
@@ -55,13 +55,13 @@ public class NodeTest {
 		}
 
 		@Override
-		protected boolean addOutgoingEdge(Edge edge) {
-			return super.addOutgoingEdge(edge);
+		protected void addOutgoingEdge(@NotNull Edge edge) {
+			super.addOutgoingEdge(edge);
 		}
 
 		@Override
-		protected boolean addIncomingEdge(Edge edge) {
-			return super.addIncomingEdge(edge);
+		protected void addIncomingEdge(@NotNull Edge edge) {
+			super.addIncomingEdge(edge);
 		}
 	}
 
@@ -104,8 +104,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link AbstractNode#addOutgoingEdge(Edge)} throws a
-	 * IllegalArgumentException when IEdge parameter is null
+	 * Test that AbstractNode#addOutgoingEdge(Edge) throws a IllegalArgumentException when IEdge parameter is null
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddOutgoingEdgeThrowsIllegalArgumentExceptionWhenParameterIsNull() {
@@ -113,8 +112,7 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link AbstractNode#addIncomingEdge(Edge)} throws a
-	 * IllegalArgumentException when IEdge parameter is null
+	 * Test that AbstractNode#addIncomingEdge(Edge) throws a IllegalArgumentException when IEdge parameter is null
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddIncomingEdgeThrowsIllegalArgumentExceptionWhenParameterIsNull() {
@@ -122,9 +120,8 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link AbstractNode#addOutgoingEdge(Edge)} throws a
-	 * IllegalArgumentException when this node is not the start-node of the
-	 * IEdge given via parameter
+	 * Test that AbstractNode#addOutgoingEdge(Edge) throws a IllegalArgumentException when this node is not the
+	 * start-node of the IEdge given via parameter
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddOutgoingEdgeThrowsIllegalArgumentExceptionWhenStartNodeIsInvalid() {
@@ -134,9 +131,8 @@ public class NodeTest {
 	}
 
 	/**
-	 * Test that {@link AbstractNode#addIncomingEdge(Edge)} throws a
-	 * IllegalArgumentException when this node is not the end-node of the IEdge
-	 * given via parameter
+	 * Test that AbstractNode#addIncomingEdge(Edge) throws a IllegalArgumentException when this node is not the end-node
+	 * of the IEdge given via parameter
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddIncomingEdgeThrowsIllegalArgumentExceptionWhenStartNodeIsInvalid() {
@@ -205,5 +201,4 @@ public class NodeTest {
 	public void testToString() {
 		assertThat(testSubject.toString(), is(equalTo("NodeMock[nodeID, nodeName]")));
 	}
-
 }

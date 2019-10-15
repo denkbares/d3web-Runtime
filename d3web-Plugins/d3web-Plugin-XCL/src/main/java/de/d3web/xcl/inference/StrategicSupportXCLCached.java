@@ -374,7 +374,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				}
 			}
 
-			if (result.isEmpty() && coversNormal) result.add(new CondNot(new ConditionTrue()));
+			if (result.isEmpty() && coversNormal) result.add(new CondNot(ConditionTrue.INSTANCE));
 			return Collections.unmodifiableCollection(result);
 		});
 	}

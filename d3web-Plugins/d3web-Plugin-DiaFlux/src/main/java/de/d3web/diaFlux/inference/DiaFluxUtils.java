@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -25,9 +25,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSAction;
@@ -48,9 +51,8 @@ import de.d3web.diaFlux.flow.StartNode;
 
 /**
  * Utils methods for DiaFlux objects.
- * 
- * @author Reinhard Hatko
- * Created: 07.08.2010
+ *
+ * @author Reinhard Hatko Created: 07.08.2010
  */
 public final class DiaFluxUtils {
 
@@ -99,8 +101,8 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * checks if there is a connecting Path from the {@link Node} fromNode to the {@link Node}
-	 * toNode. This method does NOT do a "deep" search, it only works for Nodes in the same flow.
+	 * checks if there is a connecting Path from the {@link Node} fromNode to the {@link Node} toNode. This method does
+	 * NOT do a "deep" search, it only works for Nodes in the same flow.
 	 * <p>
 	 * if fromNode and toNode are equal, this method checks for a cycle.
 	 *
@@ -222,8 +224,7 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * Returns the startnode that is called by the composed node. May return null, if no such flow
-	 * exists.
+	 * Returns the startnode that is called by the composed node. May return null, if no such flow exists.
 	 *
 	 * @return s the start node, or null, if the called startnode does not exist
 	 */
@@ -236,8 +237,7 @@ public final class DiaFluxUtils {
 	/**
 	 * Returns the {@link Flow} that is called by composedNode
 	 *
-	 * @return s the flow containing the called start node, or null, if the start node does not
-	 * exist
+	 * @return s the flow containing the called start node, or null, if the start node does not exist
 	 * @created 08.02.2012
 	 */
 	public static Flow getCalledFlow(ComposedNode composedNode) {
@@ -279,8 +279,8 @@ public final class DiaFluxUtils {
 	}
 
 	/**
-	 * Returns a DFS mapping of Flow -> contained ComposedNodes. If a flow is called from multiple
-	 * flows, the only first one according to a DF search is contained.
+	 * Returns a DFS mapping of Flow -> contained ComposedNodes. If a flow is called from multiple flows, the only first
+	 * one according to a DF search is contained.
 	 *
 	 * @created 14.03.2013
 	 */
@@ -323,5 +323,31 @@ public final class DiaFluxUtils {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the target nodes of all outgoing edges of the specified node, within the flowchart where the node is
+	 * located. The outgoing edges are the edges that have the node as their start node, leading to any other node. The
+	 * order of the edges is preserved for the nodes, but multiple edges to the same node are ignored.
+	 *
+	 * @param node the node to get the target nodes for
+	 * @return the target nodes of the outgoing edges of the node
+	 */
+	public static Set<Node> getNextNodes(Node node) {
+		return node.getOutgoingEdges().stream().map(Edge::getEndNode)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	/**
+	 * Returns all source nodes of incoming edges of the specified node, within the flowchart where the node is located.
+	 * The incoming edges are the edges that have the node as their end/target node, coming from any other node. The
+	 * order of the edges is preserved for the nodes, but multiple edges to the same node are ignored.
+	 *
+	 * @param node the node to get the source nodes for
+	 * @return the source nodes of the incoming edges of the node
+	 */
+	public static Set<Node> getPreviousNodes(Node node) {
+		return node.getIncomingEdges().stream().map(Edge::getStartNode)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 }

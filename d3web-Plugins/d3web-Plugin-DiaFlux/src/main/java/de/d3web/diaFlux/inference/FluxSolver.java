@@ -52,7 +52,7 @@ import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.DiaFluxCaseObject;
 import de.d3web.diaFlux.flow.DiaFluxElement;
 import de.d3web.diaFlux.flow.Edge;
-import de.d3web.diaFlux.flow.EdgeMap;
+import de.d3web.diaFlux.flow.EdgeList;
 import de.d3web.diaFlux.flow.EndNode;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
@@ -92,8 +92,8 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 		precise
 	}
 
-	public final static KnowledgeKind<EdgeMap> DEPENDANT_EDGES = new KnowledgeKind<>(
-			"DEPENDANT_EDGES", EdgeMap.class);
+	public final static KnowledgeKind<EdgeList> DEPENDANT_EDGES = new KnowledgeKind<>(
+			"DEPENDANT_EDGES", EdgeList.class);
 	public final static KnowledgeKind<NodeList> DEPENDANT_NODES = new KnowledgeKind<>(
 			"DEPENDANT_NODES", NodeList.class);
 	/**
@@ -161,7 +161,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 			}
 
 			TerminologyObject object = propagationEntry.getObject();
-			EdgeMap slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
+			EdgeList slice = object.getKnowledgeStore().getKnowledge(DEPENDANT_EDGES);
 
 			// the object does not occur in any edge
 			if (slice == null) continue;
