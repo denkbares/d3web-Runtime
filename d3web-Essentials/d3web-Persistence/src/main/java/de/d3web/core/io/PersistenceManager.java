@@ -67,7 +67,7 @@ import de.d3web.plugin.Autodetect;
 import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 
-import static com.denkbares.utils.Files.*;
+import static com.denkbares.utils.Files.recursiveDelete;
 
 /**
  * This class provides the management features to load and save {@link KnowledgeBase} instances to a file system. This
@@ -288,6 +288,7 @@ public final class PersistenceManager {
 	 */
 	private KnowledgeBase loadZipFile(File file, ZipFile zipfile, ProgressListener listener) throws IOException {
 		Stopwatch stopwatch = new Stopwatch();
+		listener.updateProgress(0, "Loading knowledge base: " + file.getCanonicalPath());
 		KnowledgeBase kb = new KnowledgeBase();
 		List<ZipEntry> files = new LinkedList<>();
 		// pre-calculate the size of the files to be parsed
@@ -370,7 +371,7 @@ public final class PersistenceManager {
 		kb.initPluggedPSMethods();
 
 		// knowledge base loaded successfully
-		listener.updateProgress(1, "knowledge base loaded successfully");
+		listener.updateProgress(1, "knowledge base successfully loaded");
 		stopwatch.log("Loaded knowledge base " + file.getPath());
 		return kb;
 	}
@@ -464,8 +465,9 @@ public final class PersistenceManager {
 	}
 
 	/**
-	 * Returns if the specified file path is an unrequired file from a previous version of the persistence, that cannot
-	 * be read any longer. The filePath must be relative to the knowledge base root folder/zip, without leading "/".
+	 * Returns if the specified file path is an non-required file, e.g. from a previous version of the persistence, or
+	 * some ignored system file, that cannot be read (any longer). The filePath must be relative to the knowledge base
+	 * root folder/zip, without leading "/".
 	 *
 	 * @param filePath the path to be checked
 	 * @return if the file should not be parsed
@@ -474,7 +476,9 @@ public final class PersistenceManager {
 	private boolean notNeeded(String filePath) {
 		return filePath.equalsIgnoreCase("KB-INF/Index.xml")
 				|| filePath.equalsIgnoreCase("CRS-INF/Index.xml")
-				|| filePath.equals("META-INF/MANIFEST.MF");
+				|| filePath.equals("META-INF/MANIFEST.MF")
+				|| filePath.equals(".DS_Store")
+				|| filePath.endsWith("/.DS_Store");
 	}
 
 	/**
@@ -521,6 +525,7 @@ public final class PersistenceManager {
 			throw new IOException("The knowledge base root is not a folder");
 		}
 
+		listener.updateProgress(0, "Loading knowledge base: " + folder.toRealPath());
 		// pre-calculate the list of the contained, relevant files
 		List<Path> files = Files.walk(folder)
 				// ignore directories
@@ -595,7 +600,7 @@ public final class PersistenceManager {
 		kb.initPluggedPSMethods();
 
 		// knowledge base loaded successfully
-		listener.updateProgress(1, "Knowledge base loaded successfully");
+		listener.updateProgress(1, "Knowledge base successfully loaded");
 		stopwatch.log("Loaded knowledge base " + folder);
 		return kb;
 	}
@@ -620,6 +625,8 @@ public final class PersistenceManager {
 	 * @throws IOException if an error occurs during saving the files
 	 */
 	public void save(KnowledgeBase knowledgeBase, File file, ProgressListener listener) throws IOException {
+		listener.updateProgress(0, "Saving knowledge base: " + file.getCanonicalPath());
+
 		Manifest manifest = new Manifest();
 		Attributes mainAttributes = manifest.getMainAttributes();
 		mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "2.0");
@@ -634,8 +641,8 @@ public final class PersistenceManager {
 		if (cipher != null) {
 			mainAttributes.put(new Attributes.Name("Encrypted"), cipher.getAlgorithm());
 		}
-		File tempfile = new File(file.getCanonicalPath() + ".temp");
 
+		File tempfile = new File(file.getCanonicalPath() + ".temp");
 		tempfile.getAbsoluteFile().getParentFile().mkdirs();
 
 		// update plugin configuration
@@ -705,7 +712,7 @@ public final class PersistenceManager {
 		}
 		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", "UTF-8"));
 		// delete old backup file
-		if (!recursiveDelete(bakfile)) {
+		if (bakfile.exists() && !recursiveDelete(bakfile)) {
 			Log.warning("Unable to delete old backup file: " + bakfile.getCanonicalPath());
 		}
 		// backup original file, if it exists
@@ -724,6 +731,7 @@ public final class PersistenceManager {
 		}
 		// if successful backup is not needed any more
 		recursiveDelete(bakfile);
+		listener.updateProgress(1f, "knowledge base successfully saved");
 	}
 
 	private PluginConfig getUpdatedPluginConfig(KnowledgeBase knowledgeBase) {
