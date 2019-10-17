@@ -27,6 +27,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -122,10 +124,11 @@ public class ConsoleInterview {
 		// ask for each answer
 		for (int i = 0; i < questions.size(); i++) {
 			Question question = questions.get(i);
+			// save cursor position and ask for value (optional, may be ignored, e.g. by debugger console)
+			System.out.print("\033[s");
 			System.out.print("\rEnter answer for Question " + (i + 1) + ":  ");
 
 			boolean unknown = BasicProperties.isUnknownVisible(question);
-			if (unknown) System.out.print("[0] Unknown  ");
 
 			// TODO only supporting choice questions at the moment
 			QuestionValue value = Unknown.getInstance();
@@ -133,6 +136,7 @@ public class ConsoleInterview {
 				// print choices
 				QuestionChoice omz = (QuestionChoice) question;
 				List<Choice> choices = omz.getAllAlternatives();
+				if (unknown) System.out.print("[0] Unknown  ");
 				for (int c = 0, choicesSize = choices.size(); c < choicesSize; c++) {
 					System.out.print("[" + (c + 1) + "] " + getPrompt(choices.get(c)) + "  ");
 				}
@@ -144,7 +148,9 @@ public class ConsoleInterview {
 			}
 
 			setAnswer(question, value);
-			System.out.println("\r" + (i + 1) + " = " + ValueUtils.getVerbalization(question, value, lang));
+			// restore cursor position and overwrite line with given answer
+			System.out.print("\033[u\r\033[K");
+			System.out.println((i + 1) + " = " + ValueUtils.getVerbalization(question, value, lang));
 		}
 	}
 
@@ -172,8 +178,9 @@ public class ConsoleInterview {
 		if (solutions.isEmpty()) return false;
 
 		// print them as grouped list
-		System.out.println(state.name() + " solutions");
-		KnowledgeBaseUtils.groupSolutions(solutions).toMap().forEach((group, items) -> {
+		Map<Solution, Set<Solution>> groups = KnowledgeBaseUtils.groupSolutions(solutions).toMap();
+		System.out.println(Strings.pluralOf(groups.size(), state.name() + " solutions"));
+		groups.forEach((group, items) -> {
 			System.out.println("* " + getPrompt(group));
 			for (Solution item : items) {
 				if (item == group) continue;
