@@ -304,9 +304,9 @@ public final class ValueUtils {
 	 * @throws IllegalArgumentException if the given valueString cannot be transformed into a Value
 	 * @created 11.08.2012
 	 */
-	public static Value createQuestionValue(Question question, String valueString) {
+	public static QuestionValue createQuestionValue(Question question, String valueString) {
 
-		Value value = null;
+		QuestionValue value = null;
 
 		if (valueString.equalsIgnoreCase(Unknown.getInstance().getValue().toString())) {
 			value = Unknown.getInstance();
@@ -377,7 +377,7 @@ public final class ValueUtils {
 	 * Question
 	 * @created 11.08.2012
 	 */
-	public static Value createQuestionChoiceValue(QuestionChoice question, String valueString) {
+	public static QuestionValue createQuestionChoiceValue(QuestionChoice question, String valueString) {
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString, KnowledgeBaseUtils.Matching.CASE_INSENSITIVE_IF_NO_CONFLICT);
 		if (choice == null) {
 			throw new IllegalArgumentException("'" + valueString +
