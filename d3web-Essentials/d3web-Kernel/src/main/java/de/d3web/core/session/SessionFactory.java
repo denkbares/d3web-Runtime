@@ -75,7 +75,7 @@ public final class SessionFactory {
 	 * @param knowledgeBase the knowledge base used in the case.
 	 * @return new Session instance based on the specified knowledge base
 	 */
-	public static synchronized Session createSession(KnowledgeBase knowledgeBase) {
+	public static Session createSession(KnowledgeBase knowledgeBase) {
 		return createSession(null, knowledgeBase, new Date());
 	}
 
@@ -86,7 +86,7 @@ public final class SessionFactory {
 	 * @param knowledgeBase the knowledge base used in the case.
 	 * @return new Session instance based on the specified knowledge base
 	 */
-	public static synchronized Session createSession(String name, KnowledgeBase knowledgeBase) {
+	public static Session createSession(String name, KnowledgeBase knowledgeBase) {
 		return createSession(name, knowledgeBase, new Date());
 	}
 
@@ -98,7 +98,7 @@ public final class SessionFactory {
 	 * @param creationDate Date of creation
 	 * @return {@link Session}
 	 */
-	public static synchronized DefaultSession createSession(KnowledgeBase kb, Date creationDate) {
+	public static DefaultSession createSession(KnowledgeBase kb, Date creationDate) {
 		return createSession(null, kb, creationDate);
 	}
 
@@ -111,7 +111,7 @@ public final class SessionFactory {
 	 * @param creationDate Date of creation
 	 * @return {@link Session}
 	 */
-	public static synchronized DefaultSession createSession(String id, KnowledgeBase kb, Date creationDate) {
+	public static DefaultSession createSession(String id, KnowledgeBase kb, Date creationDate) {
 		DefaultSession defaultSession = new DefaultSession(id, kb, creationDate);
 		for (PropagationListener propagationListener : propagationListeners) {
 			defaultSession.getPropagationManager().addListener(propagationListener);
@@ -137,9 +137,8 @@ public final class SessionFactory {
 	 *             in an Interview or use the PSConfig of the PSMethodInterview
 	 *             to configure the FormStrategy
 	 */
-	@SuppressWarnings("deprecation")
 	@Deprecated
-	public static synchronized DefaultSession createSession(String id,
+	public static DefaultSession createSession(String id,
 			KnowledgeBase knowledgeBase,
 			de.d3web.core.session.interviewmanager.FormStrategy formStrategy, Date creationDate) {
 		DefaultSession session = createSession(id, knowledgeBase, creationDate);
