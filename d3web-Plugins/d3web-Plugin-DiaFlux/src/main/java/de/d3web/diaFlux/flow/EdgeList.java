@@ -18,9 +18,9 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
+import com.denkbares.collections.MinimizedLinkedHashSet;
 import de.d3web.core.inference.KnowledgeSlice;
 
 /**
@@ -32,23 +32,17 @@ import de.d3web.core.inference.KnowledgeSlice;
  */
 public class EdgeList implements KnowledgeSlice {
 
-	private final List<Edge> edges;
-
-	public EdgeList() {
-		this.edges = new ArrayList<>(2);
-	}
+	private final Set<Edge> edges = new MinimizedLinkedHashSet<>();
 
 	public void addEdge(Edge edge) {
-		if (!edges.contains(edge)) {
-			edges.add(edge);
-		}
+		edges.add(edge);
 	}
 
 	public void removeEdge(Edge edge) {
 		edges.remove(edge);
 	}
 
-	public List<Edge> getEdges() {
+	public Set<Edge> getEdges() {
 		return edges;
 	}
 

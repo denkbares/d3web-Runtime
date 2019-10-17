@@ -20,6 +20,7 @@ package de.d3web.diaFlux.test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -146,7 +147,7 @@ public class NodeTest {
 	 */
 	@Test
 	public void testGetOutgoingEdges() {
-		List<Edge> edges = testSubject.getOutgoingEdges();
+		Set<Edge> edges = testSubject.getOutgoingEdges();
 		assertThat(edges.contains(incomingEdge1), is(false));
 		assertThat(edges.contains(incomingEdge2), is(false));
 		assertThat(edges.contains(outgoingEdge1), is(true));
@@ -158,7 +159,7 @@ public class NodeTest {
 	 */
 	@Test
 	public void testGetIncomingEdges() {
-		List<Edge> edges = testSubject.getIncomingEdges();
+		Set<Edge> edges = testSubject.getIncomingEdges();
 		assertThat(edges.contains(incomingEdge1), is(true));
 		assertThat(edges.contains(incomingEdge2), is(true));
 		assertThat(edges.contains(outgoingEdge1), is(false));

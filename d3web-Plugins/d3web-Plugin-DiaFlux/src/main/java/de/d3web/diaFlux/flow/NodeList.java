@@ -18,13 +18,13 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.denkbares.collections.MinimizedLinkedHashSet;
 import de.d3web.core.inference.KnowledgeSlice;
 
 /**
@@ -33,16 +33,10 @@ import de.d3web.core.inference.KnowledgeSlice;
  */
 public class NodeList implements KnowledgeSlice, Iterable<Node> {
 
-	private final List<Node> nodes;
-
-	public NodeList() {
-		this.nodes = new ArrayList<>(2);
-	}
+	private final Set<Node> nodes = new MinimizedLinkedHashSet<>();
 
 	public void addNode(Node node) {
-		if (!nodes.contains(node)) {
-			nodes.add(node);
-		}
+		nodes.add(node);
 	}
 
 	public void removeNode(Node node) {
@@ -50,7 +44,7 @@ public class NodeList implements KnowledgeSlice, Iterable<Node> {
 	}
 
 	@NotNull
-	public List<Node> getNodes() {
+	public Set<Node> getNodes() {
 		return nodes;
 	}
 

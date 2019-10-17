@@ -20,6 +20,7 @@
 package de.d3web.diaFlux.flow;
 
 import java.util.List;
+import java.util.Set;
 
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -33,12 +34,12 @@ public interface Node extends DiaFluxElement {
 	/**
 	 * @return s a list of this node's outgoing edges.
 	 */
-	List<Edge> getOutgoingEdges();
+	Set<Edge> getOutgoingEdges();
 
 	/**
 	 * @return s a list of this node's incoming edges.
 	 */
-	List<Edge> getIncomingEdges();
+	Set<Edge> getIncomingEdges();
 
 	/**
 	 * @return s the flow this node belongs to

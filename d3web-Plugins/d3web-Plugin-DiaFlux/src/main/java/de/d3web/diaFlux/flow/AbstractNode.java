@@ -20,13 +20,14 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.denkbares.collections.MinimizedLinkedHashSet;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -46,38 +47,32 @@ public abstract class AbstractNode implements Node {
 	private final String name;
 
 	private Flow flow;
-	private final List<Edge> outgoing;
-	private final List<Edge> incoming;
+	private final Set<Edge> outgoing = new MinimizedLinkedHashSet<>();
+	private final Set<Edge> incoming = new MinimizedLinkedHashSet<>();
 
 	public AbstractNode(String id, String name) {
 		this.id = id;
-		this.outgoing = new ArrayList<>();
-		this.incoming = new ArrayList<>();
 		this.name = name;
 	}
 
 	protected void addOutgoingEdge(@NotNull Edge edge) {
-		if (!outgoing.contains(edge)) {
-			checkStartNode(edge);
-			outgoing.add(edge);
-		}
+		checkStartNode(edge);
+		outgoing.add(edge);
 	}
 
-	protected boolean removeOutgoingEdge(@NotNull Edge edge) {
+	protected void removeOutgoingEdge(@NotNull Edge edge) {
 		checkStartNode(edge);
-		return outgoing.remove(edge);
+		outgoing.remove(edge);
 	}
 
 	protected void addIncomingEdge(@NotNull Edge edge) {
-		if (!incoming.contains(edge)) {
-			checkEndNode(edge);
-			incoming.add(edge);
-		}
+		checkEndNode(edge);
+		incoming.add(edge);
 	}
 
-	protected boolean removeIncomingEdge(@NotNull Edge edge) {
+	protected void removeIncomingEdge(@NotNull Edge edge) {
 		checkEndNode(edge);
-		return incoming.remove(edge);
+		incoming.remove(edge);
 	}
 
 	private void checkStartNode(@NotNull Edge edge) {
@@ -93,13 +88,13 @@ public abstract class AbstractNode implements Node {
 	}
 
 	@Override
-	public final List<Edge> getOutgoingEdges() {
-		return Collections.unmodifiableList(outgoing);
+	public final Set<Edge> getOutgoingEdges() {
+		return outgoing;
 	}
 
 	@Override
-	public List<Edge> getIncomingEdges() {
-		return Collections.unmodifiableList(incoming);
+	public Set<Edge> getIncomingEdges() {
+		return incoming;
 	}
 
 	@Override
@@ -155,7 +150,9 @@ public abstract class AbstractNode implements Node {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, flow);
+		// as the flow may change, it MUST NOT be part of the hash code,
+		// otherwise set/map will not work for nodes and edges
+		return Objects.hash(id);
 	}
 
 	@Override

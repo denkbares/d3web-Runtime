@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 University Wuerzburg, Computer Science VI
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -122,7 +122,6 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 		for (Edge edge : flow.getEdges()) {
 			nodesElem.appendChild(createEdgeElement(edge, persistence));
-
 		}
 
 		XMLUtil.appendInfoStore(persistence, flowElem, flow, null);
@@ -174,16 +173,22 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 	@Override
 	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+		listener.updateProgress(0.0);
+
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
 		Document doc = persistence.getDocument();
 
 		NodeList flows = doc.getElementsByTagName(FLOW_ELEM);
-		for (int i = 0; i < flows.getLength(); i++) {
+		int length = flows.getLength();
+		for (int i = 0; i < length; i++) {
+			listener.updateProgress(0.1 + 0.9 * i / length);
 			Element flowElem = (Element) flows.item(i);
 
 			Flow flow = readFlow(persistence, flowElem);
 			fillInfoStore(persistence, flow, flowElem);
 		}
+
+		listener.updateProgress(1.0);
 	}
 
 	private void fillInfoStore(Persistence<?> persistence, Flow flow, Element flowElem) throws IOException {
@@ -213,7 +218,6 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		Flow flow = FlowFactory.createFlow(persistence.getArtifact(), name, nodes, edges);
 		flow.setAutostart(autostart);
 		return flow;
-
 	}
 
 	private Edge readEdge(Persistence<KnowledgeBase> persistence, Element edgeElem, List<Node> nodes) throws IOException {
@@ -239,5 +243,4 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 		}
 		return null;
 	}
-
 }
