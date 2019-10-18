@@ -21,6 +21,7 @@ package de.d3web.demos;
 
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,7 +33,11 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.progress.ConsoleColoredBarListener;
 import com.denkbares.strings.Strings;
+import de.d3web.core.inference.PSMethodInit;
+import de.d3web.core.io.PersistenceManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -147,22 +152,22 @@ public class ConsoleInterview {
 				}
 			}
 
-			setAnswer(question, value);
+			// answer the question
+			session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(question, value));
+
 			// restore cursor position and overwrite line with given answer
 			System.out.print("\033[u\r\033[K");
 			System.out.println((i + 1) + " = " + ValueUtils.getVerbalization(question, value, lang));
 		}
 	}
 
-	public void setAnswer(String questionName, String valueString) {
+	public void setInitAnswer(String questionName, String valueString) {
 		Question question = session.getKnowledgeBase().getManager().searchQuestion(questionName);
 		if (question == null) throw new IllegalArgumentException("No such question: " + questionName);
 		QuestionValue value = ValueUtils.createQuestionValue(question, valueString);
-		setAnswer(question, value);
-	}
-
-	public void setAnswer(Question question, QuestionValue value) {
-		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(question, value));
+		PSMethodInit psm = PSMethodInit.getInstance();
+		session.getBlackboard().addValueFact(FactFactory.createFact(question, value, psm, psm));
+		System.out.println("INIT: " + ValueUtils.getVerbalization(question, value, lang));
 	}
 
 	public boolean printSolutions() {
@@ -219,5 +224,26 @@ public class ConsoleInterview {
 			// if not in range, beep
 			Toolkit.getDefaultToolkit().beep();
 		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		if (args.length % 2 != 1) {
+			System.err.println("Invalid number of parameters: " + args.length);
+			System.out.println("Usage: java " + ConsoleInterview.class.getName() + " <kb-file> [[question value] ...]");
+			System.exit(1);
+		}
+
+		// prepare d3web and console interview
+		InitPluginManager.init();
+		KnowledgeBase kb = PersistenceManager.getInstance().load(new File(args[0]), new ConsoleColoredBarListener());
+		ConsoleInterview interview = new ConsoleInterview(kb);
+
+		// answer specified initial questions
+		for (int i = 1; i < args.length; i += 2) {
+			interview.setInitAnswer(args[i], args[i + 1]);
+		}
+
+		// run the interview
+		interview.run();
 	}
 }
