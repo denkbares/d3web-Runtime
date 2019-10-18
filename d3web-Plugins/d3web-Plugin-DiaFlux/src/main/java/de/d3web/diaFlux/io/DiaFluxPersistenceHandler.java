@@ -78,6 +78,8 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 	@Override
 	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		listener.updateProgress(0, "Saving DiaFlux");
+
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
 		Document doc = persistence.getDocument();
 
@@ -96,11 +98,12 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 			flows.sort(Comparator.comparing(Flow::getName));
 			for (Flow flow : flows) {
 				ksNode.appendChild(writeFlow(flow, persistence));
-				listener.updateProgress(++cur / max, "Saving knowledge base: DiaFlux");
+				listener.updateProgress(++cur * 0.9 / max);
 			}
 		}
 
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
+		listener.updateProgress(1);
 	}
 
 	private Element writeFlow(Flow flow, Persistence<KnowledgeBase> persistence) throws IOException {
@@ -173,7 +176,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 	@Override
 	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		listener.updateProgress(0.0);
+		listener.updateProgress(0.0, "Reading DiaFlux");
 
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
 		Document doc = persistence.getDocument();

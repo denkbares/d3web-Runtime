@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -28,13 +28,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.denkbares.progress.ProgressListener;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.PersistenceManager;
-import com.denkbares.progress.ProgressListener;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -42,7 +42,7 @@ import de.d3web.costbenefit.inference.ComfortBenefit;
 
 /**
  * PersistenceHandler for {@link ComfortBenefit}
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 02.02.2012
  */
@@ -64,15 +64,15 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 		root.appendChild(ksNode);
 		Collection<ComfortBenefit> comfortBenefits = kb.getAllKnowledgeSlicesFor(ComfortBenefit.KNOWLEDGE_KIND);
 		float count = 0;
-		String message = "Writing ComfortBenefits.";
-		listener.updateProgress(0, message);
+		listener.updateProgress(0, "Writing ComfortBenefits.");
 		for (ComfortBenefit cb : comfortBenefits) {
 			if (cb != null) {
 				ksNode.appendChild(getElement(persistence, cb));
 			}
-			listener.updateProgress(++count / comfortBenefits.size(), message);
+			listener.updateProgress(++count * 0.9 / comfortBenefits.size());
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
+		listener.updateProgress(1);
 	}
 
 	private Element getElement(Persistence<KnowledgeBase> persistence, ComfortBenefit cb) throws IOException {
@@ -93,8 +93,7 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 
 	@Override
 	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		String message = "Loading comfort benefit knowledge";
-		listener.updateProgress(0, message);
+		listener.updateProgress(0, "Loading comfort benefit knowledge");
 
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
 		Document doc = persistence.getDocument();
@@ -105,8 +104,9 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 		for (int i = 0; i < comfortBenefitNodes.getLength(); i++) {
 			Node current = comfortBenefitNodes.item(i);
 			addComfortBenefitKnowledge(persistence, current);
-			listener.updateProgress(++count / max, message);
+			listener.updateProgress(++count / max);
 		}
+		listener.updateProgress(1);
 	}
 
 	private void addComfortBenefitKnowledge(Persistence<KnowledgeBase> persistence, Node current) throws IOException {
@@ -125,5 +125,4 @@ public class ComfortBenefitHandler implements KnowledgeReader, KnowledgeWriter {
 		}
 		new ComfortBenefit(qcontainer, condition);
 	}
-
 }

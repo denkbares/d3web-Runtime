@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,7 +60,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 
 	@Override
 	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		listener.updateProgress(0, "Starting to load multimedia");
+		listener.updateProgress(0, "Reading multimedia");
 
 		// we create a persistence with an empty xml document
 		// because we do not read from it, but require it for
@@ -70,7 +69,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Persistence<KnowledgeBase> dummyPersistence = new KnowledgeBasePersistence(manager, kb);
 		MMInfoContentHandler handler = new MMInfoContentHandler(dummyPersistence);
 		try {
-			InputStream in = new ProgressInputStream(stream, listener, "Loading multimedia");
+			InputStream in = new ProgressInputStream(stream, listener);
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser parser = factory.newSAXParser();
 			parser.parse(in, handler);
@@ -85,18 +84,18 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 			throw new IOException("unexpected internal error parsing mminfo file", e);
 		}
 		finally {
-			listener.updateProgress(1, "Loading multimedia finished");
+			listener.updateProgress(1);
 		}
 	}
 
 	@Override
 	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
-		listener.updateProgress(0, "Starting to save multimedia");
+		listener.updateProgress(0, "Saving multimedia");
 		int maxvalue = getEstimatedSize(kb);
 		float aktvalue = 0;
 		List<TerminologyObject> objects = new ArrayList<>(
 				kb.getManager().getAllTerminologyObjects());
-		Collections.sort(objects, new NamedObjectComparator());
+		objects.sort(new NamedObjectComparator());
 
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
 		Document doc = persistence.getDocument();
@@ -106,8 +105,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		Element kbElement = doc.createElement("KnowledgeBase");
 		mminfosElement.appendChild(kbElement);
 		XMLUtil.appendInfoStoreEntries(persistence, kbElement, kb.getInfoStore(), Autosave.mminfo);
-		listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
-				+ Math.round(aktvalue) + " of " + maxvalue);
+		listener.updateProgress(aktvalue++ / maxvalue);
 		for (TerminologyObject object : objects) {
 			appendIDObject(persistence, mminfosElement, object, null);
 			// also append choices
@@ -116,10 +114,9 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 					appendIDObject(persistence, mminfosElement, object, c);
 				}
 			}
-			listener.updateProgress(aktvalue++ / maxvalue, "Saving multimedia "
-					+ Math.round(aktvalue) + " of " + maxvalue);
+			listener.updateProgress(aktvalue++ / maxvalue);
 		}
-		listener.updateProgress(1, "Multimedia saved");
+		listener.updateProgress(1);
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
 	}
 

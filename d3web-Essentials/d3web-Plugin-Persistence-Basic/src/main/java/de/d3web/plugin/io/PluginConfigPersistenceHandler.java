@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -46,7 +46,7 @@ import de.d3web.plugin.PluginEntry;
 
 /**
  * A KnowledgeReader/Writer for the configuration of the extensions
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PluginConfigPersistenceHandler implements KnowledgeReader,
@@ -100,6 +100,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 
 	@Override
 	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		listener.updateProgress(0, "Saving plugin configuration");
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
 		Document doc = persistence.getDocument();
 
@@ -107,7 +108,6 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 		Element plugins = doc.createElement(ELEMENT_PLUGINS);
 		doc.appendChild(root);
 		root.appendChild(plugins);
-		listener.updateProgress(0, "Saving plugin configuration");
 		float count = 1;
 		List<PluginEntry> entries = new LinkedList<>(getEntries(kb));
 		entries.sort(Comparator.comparing(o -> o.getPlugin().getPluginID()));
@@ -120,7 +120,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 			pluginElement.setAttribute(ATTRIBUTE_AUTODETECT,
 					String.valueOf(conf.isAutodetect()));
 			plugins.appendChild(pluginElement);
-			listener.updateProgress(count++ / max, "Saving plugin configuration");
+			listener.updateProgress(count++ * 0.9 / max);
 		}
 		Element psmethods = doc.createElement(ELEMENT_PSMETHODS);
 		root.appendChild(psmethods);
@@ -130,6 +130,7 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 			psmethods.appendChild(persistence.writeFragment(ps));
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
+		listener.updateProgress(1);
 	}
 
 	@Override
@@ -141,5 +142,4 @@ public class PluginConfigPersistenceHandler implements KnowledgeReader,
 	private Collection<PluginEntry> getEntries(KnowledgeBase kb) {
 		return PluginConfig.getPluginConfig(kb).getEntries();
 	}
-
 }

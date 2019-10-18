@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -52,11 +52,9 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 
 /**
- * This PersistenceHandler saves and stores the default KnowledgeSlices of the
- * CostBenefitPackage
- * 
+ * This PersistenceHandler saves and stores the default KnowledgeSlices of the CostBenefitPackage
+ *
  * @author Markus Friedrich (denkbares GmbH)
- * 
  */
 public class CostBenefitModelPersistenceHandler implements KnowledgeReader, KnowledgeWriter {
 
@@ -64,8 +62,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	@Override
 	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
-		String message = "Loading cost benefit knowledge";
-		listener.updateProgress(0, message);
+		listener.updateProgress(0, "Loading cost benefit knowledge");
 
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
 		Document doc = persistence.getDocument();
@@ -76,8 +73,9 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		for (int i = 0; i < stmodels.getLength(); i++) {
 			Node current = stmodels.item(i);
 			addSTKnowledge(persistence, current);
-			listener.updateProgress(++count / max, message);
+			listener.updateProgress(++count / max);
 		}
+		listener.updateProgress(1);
 	}
 
 	@Override
@@ -200,6 +198,5 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		public int compare(StateTransition r1, StateTransition r2) {
 			return (r1.getQcontainer().getName().compareTo(r2.getQcontainer().getName()));
 		}
-
 	}
 }

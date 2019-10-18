@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -123,9 +123,8 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 	}
 
 	/**
-	 * Writes a relation or a relation reference, based if it is already
-	 * available in the pool. The pool will also be updated by the specified
-	 * relation.
+	 * Writes a relation or a relation reference, based if it is already available in the pool. The pool will also be
+	 * updated by the specified relation.
 	 *
 	 * @param relation    relation to be written
 	 * @param persistence the persistence object handling the document
@@ -171,6 +170,7 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 
 	@Override
 	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		listener.updateProgress(0, "Saving XCL models");
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
 		Document doc = persistence.getDocument();
 
@@ -192,9 +192,10 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 		RelationPool pool = new RelationPool();
 		for (XCLModel model : slices) {
 			ksNode.appendChild(writeModel(persistence, model, pool));
-			listener.updateProgress(++cur / max, "Saving knowledge base: XCL Models");
+			listener.updateProgress(++cur * 0.9 / max);
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
+		listener.updateProgress(1);
 	}
 
 	private String getAttribute(String name, Node node) {
@@ -206,17 +207,17 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 	}
 
 	private void parseModels(Persistence<KnowledgeBase> persistence, ProgressListener listener) throws IOException {
-		listener.updateProgress(0, "Preparing xcl models");
+		listener.updateProgress(0, "Reading XCL models");
 		NodeList xclmodels = persistence.getDocument().getElementsByTagName(ELEMENT_XCL_MODEL);
 		RelationPool pool = new RelationPool();
 		float cur = 0;
 		int max = xclmodels.getLength();
 		for (int i = 0; i < max; i++) {
-			listener.updateProgress(cur++ / max, "Loading xcl models");
+			listener.updateProgress(cur++ / max);
 			Node current = xclmodels.item(i);
 			parseModel(persistence, current, pool);
 		}
-		listener.updateProgress(1, "Loading xcl models completed");
+		listener.updateProgress(1);
 	}
 
 	private void parseModel(Persistence<KnowledgeBase> persistence, Node current, RelationPool pool) throws IOException {
@@ -307,5 +308,4 @@ public class XCLModelPersistenceHandler implements KnowledgeReader, KnowledgeWri
 		}
 		return new XCLRelation(ac, weight, type);
 	}
-
 }

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -46,7 +46,7 @@ import de.d3web.core.knowledge.KnowledgeBase;
 
 /**
  * This abstract class provides basic functions for rule handlers
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter, KnowledgeReader {
@@ -55,6 +55,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 
 	@Override
 	public void write(PersistenceManager manager, KnowledgeBase kb, OutputStream stream, ProgressListener listener) throws IOException {
+		listener.updateProgress(0, "Writing " + ruletype);
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb);
 		Document doc = persistence.getDocument();
 		Element root = doc.createElement("KnowledgeBase");
@@ -68,9 +69,10 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		for (Rule r : rules) {
 			Element element = persistence.writeFragment(r);
 			root.appendChild(element);
-			listener.updateProgress(count++ / rules.size(), "Writing " + ruletype);
+			listener.updateProgress(count++ * 0.9 / rules.size());
 		}
 		XMLUtil.writeDocumentToOutputStream(doc, stream);
+		listener.updateProgress(1);
 	}
 
 	private Set<Rule> getRules(KnowledgeBase kb) {
@@ -90,6 +92,7 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 
 	@Override
 	public void read(PersistenceManager manager, KnowledgeBase kb, InputStream stream, ProgressListener listener) throws IOException {
+		listener.updateProgress(0, "Reading " + ruletype);
 		Persistence<KnowledgeBase> persistence = new KnowledgeBasePersistence(manager, kb, stream);
 		Document doc = persistence.getDocument();
 
@@ -99,9 +102,8 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		}
 		Node root = kbnodes.item(0);
 		if (!(root.hasAttributes()
-				&& root.getAttributes().getNamedItem("type") != null && root
-				.getAttributes().getNamedItem("type").getNodeValue().equals(
-						ruletype))) {
+				&& root.getAttributes().getNamedItem("type") != null
+				&& root.getAttributes().getNamedItem("type").getNodeValue().equals(ruletype))) {
 			throw new IOException();
 		}
 		List<Element> children = XMLUtil.getElementList(root.getChildNodes());
@@ -109,11 +111,12 @@ public abstract class AbstractRulePersistenceHandler implements KnowledgeWriter,
 		List<Rule> rules = new ArrayList<>();
 		for (Element child : children) {
 			rules.add((Rule) persistence.readFragment(child));
-			listener.updateProgress(count++ / children.size(), "Reading " + ruletype);
+			listener.updateProgress(count++ / children.size());
 		}
 		for (Rule r : rules) {
 			r.setProblemsolverContext(getProblemSolverContent());
 		}
+		listener.updateProgress(1);
 	}
 
 	@Override

@@ -327,7 +327,7 @@ public final class PersistenceManager {
 					// if we can parse this entry
 					// we prepare the progress for the next step
 					cpl.next(entry.getSize());
-					cpl.updateProgress(0, "reading entry " + name);
+					cpl.updateProgress(0, "Reading file " + name);
 					// initialize the reader
 					KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
 					reader.read(this, kb, createInputStream(zipfile, entry), cpl);
@@ -352,13 +352,13 @@ public final class PersistenceManager {
 				// prepare progress for the next step,
 				// being "1" for multimedia
 				cpl.next(1);
-				cpl.updateProgress(0, "reading file " + name);
+				cpl.updateProgress(0, "Reading file " + name);
 				kb.addResouce(createResource(file, entry));
 				// we prepare the progress for the next step
 			}
 			else {
 				cpl.next(entry.getSize());
-				cpl.updateProgress(0, "reading file " + name);
+				cpl.updateProgress(0, "Skipping file " + name);
 				if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
 					Log.warning("No parser for entry " + name +
 							" available. This file will be lost" +
@@ -369,7 +369,7 @@ public final class PersistenceManager {
 		kb.initPluggedPSMethods();
 
 		// knowledge base loaded successfully
-		listener.updateProgress(1, "knowledge base successfully loaded");
+		listener.updateProgress(1, "Knowledge base successfully loaded");
 		return kb;
 	}
 
@@ -554,7 +554,7 @@ public final class PersistenceManager {
 					// if we can parse this entry
 					// we prepare the progress for the next step
 					cpl.next(Files.size(file));
-					cpl.updateProgress(0, "reading file " + name);
+					cpl.updateProgress(0, "Reading file " + name);
 					// initialize the reader
 					KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
 					reader.read(this, kb, createInputStream(file), cpl);
@@ -580,13 +580,13 @@ public final class PersistenceManager {
 				// prepare progress for the next step,
 				// being "1" for multimedia
 				cpl.next(1);
-				cpl.updateProgress(0, "reading file " + name);
+				cpl.updateProgress(0, "Reading file " + name);
 				kb.addResouce(createResource(file, name));
 			}
 			else {
 				// we prepare the progress for the next step
 				cpl.next(Files.size(file));
-				cpl.updateProgress(0, "reading file " + name);
+				cpl.updateProgress(0, "Skipping file " + name);
 				if (!isExportFile(name) && !isHiddenInfoFile(file)) {
 					Log.warning("No parser for entry " + name + " available. " +
 							"The file will be lost when saving the KnowledgeBase.");
@@ -726,7 +726,7 @@ public final class PersistenceManager {
 		}
 		// if successful backup is not needed any more
 		recursiveDelete(bakfile);
-		listener.updateProgress(1f, "knowledge base successfully saved");
+		listener.updateProgress(1f, "Knowledge base successfully saved");
 	}
 
 	private PluginConfig getUpdatedPluginConfig(KnowledgeBase knowledgeBase) {
