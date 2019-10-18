@@ -90,11 +90,11 @@ public class ConsoleInterview {
 	}
 
 	public void run() {
+		System.out.println();
 		System.out.println(" _____        _     ___     _               _            ");
 		System.out.println("|_   _|____ _| |_  |_ _|_ _| |_ ___ _ ___ _(_)_____ __ __");
 		System.out.println("  | |/ -_) \\ /  _|  | || ' \\  _/ -_) '_\\ V / / -_) V  V /");
 		System.out.println("  |_|\\___/_\\_\\\\__| |___|_||_\\__\\___|_|  \\_/|_\\___|\\_/\\_/ ");
-		System.out.println();
 		askForms();
 		System.out.println();
 		printSolutions();
