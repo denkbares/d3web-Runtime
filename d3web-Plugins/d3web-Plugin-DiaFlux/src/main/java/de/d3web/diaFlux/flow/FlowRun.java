@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 University Wuerzburg, Computer Science VI
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -110,10 +110,15 @@ public class FlowRun {
 	 *
 	 * @param node    the node to add support to
 	 * @param support the support to be added. may only be null for the autostart nodes
-	 * @return s true, if the node was not supported before, ie should be activated now
+	 * @return true, if the node was not supported before (and therefore should be activated now)
 	 * @created 02.09.2013
 	 */
 	public boolean addSupport(Node node, DiaFluxElement support) {
+//		Set<DiaFluxElement> supports = nodeSupports.computeIfAbsent(node, n -> new MinimizedHashSet<>());
+//		boolean wasEmpty = supports.isEmpty();
+//		supports.add(support);
+//		return wasEmpty;
+
 		boolean contained = nodeSupports.containsKey(node);
 		Set<DiaFluxElement> supports;
 		if (contained) {
@@ -129,9 +134,10 @@ public class FlowRun {
 	}
 
 	/**
-	 * Removes the support from the node.
+	 * Removes the support from the node. Returns true if the node is still supported, and false if the last support has
+	 * been removed
 	 *
-	 * @return s if the node is still supported
+	 * @return true, if the node is still supported
 	 * @created 02.09.2013
 	 */
 	public boolean removeSupport(Node node, DiaFluxElement support) {
@@ -182,8 +188,7 @@ public class FlowRun {
 	}
 
 	/**
-	 * Return the activated nodes of that flow run, that matches the specified class (being of this class or a
-	 * subclass.
+	 * Return the activated nodes of that flow run, that matches the specified class (being of this class or a subclass.
 	 * Activated nodes are those notes that have active incoming edges, regardless if they are start nodes or not.
 	 *
 	 * @param clazz the class for the nodes
@@ -212,5 +217,4 @@ public class FlowRun {
 		check(session);
 		return blockedSnapshots.contains(node);
 	}
-
 }

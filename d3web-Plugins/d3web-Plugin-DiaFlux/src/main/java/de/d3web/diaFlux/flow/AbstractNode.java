@@ -126,7 +126,7 @@ public abstract class AbstractNode implements Node {
 	}
 
 	@Override
-	public List<? extends TerminologyObject> getHookedObjects() {
+	public List<TerminologyObject> getHookedObjects() {
 		return Collections.emptyList();
 	}
 

@@ -137,7 +137,7 @@ public final class FlowFactory {
 
 	private static void linkNode(Node node) {
 		// index nodes to the objects their condition contains
-		List<? extends TerminologyObject> hookedObjects = node.getHookedObjects();
+		List<TerminologyObject> hookedObjects = node.getHookedObjects();
 		for (TerminologyObject object : hookedObjects) {
 			linkNodeTo(FluxSolver.DEPENDANT_NODES, node, object);
 		}
@@ -155,7 +155,7 @@ public final class FlowFactory {
 
 	private static void unlinkNode(Node node) {
 		// index nodes to the objects their condition contains
-		List<? extends TerminologyObject> hookedObjects = node.getHookedObjects();
+		List<TerminologyObject> hookedObjects = node.getHookedObjects();
 		for (TerminologyObject object : hookedObjects) {
 			unlinkNodeFrom(FluxSolver.DEPENDANT_NODES, node, object);
 		}

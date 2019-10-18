@@ -67,7 +67,7 @@ public interface Node extends DiaFluxElement {
 	 * @return s the list of questions and diagnosis, this node wants to be
 	 * notified of.
 	 */
-	List<? extends TerminologyObject> getHookedObjects();
+	List<TerminologyObject> getHookedObjects();
 
 	/**
 	 * Does the action that is associated with this node.

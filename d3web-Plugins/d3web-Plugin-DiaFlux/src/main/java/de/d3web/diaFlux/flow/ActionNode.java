@@ -76,11 +76,9 @@ public class ActionNode extends AbstractNode {
 	}
 
 	@Override
-	public List<? extends TerminologyObject> getHookedObjects() {
-		List<? extends TerminologyObject> objects = new LinkedList<TerminologyObject>(
-				this.action.getForwardObjects());
+	public List<TerminologyObject> getHookedObjects() {
+		List<TerminologyObject> objects = new LinkedList<>(this.action.getForwardObjects());
 		objects.removeAll(this.action.getBackwardObjects());
-
 		return objects;
 	}
 
