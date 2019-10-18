@@ -65,17 +65,17 @@ public class DiaFluxUtilsTest extends AbstractDiaFluxTest {
 
 	@Test
 	public void getCalledStartNode() {
-		ComposedNode composedNode = DiaFluxUtils.findFlow(kb, "Flow1").getNodesOfClass(
-				ComposedNode.class).iterator().next();
-		StartNode startNode = DiaFluxUtils.findStartNode(kb, "Flow3", "start1");
+		ComposedNode composedNode = DiaFluxUtils.findFlow(kb, "Flow1")
+				.getNodesOfClass(ComposedNode.class).iterator().next();
+		StartNode startNode = DiaFluxUtils.findStartNode(kb, "Flow4", "start1");
 		assertEquals(startNode, DiaFluxUtils.getCalledStartNode(composedNode));
 	}
 
 	@Test
 	public void getCalledFlow() {
-		ComposedNode composedNode = DiaFluxUtils.findFlow(kb, "Flow1").getNodesOfClass(
-				ComposedNode.class).iterator().next();
-		Flow calledFlow = DiaFluxUtils.findFlow(kb, "Flow3");
+		ComposedNode composedNode = DiaFluxUtils.findFlow(kb, "Flow1")
+				.getNodesOfClass(ComposedNode.class).iterator().next();
+		Flow calledFlow = DiaFluxUtils.findFlow(kb, "Flow4");
 		assertEquals(calledFlow, DiaFluxUtils.getCalledFlow(composedNode));
 	}
 

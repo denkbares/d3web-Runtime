@@ -75,14 +75,14 @@ public abstract class AbstractNode implements Node {
 		incoming.remove(edge);
 	}
 
-	private void checkStartNode(@NotNull Edge edge) {
-		if (edge.getStartNode() != this) {
+	private void checkStartNode(Edge edge) {
+		if (edge == null || edge.getStartNode() != this) {
 			throw new IllegalArgumentException("edge '" + edge + "' does not start at: " + this);
 		}
 	}
 
-	private void checkEndNode(@NotNull Edge edge) {
-		if (edge.getEndNode() != this) {
+	private void checkEndNode(Edge edge) {
+		if (edge == null || edge.getEndNode() != this) {
 			throw new IllegalArgumentException("edge '" + edge + "' does not end at: " + this);
 		}
 	}
