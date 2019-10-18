@@ -114,8 +114,10 @@ public class ConsoleInterview {
 		QContainer container = form.getRoot();
 		if (container != null) {
 			String prompt = getPrompt(container);
-			System.out.println(prompt);
-			System.out.println(Strings.nTimes('=', prompt.length()));
+			if (!Strings.isBlank(prompt)) {
+				System.out.println(prompt);
+				System.out.println(Strings.nTimes('=', prompt.length()));
+			}
 		}
 
 		// print all questions
