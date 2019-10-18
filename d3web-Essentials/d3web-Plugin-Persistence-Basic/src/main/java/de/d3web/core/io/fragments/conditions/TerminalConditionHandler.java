@@ -20,7 +20,6 @@ package de.d3web.core.io.fragments.conditions;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -76,7 +75,7 @@ public abstract class TerminalConditionHandler implements FragmentHandler<Knowle
 		TerminalCondition cond = (TerminalCondition) condition;
 		Element element = XMLUtil.writeCondition(persistence.getDocument(), saveKey);
 		List<NamedObject> terminalObjects = new ArrayList<>(cond.getTerminalObjects());
-		Collections.sort(terminalObjects, new NamedObjectComparator());
+		terminalObjects.sort(new NamedObjectComparator());
 		for (NamedObject object : terminalObjects) {
 			Element objectElement = persistence.getDocument().createElement("object");
 			objectElement.setTextContent(object.getName());
