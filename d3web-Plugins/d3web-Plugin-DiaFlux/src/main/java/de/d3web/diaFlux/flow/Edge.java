@@ -57,4 +57,13 @@ public interface Edge extends DiaFluxElement {
 	 * @return the edges guard
 	 */
 	Condition getCondition();
+
+	/**
+	 * Removes this edge from the connected nodes, form the flow to belong to (if there is any) and unlinks it from all
+	 * terminology objects. After this method is called, the object should not be reused any longer.
+	 */
+	@Override
+	default void destroy() {
+		FlowFactory.removeEdge(this);
+	}
 }

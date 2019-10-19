@@ -38,4 +38,10 @@ public interface DiaFluxElement {
 	 * @return the containing flow of this element
 	 */
 	Flow getFlow();
+
+	/**
+	 * Removes this instance from the flow and unlinks it from all terminology objects. After this method is called, the
+	 * object should not be reused any longer.
+	 */
+	void destroy();
 }
