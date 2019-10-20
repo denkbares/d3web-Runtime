@@ -19,10 +19,10 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -40,6 +40,7 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 
 	private final Map<String, Flow> map = new HashMap<>();
 	private final DefaultMultiMap<String, ComposedNode> calledFlowToComposedNode = new DefaultMultiMap<>();
+	private final DefaultMultiMap<String, ComposedNode> callingFlowToComposedNode = new DefaultMultiMap<>();
 
 	public boolean contains(String name) {
 		return map.containsKey(name);
@@ -57,18 +58,16 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 		return map.keySet();
 	}
 
-	public Flow addFlow(Flow flow) {
-		for (ComposedNode node : flow.getNodesOfClass(ComposedNode.class)) {
-			calledFlowToComposedNode.put(node.getCalledFlowName(), node);
-		}
-		return map.put(flow.getName(), flow);
+	public void addFlow(Flow flow) {
+		Flow prev = map.put(flow.getName(), flow);
+		// if we have removed an other existing flow, update caches also for removed one
+		if (prev != null && prev != flow) refreshCaches(prev, false);
+		refreshCaches(flow, true);
 	}
 
 	public void removeFlow(Flow flow) {
-		for (ComposedNode node : flow.getNodesOfClass(ComposedNode.class)) {
-			calledFlowToComposedNode.remove(node.getCalledFlowName(), node);
-		}
 		map.remove(flow.getName(), flow);
+		refreshCaches(flow, false);
 	}
 
 	/**
@@ -77,7 +76,7 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 	 * @param flowName the name of the flow that is called
 	 * @return all nodes that are calling the flow
 	 */
-	public Collection<ComposedNode> getNodesCalling(String flowName) {
+	public Set<ComposedNode> getNodesCalling(String flowName) {
 		return calledFlowToComposedNode.getValues(flowName);
 	}
 
@@ -87,7 +86,7 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 	 * @param flow the flow that is called
 	 * @return all nodes that are calling the flow
 	 */
-	public Collection<ComposedNode> getNodesCalling(Flow flow) {
+	public Set<ComposedNode> getNodesCalling(Flow flow) {
 		return getNodesCalling(flow.getName());
 	}
 
@@ -96,10 +95,50 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 	 * contained flows.
 	 */
 	public void refreshCaches() {
-		ArrayList<Flow> flows = new ArrayList<>(map.values());
-		map.clear();
 		calledFlowToComposedNode.clear();
-		flows.forEach(this::addFlow);
+		callingFlowToComposedNode.clear();
+		for (Flow flow : map.values()) {
+			refreshCaches(flow, true);
+		}
+	}
+
+	/**
+	 * After the nodes of any contained flowchart has changed, you must call this method to rebuild the caches of the
+	 * contained flows.
+	 */
+	void refreshCaches(Flow flow) {
+		boolean contained = contains(flow);
+		if (contained) refreshCaches(flow, contained);
+	}
+
+	/**
+	 * After the nodes of any contained flowchart has changed, you must call this method to rebuild the caches of the
+	 * contained flows.
+	 */
+	private void refreshCaches(Flow flow, boolean added) {
+		Set<ComposedNode> prevNodes = callingFlowToComposedNode.removeKey(flow.getName());
+		Set<ComposedNode> currNodes = new HashSet<>(flow.getNodesOfClass(ComposedNode.class));
+
+		// add the complete list, as before all nodes are removed
+		if (added) callingFlowToComposedNode.putAll(flow.getName(), currNodes);
+
+		// remove all disappearing nodes
+		// (Note: if the flow is not added, all are going to be removed)
+		for (ComposedNode node : prevNodes) {
+			if (!added || !currNodes.contains(node)) {
+				calledFlowToComposedNode.remove(node.getCalledFlowName(), node);
+			}
+		}
+
+		// add all added nodes, if the flow is added to this set
+		if (added) {
+			for (ComposedNode node : currNodes) {
+				// we ignore if already added, because adding multiple times has no effect
+				// if (!prevNodes.contains(node)) {
+				calledFlowToComposedNode.put(node.getCalledFlowName(), node);
+				//}
+			}
+		}
 	}
 
 	@NotNull

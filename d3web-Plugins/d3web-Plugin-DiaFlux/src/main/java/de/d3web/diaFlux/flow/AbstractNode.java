@@ -150,7 +150,7 @@ public abstract class AbstractNode implements Node {
 
 	@Override
 	public int hashCode() {
-		// as the flow may change, it MUST NOT be part of the hash code,
+		// as the flow may change, "this.flow" MUST NOT be part of the hash code,
 		// otherwise set/map will not work for nodes and edges
 		return Objects.hash(id);
 	}

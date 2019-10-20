@@ -26,10 +26,9 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.manage.NamedObjectFinder;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 
-
 /**
  * A finder for DiaFlux Flowcharts
- * 
+ *
  * @author Reinhard Hatko
  * @created 16.05.2013
  */
@@ -37,14 +36,7 @@ public class DiaFluxFinder implements NamedObjectFinder {
 
 	@Override
 	public Collection<NamedObject> find(String name, KnowledgeBase kb) {
-		if (!DiaFluxUtils.hasFlows(kb)) return Collections.emptyList();
-
-		FlowSet flowSet = DiaFluxUtils.getFlowSet(kb);
-		if (flowSet.contains(name)) {
-			return Collections.singletonList(flowSet.get(name));
-		}
-
-		return Collections.emptyList();
+		Flow flow = DiaFluxUtils.findFlow(kb, name);
+		return (flow == null) ? Collections.emptyList() : Collections.singleton(flow);
 	}
-
 }

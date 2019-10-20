@@ -20,17 +20,24 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.Nullable;
 
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 import de.d3web.diaFlux.inference.FluxSolver;
 
 /**
@@ -54,9 +61,50 @@ public final class FlowFactory {
 		flow.getEdges().forEach(FlowFactory::linkEdge);
 		flow.getNodes().forEach(FlowFactory::linkNode);
 
-		checkFlowConsistency(flow);
+		checkConsistency(flow);
 		insertIntoKB(flow);
 		return flow;
+	}
+
+	/**
+	 * Checks if the specified flow-set is consistent. This means that each flow is consistent for its own, see {@link
+	 * #checkConsistency(Flow)}. Additionally it means that each {@link ComposedNode} points to an existing flow within
+	 * the checked flow-set, and that all flow-set-internal caches are properly updated.
+	 *
+	 * @param flowSet the flow-set to be checked
+	 * @throws IllegalArgumentException if the flow is not consistent
+	 */
+	public static void checkConsistency(@Nullable FlowSet flowSet) throws IllegalArgumentException {
+		if (flowSet == null) return;
+
+		// check each flow individually
+		Set<ComposedNode> callers = new HashSet<>();
+		for (Flow flow : flowSet) {
+			checkConsistency(flow);
+			callers.addAll(flow.getNodesOfClass(ComposedNode.class));
+		}
+
+		// check that all called flows are available
+		for (ComposedNode caller : callers) {
+			if (!flowSet.contains(caller.getCalledFlowName())) {
+				throw new IllegalArgumentException("The called flow '" + caller.getCalledFlowName() + "', " +
+						"referenced from  '" + caller + "' in flow '" + caller.getFlow().getName() + "' " +
+						"does not exists.");
+			}
+		}
+
+		// check that all callee's properly found
+		callers.stream()
+				.collect(Collectors.groupingBy(ComposedNode::getCalledFlowName, Collectors.toSet()))
+				.forEach((calledFlowName, callingNodes) -> {
+					Set<ComposedNode> cached = flowSet.getNodesCalling(calledFlowName);
+					if (!Objects.equals(callingNodes, cached)) {
+						throw new IllegalArgumentException("The caches for the callers " +
+								"to flow '" + calledFlowName + "' are not properly updated:\n" +
+								"EXPECTED: " + callingNodes + "\n" +
+								"ACTUAL:   " + cached);
+					}
+				});
 	}
 
 	/**
@@ -67,13 +115,14 @@ public final class FlowFactory {
 	 * @param flow the flow to be checked
 	 * @throws IllegalArgumentException if the flow is not consistent
 	 */
-	public static void checkFlowConsistency(Flow flow) throws IllegalArgumentException {
+	public static void checkConsistency(@Nullable Flow flow) throws IllegalArgumentException {
+		if (flow == null) return;
 		Set<Node> nodes = new HashSet<>(flow.getNodes());
 		Set<Edge> edges = new HashSet<>(flow.getEdges());
 
 		for (Edge edge : edges) {
 			if (edge.getFlow() != flow) {
-				throw new IllegalArgumentException("The edge '" + edge + " ' returns an invalid flow instance: " + edge.getFlow());
+				throw new IllegalArgumentException("The edge '" + edge + "' returns an invalid flow instance: " + edge.getFlow());
 			}
 
 			if (!nodes.contains(edge.getStartNode())) {
@@ -88,7 +137,7 @@ public final class FlowFactory {
 
 		for (Node node : nodes) {
 			if (node.getFlow() != flow) {
-				throw new IllegalArgumentException("The node '" + node + " ' returns an invalid flow instance: " + node.getFlow());
+				throw new IllegalArgumentException("The node '" + node + "' returns an invalid flow instance: " + node.getFlow());
 			}
 
 			for (Edge edge : node.getIncomingEdges()) {
@@ -113,7 +162,6 @@ public final class FlowFactory {
 	private static void insertIntoKB(Flow flow) {
 		flow.getKnowledgeBase().getKnowledgeStore().computeIfAbsent(FluxSolver.FLOW_SET, FlowSet::new).addFlow(flow);
 	}
-
 
 	private static void linkEdge(Edge edge) {
 		// index them at the NamedObjects their condition contains
@@ -240,6 +288,39 @@ public final class FlowFactory {
 
 	/**
 	 * Adds a node from the flow. The method also automatically links the node to all terminology objects.
+	 *
+	 * @param flow the flow to add the node to
+	 * @param node the node to be added
+	 */
+	public static void addNode(Flow flow, Node node) {
+		addNodes(flow, Collections.singleton(node));
+	}
+
+	/**
+	 * Adds the specified nodes to the flow. The method also automatically links the node to all terminology objects.
+	 *
+	 * @param flow  the flow to add the node to
+	 * @param nodes the nodes to be added
+	 */
+	public static void addNodes(Flow flow, Node... nodes) {
+		addNodes(flow, Arrays.asList(nodes));
+	}
+
+	/**
+	 * Adds the specified nodes to the flow. The method also automatically links the node to all terminology objects.
+	 *
+	 * @param flow  the flow to add the node to
+	 * @param nodes the nodes to be added
+	 */
+	public static void addNodes(Flow flow, Collection<? extends Node> nodes) {
+		for (Node node : nodes) {
+			addNodeInternal(flow, node);
+		}
+		refreshFlowSetCaches(flow);
+	}
+
+	/**
+	 * Adds a node from the flow. The method also automatically links the node to all terminology objects.
 	 * <p>
 	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
 	 * otherwise the caches of the FlowSet may not update correctly.
@@ -247,10 +328,45 @@ public final class FlowFactory {
 	 * @param flow the flow to add the node to
 	 * @param node the node to be added
 	 */
-	public static void addNode(Flow flow, Node node) {
+	private static void addNodeInternal(Flow flow, Node node) {
 		linkNode(node);
 		flow.addNode(node);
 		node.setFlow(flow);
+	}
+
+	/**
+	 * Removes a node from the flow. The method also automatically unlinks the node from all terminology objects.
+	 *
+	 * @param node the node to be removed
+	 */
+	public static void removeNode(Node node) {
+		removeNodes(Collections.singleton(node));
+	}
+
+	/**
+	 * Removes the specified nodes from their flows. The method also automatically unlinks the node from all terminology
+	 * objects.
+	 *
+	 * @param nodes the nodes to be removed
+	 */
+	public static void removeNodes(Node... nodes) {
+		removeNodes(Arrays.asList(nodes));
+	}
+
+	/**
+	 * Removes the specified nodes from their flows. The method also automatically unlinks the nodes from all
+	 * terminology objects.
+	 *
+	 * @param nodes the nodes to be removed
+	 */
+	public static void removeNodes(Collection<? extends Node> nodes) {
+		Set<Flow> flows = new HashSet<>();
+		for (Node node : nodes) {
+			Flow flow = node.getFlow();
+			if (flow != null) flows.add(flow);
+			removeNodeInternal(node);
+		}
+		flows.forEach(FlowFactory::refreshFlowSetCaches);
 	}
 
 	/**
@@ -261,7 +377,7 @@ public final class FlowFactory {
 	 *
 	 * @param node the node to be removed
 	 */
-	public static void removeNode(Node node) {
+	private static void removeNodeInternal(Node node) {
 		unlinkNode(node);
 		Flow flow = node.getFlow();
 		if (flow != null) {
@@ -273,26 +389,21 @@ public final class FlowFactory {
 	/**
 	 * Adds all the specified nodes to the specified flowchart. After that, it also adds all edges that are connected to
 	 * any of these nodes to the flow. Both, nodes and edges, will be linked to all relevant terminology objects.
-	 * <p>
-	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
-	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
 	 * @param nodes the nodes to remove from the flow
 	 */
 	public static void addNodesAndConnectedEdges(Flow flow, Collection<? extends Node> nodes) {
-		nodes.forEach(node -> addNode(flow, node));
+		nodes.forEach(node -> addNodeInternal(flow, node));
 		nodes.stream()
 				.flatMap(node -> Stream.concat(node.getIncomingEdges().stream(), node.getOutgoingEdges().stream()))
 				.distinct().forEach(FlowFactory::addEdge);
+		refreshFlowSetCaches(flow);
 	}
 
 	/**
 	 * Removes all the specified nodes from the flowchart the nodes are added to. Before, it also removes all edges that
 	 * are connected to any of these nodes from the flow. Both, nodes and edges, will be unlinked from all terminology
 	 * objects before they are removed.
-	 * <p>
-	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
-	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
 	 * @param nodesToRemove the nodes to remove from the flow
 	 */
@@ -300,20 +411,26 @@ public final class FlowFactory {
 		// use a copy of nodes and edges to avoid concurrent modification
 		Set<Node> nodes = new HashSet<>(nodesToRemove);
 		Set<Edge> edges = new HashSet<>();
+		Set<Flow> flows = new HashSet<>();
 		for (Node node : nodes) {
 			edges.addAll(node.getIncomingEdges());
 			edges.addAll(node.getOutgoingEdges());
+			Flow flow = node.getFlow();
+			if (flow != null) flows.add(flow);
 		}
 		edges.forEach(FlowFactory::removeEdge);
-		nodes.forEach(FlowFactory::removeNode);
+		nodes.forEach(FlowFactory::removeNodeInternal);
+		flows.forEach(FlowFactory::refreshFlowSetCaches);
+	}
+
+	private static void refreshFlowSetCaches(Flow flow) {
+		FlowSet flowSet = DiaFluxUtils.getFlowSet(flow.getKnowledgeBase());
+		if (flowSet != null) flowSet.refreshCaches(flow);
 	}
 
 	/**
 	 * Removes all the nodes and edges from the specified flowchart. Both, nodes and edges, will be unlinked from all
 	 * terminology objects before they are removed. After that, the flow is empty.
-	 * <p>
-	 * Note that while adding/removing the nodes of a flow, the flow should not been added to a {@link FlowSet}, because
-	 * otherwise the caches of the FlowSet may not update correctly.
 	 *
 	 * @param flow the flow to remove all nodes and edges from
 	 */
@@ -321,5 +438,22 @@ public final class FlowFactory {
 		removeNodesAndConnectedEdges(flow.getNodes());
 		assert flow.getNodes().isEmpty();
 		assert flow.getEdges().isEmpty();
+		refreshFlowSetCaches(flow);
+	}
+
+	/**
+	 * Removes all the nodes calling this flowchart from the knowledge base of this flow.
+	 * <p>
+	 * Note: If there is another flow, with the same name, added to the flow-set of the knowledge base, the method still
+	 * removes these calling nodes (even if they would currently call the added flow with the same name).
+	 *
+	 * @param flow the flow to remove the calling nodes for
+	 */
+	public static void removeAllCallingNodes(Flow flow) {
+		FlowSet flowSet = DiaFluxUtils.getFlowSet(flow.getKnowledgeBase());
+		if (flowSet == null) return;
+
+		// iterate copy of nodes, to avoid potential concurrent modification
+		removeNodesAndConnectedEdges(flowSet.getNodesCalling(flow));
 	}
 }

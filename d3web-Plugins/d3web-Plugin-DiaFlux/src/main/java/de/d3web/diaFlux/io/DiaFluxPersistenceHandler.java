@@ -170,8 +170,7 @@ public class DiaFluxPersistenceHandler implements KnowledgeReader, KnowledgeWrit
 
 	@Override
 	public int getEstimatedSize(KnowledgeBase knowledgeBase) {
-		FlowSet flowSet = DiaFluxUtils.getFlowSet(knowledgeBase);
-		return flowSet == null ? 0 : flowSet.size();
+		return DiaFluxUtils.getFlows(knowledgeBase).size();
 	}
 
 	@Override

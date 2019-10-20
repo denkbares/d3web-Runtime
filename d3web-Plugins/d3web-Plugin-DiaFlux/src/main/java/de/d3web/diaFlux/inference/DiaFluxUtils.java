@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -62,7 +64,16 @@ public final class DiaFluxUtils {
 	public static final Property<Boolean> FORCE_PROPAGATION = Property.getProperty(
 			"forcePropagation", Boolean.class);
 
-	public static FlowSet getFlowSet(KnowledgeBase knowledgeBase) {
+	/**
+	 * Returns the flow-set of the knowledge base, where all the flows of the knowledge base are stored into. If the
+	 * knowledge base have no flow-set, or if the knowledge base is null, null is returned.
+	 *
+	 * @param knowledgeBase the knowledge base to get the flow-set for
+	 * @return the flow-set, if there is any, null otherwise
+	 */
+	@Nullable
+	public static FlowSet getFlowSet(@Nullable KnowledgeBase knowledgeBase) {
+		if (knowledgeBase == null) return null;
 		return knowledgeBase.getKnowledgeStore().getKnowledge(FluxSolver.FLOW_SET);
 	}
 
@@ -143,35 +154,20 @@ public final class DiaFluxUtils {
 
 	public static List<StartNode> getAutostartNodes(KnowledgeBase base) {
 		List<StartNode> result = new LinkedList<>();
-
-		for (Flow flow : getFlowSet(base)) {
+		for (Flow flow : getFlows(base)) {
 			if (flow.isAutostart()) {
 				result.addAll(flow.getStartNodes());
 			}
 		}
-
 		return result;
 	}
 
 	public static Flow findFlow(KnowledgeBase kb, String flowName) {
 		FlowSet flowSet = getFlowSet(kb);
-
-		if (flowSet == null) {
-			Log.severe(("No Flowcharts found in kb."));
-			return null;
-		}
-
-		Flow subflow = flowSet.get(flowName);
-
-		if (subflow == null) {
-			Log.severe(("Flowchart '" + flowName + "' not found."));
-			return null;
-		}
-		return subflow;
+		return (flowSet == null) ? null : flowSet.get(flowName);
 	}
 
 	private static <T extends Node> T findNode(List<T> nodes, String nodeName) {
-
 		for (T node : nodes) {
 			if (node.getName().equals(nodeName)) {
 				return node;

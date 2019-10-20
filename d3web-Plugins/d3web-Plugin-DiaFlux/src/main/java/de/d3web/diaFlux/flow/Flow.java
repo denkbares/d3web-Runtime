@@ -20,15 +20,13 @@
 
 package de.d3web.diaFlux.flow;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AbstractNamedObject;
+import de.d3web.diaFlux.inference.DiaFluxUtils;
 
 /**
  * @author Reinhard Hatko
@@ -123,14 +121,14 @@ public class Flow extends AbstractNamedObject {
 		return nodes;
 	}
 
-	public <T> Collection<T> getNodesOfClass(Class<T> clazz) {
-		Collection<T> result = new HashSet<>();
+	public <T> List<T> getNodesOfClass(Class<T> clazz) {
+		List<T> result = new ArrayList<>();
 		for (Node node : nodes) {
 			if (clazz.isInstance(node)) {
 				result.add(clazz.cast(node));
 			}
 		}
-		return Collections.unmodifiableCollection(result);
+		return result;
 	}
 
 	public boolean isAutostart() {
@@ -142,22 +140,11 @@ public class Flow extends AbstractNamedObject {
 	}
 
 	public List<StartNode> getStartNodes() {
-		return getNodesOfType(StartNode.class);
+		return getNodesOfClass(StartNode.class);
 	}
 
 	public List<EndNode> getExitNodes() {
-		return getNodesOfType(EndNode.class);
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> List<T> getNodesOfType(Class<T> clazz) {
-		List<T> result = new LinkedList<>();
-
-		for (Node node : nodes) {
-			if (clazz.isAssignableFrom(node.getClass())) result.add((T) node);
-		}
-
-		return result;
+		return getNodesOfClass(EndNode.class);
 	}
 
 	@Override
@@ -168,5 +155,20 @@ public class Flow extends AbstractNamedObject {
 
 	public KnowledgeBase getKnowledgeBase() {
 		return this.kb;
+	}
+
+	/**
+	 * Removes this instance from the knowledge base and unlinks it from all other flowcharts where it is used. The
+	 * method also (naturally) removes all edges and nodes of this flow from the knowledge base, by destroying them
+	 * first.
+	 * <p>
+	 * The method does not remove any node that calls this flow from other flows, they still remains, but will fail if
+	 * no other flow with the same name will be inserted. To do this, you may use {@link
+	 * FlowFactory#removeAllCallingNodes(Flow)}.
+	 */
+	public void destroy() {
+		FlowSet flowSet = DiaFluxUtils.getFlowSet(kb);
+		if (flowSet != null) flowSet.removeFlow(this);
+		FlowFactory.removeAllNodesAndEdges(this);
 	}
 }
