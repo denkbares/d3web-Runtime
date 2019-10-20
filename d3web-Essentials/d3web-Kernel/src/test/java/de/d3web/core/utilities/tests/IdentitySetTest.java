@@ -18,6 +18,8 @@
  */
 package de.d3web.core.utilities.tests;
 
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,7 +33,7 @@ import com.denkbares.collections.IdentitySet;
  */
 public class IdentitySetTest {
 
-	final IdentitySet<String> set = new IdentitySet<>();
+	final Set<String> set = IdentitySet.newIdentityHashSet();
 
 	@Test
 	public void test() {
