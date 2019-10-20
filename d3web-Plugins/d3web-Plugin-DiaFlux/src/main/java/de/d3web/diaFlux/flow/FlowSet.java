@@ -91,8 +91,11 @@ public class FlowSet implements KnowledgeSlice, Iterable<Flow> {
 	}
 
 	/**
-	 * After the nodes of any contained flowchart has changed, you must call this method to rebuild the caches of the
+	 * After the nodes of any contained flowchart has changed, you may call this method to rebuild the caches of the
 	 * contained flows.
+	 * <p>
+	 * This is NOT (!) necessary in most cases. For the default flow-set of the knowledge base, the caches are
+	 * automatically updated incrementally. Only if other flow-set are used, they requires manual updates.
 	 */
 	public void refreshCaches() {
 		calledFlowToComposedNode.clear();
