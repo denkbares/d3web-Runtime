@@ -18,16 +18,17 @@
  */
 package de.d3web.core.manage;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 
-
 /**
  * A finder for the KnowledgeBase itself.
- * 
+ *
  * @author Reinhard Hatko
  * @created 16.05.2013
  */
@@ -35,14 +36,11 @@ public class KnowledgeBaseFinder implements NamedObjectFinder {
 
 	public static final String KNOWLEDGEBASE_ID = "KNOWLEDGEBASE";
 
+	@NotNull
 	@Override
-	public Collection<NamedObject> find(String name, KnowledgeBase kb) {
-		if (name.equals(KNOWLEDGEBASE_ID) || name.equals(kb.getName())) {
-			return Collections.singletonList(kb);
-		}
-		else {
-			return Collections.emptyList();
-		}
+	public Set<NamedObject> find(@NotNull KnowledgeBase kb, @NotNull String name) {
+		return name.equals(KNOWLEDGEBASE_ID) || name.equals(kb.getName())
+				? Collections.singleton(kb)
+				: Collections.emptySet();
 	}
-
 }

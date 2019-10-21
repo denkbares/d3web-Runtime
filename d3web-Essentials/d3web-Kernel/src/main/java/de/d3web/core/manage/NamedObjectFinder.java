@@ -18,19 +18,31 @@
  */
 package de.d3web.core.manage;
 
-import java.util.Collection;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 
 /**
  * Implementors of this class can search the KnowledgeBase for NamedObjects.
- * 
+ *
  * @author Reinhard Hatko
  * @created 16.05.2013
  */
 public interface NamedObjectFinder {
-
-	Collection<NamedObject> find(String name, KnowledgeBase kb);
-
+	/**
+	 * Returns the sub-set of named objects of the specified name form the specified knowledge base, that matches the
+	 * searched type of the individual finder. If no such objects exists, the method returns an empty set.
+	 * <p>
+	 * Note: The individual implementors each only search for special kinds of named objects, so they are not intended
+	 * to return all {@link NamedObject}s of the whole knowledge base.
+	 *
+	 * @param kb   the knowledge base to search the named object in
+	 * @param name the name of the named object to be find
+	 * @return the named object(s) of the finder-specific type that are available in the knowledge base
+	 */
+	@NotNull
+	Set<NamedObject> find(@NotNull KnowledgeBase kb, @NotNull String name);
 }

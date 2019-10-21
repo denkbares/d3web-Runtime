@@ -18,8 +18,10 @@
  */
 package de.d3web.diaFlux.flow;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
@@ -34,9 +36,10 @@ import de.d3web.diaFlux.inference.DiaFluxUtils;
  */
 public class DiaFluxFinder implements NamedObjectFinder {
 
+	@NotNull
 	@Override
-	public Collection<NamedObject> find(String name, KnowledgeBase kb) {
+	public Set<NamedObject> find(@NotNull KnowledgeBase kb, @NotNull String name) {
 		Flow flow = DiaFluxUtils.findFlow(kb, name);
-		return (flow == null) ? Collections.emptyList() : Collections.singleton(flow);
+		return (flow == null) ? Collections.emptySet() : Collections.singleton(flow);
 	}
 }

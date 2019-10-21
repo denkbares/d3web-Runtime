@@ -18,67 +18,62 @@
  */
 package de.d3web.core.manage.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
 import de.d3web.core.manage.KnowledgeBaseFinder;
 import de.d3web.core.manage.KnowledgeBaseUtils;
-import com.denkbares.plugin.test.InitPluginManager;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link KnowledgeBaseFinder}
- * 
+ *
  * @author Reinhard Hatko
  * @created 16.05.2013
  */
 public class KnowledgeBaseFinderTest {
 
 	private final KnowledgeBase kb = KnowledgeBaseUtils.createKnowledgeBase();
+
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
-
 	}
 
 	@Test
 	public void testFindSuccessfullByName() {
 		String kbName = "wissensbasis";
 		kb.getInfoStore().addValue(MMInfo.PROMPT, kbName);
-
-		find(kbName, Collections.singletonList(kb));
+		find(kbName, Collections.singleton(kb));
 	}
 
 	@Test
 	public void testFindSuccessfullByID() {
-		find(KnowledgeBaseFinder.KNOWLEDGEBASE_ID, Collections.singletonList(kb));
+		find(KnowledgeBaseFinder.KNOWLEDGEBASE_ID, Collections.singleton(kb));
 	}
 
 	@Test
 	public void testFindFailDifferentName() {
 		kb.getInfoStore().addValue(MMInfo.PROMPT, "blubb");
-
-		find("bla", Collections.emptyList());
+		find("bla", Collections.emptySet());
 	}
 
 	@Test
 	public void testFindFailNoName() {
-		find("bla", Collections.emptyList());
+		find("bla", Collections.emptySet());
 	}
 
-	private void find(String kbName, Collection<NamedObject> result) {
-		assertThat(new KnowledgeBaseFinder().find(kbName, kb), is(result));
+	private void find(String kbName, Set<NamedObject> result) {
+		assertThat(new KnowledgeBaseFinder().find(kb, kbName), is(result));
 	}
-
-
 }

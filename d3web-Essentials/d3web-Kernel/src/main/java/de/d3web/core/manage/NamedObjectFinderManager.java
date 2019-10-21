@@ -18,41 +18,31 @@
  */
 package de.d3web.core.manage;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
-import com.denkbares.plugin.Extension;
-import com.denkbares.plugin.PluginManager;
 
 /**
  * Manager class that handles Finders for NamedObjects
- * 
+ *
  * @author Reinhard Hatko
  * @created 16.05.2013
  */
-public class NamedObjectFinderManager {
+public final class NamedObjectFinderManager {
 
-	final NamedObjectFinder[] finders;
+	private static final NamedObjectFinderManager INSTANCE = new NamedObjectFinderManager();
+	private final NamedObjectFinder[] finders;
 
-	public static final NamedObjectFinderManager INSTANCE;
-
-	static {
-		INSTANCE = new NamedObjectFinderManager();
-	}
-
-	public static NamedObjectFinderManager getInstance() {
-		return INSTANCE;
-	}
-	
-	
 	private NamedObjectFinderManager() {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(
 				KernelExtensionPoints.PLUGIN_ID,
 				KernelExtensionPoints.EXTENSIONPOINT_NAMED_OBJECT_FINDER);
-		
+
 		finders = new NamedObjectFinder[extensions.length];
 
 		for (int i = 0; i < extensions.length; i++) {
@@ -60,13 +50,17 @@ public class NamedObjectFinderManager {
 		}
 	}
 
-	public Collection<NamedObject> find(String name, KnowledgeBase kb) {
-		for (NamedObjectFinder finder : finders) {
-			Collection<NamedObject> objects = finder.find(name, kb);
-			if (!objects.isEmpty()) return objects;
-		}
-		return Collections.emptyList();
-
+	public static NamedObjectFinderManager getInstance() {
+		return INSTANCE;
 	}
-	
+
+	public Set<NamedObject> find(KnowledgeBase kb, String name) {
+		if (kb != null && name != null) {
+			for (NamedObjectFinder finder : finders) {
+				Set<NamedObject> objects = finder.find(kb, name);
+				if (!objects.isEmpty()) return objects;
+			}
+		}
+		return Collections.emptySet();
+	}
 }

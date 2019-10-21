@@ -18,28 +18,27 @@
  */
 package de.d3web.diaFlux.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.diaFlux.flow.DiaFluxFinder;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowFactory;
-import com.denkbares.plugin.test.InitPluginManager;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link DiaFluxFinder}
- * 
+ *
  * @author Reinhard Hatko
  * @created 16.05.2013
  */
@@ -49,31 +48,24 @@ public class DiaFluxFinderTest {
 	private KnowledgeBase kb;
 	private Flow flow;
 
-
 	@Before
 	public void setUp() throws IOException {
 		InitPluginManager.init();
 		kb = KnowledgeBaseUtils.createKnowledgeBase();
-		flow = FlowFactory.createFlow(kb, FLOW_NAME, Collections.emptyList(),
-				Collections.emptyList());
+		flow = FlowFactory.createFlow(kb, FLOW_NAME, Collections.emptyList(), Collections.emptyList());
 	}
 
 	@Test
 	public void testFindSuccessfullByName() {
-
-		find(FLOW_NAME, Collections.singletonList(flow));
+		find(FLOW_NAME, Collections.singleton(flow));
 	}
-
 
 	@Test
 	public void testFindFailDifferentName() {
-
-		find("bla", Collections.emptyList());
+		find("bla", Collections.emptySet());
 	}
 
-	private void find(String name, Collection<NamedObject> result) {
-		assertThat(new DiaFluxFinder().find(name, kb), is(result));
+	private void find(String name, Set<NamedObject> result) {
+		assertThat(new DiaFluxFinder().find(kb, name), is(result));
 	}
-
-
 }
