@@ -518,7 +518,7 @@ public final class PersistenceManager {
 	 */
 	public KnowledgeBase load(Path folder, ProgressListener listener) throws IOException {
 		if (!Files.isDirectory(folder)) {
-			throw new IOException("The knowledge base root is not a folder");
+			throw new IOException("The knowledge base root is not a folder: " + folder);
 		}
 
 		listener.updateProgress(0, "Loading knowledge base: " + folder.toRealPath());
