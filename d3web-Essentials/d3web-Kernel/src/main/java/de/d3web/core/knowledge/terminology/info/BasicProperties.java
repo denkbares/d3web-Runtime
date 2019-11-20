@@ -73,8 +73,8 @@ public class BasicProperties {
 			"abstractionQuestion", Boolean.class);
 
 	/**
-	 * Used for Questions. Marks a Question as abstraction question (derived) or not. Boolean.TRUE means, it is a
-	 * abstraction question, all other values means, it is not.
+	 * Decides if the question or qContainer should be always visible, if the enclosing qContainer is visible,
+	 * regardless of it relevance (indication state).
 	 */
 	public static final Property<Visible> VISIBLE = Property.getProperty(
 			"visible", Visible.class);
