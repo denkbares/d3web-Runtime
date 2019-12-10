@@ -69,10 +69,11 @@ public class ExpertMode implements SessionObject {
 	private MultiMap<Question, CondEqual> adapterStates = null;
 	private List<Question> systemStates = null;
 
-	static final Comparator<Target> BENEFIT_COMPARATOR = (target1, target2) -> {
-		// sort by the costs of the target (sort descending)
-		return (int) Math.signum(target2.getBenefit() - target1.getBenefit());
-	};
+	/**
+	 * sort descending by the benefit of the target, with no regard to the target's costs
+	 */
+	static final Comparator<Target> BENEFIT_COMPARATOR = (target1, target2) ->
+			Double.compare(target2.getBenefit(), target1.getBenefit());
 
 	private final static SessionObjectSource<ExpertMode> EXPERT_MODE_SOURCE = session -> {
 		// check if it is allowed to create such an object
@@ -88,6 +89,10 @@ public class ExpertMode implements SessionObject {
 		this.session = session;
 		this.psm = psm;
 		this.pso = session.getSessionObject(psm);
+	}
+
+	public PSMethodCostBenefit getProblemSolver() {
+		return psm;
 	}
 
 	/**
@@ -325,6 +330,13 @@ public class ExpertMode implements SessionObject {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Returns the previously used search model, used to calculate the current target.
+	 */
+	public SearchModel getSearchModel() {
+		return pso.getSearchModel();
 	}
 
 	/**

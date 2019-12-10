@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -54,16 +55,15 @@ import de.d3web.costbenefit.model.Target;
 
 /**
  * Algorithm which uses A* to find pathes to the targets
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
  */
 public class AStar {
 
 	/**
-	 * Expands a node with a specified StateTransition and creates a new
-	 * follower node.
-	 * 
+	 * Expands a node with a specified StateTransition and creates a new follower node.
+	 *
 	 * @author volker_belli
 	 * @created 09.09.2011
 	 */
@@ -96,6 +96,10 @@ public class AStar {
 	private final Session session;
 	private final Map<Pair<Path, QContainer>, Double> hValueCache = Collections.synchronizedMap(new HashMap<Pair<Path, QContainer>, Double>());
 
+	// some fields useful for debugging non-readched targets
+	private Node startNode;
+	private final Set<Target> infiniteTargets = new HashSet<>();
+
 	/**
 	 * @deprecated use PSMethodCostBenefit.TARGET_ONLY
 	 */
@@ -127,6 +131,7 @@ public class AStar {
 				updateTargets(new AStarPath(qcon, null, costFunction.getCosts(qcon, session)));
 			}
 		}
+
 		this.initTime = System.currentTimeMillis() - time;
 	}
 
@@ -150,20 +155,20 @@ public class AStar {
 		return new State(session, usedStateQuestions);
 	}
 
+	public AStarAlgorithm getAlgorithm() {
+		return algorithm;
+	}
+
 	/**
 	 * Starts the search
-	 * 
+	 *
 	 * @created 22.06.2011
 	 */
 	public void search() {
 		long time1 = System.currentTimeMillis();
 		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
-		AStarPath emptyPath = new AStarPath(null, null, 0);
-		State startState = computeState(session);
-		Node start = new Node(startState, session, emptyPath, calculateFValue(emptyPath,
-				startState, session));
-		getOpenNodes().add(start);
+		getOpenNodes().add(getStartNode());
 		// clean up targets if it is not expected to require too much time
 		// and also expect significant speed optimization during calculation
 		if (model.getTargets().size() <= 50) {
@@ -181,17 +186,32 @@ public class AStar {
 				"#closed: " + getClosedNodes().size() + ")");
 	}
 
+	public Node getStartNode() {
+		if (startNode == null) {
+			// init start node
+			AStarPath emptyPath = new AStarPath(null, null, 0);
+			State startState = computeState(session);
+			startNode = new Node(startState, session, emptyPath, calculateFValue(emptyPath, startState, session));
+		}
+		return startNode;
+	}
+
 	private void removeInfiniteTargets() {
-		Node startNode = getOpenNodes().iterator().next();
+		Node startNode = getStartNode();
 		for (Target target : new ArrayList<>(model.getTargets())) {
 			Heuristic heuristic = algorithm.getHeuristic();
 			QContainer qcontainer = target.getQContainers().get(0);
 			double distance = heuristic.getDistance(model, startNode.getPath(), startNode.getState(), qcontainer);
 			if (distance == Double.POSITIVE_INFINITY) {
 				model.removeTarget(target);
+				infiniteTargets.add(target);
 				successors.remove(StateTransition.getStateTransition(qcontainer));
 			}
 		}
+	}
+
+	public Set<Target> getInfiniteTargets() {
+		return infiniteTargets;
 	}
 
 	private void searchLoop() {
@@ -278,9 +298,9 @@ public class AStar {
 
 	/**
 	 * Notifies that a search step has been completed.
-	 * 
-	 * @created 11.09.2011
+	 *
 	 * @param node the node expanded by the current step
+	 * @created 11.09.2011
 	 */
 	private void stepCompleted(Node node) {
 		try {
@@ -294,12 +314,11 @@ public class AStar {
 	}
 
 	/**
-	 * Returns if a state transition can be used to create following up nodes
-	 * for a specific node.
-	 * 
-	 * @created 09.09.2011
-	 * @param node the node to apply the state transition to
+	 * Returns if a state transition can be used to create following up nodes for a specific node.
+	 *
+	 * @param node            the node to apply the state transition to
 	 * @param stateTransition the state transition to be applied
+	 * @created 09.09.2011
 	 */
 	private boolean canApplyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
@@ -388,6 +407,7 @@ public class AStar {
 						if (!usedStateQuestions.containsKey(question)) {
 							Value originalValue = session.getBlackboard().getValue(question);
 							usedStateQuestions.put(question, originalValue);
+							model.stateVisited(question, originalValue);
 						}
 					}
 				}
@@ -428,7 +448,8 @@ public class AStar {
 		double min = Double.POSITIVE_INFINITY;
 		double pathCosts = path.getCosts();
 
-		targets: for (Target target : model.getTargets()) {
+		targets:
+		for (Target target : model.getTargets()) {
 			double targetCosts = 0;
 			double benefit = target.getBenefit();
 			// we need only to calculate the heuristic

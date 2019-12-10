@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -62,7 +62,7 @@ import de.d3web.costbenefit.model.Target;
 
 /**
  * Uses a "slice model" to calculate a more precise distance
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 30.09.2011
  */
@@ -71,17 +71,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	public static class TPHeuristicSessionObject extends DividedTransitionHeuristicSessionObject {
 
 		/**
-		 * Stores for each CondEqual a Pair of Conditions and QContainers. If
-		 * the condition is false when starting a search and none of the
-		 * QContainers is in the actual path, the conditions can be added to the
-		 * condequal if there are no conflicts (e.g. same termobjects in an
-		 * CondOr and CondEqual)
+		 * Stores for each CondEqual a Pair of Conditions and QContainers. If the condition is false when starting a
+		 * search and none of the QContainers is in the actual path, the conditions can be added to the condequal if
+		 * there are no conflicts (e.g. same termobjects in an CondOr and CondEqual)
 		 */
 		private final Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<>();
 
 		/**
-		 * Stores a List of Pairs of Conditions and QContainers establishing a
-		 * state where the conditions of the targetQContainer is applicable
+		 * Stores a List of Pairs of Conditions and QContainers establishing a state where the conditions of the
+		 * targetQContainer is applicable
 		 */
 		private final Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<>();
 
@@ -143,17 +141,15 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 	/**
 	 * Inits preconditions per target.
-	 * 
-	 * Conditions can be used as Preconditions, if they are of type CondEqual,
-	 * they are not already contained in the activation condition of the target
-	 * and their term object is not contained in any partial condition of the
-	 * activation condition other than CondEqual. They can also be used, if they
-	 * are not type of CondEqual and all their term objects are not part of the
-	 * activation condition.
-	 * 
-	 * @created 05.10.2011
+	 * <p>
+	 * Conditions can be used as Preconditions, if they are of type CondEqual, they are not already contained in the
+	 * activation condition of the target and their term object is not contained in any partial condition of the
+	 * activation condition other than CondEqual. They can also be used, if they are not type of CondEqual and all their
+	 * term objects are not part of the activation condition.
+	 *
 	 * @param sessionObject actual SessionObject
-	 * @param model {@link SearchModel}
+	 * @param model         {@link SearchModel}
+	 * @created 05.10.2011
 	 */
 	private static void initTargetCache(TPHeuristicSessionObject sessionObject, SearchModel model) {
 		long time = System.currentTimeMillis();
@@ -307,13 +303,14 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	/**
-	 * Checks if the the Value v can be used to fullfill the condition. This
-	 * method can only handle primitive conditions @see getPrimitiveConditions
-	 * 
-	 * @created 04.07.2012
+	 * Checks if the the Value v can be used to fullfill the condition. This method can only handle primitive
+	 * conditions
+	 *
 	 * @param condition specified condition
-	 * @param v Value
+	 * @param v         Value
 	 * @return true if the value can fullfill the condition
+	 * @created 04.07.2012
+	 * @see getPrimitiveConditions
 	 */
 	public static boolean checkValue(Condition condition, Value v) {
 		if (condition instanceof CondEqual) {
@@ -339,7 +336,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		List<Condition> first = neededConditions.poll();
 		List<Condition> commonConditions = new LinkedList<>();
 		if (first != null) {
-			first: for (Condition c : first) {
+			first:
+			for (Condition c : first) {
 				for (List<Condition> ref : neededConditions) {
 					if (!ref.contains(c)) {
 						continue first;
@@ -353,12 +351,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	/**
-	 * Returns all primitive subconditions of the specified condition. CondAnd
-	 * are splitted. CondOr are defined as primitive, when their subterms are
-	 * all CondEqual of QuestionOC. CondNot are primitive, when they have
-	 * exactly one CondEqual of a QuestionOC as subcondition. CondEqual are
-	 * always primitive.
-	 * 
+	 * Returns all primitive subconditions of the specified condition. CondAnd are splitted. CondOr are defined as
+	 * primitive, when their subterms are all CondEqual of QuestionOC. CondNot are primitive, when they have exactly one
+	 * CondEqual of a QuestionOC as subcondition. CondEqual are always primitive.
+	 *
 	 * @param cond specified Condition
 	 * @return list of primitive conditions
 	 */
@@ -389,9 +385,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	/**
-	 * Checks if all terms of the specified CondOr are {@link CondEqual}s of
-	 * QuestionOC
-	 * 
+	 * Checks if all terms of the specified CondOr are {@link CondEqual}s of QuestionOC
+	 *
 	 * @created 22.03.2012
 	 */
 	private static boolean checkCondOr(CondOr condOr) {
@@ -421,9 +416,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	/**
-	 * Checks if the specified {@link CondNot} contains only one CondEqual of a
-	 * ChoiceValue
-	 * 
+	 * Checks if the specified {@link CondNot} contains only one CondEqual of a ChoiceValue
+	 *
 	 * @created 22.03.2012
 	 */
 	private static boolean checkCondNot(CondNot condNot) {
@@ -466,29 +460,24 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
 		// if there is no condition, the target can be indicated directly
 		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
-		Condition condition = getTransitiveCondition(model.getSession(), path, stateTransition,
-				state.getSession());
+		Condition condition = getTransitiveCondition(model.getSession(), path, stateTransition, state.getSession());
 		List<Condition> flattenedConditions = flattenCondAnds(condition);
 		condition = new CondAnd(flattenedConditions);
-		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(
-				this);
-		double result = estimatePathCosts(sessionObject, state, condition)
+		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
+		return estimatePathCosts(sessionObject, state, condition)
 				+ calculateUnusedNegatives(sessionObject, path);
-		return result;
 	}
 
 	/**
-	 * Creates a transitive condition for the specified stateTransition based on
-	 * the actual path. Important note: The heuristic has to be initialized
-	 * based on a search model, containing the qcontainer of the StateTransition
-	 * as a target. If no model is created yet, use the method
-	 * calculateTransitiveCondition(Session, QContainer)
-	 * 
-	 * @created 05.07.2012
+	 * Creates a transitive condition for the specified stateTransition based on the actual path. Important note: The
+	 * heuristic has to be initialized based on a search model, containing the qcontainer of the StateTransition as a
+	 * target. If no model is created yet, use the method calculateTransitiveCondition(Session, QContainer)
+	 *
 	 * @param sessionContainingObject the actual session
-	 * @param path actual path
-	 * @param stateTransition specified {@link StateTransition}
+	 * @param path                    actual path
+	 * @param stateTransition         specified {@link StateTransition}
 	 * @return transitive activation condition
+	 * @created 05.07.2012
 	 */
 	public Condition getTransitiveCondition(Session sessionContainingObject, Path path, StateTransition stateTransition, Session sessionRepresentingTheActualState) {
 		Condition precondition = stateTransition.getActivationCondition();
@@ -534,7 +523,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			}
 			conditions = getPreparingConditions(sessionRepresentingTheActualState,
 					sessionObject, forbiddenValues, conditionsToExamine);
-
 		}
 		Condition condition;
 		if (conditions.isEmpty()) {
@@ -643,7 +631,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 												}
 											}
 										}
-
 									}
 								}
 							}
@@ -656,9 +643,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	/**
-	 * Adds conditions not conflicting with other potential conditions to
-	 * conditionToUse
-	 * 
+	 * Adds conditions not conflicting with other potential conditions to conditionToUse
+	 *
 	 * @created 30.01.2013
 	 */
 	private void addConditionsNotConflicting(Session sessionRepresentingTheActualState, TPHeuristicSessionObject sessionObject, Set<Condition> conditions, List<Condition> conditionsToUse, Map<Question, Condition> originalFullfilledConditions, Set<Condition> conflictingFullfilledOriginalConds, Map<Question, Condition> originalUnFullfilledConditions, Set<Condition> conflictingUnfullfilledOriginalConds) {
@@ -679,7 +665,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			}
 		}
 		Set<Condition> blacklist = new HashSet<>();
-		additional: for (Condition additionalCondition : nonCondEqual) {
+		additional:
+		for (Condition additionalCondition : nonCondEqual) {
 			if (blacklist.contains(additionalCondition)) {
 				continue;
 			}
@@ -758,22 +745,29 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		return conditions;
 	}
 
-	private static Map<Question, Set<Value>> getCoveredValues(Condition condition) {
-		Map<Question, Set<Value>> forbiddenValues = new HashMap<>();
-		getCoveredValues(condition, forbiddenValues);
-		return forbiddenValues;
+	/**
+	 * Returns the questions of the specified condition, together with all values that potentially may (not necessarily
+	 * will) bring the condition to true.
+	 *
+	 * @param condition the condition to be examined
+	 * @return the questions and their positively covered values
+	 */
+	public static Map<Question, Set<Value>> getCoveredValues(Condition condition) {
+		Map<Question, Set<Value>> result = new HashMap<>();
+		getCoveredValues(condition, result);
+		return result;
 	}
 
-	private static void getCoveredValues(Condition condition, Map<Question, Set<Value>> forbiddenValues) {
+	private static void getCoveredValues(Condition condition, Map<Question, Set<Value>> collator) {
 		if (condition instanceof CondEqual) {
-			getSet(forbiddenValues, ((CondEqual) condition).getQuestion()).add(
-					((CondEqual) condition).getValue());
+			CondEqual condEqual = (CondEqual) condition;
+			getSet(collator, condEqual.getQuestion()).add(condEqual.getValue());
 		}
 		else if (condition instanceof CondNot) {
 			List<Condition> terms = ((CondNot) condition).getTerms();
 			if (checkCondNot((CondNot) condition)) {
 				CondEqual negatedCondition = (CondEqual) terms.get(0);
-				Set<Value> set = getSet(forbiddenValues, negatedCondition.getQuestion());
+				Set<Value> set = getSet(collator, negatedCondition.getQuestion());
 				for (ChoiceValue cv : getAllChoiceValues((QuestionChoice) negatedCondition.getQuestion())) {
 					if (!cv.equals(negatedCondition.getValue())) {
 						set.add(cv);
@@ -783,7 +777,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			else {
 				for (TerminologyObject to : condition.getTerminalObjects()) {
 					if (to instanceof QuestionChoice) {
-						Set<Value> set = getSet(forbiddenValues, (Question) to);
+						Set<Value> set = getSet(collator, (Question) to);
 						set.addAll(getAllChoiceValues((QuestionChoice) to));
 					}
 				}
@@ -791,18 +785,17 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		}
 		else if (condition instanceof CondOr || condition instanceof CondAnd) {
 			for (Condition subcondition : ((NonTerminalCondition) condition).getTerms()) {
-				getCoveredValues(subcondition, forbiddenValues);
+				getCoveredValues(subcondition, collator);
 			}
 		}
 		else {
 			for (TerminologyObject to : condition.getTerminalObjects()) {
 				if (to instanceof QuestionChoice) {
-					Set<Value> set = getSet(forbiddenValues, (Question) to);
+					Set<Value> set = getSet(collator, (Question) to);
 					set.addAll(getAllChoiceValues((QuestionChoice) to));
 				}
 			}
 		}
-
 	}
 
 	private static Set<Value> getSet(Map<Question, Set<Value>> forbiddenValues, Question question) {
@@ -818,13 +811,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	/**
-	 * Calculates a transitive condition for the specified target based on the
-	 * session.
-	 * 
-	 * @created 04.07.2012
+	 * Calculates a transitive condition for the specified target based on the session.
+	 *
 	 * @param session actual session
-	 * @param target specified target
+	 * @param target  specified target
 	 * @return transitive condition
+	 * @created 04.07.2012
 	 */
 	public static Condition calculateTransitiveCondition(Session session, QContainer target) {
 		TPHeuristic heuristic = new TPHeuristic();

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -24,10 +24,14 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.denkbares.collections.DefaultMultiMap;
+import com.denkbares.collections.MultiMap;
 import com.denkbares.utils.Log;
-import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.terminology.QContainer;
+import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
@@ -35,9 +39,9 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 
 /**
- * This model provides all functions on targets, nodes and paths for the search
- * algorithms. It represents the actual state of a search.
- * 
+ * This model provides all functions on targets, nodes and paths for the search algorithms. It represents the actual
+ * state of a search.
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class SearchModel {
@@ -53,12 +57,14 @@ public class SearchModel {
 	private final Set<QContainer> blockedQContainers;
 	private long duration = -1;
 
+	// debug fields, left untouched if debugging is not enabled
+	private final MultiMap<Question, QuestionValue> reachedStates = new DefaultMultiMap<>();
+
 	public SearchModel(Session session) {
 		this.session = session;
-		PSMethod problemsolver = session.getPSMethodInstance(PSMethodCostBenefit.class);
-		PSMethodCostBenefit ps = (PSMethodCostBenefit) problemsolver;
-		if (ps != null) {
-			costFunction = ps.getCostFunction();
+		PSMethodCostBenefit solver = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		if (solver != null) {
+			costFunction = solver.getCostFunction();
 		}
 		else {
 			costFunction = new DefaultCostFunction();
@@ -66,21 +72,21 @@ public class SearchModel {
 		}
 		blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		transitionalStateTransitions = new HashSet<>();
+
 		// filter StateTransitions that cannot be applied due to final questions
-		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND)) {
-			QContainer qcontainer = st.getQcontainer();
-			if (!blockedQContainers.contains(qcontainer)) {
-				Boolean targetOnly = qcontainer.getInfoStore().getValue(
-						CostBenefitProperties.TARGET_ONLY);
-				if (!targetOnly) {
-					transitionalStateTransitions.add(st);
-				}
-			}
+		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
+			// skip blocked and target-only containers, as their transitions are not taken into consideration
+			QContainer container = st.getQcontainer();
+			if (blockedQContainers.contains(container)) continue;
+			if (container.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY)) continue;
+
+			// add all remaining state transitions
+			transitionalStateTransitions.add(st);
 		}
 	}
 
 	@Override
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	public SearchModel clone() {
 		SearchModel copy = new SearchModel(session);
 		copy.bestBenefitTarget =
@@ -94,12 +100,11 @@ public class SearchModel {
 	}
 
 	/**
-	 * Merges the information from the specified {@link SearchModel} into this
-	 * SearchModel. The specified one is left untouched. This object is altered
-	 * and contains the merged results of the two searches.
-	 * 
-	 * @created 01.09.2011
+	 * Merges the information from the specified {@link SearchModel} into this SearchModel. The specified one is left
+	 * untouched. This object is altered and contains the merged results of the two searches.
+	 *
 	 * @param other the search model to merge into this object
+	 * @created 01.09.2011
 	 */
 	public void merge(SearchModel other) {
 		// do all the checks inside this loop
@@ -124,11 +129,33 @@ public class SearchModel {
 				targets.add(copy);
 			}
 		}
+
+		reachedStates.putAll(other.reachedStates);
 	}
 
 	/**
-	 * Return the existing target that equals to the specified one.
-	 * Unfortunately the Set have no such function to access the existing one.
+	 * This method signals that a certain precondition state has been established. This method is for debugging
+	 * purposes. If debugging is not enabled, the method returns immediately.
+	 */
+	public void stateVisited(Question stateQuestion, Value value) {
+		if (PSMethodCostBenefit.isDebugging()) {
+			reachedStates.put(stateQuestion, (QuestionValue) value);
+		}
+	}
+
+	/**
+	 * Returns the reached state values for the specified state question.
+	 *
+	 * @param stateQuestion the state question to get all reached values for
+	 * @return all reached state values for that question
+	 */
+	public Set<QuestionValue> getReachedStates(Question stateQuestion) {
+		return reachedStates.getValues(stateQuestion);
+	}
+
+	/**
+	 * Return the existing target that equals to the specified one. Unfortunately the Set have no such function to
+	 * access the existing one.
 	 */
 	private Target getExistingTarget(Target blueprint) {
 		if (targets.contains(blueprint)) {
@@ -141,8 +168,6 @@ public class SearchModel {
 
 	/**
 	 * Adds a new target
-	 * 
-	 * @param target
 	 */
 	public void addTarget(Target target) {
 		targets.add(target);
@@ -157,12 +182,11 @@ public class SearchModel {
 	}
 
 	/**
-	 * This method signals that a target has been reached by a new or improved
-	 * path. If updates the results of this search model if the new or improved
-	 * path optimizes them.
-	 * 
-	 * @created 18.09.2011
+	 * This method signals that a target has been reached by a new or improved path. If updates the results of this
+	 * search model if the new or improved path optimizes them.
+	 *
 	 * @param target the target that has been reached
+	 * @created 18.09.2011
 	 */
 	public void checkTarget(Target target) {
 		if (bestBenefitTarget == null || target.getBenefit() > bestBenefitTarget.getBenefit()) {
@@ -178,17 +202,17 @@ public class SearchModel {
 	}
 
 	/**
-	 * Maximizes the benefit of a target
-	 * 
-	 * @param t
-	 * @param benefit
+	 * Maximizes the benefit of a given target.
+	 *
+	 * @param target  the target to maximize the benefit for
+	 * @param benefit the new benefit to maximize with the already defined benefit
 	 */
-	public void maximizeBenefit(Target t, double benefit) {
-		if (t.getBenefit() < benefit) {
-			targets.remove(t);
-			t.setBenefit(benefit);
-			targets.add(t);
-			checkTarget(t);
+	public void maximizeBenefit(Target target, double benefit) {
+		if (target.getBenefit() < benefit) {
+			targets.remove(target);
+			target.setBenefit(benefit);
+			targets.add(target);
+			checkTarget(target);
 		}
 	}
 
@@ -200,10 +224,8 @@ public class SearchModel {
 	}
 
 	/**
-	 * Returns the benefit of the bestBenefitTarget The best benefit not
-	 * necessarily is the benefit used for the best cost/benefit relation
-	 * 
-	 * @return
+	 * Returns the benefit of the bestBenefitTarget The best benefit not necessarily is the benefit used for the best
+	 * cost/benefit relation.
 	 */
 	public double getBestBenefit() {
 		if (bestBenefitTarget == null) return 0f;
@@ -216,8 +238,6 @@ public class SearchModel {
 
 	/**
 	 * Returns the CostBenefit of the BestCostBenefitTarget
-	 * 
-	 * @return
 	 */
 	public double getBestCostBenefit() {
 		if (bestCostBenefitTarget == null) {
@@ -227,10 +247,7 @@ public class SearchModel {
 	}
 
 	/**
-	 * Returns the best unreached benefit. This can be used to calculate the
-	 * best reachable CostBenefit.
-	 * 
-	 * @return
+	 * Returns the best unreached benefit. This can be used to calculate the best reachable CostBenefit.
 	 */
 	public double getBestUnreachedBenefit() {
 		double benefit = 0;
@@ -243,27 +260,21 @@ public class SearchModel {
 	}
 
 	/**
-	 * Checks if this model has at least one target
-	 * 
-	 * @return
+	 * Checks if this model has at least one target.
 	 */
 	public boolean hasTargets() {
 		return !targets.isEmpty();
 	}
 
 	/**
-	 * Returns the CostFunction
-	 * 
-	 * @return
+	 * Returns the currently used CostFunction.
 	 */
 	public CostFunction getCostFunction() {
 		return costFunction;
 	}
 
 	/**
-	 * Checks if at least one target is reached.
-	 * 
-	 * @return
+	 * Returns if at least one target is reached.
 	 */
 	public boolean isAnyTargetReached() {
 		return (bestCostBenefitTarget != null);
@@ -274,11 +285,10 @@ public class SearchModel {
 	}
 
 	/**
-	 * Tells the search algorithm whether to abort the search or not. If the
-	 * search is already aborted, this method should do nothing. Please note
-	 * that each search algorithm may set this flag if its abort strategy tells
-	 * him to do.
-	 * 
+	 * Tells the search algorithm whether to abort the search or not. If the search is already aborted, this method
+	 * should do nothing. Please note that each search algorithm may set this flag if its abort strategy tells him to
+	 * do.
+	 *
 	 * @param abort if the search is / shall be aborted
 	 * @created 15.09.2011
 	 */
@@ -287,11 +297,10 @@ public class SearchModel {
 	}
 
 	/**
-	 * Check if the search has been aborted (externally or by the abort strategy
-	 * of the search).
-	 * 
-	 * @created 14.09.2011
+	 * Check if the search has been aborted (externally or by the abort strategy of the search).
+	 *
 	 * @return if the search has been aborted
+	 * @created 14.09.2011
 	 */
 	public boolean isAborted() {
 		return aborted;
@@ -306,11 +315,10 @@ public class SearchModel {
 	}
 
 	/**
-	 * Calculates all unblocked state transitions having a {@link QContainer}
-	 * being part of an actual target
-	 * 
-	 * @created 28.11.2012
+	 * Calculates all unblocked state transitions having a {@link QContainer} being part of an actual target
+	 *
 	 * @return List of unblocked target StateTransitions
+	 * @created 28.11.2012
 	 */
 	public Set<StateTransition> getTargetStateTransitions() {
 		HashSet<StateTransition> result = new HashSet<>();
@@ -341,7 +349,5 @@ public class SearchModel {
 		public int compare(Target o1, Target o2) {
 			return o2.compareTo(o1);
 		}
-
 	}
-
 }

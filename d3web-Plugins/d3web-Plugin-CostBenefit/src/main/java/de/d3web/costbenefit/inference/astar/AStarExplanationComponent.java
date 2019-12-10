@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -60,8 +60,7 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns the longest subpath of the specified path reached during the
-	 * AStar calculation
+	 * Returns the longest subpath of the specified path reached during the AStar calculation
 	 *
 	 * @param path specified path
 	 * @return subpath of the specified path
@@ -91,9 +90,8 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns the path of the last calculation, having reached most of the
-	 * specified QContainers. If two pathes have reached the same amount of
-	 * QContainers, the one with the better f Value is returned.
+	 * Returns the path of the last calculation, having reached most of the specified QContainers. If two pathes have
+	 * reached the same amount of QContainers, the one with the better f Value is returned.
 	 *
 	 * @param path specified QContainers
 	 * @return best AStarPath fitting to the defined criterias
@@ -144,8 +142,26 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns the path which would have been expanded next, if the calculation
-	 * wouldn't have finished/aborted
+	 * Returns the minimal costs that have been calculated for the specific target questionnaire. These are the minimum
+	 * of all expected costs of each visited AStar node.
+	 */
+	public double getMinimalPathCosts(QContainer target) {
+		Heuristic heuristic = astar.getAlgorithm().getHeuristic();
+		SearchModel model = astar.getModel();
+		return astar.getClosedNodes().stream().mapToDouble(node ->
+				node.getPath().getCosts() + heuristic.getDistance(model, node.getPath(), node.getState(), target))
+				.min().orElse(Double.NaN);
+	}
+
+	/**
+	 * Returns all targets that have been removed because the target state is not reachable at all.
+	 */
+	public Set<Target> getInfiniteTargets() {
+		return astar.getInfiniteTargets();
+	}
+
+	/**
+	 * Returns the path which would have been expanded next, if the calculation wouldn't have finished/aborted
 	 *
 	 * @return best unexpanded path after calculation
 	 * @created 05.07.2012
@@ -156,8 +172,8 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Represents a Result of an Analysis containing the path, the f Value and a
-	 * boolean, if the path is closed (it's successors have been expanded)
+	 * Represents a Result of an Analysis containing the path, the f Value and a boolean, if the path is closed (it's
+	 * successors have been expanded)
 	 *
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 04.07.2012
@@ -194,13 +210,12 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Calculates all conditions that must be fulfilled to be enable to execute
-	 * the target and a set of QContainers per target, enabling the condition.
+	 * Calculates all conditions that must be fulfilled to be enable to execute the target and a set of QContainers per
+	 * target, enabling the condition.
 	 *
 	 * @param session             actual session
 	 * @param transitiveCondition the transitive condition of the target test step
-	 * @return a map containing the calculated conditions and its preparing
-	 * QContainers
+	 * @return a map containing the calculated conditions and its preparing QContainers
 	 * @created 04.07.2012
 	 */
 	public static Map<Condition, Set<QContainer>> findVariations(Session session, Condition transitiveCondition) {
@@ -241,12 +256,12 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Calculates all QContainers of the path to the last calculated target, not
-	 * needed to establish a transitive precondition of the chosen target
+	 * Calculates all QContainers of the path to the last calculated target, not needed to establish a transitive
+	 * precondition of the chosen target
 	 *
 	 * @return list of unexpected QContainers
-	 * @throws IllegalArgumentException if the method is called after an
-	 *                                  calculation with a multi target having the best cost benefit
+	 * @throws IllegalArgumentException if the method is called after an calculation with a multi target having the best
+	 *                                  cost benefit
 	 * @created 05.07.2012
 	 */
 	public Set<QContainer> getUnexpectedQContainers() throws IllegalArgumentException {
@@ -274,8 +289,7 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Calculates all QContainers of the path, not needed to establish a
-	 * transitive precondition
+	 * Calculates all QContainers of the path, not needed to establish a transitive precondition
 	 *
 	 * @param path                specified Path
 	 * @param session             actual session
@@ -313,8 +327,7 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns the path of the best cost benefit target or null if no path could
-	 * be found
+	 * Returns the path of the best cost benefit target or null if no path could be found
 	 *
 	 * @return path to target
 	 * @created 05.07.2012
@@ -328,8 +341,7 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Calculates the primitive conditions, which are not fullfilled after or
-	 * while the specified path is processed
+	 * Calculates the primitive conditions, which are not fullfilled after or while the specified path is processed
 	 *
 	 * @param path                specified path
 	 * @param transitiveCondition Condition to be fullfilled
@@ -372,8 +384,7 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns if the specified QContainer was part of a target in the last
-	 * search
+	 * Returns if the specified QContainer was part of a target in the last search
 	 *
 	 * @param qContainer specified {@link QContainer}
 	 * @return true if the QContainer was part of a target

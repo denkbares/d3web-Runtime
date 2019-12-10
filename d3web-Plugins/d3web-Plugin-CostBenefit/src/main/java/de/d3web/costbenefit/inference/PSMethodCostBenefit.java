@@ -90,6 +90,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private boolean manualMode = false;
 	private WatchSet watchSet;
 
+	private static boolean debugging = false;
+
+	public static void setDebugging(boolean debugging) {
+		PSMethodCostBenefit.debugging = debugging;
+	}
+
+	public static boolean isDebugging() {
+		return debugging;
+	}
+
 	public double getStrategicBenefitFactor() {
 		return strategicBenefitFactor;
 	}

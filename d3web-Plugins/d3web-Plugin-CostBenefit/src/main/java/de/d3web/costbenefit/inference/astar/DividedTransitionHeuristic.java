@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2011 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -61,7 +61,6 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 
 /**
- * 
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
  */
@@ -75,20 +74,18 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		protected KnowledgeBase knowledgeBase;
 
 		/**
-		 * Stores all available state transitions of the knowledge base of the
-		 * initialized session
+		 * Stores all available state transitions of the knowledge base of the initialized session
 		 */
 		private Collection<StateTransition> transitionalStateTransitions;
 		private double negativeSum;
 		private Map<Question, Value> finalValues;
 		/**
-		 * Stores the costs of the cheapest state transition per Question and
-		 * Value for each target
+		 * Stores the costs of the cheapest state transition per Question and Value for each target
 		 */
-		private Map<Condition, ActivationCacheEntry> costCache;
-		private Map<ValueTransition, Value> valueCache;
+		private final Map<Condition, ActivationCacheEntry> costCache = new ConcurrentHashMap<>();
+		private final Map<ValueTransition, Value> valueCache = new ConcurrentHashMap<>();
+		;
 		private Session answeredSession;
-
 	}
 
 	@Override
@@ -117,13 +114,13 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		sessionObject.transitionalStateTransitions = new LinkedList<>();
 		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
 		sessionObject.answeredSession = CostBenefitUtil.createSearchCopy(model.getSession());
-		sessionObject.valueCache = new ConcurrentHashMap<>();
+		sessionObject.valueCache.clear();
 		// set normal values of all questions in transitional qcontainers
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
 			CostBenefitUtil.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
 		}
 
-		sessionObject.costCache = Collections.synchronizedMap(new HashMap<Condition, ActivationCacheEntry>());
+		sessionObject.costCache.clear();
 		sessionObject.negativeSum = 0;
 		for (QContainer qcon : kb.getManager().getQContainers()) {
 			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
@@ -206,7 +203,6 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				child.setConflicting(index);
 			}
 		}
-
 	}
 
 	private static final class CompiledCondOr implements CompiledCostsFunction {
@@ -273,7 +269,6 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 				else {
 					return costs;
 				}
-
 			}
 			return costs;
 		}
@@ -354,7 +349,6 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 					else {
 						map.put(index, function);
 					}
-
 				}
 			}
 			if (children.length == 1) return children[0];
@@ -424,18 +418,15 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	}
 
 	/**
-	 * Calculate the minimal costs of preparing one (1) single precondition
-	 * question of the target {@link QContainer} by a specified
-	 * {@link StateTransition}. If the StateTransition is capable to prepare
-	 * multiple precondition questions of the target, the costs of the preparing
-	 * questionnaire are divided by the number of preconditions to be
+	 * Calculate the minimal costs of preparing one (1) single precondition question of the target {@link QContainer} by
+	 * a specified {@link StateTransition}. If the StateTransition is capable to prepare multiple precondition questions
+	 * of the target, the costs of the preparing questionnaire are divided by the number of preconditions to be
 	 * established (to have the cost per precondition question).
-	 * 
-	 * @created 06.09.2011
-	 * @param preparingTransition the state transition possibly used to prepare
-	 *        the target
-	 * @param stateQuestion the question represents the state to be estimated
+	 *
+	 * @param preparingTransition the state transition possibly used to prepare the target
+	 * @param stateQuestion       the question represents the state to be estimated
 	 * @return the minimal costs per question of the target's precondition
+	 * @created 06.09.2011
 	 */
 	private static double calculateCosts(StateTransition preparingTransition, Set<Question> set, Question stateQuestion) {
 
@@ -465,13 +456,13 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 	/**
 	 * calculate all questions that
-	 * 
+	 * <p>
 	 * a) will be set by the preparing state transition
-	 * 
+	 * <p>
 	 * b) are relevant in the targets activation condition
-	 * 
+	 * <p>
 	 * c) the set values are common with the required values
-	 * 
+	 *
 	 * @created 23.05.2012
 	 */
 	private static Map<Question, Value> getQuestionSet(DividedTransitionHeuristicSessionObject sessionObject, StateTransition preparingTransition, Condition activationCondition) {
