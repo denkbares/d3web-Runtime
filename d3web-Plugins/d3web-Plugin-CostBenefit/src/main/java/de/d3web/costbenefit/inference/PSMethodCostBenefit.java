@@ -82,6 +82,11 @@ import de.d3web.interview.inference.PSMethodInterview;
  */
 public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject>, PostHookablePSMethod {
 
+	/**
+	 * Constant for the benefit of a test step if the user has selected the test steo as the target
+	 */
+	public static final double USER_SELECTED_BENEFIT = 10000000000.0;
+
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
 	private SearchAlgorithm searchAlgorithm;
@@ -206,7 +211,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				searchModel.addTarget(target);
 				// initialize benefit in search model to a positive value
 				// (use 1 if there is no benefit inside the target)
-				searchModel.maximizeBenefit(target, 10000000000.0);
+				searchModel.maximizeBenefit(target, USER_SELECTED_BENEFIT);
 			}
 		}
 		// set the undiscriminated solution to "null" to indicate that we will
@@ -215,6 +220,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// untouched because they are still valid.
 		caseObject.setUndiscriminatedSolutions(null);
 		caseObject.setSearchModel(searchModel);
+		caseObject.setDiscriminatingTargets(targets);
 	}
 
 	void calculateNewPath(CostBenefitCaseObject caseObject) {
@@ -437,7 +443,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 		}
 		for (Condition c : terms) {
-			conditionValueCache.merge(c, t.getBenefit() / t.getCosts(), (a, b) -> b + a);
+			conditionValueCache.merge(c, t.getBenefit() / t.getCosts(), Double::sum);
 		}
 	}
 

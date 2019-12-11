@@ -132,6 +132,36 @@ public class ExpertMode implements SessionObject {
 		return Collections.unmodifiableList(result);
 	}
 
+	/**
+	 * Returns a list of all targets, alternative targets and the currently selected target. The list is sorted by the
+	 * targets benefit, regardless to the costs they may induce. By specifying currentFirst as true, the current target
+	 * is moved to the first element of the list, if there is a current target available.
+	 * <p>
+	 * Please note that the calculated information contained in the {@link Target} (namely the minimal path and the
+	 * benefit of the target), are based on the latest search of the cost benefit underlying search algorithm. Due to
+	 * already answered test steps the minimal path may have become no longer applicable.
+	 *
+	 * @param currentFirst if true, moves the current target at the top of the list
+	 * @return the list of all alternative targets sorted by their benefit
+	 * @created 07.03.2011
+	 */
+	public List<Target> getAllTargets(boolean currentFirst) {
+		// create a list of all targets, sorted regarding to their benefit to become our result
+		List<Target> result = new ArrayList<>(pso.getDiscriminatingTargets());
+		result.sort(BENEFIT_COMPARATOR);
+
+		// but move the currently selected one if desired
+		if (currentFirst) {
+			Target currentTarget = getCurrentTarget();
+			if (currentTarget != null) {
+				result.remove(currentTarget);
+				result.add(0, currentTarget);
+			}
+		}
+
+		return Collections.unmodifiableList(result);
+	}
+
 	private void initStates() {
 		if (systemStates != null) return;
 

@@ -67,7 +67,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private List<Fact> indicatedFacts = new LinkedList<>();
 	private int currentPathIndex = -1;
 	private Set<Solution> undiscriminatedSolutions = new HashSet<>();
-	private Set<Target> discriminatingTargets = new HashSet<>();
+	private final Set<Target> discriminatingTargets = new HashSet<>();
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
 	private boolean manualMode = false;
@@ -161,8 +161,13 @@ public class CostBenefitCaseObject implements SessionObject {
 		this.undiscriminatedSolutions = undiscriminatedSolutions;
 	}
 
-	public void setDiscriminatingTargets(Set<Target> allDiscriminatingTargets) {
-		this.discriminatingTargets = allDiscriminatingTargets;
+	public void setDiscriminatingTargets(Target... allDiscriminatingTargets) {
+		setDiscriminatingTargets(Arrays.asList(allDiscriminatingTargets));
+	}
+
+	public void setDiscriminatingTargets(Collection<Target> allDiscriminatingTargets) {
+		this.discriminatingTargets.clear();
+		this.discriminatingTargets.addAll(allDiscriminatingTargets);
 	}
 
 	public Set<Target> getDiscriminatingTargets() {
