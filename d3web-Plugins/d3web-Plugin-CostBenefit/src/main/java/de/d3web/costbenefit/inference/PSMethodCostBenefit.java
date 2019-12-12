@@ -220,7 +220,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// untouched because they are still valid.
 		caseObject.setUndiscriminatedSolutions(null);
 		caseObject.setSearchModel(searchModel);
-		caseObject.setDiscriminatingTargets(targets);
+//		caseObject.setDiscriminatingTargets(targets);
 	}
 
 	void calculateNewPath(CostBenefitCaseObject caseObject) {
