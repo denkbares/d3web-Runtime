@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -98,7 +97,6 @@ public class AStar {
 
 	// some fields useful for debugging non-readched targets
 	private Node startNode;
-	private final Set<Target> infiniteTargets = new HashSet<>();
 
 	/**
 	 * @deprecated use PSMethodCostBenefit.TARGET_ONLY
@@ -168,7 +166,7 @@ public class AStar {
 		long time1 = System.currentTimeMillis();
 		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
-		getOpenNodes().add(getStartNode());
+		openNodes.add(getStartNode());
 		// clean up targets if it is not expected to require too much time
 		// and also expect significant speed optimization during calculation
 		if (model.getTargets().size() <= 50) {
@@ -182,8 +180,8 @@ public class AStar {
 				"#steps: " + steps + ", " +
 				"time: " + (time2 - time1) + "ms, " +
 				"init: " + initTime + "ms, " +
-				"#open: " + getOpenNodes().size() + ", " +
-				"#closed: " + getClosedNodes().size() + ")");
+				"#open: " + openNodes.size() + ", " +
+				"#closed: " + closedNodes.size() + ")");
 	}
 
 	public Node getStartNode() {
@@ -203,21 +201,18 @@ public class AStar {
 			QContainer qcontainer = target.getQContainers().get(0);
 			double distance = heuristic.getDistance(model, startNode.getPath(), startNode.getState(), qcontainer);
 			if (distance == Double.POSITIVE_INFINITY) {
-				model.removeTarget(target);
-				infiniteTargets.add(target);
+				model.blockTarget(target);
 				successors.remove(StateTransition.getStateTransition(qcontainer));
 			}
 		}
 	}
 
-	public Set<Target> getInfiniteTargets() {
-		return infiniteTargets;
-	}
-
 	private void searchLoop() {
-		while (!model.isAborted() && !getOpenNodes().isEmpty()) {
+		while (!model.isAborted()) {
 			// check for the next open node to be processed
-			Node node = getOpenNodes().poll();
+			Node node = openNodes.poll();
+			if (node == null) break;
+
 			// System.out.println("Expanding: " + node.getPath().getPath() +
 			// ", f-Value:"
 			// + node.getfValue());
@@ -228,8 +223,8 @@ public class AStar {
 
 			// if a target has been reached and its cost/benefit is better than
 			// the optimistic fValue of the best node, terminate the algorithm
-			if (model.getBestCostBenefitTarget() != null
-					&& model.getBestCostBenefitTarget().getCostBenefit() <= node.getfValue()) {
+			Target best = model.getBestCostBenefitTarget();
+			if (best != null && best.getCostBenefit() <= node.getfValue()) {
 				checkPathFValues(node);
 				break;
 			}
@@ -243,7 +238,7 @@ public class AStar {
 			}
 
 			// and mark the node as finished
-			getClosedNodes().add(node);
+			closedNodes.add(node);
 		}
 	}
 
@@ -354,13 +349,13 @@ public class AStar {
 			if (follower == null) {
 				// store the new one, because it does not exist
 				nodes.put(newFollower.getState(), newFollower);
-				getOpenNodes().add(newFollower);
+				openNodes.add(newFollower);
 				// System.out.println("\tnode added");
 			}
 			else if (follower.getPath().getCosts() > newFollower.getPath().getCosts()) {
 				// update existing node for the state
 				// for open nodes remove and add again to preserve ordering
-				boolean hasOpenNode = getOpenNodes().remove(follower);
+				boolean hasOpenNode = openNodes.remove(follower);
 				// heuristic was not steady, log that the knowledgebase has to
 				// be checked
 				if (!hasOpenNode) {
@@ -376,7 +371,7 @@ public class AStar {
 				// proceed with usual update
 				follower.updatePath(newFollower.getPath());
 				follower.setfValue(newFollower.getfValue());
-				if (hasOpenNode) getOpenNodes().add(follower);
+				if (hasOpenNode) openNodes.add(follower);
 			}
 		}
 	}

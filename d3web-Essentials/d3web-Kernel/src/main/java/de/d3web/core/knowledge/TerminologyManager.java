@@ -40,7 +40,6 @@ import de.d3web.core.knowledge.terminology.Solution;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 12.01.2011
  */
-@SuppressWarnings("JavadocReference")
 public class TerminologyManager {
 
 	/**
@@ -61,9 +60,12 @@ public class TerminologyManager {
 	 * Hashes the objects for names (unique name assumption required)
 	 */
 	private final Map<String, TerminologyObject> objectNameMap = new HashMap<>();
-	private final TreeIndexer solutionIndexer = new TreeIndexer();
-	private final TreeIndexer questionIndexer = new TreeIndexer();
 	private final KnowledgeBase kb;
+
+	// some fields for cached and useful information
+	private final transient TreeIndexer solutionIndexer = new TreeIndexer();
+	private final transient TreeIndexer questionIndexer = new TreeIndexer();
+	private final transient Map<Class<?>, List<TerminologyObject>> typeCache = new HashMap<>();
 
 	/**
 	 * Creates a new manager for the specified {@link KnowledgeBase} instance.
@@ -98,6 +100,7 @@ public class TerminologyManager {
 				}
 				// otherwise add the object and rebuild the index
 				clearIndexer(object);
+				typeCache.clear();
 				return object;
 			});
 		}
@@ -118,6 +121,7 @@ public class TerminologyManager {
 
 		synchronized (kb) {
 			clearIndexer(object);
+			typeCache.clear();
 			objectNameMap.remove(object.getName());
 		}
 	}
@@ -157,15 +161,18 @@ public class TerminologyManager {
 	 * @return list of all TerminologyObjects of a certain type contained in this KnowledgeBase
 	 */
 	public <T extends TerminologyObject> List<T> getObjects(Class<T> clazz) {
-		List<T> questions = new ArrayList<>();
 		synchronized (kb) {
-			for (NamedObject o : objectNameMap.values()) {
-				if (clazz.isInstance(o)) {
-					questions.add(clazz.cast(o));
+			//noinspection unchecked
+			return (List<T>) typeCache.computeIfAbsent(clazz, _class -> {
+				List<T> questions = new ArrayList<>();
+				for (NamedObject o : objectNameMap.values()) {
+					if (clazz.isInstance(o)) {
+						questions.add(clazz.cast(o));
+					}
 				}
-			}
+				return Collections.unmodifiableList(questions);
+			});
 		}
-		return Collections.unmodifiableList(questions);
 	}
 
 	/**
@@ -175,11 +182,7 @@ public class TerminologyManager {
 	 * <code>null</code> if none found
 	 */
 	public Solution searchSolution(String name) {
-		TerminologyObject o = search(name);
-		if (o instanceof Solution) {
-			return (Solution) o;
-		}
-		return null;
+		return search(name, Solution.class);
 	}
 
 	/**
@@ -189,11 +192,7 @@ public class TerminologyManager {
 	 * <code>null</code> if none found
 	 */
 	public QASet searchQASet(String name) {
-		TerminologyObject o = search(name);
-		if (o instanceof QASet) {
-			return (QASet) o;
-		}
-		return null;
+		return search(name, QASet.class);
 	}
 
 	/**
@@ -233,11 +232,7 @@ public class TerminologyManager {
 	 * <code>null</code> if none found
 	 */
 	public QContainer searchQContainer(String name) {
-		TerminologyObject o = search(name);
-		if (o instanceof QContainer) {
-			return (QContainer) o;
-		}
-		return null;
+		return search(name, QContainer.class);
 	}
 
 	/**
@@ -259,11 +254,7 @@ public class TerminologyManager {
 	 * @return the searched question; <code>null</code> if none found
 	 */
 	public Question searchQuestion(String name) {
-		TerminologyObject o = search(name);
-		if (o instanceof Question) {
-			return (Question) o;
-		}
-		return null;
+		return search(name, Question.class);
 	}
 
 	/**

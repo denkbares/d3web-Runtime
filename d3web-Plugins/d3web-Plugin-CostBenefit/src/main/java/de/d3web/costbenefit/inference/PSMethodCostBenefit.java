@@ -220,7 +220,6 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// untouched because they are still valid.
 		caseObject.setUndiscriminatedSolutions(null);
 		caseObject.setSearchModel(searchModel);
-//		caseObject.setDiscriminatingTargets(targets);
 	}
 
 	void calculateNewPath(CostBenefitCaseObject caseObject) {
@@ -344,18 +343,15 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				}
 				if (!Conditions.isTrue(condition, session)) {
 					ST:
-					for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-							StateTransition.KNOWLEDGE_KIND)) {
+					for (StateTransition st : StateTransition.getAll(session)) {
 						for (ValueTransition vt : st.getPostTransitions()) {
 							if (vt.getQuestion() == condEqual.getQuestion()) {
 								for (ConditionalValueSetter cvs : vt.getSetters()) {
 									boolean answeredQuestion = false;
-									for (TerminologyObject object : cvs.getCondition()
-											.getTerminalObjects()) {
+									for (TerminologyObject object : cvs.getCondition().getTerminalObjects()) {
 										if ((object instanceof Question)
 												&& UndefinedValue.isNotUndefinedValue(session.getBlackboard()
-												.getValue(
-														(Question) object))) {
+												.getValue((Question) object))) {
 											answeredQuestion = true;
 											break;
 										}
@@ -364,22 +360,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 									if (cvs.getAnswer().equals(condEqual.getValue())) {
 										Target target = targetMap.get(st.getQcontainer());
 										if (target != null) {
-											// log.info("Increasing Benefit for "
-											// + target
-											// + " from " + target.getBenefit()
-											// + " to "
-											// + (target.getBenefit() +
-											// additiveValue));
-											searchModel.maximizeBenefit(target, target.getBenefit()
-													+ additiveValue);
+											// log.info("Increasing Benefit for " + target + " from " + target.getBenefit() + " to " +
+											// (target.getBenefit() + additiveValue));
+											searchModel.maximizeBenefit(target, target.getBenefit() + additiveValue);
 										}
 										else {
 											target = new Target(Collections.singletonList(st.getQcontainer()));
 											target.setBenefit(additiveValue);
-											// log.info("Creating new target " +
-											// target
-											// + " with benefit " +
-											// target.getBenefit());
+											// log.info("Creating new target " + target + " with benefit " + target.getBenefit());
 											targetMap.put(st.getQcontainer(), target);
 											searchModel.addTarget(target);
 										}
@@ -397,8 +385,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	private static void fillConditionValueCache(HashMap<Condition, Double> conditionValueCache, Target t) {
-		StateTransition stateTransition = StateTransition.getStateTransition(
-				t.getQContainers().get(0));
+		StateTransition stateTransition = StateTransition.getStateTransition(t.getQContainers().get(0));
 		if (stateTransition == null) return;
 		Condition activationCondition = stateTransition.getActivationCondition();
 		List<Condition> terms = new LinkedList<>();
@@ -489,19 +476,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			emptySession.getBlackboard().addValueFact(
 					FactFactory.createUserEnteredFact(e.getKey(), e.getValue()));
 		}
-		for (StateTransition stateTransition : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND)) {
+		for (StateTransition stateTransition : StateTransition.getAll(session)) {
 			if (includeContraindicated
 					&& session.getBlackboard()
-					.getIndication(stateTransition.getQcontainer())
-					.hasState(
-							State.CONTRA_INDICATED)) {
+					.getIndication(stateTransition.getQcontainer()).hasState(State.CONTRA_INDICATED)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
 			if (includePermanentlyRelevant
-					&& stateTransition.getQcontainer().getInfoStore().getValue(
-					CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+					&& stateTransition.getQcontainer()
+					.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
 				result.add(stateTransition.getQcontainer());
 				continue;
 			}
@@ -536,8 +520,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				String initString = q.getInfoStore().getValue(BasicProperties.INIT);
 				Value initValue = initString == null
 						? UndefinedValue.getInstance()
-						: PSMethodInit.getValue(q,
-						initString);
+						: PSMethodInit.getValue(q, initString);
 				Value actualValue = session.getBlackboard().getValue(q);
 				if (!initValue.equals(actualValue)) {
 					finalValues.put(q, actualValue);

@@ -94,8 +94,7 @@ public class DefaultInterview implements Interview {
 	private void notifyQuestionValueChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
 		// need to check, whether the agenda needs an update due to an
 		// answered question
-		InterviewObject indicatedObject = (InterviewObject) changedFact
-				.getObject();
+		InterviewObject indicatedObject = (InterviewObject) changedFact.getObject();
 		if (this.agenda.onAgenda(indicatedObject)) {
 			// Check: the VALUE has changed from DEFINED to UNDEFINED =>
 			// activate

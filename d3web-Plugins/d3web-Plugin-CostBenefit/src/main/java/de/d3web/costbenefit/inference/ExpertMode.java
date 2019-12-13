@@ -120,12 +120,30 @@ public class ExpertMode implements SessionObject {
 	 * @created 07.03.2011
 	 */
 	public List<Target> getAlternativeTargets() {
+		return getAlternativeTargets(false);
+	}
+
+	/**
+	 * Returns a list of all alternative targets that can be suggested to the user. The list is sorted by the targets
+	 * benefit, regardless to the costs they may induce.
+	 * <p>
+	 * Please note that the calculated information contained in the {@link Target} (namely the minimal path and the
+	 * benefit of the target), are based on the latest search of the cost benefit underlying search algorithm. Due to
+	 * already answered test steps the minimal path may have become no longer applicable.
+	 *
+	 * @param includeCurrent true to also allow the current target to be included (if it is a benefit target)
+	 * @return the list of all alternative targets sorted by their benefit
+	 * @created 07.03.2011
+	 */
+	public List<Target> getAlternativeTargets(boolean includeCurrent) {
 		// create a list of all targets
 		List<Target> result = new ArrayList<>(pso.getDiscriminatingTargets());
 
-		// but without the currently selected one
-		Target currentTarget = getCurrentTarget();
-		result.remove(currentTarget);
+		if (!includeCurrent) {
+			// but without the currently selected one
+			Target currentTarget = getCurrentTarget();
+			result.remove(currentTarget);
+		}
 
 		// sort the list regarding to their benefit to become our result
 		result.sort(BENEFIT_COMPARATOR);
@@ -133,9 +151,13 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
-	 * Returns a list of all targets, alternative targets and the currently selected target. The list is sorted by the
-	 * targets benefit, regardless to the costs they may induce. By specifying currentFirst as true, the current target
-	 * is moved to the first element of the list, if there is a current target available.
+	 * Returns a list of all targets that are used for the recent path calculation. In contrast to {@link
+	 * #getAlternativeTargets()}, returning the targets that will be autoamtically selected by the cost/benefit solver,
+	 * this method returns the list will be the targets used for the recent search, regardless of their benefit (e.g. if
+	 * the target was manually selected by the user).
+	 * <p>
+	 * The list is sorted by the targets benefit, regardless to the costs they may induce. By specifying currentFirst as
+	 * true, the current target is moved to the first element of the list, if there is a current target available.
 	 * <p>
 	 * Please note that the calculated information contained in the {@link Target} (namely the minimal path and the
 	 * benefit of the target), are based on the latest search of the cost benefit underlying search algorithm. Due to
@@ -145,9 +167,12 @@ public class ExpertMode implements SessionObject {
 	 * @return the list of all alternative targets sorted by their benefit
 	 * @created 07.03.2011
 	 */
-	public List<Target> getAllTargets(boolean currentFirst) {
+	public List<Target> getCalculatedTargets(boolean currentFirst) {
+		SearchModel model = getSearchModel();
+		if (model == null) return Collections.emptyList();
+
 		// create a list of all targets, sorted regarding to their benefit to become our result
-		List<Target> result = new ArrayList<>(pso.getDiscriminatingTargets());
+		List<Target> result = new ArrayList<>(model.getTargets());
 		result.sort(BENEFIT_COMPARATOR);
 
 		// but move the currently selected one if desired
@@ -273,6 +298,20 @@ public class ExpertMode implements SessionObject {
 			session.getProtocol().addEntry(
 					new ManualTargetSelectionEntry(propagationManager.getPropagationTime(), target.getQContainers()));
 			psm.calculateNewPathTo(pso, target);
+		}
+		finally {
+			propagationManager.commitPropagation();
+		}
+	}
+
+	public void unselectTarget() {
+		PropagationManager propagationManager = session.getPropagationManager();
+		try {
+			propagationManager.openPropagation();
+			// TODO: remove manual selection entry from protocol?
+			pso.resetPath();
+			pso.resetUnreachedTarget();
+			psm.calculateNewPath(pso);
 		}
 		finally {
 			propagationManager.commitPropagation();

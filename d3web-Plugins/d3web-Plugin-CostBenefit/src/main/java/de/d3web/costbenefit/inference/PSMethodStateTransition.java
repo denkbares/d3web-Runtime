@@ -180,7 +180,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		for (QContainer qcon : answeredQuestionnaires) {
 
 			// only apply to container that have a transition object
-			StateTransition transition = qcon.getKnowledgeStore().getKnowledge(StateTransition.KNOWLEDGE_KIND);
+			StateTransition transition = StateTransition.getStateTransition(qcon);
 			if (transition == null) continue;
 
 			// only if the container if fully answered
@@ -260,15 +260,11 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 	@Override
 	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
-		// get all objects from all conditional value setter's conditions
-		// that match on the requested object
-		// due to not caching the StateTransitions, this method tends to be
-		// slow...
+		// get all objects from all conditional value setter's conditions that match on the requested object
+		// due to not caching the StateTransitions, this method tends to be slow...
 		if (!(derivedObject instanceof Question)) return Collections.emptySet();
 		Set<TerminologyObject> result = new HashSet<>();
-		Collection<StateTransition> transitions = derivedObject.getKnowledgeBase()
-				.getAllKnowledgeSlicesFor(
-						StateTransition.KNOWLEDGE_KIND);
+		Collection<StateTransition> transitions = StateTransition.getAll(derivedObject.getKnowledgeBase());
 		for (StateTransition stateTransition : transitions) {
 			List<ValueTransition> postTransitions = stateTransition.getPostTransitions();
 			for (ValueTransition valueTransition : postTransitions) {

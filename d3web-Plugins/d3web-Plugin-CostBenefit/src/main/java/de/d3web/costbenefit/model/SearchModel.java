@@ -21,6 +21,7 @@ package de.d3web.costbenefit.model;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.NavigableSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -47,6 +48,7 @@ import de.d3web.costbenefit.inference.StateTransition;
 public class SearchModel {
 
 	private final NavigableSet<Target> targets = new TreeSet<>(new TargetComparator());
+	private final Set<Target> blockedTargets = new TreeSet<>(new TargetComparator());
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
@@ -74,7 +76,7 @@ public class SearchModel {
 		transitionalStateTransitions = new HashSet<>();
 
 		// filter StateTransitions that cannot be applied due to final questions
-		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
+		for (StateTransition st : StateTransition.getAll(session)) {
 			// skip blocked and target-only containers, as their transitions are not taken into consideration
 			QContainer container = st.getQcontainer();
 			if (blockedQContainers.contains(container)) continue;
@@ -173,11 +175,18 @@ public class SearchModel {
 		targets.add(target);
 	}
 
-	public void removeTarget(Target target) {
-		targets.remove(target);
-		if (bestBenefitTarget != null && bestBenefitTarget.equals(target)) {
-			bestBenefitTarget = null;
-			if (!targets.isEmpty()) bestBenefitTarget = targets.first();
+	/**
+	 * Blocks a target for the path calculation. The target is removed from the targets set, and moved to the blocked
+	 * targets accordingly.
+	 *
+	 * @param target the target to be blocked
+	 */
+	public void blockTarget(Target target) {
+		if (targets.remove(target)) {
+			blockedTargets.add(target);
+			if (Objects.equals(bestBenefitTarget, target)) {
+				bestBenefitTarget = targets.isEmpty() ? null : targets.first();
+			}
 		}
 	}
 
@@ -232,8 +241,17 @@ public class SearchModel {
 		return bestBenefitTarget.getBenefit();
 	}
 
+	/**
+	 * Retruns the currently used targets for path calculation.
+	 *
+	 * @return
+	 */
 	public NavigableSet<Target> getTargets() {
 		return targets;
+	}
+
+	public Set<Target> getBlockedTargets() {
+		return blockedTargets;
 	}
 
 	/**

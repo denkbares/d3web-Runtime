@@ -260,7 +260,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		Collection<StateTransition> stateTransitions = new LinkedList<>();
 		Set<QContainer> blockedQContainers = model.getBlockedQContainers();
 		// filter StateTransitions that cannot be applied due to final questions
-		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
+		for (StateTransition st : StateTransition.getAll(kb)) {
 			QContainer qcontainer = st.getQcontainer();
 			if (!blockedQContainers.contains(qcontainer)) {
 				stateTransitions.add(st);

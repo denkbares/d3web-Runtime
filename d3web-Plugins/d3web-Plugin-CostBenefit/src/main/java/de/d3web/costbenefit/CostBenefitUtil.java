@@ -417,12 +417,9 @@ public final class CostBenefitUtil {
 	public static Map<Question, Set<Value>> calculateReachableFinalValues(Session session) {
 		Map<Question, Set<Value>> result = new HashMap<>();
 		Session copiedSession = new CopiedSession(session);
-		for (StateTransition st : session.getKnowledgeBase().getAllKnowledgeSlicesFor(
-				StateTransition.KNOWLEDGE_KIND)) {
+		for (StateTransition st : StateTransition.getAll(session)) {
 			// ignore permanently relevant QContainer
-			if (st.getQcontainer()
-					.getInfoStore()
-					.getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+			if (st.getQcontainer().getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
 				continue;
 			}
 			setNormalValues(copiedSession, st.getQcontainer(), new Object());

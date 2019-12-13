@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.inference;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.KnowledgeSlice;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -63,6 +65,47 @@ public class StateTransition implements KnowledgeSlice {
 		this.postTransitions = postTransitions;
 		this.qcontainer = qcontainer;
 		qcontainer.getKnowledgeStore().addKnowledge(KNOWLEDGE_KIND, this);
+	}
+
+	/**
+	 * Returns all state transitions of all QContainer of the knowledge base of the specified session.
+	 *
+	 * @param session the session of the knowledge base to get the state transitions for
+	 * @return the state transitions
+	 */
+	public static Collection<StateTransition> getAll(Session session) {
+		return getAll(session.getKnowledgeBase());
+	}
+
+	/**
+	 * Returns all state transitions of all QContainer of the knowledge base.
+	 *
+	 * @param base the knowledge base to get the state transitions for
+	 * @return the state transitions
+	 */
+	public static Collection<StateTransition> getAll(KnowledgeBase base) {
+		return base.getAllKnowledgeSlicesFor(KNOWLEDGE_KIND, QContainer.class);
+	}
+
+	/**
+	 * Returns the StateTransition of the QContainer
+	 *
+	 * @param qcon QContainer
+	 * @return StateTransition of the QContainer or null if it has none
+	 * @created 25.06.2010
+	 */
+	public static StateTransition getStateTransition(QContainer qcon) {
+		return qcon.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
+	}
+
+	/**
+	 * Returns true of the specified QContainer has a StateTransition
+	 *
+	 * @param container the QContainer to check for a state transition
+	 * @return true, if there is a StateTransition attached to the QContainer
+	 */
+	public static boolean hasStateTransition(QContainer container) {
+		return getStateTransition(container) != null;
 	}
 
 	@Nullable
@@ -112,17 +155,6 @@ public class StateTransition implements KnowledgeSlice {
 	 */
 	public boolean isApplicable(Session session) {
 		return (activationCondition == null) || Conditions.isTrue(activationCondition, session);
-	}
-
-	/**
-	 * Returns the StateTransition of the QContainer
-	 *
-	 * @param qcon QContainer
-	 * @return StateTransition of the QContainer or null if it has none
-	 * @created 25.06.2010
-	 */
-	public static StateTransition getStateTransition(QContainer qcon) {
-		return qcon.getKnowledgeStore().getKnowledge(KNOWLEDGE_KIND);
 	}
 
 	/**

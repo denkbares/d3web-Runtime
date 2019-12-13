@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
@@ -80,9 +79,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	@Override
 	public int getEstimatedSize(de.d3web.core.knowledge.KnowledgeBase kb) {
-		Collection<StateTransition> relations = kb
-				.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND);
-		return relations.size();
+		return StateTransition.getAll(kb).size();
 	}
 
 	@Override
@@ -96,13 +93,8 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 		doc.appendChild(root);
 		Element ksNode = doc.createElement("KnowledgeSlices");
 		root.appendChild(ksNode);
-		SortedSet<StateTransition> knowledgeSlices = new TreeSet<>(
-				new StateTransitionComparator());
-		for (StateTransition knowledgeSlice : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
-			if (knowledgeSlice != null) {
-				knowledgeSlices.add(knowledgeSlice);
-			}
-		}
+		SortedSet<StateTransition> knowledgeSlices = new TreeSet<>(new StateTransitionComparator());
+		knowledgeSlices.addAll(StateTransition.getAll(kb));
 		for (StateTransition model : knowledgeSlices) {
 			ksNode.appendChild(getElement(persistence, model));
 		}

@@ -154,13 +154,6 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns all targets that have been removed because the target state is not reachable at all.
-	 */
-	public Set<Target> getInfiniteTargets() {
-		return astar.getInfiniteTargets();
-	}
-
-	/**
 	 * Returns the path which would have been expanded next, if the calculation wouldn't have finished/aborted
 	 *
 	 * @return best unexpanded path after calculation
@@ -224,7 +217,7 @@ public class AStarExplanationComponent {
 		Collection<StateTransition> stateTransitions = new LinkedList<>();
 		// filter StateTransitions that cannot be applied due to final questions
 		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
-		for (StateTransition st : kb.getAllKnowledgeSlicesFor(StateTransition.KNOWLEDGE_KIND)) {
+		for (StateTransition st : StateTransition.getAll(kb)) {
 			QContainer qcontainer = st.getQcontainer();
 			Boolean targetOnly = qcontainer.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
 			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {

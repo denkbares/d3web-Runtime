@@ -21,7 +21,6 @@
 package de.d3web.core.knowledge;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,13 +52,11 @@ import de.d3web.plugin.PluginConfig;
 import de.d3web.plugin.PluginEntry;
 
 /**
- * The KnowledgeBase stores all terminology objects (Question, Solution, etc.)
- * and provides interfaces to access the problem-solving/dialog knowledge of the
- * domain.
+ * The KnowledgeBase stores all terminology objects (Question, Solution, etc.) and provides interfaces to access the
+ * problem-solving/dialog knowledge of the domain.
  * <p>
- * New terminology objects should be added here and should be created using the
- * KnowlegdeBaseManagement factory. For the creation of problem-solving/dialog
- * knowledge, you should use the factories provided with the particular
+ * New terminology objects should be added here and should be created using the KnowlegdeBaseManagement factory. For the
+ * creation of problem-solving/dialog knowledge, you should use the factories provided with the particular
  * KnowledgeSlices (e.g. XCLModel).
  *
  * @author Joachim Baumeister (denkbares GmbH)
@@ -107,43 +104,37 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Creates a new knowledge base instance. For the general creation of a
-	 * knowledge base and its corresponding objects we recommend to use the
-	 * {@link KnowledgeBaseUtils} class. Caution: This constructor does not
-	 * create root objects for questions and solutions (use
-	 * {@link KnowledgeBaseUtils} instead).
+	 * Creates a new knowledge base instance. For the general creation of a knowledge base and its corresponding objects
+	 * we recommend to use the {@link KnowledgeBaseUtils} class. Caution: This constructor does not create root objects
+	 * for questions and solutions (use {@link KnowledgeBaseUtils} instead).
 	 */
 	public KnowledgeBase() {
 	}
 
 	/**
-	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
-	 * in this {@link KnowledgeBase}.
+	 * Collects and returns all {@link KnowledgeSlice} instances that are stored in this {@link KnowledgeBase}.
 	 *
-	 * @return a {@link Collection} of all {@link KnowledgeSlice} instances
-	 * contained in the {@link KnowledgeBase}
+	 * @return a {@link Collection} of all {@link KnowledgeSlice} instances contained in the {@link KnowledgeBase}
 	 */
 	public Collection<KnowledgeSlice> getAllKnowledgeSlices() {
-		Set<KnowledgeSlice> allKnowledgeSlices = new HashSet<>(
-				Arrays.asList(getKnowledgeStore().getKnowledge()));
+		Set<KnowledgeSlice> slices = new HashSet<>();
+		Collections.addAll(slices, getKnowledgeStore().getKnowledge());
 		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
-			allKnowledgeSlices.addAll(Arrays.asList(to.getKnowledgeStore().getKnowledge()));
+			Collections.addAll(slices, to.getKnowledgeStore().getKnowledge());
 		}
-		return allKnowledgeSlices;
+		return slices;
 	}
 
 	/**
-	 * Collects and returns all {@link KnowledgeSlice} instances that are stored
-	 * in this {@link KnowledgeBase} for a specified problem-solver key.
+	 * Collects and returns all {@link KnowledgeSlice} instances that are stored in this {@link KnowledgeBase} for a
+	 * specified problem-solver key.
 	 *
-	 * @param kind the specified access key how the knowledge is stored in the
-	 *             problem-solver
-	 * @return a {@link Collection} of {@link KnowledgeSlice} instances
-	 * containing all knowledge for the specified problem-solver and
-	 * access key
+	 * @param kind the specified access key how the knowledge is stored in the problem-solver
+	 * @return a {@link Collection} of {@link KnowledgeSlice} instances containing all knowledge for the specified
+	 * problem-solver and access key
 	 */
 	public <T extends KnowledgeSlice> Collection<T> getAllKnowledgeSlicesFor(KnowledgeKind<T> kind) {
-		Collection<T> slices = new LinkedList<>();
+		Collection<T> slices = new ArrayList<>();
 		T ks = getKnowledgeStore().getKnowledge(kind);
 		if (ks != null) slices.add(ks);
 		for (TerminologyObject to : manager.getAllTerminologyObjects()) {
@@ -154,9 +145,29 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns the ordered {@link List} of all initial questions (
-	 * {@link Question})/questionnaires ({@link QContainer}) . These
-	 * questions/questionnaires are prompted first when starting a new dialog.
+	 * Collects and returns all {@link KnowledgeSlice} instances of the specified knowledge kind, that are stored in any
+	 * terminology object of the specified class that is part of this {@link KnowledgeBase}.
+	 *
+	 * @param kind      the specified access key how the knowledge is stored in the problem-solver
+	 * @param termClass the type of terminology objects to be searched
+	 * @return a {@link Collection} of {@link KnowledgeSlice} instances containing all knowledge for the specified
+	 * knowledge kind and specified source terminology objects
+	 */
+	public <T extends KnowledgeSlice, O extends TerminologyObject> Collection<T> getAllKnowledgeSlicesFor(KnowledgeKind<T> kind, Class<O> termClass) {
+		// NOTE: as the knowlegde base it NOT (!) a terminology object,
+		// there is no need to examine the knowlegde base for the specified knowledge kind
+		List<O> objects = manager.getObjects(termClass);
+		Collection<T> slices = new ArrayList<>(objects.size());
+		for (TerminologyObject to : objects) {
+			T slice = to.getKnowledgeStore().getKnowledge(kind);
+			if (slice != null) slices.add(slice);
+		}
+		return slices;
+	}
+
+	/**
+	 * Returns the ordered {@link List} of all initial questions ( {@link Question})/questionnaires ({@link QContainer})
+	 * . These questions/questionnaires are prompted first when starting a new dialog.
 	 *
 	 * @return a list of the initial questions/questionnaires
 	 */
@@ -175,8 +186,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * The solutions contained in this {@link KnowledgeBase} are organized in a
-	 * hierarchy. This method returns the root solution.
+	 * The solutions contained in this {@link KnowledgeBase} are organized in a hierarchy. This method returns the root
+	 * solution.
 	 *
 	 * @return the root solution of this {@link KnowledgeBase}
 	 * @created 15.04.2010
@@ -186,8 +197,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * The questionnaires and contained questions are organized in a hierarchy.
-	 * This method returns the root object (usually a {@link QContainer}).
+	 * The questionnaires and contained questions are organized in a hierarchy. This method returns the root object
+	 * (usually a {@link QContainer}).
 	 *
 	 * @return the root {@link QASet} instance of this {@link KnowledgeBase}
 	 */
@@ -196,9 +207,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Defines the ordered list of initial questions/questionnaires. This
-	 * {@link List} of {@link QASet}s is prompted at the beginning of every new
-	 * problem-solving session.
+	 * Defines the ordered list of initial questions/questionnaires. This {@link List} of {@link QASet}s is prompted at
+	 * the beginning of every new problem-solving session.
 	 *
 	 * @param initQuestions the collection of init questions/questionnaires
 	 * @created 15.04.2010
@@ -213,15 +223,13 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Adds the specified {@link Question} or {@link QContainer} to the list of
-	 * init questions. This {@link List} of {@link QASet}s is prompted at the
-	 * beginning of every new problem-solving session. Priority: A lower number
-	 * means a higher priority, i.e., qasets with the lowest numbers are asked
-	 * first.
+	 * Adds the specified {@link Question} or {@link QContainer} to the list of init questions. This {@link List} of
+	 * {@link QASet}s is prompted at the beginning of every new problem-solving session. Priority: A lower number means
+	 * a higher priority, i.e., qasets with the lowest numbers are asked first.
 	 *
 	 * @param qaset    the specified init question to be added
-	 * @param priority a priority used to sort the specified question into the
-	 *                 list of already existing init questionnaires
+	 * @param priority a priority used to sort the specified question into the list of already existing init
+	 *                 questionnaires
 	 * @return true, when the specified priority was already used before
 	 * @created 25.10.2010
 	 */
@@ -232,12 +240,10 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Removes the specified {@link Question} or {@link QContainer} from the
-	 * list of init questions.
+	 * Removes the specified {@link Question} or {@link QContainer} from the list of init questions.
 	 *
 	 * @param qaset the specified init question to be removed
-	 * @return true, when the specified qaset was successfully removed; false
-	 * otherwise
+	 * @return true, when the specified qaset was successfully removed; false otherwise
 	 * @created 25.10.2010
 	 */
 	public boolean removeInitQuestion(QASet qaset) {
@@ -249,8 +255,7 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns a compact {@link String} representation of this
-	 * {@link KnowledgeBase} instance (usually only the ID).
+	 * Returns a compact {@link String} representation of this {@link KnowledgeBase} instance (usually only the ID).
 	 *
 	 * @return a compact {@link String} representation of this instance
 	 */
@@ -260,12 +265,11 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Inserts a new resource for this {@link KnowledgeBase} instance. A
-	 * resource is a multimedia file attached to the {@link KnowledgeBase}.
+	 * Inserts a new resource for this {@link KnowledgeBase} instance. A resource is a multimedia file attached to the
+	 * {@link KnowledgeBase}.
 	 * <p>
-	 * The path is represented from its root path without any trailing "/". The
-	 * path folder separator used is always "/", independent from the underlying
-	 * file system.
+	 * The path is represented from its root path without any trailing "/". The path folder separator used is always
+	 * "/", independent from the underlying file system.
 	 *
 	 * @param resource a new resource
 	 * @created 15.04.2010
@@ -275,8 +279,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Removes a resource for this {@link KnowledgeBase} instance. A resource is
-	 * a multimedia file attached to the {@link KnowledgeBase}.
+	 * Removes a resource for this {@link KnowledgeBase} instance. A resource is a multimedia file attached to the
+	 * {@link KnowledgeBase}.
 	 *
 	 * @param resource a resource to be removed
 	 * @created 16.03.2011
@@ -286,9 +290,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Removes all resources for this {@link KnowledgeBase} instance. A resource
-	 * is a multimedia file attached to the {@link KnowledgeBase}.
-	 * {@link KnowledgeBase}.
+	 * Removes all resources for this {@link KnowledgeBase} instance. A resource is a multimedia file attached to the
+	 * {@link KnowledgeBase}. {@link KnowledgeBase}.
 	 *
 	 * @created 16.03.2011
 	 */
@@ -297,8 +300,8 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns all resources stored in this {@link KnowledgeBase} instance. A
-	 * resource is a multimedia file attached to the {@link KnowledgeBase}.
+	 * Returns all resources stored in this {@link KnowledgeBase} instance. A resource is a multimedia file attached to
+	 * the {@link KnowledgeBase}.
 	 *
 	 * @return all resources of this knowledge base
 	 * @created 15.04.2010
@@ -308,11 +311,9 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns a stored resource for a specified pathname accessor (a relative
-	 * path that must not start with "/"). A resource is a multimedia file
-	 * attached to the {@link KnowledgeBase}. If the resource specified by the
-	 * pathname is not available in this knowledge base, null is returned. The
-	 * pathname is treated case-insensitive.
+	 * Returns a stored resource for a specified pathname accessor (a relative path that must not start with "/"). A
+	 * resource is a multimedia file attached to the {@link KnowledgeBase}. If the resource specified by the pathname is
+	 * not available in this knowledge base, null is returned. The pathname is treated case-insensitive.
 	 *
 	 * @param pathname the specified pathname accessor
 	 * @return a resource stored by the specified accessor
@@ -409,10 +410,9 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns the {@link TerminologyManager} instance related to this
-	 * {@link KnowledgeBase} instance. The {@link TerminologyManager} provides
-	 * convenient methods to access/search single elements included in the
-	 * {@link KnowledgeBase}.
+	 * Returns the {@link TerminologyManager} instance related to this {@link KnowledgeBase} instance. The {@link
+	 * TerminologyManager} provides convenient methods to access/search single elements included in the {@link
+	 * KnowledgeBase}.
 	 *
 	 * @return the corresponding {@link TerminologyManager} instance
 	 * @created 06.05.2011
@@ -422,12 +422,10 @@ public class KnowledgeBase implements NamedObject {
 	}
 
 	/**
-	 * Returns the {@link KnowledgeStore} instance related to this
-	 * {@link KnowledgeBase} instance. Here meta-data is stored relevant for the
-	 * {@link KnowledgeBase}.
+	 * Returns the {@link KnowledgeStore} instance related to this {@link KnowledgeBase} instance. Here meta-data is
+	 * stored relevant for the {@link KnowledgeBase}.
 	 *
-	 * @return the {@link KnowledgeStore} instance corresponding to this
-	 * {@link KnowledgeBase} instance
+	 * @return the {@link KnowledgeStore} instance corresponding to this {@link KnowledgeBase} instance
 	 * @created 06.05.2011
 	 */
 	public KnowledgeStore getKnowledgeStore() {
