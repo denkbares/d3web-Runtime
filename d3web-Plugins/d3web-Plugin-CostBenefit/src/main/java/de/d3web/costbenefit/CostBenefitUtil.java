@@ -115,7 +115,7 @@ public final class CostBenefitUtil {
 		return testCase;
 	}
 
-	public static void undo(Session session, List<Fact> facts) {
+	public static void undo(Session session, Collection<Fact> facts) {
 		try {
 			session.getPropagationManager().openPropagation();
 			for (Fact fact : facts) {

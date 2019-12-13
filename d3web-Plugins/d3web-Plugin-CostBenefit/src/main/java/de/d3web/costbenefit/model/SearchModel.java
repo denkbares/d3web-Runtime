@@ -18,21 +18,26 @@
  */
 package de.d3web.costbenefit.model;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.utils.Log;
+import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
@@ -48,7 +53,7 @@ import de.d3web.costbenefit.inference.StateTransition;
 public class SearchModel {
 
 	private final NavigableSet<Target> targets = new TreeSet<>(new TargetComparator());
-	private final Set<Target> blockedTargets = new TreeSet<>(new TargetComparator());
+	private final Map<Target, String> blockedTargets = new TreeMap<>(new TargetComparator());
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
@@ -137,10 +142,26 @@ public class SearchModel {
 
 	/**
 	 * This method signals that a certain precondition state has been established. This method is for debugging
-	 * purposes. If debugging is not enabled, the method returns immediately.
+	 * purposes. If debugging is not enabled, the method returns without any changes.
+	 */
+	public void stateVisited(Collection<Fact> transitionFacts) {
+		if (PSMethodCostBenefit.isDebugging()) {
+			for (Fact fact : transitionFacts) {
+				TerminologyObject object = fact.getTerminologyObject();
+				Value value = fact.getValue();
+				if ((object instanceof Question) && (value instanceof QuestionValue)) {
+					reachedStates.put((Question) object, (QuestionValue) value);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method signals that a certain precondition state has been established. This method is for debugging
+	 * purposes. If debugging is not enabled, the method returns without any changes.
 	 */
 	public void stateVisited(Question stateQuestion, Value value) {
-		if (PSMethodCostBenefit.isDebugging()) {
+		if (PSMethodCostBenefit.isDebugging() && (value instanceof QuestionValue)) {
 			reachedStates.put(stateQuestion, (QuestionValue) value);
 		}
 	}
@@ -180,12 +201,20 @@ public class SearchModel {
 	 * targets accordingly.
 	 *
 	 * @param target the target to be blocked
+	 * @param reason some textual reason why this target is blocked (for debug purposes)
 	 */
-	public void blockTarget(Target target) {
+	public void blockTarget(Target target, String reason) {
 		if (targets.remove(target)) {
-			blockedTargets.add(target);
+			blockedTargets.put(target, reason);
+			// update the best benefit target, if that one is removed
 			if (Objects.equals(bestBenefitTarget, target)) {
 				bestBenefitTarget = targets.isEmpty() ? null : targets.first();
+			}
+			// update the best cost/benefit target, if that one is removed
+			// (should not happen is this method is not called during searching)
+			if (Objects.equals(bestCostBenefitTarget, target)) {
+				bestCostBenefitTarget = null;
+				targets.forEach(this::checkBestCostBenefitTarget);
 			}
 		}
 	}
@@ -198,9 +227,17 @@ public class SearchModel {
 	 * @created 18.09.2011
 	 */
 	public void checkTarget(Target target) {
+		checkBestBenefitTarget(target);
+		checkBestCostBenefitTarget(target);
+	}
+
+	private void checkBestBenefitTarget(Target target) {
 		if (bestBenefitTarget == null || target.getBenefit() > bestBenefitTarget.getBenefit()) {
 			bestBenefitTarget = target;
 		}
+	}
+
+	private void checkBestCostBenefitTarget(Target target) {
 		// only check for best cost/benefit if the target has been reached yet
 		if (target.getMinPath() != null) {
 			if (bestCostBenefitTarget == null
@@ -242,16 +279,27 @@ public class SearchModel {
 	}
 
 	/**
-	 * Retruns the currently used targets for path calculation.
-	 *
-	 * @return
+	 * Returns the currently used targets for path calculation.
 	 */
 	public NavigableSet<Target> getTargets() {
 		return targets;
 	}
 
+	/**
+	 * Returns the targets that have benefit, but are blocked for other reasons (usually because any of its QContainers
+	 * are identified to be not reachable at all, e.g. some indicator state is violated, or the heuristic tells that the
+	 * costs are infinite).
+	 */
 	public Set<Target> getBlockedTargets() {
-		return blockedTargets;
+		return blockedTargets.keySet();
+	}
+
+	/**
+	 * Returns a reason (message) why the specified target has been blocked, or null if the target is not blocked at
+	 * all.
+	 */
+	public String getBlockingMessage(Target target) {
+		return blockedTargets.get(target);
 	}
 
 	/**

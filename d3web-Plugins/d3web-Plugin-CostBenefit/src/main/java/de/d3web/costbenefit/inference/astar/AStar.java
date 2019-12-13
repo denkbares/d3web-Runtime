@@ -201,7 +201,7 @@ public class AStar {
 			QContainer qcontainer = target.getQContainers().get(0);
 			double distance = heuristic.getDistance(model, startNode.getPath(), startNode.getState(), qcontainer);
 			if (distance == Double.POSITIVE_INFINITY) {
-				model.blockTarget(target);
+				model.blockTarget(target, heuristic.getClass().getSimpleName() + ": target cannot be reached");
 				successors.remove(StateTransition.getStateTransition(qcontainer));
 			}
 		}
@@ -402,7 +402,7 @@ public class AStar {
 						if (!usedStateQuestions.containsKey(question)) {
 							Value originalValue = session.getBlackboard().getValue(question);
 							usedStateQuestions.put(question, originalValue);
-							model.stateVisited(question, originalValue);
+							model.stateVisited(question, fact.getValue());
 						}
 					}
 				}

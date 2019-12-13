@@ -195,8 +195,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (Target target : targets) {
 			boolean hasContraindicatedQContainer = false;
 			for (QContainer qContainer : target.getQContainers()) {
-				if (session.getBlackboard().getIndication(qContainer).hasState(
-						State.CONTRA_INDICATED)) {
+				if (isContraIndicated(session, qContainer)) {
 					hasContraindicatedQContainer = true;
 				}
 				else {
@@ -283,7 +282,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private void initializeSearchModel(CostBenefitCaseObject caseObject) {
 		Session session = caseObject.getSession();
 		HashSet<Solution> allSolutions = new HashSet<>();
-		HashSet<Target> allTargets = new HashSet<>();
+//		HashSet<Target> allTargets = new HashSet<>();
 		SearchModel searchModel = new SearchModel(session);
 		List<StrategicSupport> strategicSupports = CostBenefitUtil.getStrategicSupports(session);
 		for (StrategicSupport strategicSupport : strategicSupports) {
@@ -293,21 +292,17 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			Collection<Target> targets = targetFunction.getTargets(session, discriminatingQuestions, solutions, strategicSupport);
 			Set<QContainer> blockedQContainers = searchModel.getBlockedQContainers();
 			for (Target target : targets) {
-				boolean skipTarget = false;
-				for (QContainer qcontainer : target.getQContainers()) {
-					if (blockedQContainers.contains(qcontainer)) {
-						skipTarget = true;
-						break;
-					}
-				}
-				if (skipTarget) {
-					continue;
-				}
 				double benefit = strategicSupport.getInformationGain(target.getQContainers(), solutions, session);
 				if (benefit == 0) continue;
 				searchModel.addTarget(target);
 				searchModel.maximizeBenefit(target, benefit);
-				allTargets.add(target);
+
+				// check if the target is blocked (when any of the QContainers are blocked)
+				if (!Collections.disjoint(blockedQContainers, target.getQContainers())) {
+					searchModel.blockTarget(target,
+							target.getQContainers().stream().anyMatch(qc -> isContraIndicated(session, qc))
+									? "QContainer is contra indicated" : "QContainer is blocked");
+				}
 			}
 
 			// recall them for storing into the case object
@@ -316,18 +311,18 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		caseObject.setUndiscriminatedSolutions(allSolutions);
 		caseObject.setSearchModel(searchModel);
 		if (strategicBenefitFactor > 0.0) {
-			addStrategicBenefit(session, allTargets, searchModel);
+			addStrategicBenefit(session, searchModel);
 		}
-		caseObject.setDiscriminatingTargets(allTargets);
+		caseObject.setDiscriminatingTargets(searchModel.getTargets());
 	}
 
-	private void addStrategicBenefit(Session session, HashSet<Target> allTargets, SearchModel searchModel) {
+	private void addStrategicBenefit(Session session, SearchModel searchModel) {
 		double totalbenefit = 0.0;
 		List<Question> finalQuestions = getFinalQuestions(session);
 		HashMap<Condition, Double> conditionValueCache = new HashMap<>();
 
 		HashMap<QContainer, Target> targetMap = new HashMap<>();
-		for (Target t : allTargets) {
+		for (Target t : searchModel.getTargets()) {
 			targetMap.put(t.getQContainers().get(0), t);
 			totalbenefit += t.getBenefit() / t.getCosts();
 			fillConditionValueCache(conditionValueCache, t);
@@ -473,20 +468,17 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Map<Question, Value> finalValues = getFinalValues(session);
 		// now all unmutable facts are added to the emptySession
 		for (Entry<Question, Value> e : finalValues.entrySet()) {
-			emptySession.getBlackboard().addValueFact(
-					FactFactory.createUserEnteredFact(e.getKey(), e.getValue()));
+			emptySession.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(e.getKey(), e.getValue()));
 		}
 		for (StateTransition stateTransition : StateTransition.getAll(session)) {
-			if (includeContraindicated
-					&& session.getBlackboard()
-					.getIndication(stateTransition.getQcontainer()).hasState(State.CONTRA_INDICATED)) {
-				result.add(stateTransition.getQcontainer());
+			QContainer container = stateTransition.getQcontainer();
+			if (includeContraindicated && isContraIndicated(session, container)) {
+				result.add(container);
 				continue;
 			}
 			if (includePermanentlyRelevant
-					&& stateTransition.getQcontainer()
-					.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
-				result.add(stateTransition.getQcontainer());
+					&& container.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+				result.add(container);
 				continue;
 			}
 			Condition activationCondition = stateTransition.getActivationCondition();
@@ -495,13 +487,17 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 			try {
 				if (!activationCondition.eval(emptySession)) {
-					result.add(stateTransition.getQcontainer());
+					result.add(container);
 				}
 			}
 			catch (NoAnswerException | UnknownAnswerException ignored) {
 			}
 		}
 		return result;
+	}
+
+	private static boolean isContraIndicated(Session session, QContainer container) {
+		return session.getBlackboard().getIndication(container).hasState(State.CONTRA_INDICATED);
 	}
 
 	/**

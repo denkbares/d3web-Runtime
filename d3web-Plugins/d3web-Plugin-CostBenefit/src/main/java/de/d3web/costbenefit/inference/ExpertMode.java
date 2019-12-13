@@ -173,6 +173,7 @@ public class ExpertMode implements SessionObject {
 
 		// create a list of all targets, sorted regarding to their benefit to become our result
 		List<Target> result = new ArrayList<>(model.getTargets());
+		result.addAll(model.getBlockedTargets());
 		result.sort(BENEFIT_COMPARATOR);
 
 		// but move the currently selected one if desired
@@ -308,7 +309,6 @@ public class ExpertMode implements SessionObject {
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
-			// TODO: remove manual selection entry from protocol?
 			pso.resetPath();
 			pso.resetUnreachedTarget();
 			psm.calculateNewPath(pso);

@@ -160,10 +160,8 @@ public class Target implements Comparable<Target> {
 	 * @return the cost per benefit ratio
 	 */
 	public double getCostBenefit() {
-		double theBenefit = getBenefit();
-		Path theMinPath = getMinPath();
-		if (theMinPath == null || theBenefit <= 0f) return Float.MAX_VALUE;
-		return theMinPath.getCosts() / theBenefit;
+		if (minPath == null || benefit <= 0f) return Float.MAX_VALUE;
+		return minPath.getCosts() / benefit;
 	}
 
 	/**

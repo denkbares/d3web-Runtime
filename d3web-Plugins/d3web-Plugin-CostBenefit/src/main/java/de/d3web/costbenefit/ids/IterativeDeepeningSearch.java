@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2009 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -18,6 +18,7 @@
  */
 package de.d3web.costbenefit.ids;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.denkbares.collections.ConcatenateCollection;
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -37,16 +40,16 @@ import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.DefaultAbortStrategy;
+import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.model.ids.IDSPath;
 import de.d3web.costbenefit.model.ids.Node;
-import com.denkbares.utils.Log;
 
 /**
- * This IterativeDeepeningSearch is extended by multiple optimizations. It
- * operates on a SearchModel, which provides all used methods
- * 
+ * This IterativeDeepeningSearch is extended by multiple optimizations. It operates on a SearchModel, which provides all
+ * used methods
+ *
  * @author Markus Friedrich (denkbares GmbH)
  */
 class IterativeDeepeningSearch {
@@ -92,17 +95,13 @@ class IterativeDeepeningSearch {
 			if (target.getMinPath() != null) countMinPaths++;
 			for (QContainer qcon : target.getQContainers()) {
 				Node key = map.get(qcon);
-				List<Target> refs = this.referencingTargets.get(key);
-				if (refs == null) {
-					refs = new LinkedList<>();
-					this.referencingTargets.put(key, refs);
-				}
+				List<Target> refs = this.referencingTargets.computeIfAbsent(key, k -> new ArrayList<>());
 				refs.add(target);
 			}
 		}
 		// get finalNodes
-		List<Target> possibleTargets = new LinkedList<>(model.getTargets());
-		Collections.sort(possibleTargets, (o1, o2) -> {
+		List<Target> possibleTargets = new ArrayList<>(model.getTargets());
+		possibleTargets.sort((o1, o2) -> {
 			String name1 = o1.getQContainers().get(0).getName();
 			String name2 = o2.getQContainers().get(0).getName();
 			return -1 * (name1.compareTo(name2));
@@ -113,7 +112,7 @@ class IterativeDeepeningSearch {
 				temp.add(map.get(qcon));
 			}
 		}
-		finalNodes = temp.toArray(new Node[temp.size()]);
+		finalNodes = temp.toArray(new Node[0]);
 		Set<Node> nodeList = getNodes();
 		HashSet<Node> relevantNodes = new HashSet<>();
 		Blackboard blackboard = originalSession.getBlackboard();
@@ -123,10 +122,8 @@ class IterativeDeepeningSearch {
 		for (Node node : nodeList) {
 			// contraindicated QContainers must not be used
 			if (blackboard.getIndication(node.getQContainer()).isContraIndicated()) continue;
-			if (node.getStateTransition() != null
-					&& node.getStateTransition().getPostTransitions() != null
-					&& !node.getStateTransition().getPostTransitions()
-							.isEmpty()) {
+			StateTransition stateTransition = node.getStateTransition();
+			if (stateTransition != null && !stateTransition.getPostTransitions().isEmpty()) {
 				relevantNodes.add(node);
 			}
 		}
@@ -134,8 +131,7 @@ class IterativeDeepeningSearch {
 		// relevantNodes.removeAll(temp);
 		// reenter Target nodes that are used in combined targets
 		relevantNodes.addAll(getCombinedTargetsNodes());
-		this.successorNodes = relevantNodes.toArray(new Node[relevantNodes
-				.size()]);
+		this.successorNodes = relevantNodes.toArray(new Node[0]);
 		// cheaper nodes are tried as successors first
 		Arrays.sort(successorNodes, new StaticCostComparator());
 		this.initTime = System.currentTimeMillis() - time;
@@ -194,10 +190,10 @@ class IterativeDeepeningSearch {
 			// if a minSearchPath is found, the costs are at least the costs of
 			// the minSearchPath plus the cheapest unused teststep
 			mincosts = minSearchedPath.getCosts();
-			List<Node> nextnodes = new LinkedList<>();
+			List<Node> nextnodes = new ArrayList<>();
 			nextnodes.addAll(Arrays.asList(successorNodes));
 			nextnodes.addAll(Arrays.asList(finalNodes));
-			Collections.sort(nextnodes, new StaticCostComparator());
+			nextnodes.sort(new StaticCostComparator());
 			for (Node node : nextnodes) {
 				if (!minSearchedPath.contains(node)) {
 					mincosts += node.getStaticCosts();
@@ -207,7 +203,7 @@ class IterativeDeepeningSearch {
 		}
 		if (allTargetsReached()
 				|| (model.getBestCostBenefit() < mincosts
-						/ model.getBestUnreachedBenefit())) {
+				/ model.getBestUnreachedBenefit())) {
 			// stop iterative deep search if each target node has been reached
 			// or if the minimal costs are to high for even for the most
 			// beneficial
@@ -225,8 +221,7 @@ class IterativeDeepeningSearch {
 
 	private void findCheapestPath(IDSPath actual, int depth, Session session) throws AbortException {
 
-		if (actual.getCosts() / model.getBestBenefit() > model
-				.getBestCostBenefit()) { // NOSONAR
+		if (actual.getCosts() / model.getBestBenefit() > model.getBestCostBenefit()) { // NOSONAR
 			// nothing to do
 		}
 		else if (depth == 1) {
@@ -241,27 +236,24 @@ class IterativeDeepeningSearch {
 				if (!isValidSuccessor(actual, n, session)) continue;
 				actual.add(n, session);
 				nextStep(actual);
-				if (minSearchedPath == null
-						|| actual.getCosts() < minSearchedPath.getCosts()) {
+				if (minSearchedPath == null || actual.getCosts() < minSearchedPath.getCosts()) {
 					minSearchedPath = actual.copy();
 				}
 				actual.pop();
 			}
 		}
 		else {
-			// Session testcase = Util.copyCase(session);
 			for (Node successor : successorNodes) {
 				if (!isValidSuccessor(actual, successor, session)) continue;
-				List<Fact> undo = new LinkedList<>();
 				actual.add(successor, session);
 				nextStep(actual);
-				undo.addAll(successor.setNormalValues(session));
-				if (successor.getStateTransition() != null) {
-					undo.addAll(successor.getStateTransition().fire(session));
-				}
+				List<Fact> normals = successor.setNormalValues(session);
+				StateTransition stateTransition = successor.getStateTransition();
+				List<Fact> fired = (stateTransition == null) ? Collections.emptyList() : stateTransition.fire(session);
+				model.stateVisited(fired);
 				findCheapestPath(actual, depth - 1, session);
 				actual.pop();
-				CostBenefitUtil.undo(session, undo);
+				CostBenefitUtil.undo(session, new ConcatenateCollection<>(normals, fired));
 			}
 		}
 	}
@@ -294,8 +286,7 @@ class IterativeDeepeningSearch {
 	}
 
 	/**
-	 * Returns all Nodes contained in combined Targets (targets with more than
-	 * one target Node)
+	 * Returns all Nodes contained in combined Targets (targets with more than one target Node)
 	 */
 	private Collection<? extends Node> getCombinedTargetsNodes() {
 		List<Node> list = new LinkedList<>();
@@ -330,8 +321,7 @@ class IterativeDeepeningSearch {
 	}
 
 	/**
-	 * Checks if all targets are reached. If this is true, every target has a
-	 * minPath.
+	 * Checks if all targets are reached. If this is true, every target has a minPath.
 	 *
 	 * @return if all targets are reached
 	 */

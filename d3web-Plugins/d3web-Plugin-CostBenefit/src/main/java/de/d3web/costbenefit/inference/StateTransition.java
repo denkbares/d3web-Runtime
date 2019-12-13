@@ -135,8 +135,7 @@ public class StateTransition implements KnowledgeSlice {
 			for (ConditionalValueSetter cvs : setters) {
 				Condition condition = cvs.getCondition();
 				if (condition == null || Conditions.isTrue(cvs.getCondition(), session)) {
-					Fact fact = new PSMethodStateTransition.StateTransitionFact(
-							cvs, session, q, cvs.getAnswer());
+					Fact fact = new PSMethodStateTransition.StateTransitionFact(cvs, session, q, cvs.getAnswer());
 					session.getBlackboard().addValueFact(fact);
 					facts.add(fact);
 					break;
