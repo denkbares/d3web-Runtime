@@ -386,9 +386,7 @@ public class AStar {
 		List<Fact> facts = stateTransition.fire(copiedSession);
 		State newState;
 		if (facts.isEmpty()) {
-			// if we have not fired any transitions
-			// we should reuse the original state
-			// instead of creating a new one
+			// if we have not fired any transitions, reuse the original state instead of creating a new one
 			newState = node.getState();
 		}
 		else {
@@ -402,8 +400,9 @@ public class AStar {
 						if (!usedStateQuestions.containsKey(question)) {
 							Value originalValue = session.getBlackboard().getValue(question);
 							usedStateQuestions.put(question, originalValue);
-							model.stateVisited(question, fact.getValue());
 						}
+						// for debug purposes, mark all states as visited
+						model.stateVisited(question, fact.getValue());
 					}
 				}
 				newState = computeState(copiedSession);
@@ -417,20 +416,18 @@ public class AStar {
 
 	private void updateTargets(AStarPath newPath) {
 		QContainer qcontainer = newPath.getQContainer();
-		for (Target t : model.getTargets()) {
+		for (Target target : model.getTargets()) {
 			// update only if the last qcontainer of the path is contained in
 			// the target and if the path contains all targetQContainers
-			if (t.getQContainers().contains(qcontainer)
-					&& (newPath.containsAll(t.getQContainers()))) {
-				// this has to be checked because there
-				// can be several nodes to reach a
-				// target, one of the other nodes could
-				// be cheaper
+			List<QContainer> containers = target.getQContainers();
+			if (containers.contains(qcontainer) && (newPath.containsAll(containers))) {
+				// this has to be checked, because there can be several nodes to reach a target,
+				// one of the other nodes could be cheaper
 				synchronized (this) {
-					if (t.getMinPath() == null
-							|| t.getMinPath().getCosts() > newPath.getCosts()) {
-						t.setMinPath(newPath);
-						model.checkTarget(t);
+					Path minPath = target.getMinPath();
+					if (minPath == null || minPath.getCosts() > newPath.getCosts()) {
+						target.setMinPath(newPath);
+						model.checkTarget(target);
 					}
 				}
 			}
