@@ -173,6 +173,12 @@ public class DecoratedSession implements DerivedSession {
 			}
 
 			@Override
+			public long getPropagationIndex() {
+				// as there are no PSMethods, no additional propagation committed
+				return rootSession.getPropagationManager().getPropagationIndex();
+			}
+
+			@Override
 			public long getPropagationTime() {
 				return time;
 			}

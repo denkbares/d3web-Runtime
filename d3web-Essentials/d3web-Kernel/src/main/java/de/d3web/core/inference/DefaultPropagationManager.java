@@ -41,6 +41,7 @@ import de.d3web.core.session.Value;
 public class DefaultPropagationManager implements PropagationManager {
 
 	private final Collection<PropagationListener> listeners = new LinkedList<>();
+	private long propagationIndex = -1;
 
 	private final Set<ValueObject> forcedPropagationEntries = new HashSet<>();
 
@@ -52,7 +53,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 	private class PSMethodHandler {
 
-		private boolean hasPropagated;
+		private boolean hasPropagated = false;
 		private final PSMethod psMethod;
 		private final Map<ValueObject, Value> propagationEntries = new HashMap<>();
 		private final Set<ValueObject> hazardPropagationEntries = new HashSet<>();
@@ -90,10 +91,6 @@ public class DefaultPropagationManager implements PropagationManager {
 			return psMethod;
 		}
 
-		public void setPropagated(boolean hasPropagated) {
-			this.hasPropagated = hasPropagated;
-		}
-
 		public boolean hasPropagated() {
 			return hasPropagated;
 		}
@@ -104,8 +101,7 @@ public class DefaultPropagationManager implements PropagationManager {
 
 		public void propagate() {
 			Collection<PropagationEntry> entries = convertMapsToEntries(propagationEntries,
-					hazardPropagationEntries,
-					interviewPropagationEntries, true);
+					hazardPropagationEntries, interviewPropagationEntries, true);
 
 			try {
 				// inform the listeners
@@ -121,7 +117,7 @@ public class DefaultPropagationManager implements PropagationManager {
 						getPSMethod().getClass(), e);
 			}
 			finally {
-				setPropagated(true);
+				this.hasPropagated = true;
 			}
 		}
 	}
@@ -151,12 +147,12 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Starts a new propagation frame. <p> Every propagation will be delayed until the last
-	 * propagation frame has been commit. There is no essential need to call this method manually.
+	 * Starts a new propagation frame. <p> Every propagation will be delayed until the last propagation frame has been
+	 * commit. There is no essential need to call this method manually.
 	 * <p> This method can be called manually before setting a bunch of question values to enabled
-	 * optimized propagation throughout the PSMethods. You must ensure that to call
-	 * commitPropagation() once for each call to this method under any circumstances (!) even in
-	 * case of unexpected exceptions. Therefore always use the following snipplet: <p> <p/>
+	 * optimized propagation throughout the PSMethods. You must ensure that to call commitPropagation() once for each
+	 * call to this method under any circumstances (!) even in case of unexpected exceptions. Therefore always use the
+	 * following snipplet: <p> <p/>
 	 * <pre>
 	 * try {
 	 * 	session.getPropagationManager().openPropagation();
@@ -174,9 +170,8 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Starts a new propagation frame with a given time. If an other propagation frame has already
-	 * been opened, the specified time is ignored. For more details see
-	 * PropagationController.openProgagation()
+	 * Starts a new propagation frame with a given time. If an other propagation frame has already been opened, the
+	 * specified time is ignored. For more details see PropagationController.openProgagation()
 	 */
 	@Override
 	public void openPropagation(long time) {
@@ -188,12 +183,12 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Commits a propagation frame. <p> By commit the last propagation frame, the changes will be
-	 * propagated throughout the PSMethods. There is no essential need to call this method manually.
+	 * Commits a propagation frame. <p> By commit the last propagation frame, the changes will be propagated throughout
+	 * the PSMethods. There is no essential need to call this method manually.
 	 * <p> This method can be called manually after setting a bunch of question values to enabled
-	 * optimized propagation throughout the PSMethods. You must ensure that this method is called
-	 * once for each call to openPropagation() under any circumstances (!) even in case of
-	 * unexpected exceptions. Therefore always use the following snipplet: <p> <p/>
+	 * optimized propagation throughout the PSMethods. You must ensure that this method is called once for each call to
+	 * openPropagation() under any circumstances (!) even in case of unexpected exceptions. Therefore always use the
+	 * following snipplet: <p> <p/>
 	 * <pre>
 	 * try {
 	 * 	session.getPropagationManager().openPropagation();
@@ -249,25 +244,25 @@ public class DefaultPropagationManager implements PropagationManager {
 				if (firstHandler == null) {
 					// inform listener about post propagation entries
 					Collection<PropagationEntry> entries = convertMapsToEntries(
-							postPropagationEntries,
-							Collections.emptySet(),
-							postInterviewPropagationEntries, true);
+							postPropagationEntries, Collections.emptySet(), postInterviewPropagationEntries, true);
 					for (PropagationListener listener : listeners) {
 						listener.postPropagationStarted(session, entries);
 					}
 					for (PSMethodHandler handler : this.psHandlers) {
 						if (handler.getPSMethod() instanceof PostHookablePSMethod) {
 							checkTerminated();
-							PostHookablePSMethod postHookablePSMethod = (PostHookablePSMethod) handler
-									.getPSMethod();
+							propagationIndex++;
+							PostHookablePSMethod postHookablePSMethod = (PostHookablePSMethod) handler.getPSMethod();
 							postHookablePSMethod.postPropagate(session, entries);
 						}
 					}
 					firstHandler = findNextHandler();
 					if (firstHandler == null) break;
 				}
+
 				// otherwise continue with this handler
 				checkTerminated();
+				propagationIndex++;
 				firstHandler.propagate();
 			}
 		}
@@ -275,9 +270,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			// inform the listeners that we are finished now,
 			// even if we have been terminated
 			Collection<PropagationEntry> entries = convertMapsToEntries(
-					globalPropagationEntries,
-					Collections.emptySet(),
-					globalInterviewPropagationEntries, true);
+					globalPropagationEntries, Collections.emptySet(), globalInterviewPropagationEntries, true);
 			forcedPropagationEntries.clear();
 			for (PropagationListener listener : listeners) {
 				listener.propagationFinished(session, entries);
@@ -349,9 +342,8 @@ public class DefaultPropagationManager implements PropagationManager {
 	/**
 	 * Propagates a change value of an object through the different PSMethods.
 	 * <p/>
-	 * This method may cause other value propagations and therefore may be called recursively. It is
-	 * called after the value has been updated in the case. Thus the case already contains the new
-	 * value.
+	 * This method may cause other value propagations and therefore may be called recursively. It is called after the
+	 * value has been updated in the case. Thus the case already contains the new value.
 	 * <p/>
 	 * <b>Do not call this method directly! It will be called by the case to propagate facts updated
 	 * into the case.</b>
@@ -365,11 +357,11 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Propagates a change value of an object through one selected PSMethod. All changes that will
-	 * be derived by that PSMethod will be propagated normally throughout the whole system.
+	 * Propagates a change value of an object through one selected PSMethod. All changes that will be derived by that
+	 * PSMethod will be propagated normally throughout the whole system.
 	 * <p/>
-	 * This method may be used after a problem solver has been added to distribute existing facts to
-	 * him and enable him to derive additional facts.
+	 * This method may be used after a problem solver has been added to distribute existing facts to him and enable him
+	 * to derive additional facts.
 	 * <p/>
 	 * <b>Do not call this method directly! It will be called by the case to propagate facts updated
 	 * into the case.</b>
@@ -409,6 +401,11 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	@Override
+	public long getPropagationIndex() {
+		return propagationIndex;
+	}
+
+	@Override
 	public long getPropagationTime() {
 		return propagationTime;
 	}
@@ -427,8 +424,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	}
 
 	/**
-	 * Returns if there is an open propagation frame (and therefore the kernel is in propagation
-	 * mode).
+	 * Returns if there is an open propagation frame (and therefore the kernel is in propagation mode).
 	 *
 	 * @return if the kernel is in propagation
 	 */
