@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 denkbares GmbH, Germany
+ * Copyright (C) 2019 denkbares GmbH, Germany
  *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -16,30 +16,23 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
  * site: http://www.fsf.org.
  */
+
 package de.d3web.costbenefit.blackboard;
 
-import java.util.Date;
-
-import de.d3web.core.session.DefaultSession;
 import de.d3web.core.session.Session;
 
-public class CopiedSession extends DefaultSession implements DerivedSession {
-
-	private final Session originalSession;
-
-	public CopiedSession(Session originalSession) {
-		super(null, originalSession.getKnowledgeBase(), new Date(), psMethod -> false);
-		this.originalSession = originalSession;
-	}
-
-	public Session getOriginalSession() {
-		return originalSession;
-	}
-
-	@Override
-	public Session getRootSession() {
-		return (originalSession instanceof DerivedSession)
-				? ((DerivedSession) originalSession).getRootSession()
-				: originalSession;
-	}
+/**
+ * Interface to mark a session to be derived from an other existing session.
+ *
+ * @author Volker Belli (denkbares GmbH)
+ * @created 16.12.2019
+ */
+public interface DerivedSession extends Session {
+	/**
+	 * Returns the underlying root session this session is derived from. If a derived session is also derived from
+	 * another derived session, this method should directly return the original non-derived session.
+	 *
+	 * @return the most original session this session is derived from
+	 */
+	Session getRootSession();
 }

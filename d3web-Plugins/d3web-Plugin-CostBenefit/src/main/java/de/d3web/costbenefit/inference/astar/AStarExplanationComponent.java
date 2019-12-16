@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -54,6 +57,7 @@ import de.d3web.indication.inference.PSMethodUserSelected;
 public class AStarExplanationComponent {
 
 	private final AStar astar;
+	private TPHeuristic heuristic;
 
 	public AStarExplanationComponent(AStar astar) {
 		this.astar = astar;
@@ -119,11 +123,8 @@ public class AStarExplanationComponent {
 				}
 			}
 		}
-		if (bestNode == null) {
-			return new AnalysisResult(new AStarPath(null, null, 0), 0, true);
-		}
-		boolean closed = astar.getClosedNodes().contains(bestNode);
-		return new AnalysisResult(bestNode.getPath(), bestNode.getfValue(), closed);
+
+		return (bestNode == null) ? null : new AnalysisResult(bestNode);
 	}
 
 	/**
@@ -146,7 +147,19 @@ public class AStarExplanationComponent {
 	 * of all expected costs of each visited AStar node.
 	 */
 	public double getMinimalPathCosts(QContainer target) {
-		Heuristic heuristic = astar.getAlgorithm().getHeuristic();
+		StateTransition stateTransition = StateTransition.getStateTransition(target);
+		if (stateTransition == null) return 0;
+		Condition condition = stateTransition.getActivationCondition();
+		if (condition == null) return 0;
+		return getMinimalPathCosts(condition);
+	}
+
+	/**
+	 * Returns the minimal costs that have been calculated for the specific target condition. These are the minimum of
+	 * all expected costs of each visited AStar node.
+	 */
+	public double getMinimalPathCosts(Condition target) {
+		Heuristic heuristic = getTPHeuristic();
 		SearchModel model = astar.getModel();
 		return astar.getClosedNodes().stream().mapToDouble(node ->
 				node.getPath().getCosts() + heuristic.getDistance(model, node.getPath(), node.getState(), target))
@@ -154,13 +167,45 @@ public class AStarExplanationComponent {
 	}
 
 	/**
-	 * Returns the path which would have been expanded next, if the calculation wouldn't have finished/aborted
+	 * Returns the costs (initially) estimated by the heuristic for the specified target, calculated from the start of
+	 * the search.
+	 */
+	public double getHeuristicCosts(Condition target) {
+		Heuristic heuristic = getTPHeuristic();
+		Node startNode = astar.getStartNode();
+		return heuristic.getDistance(astar.getModel(), startNode.getPath(), startNode.getState(), target);
+	}
+
+//	/**
+//	 * Returns the path of the whole calculation, that gets closest to the specified target (based on the heuristic to
+//	 * determine the "closest" path).
+//	 */
+//	public AnalysisResult getClosestPath(QContainer target) {
+//		StateTransition stateTransition = StateTransition.getStateTransition(target);
+//		if (stateTransition == null) return new AnalysisResult(astar.getStartNode());
+//		Condition condition = stateTransition.getActivationCondition();
+//		if (condition == null) return new AnalysisResult(astar.getStartNode());
+//		return getClosestPath(condition);
+//	}
+//
+//	public AnalysisResult getClosestPath(Condition target) {
+//		Heuristic heuristic = getTPHeuristic();
+//		SearchModel model = astar.getModel();
+//		astar.getClosedNodes().stream().min(Comparator.comparing(node ->
+//				node.getPath().getCosts() + heuristic.getDistance(model, node.getPath(), node.getState(), target)))
+//				.map(AnalysisResult::new).orElse(null);
+//	}
+
+	/**
+	 * Returns the path which would have been expanded next, if the calculation wouldn't have finished/aborted. Returns
+	 * null if there is no open node left and no next node would be expanded.
 	 *
 	 * @return best unexpanded path after calculation
 	 * @created 05.07.2012
 	 */
 	public AnalysisResult getBestPathAtCalculationEnd() {
 		Node peek = astar.getOpenNodes().peek();
+		if (peek == null) return null;
 		return new AnalysisResult(peek.getPath(), peek.getfValue(), false);
 	}
 
@@ -171,14 +216,17 @@ public class AStarExplanationComponent {
 	 * @author Markus Friedrich (denkbares GmbH)
 	 * @created 04.07.2012
 	 */
-	public static class AnalysisResult {
+	public class AnalysisResult {
 
 		private final AStarPath path;
 		private final double fValue;
 		private final boolean closed;
 
+		public AnalysisResult(Node node) {
+			this(node.getPath(), node.getfValue(), astar.getClosedNodes().contains(node));
+		}
+
 		public AnalysisResult(AStarPath path, double fValue, boolean closed) {
-			super();
 			this.path = path;
 			this.fValue = fValue;
 			this.closed = closed;
@@ -266,16 +314,12 @@ public class AStarExplanationComponent {
 		if (target.getQContainers().size() != 1) {
 			throw new IllegalArgumentException("this method only works with single targets.");
 		}
-		StateTransition stateTransition = StateTransition.getStateTransition(target.getQContainers().get(
-				0));
-		if (stateTransition == null || stateTransition.getActivationCondition() == null) {
-			return Collections.emptySet();
-		}
-		Condition transitiveCondition = getAndInitTPHeuristic(model).getTransitiveCondition(
-				model.getSession(),
-				new AStarPath(null, null, 0),
-				stateTransition, model.getSession());
+		StateTransition stateTransition = StateTransition.getStateTransition(target.getQContainers().get(0));
+		if (stateTransition == null) return Collections.emptySet();
+		Condition condition = stateTransition.getActivationCondition();
+		if (condition == null) return Collections.emptySet();
 
+		Condition transitiveCondition = getTPHeuristic().getTransitiveCondition(model.getSession(), condition);
 		List<QContainer> path = new LinkedList<>(target.getMinPath().getPath());
 		path.removeAll(target.getQContainers());
 		return getUnexpectedQContainers(path, model.getSession(), transitiveCondition);
@@ -299,24 +343,36 @@ public class AStarExplanationComponent {
 		return result;
 	}
 
-	private static TPHeuristic getAndInitTPHeuristic(SearchModel model) {
-		Session session = model.getSession();
-		PSMethodCostBenefit cb = session.getPSMethodInstance(PSMethodCostBenefit.class);
-		SearchAlgorithm searchAlgorithm = cb.getSearchAlgorithm();
-		if (searchAlgorithm instanceof PathExtender) {
-			searchAlgorithm = ((PathExtender) searchAlgorithm).getSubalgorithm();
-		}
-		if (searchAlgorithm instanceof AStarAlgorithm) {
-			Heuristic heuristic = ((AStarAlgorithm) searchAlgorithm).getHeuristic();
-			if (heuristic instanceof TPHeuristic) {
-				heuristic.init(model);
-				return (TPHeuristic) heuristic;
+	/**
+	 * Returns a TP heuristic for the current search model. Is the algorithm does not provide one, a new one is created.
+	 * The method also grants that the heuristic is initialized for this search model.
+	 */
+	@NotNull
+	private TPHeuristic getTPHeuristic() {
+		SearchModel model = astar.getModel();
+		if (heuristic == null) {
+			Session session = model.getSession();
+			PSMethodCostBenefit cb = session.getPSMethodInstance(PSMethodCostBenefit.class);
+			SearchAlgorithm searchAlgorithm = cb.getSearchAlgorithm();
+			if (searchAlgorithm instanceof PathExtender) {
+				searchAlgorithm = ((PathExtender) searchAlgorithm).getSubalgorithm();
+			}
+			if (searchAlgorithm instanceof AStarAlgorithm) {
+				Heuristic existing = ((AStarAlgorithm) searchAlgorithm).getHeuristic();
+				if (existing instanceof TPHeuristic) {
+					heuristic = (TPHeuristic) existing;
+				}
+			}
+
+			// if another heuristic is used, create and init a new one
+			if (heuristic == null) {
+				heuristic = new TPHeuristic();
 			}
 		}
-		// if another heuristic is used, create and init a new one
-		TPHeuristic tpHeuristic = new TPHeuristic();
-		tpHeuristic.init(model);
-		return tpHeuristic;
+
+		// always initialize for this model, should do nothing if already initialized
+		heuristic.init(model);
+		return heuristic;
 	}
 
 	/**
@@ -342,18 +398,19 @@ public class AStarExplanationComponent {
 	 * @return a set of unfullfilled (sub) conditions
 	 * @created 05.07.2012
 	 */
-	public static Set<Condition> getUnfullfilledConditions(Path path, Condition transitiveCondition, Session session) {
-		Set<Condition> result = new HashSet<>(
-				TPHeuristic.getPrimitiveConditions(transitiveCondition));
+	public static Set<Condition> getUnfullfilledConditions(@Nullable Path path, Condition transitiveCondition, Session session) {
+		Set<Condition> result = new HashSet<>(TPHeuristic.getPrimitiveConditions(transitiveCondition));
 		Set<Condition> fullfilledConditions = new HashSet<>();
 		Session copiedSession = CostBenefitUtil.createSearchCopy(session);
 		addFullfilledConditions(result, copiedSession, fullfilledConditions);
-		for (QContainer qcon : path.getPath()) {
-			StateTransition stateTransition = StateTransition.getStateTransition(qcon);
-			if (stateTransition != null) {
-				CostBenefitUtil.setNormalValues(copiedSession, qcon, PSMethodUserSelected.getInstance());
-				stateTransition.fire(copiedSession);
-				addFullfilledConditions(result, copiedSession, fullfilledConditions);
+		if (path != null) {
+			for (QContainer qcon : path.getPath()) {
+				StateTransition stateTransition = StateTransition.getStateTransition(qcon);
+				if (stateTransition != null) {
+					CostBenefitUtil.setNormalValues(copiedSession, qcon, PSMethodUserSelected.getInstance());
+					stateTransition.fire(copiedSession);
+					addFullfilledConditions(result, copiedSession, fullfilledConditions);
+				}
 			}
 		}
 		result.removeAll(fullfilledConditions);

@@ -54,6 +54,7 @@ import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
+import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
@@ -77,23 +78,16 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		 */
 		private final Map<Condition, Pair<List<Condition>, Set<QContainer>>> preconditionCache = new HashMap<>();
 
-		/**
-		 * Stores a List of Pairs of Conditions and QContainers establishing a state where the conditions of the
-		 * targetQContainer is applicable
-		 */
-		private final Map<QContainer, List<Pair<List<Condition>, Set<QContainer>>>> targetCache = new HashMap<>();
-
 		private Collection<Question> cachedAbnormalQuestions = new HashSet<>();
 
 		private Collection<QContainer> blockedQContainer = new HashSet<>();
 	}
 
-	private static final boolean targetCaching = false;
-
 	@Override
 	public void init(SearchModel model) {
-		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(
-				this);
+		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(this);
+		if (sessionObject.initializedModel == model) return;
+
 		// KB has to be remembered before super.init
 		KnowledgeBase oldkb = sessionObject.knowledgeBase;
 		super.init(model);
@@ -115,9 +109,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				sessionObject.blockedQContainer = model.getBlockedQContainers();
 			}
 		}
-		if (targetCaching) {
-			initTargetCache(sessionObject, model);
-		}
 	}
 
 	private static Set<Question> calculateAnsweredAbnormalQuestions(SearchModel model) {
@@ -137,54 +128,6 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Inits preconditions per target.
-	 * <p>
-	 * Conditions can be used as Preconditions, if they are of type CondEqual, they are not already contained in the
-	 * activation condition of the target and their term object is not contained in any partial condition of the
-	 * activation condition other than CondEqual. They can also be used, if they are not type of CondEqual and all their
-	 * term objects are not part of the activation condition.
-	 *
-	 * @param sessionObject actual SessionObject
-	 * @param model         {@link SearchModel}
-	 * @created 05.10.2011
-	 */
-	private static void initTargetCache(TPHeuristicSessionObject sessionObject, SearchModel model) {
-		long time = System.currentTimeMillis();
-		sessionObject.targetCache.clear();
-		Session session = model.getSession();
-		for (Target target : model.getTargets()) {
-			// iterate over all QContainers of all targets
-			for (QContainer qcon : target.getQContainers()) {
-				// skip qcontainer if it is already initialized
-				if (sessionObject.targetCache.get(qcon) != null) continue;
-				StateTransition st = StateTransition.getStateTransition(qcon);
-				// qcontainers without Statetransition are handled separately
-				if (st == null) continue;
-				Condition activationCondition = st.getActivationCondition();
-				if (activationCondition == null) continue;
-				// Collection<TerminologyObject> forbiddenTermObjects =
-				// getForbiddenObjects(activationCondition);
-				Map<Question, Set<Value>> forbiddenValues = getCoveredValues(activationCondition);
-				List<Condition> conditions = getPrimitiveConditions(activationCondition);
-				List<Pair<List<Condition>, Set<QContainer>>> additionalConditions = new LinkedList<>();
-				List<Condition> conditionsToExamine = conditions;
-				Set<Condition> alreadyExaminedConditions = new HashSet<>();
-				while (!conditionsToExamine.isEmpty()) {
-					List<Pair<List<Condition>, Set<QContainer>>> temppairs = getPairs(
-							sessionObject, session,
-							conditionsToExamine, forbiddenValues,
-							true);
-					additionalConditions.addAll(temppairs);
-					conditionsToExamine = getPrimitiveConditions(temppairs,
-							alreadyExaminedConditions);
-				}
-				sessionObject.targetCache.put(qcon, additionalConditions);
-			}
-		}
-		Log.info("Target init: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	private static List<Condition> getPrimitiveConditions(List<Pair<List<Condition>, Set<QContainer>>> temppairs, Set<Condition> alreadyExaminedConditions) {
@@ -310,7 +253,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	 * @param v         Value
 	 * @return true if the value can fullfill the condition
 	 * @created 04.07.2012
-	 * @see getPrimitiveConditions
+	 * @see #getPrimitiveConditions(Condition)
 	 */
 	public static boolean checkValue(Condition condition, Value v) {
 		if (condition instanceof CondEqual) {
@@ -456,74 +399,113 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	@Override
-	public double getDistance(SearchModel model, Path path, State state, QContainer target) {
-		StateTransition stateTransition = StateTransition.getStateTransition(target);
-		// if there is no condition, the target can be indicated directly
-		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
-		Condition condition = getTransitiveCondition(model.getSession(), path, stateTransition, state.getSession());
+	public double getDistance(SearchModel model, Path path, State state, Condition target) {
+		Condition condition = getTransitiveCondition(model.getSession(), target, state.getSession());
 		List<Condition> flattenedConditions = flattenCondAnds(condition);
 		condition = new CondAnd(flattenedConditions);
 		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
 		return estimatePathCosts(sessionObject, state, condition)
 				+ calculateUnusedNegatives(sessionObject, path);
+
+		//		AStarAlgorithm alogrithm = CostBenefitUtil.getAStarAlogrithm(expertMode.getProblemSolver());
+//		TPHeuristic heuristic = (TPHeuristic) alogrithm.getHeuristic();
+//		DividedTransitionHeuristic.DividedTransitionHeuristicSessionObject sessionObject = session.getSessionObject(heuristic);
+//		State startState = alogrithm.getExplanationComponent(session).astar.getStartNode().state;
+//		TPHeuristic.estimatePathCosts(sessionObject, startState, new CondEqual(info.question, value))
 	}
 
 	/**
-	 * Creates a transitive condition for the specified stateTransition based on the actual path. Important note: The
-	 * heuristic has to be initialized based on a search model, containing the qcontainer of the StateTransition as a
-	 * target. If no model is created yet, use the method calculateTransitiveCondition(Session, QContainer)
+	 * Creates a transitive condition for the specified stateTransition.
+	 * <p>
+	 * Important note: The heuristic has to be initialized based on a search model, containing the qcontainer of the
+	 * StateTransition as a target. If no model is created yet, use the method calculateTransitiveCondition(Session,
+	 * QContainer)
 	 *
 	 * @param sessionContainingObject the actual session
-	 * @param path                    actual path
 	 * @param stateTransition         specified {@link StateTransition}
 	 * @return transitive activation condition
 	 * @created 05.07.2012
 	 */
-	public Condition getTransitiveCondition(Session sessionContainingObject, Path path, StateTransition stateTransition, Session sessionRepresentingTheActualState) {
-		Condition precondition = stateTransition.getActivationCondition();
+	public Condition getTransitiveCondition(Session sessionContainingObject, StateTransition stateTransition, Session sessionRepresentingTheActualState) {
+		return getTransitiveCondition(sessionContainingObject, stateTransition.getActivationCondition(), sessionRepresentingTheActualState);
+	}
+
+	/**
+	 * Creates a transitive condition for the specified condition.
+	 * <p>
+	 * Important note: The heuristic has to be initialized based on a search model, containing the qcontainer of the
+	 * StateTransition as a target. If no model is created yet, use the method calculateTransitiveCondition(Session,
+	 * QContainer)
+	 *
+	 * @param session      the actual session
+	 * @param precondition specified {@link StateTransition}
+	 * @return transitive activation condition
+	 * @created 05.07.2012
+	 */
+	public Condition getTransitiveCondition(Session session, Condition precondition) {
+		Session root = session instanceof DecoratedSession ? ((DecoratedSession) session).getRootSession() : session;
+		return getTransitiveCondition(root, precondition, session);
+	}
+
+	/**
+	 * Creates a transitive condition for the specified stateTransition.
+	 * <p>
+	 * Important note: The heuristic has to be initialized based on a search model, containing the qcontainer of the
+	 * StateTransition as a target. If no model is created yet, use the method calculateTransitiveCondition(Session,
+	 * QContainer)
+	 *
+	 * @param sessionContainingObject the actual session
+	 * @param precondition            specified {@link StateTransition}
+	 * @return transitive activation condition
+	 * @created 05.07.2012
+	 */
+	public Condition getTransitiveCondition(Session sessionContainingObject, Condition precondition, Session sessionRepresentingTheActualState) {
 		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) sessionContainingObject.getSessionObject(this);
+		return getTransitiveCondition(sessionObject, precondition, sessionRepresentingTheActualState);
+	}
+
+	/**
+	 * Creates a transitive condition for the specified stateTransition.
+	 * <p>
+	 * Important note: The heuristic has to be initialized based on a search model, containing the qcontainer of the
+	 * StateTransition as a target. If no model is created yet, use the method calculateTransitiveCondition(Session,
+	 * QContainer)
+	 *
+	 * @param sessionObject the actual session object of this heuristic
+	 * @param precondition  specified {@link StateTransition}
+	 * @return transitive activation condition
+	 * @created 05.07.2012
+	 */
+	private Condition getTransitiveCondition(TPHeuristicSessionObject sessionObject, Condition precondition, Session session) {
+		if (precondition == null) return new CondAnd();
 		Map<Question, Condition> originalFullfilledConditions = new HashMap<>();
 		Map<Question, Condition> originalUnFullfilledConditions = new HashMap<>();
-		// use a set to filter duplicated conditions
-		Set<Condition> conditions;
-		if (targetCaching) {
-			List<Pair<List<Condition>, Set<QContainer>>> list = sessionObject.targetCache.get(stateTransition.getQcontainer());
-			if (list == null) {
-				return precondition;
-			}
-			for (Pair<List<Condition>, Set<QContainer>> p : list) {
-				// if no qcontainer was on the path, add the conditions
-				if (!path.contains(p.getB())) {
-					conditions.addAll(p.getA());
-				}
-			}
-		}
-		else {
-			List<Condition> originalPrimitiveConditions = getPrimitiveConditions(precondition);
-			Map<Question, Set<Value>> forbiddenValues = getCoveredValues(precondition);
-			List<Condition> conditionsToExamine = new LinkedList<>();
 
-			for (Condition condition : originalPrimitiveConditions) {
-				boolean conditionFullfilled = Conditions.isTrue(condition,
-						sessionRepresentingTheActualState);
-				if (condition.getTerminalObjects().size() == 1) {
-					TerminologyObject object = condition.getTerminalObjects().iterator().next();
-					if (object instanceof Question) {
-						if (conditionFullfilled) {
-							originalFullfilledConditions.put((Question) object, condition);
-						}
-						else {
-							originalUnFullfilledConditions.put((Question) object, condition);
-						}
+		// use a set to filter duplicated conditions
+		List<Condition> originalPrimitiveConditions = getPrimitiveConditions(precondition);
+		Map<Question, Set<Value>> forbiddenValues = getCoveredValues(precondition);
+		List<Condition> conditionsToExamine = new LinkedList<>();
+
+		for (Condition condition : originalPrimitiveConditions) {
+			boolean conditionFullfilled = Conditions.isTrue(condition, session);
+			if (condition.getTerminalObjects().size() == 1) {
+				TerminologyObject object = condition.getTerminalObjects().iterator().next();
+				if (object instanceof Question) {
+					if (conditionFullfilled) {
+						originalFullfilledConditions.put((Question) object, condition);
+					}
+					else {
+						originalUnFullfilledConditions.put((Question) object, condition);
 					}
 				}
-				if (!conditionFullfilled) {
-					conditionsToExamine.add(condition);
-				}
 			}
-			conditions = getPreparingConditions(sessionRepresentingTheActualState,
-					sessionObject, forbiddenValues, conditionsToExamine);
+			if (!conditionFullfilled) {
+				conditionsToExamine.add(condition);
+			}
 		}
+		Set<Condition> conditions = getPreparingConditions(session,
+				sessionObject, forbiddenValues, conditionsToExamine);
+
 		Condition condition;
 		if (conditions.isEmpty()) {
 			condition = precondition;
@@ -534,7 +516,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			conditionsToUse.add(precondition);
 			Set<Condition> conflictingfullfilledOriginalConds = new HashSet<>();
 			Set<Condition> conflictingUnfullfilledOriginalConds = new HashSet<>();
-			addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject,
+			addConditionsNotConflicting(session, sessionObject,
 					conditions, conditionsToUse, originalFullfilledConditions,
 					conflictingfullfilledOriginalConds, originalUnFullfilledConditions,
 					conflictingUnfullfilledOriginalConds);
@@ -543,12 +525,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// condition conflicting with it, it will be destroyed during the
 			// path, so we have to add its preparing transitions again (if not
 			// fullfilled)
-			if (!targetCaching && !conflictingfullfilledOriginalConds.isEmpty()) {
+			if (!conflictingfullfilledOriginalConds.isEmpty()) {
 				Set<Condition> conditionsPreparingConflictingOriginalConditions = getPreparingConditions(
-						sessionRepresentingTheActualState, sessionObject,
+						session, sessionObject,
 						getCoveredValues(condition),
 						conflictingfullfilledOriginalConds);
-				addConditionsNotConflicting(sessionRepresentingTheActualState, sessionObject,
+				addConditionsNotConflicting(session, sessionObject,
 						conditionsPreparingConflictingOriginalConditions,
 						conditionsToUse, null, null, originalUnFullfilledConditions,
 						conflictingUnfullfilledOriginalConds);
@@ -558,14 +540,14 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 			// conditions (Reason: if F1=C is part of the original condition, we
 			// expand F1=A and F1=B is needed to prepare F1=C, then F1=B can
 			// also be added).
-			if (!targetCaching && !conflictingUnfullfilledOriginalConds.isEmpty()) {
+			if (!conflictingUnfullfilledOriginalConds.isEmpty()) {
 				Map<Question, Set<Value>> coveredValueMap = getCoveredValues(condition);
 				for (Condition conflicting : conflictingUnfullfilledOriginalConds) {
 					Pair<List<Condition>, Set<QContainer>> pair = sessionObject.preconditionCache.get(conflicting);
 					Question question = (Question) conflicting.getTerminalObjects().iterator().next();
 					for (Condition candidate : pair.getA()) {
 						if (candidate.getTerminalObjects().size() == 1
-								&& Conditions.isTrue(candidate, sessionRepresentingTheActualState)) {
+								&& Conditions.isTrue(candidate, session)) {
 							TerminologyObject candidateQuestion = candidate.getTerminalObjects().iterator().next();
 							if (question != candidateQuestion) {
 								// actually all candidateQuestions not being
@@ -824,9 +806,8 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		model.addTarget(new Target(target));
 		heuristic.init(model);
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
-		if (stateTransition == null) return new CondAnd(Collections.emptyList());
-		Path path = new AStarPath(null, null, 0);
-		return heuristic.getTransitiveCondition(session, path, stateTransition, session);
+		if (stateTransition == null) return new CondAnd();
+		return heuristic.getTransitiveCondition(session, stateTransition.getActivationCondition());
 	}
 
 	@Override

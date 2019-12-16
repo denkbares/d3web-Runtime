@@ -72,6 +72,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		 * Stores the {@link KnowledgeBase} this heuristic is initialized for
 		 */
 		protected KnowledgeBase knowledgeBase;
+		protected SearchModel initializedModel;
 
 		/**
 		 * Stores all available state transitions of the knowledge base of the initialized session
@@ -84,18 +85,14 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		 */
 		private final Map<Condition, ActivationCacheEntry> costCache = new ConcurrentHashMap<>();
 		private final Map<ValueTransition, Value> valueCache = new ConcurrentHashMap<>();
-		;
+
 		private Session answeredSession;
 	}
 
 	@Override
-	public double getDistance(SearchModel model, Path path, State state, QContainer target) {
-		StateTransition stateTransition = StateTransition.getStateTransition(target);
-		// if there is no condition, the target can be indicated directly
-		if (stateTransition == null || stateTransition.getActivationCondition() == null) return 0;
-		Condition precondition = stateTransition.getActivationCondition();
+	public double getDistance(SearchModel model, Path path, State state, Condition target) {
 		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
-		return estimatePathCosts(sessionObject, state, precondition)
+		return estimatePathCosts(sessionObject, state, target)
 				+ calculateUnusedNegatives(sessionObject, path);
 	}
 
@@ -106,11 +103,14 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	@Override
 	public void init(SearchModel model) {
 		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
+		if (sessionObject.initializedModel == model) return;
+
 		// check if no further initialization required
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
 		sessionObject.finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
 		// otherwise prepare some information
 		sessionObject.knowledgeBase = kb;
+		sessionObject.initializedModel = model;
 		sessionObject.transitionalStateTransitions = new LinkedList<>();
 		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
 		sessionObject.answeredSession = CostBenefitUtil.createSearchCopy(model.getSession());

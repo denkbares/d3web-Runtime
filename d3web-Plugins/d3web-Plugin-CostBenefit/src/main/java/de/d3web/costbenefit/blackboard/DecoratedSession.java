@@ -51,7 +51,7 @@ import de.d3web.core.session.protocol.Protocol;
  * @author volker_belli
  * @created 16.09.2011
  */
-public class DecoratedSession implements Session {
+public class DecoratedSession implements DerivedSession {
 
 	private final long time = System.currentTimeMillis();
 	private final KnowledgeBase knowledgeBase;
@@ -66,13 +66,7 @@ public class DecoratedSession implements Session {
 				: other;
 	}
 
-	/**
-	 * Returns the original root session that is decorated by this {@link DecoratedSession} and a series of other
-	 * DecoratedSessions.
-	 *
-	 * @return the original root session
-	 * @created 04.06.2012
-	 */
+	@Override
 	@NotNull
 	public Session getRootSession() {
 		return this.rootSession;
