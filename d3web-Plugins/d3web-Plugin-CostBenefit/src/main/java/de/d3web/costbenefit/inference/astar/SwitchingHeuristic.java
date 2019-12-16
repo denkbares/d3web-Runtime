@@ -53,7 +53,7 @@ public class SwitchingHeuristic implements Heuristic {
 	}
 
 	@Override
-	public void init(SearchModel searchModel) {
+	public boolean init(SearchModel searchModel) {
 		if (searchModel.getTargets().size() > switchingLevel) {
 			actual = dividedTransitionHeuristic;
 		}
@@ -62,7 +62,7 @@ public class SwitchingHeuristic implements Heuristic {
 		}
 		Log.info("#Targets: " + searchModel.getTargets().size() + ", " +
 				"using heuristic: " + actual.getClass().getSimpleName());
-		actual.init(searchModel);
+		return actual.init(searchModel);
 	}
 
 	public int getSwitchingLevel() {

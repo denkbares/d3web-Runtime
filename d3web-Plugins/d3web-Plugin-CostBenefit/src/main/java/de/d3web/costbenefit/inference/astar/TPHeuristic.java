@@ -84,13 +84,12 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	@Override
-	public void init(SearchModel model) {
-		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(this);
-		if (sessionObject.initializedModel == model) return;
-
+	public boolean init(SearchModel model) {
 		// KB has to be remembered before super.init
+		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(this);
 		KnowledgeBase oldkb = sessionObject.knowledgeBase;
-		super.init(model);
+		if (!super.init(model)) return false;
+
 		// initgeneral is only called when the kb, the blocked QContainers or
 		// the list of cached abnormal
 		// questions changes
@@ -109,6 +108,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 				sessionObject.blockedQContainer = model.getBlockedQContainers();
 			}
 		}
+		return true;
 	}
 
 	private static Set<Question> calculateAnsweredAbnormalQuestions(SearchModel model) {

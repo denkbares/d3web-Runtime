@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -21,7 +21,7 @@ package de.d3web.costbenefit;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,20 +49,18 @@ import de.d3web.costbenefit.model.SearchModel;
 
 /**
  * Tests the behavior of the heuristics in combination with final questions
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.09.2012
  */
 public class TestHeuristicFinalQuestionBehaviour {
 
 	/**
-	 * The values of final questions cannot be changed once they have been set.
-	 * If the value is set to a value used to a precondition, this part of the
-	 * precondition can be ignored, which leads to a better calculation of the
-	 * predicted costs
-	 * 
+	 * The values of final questions cannot be changed once they have been set. If the value is set to a value used to a
+	 * precondition, this part of the precondition can be ignored, which leads to a better calculation of the predicted
+	 * costs
+	 *
 	 * @throws IOException
-	 * 
 	 * @created 25.09.2012
 	 */
 	@Test
@@ -78,34 +76,26 @@ public class TestHeuristicFinalQuestionBehaviour {
 		finalQuestion.getInfoStore().addValue(CostBenefitProperties.FINAL_QUESTION, true);
 		QContainer transition = new QContainer(kb, "transitionalQContainer");
 		QContainer target = new QContainer(kb, "target");
-		LinkedList<ValueTransition> transitions = new LinkedList<>();
-		transitions.add(new ValueTransition(finalQuestion,
-				Collections.singletonList(new ConditionalValueSetter(value,
-						new CondAnd(Collections.emptyList())))));
-		transitions.add(new ValueTransition(nonfinalQuestion,
-				Collections.singletonList(new ConditionalValueSetter(value,
-						new CondAnd(Collections.emptyList())))));
-		new StateTransition(new CondAnd(Arrays.asList(new CondEqual(finalQuestion,
-				value),
-				new CondEqual(nonfinalQuestion, value))),
+		List<ValueTransition> transitions = Arrays.asList(
+				new ValueTransition(finalQuestion, new ConditionalValueSetter(value, new CondAnd())),
+				new ValueTransition(nonfinalQuestion, new ConditionalValueSetter(value, new CondAnd())));
+		new StateTransition(
+				new CondAnd(new CondEqual(finalQuestion, value), new CondEqual(nonfinalQuestion, value)),
 				Collections.emptyList(), target);
-		new StateTransition(new CondAnd(Collections.emptyList()), transitions,
-				transition);
+		new StateTransition(new CondAnd(), transitions, transition);
 
 		Session session = SessionFactory.createSession(kb);
 		DividedTransitionHeuristic heuristic = new DividedTransitionHeuristic();
 		AStarPath emptyPath = new AStarPath(null, null, 0);
 		SearchModel model = new SearchModel(session);
 		heuristic.init(model);
-		double distance = heuristic.getDistance(model, emptyPath,
-				new State(session, Collections.emptyMap()), target);
+
+		double distance = heuristic.getDistance(model, emptyPath, new State(session, Collections.emptyMap()), target);
 		Assert.assertEquals(1.0, distance, 0);
-		session.getBlackboard().addValueFact(
-				FactFactory.createUserEnteredFact(finalQuestion, value));
+
+		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(finalQuestion, value));
 		heuristic.init(model);
-		distance = heuristic.getDistance(model, emptyPath,
-				new State(session, Collections.emptyMap()), target);
+		distance = heuristic.getDistance(model, emptyPath, new State(session, Collections.emptyMap()), target);
 		Assert.assertEquals(1.0, distance, 0);
 	}
-
 }

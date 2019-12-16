@@ -72,7 +72,8 @@ public interface Heuristic {
 	 * only for that search at the same time, until #init(SearchModel) is called for an other search model.
 	 *
 	 * @param searchModel the SearchModel the heuristic should be used for
+	 * @return true, if initialized, false if already initialized to this session and no initialization is required
 	 * @created 06.09.2011
 	 */
-	void init(SearchModel searchModel);
+	boolean init(SearchModel searchModel);
 }

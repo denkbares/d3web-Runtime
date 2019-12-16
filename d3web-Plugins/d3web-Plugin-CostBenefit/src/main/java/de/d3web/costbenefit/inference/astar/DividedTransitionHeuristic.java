@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,7 +71,10 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 		 * Stores the {@link KnowledgeBase} this heuristic is initialized for
 		 */
 		protected KnowledgeBase knowledgeBase;
-		protected SearchModel initializedModel;
+
+		// store some information to identify if initialization is required
+		private SearchModel initializedModel;
+		private long propagationIndex;
 
 		/**
 		 * Stores all available state transitions of the knowledge base of the initialized session
@@ -101,20 +103,23 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 	}
 
 	@Override
-	public void init(SearchModel model) {
-		DividedTransitionHeuristicSessionObject sessionObject = model.getSession().getSessionObject(this);
-		if (sessionObject.initializedModel == model) return;
+	public boolean init(SearchModel model) {
+		Session session = model.getSession();
+		DividedTransitionHeuristicSessionObject sessionObject = session.getSessionObject(this);
 
-		// check if no further initialization required
-		KnowledgeBase kb = model.getSession().getKnowledgeBase();
-		sessionObject.finalValues = PSMethodCostBenefit.getFinalValues(model.getSession());
+		// check if init is required; skip if same search model and no propagation in between
+		long index = session.getPropagationManager().getPropagationIndex();
+		if (sessionObject.initializedModel == model && sessionObject.propagationIndex == index) return false;
+
 		// otherwise prepare some information
-		sessionObject.knowledgeBase = kb;
+		sessionObject.knowledgeBase = session.getKnowledgeBase();
 		sessionObject.initializedModel = model;
-		sessionObject.transitionalStateTransitions = new LinkedList<>();
-		sessionObject.transitionalStateTransitions.addAll(model.getTransitionalStateTransitions());
-		sessionObject.answeredSession = CostBenefitUtil.createSearchCopy(model.getSession());
+		sessionObject.propagationIndex = index;
+		sessionObject.finalValues = PSMethodCostBenefit.getFinalValues(session);
+		sessionObject.transitionalStateTransitions = new ArrayList<>(model.getTransitionalStateTransitions());
+		sessionObject.answeredSession = CostBenefitUtil.createSearchCopy(session);
 		sessionObject.valueCache.clear();
+
 		// set normal values of all questions in transitional qcontainers
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
 			CostBenefitUtil.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
@@ -122,12 +127,15 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 		sessionObject.costCache.clear();
 		sessionObject.negativeSum = 0;
-		for (QContainer qcon : kb.getManager().getQContainers()) {
+		for (QContainer qcon : sessionObject.knowledgeBase.getManager().getQContainers()) {
 			Double costs = qcon.getInfoStore().getValue(BasicProperties.COST);
 			if (costs < 0) {
 				sessionObject.negativeSum += costs;
 			}
 		}
+
+		// init completed
+		return true;
 	}
 
 	private static final class ActivationCacheEntry {
