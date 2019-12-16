@@ -20,22 +20,31 @@
 
 package de.d3web.core.inference.condition;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import com.denkbares.strings.Strings;
 import de.d3web.core.session.Session;
 
 /**
- * Implements an "and"-condition, where all sub-conditions have to be true. The
- * composite pattern is used for this. This class is a "composite".
+ * Implements an "and"-condition, where all sub-conditions have to be true. The composite pattern is used for this. This
+ * class is a "composite".
  *
  * @author Michael Wolber, joba
  */
 public class CondAnd extends NonTerminalCondition {
 
 	/**
-	 * Creates a new AND-condition based on the conjunction of the specified
-	 * terms ({@link Condition} instances).
+	 * Creates a new AND-condition based on the conjunction of the specified terms ({@link Condition} instances).
+	 *
+	 * @param terms a collection of {@link Condition} instances
+	 */
+	public CondAnd(Condition... terms) {
+		this(Arrays.asList(terms));
+	}
+
+	/**
+	 * Creates a new AND-condition based on the conjunction of the specified terms ({@link Condition} instances).
 	 *
 	 * @param terms a collection of {@link Condition} instances
 	 */
@@ -44,8 +53,8 @@ public class CondAnd extends NonTerminalCondition {
 	}
 
 	/**
-	 * Returns true, when <b>all</b> conjunctive elements are evaluated as true
-	 * based on the findings given in the specified {@link Session}.
+	 * Returns true, when <b>all</b> conjunctive elements are evaluated as true based on the findings given in the
+	 * specified {@link Session}.
 	 *
 	 * @param session the given {@link Session}
 	 */
