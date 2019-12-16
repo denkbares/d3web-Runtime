@@ -285,19 +285,18 @@ public final class CostBenefitUtil {
 	 * @return configured instance of AStarAlgorithm or null, if another algorithm is used.
 	 * @created 04.12.2012
 	 */
-	public static AStarAlgorithm getAStarAlogrithm(PSMethodCostBenefit psMethodCostBenefit) {
+	public static AStarAlgorithm getAStarAlgorithm(PSMethodCostBenefit psMethodCostBenefit) {
 		SearchAlgorithm searchAlgorithm = psMethodCostBenefit.getSearchAlgorithm();
-		AStarAlgorithm aStar = null;
 		if (searchAlgorithm instanceof PathExtender) {
 			PathExtender extender = (PathExtender) searchAlgorithm;
 			if (extender.getSubalgorithm() instanceof AStarAlgorithm) {
-				aStar = (AStarAlgorithm) extender.getSubalgorithm();
+				return (AStarAlgorithm) extender.getSubalgorithm();
 			}
 		}
 		else if (searchAlgorithm instanceof AStarAlgorithm) {
-			aStar = (AStarAlgorithm) searchAlgorithm;
+			return (AStarAlgorithm) searchAlgorithm;
 		}
-		return aStar;
+		return null;
 	}
 
 	/**
