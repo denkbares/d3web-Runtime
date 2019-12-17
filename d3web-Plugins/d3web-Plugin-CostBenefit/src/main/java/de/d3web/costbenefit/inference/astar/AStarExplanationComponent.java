@@ -163,7 +163,7 @@ public class AStarExplanationComponent {
 		SearchModel model = astar.getModel();
 		return astar.getClosedNodes().stream().mapToDouble(node ->
 				node.getPath().getCosts() + heuristic.getDistance(model, node.getPath(), node.getState(), target))
-				.min().orElse(Double.NaN);
+				.min().orElseGet(() -> getHeuristicCosts(target));
 	}
 
 	/**
