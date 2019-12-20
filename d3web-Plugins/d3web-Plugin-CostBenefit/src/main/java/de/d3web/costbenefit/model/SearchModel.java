@@ -38,6 +38,7 @@ import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.costbenefit.inference.BlockingReason;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
@@ -53,7 +54,7 @@ import de.d3web.costbenefit.inference.StateTransition;
 public class SearchModel {
 
 	private final NavigableSet<Target> targets = new TreeSet<>(new TargetComparator());
-	private final Map<Target, String> blockedTargets = new TreeMap<>(new TargetComparator());
+	private final Map<Target, BlockingReason> blockedTargets = new TreeMap<>(new TargetComparator());
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
@@ -61,7 +62,7 @@ public class SearchModel {
 	private final CostFunction costFunction;
 	private final Session session;
 	private final Set<StateTransition> transitionalStateTransitions;
-	private final Set<QContainer> blockedQContainers;
+	private final Map<QContainer, BlockingReason> blockedQContainers;
 	private long duration = -1;
 
 	// debug fields, left untouched if debugging is not enabled
@@ -83,9 +84,9 @@ public class SearchModel {
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : StateTransition.getAll(session)) {
 			// skip blocked and target-only containers, as their transitions are not taken into consideration
-			QContainer container = st.getQcontainer();
-			if (blockedQContainers.contains(container)) continue;
-			if (container.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY)) continue;
+			QContainer container = st.getQContainer();
+			if (blockedQContainers.containsKey(container)) continue;
+			if (CostBenefitProperties.isTargetOnly(container)) continue;
 
 			// add all remaining state transitions
 			transitionalStateTransitions.add(st);
@@ -96,10 +97,8 @@ public class SearchModel {
 	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	public SearchModel clone() {
 		SearchModel copy = new SearchModel(session);
-		copy.bestBenefitTarget =
-				this.bestBenefitTarget == null ? null : bestBenefitTarget.clone();
-		copy.bestCostBenefitTarget =
-				this.bestCostBenefitTarget == null ? null : bestCostBenefitTarget.clone();
+		copy.bestBenefitTarget = this.bestBenefitTarget == null ? null : bestBenefitTarget.clone();
+		copy.bestCostBenefitTarget = this.bestCostBenefitTarget == null ? null : bestCostBenefitTarget.clone();
 		for (Target target : targets) {
 			copy.addTarget(target.clone());
 		}
@@ -203,7 +202,7 @@ public class SearchModel {
 	 * @param target the target to be blocked
 	 * @param reason some textual reason why this target is blocked (for debug purposes)
 	 */
-	public void blockTarget(Target target, String reason) {
+	public void blockTarget(Target target, BlockingReason reason) {
 		if (targets.remove(target)) {
 			blockedTargets.put(target, reason);
 			// update the best benefit target, if that one is removed
@@ -298,7 +297,7 @@ public class SearchModel {
 	 * Returns a reason (message) why the specified target has been blocked, or null if the target is not blocked at
 	 * all.
 	 */
-	public String getBlockingMessage(Target target) {
+	public BlockingReason getBlockingMessage(Target target) {
 		return blockedTargets.get(target);
 	}
 
@@ -372,7 +371,7 @@ public class SearchModel {
 		return aborted;
 	}
 
-	public Set<QContainer> getBlockedQContainers() {
+	public Map<QContainer, BlockingReason> getBlockedQContainers() {
 		return blockedQContainers;
 	}
 
@@ -390,11 +389,10 @@ public class SearchModel {
 		HashSet<StateTransition> result = new HashSet<>();
 		for (Target t : targets) {
 			for (QContainer qcon : t.getQContainers()) {
-				if (!blockedQContainers.contains(qcon)) {
-					StateTransition stateTransition = StateTransition.getStateTransition(qcon);
-					if (stateTransition != null) {
-						result.add(stateTransition);
-					}
+				if (blockedQContainers.containsKey(qcon)) continue;
+				StateTransition stateTransition = StateTransition.getStateTransition(qcon);
+				if (stateTransition != null) {
+					result.add(stateTransition);
 				}
 			}
 		}

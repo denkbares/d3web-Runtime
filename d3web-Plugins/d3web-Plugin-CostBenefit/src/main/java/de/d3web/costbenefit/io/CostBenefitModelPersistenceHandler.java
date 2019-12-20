@@ -104,7 +104,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 	private Element getElement(Persistence<KnowledgeBase> persistence, StateTransition st) throws IOException {
 		Element element = persistence.getDocument().createElement("StateTransition");
-		element.setAttribute("QID", st.getQcontainer().getName());
+		element.setAttribute("QID", st.getQContainer().getName());
 		Condition activationCondition = st.getActivationCondition();
 		if (activationCondition != null) {
 			Element aCElement = persistence.getDocument().createElement("activationCondition");
@@ -188,7 +188,7 @@ public class CostBenefitModelPersistenceHandler implements KnowledgeReader, Know
 
 		@Override
 		public int compare(StateTransition r1, StateTransition r2) {
-			return (r1.getQcontainer().getName().compareTo(r2.getQcontainer().getName()));
+			return (r1.getQContainer().getName().compareTo(r2.getQContainer().getName()));
 		}
 	}
 }

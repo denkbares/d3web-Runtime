@@ -224,7 +224,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 
 				// otherwise proceed in path and remove old indication
 				cbCaseObject.activateNextQContainer();
-				cbCaseObject.cleanupIndicationForQContainer(session, transition.getQcontainer());
+				cbCaseObject.cleanupIndicationForQContainer(session, transition.getQContainer());
 				sessionObject.qContainer = qcon;
 			}
 		}

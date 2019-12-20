@@ -20,7 +20,6 @@ package de.d3web.costbenefit.inference.astar;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -30,6 +29,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -38,12 +38,12 @@ import com.denkbares.utils.Pair;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
+import de.d3web.costbenefit.inference.BlockingReason;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
@@ -93,16 +93,10 @@ public class AStar {
 	private final Collection<StateTransition> successors;
 	private final CostFunction costFunction;
 	private final Session session;
-	private final Map<Pair<Path, QContainer>, Double> hValueCache = Collections.synchronizedMap(new HashMap<Pair<Path, QContainer>, Double>());
+	private final Map<Pair<Path, QContainer>, Double> hValueCache = new ConcurrentHashMap<>();
 
 	// some fields useful for debugging non-readched targets
 	private Node startNode;
-
-	/**
-	 * @deprecated use PSMethodCostBenefit.TARGET_ONLY
-	 */
-	@Deprecated
-	public static final Property<Boolean> TARGET_ONLY = CostBenefitProperties.TARGET_ONLY;
 
 	// some information about the current search
 	private final transient long initTime;
@@ -201,7 +195,7 @@ public class AStar {
 			QContainer qcontainer = target.getQContainers().get(0);
 			double distance = heuristic.getDistance(model, startNode.getPath(), startNode.getState(), qcontainer);
 			if (distance == Double.POSITIVE_INFINITY) {
-				model.blockTarget(target, heuristic.getClass().getSimpleName() + ": target cannot be reached");
+				model.blockTarget(target, BlockingReason.cannotReach);
 				successors.remove(StateTransition.getStateTransition(qcontainer));
 			}
 		}
@@ -317,7 +311,7 @@ public class AStar {
 	 */
 	private boolean canApplyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
-		QContainer qcontainer = stateTransition.getQcontainer();
+		QContainer qcontainer = stateTransition.getQContainer();
 		// do not repeat qcontainers in a row
 		if (node.getPath().getQContainer() == qcontainer) {
 			return false;
@@ -337,9 +331,7 @@ public class AStar {
 
 	private void installNode(Node newFollower) {
 		updateTargets(newFollower.getPath());
-		Boolean targetOnly = newFollower.getPath().getQContainer().getInfoStore().getValue(
-				CostBenefitProperties.TARGET_ONLY);
-		if (targetOnly) {
+		if (CostBenefitProperties.isTargetOnly(newFollower.getPath().getQContainer())) {
 			// do not add this node to our pathes, it cannot be reused because
 			// the last QContainer can not be used to establish preconditions
 			return;
@@ -378,7 +370,7 @@ public class AStar {
 
 	private Node applyTransition(Node node, StateTransition stateTransition) {
 		Session actualSession = node.getSession();
-		QContainer qcontainer = stateTransition.getQcontainer();
+		QContainer qcontainer = stateTransition.getQContainer();
 		Session copiedSession = CostBenefitUtil.createDecoratedSession(actualSession);
 		double costs = costFunction.getCosts(qcontainer, copiedSession);
 		CostBenefitUtil.setNormalValues(copiedSession, qcontainer, this);

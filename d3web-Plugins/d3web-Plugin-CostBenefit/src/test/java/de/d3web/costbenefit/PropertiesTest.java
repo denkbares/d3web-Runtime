@@ -342,17 +342,14 @@ public class PropertiesTest {
 		PersistenceManager.getInstance().save(kb, file);
 		KnowledgeBase reloadedKB = PersistenceManager.getInstance().load(file);
 		QContainer reloadedFirst = reloadedKB.getManager().searchQContainer(FIRST_NAME);
-		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(
-				CostBenefitProperties.PERMANENTLY_RELEVANT));
-		Assert.assertFalse(reloadedFirst.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY));
-		QContainer reloadedPermanentlyRelevant = reloadedKB.getManager().searchQContainer(
-				PERMANENTLY_NAME);
-		Assert.assertTrue(reloadedPermanentlyRelevant.getInfoStore().getValue(
-				CostBenefitProperties.PERMANENTLY_RELEVANT));
+		Assert.assertFalse(CostBenefitProperties.isPermanentlyRelevant(reloadedFirst));
+		Assert.assertFalse(CostBenefitProperties.isTargetOnly(reloadedFirst));
+
+		QContainer reloadedPermanentlyRelevant = reloadedKB.getManager().searchQContainer(PERMANENTLY_NAME);
+		Assert.assertTrue(CostBenefitProperties.isPermanentlyRelevant(reloadedPermanentlyRelevant));
+
 		QContainer reloadedTargetOnly = reloadedKB.getManager().searchQContainer(TARGET_ONLY_NAME);
-		Assert.assertFalse(reloadedTargetOnly.getInfoStore().getValue(
-				CostBenefitProperties.PERMANENTLY_RELEVANT));
-		Assert.assertTrue(reloadedTargetOnly.getInfoStore().getValue(
-				CostBenefitProperties.TARGET_ONLY));
+		Assert.assertFalse(CostBenefitProperties.isPermanentlyRelevant(reloadedTargetOnly));
+		Assert.assertTrue(CostBenefitProperties.isTargetOnly(reloadedTargetOnly));
 	}
 }

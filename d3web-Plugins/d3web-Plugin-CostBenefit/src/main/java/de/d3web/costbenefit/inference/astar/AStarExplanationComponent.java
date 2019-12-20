@@ -170,10 +170,51 @@ public class AStarExplanationComponent {
 	 * Returns the costs (initially) estimated by the heuristic for the specified target, calculated from the start of
 	 * the search.
 	 */
+	public double getHeuristicCosts(QContainer target) {
+		StateTransition stateTransition = StateTransition.getStateTransition(target);
+		if (stateTransition == null) return 0;
+		Condition condition = stateTransition.getActivationCondition();
+		if (condition == null) return 0;
+		return getHeuristicCosts(condition);
+	}
+
+	/**
+	 * Returns the costs (initially) estimated by the heuristic for the specified target, calculated from the start of
+	 * the search.
+	 */
 	public double getHeuristicCosts(Condition target) {
 		Heuristic heuristic = getTPHeuristic();
 		Node startNode = astar.getStartNode();
 		return heuristic.getDistance(astar.getModel(), startNode.getPath(), startNode.getState(), target);
+	}
+
+	/**
+	 * Expands and returns the specified target condition to the transitive condition that additionally requires all
+	 * preparation states that are definitely required (from the heuristic's point of view) to prepare the target. The
+	 * method returns null if there is no precondition for the target defined.
+	 *
+	 * @param target the target to get the transitive precondition for
+	 * @return the transitive precondition, including the target's and all required preparations' preconditions
+	 */
+	@Nullable
+	public Condition getTransitiveCondition(QContainer target) {
+		StateTransition stateTransition = StateTransition.getStateTransition(target);
+		if (stateTransition == null) return null;
+		Condition condition = stateTransition.getActivationCondition();
+		if (condition == null) return null;
+		return getTransitiveCondition(condition);
+	}
+
+	/**
+	 * Expands and returns the specified target condition to the transitive condition that additionally requires all
+	 * preparation states that are definitely required (from the heuristic's point of view) to prepare the target.
+	 *
+	 * @param target the target to get the transitive precondition for
+	 * @return the transitive precondition, including the target's and all required preparations' preconditions
+	 */
+	@NotNull
+	public Condition getTransitiveCondition(@NotNull Condition target) {
+		return getTPHeuristic().getTransitiveCondition(astar.getModel().getSession(), target);
 	}
 
 //	/**
@@ -264,11 +305,10 @@ public class AStarExplanationComponent {
 		KnowledgeBase kb = session.getKnowledgeBase();
 		Collection<StateTransition> stateTransitions = new LinkedList<>();
 		// filter StateTransitions that cannot be applied due to final questions
-		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
+		Set<QContainer> blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session).keySet();
 		for (StateTransition st : StateTransition.getAll(kb)) {
-			QContainer qcontainer = st.getQcontainer();
-			Boolean targetOnly = qcontainer.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
-			if (!targetOnly && !blockedQContainers.contains(qcontainer)) {
+			QContainer qcontainer = st.getQContainer();
+			if (!CostBenefitProperties.isTargetOnly(qcontainer) && !blockedQContainers.contains(qcontainer)) {
 				stateTransitions.add(st);
 			}
 		}
@@ -283,7 +323,7 @@ public class AStarExplanationComponent {
 							// to DividedTransitionHeuristic.getValue()
 							for (Value v : vt.calculatePossibleValues()) {
 								if (TPHeuristic.checkValue(condition, v)) {
-									transitionalQContainer.add(st.getQcontainer());
+									transitionalQContainer.add(st.getQContainer());
 									break;
 								}
 							}

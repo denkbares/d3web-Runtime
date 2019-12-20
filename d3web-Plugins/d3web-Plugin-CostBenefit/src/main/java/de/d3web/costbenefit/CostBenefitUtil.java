@@ -308,7 +308,7 @@ public final class CostBenefitUtil {
 	 */
 	public static boolean hasPermanentlyRelevantParent(TerminologyObject termObject) {
 		for (TerminologyObject parent : KnowledgeBaseUtils.getAncestors(termObject)) {
-			if (parent.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+			if ((parent instanceof QContainer) && CostBenefitProperties.isPermanentlyRelevant((QContainer) parent)) {
 				return true;
 			}
 		}
@@ -418,10 +418,10 @@ public final class CostBenefitUtil {
 		Session copiedSession = new CopiedSession(session);
 		for (StateTransition st : StateTransition.getAll(session)) {
 			// ignore permanently relevant QContainer
-			if (st.getQcontainer().getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+			if (CostBenefitProperties.isPermanentlyRelevant(st.getQContainer())) {
 				continue;
 			}
-			setNormalValues(copiedSession, st.getQcontainer(), new Object());
+			setNormalValues(copiedSession, st.getQContainer(), new Object());
 			List<Fact> facts = st.fire(copiedSession);
 			for (Fact fact : facts) {
 				if (CostBenefitProperties.isCheckOnce(fact.getTerminologyObject())) {

@@ -119,7 +119,7 @@ public class StateTransition implements KnowledgeSlice {
 	}
 
 	@NotNull
-	public QContainer getQcontainer() {
+	public QContainer getQContainer() {
 		return qcontainer;
 	}
 

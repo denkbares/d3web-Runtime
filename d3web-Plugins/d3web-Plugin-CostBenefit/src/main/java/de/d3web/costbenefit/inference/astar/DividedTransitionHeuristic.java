@@ -122,7 +122,7 @@ public class DividedTransitionHeuristic implements Heuristic, SessionObjectSourc
 
 		// set normal values of all questions in transitional qcontainers
 		for (StateTransition st : sessionObject.transitionalStateTransitions) {
-			CostBenefitUtil.setNormalValues(sessionObject.answeredSession, st.getQcontainer(), this);
+			CostBenefitUtil.setNormalValues(sessionObject.answeredSession, st.getQContainer(), this);
 		}
 
 		sessionObject.costCache.clear();

@@ -88,7 +88,6 @@ public class CostBenefitProperties {
 	 */
 	public static final Property<String> INTERRUPT_QCONTAINER = Property.getProperty("interruptQContainer", String.class);
 
-
 	public static final String CONNECT_UMD_CHOICE_NAME = "connect_umd"; // CBX
 	public static final String ADAPTED_CHOICE_NAME = "adapt"; // CBX
 	public static final String UMD_INTEGRATED_CHOICE_NAME = "#integriert"; // KnowledgeDesigner (SGP + CAN)
@@ -273,5 +272,21 @@ public class CostBenefitProperties {
 			value = new ChoiceValue(((QuestionChoice) adapterOrDeviceStateQuestion).getAllAlternatives().get(0));
 		}
 		return UndefinedValue.isUndefinedValue(value) ? null : value;
+	}
+
+	/**
+	 * Returns true if the specified QContainer is explicitly marked to be permanently relevant, which means that the
+	 * user is always allowed to use this QContainer, independently from a calculated path.
+	 */
+	public static boolean isPermanentlyRelevant(QContainer container) {
+		return container.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT);
+	}
+
+	/**
+	 * Returns true if the specified QContainer is explicitly marked to only be used as a path target, but not being
+	 * used to prepare stated for other targets.
+	 */
+	public static boolean isTargetOnly(QContainer container) {
+		return container.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
 	}
 }

@@ -201,7 +201,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				else {
 					// remove permanently relevant QContainer from blocked
 					// qcontainers if it is selected as target manually
-					if (qContainer.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
+					if (CostBenefitProperties.isPermanentlyRelevant(qContainer)) {
 						searchModel.getBlockedQContainers().remove(qContainer);
 					}
 				}
@@ -282,15 +282,16 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	private void initializeSearchModel(CostBenefitCaseObject caseObject) {
 		Session session = caseObject.getSession();
 		HashSet<Solution> allSolutions = new HashSet<>();
-//		HashSet<Target> allTargets = new HashSet<>();
 		SearchModel searchModel = new SearchModel(session);
 		List<StrategicSupport> strategicSupports = CostBenefitUtil.getStrategicSupports(session);
 		for (StrategicSupport strategicSupport : strategicSupports) {
 			// calculate the targets from the strategic support items
 			Collection<Solution> solutions = strategicSupport.getUndiscriminatedSolutions(session);
-			Collection<Question> discriminatingQuestions = strategicSupport.getDiscriminatingQuestions(solutions, session);
-			Collection<Target> targets = targetFunction.getTargets(session, discriminatingQuestions, solutions, strategicSupport);
-			Set<QContainer> blockedQContainers = searchModel.getBlockedQContainers();
+			Collection<Question> questions = strategicSupport.getDiscriminatingQuestions(solutions, session);
+			Collection<Target> targets = targetFunction.getTargets(session, questions, solutions, strategicSupport);
+			Map<QContainer, BlockingReason> blocked = searchModel.getBlockedQContainers();
+
+			nextTarget:
 			for (Target target : targets) {
 				double benefit = strategicSupport.getInformationGain(target.getQContainers(), solutions, session);
 				if (benefit == 0) continue;
@@ -298,16 +299,19 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 				searchModel.maximizeBenefit(target, benefit);
 
 				// check if the target is blocked (when any of the QContainers are blocked)
-				if (!Collections.disjoint(blockedQContainers, target.getQContainers())) {
-					searchModel.blockTarget(target,
-							target.getQContainers().stream().anyMatch(qc -> isContraIndicated(session, qc))
-									? "QContainer is contra indicated" : "QContainer is blocked");
+				for (QContainer container : target.getQContainers()) {
+					BlockingReason reason = blocked.get(container);
+					if (reason != null) {
+						searchModel.blockTarget(target, reason);
+						continue nextTarget;
+					}
 				}
 			}
 
 			// recall them for storing into the case object
 			allSolutions.addAll(solutions);
 		}
+
 		caseObject.setUndiscriminatedSolutions(allSolutions);
 		caseObject.setSearchModel(searchModel);
 		if (strategicBenefitFactor > 0.0) {
@@ -353,17 +357,17 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 									}
 									if (answeredQuestion) continue;
 									if (cvs.getAnswer().equals(condEqual.getValue())) {
-										Target target = targetMap.get(st.getQcontainer());
+										Target target = targetMap.get(st.getQContainer());
 										if (target != null) {
 											// log.info("Increasing Benefit for " + target + " from " + target.getBenefit() + " to " +
 											// (target.getBenefit() + additiveValue));
 											searchModel.maximizeBenefit(target, target.getBenefit() + additiveValue);
 										}
 										else {
-											target = new Target(Collections.singletonList(st.getQcontainer()));
+											target = new Target(Collections.singletonList(st.getQContainer()));
 											target.setBenefit(additiveValue);
 											// log.info("Creating new target " + target + " with benefit " + target.getBenefit());
-											targetMap.put(st.getQcontainer(), target);
+											targetMap.put(st.getQContainer(), target);
 											searchModel.addTarget(target);
 										}
 										continue ST;
@@ -447,7 +451,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @return set of blocked QContainers
 	 * @created 24.10.2012
 	 */
-	public static Set<QContainer> getBlockedQContainers(Session session) {
+	public static Map<QContainer, BlockingReason> getBlockedQContainers(Session session) {
 		return getBlockedQContainers(session, true, true);
 	}
 
@@ -459,26 +463,29 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @param session                    actual session
 	 * @param includeContraindicated     if true, contraindicated QContainers are included in the returned set
 	 * @param includePermanentlyRelevant if true, permanently relevant QContainers are included in the returned set
-	 * @return set of blocked QContainers
+	 * @return set of blocked QContainers, mapped to the blocking reason
 	 * @created 01.03.2014
 	 */
-	public static Set<QContainer> getBlockedQContainers(Session session, boolean includeContraindicated, boolean includePermanentlyRelevant) {
-		Set<QContainer> result = new HashSet<>();
+	public static Map<QContainer, BlockingReason> getBlockedQContainers(Session session, boolean includeContraindicated, boolean includePermanentlyRelevant) {
+		Map<QContainer, BlockingReason> result = new HashMap<>();
+
+		// add all unmutable facts to an empty session,
+		// to figure out what preconditions will never become true
 		Session emptySession = new CopiedSession(session);
 		Map<Question, Value> finalValues = getFinalValues(session);
-		// now all unmutable facts are added to the emptySession
 		for (Entry<Question, Value> e : finalValues.entrySet()) {
 			emptySession.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(e.getKey(), e.getValue()));
 		}
+
+		// check all state transitions if they are potentially available
 		for (StateTransition stateTransition : StateTransition.getAll(session)) {
-			QContainer container = stateTransition.getQcontainer();
+			QContainer container = stateTransition.getQContainer();
 			if (includeContraindicated && isContraIndicated(session, container)) {
-				result.add(container);
+				result.put(container, BlockingReason.contraIndicated);
 				continue;
 			}
-			if (includePermanentlyRelevant
-					&& container.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
-				result.add(container);
+			if (includePermanentlyRelevant && CostBenefitProperties.isPermanentlyRelevant(container)) {
+				result.put(container, BlockingReason.permanentlyRelevant);
 				continue;
 			}
 			Condition activationCondition = stateTransition.getActivationCondition();
@@ -487,7 +494,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			}
 			try {
 				if (!activationCondition.eval(emptySession)) {
-					result.add(container);
+					result.put(container, BlockingReason.checkOnceFalse);
 				}
 			}
 			catch (NoAnswerException | UnknownAnswerException ignored) {

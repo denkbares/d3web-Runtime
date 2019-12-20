@@ -55,6 +55,7 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
+import de.d3web.costbenefit.inference.BlockingReason;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.costbenefit.model.Path;
@@ -86,26 +87,27 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	@Override
 	public boolean init(SearchModel model) {
 		// KB has to be remembered before super.init
-		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) model.getSession().getSessionObject(this);
-		KnowledgeBase oldkb = sessionObject.knowledgeBase;
+		Session session = model.getSession();
+		TPHeuristicSessionObject sessionObject = (TPHeuristicSessionObject) session.getSessionObject(this);
+		KnowledgeBase previousBase = sessionObject.knowledgeBase;
 		if (!super.init(model)) return false;
 
-		// initgeneral is only called when the kb, the blocked QContainers or
-		// the list of cached abnormal
-		// questions changes
-		if (model.getSession().getKnowledgeBase() != oldkb
-				|| !model.getBlockedQContainers().equals(sessionObject.blockedQContainer)) {
+		// initGeneralCache is only called if the knowlegde base changes,
+		// or the blocked QContainers changes,
+		// or the list of cached abnormal questions changes
+		Set<QContainer> blocked = model.getBlockedQContainers().keySet();
+		if (session.getKnowledgeBase() != previousBase || !blocked.equals(sessionObject.blockedQContainer)) {
 			initGeneralCache(sessionObject, model);
-			// knowledbase gets updated in super.init(model)
+			// knowledge base gets updated in super.init(model)
 			sessionObject.cachedAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
-			sessionObject.blockedQContainer = model.getBlockedQContainers();
+			sessionObject.blockedQContainer = blocked;
 		}
 		else {
 			Set<Question> answeredAbnormalQuestions = calculateAnsweredAbnormalQuestions(model);
 			if (!answeredAbnormalQuestions.equals(sessionObject.cachedAbnormalQuestions)) {
 				sessionObject.cachedAbnormalQuestions = answeredAbnormalQuestions;
 				initGeneralCache(sessionObject, model);
-				sessionObject.blockedQContainer = model.getBlockedQContainers();
+				sessionObject.blockedQContainer = blocked;
 			}
 		}
 		return true;
@@ -115,7 +117,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		Set<Question> result = new HashSet<>();
 		Blackboard blackboard = model.getSession().getBlackboard();
 		for (StateTransition st : model.getTransitionalStateTransitions()) {
-			for (Question q : CostBenefitUtil.getQuestionOCs(st.getQcontainer())) {
+			for (Question q : CostBenefitUtil.getQuestionOCs(st.getQContainer())) {
 				DefaultAbnormality abnormality = q.getInfoStore().getValue(
 						BasicProperties.DEFAULT_ABNORMALITY);
 				Value value = blackboard.getValue(q);
@@ -201,11 +203,10 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
 		Collection<StateTransition> transitiveStateTransitions = model.getTransitionalStateTransitions();
 		Collection<StateTransition> stateTransitions = new LinkedList<>();
-		Set<QContainer> blockedQContainers = model.getBlockedQContainers();
+		Map<QContainer, BlockingReason> blockedQContainers = model.getBlockedQContainers();
 		// filter StateTransitions that cannot be applied due to final questions
 		for (StateTransition st : StateTransition.getAll(kb)) {
-			QContainer qcontainer = st.getQcontainer();
-			if (!blockedQContainers.contains(qcontainer)) {
+			if (!blockedQContainers.containsKey(st.getQContainer())) {
 				stateTransitions.add(st);
 			}
 		}
@@ -228,7 +229,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 						Value v = getValue(sessionObject, vt);
 						if (checkValue(condition, v)) {
 							neededConditions.add(flattenCondAnds(st.getActivationCondition()));
-							transitionalQContainer.add(st.getQcontainer());
+							transitionalQContainer.add(st.getQContainer());
 							break;
 						}
 					}
@@ -794,6 +795,9 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 
 	/**
 	 * Calculates a transitive condition for the specified target based on the session.
+	 * <p>
+	 * Note: this method if for testing only. It is not tuned for performance as it always creates and initializes a new
+	 * heuristic instance and search model.
 	 *
 	 * @param session actual session
 	 * @param target  specified target
