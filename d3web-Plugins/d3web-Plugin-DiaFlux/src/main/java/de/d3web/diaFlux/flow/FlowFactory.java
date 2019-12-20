@@ -20,6 +20,7 @@
 
 package de.d3web.diaFlux.flow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import de.d3web.core.inference.KnowledgeKind;
@@ -75,19 +77,37 @@ public final class FlowFactory {
 	 * @throws IllegalArgumentException if the flow is not consistent
 	 */
 	public static void checkConsistency(@Nullable FlowSet flowSet) throws IllegalArgumentException {
-		if (flowSet == null) return;
+		List<String> inconsistencies = getInconsistencies(flowSet);
+		if (!inconsistencies.isEmpty()) {
+			throw new IllegalArgumentException("Inconsistencies: \n"
+					+ inconsistencies.stream().sorted().collect(Collectors.joining("\n")));
+		}
+	}
 
+	/**
+	 * Checks if the specified flow-set is consistent. This means that each flow is consistent for its own, see {@link
+	 * #checkConsistency(Flow)}. Additionally it means that each {@link ComposedNode} points to an existing flow within
+	 * the checked flow-set, and that all flow-set-internal caches are properly updated.
+	 *
+	 * @param flowSet the flow-set to be checked
+	 * @return a list with all inconsistencies as explanation messages
+	 */
+	@NotNull
+	public static List<String> getInconsistencies(@Nullable FlowSet flowSet) {
+		if (flowSet == null) return Collections.emptyList();
+
+		List<String> inconsistencies = new ArrayList<>();
 		// check each flow individually
 		Set<ComposedNode> callers = new HashSet<>();
 		for (Flow flow : flowSet) {
-			checkConsistency(flow);
+			inconsistencies.addAll(getInconsistencies(flow));
 			callers.addAll(flow.getNodesOfClass(ComposedNode.class));
 		}
 
 		// check that all called flows are available
 		for (ComposedNode caller : callers) {
 			if (!flowSet.contains(caller.getCalledFlowName())) {
-				throw new IllegalArgumentException("The called flow '" + caller.getCalledFlowName() + "', " +
+				inconsistencies.add("The called flow '" + caller.getCalledFlowName() + "', " +
 						"referenced from  '" + caller + "' in flow '" + caller.getFlow().getName() + "' " +
 						"does not exists.");
 			}
@@ -99,12 +119,13 @@ public final class FlowFactory {
 				.forEach((calledFlowName, callingNodes) -> {
 					Set<ComposedNode> cached = flowSet.getNodesCalling(calledFlowName);
 					if (!Objects.equals(callingNodes, cached)) {
-						throw new IllegalArgumentException("The caches for the callers " +
+						inconsistencies.add("The caches for the callers " +
 								"to flow '" + calledFlowName + "' are not properly updated:\n" +
 								"EXPECTED: " + callingNodes + "\n" +
 								"ACTUAL:   " + cached);
 					}
 				});
+		return inconsistencies;
 	}
 
 	/**
@@ -116,44 +137,62 @@ public final class FlowFactory {
 	 * @throws IllegalArgumentException if the flow is not consistent
 	 */
 	public static void checkConsistency(@Nullable Flow flow) throws IllegalArgumentException {
-		if (flow == null) return;
+		List<String> inconsistencies = getInconsistencies(flow);
+		if (!inconsistencies.isEmpty()) {
+			throw new IllegalArgumentException("Inconsistencies: \n"
+					+ inconsistencies.stream().sorted().collect(Collectors.joining("\n")));
+		}
+	}
+
+	/**
+	 * Checks if the specified flow is consistent, so that all connected nodes and edges of the flow are also located
+	 * within the flow. If not, an IllegalArgumentException is thrown. You may use this method when creating flows
+	 * programmatically to check that your code is doing well.
+	 *
+	 * @param flow the flow to be checked
+	 * @return a list with all inconsistencies as explanation messages
+	 */
+	@NotNull
+	public static List<String> getInconsistencies(@Nullable Flow flow) {
+		if (flow == null) return Collections.emptyList();
 		Set<Node> nodes = new HashSet<>(flow.getNodes());
 		Set<Edge> edges = new HashSet<>(flow.getEdges());
-
+		List<String> inconsistencies = new ArrayList<>();
 		for (Edge edge : edges) {
 			if (edge.getFlow() != flow) {
-				throw new IllegalArgumentException("The edge '" + edge + "' returns an invalid flow instance: " + edge.getFlow());
+				inconsistencies.add("The edge '" + edge + "' returns an invalid flow instance: " + edge.getFlow());
 			}
 
 			if (!nodes.contains(edge.getStartNode())) {
-				throw new IllegalArgumentException("Start node '" + edge.getStartNode()
+				inconsistencies.add("Start node '" + edge.getStartNode()
 						+ "' of edge '" + edge + "' is not contained in list of nodes.");
 			}
 			if (!nodes.contains(edge.getEndNode())) {
-				throw new IllegalArgumentException("End node '" + edge.getEndNode() + "' of edge '"
+				inconsistencies.add("End node '" + edge.getEndNode() + "' of edge '"
 						+ edge + "' is not contained in list of nodes.");
 			}
 		}
 
 		for (Node node : nodes) {
 			if (node.getFlow() != flow) {
-				throw new IllegalArgumentException("The node '" + node + "' returns an invalid flow instance: " + node.getFlow());
+				inconsistencies.add("The node '" + node + "' returns an invalid flow instance: " + node.getFlow());
 			}
 
 			for (Edge edge : node.getIncomingEdges()) {
 				if (!edges.contains(edge)) {
-					throw new IllegalArgumentException("Incoming edge '" + edge
+					inconsistencies.add("Incoming edge '" + edge
 							+ "' of node '" + node + "' is not contained in list of edges.");
 				}
 			}
 
 			for (Edge edge : node.getOutgoingEdges()) {
 				if (!edges.contains(edge)) {
-					throw new IllegalArgumentException("Outgoing edge '" + edge
+					inconsistencies.add("Outgoing edge '" + edge
 							+ "' of node '" + node + "' is not contained in list of edges.");
 				}
 			}
 		}
+		return inconsistencies;
 	}
 
 	/**
