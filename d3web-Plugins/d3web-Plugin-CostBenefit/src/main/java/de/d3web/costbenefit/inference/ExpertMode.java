@@ -43,6 +43,8 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.protocol.FactProtocolEntry;
+import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
@@ -253,10 +255,19 @@ public class ExpertMode implements SessionObject {
 		initStates();
 		Set<CondEqual> states = adapterStates.getValues(adapterStateQuestion);
 		Set<QContainer> targets = new HashSet<>();
+		targets:
 		for (QContainer target : session.getKnowledgeBase().getManager().getQContainers()) {
 			StateTransition transition = StateTransition.getStateTransition(target);
 			if (transition == null) continue;
 			if (hasAnyState(transition.getActivationCondition(), states)) {
+				for (ProtocolEntry protocolEntry : session.getProtocol().getProtocolHistory()) {
+					if (protocolEntry instanceof FactProtocolEntry){
+						String terminologyObjectName = ((FactProtocolEntry) protocolEntry).getTerminologyObjectName();
+						if (terminologyObjectName.matches(target.getName() + ":.*")) {
+							continue targets;
+						}
+					}
+				}
 				targets.add(target);
 			}
 		}
