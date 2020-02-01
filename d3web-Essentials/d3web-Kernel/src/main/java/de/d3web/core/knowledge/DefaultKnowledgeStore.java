@@ -42,7 +42,7 @@ public class DefaultKnowledgeStore implements KnowledgeStore {
 	@Override
 	public void removeKnowledge(KnowledgeKind<?> kind, KnowledgeSlice slice) {
 		if (getKnowledge(kind) != slice) {
-			throw new IllegalArgumentException("Slice " + slice + " not contained with KnowlegeKind " + kind);
+			throw new IllegalArgumentException("Slice " + slice + " not contained with KnowledgeKind " + kind);
 		}
 		entries.remove(kind);
 	}
