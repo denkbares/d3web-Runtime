@@ -43,7 +43,7 @@ public class FactProtocolExecutor<T extends PSMethod> implements ProtocolExecuto
 		psm = builder.getSession().getPSMethodInstance(solverClass);
 	}
 
-	private boolean canHandle(FactProtocolEntry entry) {
+	protected boolean canHandle(FactProtocolEntry entry) {
 		return Objects.equals(solverClass.getName(), entry.getSolvingMethodClassName());
 	}
 
