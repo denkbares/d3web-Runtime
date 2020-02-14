@@ -154,9 +154,9 @@ public class ExpertMode implements SessionObject {
 
 	/**
 	 * Returns a list of all targets that are used for the recent path calculation. In contrast to {@link
-	 * #getAlternativeTargets()}, returning the targets that will be autoamtically selected by the cost/benefit solver,
-	 * this method returns the list will be the targets used for the recent search, regardless of their benefit (e.g. if
-	 * the target was manually selected by the user).
+	 * #getAlternativeTargets()} (returning the targets automatically selected by the cost/benefit solver), this method
+	 * returns the targets that actually have been used for the recent search, regardless of their benefit (e.g. if the
+	 * target was manually selected by the user).
 	 * <p>
 	 * The list is sorted by the targets benefit, regardless to the costs they may induce. By specifying currentFirst as
 	 * true, the current target is moved to the first element of the list, if there is a current target available.
