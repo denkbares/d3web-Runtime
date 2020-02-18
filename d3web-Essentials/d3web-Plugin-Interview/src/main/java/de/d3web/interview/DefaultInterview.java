@@ -26,7 +26,6 @@ import java.util.List;
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
-import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
@@ -39,6 +38,8 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.interviewmanager.InterviewAgenda.InterviewState;
 import de.d3web.core.session.values.UndefinedValue;
+
+import static de.d3web.core.knowledge.Indication.State.*;
 
 /**
  * The default implementation of {@link Interview}: This class stores an
@@ -127,41 +128,41 @@ public class DefaultInterview implements Interview {
 	}
 
 	private void notifyIndicationChange(PropagationEntry changedFact, Value oldValue, Value newValue) {
-		InterviewObject indicatedObject = (InterviewObject) changedFact
-				.getObject();
+		InterviewObject indicatedObject = (InterviewObject) changedFact.getObject();
 		Indication oldIndication = (Indication) oldValue;
 		Indication newIndication = (Indication) newValue;
 
 		// #### MULTIPLE_INDICATED ####
-		if (newIndication.hasState(State.MULTIPLE_INDICATED)) {
+		if (newIndication.hasState(MULTIPLE_INDICATED)) {
 			agenda.delete(indicatedObject, oldIndication);
 			Collection<Fact> interviewFacts = session.getBlackboard()
 					.getInterviewFacts(indicatedObject);
 			for (Fact fact : interviewFacts) {
 				Indication factIndication = (Indication) fact.getValue();
-				if (factIndication.hasState(State.MULTIPLE_INDICATED)) {
+				if (factIndication.hasState(MULTIPLE_INDICATED)) {
 					agenda.append(indicatedObject, factIndication);
 				}
 			}
 		}
-		else if (oldIndication.hasState(State.MULTIPLE_INDICATED)) {
+		else if (oldIndication.hasState(MULTIPLE_INDICATED)) {
 			agenda.delete(indicatedObject, oldIndication);
 			// after removing act like a new indication
-			if (!newIndication.hasState(State.NEUTRAL)) {
-				notifyIndicationChange(changedFact, new Indication(State.NEUTRAL, 0), newValue);
+			if (!newIndication.hasState(NEUTRAL)) {
+				notifyIndicationChange(changedFact, new Indication(NEUTRAL, 0), newValue);
 			}
 		}
 
 		// #### INDICATED ####
-		else if (newIndication.hasState(State.INDICATED)) {
-			if (!oldIndication.equals(newIndication)) {
+		else if (newIndication.hasState(INDICATED)) {
+			if (oldIndication.hasState(CONTRA_INDICATED, NEUTRAL, RELEVANT)) {
+//			if (!oldIndication.equals(newIndication)) {
 				this.agenda.append(indicatedObject, newIndication);
 				checkParentalQContainer(indicatedObject);
 			}
 		}
 
 		// #### INSTANT_INDICATED ####
-		else if (newIndication.hasState(State.INSTANT_INDICATED)) {
+		else if (newIndication.hasState(INSTANT_INDICATED)) {
 			if (!oldIndication.equals(newIndication)) {
 				this.agenda.append(indicatedObject, newIndication);
 				checkParentalQContainer(indicatedObject);
@@ -169,37 +170,30 @@ public class DefaultInterview implements Interview {
 		}
 
 		// #### REPEATED_INDICATED ####
-		else if (newIndication.hasState(State.REPEATED_INDICATED)) {
+		else if (newIndication.hasState(REPEATED_INDICATED)) {
 			this.agenda.deactivate(indicatedObject);
 			this.agenda.activate(indicatedObject, newIndication);
 			checkParentalQContainer(indicatedObject);
 		}
 
 		// #### NEUTRAL / RELEVANT ####
-		else if (newIndication.hasState(State.NEUTRAL)
-				|| newIndication.hasState(State.RELEVANT)) {
-
-			if (oldIndication.hasState(State.REPEATED_INDICATED)
-					|| oldIndication.hasState(State.INDICATED)
-					|| oldIndication.hasState(State.INSTANT_INDICATED)) {
+		else if (newIndication.hasState(NEUTRAL) || newIndication.hasState(RELEVANT)) {
+			if (oldIndication.hasState(REPEATED_INDICATED, INDICATED, INSTANT_INDICATED)) {
 				this.agenda.deactivate(indicatedObject);
 				checkParentalQContainer(indicatedObject);
 			}
-			else if (oldIndication.hasState(State.CONTRA_INDICATED)) {
+			else if (oldIndication.hasState(CONTRA_INDICATED)) {
 				checkParentalQContainer(indicatedObject);
 			}
 		}
 
 		// #### CONTRA_INDICATED ####
-		else if (newIndication.hasState(State.CONTRA_INDICATED)) {
-			if (oldIndication.hasState(State.INDICATED)
-					|| oldIndication.hasState(State.REPEATED_INDICATED)
-					|| oldIndication.hasState(State.INSTANT_INDICATED)) {
+		else if (newIndication.hasState(CONTRA_INDICATED)) {
+			if (oldIndication.hasState(INDICATED, REPEATED_INDICATED, INSTANT_INDICATED)) {
 				this.agenda.deactivate(indicatedObject);
 				checkParentalQContainer(indicatedObject);
 			}
-			else if (oldIndication.hasState(State.NEUTRAL)
-					|| oldIndication.hasState(State.RELEVANT)) {
+			else if (oldIndication.hasState(NEUTRAL, RELEVANT)) {
 				checkParentalQContainer(indicatedObject);
 			}
 		}
