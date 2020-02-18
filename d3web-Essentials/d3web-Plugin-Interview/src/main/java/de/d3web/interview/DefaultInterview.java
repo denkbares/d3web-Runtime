@@ -260,12 +260,14 @@ public class DefaultInterview implements Interview {
 						}
 					}
 				}
-				// If at least on child qcontainer is active, then return
-				// State=ACTIVE
+				// If at least on child qcontainer is active, then return State = ACTIVE
+				// but only check the child-QContainers, that are relevant or indicated (== isRelevant())
 				else if (child instanceof QContainer) {
-					InterviewState childState = checkChildrenState((QContainer) child);
-					if (childState == InterviewState.ACTIVE) {
-						return InterviewState.ACTIVE;
+					if (session.getBlackboard().getIndication((QContainer) child).isRelevant()) {
+						InterviewState childState = checkChildrenState((QContainer) child);
+						if (childState == InterviewState.ACTIVE) {
+							return InterviewState.ACTIVE;
+						}
 					}
 				}
 			}
