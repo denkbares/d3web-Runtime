@@ -54,7 +54,6 @@ public class Indication implements Value {
 		 * that element
 		 */
 		REPEATED_INDICATED
-
 	}
 
 	private final State state;
@@ -119,6 +118,19 @@ public class Indication implements Value {
 	 */
 	public boolean hasState(State state) {
 		return this.state == state;
+	}
+
+	/**
+	 * Returns whether the state of this indication equals to any of the specified states.
+	 *
+	 * @param states the states to be checked
+	 * @return whether the state is equal to the specified one
+	 */
+	public boolean hasState(State... states) {
+		for (State state : states) {
+			if (this.state == state) return true;
+		}
+		return false;
 	}
 
 	/**
