@@ -26,7 +26,7 @@ import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.KnowledgeBase;
-import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 
 /**
@@ -66,7 +66,7 @@ public class PathExtenderHandler implements FragmentHandler<KnowledgeBase> {
 		PathExtender algorithm = (PathExtender) object;
 		Element element = persistence.getDocument().createElement("searchAlgorithm");
 		element.setAttribute("name", "PathExtender");
-		Element fragment = persistence.writeFragment(algorithm.getSubalgorithm());
+		Element fragment = persistence.writeFragment(algorithm.getDelegateAlgorithm());
 		element.appendChild(fragment);
 		return element;
 	}

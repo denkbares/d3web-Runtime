@@ -44,6 +44,13 @@ public class CostBenefitProperties {
 	public static final Property<Boolean> TARGET_ONLY = Property.getProperty("targetOnly", Boolean.class);
 
 	/**
+	 * Marks a QContainer with a path order priority, indicating if that QContainer should be preferably used early
+	 * (lower, negative numbers) or late (higher, positive numbers) in the path. This property is used by the
+	 * PathExtender's PathSorter.
+	 */
+	public static final Property<Double> PATH_ORDER = Property.getProperty("pathOrder", Double.class);
+
+	/**
 	 * Can be used to mark QContainers, that are permanently relevant.
 	 *
 	 * @see ExpertMode#getApplicablePermanentlyRelevantQContainers()

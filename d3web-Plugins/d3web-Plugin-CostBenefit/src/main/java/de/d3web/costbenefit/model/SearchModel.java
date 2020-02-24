@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.utils.Log;
@@ -264,8 +266,17 @@ public class SearchModel {
 	/**
 	 * @return the Target with the best CostBenefit
 	 */
+	@Nullable
 	public Target getBestCostBenefitTarget() {
 		return bestCostBenefitTarget;
+	}
+
+	/**
+	 * @return the Target with the best CostBenefit
+	 */
+	@Nullable
+	public Path getBestCostBenefitPath() {
+		return bestCostBenefitTarget == null ? null : bestCostBenefitTarget.getMinPath();
 	}
 
 	/**

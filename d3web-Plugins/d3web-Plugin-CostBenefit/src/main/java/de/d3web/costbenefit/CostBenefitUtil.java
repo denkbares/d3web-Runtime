@@ -59,7 +59,7 @@ import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
-import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
@@ -289,8 +289,8 @@ public final class CostBenefitUtil {
 		SearchAlgorithm searchAlgorithm = psMethodCostBenefit.getSearchAlgorithm();
 		if (searchAlgorithm instanceof PathExtender) {
 			PathExtender extender = (PathExtender) searchAlgorithm;
-			if (extender.getSubalgorithm() instanceof AStarAlgorithm) {
-				return (AStarAlgorithm) extender.getSubalgorithm();
+			if (extender.getDelegateAlgorithm() instanceof AStarAlgorithm) {
+				return (AStarAlgorithm) extender.getDelegateAlgorithm();
 			}
 		}
 		else if (searchAlgorithm instanceof AStarAlgorithm) {

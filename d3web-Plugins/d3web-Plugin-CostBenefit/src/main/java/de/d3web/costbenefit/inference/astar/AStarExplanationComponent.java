@@ -39,7 +39,7 @@ import de.d3web.core.session.Value;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
-import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
@@ -395,7 +395,7 @@ public class AStarExplanationComponent {
 			PSMethodCostBenefit cb = session.getPSMethodInstance(PSMethodCostBenefit.class);
 			SearchAlgorithm searchAlgorithm = cb.getSearchAlgorithm();
 			if (searchAlgorithm instanceof PathExtender) {
-				searchAlgorithm = ((PathExtender) searchAlgorithm).getSubalgorithm();
+				searchAlgorithm = ((PathExtender) searchAlgorithm).getDelegateAlgorithm();
 			}
 			if (searchAlgorithm instanceof AStarAlgorithm) {
 				Heuristic existing = ((AStarAlgorithm) searchAlgorithm).getHeuristic();

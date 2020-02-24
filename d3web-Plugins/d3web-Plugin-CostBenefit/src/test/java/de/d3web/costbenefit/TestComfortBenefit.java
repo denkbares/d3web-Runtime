@@ -42,7 +42,7 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.costbenefit.inference.ComfortBenefit;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
-import de.d3web.costbenefit.inference.PathExtender;
+import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
