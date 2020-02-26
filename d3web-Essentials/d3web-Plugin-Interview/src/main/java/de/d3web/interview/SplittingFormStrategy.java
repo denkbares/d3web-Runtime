@@ -192,18 +192,6 @@ public class SplittingFormStrategy implements FormStrategy {
 		public InterviewObject getInterviewObject() {
 			return delegate.getInterviewObject();
 		}
-
-		@SuppressWarnings("deprecation")
-		@Override
-		public String getTitle() {
-			return getName();
-		}
-
-		@SuppressWarnings("deprecation")
-		@Override
-		public boolean isNotEmpty() {
-			return !isEmpty();
-		}
 	}
 
 	@FunctionalInterface

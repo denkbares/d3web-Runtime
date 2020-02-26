@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -236,6 +237,21 @@ public class CostBenefitProperties {
 	 */
 	public static boolean isMeasurementDeviceState(Question stateQuestion) {
 		return getUUTState(stateQuestion) == UUTState.measurementDevice;
+	}
+
+	/**
+	 * Returns the malfunction type of the specified question, or null if the question is not a malfunction.
+	 */
+	@Nullable
+	public static MalfunctionType getMalfunctionType(Question question) {
+		return question.getInfoStore().getValue(MALFUNCTION_TYPE);
+	}
+
+	/**
+	 * Returns true if the specified question is a malfunction.
+	 */
+	public static boolean isMalfunction(Question question) {
+		return getMalfunctionType(question) != null;
 	}
 
 	/**

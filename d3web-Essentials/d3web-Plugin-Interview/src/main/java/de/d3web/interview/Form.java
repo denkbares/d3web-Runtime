@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.interview.measure.Measurement;
@@ -38,6 +39,7 @@ import de.d3web.interview.measure.Measurement;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 25.03.2013
  */
+@SuppressWarnings("deprecation")
 public interface Form extends de.d3web.core.session.interviewmanager.Form {
 
 	/**
@@ -117,5 +119,20 @@ public interface Form extends de.d3web.core.session.interviewmanager.Form {
 			if (Objects.equals(qm, measurement)) return question;
 		}
 		return null;
+	}
+
+	@Override
+	default InterviewObject getInterviewObject() {
+		return getRoot();
+	}
+
+	@Override
+	default String getTitle() {
+		return getName();
+	}
+
+	@Override
+	default boolean isNotEmpty() {
+		return !isEmpty();
 	}
 }
