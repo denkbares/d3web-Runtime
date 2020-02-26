@@ -306,38 +306,39 @@ public final class ValueUtils {
 	 */
 	public static QuestionValue createQuestionValue(Question question, String valueString) {
 
-		QuestionValue value = null;
-
+		if (valueString.equals(Unknown.UNKNOWN_ID)) return Unknown.getInstance();
+		if (valueString.equals(Unknown.UNKNOWN_VALUE)) return Unknown.getInstance();
 		if (valueString.equalsIgnoreCase(Unknown.getInstance().getValue().toString())) {
-			value = Unknown.getInstance();
+			return Unknown.getInstance();
 		}
 
-		else if (valueString.equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
-			value = UndefinedValue.getInstance();
+		if (valueString.equals(UndefinedValue.UNDEFINED_ID)) return UndefinedValue.getInstance();
+		if (valueString.equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
+			return UndefinedValue.getInstance();
 		}
 
-		else if (question instanceof QuestionChoice) {
-			value = createQuestionChoiceValue((QuestionChoice) question, valueString);
+		if (question instanceof QuestionChoice) {
+			return createQuestionChoiceValue((QuestionChoice) question, valueString);
 		}
 
-		else if (question instanceof QuestionNum) {
+		if (question instanceof QuestionNum) {
 			double doubleValue = parseDouble(valueString);
 			if (!Double.isNaN(doubleValue)) {
-				value = new NumValue(doubleValue);
+				return new NumValue(doubleValue);
 			}
 		}
 
-		else if (question instanceof QuestionText) {
-			value = new TextValue(valueString);
+		if (question instanceof QuestionText) {
+			return new TextValue(valueString);
 		}
 
-		else if (question instanceof QuestionDate) {
+		if (question instanceof QuestionDate) {
 			try {
-				value = createDateValue((QuestionDate) question, valueString);
+				return createDateValue((QuestionDate) question, valueString);
 			}
 			catch (IllegalArgumentException ignore1) {
 				try {
-					value = new DateValue(new Date(Long.parseLong(valueString)));
+					return new DateValue(new Date(Long.parseLong(valueString)));
 				}
 				catch (NumberFormatException ignore2) {
 					// will be handled below when value == null.
@@ -345,12 +346,8 @@ public final class ValueUtils {
 			}
 		}
 
-		if (value == null) {
-			throw new IllegalArgumentException("Unable to create value from String '"
-					+ valueString + "' for question '" + question.getName() + "'");
-		}
-
-		return value;
+		throw new IllegalArgumentException("Unable to create value from String '"
+				+ valueString + "' for question '" + question.getName() + "'");
 	}
 
 	private static double parseDouble(String valueString) {
