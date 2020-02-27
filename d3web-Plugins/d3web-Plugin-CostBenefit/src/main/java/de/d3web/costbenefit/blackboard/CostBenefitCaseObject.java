@@ -77,10 +77,18 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
+	private static boolean verbose = true;
 	private boolean replayingSession;
 
 	public CostBenefitCaseObject(Session session) {
 		this.session = session;
+	}
+
+	/**
+	 * Reduce/increase logging output
+	 */
+	public static void setVerbose(boolean verbose) {
+		CostBenefitCaseObject.verbose = verbose;
 	}
 
 	public Session getSession() {
@@ -388,9 +396,12 @@ public class CostBenefitCaseObject implements SessionObject {
 		}
 		final Set<Solution> previousSolutions = this.getUndiscriminatedSolutions();
 		if (!previousSolutions.containsAll(currentSolutions)) {
-			String message = "The sprint group has increased/changed.\nPrevious group: "
-					+ previousSolutions
-					+ "\nActual group: " + currentSolutions;
+			String message = "The sprint group has increased/changed.";
+			if (verbose) {
+				message += "\nPrevious group: "
+						+ previousSolutions
+						+ "\nActual group: " + currentSolutions;
+			}
 			this.getSession().getProtocol().addEntry(
 					new TextProtocolEntry(
 							this.getSession().getPropagationManager().getPropagationTime(),
