@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -79,8 +79,8 @@ public class ChoiceValue implements QuestionValue {
 	}
 
 	/**
-	 * Returns the choice of the specified question that is reference by this choice value,
-	 * or null if the choice is not available in the specified question.
+	 * Returns the choice of the specified question that is reference by this choice value, or null if the choice is not
+	 * available in the specified question.
 	 *
 	 * @param question the question to get the choice from
 	 * @return the choice of this value, or null
@@ -89,6 +89,9 @@ public class ChoiceValue implements QuestionValue {
 		return choiceID.getChoice(question);
 	}
 
+	/**
+	 * Returns the name (id) of the choice of this value.
+	 */
 	public String getAnswerChoiceID() {
 		return choiceID.getText();
 	}
@@ -109,11 +112,9 @@ public class ChoiceValue implements QuestionValue {
 	}
 
 	/**
-	 * Checks, if the specified object is a {@link ChoiceValue} or a
-	 * {@link MultipleChoiceValue} and then checks the included values. It is
-	 * important to notice, that this method also returns true, when a
-	 * {@link ChoiceValue} is compared with a {@link MultipleChoiceValue} and
-	 * both contain the same single choice.
+	 * Checks, if the specified object is a {@link ChoiceValue} or a {@link MultipleChoiceValue} and then checks the
+	 * included values. It is important to notice, that this method also returns true, when a {@link ChoiceValue} is
+	 * compared with a {@link MultipleChoiceValue} and both contain the same single choice.
 	 *
 	 * @author joba
 	 */
