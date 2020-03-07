@@ -22,29 +22,35 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
+import com.denkbares.strings.NumberAwareComparator;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionZC;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.blackboard.SessionObject;
-import de.d3web.core.session.protocol.FactProtocolEntry;
-import de.d3web.core.session.protocol.ProtocolEntry;
+import de.d3web.core.session.protocol.ActualQContainerEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
@@ -64,12 +70,15 @@ import static de.d3web.core.inference.PSMethod.Type.source;
  */
 public class ExpertMode implements SessionObject {
 
+	private static final String PLUGIN_ID = "d3web-CostBenefit";
+	private static final String EXTENSION_POINT_COMPARATOR = "AdapterStateTargetComparator";
 	private final Session session;
 	private final PSMethodCostBenefit psm;
 	private final CostBenefitCaseObject pso;
 
 	private MultiMap<Question, CondEqual> adapterStates = null;
 	private List<Question> systemStates = null;
+	private Comparator<QContainer> adapterStatesTargetComparator;
 
 	/**
 	 * sort descending by the benefit of the target, with no regard to the target's costs
@@ -254,24 +263,51 @@ public class ExpertMode implements SessionObject {
 	public Set<QContainer> getTargetsForAdapterState(Question adapterStateQuestion) {
 		initStates();
 		Set<CondEqual> states = adapterStates.getValues(adapterStateQuestion);
-		Set<QContainer> targets = new HashSet<>();
-		targets:
-		for (QContainer target : session.getKnowledgeBase().getManager().getQContainers()) {
+		List<QContainer> targets = new ArrayList<>();
+		Set<String> visitedQContainers = session.getProtocol()
+				.getProtocolHistory()
+				.stream()
+				.filter(e -> e instanceof ActualQContainerEntry)
+				.map(e -> (ActualQContainerEntry) e)
+				.map(ActualQContainerEntry::getQContainerName)
+				.collect(Collectors.toSet());
+		for (QContainer target : new ArrayList<>(session.getKnowledgeBase().getManager().getQContainers())) {
 			StateTransition transition = StateTransition.getStateTransition(target);
 			if (transition == null) continue;
-			if (hasAnyState(transition.getActivationCondition(), states)) {
-				for (ProtocolEntry protocolEntry : session.getProtocol().getProtocolHistory()) {
-					if (protocolEntry instanceof FactProtocolEntry){
-						String terminologyObjectName = ((FactProtocolEntry) protocolEntry).getTerminologyObjectName();
-						if (terminologyObjectName.matches(target.getName() + ":.*")) {
-							continue targets;
-						}
-					}
+			if (!hasAnyState(transition.getActivationCondition(), states)) continue;
+			if (visitedQContainers.contains(target.getName())) continue;
+			if (isDeAdaptation(target)) continue;
+			targets.add(target);
+		}
+		targets.sort(getAdapterStateTargetComparator());
+		return new LinkedHashSet<>(targets);
+	}
+
+	private boolean isDeAdaptation(QContainer target) {
+		return KnowledgeBaseUtils.getSuccessors(target, QuestionZC.class)
+						.stream()
+						.map(QuestionZC::getName)
+						.anyMatch(n -> n.endsWith(CostBenefitProperties.DE_ADAPTED_CHOICE_NAME));
+	}
+
+	private Comparator<QContainer> getAdapterStateTargetComparator() {
+		if (this.adapterStatesTargetComparator == null) {
+			for (Extension extension : PluginManager.getInstance()
+					.getExtensions(PLUGIN_ID, EXTENSION_POINT_COMPARATOR)) {
+				Object singleton = extension.getSingleton();
+				if (singleton instanceof Comparator) {
+					//noinspection unchecked
+					adapterStatesTargetComparator = (Comparator<QContainer>) singleton;
+					break;
 				}
-				targets.add(target);
+			}
+			// no extension found, compare just based on name
+			if (this.adapterStatesTargetComparator == null) {
+				this.adapterStatesTargetComparator = Comparator.comparing(AbstractNamedObject::getName,
+						NumberAwareComparator.CASE_INSENSITIVE);
 			}
 		}
-		return targets;
+		return this.adapterStatesTargetComparator;
 	}
 
 	private boolean hasAnyState(Condition condition, Collection<CondEqual> states) {

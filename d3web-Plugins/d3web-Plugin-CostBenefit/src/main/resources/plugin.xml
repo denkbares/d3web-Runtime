@@ -14,6 +14,14 @@
 		</library>
 	</runtime>
 
+	<extension-point id="AdapterStateTargetComparator">
+		<parameter-def id="class" />
+		<parameter-def id="name" />
+		<parameter-def id="description" />
+		<parameter-def id="version" />
+		<parameter-def id="priority" type="number" />
+	</extension-point>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="PSMethod" id="PSMethodCostBenefit">
 		<parameter id="class" value="de.d3web.costbenefit.inference.PSMethodCostBenefit" />
 		<parameter id="name" value="PSMethodCostBenefit" />

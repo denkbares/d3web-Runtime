@@ -98,6 +98,7 @@ public class CostBenefitProperties {
 
 	public static final String CONNECT_UMD_CHOICE_NAME = "connect_umd"; // CBX
 	public static final String ADAPTED_CHOICE_NAME = "adapt"; // CBX
+	public static final String DE_ADAPTED_CHOICE_NAME = "deadapt"; // CBX
 	public static final String UMD_INTEGRATED_CHOICE_NAME = "#integriert"; // KnowledgeDesigner (SGP + CAN)
 
 	public enum MalfunctionType {
