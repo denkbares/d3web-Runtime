@@ -44,8 +44,8 @@ public class TestResult implements Comparable<TestResult> {
 
 	private Message summary = null;
 
-	private final Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
-	private final Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<String, Message>());
+	private final Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<>());
+	private final Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<>());
 
 	/**
 	 * Creates a new TestResult for the specified test with the specified arguments.
@@ -134,8 +134,7 @@ public class TestResult implements Comparable<TestResult> {
 		for (String configString : configuration) {
 			result = prime * result + ((configString == null) ? 0 : configString.hashCode());
 		}
-		result = prime * result
-				+ ((unexpectedMessages == null) ? 0 : unexpectedMessages.hashCode());
+		result = prime * result + unexpectedMessages.hashCode();
 		result = prime * result + ((getSummary() == null) ? 0 : getSummary().hashCode());
 		result = prime * result + getSuccessfullyTestedObjects();
 		return result;
@@ -287,7 +286,6 @@ public class TestResult implements Comparable<TestResult> {
 	public Message getMessageForTestObject(String testObjectName) {
 		if (unexpectedMessages.containsKey(testObjectName)) {
 			return unexpectedMessages.get(testObjectName);
-
 		}
 		else {
 			return expectedMessages.get(testObjectName);

@@ -27,17 +27,17 @@ import static java.util.stream.Collectors.toList;
 
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -45,8 +45,8 @@ import static java.util.stream.Collectors.toList;
  */
 
 /**
- * A TestExecutor executes a set of tests. It can use multiple threads to execute the testing tasks
- * in parallel. It uses updates a ProgressListener on finished tasks.
+ * A TestExecutor executes a set of tests. It can use multiple threads to execute the testing tasks in parallel. It uses
+ * updates a ProgressListener on finished tasks.
  *
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
@@ -54,8 +54,7 @@ import static java.util.stream.Collectors.toList;
 public class TestExecutor {
 
 	/**
-	 * Here the number of (parllel) threads are configured that will be used to execute the testing
-	 * tasks.
+	 * Here the number of (parllel) threads are configured that will be used to execute the testing tasks.
 	 */
 	private static final int DEFAULT_NUMBER_OF_PARALLEL_THREADS = 2;
 
@@ -92,8 +91,8 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Runs the tests given by the task list using the provided TestObjectProvider. A BuildResultSet
-	 * with the given build-number is created.
+	 * Runs the tests given by the task list using the provided TestObjectProvider. A BuildResultSet with the given
+	 * build-number is created.
 	 *
 	 * @created 22.05.2012
 	 */
@@ -275,15 +274,13 @@ public class TestExecutor {
 			noTestObjects = false;
 			String testObjectName = testObjectContainer.getTestObjectName();
 			T testObject = testObjectContainer.getTestObject();
-			CallableTest<T> callableTest = new CallableTest<>(specification, testObjectName,
-					testObject, testResult);
+			CallableTest<T> callableTest = new CallableTest<>(specification, testObjectName, testObject, testResult);
 			result.add(callableTest);
 		}
 
-		// if no test can be applied, we assume test to be erroneous
+		// if no test can be applied, we assume test to be skipped
 		if (noTestObjects) {
-			testResult.setSummary(new Message(Message.Type.ERROR,
-					"No test objects available for this test."));
+			testResult.setSummary(new Message(Type.SKIPPED, "No test objects available for this test."));
 		}
 		return result;
 	}
@@ -336,9 +333,8 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Terminates/aborts all running tests as fast as possible. This method does not wait until the
-	 * tests really have been terminated, use {@link TestExecutor#awaitTermination()} for this
-	 * purpose.
+	 * Terminates/aborts all running tests as fast as possible. This method does not wait until the tests really have
+	 * been terminated, use {@link TestExecutor#awaitTermination()} for this purpose.
 	 *
 	 * @created 21.09.2012
 	 */
@@ -351,8 +347,8 @@ public class TestExecutor {
 	}
 
 	/**
-	 * Blocks/waits until all running tests are done, tests are not aborted or shutdown by calling
-	 * this method. Given timeout defines the maximum waited time until the method returns.
+	 * Blocks/waits until all running tests are done, tests are not aborted or shutdown by calling this method. Given
+	 * timeout defines the maximum waited time until the method returns.
 	 *
 	 * @created 17.12.2013
 	 */

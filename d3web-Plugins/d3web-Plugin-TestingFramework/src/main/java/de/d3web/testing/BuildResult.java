@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * An instance of this class holds the result of a ci build
- * 
+ *
  * @author Marc-Oliver Ochlast
  */
 public final class BuildResult {
@@ -95,33 +95,31 @@ public final class BuildResult {
 	}
 
 	/**
-	 * Returns the duration this build has required to be performed, given in
-	 * milliseconds.
-	 * 
-	 * @created 03.02.2012
+	 * Returns the duration this build has required to be performed, given in milliseconds.
+	 *
 	 * @return in milliseconds
+	 * @created 03.02.2012
 	 */
 	public long getBuildDuration() {
 		return buildDuration;
 	}
 
 	/**
-	 * Sets the duration this build has required to be performed, given in
-	 * milliseconds.
-	 * 
-	 * @created 03.02.2012
+	 * Sets the duration this build has required to be performed, given in milliseconds.
+	 *
 	 * @param timeSpentForBuild in milliseconds
+	 * @created 03.02.2012
 	 */
 	public void setBuildDuration(long timeSpentForBuild) {
 		this.buildDuration = timeSpentForBuild;
 	}
 
 	/**
-	 * Sets the build number of this {@link BuildResult}. Can be used for
-	 * distinguishing builds later on, e.g. for rendering.
-	 * 
-	 * @created 18.09.2012
+	 * Sets the build number of this {@link BuildResult}. Can be used for distinguishing builds later on, e.g. for
+	 * rendering.
+	 *
 	 * @param buildNumber the bild number to be set
+	 * @created 18.09.2012
 	 */
 	public void setBuildNumber(int buildNumber) {
 		this.buildNumber = buildNumber;
@@ -129,9 +127,9 @@ public final class BuildResult {
 
 	/**
 	 * Returns the date this build has been started.
-	 * 
-	 * @created 19.05.2012
+	 *
 	 * @return the build start time
+	 * @created 19.05.2012
 	 */
 	public Date getBuildDate() {
 		return buildDate;
@@ -169,11 +167,10 @@ public final class BuildResult {
 	}
 
 	/**
-	 * Return the build number of this build, or 0 if it is not set via
-	 * {@link BuildResult#setBuildNumber(int)}.
-	 * 
-	 * @created 18.09.2012
+	 * Return the build number of this build, or 0 if it is not set via {@link BuildResult#setBuildNumber(int)}.
+	 *
 	 * @return the build number of this build
+	 * @created 18.09.2012
 	 */
 	public int getBuildNumber() {
 		return buildNumber;
@@ -181,48 +178,33 @@ public final class BuildResult {
 
 	/**
 	 * Returns the list of all test results of this build.
-	 * 
-	 * @created 19.05.2012
+	 *
 	 * @return the results of this build
+	 * @created 19.05.2012
 	 */
 	public List<TestResult> getResults() {
 		return Collections.unmodifiableList(testResults);
 	}
 
 	/**
-	 * Computes the overall TestResultType of this result set, determined by the
-	 * "worst" test result
-	 * 
-	 * @created 03.06.2010
+	 * Computes the overall TestResultType of this result set, determined by the "worst" test result
+	 *
 	 * @return the overall result type
+	 * @created 03.06.2010
 	 */
 	public Message.Type getOverallResult() {
 		return getOverallResult(this.testResults);
 	}
 
 	/**
-	 * Computes the overall TestResultType of this result set, determined by the
-	 * "worst" test result
+	 * Computes the overall TestResultType of this result set, determined by the "worst" test result
 	 *
-	 * @created 03.06.2010
 	 * @return the overall result type
+	 * @created 03.06.2010
 	 */
-	public static Message.Type getOverallResult(Collection <TestResult> testResults) {
-		Message.Type overallResult = Message.Type.SUCCESS;
-		for (TestResult testResult : testResults) {
-			Message summary = testResult.getSummary();
-			if (summary == null) continue;
-			if (summary.getType() == Message.Type.ERROR) {
-				return Message.Type.ERROR;
-			}
-			if (summary.getType() == Message.Type.FAILURE) {
-				overallResult = Message.Type.FAILURE;
-			}
-			if (summary.getType() == Message.Type.WARNING && overallResult == Message.Type.SUCCESS) {
-				overallResult = Message.Type.WARNING;
-			}
-		}
-		return overallResult;
+	public static Message.Type getOverallResult(Collection<TestResult> testResults) {
+		return testResults.stream().map(result -> result.getSummary().getType())
+				.reduce(Message.Type.SUCCESS, Message.Type::merge);
 	}
 
 	public void addTestResult(TestResult testResult) {
