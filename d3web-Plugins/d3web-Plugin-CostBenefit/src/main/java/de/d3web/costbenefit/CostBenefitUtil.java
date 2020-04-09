@@ -40,6 +40,7 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
@@ -157,33 +158,33 @@ public final class CostBenefitUtil {
 		Blackboard blackboard = session.getBlackboard();
 		for (Question question : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
 			// skip all non-oc questions and already answered questions
-			if (!(question instanceof QuestionOC)) continue;
+			if (!(question instanceof QuestionChoice)) continue;
 			if (question instanceof QuestionZC) {
 				expectedValues.put(question, Unknown.getInstance());
 				continue;
 			}
 			Value value = blackboard.getValue(question);
 			if (!UndefinedValue.isUndefinedValue(value)) continue;
-			QuestionOC questionOC = (QuestionOC) question;
+			QuestionChoice questionChoice = (QuestionChoice) question;
 
 			// if question has only one choice, use the choice
-			List<Choice> alternatives = questionOC.getAllAlternatives();
+			List<Choice> alternatives = questionChoice.getAllAlternatives();
 			if (alternatives.size() == 1) {
-				expectedValues.put(questionOC, new ChoiceValue(alternatives.get(0)));
+				expectedValues.put(questionChoice, new ChoiceValue(alternatives.get(0)));
 				continue;
 			}
 
 			// if no abnormality is defined, warn and skip
-			DefaultAbnormality abnormality = questionOC.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
+			DefaultAbnormality abnormality = questionChoice.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
 			if (abnormality == null) {
-				Log.info("no normal value for question " + questionOC);
+				Log.info("no normal value for question " + questionChoice);
 				continue;
 			}
 
 			// otherwise us the first normal alternative
 			for (Choice choice : alternatives) {
 				if (abnormality.getValue(choice) == Abnormality.A0) {
-					expectedValues.put(questionOC, new ChoiceValue(choice));
+					expectedValues.put(questionChoice, new ChoiceValue(choice));
 					break;
 				}
 			}
