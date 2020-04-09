@@ -81,7 +81,7 @@ import de.d3web.xcl.XCLRelation;
  */
 public final class CostBenefitUtil {
 
-	private static final int LOG_THRESHOLD = 5000;
+	public static final int LOG_THRESHOLD = 5000;
 
 	/**
 	 * Avoids the creation of an instance for this class.

@@ -168,18 +168,26 @@ public class AStar {
 			removeInfiniteTargets();
 		}
 
-		String targets = "#targets: " + model.getTargets().size();
-		Log.fine("Starting calculation, " + targets);
+		Log.fine("Starting calculation, " + "#targets: " + model.getTargets().size());
 		searchLoop();
 		long time2 = System.currentTimeMillis();
-		CostBenefitUtil.log(time2 - time1,
+		long duration = time2 - time1;
+		CostBenefitUtil.log(duration,
 				"A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
 						"#steps: " + steps + ", " +
-						"time: " + (time2 - time1) + "ms, " +
+						"time: " + duration + "ms, " +
 						"init: " + Stopwatch.getDisplay(initTime) + ", " +
-						targets + ", " +
+						"#targets: " + verbalizeTargets(duration) + ", " +
 						"#open: " + openNodes.size() + ", " +
 						"#closed: " + closedNodes.size() + ")");
+	}
+
+	private String verbalizeTargets(long duration) {
+		int count = model.getTargets().size();
+		if (duration <= CostBenefitUtil.LOG_THRESHOLD) {
+			return String.valueOf(count);
+		}
+		return model.getTargets().toString();
 	}
 
 	public Node getStartNode() {
