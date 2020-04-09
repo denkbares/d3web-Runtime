@@ -183,7 +183,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 		else {
 			Path minPath = bestTarget.getMinPath();
-			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			Log.fine(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			caseObject.activatePath(minPath.getPath(), this);
 			caseObject.activateNextQContainer();
 		}
@@ -241,7 +241,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
 		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
 			Path minPath = bestTarget.getMinPath();
-			Log.info(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			Log.fine(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 			caseObject.activatePath(minPath.getPath(), this);
 		}
 		caseObject.activateNextQContainer();

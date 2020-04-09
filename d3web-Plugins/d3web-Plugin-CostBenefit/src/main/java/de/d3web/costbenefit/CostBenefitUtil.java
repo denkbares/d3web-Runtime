@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.w3c.dom.Node;
 
@@ -79,6 +80,8 @@ import de.d3web.xcl.XCLRelation;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class CostBenefitUtil {
+
+	private static final int LOG_THRESHOLD = 5000;
 
 	/**
 	 * Avoids the creation of an instance for this class.
@@ -175,7 +178,8 @@ public final class CostBenefitUtil {
 			}
 
 			// if no abnormality is defined, warn and skip
-			DefaultAbnormality abnormality = questionChoice.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
+			DefaultAbnormality abnormality = questionChoice.getInfoStore()
+					.getValue(BasicProperties.DEFAULT_ABNORMALITY);
 			if (abnormality == null) {
 				Log.info("no normal value for question " + questionChoice);
 				continue;
@@ -441,5 +445,9 @@ public final class CostBenefitUtil {
 			}
 		}
 		return result;
+	}
+
+	public static void log(long duration, String message) {
+		Log.mock(1, duration <= LOG_THRESHOLD ? Level.FINE : Level.INFO, message);
 	}
 }

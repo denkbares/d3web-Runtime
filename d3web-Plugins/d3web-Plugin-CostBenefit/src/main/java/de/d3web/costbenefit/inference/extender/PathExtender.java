@@ -73,6 +73,6 @@ public class PathExtender implements SearchAlgorithm {
 				bestCostBenefitTarget.setMinPath(path);
 			}
 		}
-		stopwatch.log("extending calculated path");
+		CostBenefitUtil.log(stopwatch.getTime(), "Extending calculated path: " + stopwatch.getDisplay());
 	}
 }

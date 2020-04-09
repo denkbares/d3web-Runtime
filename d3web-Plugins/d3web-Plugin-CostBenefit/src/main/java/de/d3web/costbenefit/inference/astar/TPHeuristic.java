@@ -30,6 +30,7 @@ import java.util.Set;
 
 import com.denkbares.utils.Log;
 import com.denkbares.utils.Pair;
+import com.denkbares.utils.Stopwatch;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondNot;
@@ -198,7 +199,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 	}
 
 	private static void initGeneralCache(TPHeuristicSessionObject sessionObject, SearchModel model) {
-		long time = System.currentTimeMillis();
+		Stopwatch stopwatch = new Stopwatch();
 		sessionObject.preconditionCache.clear();
 		KnowledgeBase kb = model.getSession().getKnowledgeBase();
 		Collection<StateTransition> transitiveStateTransitions = model.getTransitionalStateTransitions();
@@ -243,7 +244,7 @@ public class TPHeuristic extends DividedTransitionHeuristic {
 							getCommonConditions(neededConditions),
 							transitionalQContainer));
 		}
-		Log.info("General init: " + (System.currentTimeMillis() - time) + "ms");
+		CostBenefitUtil.log(stopwatch.getTime(), "General init: " + stopwatch.getDisplay());
 	}
 
 	/**

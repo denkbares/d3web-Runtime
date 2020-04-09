@@ -35,6 +35,7 @@ import java.util.concurrent.Future;
 
 import com.denkbares.utils.Log;
 import com.denkbares.utils.Pair;
+import com.denkbares.utils.Stopwatch;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -167,15 +168,18 @@ public class AStar {
 			removeInfiniteTargets();
 		}
 
-		Log.info("Starting calculation, #targets: " + model.getTargets().size());
+		String targets = "#targets: " + model.getTargets().size();
+		Log.fine("Starting calculation, " + targets);
 		searchLoop();
 		long time2 = System.currentTimeMillis();
-		Log.info("A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
-				"#steps: " + steps + ", " +
-				"time: " + (time2 - time1) + "ms, " +
-				"init: " + initTime + "ms, " +
-				"#open: " + openNodes.size() + ", " +
-				"#closed: " + closedNodes.size() + ")");
+		CostBenefitUtil.log(time2 - time1,
+				"A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
+						"#steps: " + steps + ", " +
+						"time: " + (time2 - time1) + "ms, " +
+						"init: " + Stopwatch.getDisplay(initTime) + ", " +
+						targets + ", " +
+						"#open: " + openNodes.size() + ", " +
+						"#closed: " + closedNodes.size() + ")");
 	}
 
 	public Node getStartNode() {
