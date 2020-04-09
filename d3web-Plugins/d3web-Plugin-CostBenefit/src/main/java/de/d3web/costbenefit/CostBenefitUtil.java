@@ -55,6 +55,7 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
@@ -157,7 +158,10 @@ public final class CostBenefitUtil {
 		for (Question question : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
 			// skip all non-oc questions and already answered questions
 			if (!(question instanceof QuestionOC)) continue;
-			if (question instanceof QuestionZC) continue;
+			if (question instanceof QuestionZC) {
+				expectedValues.put(question, Unknown.getInstance());
+				continue;
+			}
 			Value value = blackboard.getValue(question);
 			if (!UndefinedValue.isUndefinedValue(value)) continue;
 			QuestionOC questionOC = (QuestionOC) question;
