@@ -43,6 +43,7 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.QuestionZC;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
@@ -56,6 +57,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.costbenefit.blackboard.CopiedSession;
@@ -160,12 +162,18 @@ public final class CostBenefitUtil {
 		Map<Question, Value> expectedValues = new HashMap<>();
 		Blackboard blackboard = session.getBlackboard();
 		for (Question question : getFormStrategy(session).getActiveQuestions(qContainer, session)) {
-			// skip all non-oc questions and already answered questions
-			if (!(question instanceof QuestionChoice)) continue;
+			if (question instanceof QuestionText) {
+				expectedValues.put(question, new TextValue("Dummy-Text"));
+				continue;
+			}
 			if (question instanceof QuestionZC) {
 				expectedValues.put(question, Unknown.getInstance());
 				continue;
 			}
+
+			// we expect choice question from here on
+			if (!(question instanceof QuestionChoice)) continue;
+
 			Value value = blackboard.getValue(question);
 			if (!UndefinedValue.isUndefinedValue(value)) continue;
 			QuestionChoice questionChoice = (QuestionChoice) question;
