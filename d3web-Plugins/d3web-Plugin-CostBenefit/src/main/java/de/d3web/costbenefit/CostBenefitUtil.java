@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 
 import com.denkbares.utils.Log;
@@ -235,10 +236,26 @@ public final class CostBenefitUtil {
 	 * @param source     of the created Facts
 	 * @return all Facts that are used to set the values
 	 */
+	@NotNull
 	public static List<Fact> setNormalValues(Session session, QContainer qContainer, Object source) {
+		PSMethod psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		return setNormalValues(session, qContainer, source, psm);
+	}
+
+	/**
+	 * Ensures that all questions of the given QContainer are answered. For unanswered Questions the expected values are
+	 * set.
+	 *
+	 * @param session    the Session where the values should be set
+	 * @param qContainer {@link QContainer}
+	 * @param source     of the created Facts
+	 * @param psm		 problemsolver to create the facts for
+	 * @return all Facts that are used to set the values
+	 */
+	@NotNull
+	public static List<Fact> setNormalValues(Session session, QContainer qContainer, Object source, PSMethod psm) {
 		Map<Question, Value> valuesToSet = getExpectedValues(session, qContainer);
 		List<Fact> facts = new LinkedList<>();
-		PSMethod psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		if (psm == null) psm = new PSMethodCostBenefit();
 		try {
 			session.getPropagationManager().openPropagation();
