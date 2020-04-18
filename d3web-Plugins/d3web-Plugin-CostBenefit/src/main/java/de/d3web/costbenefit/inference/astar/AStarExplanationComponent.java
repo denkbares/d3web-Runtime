@@ -168,7 +168,7 @@ public class AStarExplanationComponent {
 
 	/**
 	 * Returns the costs (initially) estimated by the heuristic for the specified target, calculated from the start of
-	 * the search.
+	 * the search. These heuristic costs will not (!) include the costs if the specified target questionnaire.
 	 */
 	public double getHeuristicCosts(QContainer target) {
 		StateTransition stateTransition = StateTransition.getStateTransition(target);
