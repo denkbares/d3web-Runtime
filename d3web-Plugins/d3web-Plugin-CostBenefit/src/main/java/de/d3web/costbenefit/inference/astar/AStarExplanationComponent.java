@@ -39,10 +39,10 @@ import de.d3web.core.session.Value;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
-import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -338,16 +338,30 @@ public class AStarExplanationComponent {
 
 	/**
 	 * Calculates all QContainers of the path to the last calculated target, not needed to establish a transitive
-	 * precondition of the chosen target
+	 * precondition of the chosen target.
 	 *
 	 * @return list of unexpected QContainers
 	 * @throws IllegalArgumentException if the method is called after an calculation with a multi target having the best
 	 *                                  cost benefit
 	 * @created 05.07.2012
 	 */
+	@NotNull
 	public Set<QContainer> getUnexpectedQContainers() throws IllegalArgumentException {
-		SearchModel model = astar.getModel();
-		Target target = model.getBestCostBenefitTarget();
+		Target target = astar.getModel().getBestCostBenefitTarget();
+		return getUnexpectedQContainers(target);
+	}
+
+	/**
+	 * Calculates all QContainers of the path to the last calculated target, not needed to establish a transitive
+	 * precondition of the chosen target.
+	 *
+	 * @param target the target the path is calculated to
+	 * @return list of unexpected QContainers on the path
+	 * @throws IllegalArgumentException if the method is called after an calculation with a multi target having the best
+	 *                                  cost benefit
+	 */
+	@NotNull
+	public Set<QContainer> getUnexpectedQContainers(Target target) {
 		if (target == null) {
 			return Collections.emptySet();
 		}
@@ -359,6 +373,7 @@ public class AStarExplanationComponent {
 		Condition condition = stateTransition.getActivationCondition();
 		if (condition == null) return Collections.emptySet();
 
+		SearchModel model = astar.getModel();
 		Condition transitiveCondition = getTPHeuristic().getTransitiveCondition(model.getSession(), condition);
 		List<QContainer> path = new LinkedList<>(target.getMinPath().getPath());
 		path.removeAll(target.getQContainers());
