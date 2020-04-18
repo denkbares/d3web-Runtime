@@ -74,7 +74,7 @@ public class Indication implements Value {
 	 * Creates a new indication value based on the indication state and sorting rating
 	 *
 	 * @param state   the state of the new indication value
-	 * @param sorting the rating of the sorting of the new indication
+	 * @param sorting the sorting of the interview object, according to the new indication, usually the tree index
 	 */
 	public Indication(State state, double sorting) {
 		this.sorting = sorting;
