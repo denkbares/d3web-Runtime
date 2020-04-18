@@ -140,14 +140,18 @@ public class CostBenefitProperties {
 
 	public enum UUTState {
 		/**
-		 * "Normal" state question, that represents e.g. a switch position
-		 */
-		status,
-		/**
 		 * "Indicator" or "final question" state, that represents a checked capability of the equipment. If this
 		 * question once left its init value, it is assumed to be never changed within the knowledge base.
 		 */
 		checkOnce,
+		/**
+		 * "Normal" state question, that represents e.g. a switch position
+		 */
+		status,
+		/**
+		 * State/result of a mechanical check.
+		 */
+		mechanicalCheck,
 		/**
 		 * Integration state of a measurement adapter, a cable that is potentially connected into the UUT.
 		 */
@@ -155,11 +159,7 @@ public class CostBenefitProperties {
 		/**
 		 * Integration state of a measurement device, a device that is potentially connected to a measurement adapter.
 		 */
-		measurementDevice,
-		/**
-		 * State/result of a mechanical check.
-		 */
-		mechanicalCheck;
+		measurementDevice;
 
 		private static UUTState autoDetect(Question stateQuestion) {
 			// TODO: here some hard-coded stuff (convention) is used. Replace by adding UUT_STATE property to knowledge base
