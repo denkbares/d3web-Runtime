@@ -24,6 +24,8 @@ import java.util.List;
 import com.denkbares.utils.Stopwatch;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.model.Path;
@@ -37,7 +39,7 @@ import de.d3web.costbenefit.model.Target;
  * @author Markus Friedrich (denkbares GmbH)
  * @created 07.11.2011
  */
-public class PathExtender implements SearchAlgorithm {
+public class PathExtender implements SearchAlgorithm, SessionObjectSource<PathExtender.PathExtenderInfo> {
 
 	private final SearchAlgorithm delegate;
 	private final List<PathModifier> modifiers = Arrays.asList(new PathSorter(), new ComfortAdder());
@@ -55,9 +57,15 @@ public class PathExtender implements SearchAlgorithm {
 		// search using the delegate algorithm
 		delegate.search(session, model);
 
+		// rest the info object to reflect only the most recent search
+		PathExtenderInfo info = session.getSessionObject(this);
+		info.pathBeforeModification = null;
+		info.pathAfterModification = null;
+
 		// if no path is calculated, do nothing
 		Target bestCostBenefitTarget = model.getBestCostBenefitTarget();
 		if (bestCostBenefitTarget == null) return;
+		info.pathBeforeModification = bestCostBenefitTarget.getMinPath();
 
 		// otherwise apply modifications to the path / target
 		Stopwatch stopwatch = new Stopwatch().start();
@@ -68,11 +76,37 @@ public class PathExtender implements SearchAlgorithm {
 				if (copy == null) {
 					copy = CostBenefitUtil.createSearchCopy(session);
 				}
+
 				// and apply the modification to the path
 				Path path = modifier.calculatePath(copy, model);
 				bestCostBenefitTarget.setMinPath(path);
+				info.pathAfterModification = path;
 			}
 		}
 		CostBenefitUtil.log(stopwatch.getTime(), "Extending calculated path: " + stopwatch.getDisplay());
+	}
+
+	@Override
+	public PathExtenderInfo createSessionObject(Session session) {
+		return new PathExtenderInfo();
+	}
+
+	public static class PathExtenderInfo implements SessionObject {
+		private Path pathBeforeModification = null;
+		private Path pathAfterModification = null;
+
+		/**
+		 * Returns the path of the most recent path search, as it was before any modification has been applied.
+		 */
+		public Path getPathBeforeModification() {
+			return pathBeforeModification;
+		}
+
+		/**
+		 * Returns the path of the most recent path search, as it was after all modification has been applied.
+		 */
+		public Path getPathAfterModification() {
+			return pathAfterModification;
+		}
 	}
 }

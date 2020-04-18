@@ -340,7 +340,7 @@ public class AStarExplanationComponent {
 	 * Calculates all QContainers of the path to the last calculated target, not needed to establish a transitive
 	 * precondition of the chosen target.
 	 *
-	 * @return list of unexpected QContainers
+	 * @return set of unexpected QContainers
 	 * @throws IllegalArgumentException if the method is called after an calculation with a multi target having the best
 	 *                                  cost benefit
 	 * @created 05.07.2012
@@ -356,7 +356,7 @@ public class AStarExplanationComponent {
 	 * precondition of the chosen target.
 	 *
 	 * @param target the target the path is calculated to
-	 * @return list of unexpected QContainers on the path
+	 * @return set of unexpected QContainers on the path
 	 * @throws IllegalArgumentException if the method is called after an calculation with a multi target having the best
 	 *                                  cost benefit
 	 */
@@ -396,6 +396,35 @@ public class AStarExplanationComponent {
 			result.removeAll(qcons);
 		}
 		return result;
+	}
+
+	/**
+	 * Calculates all QContainers of the most recently calculated path, that are only build into the path for comfort
+	 * reasons. If no QContainers are added for comfort reasons, of if there is no search configured that modifies the
+	 * path for comfort reasons, an empty set is returned.
+	 *
+	 * @return set of comfort-only QContainers on the path
+	 */
+	@NotNull
+	public Set<QContainer> getComfortOnlyQContainers() {
+		// have a look for a PathExtender search algorithm
+		Session session = astar.getModel().getSession();
+		PSMethodCostBenefit cb = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		SearchAlgorithm searchAlgorithm = cb.getSearchAlgorithm();
+		if (searchAlgorithm instanceof PathExtender) {
+			// if a path extender is found, use the case object to detect the changed
+			PathExtender.PathExtenderInfo info = session.getSessionObject((PathExtender) searchAlgorithm);
+			Path before = info.getPathBeforeModification();
+			Path after = info.getPathAfterModification();
+			if (before != null && after != null) {
+				// make a set-difference from "after - before" to get the added ones
+				Set<QContainer> added = new HashSet<>(after.getPath());
+				added.removeAll(before.getPath());
+				// we assume that comfort-questionnaires are the only QContainers that are added by the path modifier
+				return added;
+			}
+		}
+		return Collections.emptySet();
 	}
 
 	/**

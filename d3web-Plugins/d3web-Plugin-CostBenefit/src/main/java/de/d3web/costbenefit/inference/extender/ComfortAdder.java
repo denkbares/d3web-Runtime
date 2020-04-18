@@ -38,10 +38,13 @@ import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 
 /**
+ * Path modifier that adds the test steps to a specified path that have comfort benefit and applies to the path.
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 24.02.2020
  */
 class ComfortAdder implements PathModifier {
+
 	private List<QContainer> qcontainersToAdd;
 
 	private void init(SearchModel model) {
@@ -71,7 +74,6 @@ class ComfortAdder implements PathModifier {
 		Path path = model.getBestCostBenefitPath();
 		assert path != null;
 
-		//
 		for (QContainer qconToInclude : qcontainersToAdd) {
 			// if it is already in the path, do nothing
 			if (path.contains(qconToInclude)) continue;
