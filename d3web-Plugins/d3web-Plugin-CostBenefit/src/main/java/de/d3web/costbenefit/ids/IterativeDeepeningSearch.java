@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.denkbares.collections.ConcatenateCollection;
-import com.denkbares.utils.Log;
+import com.denkbares.utils.Stopwatch;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.Blackboard;
@@ -151,9 +151,10 @@ class IterativeDeepeningSearch {
 	 * @param session the session to be searched
 	 */
 	public void search(Session session) {
-		// Abort if there are no targets in the model
+		// do nothing if there are no targets in the model
 		if (!model.hasTargets()) return;
-		long time1 = System.currentTimeMillis();
+
+		Stopwatch stopwatch = new Stopwatch();
 		abortStrategy.init(model);
 		Session testcase = CostBenefitUtil.createSearchCopy(session);
 		try {
@@ -164,12 +165,16 @@ class IterativeDeepeningSearch {
 			// use the best found path till now
 			model.setAbort(true);
 		}
-		long time2 = System.currentTimeMillis();
-		Log.info("IDS Calculation " +
+		finally {
+			model.setCalculationTime(stopwatch.pause().getTime());
+			model.setCalculationSteps(steps);
+		}
+
+		CostBenefitUtil.log(model.getCalculationTime(), "IDS Calculation " +
 				(model.isAborted() ? "aborted" : "done") + " (" +
 				"#steps: " + steps + ", " +
-				"time: " + (time2 - time1) + "ms, " +
-				"init: " + initTime + "ms)");
+				"time: " + stopwatch.getDisplay() + ", " +
+				"init: " + Stopwatch.getDisplay(initTime) + ")");
 	}
 
 	private void search(Session testcase, int depth) throws AbortException {

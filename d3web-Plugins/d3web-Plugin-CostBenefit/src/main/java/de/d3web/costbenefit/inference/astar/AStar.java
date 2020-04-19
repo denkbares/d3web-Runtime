@@ -54,7 +54,7 @@ import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 
 /**
- * Algorithm which uses A* to find pathes to the targets
+ * Algorithm which uses A* to find paths to the targets
  *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 22.06.2011
@@ -158,7 +158,7 @@ public class AStar {
 	 * @created 22.06.2011
 	 */
 	public void search() {
-		long time1 = System.currentTimeMillis();
+		Stopwatch stopwatch = new Stopwatch();
 		algorithm.getAbortStrategy().init(model);
 		algorithm.getHeuristic().init(model);
 		openNodes.add(getStartNode());
@@ -170,16 +170,18 @@ public class AStar {
 
 		Log.fine("Starting calculation, " + "#targets: " + model.getTargets().size());
 		searchLoop();
-		long time2 = System.currentTimeMillis();
-		long duration = time2 - time1;
-		CostBenefitUtil.log(duration,
-				"A* Calculation " + (model.isAborted() ? "aborted" : "done") + " (" +
-						"#steps: " + steps + ", " +
-						"time: " + duration + "ms, " +
-						"init: " + Stopwatch.getDisplay(initTime) + ", " +
-						"#targets: " + verbalizeTargets(duration) + ", " +
-						"#open: " + openNodes.size() + ", " +
-						"#closed: " + closedNodes.size() + ")");
+		long duration = stopwatch.pause().getTime();
+		model.setCalculationTime(duration);
+		model.setCalculationSteps(steps);
+
+		CostBenefitUtil.log(duration, "A* Calculation " +
+				(model.isAborted() ? "aborted" : "done") + " (" +
+				"#steps: " + steps + ", " +
+				"time: " + stopwatch.getDisplay() + ", " +
+				"init: " + Stopwatch.getDisplay(initTime) + ", " +
+				"#targets: " + verbalizeTargets(duration) + ", " +
+				"#open: " + openNodes.size() + ", " +
+				"#closed: " + closedNodes.size() + ")");
 	}
 
 	private String verbalizeTargets(long duration) {

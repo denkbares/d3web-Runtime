@@ -60,12 +60,14 @@ public class SearchModel {
 
 	private Target bestBenefitTarget;
 	private Target bestCostBenefitTarget;
-	private boolean aborted = false;
 	private final CostFunction costFunction;
 	private final Session session;
 	private final Set<StateTransition> transitionalStateTransitions;
 	private final Map<QContainer, BlockingReason> blockedQContainers;
-	private long duration = -1;
+
+	private boolean aborted = false;
+	private long calculationTime = -1;
+	private int calculationSteps = -1;
 
 	// debug fields, left untouched if debugging is not enabled
 	private final MultiMap<Question, QuestionValue> reachedStates = new DefaultMultiMap<>();
@@ -360,28 +362,6 @@ public class SearchModel {
 		return session;
 	}
 
-	/**
-	 * Tells the search algorithm whether to abort the search or not. If the search is already aborted, this method
-	 * should do nothing. Please note that each search algorithm may set this flag if its abort strategy tells him to
-	 * do.
-	 *
-	 * @param abort if the search is / shall be aborted
-	 * @created 15.09.2011
-	 */
-	public void setAbort(boolean abort) {
-		this.aborted = abort;
-	}
-
-	/**
-	 * Check if the search has been aborted (externally or by the abort strategy of the search).
-	 *
-	 * @return if the search has been aborted
-	 * @created 14.09.2011
-	 */
-	public boolean isAborted() {
-		return aborted;
-	}
-
 	public Map<QContainer, BlockingReason> getBlockedQContainers() {
 		return blockedQContainers;
 	}
@@ -410,12 +390,62 @@ public class SearchModel {
 		return result;
 	}
 
-	public long getDuration() {
-		return duration;
+	/**
+	 * Tells the search algorithm whether to abort the search or not. If the search is already aborted, this method
+	 * should do nothing. Please note that each search algorithm may set this flag if its abort strategy tells him to
+	 * do.
+	 *
+	 * @param abort if the search is / shall be aborted
+	 * @created 15.09.2011
+	 */
+	public void setAbort(boolean abort) {
+		this.aborted = abort;
 	}
 
-	public void setDuration(long duration) {
-		this.duration = duration;
+	/**
+	 * Check if the search has been aborted (externally or by the abort strategy of the search).
+	 *
+	 * @return if the search has been aborted
+	 * @created 14.09.2011
+	 */
+	public boolean isAborted() {
+		return aborted;
+	}
+
+	/**
+	 * Gets the duration how long the calculation has been processed until it has been stopped or aborted.
+	 *
+	 * @return the recent calculation time in milliseconds
+	 */
+	public long getCalculationTime() {
+		return calculationTime;
+	}
+
+	/**
+	 * Sets the duration how long the calculation has been processed until it has been stopped or aborted.
+	 *
+	 * @param calculationTime the duration to be set in milliseconds
+	 */
+	public void setCalculationTime(long calculationTime) {
+		this.calculationTime = calculationTime;
+	}
+
+	/**
+	 * Gets the number of path steps the calculation has been processed until it has been stopped or aborted.
+	 *
+	 * @return the recent calculation time in milliseconds
+	 */
+	public int getCalculationSteps() {
+		return calculationSteps;
+	}
+
+	/**
+	 * Sets the number of path steps the calculation has been processed until it has been stopped or aborted.
+	 *
+	 * @param calculationSteps the duration to be set in milliseconds
+	 */
+	public void setCalculationSteps(int calculationSteps) {
+		this.calculationSteps = calculationSteps;
 	}
 
 	private static class TargetComparator implements Comparator<Target> {
