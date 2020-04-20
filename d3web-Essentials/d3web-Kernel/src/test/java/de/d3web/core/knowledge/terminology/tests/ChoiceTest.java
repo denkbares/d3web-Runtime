@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -18,10 +18,6 @@
  */
 
 package de.d3web.core.knowledge.terminology.tests;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +32,14 @@ import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionOC;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 /**
- * This class tests the "Choices" which utilize the answer alternatives for
- * choice questions.
- * 
+ * This class tests the "Choices" which utilize the answer alternatives for choice questions.
+ *
  * @author Marc-Oliver Ochlast (denkbares GmbH)
  * @created 24.08.2010
  */
@@ -57,11 +57,10 @@ public class ChoiceTest {
 
 	/**
 	 * Summary: Assure that this Choice instance is not an Yes or No Answer
-	 * 
+	 *
+	 * @created 24.08.2010
 	 * @see Choice#isAnswerNo()
 	 * @see Choice#isAnswerYes()
-	 * 
-	 * @created 24.08.2010
 	 */
 	@Test
 	public void testChoiceAnswerYesNo() {
@@ -70,12 +69,11 @@ public class ChoiceTest {
 	}
 
 	/**
-	 * This tests the compareTo() method of Choices, which take the "distance"
-	 * of the answer alternatives in the question into account
-	 * 
-	 * @see Choice#compareTo(Choice)
-	 * 
+	 * This tests the compareTo() method of Choices, which take the "distance" of the answer alternatives in the
+	 * question into account
+	 *
 	 * @created 24.08.2010
+	 * @see Choice#compareTo(Choice)
 	 */
 	@Test
 	public void testCompareTo() {
@@ -92,21 +90,20 @@ public class ChoiceTest {
 		Choice choiceThree = KnowledgeBaseUtils.findChoice(question, "choiceThree");
 
 		// choiceOne is two answer alternatives in front of choiceThree
-		assertThat(choiceOne.compareTo(choiceThree), is(-2));
+		assertTrue(choiceOne.compareTo(choiceThree) < 0);
 		// choiceOne is directly in front of choiceThree
-		assertThat(choiceTwo.compareTo(choiceThree), is(-1));
+		assertTrue(choiceTwo.compareTo(choiceThree) < 0);
 		// choiceThree is two answer alternatives behind choiceOne
-		assertThat(choiceThree.compareTo(choiceOne), is(2));
+		assertTrue(choiceThree.compareTo(choiceOne) > 0);
 		// choiceThree is directly behind choiceTwo
-		assertThat(choiceThree.compareTo(choiceTwo), is(1));
+		assertTrue(choiceThree.compareTo(choiceTwo) > 0);
 		// choiceTwo equals choiceTwo
-		assertThat(choiceTwo.compareTo(choiceTwo), is(0));
+		assertTrue(choiceTwo.compareTo(choiceTwo) == 0);
 	}
 
 	/**
-	 * Summary: Tests the hashCode method of the class Choice by simply checking
-	 * if its value is not 0.
-	 * 
+	 * Summary: Tests the hashCode method of the class Choice by simply checking if its value is not 0.
+	 *
 	 * @created 24.08.2010
 	 */
 	@Test
@@ -117,10 +114,9 @@ public class ChoiceTest {
 
 	/**
 	 * Summary: Tests the subclass of Choice: AnswerNo
-	 * 
-	 * @see AnswerNo
-	 * 
+	 *
 	 * @created 24.08.2010
+	 * @see AnswerNo
 	 */
 	@Test
 	public void testClassAnswerNo() {
@@ -131,10 +127,9 @@ public class ChoiceTest {
 
 	/**
 	 * Summary: Tests the subclass of Choice: AnswerYes
-	 * 
-	 * @see AnswerYes
-	 * 
+	 *
 	 * @created 24.08.2010
+	 * @see AnswerYes
 	 */
 	@Test
 	public void testClassAnswerYes() {
