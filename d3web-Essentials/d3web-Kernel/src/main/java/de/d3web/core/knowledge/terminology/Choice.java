@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2009 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -20,15 +20,14 @@
 
 package de.d3web.core.knowledge.terminology;
 
-import java.util.List;
+import java.util.Objects;
 
 import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
 
 /**
- * Answer (alternative) class for choice questions Creation date: (13.09.2000
- * 14:32:50)
- * 
+ * Answer (alternative) class for choice questions Creation date: (13.09.2000 14:32:50)
+ *
  * @author norman
  */
 public class Choice implements NamedObject, Comparable<Choice> {
@@ -43,7 +42,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 
 	/**
 	 * Creates a new choice with the given name
-	 * 
+	 *
 	 * @param name the name of the choice
 	 * @throws NullPointerException when the name is null
 	 */
@@ -61,7 +60,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 
 	/**
 	 * Creation date: (28.09.00 17:50:31)
-	 * 
+	 *
 	 * @return true, if this is an as AnswerNo configured answer (false here)
 	 */
 	public boolean isAnswerNo() {
@@ -70,7 +69,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 
 	/**
 	 * Creation date: (28.09.00 17:50:14)
-	 * 
+	 *
 	 * @return true, if this is an as AnswerYes configured answer (false here)
 	 */
 	public boolean isAnswerYes() {
@@ -79,7 +78,7 @@ public class Choice implements NamedObject, Comparable<Choice> {
 
 	/**
 	 * Creation date: (15.09.2000 12:07:31)
-	 * 
+	 *
 	 * @return String representation of the answer
 	 */
 	@Override
@@ -87,66 +86,40 @@ public class Choice implements NamedObject, Comparable<Choice> {
 		return text;
 	}
 
-	/**
-	 * Firstly compares for equal reference, then for equal class instance, then
-	 * for equal getText() values. <BR>
-	 * 2002-05-29 joba: added for better comparisons
-	 * */
 	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		else if (other instanceof Choice) {
-			return ((Choice) other).getSignatureString().equals(
-					this.getSignatureString());
-		}
-		else {
-			return false;
-		}
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Choice)) return false;
+		Choice choice = (Choice) o;
+		return Objects.equals(question, choice.question) &&
+				Objects.equals(text, choice.text);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		String signatureString = getSignatureString();
-		result = prime * result + ((signatureString == null) ? 0 : signatureString.hashCode());
-		return result;
+		return Objects.hash(question, text);
 	}
-
-	private String getSignatureString() {
-		if (question == null) {
-			return getName();
-		}
-		else {
-			return getName() + question.getName();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.d3web.kernel.domainModel.Answer#hashCode()
-	 */
-	// @Override
-	// public int hashCode() {
-	// return getId().hashCode() + getName().hashCode();
-	// }
 
 	@Override
 	public int compareTo(Choice other) {
-		List<Choice> range = ((QuestionChoice) this.getQuestion()).getAllAlternatives();
-		int i1 = range.indexOf(this);
-		int i2 = range.indexOf(other);
-		int result = i1 - i2;
-		if (result == 0) {
-			return getSignatureString().compareTo(other.getSignatureString());
-		}
-		else {
-			return result;
-		}
+		int result = Integer.compare(getIndex(), other.getIndex());
+		if (result != 0) return result;
 
+		result = text.compareTo(other.text);
+		if (result != 0) return result;
+
+		if (question == other.question) return 0;
+		if (question == null) return 1;
+		if (other.question == null) return -1;
+		return question.getName().compareTo(other.question.getName());
+	}
+
+	/**
+	 * Retuns the index of the choice in the choice's question, or -1 if the choice is not part of a choice question.
+	 */
+	public int getIndex() {
+		return (question instanceof QuestionChoice)
+				? ((QuestionChoice) question).getAllAlternatives().indexOf(this) : -1;
 	}
 
 	@Override

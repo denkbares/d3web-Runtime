@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -20,13 +20,13 @@ package de.d3web.core.session.values;
 
 import java.util.Collection;
 
+import com.denkbares.utils.HashCodeUtils;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
-import com.denkbares.utils.HashCodeUtils;
 
 /**
  * This class implements a reference to a choice within a knowledge base
- * 
+ *
  * @author volker_belli
  * @created 22.10.2010
  */
@@ -37,9 +37,8 @@ public class ChoiceID implements Comparable<ChoiceID> {
 
 	/**
 	 * Constructs a new ChoiceID from a specified choice text
-	 * 
-	 * @param text the choice text for which a new ChoiceID should be
-	 *        instantiated
+	 *
+	 * @param text the choice text for which a new ChoiceID should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public ChoiceID(String text) {
@@ -51,7 +50,7 @@ public class ChoiceID implements Comparable<ChoiceID> {
 
 	/**
 	 * Constructs a new ChoiceID from a specified {@link Choice}
-	 * 
+	 *
 	 * @param choice the choice for which a new ChoiceID should be instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
@@ -59,18 +58,23 @@ public class ChoiceID implements Comparable<ChoiceID> {
 		this(choice.getName());
 	}
 
+	/**
+	 * Returns the name of the choice. The name is the unique, language independent name that reflects to {@link
+	 * Choice#getName()} if the referenced choice instance.
+	 *
+	 * @return the choice's name
+	 */
 	public String getText() {
 		return text;
 	}
 
 	/**
-	 * Searches and returns the {@link Choice} within a question that was
-	 * specified by this choiceID. Returns null if no matching choice has been
-	 * found.
-	 * 
-	 * @created 22.10.2010
+	 * Searches and returns the {@link Choice} within a question that was specified by this choiceID. Returns null if no
+	 * matching choice has been found.
+	 *
 	 * @param question the question to be searched for the ChoiceID
 	 * @return the Choice found
+	 * @created 22.10.2010
 	 */
 	public Choice getChoice(QuestionChoice question) {
 		for (Choice choice : question.getAllAlternatives()) {
@@ -129,10 +133,10 @@ public class ChoiceID implements Comparable<ChoiceID> {
 
 	/**
 	 * Returns if the string is a list mire than one of encoded ChoiceIDs.
-	 * 
-	 * @created 22.10.2010
+	 *
 	 * @param encodedString the string to be checked
 	 * @return if the string consists of multiple encoded ChoiceIDs
+	 * @created 22.10.2010
 	 */
 	public static boolean isEncodedChoiceIDs(String encodedString) {
 		return encodedString.contains(ID_SEPARATOR);
