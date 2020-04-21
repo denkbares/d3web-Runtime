@@ -39,10 +39,7 @@
     <psEntry extensionID="PSMethodStateTransition" pluginID="d3web-CostBenefit" priority="5.5" state="autodetect"/>
     <psEntry extensionID="PSMethodCostBenefit" manual="false" pluginID="d3web-CostBenefit" priority="6.0" state="autodetect" strategicBenefitFactor="0.0">
       <targetFunction name="DefaultTargetFunction"/>
-      <searchAlgorithm multiCore="true" name="AStarSearchAlgorithm">
-        <heuristic name="TPHeuristic"/>
-        <abortStrategy increasingFactor="4.0" maxsteps="500000" name="DefaultAbortStrategy"/>
-      </searchAlgorithm>
+      <searchAlgorithm name="IterativeDeepeningSearchAlgorithm"/>
       <costFunction name="DefaultCostFunction"/>
       <solutionRater name="DefaultSolutionRater"/>
     </psEntry>
