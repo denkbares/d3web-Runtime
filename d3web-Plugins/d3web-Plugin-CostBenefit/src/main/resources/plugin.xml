@@ -96,23 +96,6 @@
 		<parameter id="filename" value="kb/comfortBenefit.xml" />
 	</extension>
 
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DividedTransitionHeuristicHandler">
-		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DividedTransitionHeuristicHandler" />
-		<parameter id="name" value="DividedTransitionHeuristicHandler" />
-		<parameter id="description" value="Handler for DividedTransitionHeuristic" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler" id="TPHeuristicHandler">
-		<parameter id="class" value="de.d3web.costbenefit.io.fragments.TPHeuristicHandler" />
-		<parameter id="name" value="TPHeuristicHandler" />
-		<parameter id="description" value="Handler for TPHeuristic" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler" id="WatchSetHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.WatchSetHandler" />
 		<parameter id="name" value="WatchSetHandler" />
@@ -120,16 +103,7 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
-
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="SwitchingHeuristicHandler">
-		<parameter id="class" value="de.d3web.costbenefit.io.fragments.SwitchingHeuristicHandler" />
-		<parameter id="name" value="TPHeuristicHandler" />
-		<parameter id="description" value="Handler for SwitchingHeuristic" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-
+	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultAbortStrategyHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DefaultAbortStrategyHandler" />
@@ -171,15 +145,6 @@
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="name" value="IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="description" value="Handler for IterativeDeepeningSearchAlgorithm" />
-		<parameter id="version" value="1.0" />
-		<parameter id="priority" value="5" />
-	</extension>
-
-	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="AStarSearchAlgorithmHandler">
-		<parameter id="class" value="de.d3web.costbenefit.io.fragments.AStarSearchAlgorithmHandler" />
-		<parameter id="name" value="AStarSearchAlgorithmHandler" />
-		<parameter id="description" value="Handler for AStarSearchAlgorithm" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
