@@ -22,6 +22,23 @@
 		<parameter-def id="priority" type="number" />
 	</extension-point>
 
+	<extension-point id="SearchAlgorithm">
+		<parameter-def id="class" />
+		<parameter-def id="name" />
+		<parameter-def id="description" />
+		<parameter-def id="version" />
+		<parameter-def id="priority" type="number" />
+	</extension-point>
+
+
+	<extension plugin-id="d3web-CostBenefit" point-id="SearchAlgorithm" id="IterativeDeepeningSearchAlgorithm">
+		<parameter id="class" value="de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm" />
+		<parameter id="name" value="IterativeDeepeningSearchAlgorithm" />
+		<parameter id="description" value="Basic cost/benefit search algorithm." />
+		<parameter id="version" value="1.0" />
+		<parameter id="priority" value="8" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="PSMethod" id="PSMethodCostBenefit">
 		<parameter id="class" value="de.d3web.costbenefit.inference.PSMethodCostBenefit" />
 		<parameter id="name" value="PSMethodCostBenefit" />
@@ -103,7 +120,7 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
-	
+
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="DefaultAbortStrategyHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DefaultAbortStrategyHandler" />

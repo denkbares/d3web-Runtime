@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
@@ -64,7 +66,7 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
-import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
+import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -135,8 +137,20 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	public PSMethodCostBenefit() {
 		this.targetFunction = new DefaultTargetFunction();
 		this.costFunction = new DefaultCostFunction();
-		this.searchAlgorithm = new AStarAlgorithm();
+		this.searchAlgorithm = createDefaultAlgorithm();
 		this.solutionsRater = new DefaultSolutionRater();
+	}
+
+	private static SearchAlgorithm createDefaultAlgorithm() {
+		try {
+			for (Extension algorithms : PluginManager.getInstance()
+					.getExtensions("d3web-CostBenefit", "SearchAlgorithm")) {
+				return (SearchAlgorithm) algorithms.getNewInstance();
+			}
+		}
+		catch (Exception ignore) {
+		}
+		return new IterativeDeepeningSearchAlgorithm();
 	}
 
 	@Override
