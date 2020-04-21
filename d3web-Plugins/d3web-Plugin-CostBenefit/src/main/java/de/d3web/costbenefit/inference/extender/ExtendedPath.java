@@ -27,25 +27,49 @@ import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.costbenefit.model.Path;
 
 /**
+ * Path implementation that represents a modified path based on a originally searched path.
+ *
  * @author Volker Belli (denkbares GmbH)
  * @created 24.02.2020
  */
-final class ExtendedPath implements Path {
+public final class ExtendedPath implements Path {
 
 	private final List<QContainer> qContainers;
 	private final double costs;
 	private final double negativeCosts;
+	private final Path originalPath;
 
-	ExtendedPath(List<QContainer> qContainers, double costs, double negativeCosts) {
+	ExtendedPath(List<QContainer> qContainers, Path originalPath) {
 		super();
 		this.qContainers = qContainers;
-		this.costs = costs;
-		this.negativeCosts = negativeCosts;
+		this.costs = originalPath.getCosts();
+		this.negativeCosts = originalPath.getNegativeCosts();
+		this.originalPath = originalPath;
 	}
 
 	@Override
 	public List<QContainer> getPath() {
 		return Collections.unmodifiableList(qContainers);
+	}
+
+	/**
+	 * Returns the path this path is derived from. Note that the returned path may still be an {@link ExtendedPath}
+	 * instance.
+	 */
+	public Path getOriginalPath() {
+		return originalPath;
+	}
+
+	/**
+	 * Returns the root path that has been extended, if the specified path is an extended path, otherwise return the
+	 * specified path. If the specified path is extended multiple times, it returns the original path before any of
+	 * these extensions.
+	 */
+	public static Path getRootPath(Path potentialExtendedPath) {
+		while (potentialExtendedPath instanceof ExtendedPath) {
+			potentialExtendedPath = ((ExtendedPath) potentialExtendedPath).getOriginalPath();
+		}
+		return potentialExtendedPath;
 	}
 
 	@Override

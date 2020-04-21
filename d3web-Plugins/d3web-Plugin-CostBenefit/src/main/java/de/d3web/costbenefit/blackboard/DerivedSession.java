@@ -19,6 +19,9 @@
 
 package de.d3web.costbenefit.blackboard;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.session.Session;
 
 /**
@@ -35,4 +38,19 @@ public interface DerivedSession extends Session {
 	 * @return the most original session this session is derived from
 	 */
 	Session getRootSession();
+
+	/**
+	 * If the specified session is a derived session, the method returns the underlying root session this session is
+	 * derived from. If a derived session is also derived from another derived session, this method should directly
+	 * return the original non-derived session. if the specified session is not a derived session, the specified session
+	 * is returned.
+	 *
+	 * @return the most original session this session is derived from
+	 */
+	@Contract("null -> null; !null -> !null")
+	static Session getRootSession(@Nullable Session potentiallyDerivedSession) {
+		return (potentiallyDerivedSession instanceof DerivedSession)
+				? ((DerivedSession) potentiallyDerivedSession).getRootSession()
+				: potentiallyDerivedSession;
+	}
 }

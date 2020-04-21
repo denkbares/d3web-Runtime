@@ -61,9 +61,7 @@ public class DecoratedSession implements DerivedSession {
 	public DecoratedSession(@NotNull Session other) {
 		this.knowledgeBase = other.getKnowledgeBase();
 		this.blackboard = new DecoratedBlackboard(this, (DefaultBlackboard) other.getBlackboard());
-		this.rootSession = (other instanceof DecoratedSession)
-				? ((DecoratedSession) other).rootSession
-				: other;
+		this.rootSession = DerivedSession.getRootSession(other);
 	}
 
 	@Override

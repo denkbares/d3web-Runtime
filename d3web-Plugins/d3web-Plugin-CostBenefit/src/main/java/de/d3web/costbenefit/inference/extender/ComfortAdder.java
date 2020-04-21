@@ -20,7 +20,6 @@
 package de.d3web.costbenefit.inference.extender;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -129,8 +128,8 @@ class ComfortAdder implements PathModifier {
 	}
 
 	private Path getNewPath(int position, QContainer qconToInclude, Path path) {
-		List<QContainer> qContainers = new LinkedList<>(path.getPath());
+		List<QContainer> qContainers = new ArrayList<>(path.getPath());
 		qContainers.add(position, qconToInclude);
-		return new ExtendedPath(qContainers, path.getCosts(), path.getNegativeCosts());
+		return new ExtendedPath(qContainers, path);
 	}
 }

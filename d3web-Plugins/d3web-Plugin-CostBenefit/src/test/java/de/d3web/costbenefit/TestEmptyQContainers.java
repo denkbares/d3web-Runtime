@@ -23,9 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -43,15 +43,14 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.costbenefit.ids.IterativeDeepeningSearchAlgorithm;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.ExpertMode;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
-import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.interview.Interview;
 import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests firing and proceeding of QContainers containing a ok Question and not
@@ -64,7 +63,7 @@ public class TestEmptyQContainers {
 
 	protected void configureSearchAlgorithm(KnowledgeBase kb) {
 		PSMethodCostBenefit psmethod = new PSMethodCostBenefit();
-		psmethod.setSearchAlgorithm(new AStarAlgorithm());
+		psmethod.setSearchAlgorithm(new IterativeDeepeningSearchAlgorithm());
 		kb.addPSConfig(new PSConfig(PSConfig.PSState.active, psmethod, "PSMethodCostBenefit",
 				"d3web-CostBenefit", 6));
 	}

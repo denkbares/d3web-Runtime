@@ -38,8 +38,6 @@ public class CopiedSession extends DefaultSession implements DerivedSession {
 
 	@Override
 	public Session getRootSession() {
-		return (originalSession instanceof DerivedSession)
-				? ((DerivedSession) originalSession).getRootSession()
-				: originalSession;
+		return DerivedSession.getRootSession(originalSession);
 	}
 }

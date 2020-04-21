@@ -96,7 +96,7 @@ class PathSorter implements PathModifier {
 		List<QContainer> containers = new ArrayList<>(source.getPath());
 		QContainer container = containers.remove(from);
 		containers.add(to, container);
-		return new ExtendedPath(containers, source.getCosts(), source.getNegativeCosts());
+		return new ExtendedPath(containers, source);
 	}
 
 	private boolean isValidPath(Session copy, Path path) {

@@ -63,12 +63,10 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
+import de.d3web.costbenefit.blackboard.DerivedSession;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
-import de.d3web.costbenefit.inference.extender.PathExtender;
-import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
-import de.d3web.costbenefit.inference.astar.AStarAlgorithm;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
@@ -233,6 +231,20 @@ public final class CostBenefitUtil {
 	 *
 	 * @param session    the Session where the values should be set
 	 * @param qContainer {@link QContainer}
+	 * @return all Facts that are used to set the values
+	 */
+	@NotNull
+	public static List<Fact> setNormalValues(Session session, QContainer qContainer) {
+		PSMethod psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		return setNormalValues(session, qContainer, psm, psm);
+	}
+
+	/**
+	 * Ensures that all questions of the given QContainer are answered. For unanswered Questions the expected values are
+	 * set.
+	 *
+	 * @param session    the Session where the values should be set
+	 * @param qContainer {@link QContainer}
 	 * @param source     of the created Facts
 	 * @return all Facts that are used to set the values
 	 */
@@ -249,7 +261,7 @@ public final class CostBenefitUtil {
 	 * @param session    the Session where the values should be set
 	 * @param qContainer {@link QContainer}
 	 * @param source     of the created Facts
-	 * @param psm		 problemsolver to create the facts for
+	 * @param psm        problemsolver to create the facts for
 	 * @return all Facts that are used to set the values
 	 */
 	@NotNull
@@ -272,14 +284,7 @@ public final class CostBenefitUtil {
 	}
 
 	private static FormStrategy getFormStrategy(Session session) {
-		if (session instanceof DecoratedSession) {
-			DecoratedSession ds = (DecoratedSession) session;
-			return getFormStrategy(ds.getRootSession());
-		}
-		else if (session instanceof CopiedSession) {
-			CopiedSession cs = (CopiedSession) session;
-			return getFormStrategy(cs.getOriginalSession());
-		}
+		session = DerivedSession.getRootSession(session);
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		return interview.getFormStrategy();
 	}
@@ -309,28 +314,6 @@ public final class CostBenefitUtil {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Offers easy access to the AStarAlgorithm even if it is capsuled with the path extender. If no AStar is used in
-	 * the {@link PSMethodCostBenefit}, null is returned
-	 *
-	 * @param psMethodCostBenefit specified PSMethod
-	 * @return configured instance of AStarAlgorithm or null, if another algorithm is used.
-	 * @created 04.12.2012
-	 */
-	public static AStarAlgorithm getAStarAlgorithm(PSMethodCostBenefit psMethodCostBenefit) {
-		SearchAlgorithm searchAlgorithm = psMethodCostBenefit.getSearchAlgorithm();
-		if (searchAlgorithm instanceof PathExtender) {
-			PathExtender extender = (PathExtender) searchAlgorithm;
-			if (extender.getDelegateAlgorithm() instanceof AStarAlgorithm) {
-				return (AStarAlgorithm) extender.getDelegateAlgorithm();
-			}
-		}
-		else if (searchAlgorithm instanceof AStarAlgorithm) {
-			return (AStarAlgorithm) searchAlgorithm;
-		}
-		return null;
 	}
 
 	/**
