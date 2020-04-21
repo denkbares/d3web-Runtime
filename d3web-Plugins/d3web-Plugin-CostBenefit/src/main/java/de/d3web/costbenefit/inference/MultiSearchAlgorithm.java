@@ -26,10 +26,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import de.d3web.core.session.Session;
-import de.d3web.costbenefit.inference.astar.IterableExecutor;
-import de.d3web.costbenefit.model.SearchModel;
 import com.denkbares.utils.Log;
+import de.d3web.core.session.Session;
+import de.d3web.costbenefit.model.SearchModel;
 
 /**
  * A new {@link SearchAlgorithm} that delegates the search to a sequence of
