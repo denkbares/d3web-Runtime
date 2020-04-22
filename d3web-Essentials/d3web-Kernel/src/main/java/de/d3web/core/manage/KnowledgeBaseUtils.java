@@ -659,7 +659,8 @@ public final class KnowledgeBaseUtils {
 	 * @param solution the solution to be grouped
 	 * @return the solution
 	 */
-	public static Solution getGroup(Solution solution) {
+	@NotNull
+	public static Solution getGroup(@NotNull Solution solution) {
 		MultiMap<Solution, Solution> group = new DefaultMultiMap<>();
 		groupSolution(solution, group);
 		return group.isEmpty() ? solution : group.keySet().iterator().next();
