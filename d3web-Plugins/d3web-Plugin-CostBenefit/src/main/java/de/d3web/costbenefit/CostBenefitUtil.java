@@ -227,7 +227,7 @@ public final class CostBenefitUtil {
 
 	/**
 	 * Ensures that all questions of the given QContainer are answered. For unanswered Questions the expected values are
-	 * set.
+	 * set. The values are answered by the user-problem-solver.
 	 *
 	 * @param session    the Session where the values should be set
 	 * @param qContainer {@link QContainer}
@@ -235,7 +235,7 @@ public final class CostBenefitUtil {
 	 */
 	@NotNull
 	public static List<Fact> setNormalValues(Session session, QContainer qContainer) {
-		PSMethod psm = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		PSMethod psm = PSMethodUserSelected.getInstance();
 		return setNormalValues(session, qContainer, psm, psm);
 	}
 
@@ -283,7 +283,14 @@ public final class CostBenefitUtil {
 		return facts;
 	}
 
-	private static FormStrategy getFormStrategy(Session session) {
+	/**
+	 * Returns the form strategy that is used in the specified session. The session may be a derived session, then the
+	 * root form strategy is used.
+	 *
+	 * @param session the session to get the form strategy for
+	 * @return the form strategy to be used
+	 */
+	public static FormStrategy getFormStrategy(Session session) {
 		session = DerivedSession.getRootSession(session);
 		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
 		return interview.getFormStrategy();

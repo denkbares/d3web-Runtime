@@ -36,7 +36,7 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
  */
 public class Target implements Comparable<Target> {
 
-	private final List<QContainer> qContainers = new LinkedList<>();
+	private final List<QContainer> containers = new LinkedList<>();
 	private final double costs;
 	private double benefit = 0.0;
 	private Path minPath;
@@ -47,8 +47,8 @@ public class Target implements Comparable<Target> {
 	 * @param targetContainer the QContainer to be reached
 	 */
 	public Target(QContainer targetContainer) {
-		this.qContainers.add(targetContainer);
-		this.costs = summarizeCosts(qContainers);
+		this.containers.add(targetContainer);
+		this.costs = summarizeCosts(containers);
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class Target implements Comparable<Target> {
 	 * @param targetContainers the QContainers to be reached
 	 */
 	public Target(Collection<QContainer> targetContainers) {
-		this.qContainers.addAll(targetContainers);
-		this.costs = summarizeCosts(qContainers);
+		this.containers.addAll(targetContainers);
+		this.costs = summarizeCosts(containers);
 	}
 
 	private static double summarizeCosts(List<QContainer> qContainers) {
@@ -72,7 +72,7 @@ public class Target implements Comparable<Target> {
 	@Override
 	@SuppressWarnings({ "CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod" })
 	protected Target clone() {
-		Target copy = new Target(qContainers);
+		Target copy = new Target(containers);
 		copy.benefit = this.benefit;
 		copy.minPath = this.minPath;
 		return copy;
@@ -171,12 +171,19 @@ public class Target implements Comparable<Target> {
 	 * @created 07.03.2011
 	 */
 	public List<QContainer> getQContainers() {
-		return Collections.unmodifiableList(qContainers);
+		return Collections.unmodifiableList(containers);
+	}
+
+	/**
+	 * Returns true if the specified QContainer is one of the target containers of this instance.
+	 */
+	public boolean isTarget(QContainer container) {
+		return containers.contains(container);
 	}
 
 	@Override
 	public String toString() {
-		return "Target" + this.qContainers +
+		return "Target" + this.containers +
 				"#B:" + this.benefit +
 				"#C:" + (minPath != null ? minPath.getCosts() : "?");
 	}
@@ -187,12 +194,12 @@ public class Target implements Comparable<Target> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		Target other = (Target) obj;
-		return qContainers.equals(other.qContainers);
+		return containers.equals(other.containers);
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 + qContainers.hashCode();
+		return 31 + containers.hashCode();
 	}
 
 	@Override
@@ -205,7 +212,7 @@ public class Target implements Comparable<Target> {
 			return -1;
 		}
 		else {
-			return qContainers.toString().compareTo(o.qContainers.toString());
+			return containers.toString().compareTo(o.containers.toString());
 		}
 	}
 }
