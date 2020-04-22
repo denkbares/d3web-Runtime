@@ -246,8 +246,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// (only if there is any benefit target)
 		initializeSearchModel(caseObject);
 		SearchModel searchModel = caseObject.getSearchModel();
-		if (searchModel.getBestBenefit() != 0
-				&& solutionsRater.check(caseObject.getUndiscriminatedSolutions())) {
+		Set<Solution> remaining = caseObject.getUndiscriminatedSolutions();
+		if (searchModel.getBestBenefit() != 0 && solutionsRater.check(remaining)) {
 			search(session, searchModel);
 		}
 		// sets the new path based on the result stored in the search model
@@ -736,7 +736,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		if (!manualMode && !sessionObject.isAbortedManuallySetTarget()) {
 			// target was manually set and the path was reset before it was
 			// finished -> try to calculate to the target again
-			if (sessionObject.getUndiscriminatedSolutions() == null && sessionObject.getUnreachedTarget() != null) {
+			Set<Solution> remaining = sessionObject.getUndiscriminatedSolutions();
+			if (remaining == null && sessionObject.getUnreachedTarget() != null) {
 				try {
 					calculateNewPathTo(sessionObject, new Target(sessionObject.getUnreachedTarget()));
 				}
