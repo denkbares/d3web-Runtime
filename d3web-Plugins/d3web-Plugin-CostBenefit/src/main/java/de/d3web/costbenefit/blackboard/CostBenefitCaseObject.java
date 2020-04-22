@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
@@ -66,7 +68,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private SearchModel searchModel;
 	private List<Fact> indicatedFacts = new LinkedList<>();
 	private int currentPathIndex = -1;
-	private Set<Solution> undiscriminatedSolutions = new HashSet<>();
+	private Set<Solution> undiscriminatedSolutions = null;
 	private final Set<Target> discriminatingTargets = new HashSet<>();
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
@@ -161,10 +163,18 @@ public class CostBenefitCaseObject implements SessionObject {
 		return indicatedFacts.remove(fact);
 	}
 
+	/**
+	 * Returns the solutions that are still to be discriminated, if known, or null if not yet known.
+	 */
+	@Nullable
 	public Set<Solution> getUndiscriminatedSolutions() {
 		return undiscriminatedSolutions;
 	}
 
+	/**
+	 * Sets the solutions that are still to be discriminated. It may be set to <code>null</code>> if these solutions are
+	 * not known.
+	 */
 	public void setUndiscriminatedSolutions(Set<Solution> undiscriminatedSolutions) {
 		this.undiscriminatedSolutions = undiscriminatedSolutions;
 	}
@@ -386,7 +396,8 @@ public class CostBenefitCaseObject implements SessionObject {
 		// if the current set of undiscriminated solutions is null
 		// this indicated that we will not check for undiscriminated solutions
 		// at all
-		if (this.getUndiscriminatedSolutions() == null) return false;
+		Set<Solution> previousSolutions = this.undiscriminatedSolutions;
+		if (previousSolutions == null) return false;
 
 		// otherwise calculate the current solution to be discriminated and
 		// compare them to the previous ones
@@ -394,30 +405,23 @@ public class CostBenefitCaseObject implements SessionObject {
 		for (StrategicSupport strategicSupport : CostBenefitUtil.getStrategicSupports(session)) {
 			currentSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
 		}
-		final Set<Solution> previousSolutions = this.getUndiscriminatedSolutions();
 		if (!previousSolutions.containsAll(currentSolutions)) {
 			String message = "The sprint group has increased/changed.";
 			if (verbose) {
-				message += "\nPrevious group: "
-						+ previousSolutions
+				message += "\nPrevious group: " + previousSolutions
 						+ "\nActual group: " + currentSolutions;
 			}
 			this.getSession().getProtocol().addEntry(
-					new TextProtocolEntry(
-							this.getSession().getPropagationManager().getPropagationTime(),
-							message));
+					new TextProtocolEntry(this.getSession().getPropagationManager().getPropagationTime(), message));
 			Log.warning(message);
 		}
 		Set<TerminologyObject> conflictingQuestions = CostBenefitUtil.calculatePossibleConflictingQuestions(
 				this.getSession(), currentSolutions);
 		if (!this.getConflictingObjects().containsAll(conflictingQuestions)) {
 			this.setConflictingObjects(conflictingQuestions);
-			String message = "The following questions decreased the covering value of the sprint group: "
-					+ conflictingQuestions;
+			String message = "The following questions decreased the covering value of the sprint group: " + conflictingQuestions;
 			this.getSession().getProtocol().addEntry(
-					new TextProtocolEntry(
-							this.getSession().getPropagationManager().getPropagationTime(),
-							message));
+					new TextProtocolEntry(this.getSession().getPropagationManager().getPropagationTime(), message));
 			Log.warning(message);
 		}
 		return !previousSolutions.equals(currentSolutions);
