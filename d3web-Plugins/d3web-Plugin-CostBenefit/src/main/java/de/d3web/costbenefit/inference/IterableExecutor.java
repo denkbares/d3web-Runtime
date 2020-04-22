@@ -92,11 +92,20 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		// initialize thread pool if not exists
 		if (threadPool == null) {
 			int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
-			threadPool = Executors.newFixedThreadPool(threadCount);
+			threadPool = Executors.newFixedThreadPool(threadCount, IterableExecutor::newDemon);
 			Log.info("created multicore thread pool of size " + threadCount);
 		}
 		// and return new executor based on the thread pool
 		return new IterableExecutor<>(threadPool);
+	}
+
+	/**
+	 * Creates a new demon thread for the thread pool.
+	 */
+	private static Thread newDemon(Runnable runnable) {
+		Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+		thread.setDaemon(true);
+		return thread;
 	}
 
 	/**
