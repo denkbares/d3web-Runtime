@@ -181,9 +181,19 @@ public class CostBenefitProperties {
 	private static final Pattern mechanicalPattern = Pattern.compile("(target_state_questionnaire#mechanicalCheck_\\w+)", Pattern.CASE_INSENSITIVE);
 
 	/**
+	 * Returns true if the question is a state question of any UUTState kind.
+	 *
+	 * @param stateQuestion the (potential) state question to be checked
+	 * @return true for UUTState questions
+	 */
+	public static boolean hasUUTState(Question stateQuestion) {
+		return getUUTState(stateQuestion) != null;
+	}
+
+	/**
 	 * Returns null if the question is not a state question, otherwise the type of the state is returned.
 	 *
-	 * @param stateQuestion the (potantial) state question to be checked
+	 * @param stateQuestion the (potential) state question to be checked
 	 * @return the type of the state or null for non-state questions
 	 */
 	public static UUTState getUUTState(Question stateQuestion) {
