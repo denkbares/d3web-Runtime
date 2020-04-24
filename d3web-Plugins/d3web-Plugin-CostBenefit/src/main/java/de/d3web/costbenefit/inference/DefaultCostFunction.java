@@ -20,7 +20,6 @@ package de.d3web.costbenefit.inference;
 
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
-import de.d3web.core.session.Session;
 
 /**
  * The DefaultCostFunction returns the static costs of a QContainer. The actual
@@ -29,14 +28,6 @@ import de.d3web.core.session.Session;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class DefaultCostFunction implements CostFunction {
-
-	public DefaultCostFunction() {
-	}
-
-	@Override
-	public double getCosts(QContainer qcon, Session session) {
-		return BasicProperties.getCost(qcon);
-	}
 
 	@Override
 	public double getStaticCosts(QContainer qcon) {

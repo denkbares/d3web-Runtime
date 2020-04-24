@@ -77,6 +77,7 @@ public class SearchModel {
 		PSMethodCostBenefit solver = session.getPSMethodInstance(PSMethodCostBenefit.class);
 		if (solver != null) {
 			costFunction = solver.getCostFunction();
+			costFunction.init(session.getKnowledgeBase());
 		}
 		else {
 			costFunction = new DefaultCostFunction();
