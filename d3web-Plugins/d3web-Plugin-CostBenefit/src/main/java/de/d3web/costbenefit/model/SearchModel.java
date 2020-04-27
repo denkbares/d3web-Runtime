@@ -367,6 +367,13 @@ public class SearchModel {
 		return blockedQContainers;
 	}
 
+	/**
+	 * Returns a set of all available state transitions of the knowledge base that are allowed to be used to established
+	 * required precondition states. These are all transitions, that are neither currently blocked, nor are transitions
+	 * of target-only test steps.
+	 *
+	 * @return the state transitions currently usable for establishing precondition states
+	 */
 	public Set<StateTransition> getTransitionalStateTransitions() {
 		return transitionalStateTransitions;
 	}
