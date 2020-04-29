@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -36,17 +36,16 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.session.Copyable;
 
 /**
- * This class organizes the facts of one type for one terminology object. It is
- * capable to merge different opinions (facts from different solvers) to one
- * final value of the terminology object.
+ * This class organizes the facts of one type for one terminology object. It is capable to merge different opinions
+ * (facts from different solvers) to one final value of the terminology object.
  * <p>
  * <b>Note:<br>
- * This class is for internal purpose only. Until you do not provide an own
- * blackboard implementation, do not use this class directly! </b>
- * 
+ * This class is for internal purpose only. Until you do not provide an own blackboard implementation, do not use this
+ * class directly! </b>
+ *
  * @author Volker Belli (denkbares GmbH)
  */
-final class FactAggregator implements Copyable<FactAggregator> {
+public final class FactAggregator implements Copyable<FactAggregator> {
 
 	private final List<Fact> facts;
 	private Fact mergedFact;
@@ -58,7 +57,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Copy constructor to create a deep copy of this instance.
-	 * 
+	 *
 	 * @param source the source instance to be copied
 	 */
 	private FactAggregator(FactAggregator source) {
@@ -73,9 +72,9 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
-	 * Adds a new fact to the aggregator. If a fact with the same source as the
-	 * new fact already exists, it will be overwritten.
-	 * 
+	 * Adds a new fact to the aggregator. If a fact with the same source as the new fact already exists, it will be
+	 * overwritten.
+	 *
 	 * @param fact the fact to be added
 	 */
 	public void addFact(Fact fact) {
@@ -87,7 +86,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Removes the specified fact from this aggregator.
-	 * 
+	 *
 	 * @param fact the fact to be removed
 	 */
 	public void removeFact(Fact fact) {
@@ -105,7 +104,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Removes the fact for the specified source from this aggregator.
-	 * 
+	 *
 	 * @param source the source to remove facts for
 	 */
 	public void removeFactsBySource(Object source) {
@@ -124,7 +123,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Returns the merged fact of all currently added facts of this aggregator.
-	 * 
+	 *
 	 * @return the merged fact
 	 */
 	public Fact getMergedFact() {
@@ -136,7 +135,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Returns the merged fact of all currently added facts of this aggregator.
-	 * 
+	 *
 	 * @return the merged fact
 	 */
 	public Collection<Fact> getAllFacts() {
@@ -203,14 +202,12 @@ final class FactAggregator implements Copyable<FactAggregator> {
 		else {
 			this.mergedFact = mergeFactsByPriority(mergedFacts);
 		}
-
 	}
 
 	/**
-	 * Merges the facts by the priority of the PSMethods derived that facts.
-	 * This method if used, if the facts does not have a priority of their own,
-	 * such as Answers.
-	 * 
+	 * Merges the facts by the priority of the PSMethods derived that facts. This method if used, if the facts does not
+	 * have a priority of their own, such as Answers.
+	 *
 	 * @param mergedFacts the facts to be merged
 	 * @return the fact with the highest PSMethod's priority
 	 */
@@ -229,10 +226,9 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
-	 * Merges the facts of solution ratings by the priority of the ratings. In
-	 * addition it is considered, that the source solvers (e.g. user) have a
-	 * higher priority as other solvers.
-	 * 
+	 * Merges the facts of solution ratings by the priority of the ratings. In addition it is considered, that the
+	 * source solvers (e.g. user) have a higher priority as other solvers.
+	 *
 	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
 	 */
@@ -241,10 +237,9 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
-	 * Merges the facts of indications by the priority of the ratings. In
-	 * addition it is considered, that the source solvers (e.g. user) have a
-	 * higher priority as other solvers.
-	 * 
+	 * Merges the facts of indications by the priority of the ratings. In addition it is considered, that the source
+	 * solvers (e.g. user) have a higher priority as other solvers.
+	 *
 	 * @param facts the facts to be merged
 	 * @return the fact with the highest priority
 	 */
@@ -254,7 +249,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Returns whether the aggregator is empty due to having no facts.
-	 * 
+	 *
 	 * @return whether the aggregator is empty
 	 */
 	public boolean isEmpty() {
@@ -262,9 +257,9 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
-	 * Returns whether the aggregator is empty for a specific problem or
-	 * stratgic solver due to having no facts from this solver.
-	 * 
+	 * Returns whether the aggregator is empty for a specific problem or stratgic solver due to having no facts from
+	 * this solver.
+	 *
 	 * @param psMethod the solver to check for facts
 	 * @return whether the aggregator is empty
 	 */
@@ -278,9 +273,8 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
-	 * Returns whether the aggregator has facts for a specific problem or
-	 * stratgic solver.
-	 * 
+	 * Returns whether the aggregator has facts for a specific problem or stratgic solver.
+	 *
 	 * @param psMethod the solver to check for facts
 	 * @return if there are facts for the solver
 	 */
@@ -290,7 +284,7 @@ final class FactAggregator implements Copyable<FactAggregator> {
 
 	/**
 	 * Merges and returns all facts of one psmethod
-	 * 
+	 *
 	 * @return merged Fact
 	 */
 	public Fact getMergedFact(PSMethod psMethod) {
@@ -327,11 +321,11 @@ final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
-	 * Returns a collection of all problem and strategic solvers that are
-	 * contributing at least one fact to this FactAggregator.
-	 * 
-	 * @created 02.09.2011
+	 * Returns a collection of all problem and strategic solvers that are contributing at least one fact to this
+	 * FactAggregator.
+	 *
 	 * @return the contributing solver instances
+	 * @created 02.09.2011
 	 */
 	public Collection<PSMethod> getContributingPSMethods() {
 		Set<PSMethod> result = new HashSet<>();

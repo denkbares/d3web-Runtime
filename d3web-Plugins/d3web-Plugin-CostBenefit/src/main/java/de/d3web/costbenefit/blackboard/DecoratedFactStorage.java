@@ -19,14 +19,17 @@
 package de.d3web.costbenefit.blackboard;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
-import de.d3web.core.session.blackboard.DefaultFactStorage;
 import de.d3web.core.session.blackboard.Fact;
+import de.d3web.core.session.blackboard.FactAggregator;
 import de.d3web.core.session.blackboard.FactStorage;
 
 /**
@@ -43,57 +46,43 @@ import de.d3web.core.session.blackboard.FactStorage;
  */
 public class DecoratedFactStorage implements FactStorage {
 
-	private final FactStorage covering;
+	private final Map<TerminologyObject, FactAggregator> mediators = new HashMap<>();
 	private final FactStorage decorated;
-	private final Set<TerminologyObject> coveredObjects;
 
 	/**
-	 * Creates a new DecoratedFactStorage that covers the specified fact
-	 * storage.
+	 * Creates a new DecoratedFactStorage that covers the specified fact storage.
 	 *
 	 * @param decoratedStorage the FactStorage to be covered.
 	 */
 	public DecoratedFactStorage(FactStorage decoratedStorage) {
-		this(new DefaultFactStorage(), decoratedStorage, new HashSet<>());
-	}
-
-	private DecoratedFactStorage(FactStorage covering, FactStorage decorated, Set<TerminologyObject> coveredObjects) {
-		this.covering = covering;
-		this.decorated = decorated;
-		this.coveredObjects = coveredObjects;
+		this.decorated = decoratedStorage;
 	}
 
 	@Override
 	public DecoratedFactStorage copy() {
-		return new DecoratedFactStorage(
-				covering.copy(), decorated, new HashSet<>(coveredObjects));
+		// create a copy with the same decorated item and a copy of the existing aggregators
+		DecoratedFactStorage copy = new DecoratedFactStorage(decorated);
+		mediators.forEach((object, aggegator) -> copy.mediators.put(object, aggegator.copy()));
+		return copy;
 	}
 
 	/**
-	 * Ensures that the specified {@link TerminologyObject} uses our own fact
-	 * storage instead of the covered one, after this method is called.
-	 * 
-	 * @created 16.09.2011
+	 * Ensures that the specified {@link TerminologyObject} uses our own fact storage instead of the covered one, after
+	 * this method is called.
+	 *
 	 * @param terminologyObject the object to be covered
+	 * @created 16.09.2011
 	 */
-	private void makeCovered(TerminologyObject terminologyObject) {
-		boolean isNew = coveredObjects.add(terminologyObject);
-		if (isNew) {
+	private FactAggregator makeCovered(TerminologyObject terminologyObject) {
+		return mediators.computeIfAbsent(terminologyObject, object -> {
+			FactAggregator aggregator = new FactAggregator();
 			// thrill-seekers only: we only add the merged fact instead of all
-			Fact existingFact = decorated.getMergedFact(terminologyObject);
+			Fact existingFact = decorated.getMergedFact(object);
 			if (existingFact != null) {
-				this.covering.add(existingFact);
+				aggregator.addFact(existingFact);
 			}
-			// Collection<Fact> allFacts =
-			// this.decorated.getAllFacts(terminologyObject);
-			// for (Fact fact : allFacts) {
-			// this.covering.add(fact);
-			// }
-		}
-	}
-
-	private boolean isCovered(TerminologyObject terminologyObject) {
-		return coveredObjects.contains(terminologyObject);
+			return aggregator;
+		});
 	}
 
 	// -------
@@ -102,26 +91,23 @@ public class DecoratedFactStorage implements FactStorage {
 
 	@Override
 	public void add(Fact fact) {
-		makeCovered(fact.getTerminologyObject());
-		covering.add(fact);
+		makeCovered(fact.getTerminologyObject()).addFact(fact);
 	}
 
 	@Override
 	public void remove(Fact fact) {
-		makeCovered(fact.getTerminologyObject());
-		covering.remove(fact);
+		makeCovered(fact.getTerminologyObject()).removeFact(fact);
 	}
 
 	@Override
 	public void remove(TerminologyObject termObject) {
-		makeCovered(termObject);
-		covering.remove(termObject);
+		// remove termObject by overwrite with empty aggregator
+		mediators.put(termObject, new FactAggregator());
 	}
 
 	@Override
 	public void remove(TerminologyObject termObject, Object source) {
-		makeCovered(termObject);
-		covering.remove(termObject, source);
+		makeCovered(termObject).removeFactsBySource(source);
 	}
 
 	// -------
@@ -130,79 +116,87 @@ public class DecoratedFactStorage implements FactStorage {
 
 	@Override
 	public Fact getMergedFact(TerminologyObject termObject) {
-		return isCovered(termObject)
-				? covering.getMergedFact(termObject)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? aggregator.getMergedFact()
 				: decorated.getMergedFact(termObject);
 	}
 
 	@Override
 	public Collection<Fact> getAllFacts(TerminologyObject termObject) {
-		return isCovered(termObject)
-				? covering.getAllFacts(termObject)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? Collections.unmodifiableCollection(aggregator.getAllFacts())
 				: decorated.getAllFacts(termObject);
 	}
 
 	@Override
 	public Fact getMergedFact(TerminologyObject termObject, PSMethod psMethod) {
-		return isCovered(termObject)
-				? covering.getMergedFact(termObject, psMethod)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? aggregator.getMergedFact(psMethod)
 				: decorated.getMergedFact(termObject, psMethod);
 	}
 
 	@Override
 	public Fact getFact(TerminologyObject termObject, PSMethod psMethod, Object source) {
-		return isCovered(termObject)
-				? covering.getFact(termObject, psMethod, source)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? aggregator.getFact(psMethod, source)
 				: decorated.getFact(termObject, psMethod, source);
 	}
 
 	@Override
 	public boolean hasFact(TerminologyObject termObject) {
-		return isCovered(termObject)
-				? covering.hasFact(termObject)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? !aggregator.isEmpty()
 				: decorated.hasFact(termObject);
 	}
 
 	@Override
 	public boolean hasFact(TerminologyObject termObject, PSMethod method) {
-		return isCovered(termObject)
-				? covering.hasFact(termObject, method)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? aggregator.hasFacts(method)
 				: decorated.hasFact(termObject, method);
 	}
 
 	@Override
 	public Collection<TerminologyObject> getValuedObjects() {
-		Set<TerminologyObject> allObjects = new HashSet<>(
-				decorated.getValuedObjects());
-		allObjects.addAll(covering.getValuedObjects());
+		Collection<TerminologyObject> self = mediators.keySet();
+		Collection<TerminologyObject> other = decorated.getValuedObjects();
+		Set<TerminologyObject> allObjects = new HashSet<>((self.size() + other.size()) * 3 / 2);
+		allObjects.addAll(self);
+		allObjects.addAll(other);
 		return allObjects;
 	}
 
 	@Override
 	public Collection<PSMethod> getContributingPSMethods(TerminologyObject termObject) {
-		return isCovered(termObject)
-				? covering.getContributingPSMethods(termObject)
+		FactAggregator aggregator = mediators.get(termObject);
+		return (aggregator != null)
+				? aggregator.getContributingPSMethods()
 				: decorated.getContributingPSMethods(termObject);
 	}
 
 	/**
-	 * Returns the merged fact of this {@link DecoratedFactStorage} or
-	 * (transitively) the first decorated instance in the sequence. In contrast
-	 * to {@link #getMergedFact(TerminologyObject)}, it does not return the
-	 * merged fact of the underlying original session.
-	 * 
-	 * @created 05.06.2012
+	 * Returns the merged fact of this {@link DecoratedFactStorage} or (transitively) the first decorated instance in
+	 * the sequence. In contrast to {@link #getMergedFact(TerminologyObject)}, it does not return the merged fact of the
+	 * underlying original session.
+	 *
 	 * @param object the object to get the merged fact for
 	 * @return the merged fact or null if it has not been decorated
+	 * @created 05.06.2012
 	 */
 	public Fact getDecoratedMergedFact(ValueObject object) {
-		if (isCovered(object)) {
-			return covering.getMergedFact(object);
+		FactAggregator aggregator = mediators.get(object);
+		if (aggregator != null) {
+			return aggregator.getMergedFact();
 		}
 		if (decorated instanceof DecoratedFactStorage) {
 			return ((DecoratedFactStorage) decorated).getDecoratedMergedFact(object);
 		}
 		return null;
 	}
-
 }
