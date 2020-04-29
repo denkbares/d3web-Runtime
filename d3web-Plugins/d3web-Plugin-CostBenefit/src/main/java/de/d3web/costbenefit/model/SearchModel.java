@@ -70,7 +70,7 @@ public class SearchModel {
 	private int calculationSteps = -1;
 
 	// debug fields, left untouched if debugging is not enabled
-	private final MultiMap<Question, QuestionValue> reachedStates = new DefaultMultiMap<>();
+	private final MultiMap<Question, QuestionValue> reachedStates = DefaultMultiMap.newConcurrent();
 
 	public SearchModel(Session session) {
 		this.session = session;
