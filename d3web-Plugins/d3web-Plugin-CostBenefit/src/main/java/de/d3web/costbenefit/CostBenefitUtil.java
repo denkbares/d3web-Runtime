@@ -104,21 +104,21 @@ public final class CostBenefitUtil {
 	 * @created 15.09.2011
 	 */
 	public static Session createSearchCopy(Session session) {
-		Session testCase = new CopiedSession(session);
-		testCase.getBlackboard().setSourceRecording(false);
+		Session copy = new CopiedSession(session);
+		copy.getBlackboard().setSourceRecording(false);
 		Blackboard blackboard = session.getBlackboard();
 		List<? extends Question> answeredQuestions = blackboard.getAnsweredQuestions();
 		try {
-			testCase.getPropagationManager().openPropagation();
+			copy.getPropagationManager().openPropagation();
 			for (Question q : answeredQuestions) {
 				Fact fact = blackboard.getValueFact(q);
-				testCase.getBlackboard().addValueFact(fact);
+				copy.getBlackboard().addValueFact(fact);
 			}
 		}
 		finally {
-			testCase.getPropagationManager().commitPropagation();
+			copy.getPropagationManager().commitPropagation();
 		}
-		return testCase;
+		return copy;
 	}
 
 	public static void undo(Session session, Collection<Fact> facts) {
