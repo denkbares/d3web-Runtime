@@ -161,16 +161,6 @@ public class SearchModel {
 	}
 
 	/**
-	 * This method signals that a certain precondition state has been established. This method is for debugging
-	 * purposes. If debugging is not enabled, the method returns without any changes.
-	 */
-	public void stateVisited(Question stateQuestion, Value value) {
-		if (PSMethodCostBenefit.isDebugging() && (value instanceof QuestionValue)) {
-			reachedStates.put(stateQuestion, (QuestionValue) value);
-		}
-	}
-
-	/**
 	 * Returns the reached state values for the specified state question.
 	 *
 	 * @param stateQuestion the state question to get all reached values for
