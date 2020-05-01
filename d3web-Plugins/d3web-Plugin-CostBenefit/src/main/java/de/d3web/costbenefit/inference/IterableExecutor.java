@@ -41,6 +41,7 @@ import com.denkbares.utils.Log;
 public class IterableExecutor<T> implements Iterable<Future<T>> {
 
 	// share one thread pool among the whole virtual machine
+	private static final int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
 	private static ExecutorService threadPool = null;
 
 	/**
@@ -91,7 +92,6 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 	public static <T> IterableExecutor<T> createExecutor() {
 		// initialize thread pool if not exists
 		if (threadPool == null) {
-			int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
 			threadPool = Executors.newFixedThreadPool(threadCount, IterableExecutor::newDemon);
 			Log.info("created multicore thread pool of size " + threadCount);
 		}
@@ -106,6 +106,10 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		Thread thread = Executors.defaultThreadFactory().newThread(runnable);
 		thread.setDaemon(true);
 		return thread;
+	}
+
+	public static int getThreadCount() {
+		return threadCount;
 	}
 
 	/**
