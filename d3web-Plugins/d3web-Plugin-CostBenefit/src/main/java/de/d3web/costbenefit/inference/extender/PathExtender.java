@@ -21,12 +21,15 @@ package de.d3web.costbenefit.inference.extender;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.denkbares.utils.Stopwatch;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.costbenefit.CostBenefitUtil;
+import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
@@ -50,6 +53,17 @@ public class PathExtender implements SearchAlgorithm, SessionObjectSource<PathEx
 
 	public SearchAlgorithm getDelegateAlgorithm() {
 		return delegate;
+	}
+
+	@NotNull
+	@Override
+	public AbortStrategy getAbortStrategy() {
+		return delegate.getAbortStrategy();
+	}
+
+	@Override
+	public void setAbortStrategy(AbortStrategy abortStrategy) {
+		delegate.setAbortStrategy(abortStrategy);
 	}
 
 	@Override
