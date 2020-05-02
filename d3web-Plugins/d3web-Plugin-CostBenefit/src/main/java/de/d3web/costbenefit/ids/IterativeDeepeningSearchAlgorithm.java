@@ -18,6 +18,8 @@
  */
 package de.d3web.costbenefit.ids;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
@@ -40,10 +42,13 @@ public class IterativeDeepeningSearchAlgorithm implements SearchAlgorithm {
 		iterativeDeepeningSearch.search(session);
 	}
 
+	@NotNull
+	@Override
 	public AbortStrategy getAbortStrategy() {
 		return abortStrategy;
 	}
 
+	@Override
 	public void setAbortStrategy(AbortStrategy abortStrategy) {
 		this.abortStrategy = abortStrategy;
 	}

@@ -18,6 +18,8 @@
  */
 package de.d3web.costbenefit.inference;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.model.SearchModel;
 
@@ -35,4 +37,19 @@ public interface SearchAlgorithm {
 	 * @param model   the initialized search model to work on
 	 */
 	void search(Session session, SearchModel model);
+
+	/**
+	 * Returns the abort strategy that is used for searching with this search algorithm
+	 *
+	 * @return the abort strategy
+	 */
+	@NotNull
+	AbortStrategy getAbortStrategy();
+
+	/**
+	 * Sets the specified abort strategy to be used for searching with this algorithm.
+	 *
+	 * @param abortStrategy the new abort strategy to be set
+	 */
+	void setAbortStrategy(AbortStrategy abortStrategy);
 }
