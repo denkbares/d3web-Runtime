@@ -255,7 +255,6 @@ class IterativeDeepeningSearch {
 				List<Fact> normals = successor.setNormalValues(session);
 				StateTransition stateTransition = successor.getStateTransition();
 				List<Fact> fired = (stateTransition == null) ? Collections.emptyList() : stateTransition.fire(session);
-				model.stateVisited(fired);
 				findCheapestPath(actual, depth - 1, session);
 				actual.pop();
 				CostBenefitUtil.undo(session, new ConcatenateCollection<>(normals, fired));

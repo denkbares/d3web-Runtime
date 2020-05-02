@@ -18,7 +18,6 @@
  */
 package de.d3web.costbenefit.model;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,16 +29,9 @@ import java.util.TreeSet;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.denkbares.collections.DefaultMultiMap;
-import com.denkbares.collections.MultiMap;
 import com.denkbares.utils.Log;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
-import de.d3web.core.knowledge.terminology.Question;
-import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
-import de.d3web.core.session.Value;
-import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.inference.BlockingReason;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
@@ -68,9 +60,6 @@ public class SearchModel {
 	private boolean aborted = false;
 	private long calculationTime = -1;
 	private int calculationSteps = -1;
-
-	// debug fields, left untouched if debugging is not enabled
-	private final MultiMap<Question, QuestionValue> reachedStates = DefaultMultiMap.newConcurrent();
 
 	public SearchModel(Session session) {
 		this.session = session;
@@ -140,34 +129,6 @@ public class SearchModel {
 				targets.add(copy);
 			}
 		}
-
-		reachedStates.putAll(other.reachedStates);
-	}
-
-	/**
-	 * This method signals that a certain precondition state has been established. This method is for debugging
-	 * purposes. If debugging is not enabled, the method returns without any changes.
-	 */
-	public void stateVisited(Collection<Fact> transitionFacts) {
-		if (PSMethodCostBenefit.isDebugging()) {
-			for (Fact fact : transitionFacts) {
-				TerminologyObject object = fact.getTerminologyObject();
-				Value value = fact.getValue();
-				if ((object instanceof Question) && (value instanceof QuestionValue)) {
-					reachedStates.put((Question) object, (QuestionValue) value);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Returns the reached state values for the specified state question.
-	 *
-	 * @param stateQuestion the state question to get all reached values for
-	 * @return all reached state values for that question
-	 */
-	public Set<QuestionValue> getReachedStates(Question stateQuestion) {
-		return reachedStates.getValues(stateQuestion);
 	}
 
 	/**
