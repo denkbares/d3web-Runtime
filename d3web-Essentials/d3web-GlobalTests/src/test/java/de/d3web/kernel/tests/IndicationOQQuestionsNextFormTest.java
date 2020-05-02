@@ -20,16 +20,13 @@
 
 package de.d3web.kernel.tests;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.knowledge.Indication;
@@ -50,8 +47,10 @@ import de.d3web.interview.DefaultForm;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
+
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This test is designed to control the indication mechanisms (calculation/
@@ -101,7 +100,7 @@ public class IndicationOQQuestionsNextFormTest {
 		addTerminologyObjects();
 		addRules();
 		session = SessionFactory.createSession(kb);
-		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview = Interview.get(session);
 		agenda = interview.getInterviewAgenda();
 	}
 

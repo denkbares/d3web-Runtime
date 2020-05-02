@@ -29,7 +29,6 @@ import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This class always creates a new {@link Form} that contains the
@@ -125,7 +124,7 @@ public class CurrentQContainerFormStrategy implements FormStrategy {
 	 */
 	private boolean hasActiveQuestions(QContainer container, Session session) {
 		FormStrategyUtils utils = new FormStrategyUtils(session);
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		for (TerminologyObject child : container.getChildren()) {
 			if (child instanceof Question) {
 				Question question = (Question) child;

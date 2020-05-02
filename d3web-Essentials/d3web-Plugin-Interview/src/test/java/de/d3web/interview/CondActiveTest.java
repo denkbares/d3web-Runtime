@@ -35,7 +35,6 @@ import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.Unknown;
-import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.interview.inference.condition.CondActive;
 
 import static junit.framework.TestCase.assertFalse;
@@ -195,7 +194,7 @@ public class CondActiveTest extends IndicationTest {
 	}
 
 	private Interview getInterview(Session session) {
-		return session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		return Interview.get(session);
 	}
 
 	private void testCondActives(Session session, CondActive condActive1, CondActive condActive2) throws NoAnswerException, UnknownAnswerException {

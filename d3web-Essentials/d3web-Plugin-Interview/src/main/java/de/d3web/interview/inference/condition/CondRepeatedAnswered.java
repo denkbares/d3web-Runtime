@@ -36,7 +36,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.interviewmanager.InterviewAgenda;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This condition checks, if an NamedObject (e.g. Question) has a value or was
@@ -79,9 +78,8 @@ public class CondRepeatedAnswered extends TerminalCondition {
 
 	@Override
 	public boolean eval(Session session) {
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
-		boolean repeatedIndicated = session.getBlackboard()
-				.getIndication(getQASet())
+		Interview interview = Interview.get(session);
+		boolean repeatedIndicated = session.getBlackboard().getIndication(getQASet())
 				.hasState(Indication.State.REPEATED_INDICATED);
 		boolean active = interview.getInterviewAgenda().hasState(getQASet(), InterviewAgenda.InterviewState.ACTIVE);
 		return repeatedIndicated && !active;

@@ -55,7 +55,6 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * Tests the combination of Rules and the CostBenefit
@@ -138,7 +137,7 @@ public class TestRuleCBCompatibilityQContainer {
 		Session session = SessionFactory.createSession(kb);
 		ExpertMode em = ExpertMode.getExpertMode(session);
 		em.selectTarget(target);
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		Form nextForm = interview.nextForm();
 		CostBenefitCaseObject cbObject = session.getSessionObject(session.getPSMethodInstance(PSMethodCostBenefit.class));
 		Assert.assertEquals(0, cbObject.getCurrentPathIndex());

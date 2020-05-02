@@ -18,13 +18,12 @@
  */
 package de.d3web.core.session.interviewmanager.tests;
 
-import static junit.framework.Assert.assertEquals;
-
 import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -41,8 +40,8 @@ import de.d3web.interview.EmptyForm;
 import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Checks, that the indication of follow-up questions is correctly performed
@@ -95,7 +94,7 @@ public class IndicationInACyclicHierarchy {
 		kb.setInitQuestions(Collections.singletonList(pregnancyQuestions));
 
 		session = SessionFactory.createSession(kb);
-		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview = Interview.get(session);
 		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = interview.getInterviewAgenda();
 	}

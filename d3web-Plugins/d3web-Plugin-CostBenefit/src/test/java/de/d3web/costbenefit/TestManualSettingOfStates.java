@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -43,8 +43,6 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * This class tests setting states that are used in preconditions and value
@@ -96,7 +94,7 @@ public class TestManualSettingOfStates {
 
 	private void answerInterviewAndResetState(QuestionOC statusA, ChoiceValue valueA_A, ChoiceValue valueA_B, QuestionOC next, ChoiceValue okValue, QContainer qContainer2, QuestionOC finish, ChoiceValue doneValue, Session session, ExpertMode expertMode) throws AbortException {
 		expertMode.selectTarget(qContainer2);
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		Form nextForm = interview.nextForm();
 		Assert.assertEquals(next, nextForm.getActiveQuestions().get(0));
 		session.getBlackboard().addValueFact(FactFactory.createUserEnteredFact(next, okValue));

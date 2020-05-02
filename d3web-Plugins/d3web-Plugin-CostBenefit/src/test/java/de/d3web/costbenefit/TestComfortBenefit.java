@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondNumGreater;
 import de.d3web.core.inference.condition.CondNumLess;
@@ -40,20 +41,21 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.values.NumValue;
+import de.d3web.costbenefit.inference.AbortStrategy;
 import de.d3web.costbenefit.inference.ComfortBenefit;
 import de.d3web.costbenefit.inference.ConditionalValueSetter;
-import de.d3web.costbenefit.inference.extender.PathExtender;
+import de.d3web.costbenefit.inference.NoAbortStrategy;
 import de.d3web.costbenefit.inference.SearchAlgorithm;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
+import de.d3web.costbenefit.inference.extender.PathExtender;
 import de.d3web.costbenefit.model.Path;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
-import com.denkbares.plugin.test.InitPluginManager;
 
 /**
  * Tests {@link ComfortBenefit}
- * 
+ *
  * @author Markus Friedrich (denkbares GmbH)
  * @created 02.02.2012
  */
@@ -231,7 +233,6 @@ public class TestComfortBenefit {
 			}
 			return false;
 		}
-
 	}
 
 	private static class TestAlgorithm implements SearchAlgorithm {
@@ -241,6 +242,14 @@ public class TestComfortBenefit {
 			// nothing to do, best cost benefit startPath is set in setUp
 		}
 
-	}
+		@NotNull
+		@Override
+		public AbortStrategy getAbortStrategy() {
+			return new NoAbortStrategy();
+		}
 
+		@Override
+		public void setAbortStrategy(AbortStrategy abortStrategy) {
+		}
+	}
 }

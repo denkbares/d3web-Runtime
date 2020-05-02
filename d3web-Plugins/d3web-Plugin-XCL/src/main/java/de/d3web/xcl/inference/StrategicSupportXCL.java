@@ -67,7 +67,7 @@ public class StrategicSupportXCL implements StrategicSupport {
 									 Collection<Solution> solutions, Session session) {
 		Map<List<Condition>, Float> map = new HashMap<>();
 		Collection<Question> questions = new HashSet<>();
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		FormStrategy formStrategy = interview.getFormStrategy();
 		for (QASet qaSet : qasets) {
 			questions.addAll(formStrategy.getActiveQuestions(qaSet, session));

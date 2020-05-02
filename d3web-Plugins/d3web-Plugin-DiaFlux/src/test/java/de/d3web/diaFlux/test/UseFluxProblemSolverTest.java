@@ -18,18 +18,16 @@
  */
 package de.d3web.diaFlux.test;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
@@ -58,10 +56,10 @@ import de.d3web.diaFlux.flow.StartNode;
 import de.d3web.diaFlux.inference.NodeActiveCondition;
 import de.d3web.indication.ActionInstantIndication;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.scoring.ActionHeuristicPS;
 import de.d3web.scoring.Score;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * First (small) test of FluxProblemSolver
@@ -160,7 +158,7 @@ public class UseFluxProblemSolverTest {
 		Rating solutionState = session.getBlackboard().getRating(solutionFoo);
 		assertTrue("Solution has wrong state. Expected 'UNCLEAR'",
 				solutionState.hasState(Rating.State.UNCLEAR));// this is true
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		List<InterviewObject> currentlyActiveObjects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
 		assertTrue("YesNoQuestion should be on Agenda", currentlyActiveObjects.contains(questionYN));
 		assertTrue("YesNoQuestion should be the next form",

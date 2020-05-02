@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.Rule;
 import de.d3web.core.inference.condition.CondEqual;
@@ -30,8 +31,6 @@ import de.d3web.indication.ActionNextQASet;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.indication.ActionRepeatedIndication;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 
 import static de.d3web.core.knowledge.Indication.State.*;
 import static de.d3web.core.manage.RuleFactory.setRuleParams;
@@ -261,7 +260,7 @@ public class IndicationTest {
 	@Test
 	public void testMultipleIndication() {
 		Session session = SessionFactory.createSession(kb);
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 
 		indicate(session, multipleIndicationQuestion1, MULTIPLE_INDICATED, 1);
 		indicate(session, multipleIndicationQuestion2, MULTIPLE_INDICATED, 2);
@@ -313,7 +312,7 @@ public class IndicationTest {
 	}
 
 	private Form getNextForm(Session session) {
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		return interview.nextForm();
 	}
 

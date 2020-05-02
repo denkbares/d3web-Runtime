@@ -54,7 +54,6 @@ import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 import static org.junit.Assert.*;
 
@@ -233,7 +232,7 @@ public class TestKfz {
 	public void testCase() {
 		Session session = SessionFactory.createSession(kb);
 
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		while (interview.nextForm().isNotEmpty()) {
 			assertTrue(!interview.nextForm().getActiveQuestions().isEmpty());
 			QASet qaSet = interview.nextForm().getActiveQuestions().get(0);

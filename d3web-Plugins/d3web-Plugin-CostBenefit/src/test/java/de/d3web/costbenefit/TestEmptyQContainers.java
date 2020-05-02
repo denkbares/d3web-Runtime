@@ -50,7 +50,6 @@ import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * Tests firing and proceeding of QContainers containing a ok Question and not
@@ -116,7 +115,7 @@ public class TestEmptyQContainers {
 				new ChoiceValue(lighting)));
 		Assert.assertEquals(b.toString(), blackboard.getValue(state).getValue().toString());
 		// check that follower will be the next QContainer:
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		Assert.assertEquals(followerQuestion,
 				interview.nextForm().getActiveQuestions().get(0));
 		Assert.assertTrue(interview.getInterviewAgenda().getCurrentlyActiveObjects().contains(

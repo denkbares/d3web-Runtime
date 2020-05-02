@@ -20,13 +20,10 @@
 
 package de.d3web.core.session.interviewmanager.tests;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -48,8 +45,8 @@ import de.d3web.interview.EmptyForm;
 import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
+
+import static junit.framework.Assert.*;
 
 public class CostBenefitAgendaSortingTest {
 
@@ -96,7 +93,7 @@ public class CostBenefitAgendaSortingTest {
 		costBenefit = new PSMethodCostBenefit();
 		costBenefit.init(session);
 
-		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview = Interview.get(session);
 		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = interview.getInterviewAgenda();
 	}

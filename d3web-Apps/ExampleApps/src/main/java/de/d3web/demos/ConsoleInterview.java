@@ -58,7 +58,6 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * Basic interview implementation to use a knowledge bsse in the console.
@@ -84,7 +83,7 @@ public class ConsoleInterview {
 
 	public ConsoleInterview(Session session, Locale lang) {
 		this.session = session;
-		this.interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		this.interview = Interview.get(session);
 		this.lang = lang;
 		this.keyboard = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 	}

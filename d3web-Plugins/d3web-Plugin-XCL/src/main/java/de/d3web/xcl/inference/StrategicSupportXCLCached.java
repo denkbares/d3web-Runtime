@@ -53,7 +53,6 @@ import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -134,7 +133,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	private static Collection<Question> getRelevantQuestions(Collection<? extends QASet> qasets, Session session) {
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		FormStrategy formStrategy = interview.getFormStrategy();
 		Set<Question> result = new HashSet<>();
 		for (QASet qaSet : qasets) {

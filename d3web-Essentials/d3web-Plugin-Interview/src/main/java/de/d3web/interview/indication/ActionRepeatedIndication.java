@@ -31,7 +31,6 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.indication.ActionNextQASet;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * This action type indicates a list of {@link QASet} instances no matter,
@@ -65,7 +64,7 @@ public class ActionRepeatedIndication extends ActionNextQASet {
 			session.getBlackboard().addInterviewFact(fact);
 			// notify immediately to enable usage in condition
 			PropagationEntry entry = new PropagationEntry(qaset, oldIndication, indication);
-			Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+			Interview interview = Interview.get(session);
 			interview.notifyFactChange(entry);
 		}
 	}

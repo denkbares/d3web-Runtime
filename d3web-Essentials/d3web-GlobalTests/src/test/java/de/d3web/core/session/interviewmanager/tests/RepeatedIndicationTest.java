@@ -25,6 +25,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
 import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -45,8 +46,6 @@ import de.d3web.interview.Interview;
 import de.d3web.interview.InterviewAgenda;
 import de.d3web.interview.NextUnansweredQuestionFormStrategy;
 import de.d3web.interview.indication.ActionRepeatedIndication;
-import de.d3web.interview.inference.PSMethodInterview;
-import com.denkbares.plugin.test.InitPluginManager;
 
 import static junit.framework.Assert.*;
 
@@ -102,7 +101,7 @@ public class RepeatedIndicationTest {
 		kb.setInitQuestions(Collections.singletonList(pregnancyQuestions));
 
 		session = SessionFactory.createSession(kb);
-		interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		interview = Interview.get(session);
 		interview.setFormStrategy(new NextUnansweredQuestionFormStrategy());
 		agenda = interview.getInterviewAgenda();
 	}

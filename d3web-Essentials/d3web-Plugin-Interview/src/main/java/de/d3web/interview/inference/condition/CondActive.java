@@ -19,7 +19,6 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Session;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * Checks whether the given QASets are currently active or not.
@@ -169,7 +168,7 @@ public class CondActive extends TerminalCondition {
 
 	@Override
 	public boolean eval(Session session) throws NoAnswerException, UnknownAnswerException {
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		Form form = interview.nextForm();
 		List<Question> activeQuestionsOfForm = form.getActiveQuestions();
 		QContainer rootQContainer = getRootQContainer();
