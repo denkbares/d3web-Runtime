@@ -180,16 +180,12 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
-		Target bestTarget = searchModel.getBestCostBenefitTarget();
-		if (bestTarget == null || bestTarget.getMinPath() == null) {
-			caseObject.setAbortedManuallySetTarget(true);
-			throw new AbortException();
+		if (selectPathToBestTarget(caseObject, searchModel)) {
+			caseObject.activateNextQContainer();
 		}
 		else {
-			Path minPath = bestTarget.getMinPath();
-			Log.fine(minPath + " --> " + searchModel.getBestCostBenefitTarget());
-			caseObject.activatePath(minPath.getPath(), this);
-			caseObject.activateNextQContainer();
+			caseObject.setAbortedManuallySetTarget(true);
+			throw new AbortException();
 		}
 	}
 
@@ -242,13 +238,47 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 		// sets the new path based on the result stored in the search model
 		// inside the specified case object.
-		Target bestTarget = searchModel.getBestCostBenefitTarget();
-		if (!(bestTarget == null || bestTarget.getMinPath() == null)) {
-			Path minPath = bestTarget.getMinPath();
-			Log.fine(minPath + " --> " + searchModel.getBestCostBenefitTarget());
-			caseObject.activatePath(minPath.getPath(), this);
-		}
+		selectPathToBestTarget(caseObject, searchModel);
 		caseObject.activateNextQContainer();
+	}
+
+//	/**
+//	 * Repeats the most recent search, but using the specified abort strategy, instead of the previously used. This may
+//	 * be helpful during debugging, to try to find a path with less restrictions, and then figure out why calculation
+//	 * exceeded before.
+//	 *
+//	 * @param caseObject  the cost benefit case object of the session to recalculate the path for
+//	 * @param searchModel the new abort strategy to be used for that single search
+//	 */
+//	void recalculateNewPath(CostBenefitCaseObject caseObject, SearchModel searchModel) {
+//		caseObject.resetPath();
+//		search(caseObject.getSession(), searchModel);
+//
+//		if (selectPathToBestTarget(caseObject, searchModel)) {
+//			caseObject.activateNextQContainer();
+//		}
+//		else {
+//			caseObject.setAbortedManuallySetTarget(true);
+//			throw new AbortException();
+//		}
+//	}
+
+	/**
+	 * Installs the path to the best target that has been calculated in the specified search model. The method returns
+	 * true if there was a target and path that could been selected.
+	 * <p>
+	 * Note: after selecting the path, the next QContainer has to be activated (see {@link
+	 * CostBenefitCaseObject#activateNextQContainer()}, before the path becomes active.
+	 */
+	private boolean selectPathToBestTarget(CostBenefitCaseObject caseObject, SearchModel searchModel) {
+		// sets the new path based on the result stored in the search model
+		// inside the specified case object.
+		Target bestTarget = searchModel.getBestCostBenefitTarget();
+		if (bestTarget == null || bestTarget.getMinPath() == null) return false;
+		Path minPath = bestTarget.getMinPath();
+		Log.fine(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+		caseObject.activatePath(minPath.getPath(), this);
+		return true;
 	}
 
 	private void search(Session session, SearchModel searchModel) {
@@ -270,7 +300,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	private boolean hasUnansweredQuestions(Session session) {
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		Form nextForm = interview.nextForm();
 		return (nextForm != null) && !nextForm.isEmpty();
 	}
