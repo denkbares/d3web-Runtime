@@ -70,7 +70,6 @@ import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.xcl.InferenceTrace;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -292,7 +291,7 @@ public final class CostBenefitUtil {
 	 */
 	public static FormStrategy getFormStrategy(Session session) {
 		session = DerivedSession.getRootSession(session);
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		return interview.getFormStrategy();
 	}
 
@@ -314,7 +313,7 @@ public final class CostBenefitUtil {
 	 * @return if the qaset is fully answered
 	 */
 	public static boolean isDone(InterviewObject qaset, Session session) {
-		Interview interview = session.getSessionObject(session.getPSMethodInstance(PSMethodInterview.class));
+		Interview interview = Interview.get(session);
 		for (Question q : interview.getFormStrategy().getActiveQuestions(qaset, session)) {
 			if (UndefinedValue.isUndefinedValue(session.getBlackboard().getValue(q))) {
 				return false;
