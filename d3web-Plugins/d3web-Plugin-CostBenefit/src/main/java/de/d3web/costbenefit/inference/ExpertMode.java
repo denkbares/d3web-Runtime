@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,6 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
-import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -49,6 +49,7 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
 import de.d3web.core.session.values.ChoiceValue;
@@ -56,6 +57,7 @@ import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
+import de.d3web.interview.Interview;
 
 import static de.d3web.core.inference.PSMethod.Type.source;
 
@@ -285,9 +287,9 @@ public class ExpertMode implements SessionObject {
 
 	private boolean isDeAdaptation(QContainer target) {
 		return KnowledgeBaseUtils.getSuccessors(target, QuestionZC.class)
-						.stream()
-						.map(QuestionZC::getName)
-						.anyMatch(n -> n.endsWith(CostBenefitProperties.DE_ADAPTED_CHOICE_NAME));
+				.stream()
+				.map(QuestionZC::getName)
+				.anyMatch(n -> n.endsWith(CostBenefitProperties.DE_ADAPTED_CHOICE_NAME));
 	}
 
 	private Comparator<QContainer> getAdapterStateTargetComparator() {
@@ -437,11 +439,13 @@ public class ExpertMode implements SessionObject {
 			// the user does not answer these questions directly
 			return false;
 		}
-		for (TerminologyObject child : currentQContainer.getChildren()) {
-			if (!(child instanceof Question)) continue;
-			if (session.getBlackboard().getContributingPSMethods(child)
-					.stream()
-					.anyMatch(psMethod -> psMethod.hasType(source))) {
+
+		// check is any source facts are provided for any active question of the QContainer
+		Blackboard blackboard = session.getBlackboard();
+		Interview interview = Interview.get(session);
+		List<Question> questions = interview.getFormStrategy().getActiveQuestions(currentQContainer, session);
+		for (Question child : questions) {
+			if (blackboard.getContributingPSMethods(child).stream().anyMatch(psMethod -> psMethod.hasType(source))) {
 				return true;
 			}
 		}
@@ -500,9 +504,44 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
-	 * Returns a collection of all permanently relevant qcontainers with actually fullfilled preconditions
+	 * Repeats the most recent calculation that has been performed, but replaces the abort strategy to allow 2x (up to
+	 * 5x) as many calculation steps as previously been searched.
 	 *
-	 * @return list of applicable permenantly relevant QContainers
+	 * @throws AbortException if a target was selected, but no path can be established with this calculation
+	 */
+	public void recalculate() throws AbortException {
+		// check if a previous search has been executed
+		SearchModel searchModel = pso.getSearchModel();
+		if (searchModel == null) return;
+
+		// sets a new abort strategy that allows al least 2x steps to be used (up to 5x steps)
+		SearchAlgorithm algorithm = psm.getSearchAlgorithm();
+		AbortStrategy existing = algorithm.getAbortStrategy();
+		algorithm.setAbortStrategy(new DefaultAbortStrategy(searchModel.getCalculationSteps() * 2, 2.5f));
+
+		try {
+			// if a manual target has been selected, select a path to that target
+			NavigableSet<Target> targets = searchModel.getTargets();
+			if (targets.size() == 1) {
+				Target target = targets.first();
+				if (target.getBenefit() >= PSMethodCostBenefit.USER_SELECTED_BENEFIT) {
+					selectTarget(new Target(target.getQContainers()));
+					return;
+				}
+			}
+
+			// otherwise do a normal path calculation
+			selectBestSequence();
+		}
+		finally {
+			algorithm.setAbortStrategy(existing);
+		}
+	}
+
+	/**
+	 * Returns a collection of all permanently relevant qcontainers with actually fulfilled preconditions
+	 *
+	 * @return list of applicable permanently relevant QContainers
 	 * @created 19.06.2013
 	 */
 	public Collection<QContainer> getApplicablePermanentlyRelevantQContainers() {
