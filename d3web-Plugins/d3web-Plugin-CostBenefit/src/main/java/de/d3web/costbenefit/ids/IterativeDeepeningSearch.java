@@ -39,7 +39,6 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.AbortException;
 import de.d3web.costbenefit.inference.AbortStrategy;
-import de.d3web.costbenefit.inference.DefaultAbortStrategy;
 import de.d3web.costbenefit.inference.StateTransition;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
@@ -71,22 +70,23 @@ class IterativeDeepeningSearch {
 	private final Node[] successorNodes;
 	private final Node[] finalNodes;
 	private final SearchModel model;
+	private final AbortStrategy abortStrategy;
+	private final Session originalSession;
+
 	private IDSPath minSearchedPath;
-	// TODO move to constructor...
-	private AbortStrategy abortStrategy = new DefaultAbortStrategy();
 	private final Map<Node, List<Target>> referencingTargets = new HashMap<>();
 	private final Map<QContainer, Node> map = new HashMap<>();
 	private int countMinPaths = 0;
-	private final Session originalSession;
 
 	// some information about the current search
 	private final transient long initTime;
 	private transient int steps = 0;
 
-	public IterativeDeepeningSearch(SearchModel model) {
+	public IterativeDeepeningSearch(SearchModel model, AbortStrategy abortStrategy) {
 		long time = System.currentTimeMillis();
 		this.model = model;
-		originalSession = model.getSession();
+		this.abortStrategy = abortStrategy;
+		this.originalSession = model.getSession();
 		for (QContainer qcon : originalSession.getKnowledgeBase().getManager().getQContainers()) {
 			Node containerNode = new Node(qcon, model);
 			map.put(qcon, containerNode);
@@ -139,10 +139,6 @@ class IterativeDeepeningSearch {
 
 	public AbortStrategy getAbortStrategy() {
 		return abortStrategy;
-	}
-
-	public void setAbortStrategy(AbortStrategy abortStrategy) {
-		this.abortStrategy = abortStrategy;
 	}
 
 	/**
