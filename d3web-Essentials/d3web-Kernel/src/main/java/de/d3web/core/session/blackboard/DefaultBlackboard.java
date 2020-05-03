@@ -25,6 +25,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PSMethod.Type;
 import de.d3web.core.inference.PropagationManager;
@@ -88,6 +91,7 @@ public class DefaultBlackboard implements Blackboard {
 		this.interviewStorage = factStoragesToShare.interviewStorage;
 	}
 
+	@NotNull
 	@Override
 	public Session getSession() {
 		return session;
@@ -167,17 +171,20 @@ public class DefaultBlackboard implements Blackboard {
 		propagate(terminologyObject, oldValue, false);
 	}
 
+	@NotNull
 	@Override
 	public Value getValue(ValueObject valueObject) {
 		return getValueFromFact(valueObject, this.getValueStorage().getMergedFact(valueObject));
 	}
 
+	@NotNull
 	@Override
 	public Collection<TerminologyObject> getValuedObjects() {
 		return Collections.unmodifiableCollection(
 				this.getValueStorage().getValuedObjects());
 	}
 
+	@NotNull
 	@Override
 	public Collection<Question> getValuedQuestions() {
 		Collection<Question> result = new LinkedList<>();
@@ -189,6 +196,7 @@ public class DefaultBlackboard implements Blackboard {
 		return result;
 	}
 
+	@NotNull
 	@Override
 	public Collection<Solution> getValuedSolutions() {
 		Collection<Solution> result = new LinkedList<>();
@@ -256,16 +264,19 @@ public class DefaultBlackboard implements Blackboard {
 		}
 	}
 
+	@Nullable
 	@Override
 	public Fact getInterviewFact(TerminologyObject terminologyObject) {
 		return this.getInterviewStorage().getMergedFact(terminologyObject);
 	}
 
+	@Nullable
 	@Override
 	public Fact getInterviewFact(TerminologyObject terminologyObject, PSMethod psmethod) {
 		return this.getInterviewStorage().getMergedFact(terminologyObject, psmethod);
 	}
 
+	@NotNull
 	@Override
 	public Collection<InterviewObject> getInterviewObjects() {
 		Collection<TerminologyObject> objects = this.getInterviewStorage().getValuedObjects();
@@ -276,42 +287,49 @@ public class DefaultBlackboard implements Blackboard {
 		return Collections.unmodifiableCollection(result);
 	}
 
+	@NotNull
 	@Override
 	public Rating getRating(Solution solution) {
 		return (Rating) getValue(solution);
 	}
 
+	@NotNull
 	@Override
 	public Value getValue(ValueObject object, PSMethod psmethod) {
 		return getValueFromFact(object, getValueStorage().getMergedFact(object, psmethod));
 	}
 
+	@NotNull
 	@Override
 	public Value getValue(ValueObject object, PSMethod psmethod, Object source) {
 		return getValueFromFact(object, getValueStorage().getFact(object, psmethod, source));
 	}
 
+	@NotNull
 	@Override
 	public Indication getIndication(InterviewObject interviewElement) {
 		Fact fact = getInterviewFact(interviewElement);
 		return getValueFromFact(interviewElement, fact);
 	}
 
+	@NotNull
 	private Indication getValueFromFact(InterviewObject interviewElement, Fact fact) {
 		if (fact == null) {
 			return interviewElement.getDefaultInterviewValue();
 		}
 		else {
-			return (Indication) getInterviewFact(interviewElement).getValue();
+			return (Indication) fact.getValue();
 		}
 	}
 
+	@NotNull
 	@Override
 	public Indication getIndication(InterviewObject interviewElement, PSMethod psMethod) {
 		Fact fact = getInterviewFact(interviewElement, psMethod);
 		return getValueFromFact(interviewElement, fact);
 	}
 
+	@NotNull
 	@Override
 	public List<Question> getAnsweredQuestions() {
 		List<Question> questions = new LinkedList<>();
@@ -328,6 +346,7 @@ public class DefaultBlackboard implements Blackboard {
 		return questions;
 	}
 
+	@NotNull
 	@Override
 	public List<Solution> getSolutions(Rating.State state) {
 		List<Solution> result = new LinkedList<>();
@@ -355,6 +374,7 @@ public class DefaultBlackboard implements Blackboard {
 		return result;
 	}
 
+	@NotNull
 	@Override
 	public Rating getRating(Solution solution, PSMethod psmethod) {
 		Fact mergedFact = getValueStorage().getMergedFact(solution, psmethod);
@@ -366,21 +386,25 @@ public class DefaultBlackboard implements Blackboard {
 		}
 	}
 
+	@NotNull
 	@Override
 	public Collection<PSMethod> getContributingPSMethods(TerminologyObject object) {
 		return getValueStorage().getContributingPSMethods(object);
 	}
 
+	@NotNull
 	@Override
 	public Collection<PSMethod> getIndicatingPSMethods(TerminologyObject object) {
 		return getInterviewStorage().getContributingPSMethods(object);
 	}
 
+	@Nullable
 	@Override
 	public Fact getValueFact(TerminologyObject valueObject) {
 		return this.getValueStorage().getMergedFact(valueObject);
 	}
 
+	@Nullable
 	@Override
 	public Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod) {
 		return this.getValueStorage().getMergedFact(terminologyObject, psmethod);
@@ -396,6 +420,7 @@ public class DefaultBlackboard implements Blackboard {
 		return this.getValueStorage().hasFact(terminologyObject);
 	}
 
+	@NotNull
 	private Value getValueFromFact(ValueObject object, Fact fact) {
 		if (fact == null) {
 			return object.getDefaultValue();
@@ -419,6 +444,7 @@ public class DefaultBlackboard implements Blackboard {
 		this.interviewStorage = interviewStorage;
 	}
 
+	@NotNull
 	@Override
 	public Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject) {
 		return this.getInterviewStorage().getAllFacts(terminologyObject);

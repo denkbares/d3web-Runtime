@@ -22,6 +22,9 @@ package de.d3web.core.session.blackboard;
 import java.util.Collection;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.SessionTerminatedException;
@@ -50,6 +53,7 @@ public interface Blackboard {
 	 *
 	 * @return the session of this blackboard
 	 */
+	@NotNull
 	Session getSession();
 
 	/**
@@ -98,6 +102,7 @@ public interface Blackboard {
 	 * @return Value the current value for this object
 	 * @created 30.09.2010
 	 */
+	@NotNull
 	Value getValue(ValueObject valueObject);
 
 	/**
@@ -107,6 +112,7 @@ public interface Blackboard {
 	 * @param terminologyObject the terminology object to access the merged fact for
 	 * @return the merged fact
 	 */
+	@Nullable
 	Fact getValueFact(TerminologyObject terminologyObject);
 
 	/**
@@ -116,6 +122,7 @@ public interface Blackboard {
 	 *
 	 * @return the collection of valued terminology objects
 	 */
+	@NotNull
 	Collection<TerminologyObject> getValuedObjects();
 
 	/**
@@ -124,6 +131,7 @@ public interface Blackboard {
 	 *
 	 * @return the collection of valued questions
 	 */
+	@NotNull
 	Collection<Question> getValuedQuestions();
 
 	/**
@@ -132,6 +140,7 @@ public interface Blackboard {
 	 *
 	 * @return the collection of valued diagnoses
 	 */
+	@NotNull
 	Collection<Solution> getValuedSolutions();
 
 	/**
@@ -179,6 +188,7 @@ public interface Blackboard {
 	 * @return collection of interview facts
 	 * @created 14.05.2013
 	 */
+	@NotNull
 	Collection<Fact> getInterviewFacts(TerminologyObject terminologyObject);
 
 	/**
@@ -200,6 +210,7 @@ public interface Blackboard {
 	 * @param terminologyObject the terminology object to access the merged fact for
 	 * @return the merged fact
 	 */
+	@Nullable
 	Fact getInterviewFact(TerminologyObject terminologyObject);
 
 	/**
@@ -209,17 +220,19 @@ public interface Blackboard {
 	 *
 	 * @return the collection of interview rated terminology objects
 	 */
+	@NotNull
 	Collection<InterviewObject> getInterviewObjects();
 
 	/**
 	 * Returns the current rating of the diagnosis. The returned rating is the merged rating over all problem solvers
 	 * available. This is a typed shortcut for accessing the value {@link Fact} of the {@link Solution} and read out its
-	 * current value.The method never returns null, it returns an {@link State#UNCLEAR} {@link Rating} if the solution
+	 * current value. The method never returns null, it returns an {@link State#UNCLEAR} {@link Rating} if the solution
 	 * is not rated yet.
 	 *
 	 * @param solution the solution to take the rating from
 	 * @return the total rating of the solution
 	 */
+	@NotNull
 	Rating getRating(Solution solution);
 
 	/**
@@ -232,6 +245,7 @@ public interface Blackboard {
 	 * @return Value the current value for this object and psmethod
 	 * @created 30.09.2010
 	 */
+	@NotNull
 	Value getValue(ValueObject object, PSMethod psmethod);
 
 	/**
@@ -245,6 +259,7 @@ public interface Blackboard {
 	 * @return Value the current value for this object, psmethod and source
 	 * @created 30.09.2010
 	 */
+	@NotNull
 	Value getValue(ValueObject object, PSMethod psmethod, Object source);
 
 	/**
@@ -255,6 +270,7 @@ public interface Blackboard {
 	 * @param psmethod PSMethod
 	 * @return Rating
 	 */
+	@NotNull
 	Rating getRating(Solution solution, PSMethod psmethod);
 
 	/**
@@ -266,6 +282,7 @@ public interface Blackboard {
 	 * @param interviewElement the question to take the rating from
 	 * @return the indication of the interview element
 	 */
+	@NotNull
 	Indication getIndication(InterviewObject interviewElement);
 
 	/**
@@ -274,6 +291,7 @@ public interface Blackboard {
 	 * @return List of answered questions
 	 * @created 11.05.2010
 	 */
+	@NotNull
 	List<Question> getAnsweredQuestions();
 
 	/**
@@ -282,16 +300,18 @@ public interface Blackboard {
 	 * @param state the Rating the diagnoses must have to be returned
 	 * @return a list of diagnoses in this case that have the state 'state'
 	 */
+	@NotNull
 	List<Solution> getSolutions(Rating.State state);
 
 	/**
-	 * Returns the Value Fact of one {@link PSMethod} of a {@link TerminologyObject}.
+	 * Returns the Value Fact of a particular {@link PSMethod} for the specified {@link TerminologyObject}. The method returns null of no such fact has been added.
 	 *
 	 * @param terminologyObject {@link TerminologyObject}
 	 * @param psmethod          {@link PSMethod}
 	 * @return {@link Fact}
 	 * @created 21.09.2010
 	 */
+	@Nullable
 	Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod);
 
 	/**
@@ -314,13 +334,14 @@ public interface Blackboard {
 	boolean hasValueFact(TerminologyObject terminologyObject);
 
 	/**
-	 * Returns the Interview Fact of one {@link PSMethod} of a {@link TerminologyObject}.
+	 * Returns the Interview Fact of a particular {@link PSMethod} for the specified {@link TerminologyObject}. The method returns null of no such fact has been added.
 	 *
 	 * @param terminologyObject {@link TerminologyObject}
 	 * @param psmethod          {@link PSMethod}
 	 * @return {@link Fact}
 	 * @created 21.09.2010
 	 */
+	@Nullable
 	Fact getInterviewFact(TerminologyObject terminologyObject, PSMethod psmethod);
 
 	/**
@@ -333,6 +354,7 @@ public interface Blackboard {
 	 * @return the indication of the specified strategic solver
 	 * @created 21.09.2010
 	 */
+	@NotNull
 	Indication getIndication(InterviewObject interviewElement, PSMethod psMethod);
 
 	/**
@@ -343,6 +365,7 @@ public interface Blackboard {
 	 * @return {@link Collection} of {@link PSMethod}
 	 * @created 24.09.2010
 	 */
+	@NotNull
 	Collection<PSMethod> getContributingPSMethods(TerminologyObject object);
 
 	/**
@@ -353,6 +376,7 @@ public interface Blackboard {
 	 * @return {@link Collection} of {@link PSMethod}
 	 * @created 24.09.2010
 	 */
+	@NotNull
 	Collection<PSMethod> getIndicatingPSMethods(TerminologyObject object);
 
 	/**

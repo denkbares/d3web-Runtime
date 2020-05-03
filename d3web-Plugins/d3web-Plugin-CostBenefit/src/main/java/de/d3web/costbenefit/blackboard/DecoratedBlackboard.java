@@ -18,6 +18,8 @@
  */
 package de.d3web.costbenefit.blackboard;
 
+import org.jetbrains.annotations.Nullable;
+
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
@@ -60,6 +62,7 @@ public class DecoratedBlackboard extends DefaultBlackboard {
 	 * @param object the object to get the decorated value for
 	 * @return the decorated value or null if not decorated
 	 */
+	@Nullable
 	public Value getDecoratedValue(ValueObject object) {
 		Fact fact = ((DecoratedFactStorage) getValueStorage()).getDecoratedMergedFact(object);
 		return (fact == null) ? null : fact.getValue();
@@ -78,6 +81,7 @@ public class DecoratedBlackboard extends DefaultBlackboard {
 	 * @param object the object to get the changed value for
 	 * @return the new value or null if unchanged
 	 */
+	@Nullable
 	public Value getChangedValue(ValueObject object) {
 		Value value = getDecoratedValue(object);
 		if (value != null) {
