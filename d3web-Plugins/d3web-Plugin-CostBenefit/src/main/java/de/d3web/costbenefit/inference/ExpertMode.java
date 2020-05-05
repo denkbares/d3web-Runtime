@@ -493,8 +493,7 @@ public class ExpertMode implements SessionObject {
 		PropagationManager propagationManager = session.getPropagationManager();
 		try {
 			propagationManager.openPropagation();
-			// if the path is reset, a calculation will be done in
-			// postpropergate
+			// if the path is reset, a calculation will be done in postpropergate
 			pso.resetPath();
 			pso.resetUnreachedTarget();
 		}
