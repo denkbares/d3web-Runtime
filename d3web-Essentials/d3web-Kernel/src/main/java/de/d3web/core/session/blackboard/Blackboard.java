@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -304,7 +304,8 @@ public interface Blackboard {
 	List<Solution> getSolutions(Rating.State state);
 
 	/**
-	 * Returns the Value Fact of a particular {@link PSMethod} for the specified {@link TerminologyObject}. The method returns null of no such fact has been added.
+	 * Returns the Value Fact of a particular {@link PSMethod} for the specified {@link TerminologyObject}. The method
+	 * returns null of no such fact has been added.
 	 *
 	 * @param terminologyObject {@link TerminologyObject}
 	 * @param psmethod          {@link PSMethod}
@@ -313,6 +314,16 @@ public interface Blackboard {
 	 */
 	@Nullable
 	Fact getValueFact(TerminologyObject terminologyObject, PSMethod psmethod);
+
+	/**
+	 * Returns all value facts from this blackboard for the specified terminology object. If no such fact exists in the
+	 * blackboard, an empty collection is returned
+	 *
+	 * @param terminologyObject the terminology object to access the value facts from
+	 * @return collection of value facts
+	 */
+	@NotNull
+	Collection<Fact> getValueFacts(TerminologyObject terminologyObject);
 
 	/**
 	 * Returns whether the {@link TerminologyObject} has a Value Fact for the given {@link PSMethod}.
@@ -334,7 +345,8 @@ public interface Blackboard {
 	boolean hasValueFact(TerminologyObject terminologyObject);
 
 	/**
-	 * Returns the Interview Fact of a particular {@link PSMethod} for the specified {@link TerminologyObject}. The method returns null of no such fact has been added.
+	 * Returns the Interview Fact of a particular {@link PSMethod} for the specified {@link TerminologyObject}. The
+	 * method returns null of no such fact has been added.
 	 *
 	 * @param terminologyObject {@link TerminologyObject}
 	 * @param psmethod          {@link PSMethod}
