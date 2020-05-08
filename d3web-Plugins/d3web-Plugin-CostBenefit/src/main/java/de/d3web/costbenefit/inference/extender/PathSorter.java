@@ -58,7 +58,7 @@ class PathSorter implements PathModifier {
 		List<QContainer> order = containers.stream().filter(this::hasPathOrder)
 				.sorted(Comparator.comparingDouble(qc -> -Math.abs(getPathOrder(qc)))).collect(Collectors.toList());
 		int min = 0; // inclusively
-		int max = containers.size() - 1; // exclusively
+		int max = containers.size() - 1; // inclusively
 		for (QContainer container : order) {
 			double priority = getPathOrder(container);
 			int from = containers.indexOf(container);
@@ -79,13 +79,15 @@ class PathSorter implements PathModifier {
 			if (bestPath != null) {
 				path = bestPath;
 				containers = bestPath.getPath();
-				// and restrict the next items to be sorted not further
-				if (priority < 0) {
-					min = to + 1;
-				}
-				else {
-					max = to - 1;
-				}
+			}
+
+			// and restrict the next items to be sorted not further than this item,
+			// (even if if this item could not been moved, but is has a higher (abs) order value)
+			if (priority < 0) {
+				min = to + 1;
+			}
+			else {
+				max = to - 1;
 			}
 		}
 
