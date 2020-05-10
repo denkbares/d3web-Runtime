@@ -83,8 +83,8 @@ public final class RuleFactory {
 		return rule;
 	}
 
-	public static void createContraIndicationRule(QASet question, Condition condition) {
-		createContraIndicationRule(Collections.singletonList(question), condition);
+	public static Rule createContraIndicationRule(QASet question, Condition condition) {
+		return createContraIndicationRule(Collections.singletonList(question), condition);
 	}
 
 	public static Rule createHeuristicPSRule(Solution solution, Score score, Condition condition) {
