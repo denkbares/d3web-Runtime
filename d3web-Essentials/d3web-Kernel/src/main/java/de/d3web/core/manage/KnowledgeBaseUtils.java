@@ -214,7 +214,8 @@ public final class KnowledgeBaseUtils {
 	 * @return the depth-first search tree items
 	 * @created 04.05.2011
 	 */
-	public static <T extends TerminologyObject> List<T> getSuccessors(TerminologyObject terminologyObject, Class<T> typeOf) {
+	public static <T extends TerminologyObject> List<T> getSuccessors(TerminologyObject terminologyObject, @NotNull Class<T> typeOf) {
+		if (terminologyObject == null) return Collections.emptyList();
 		List<T> result = new LinkedList<>();
 		Set<TerminologyObject> visited = new HashSet<>();
 		collectSuccessors(terminologyObject, visited, result, typeOf);
