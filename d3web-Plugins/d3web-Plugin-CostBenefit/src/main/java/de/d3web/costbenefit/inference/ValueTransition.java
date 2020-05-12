@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.session.Value;
 
@@ -66,5 +67,10 @@ public class ValueTransition {
 			result.add(setter.getAnswer());
 		}
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "STATE " + question + "\n" + Strings.concat("\n", setters);
 	}
 }
