@@ -91,7 +91,7 @@ public interface SessionRecord extends SessionHeader {
 
 	/**
 	 * Creates a new SessionBuilder for this record instance, that can be used to initialize a running session with the
-	 * conents of this record. Usually the specified target session should be empty, otherwise the results are hardly to
+	 * contents of this record. Usually the specified target session should be empty, otherwise the results are hardly to
 	 * predict.
 	 *
 	 * @param targetSession the session to replay this records contents into
