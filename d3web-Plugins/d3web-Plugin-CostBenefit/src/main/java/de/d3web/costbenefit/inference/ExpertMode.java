@@ -29,6 +29,8 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
@@ -223,9 +225,9 @@ public class ExpertMode implements SessionObject {
 				case mechanicalCheck:
 					break;
 				case measurementAdapter:
-					Choice adaptedChoice = CostBenefitProperties.getAdaptedChoice(stateQuestion);
-					if (adaptedChoice == null) break;
-					adapterStates.put(stateQuestion, new CondEqual(stateQuestion, new ChoiceValue(adaptedChoice)));
+					for (Choice choice : CostBenefitProperties.getAdaptedChoice(stateQuestion)) {
+						adapterStates.put(stateQuestion, new CondEqual(stateQuestion, new ChoiceValue(choice)));
+					}
 					break;
 
 				// otherwise use as normal system state
@@ -246,12 +248,23 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
-	 * Returns a list of all state questions that represents measurement adapters. These questions may be used to get a
-	 * number of test steps that measures through the adapter, using {@link #getTargetsForAdapterState(Question)}.
+	 * Returns a set of all state questions that represent measurement adapters. These questions may be used to get a
+	 * number of test steps that measure through the adapter, using {@link #getTargetsForAdapterState(Question,
+	 * Choice)}.
 	 */
 	public Collection<Question> getAdapterStates() {
 		initStates();
 		return Collections.unmodifiableSet(adapterStates.keySet());
+	}
+
+	/**
+	 * Returns a set of all conditions represent a measurement adapter adapted to a certain socket. These conditions
+	 * may be used to get a number of test steps that measure through the adapter, using {@link
+	 * #getTargetsForAdapterState(Question, Choice)}.
+	 */
+	public Collection<CondEqual> getAdaptedConditions() {
+		initStates();
+		return Collections.unmodifiableSet(adapterStates.valueSet());
 	}
 
 	/**
@@ -260,11 +273,13 @@ public class ExpertMode implements SessionObject {
 	 * the method returns an empty set of targets.
 	 *
 	 * @param adapterStateQuestion the adapter integration question, to search the target test steps for
+	 * @param choice               optionally the choice to additionally filter target test steps by
 	 * @return the target test steps for the adapter
 	 */
-	public Set<QContainer> getTargetsForAdapterState(Question adapterStateQuestion) {
+	public Set<QContainer> getTargetsForAdapterState(Question adapterStateQuestion, @Nullable Choice choice) {
 		initStates();
-		Set<CondEqual> states = adapterStates.getValues(adapterStateQuestion);
+		Set<CondEqual> states = new LinkedHashSet<>(adapterStates.getValues(adapterStateQuestion));
+		if (choice != null) states.removeIf(c -> !usesChoice(c, choice));
 		List<QContainer> targets = new ArrayList<>();
 		Set<String> visitedQContainers = session.getProtocol()
 				.getProtocolHistory()
@@ -283,6 +298,13 @@ public class ExpertMode implements SessionObject {
 		}
 		targets.sort(getAdapterStateTargetComparator());
 		return new LinkedHashSet<>(targets);
+	}
+
+	private boolean usesChoice(CondEqual condEqual, Choice choice) {
+		if (condEqual.getValue() instanceof ChoiceValue) {
+			return ((ChoiceValue) condEqual.getValue()).getChoiceID().getText().equals(choice.getName());
+		}
+		return false;
 	}
 
 	private boolean isDeAdaptation(QContainer target) {

@@ -4,8 +4,10 @@
 
 package de.d3web.costbenefit.inference;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -286,11 +288,17 @@ public class CostBenefitProperties {
 	/**
 	 * Returns the choice indicating that a adapter is adapted in regards to a given adapter state question.
 	 */
-	public static Choice getAdaptedChoice(Question stateQuestion) {
+	@NotNull
+	public static List<Choice> getAdaptedChoice(Question stateQuestion) {
+		List<Choice> adaptChoices = new ArrayList<>();
 		if (stateQuestion instanceof QuestionChoice && getUUTState(stateQuestion) == UUTState.measurementAdapter) {
-			return KnowledgeBaseUtils.findChoice((QuestionChoice) stateQuestion, ADAPTED_CHOICE_NAME);
+			for (Choice choice : ((QuestionChoice) stateQuestion).getAllAlternatives()) {
+				if (choice.getName().startsWith(ADAPTED_CHOICE_NAME)) {
+					adaptChoices.add(choice);
+				}
+			}
 		}
-		return null;
+		return adaptChoices;
 	}
 
 	/**
