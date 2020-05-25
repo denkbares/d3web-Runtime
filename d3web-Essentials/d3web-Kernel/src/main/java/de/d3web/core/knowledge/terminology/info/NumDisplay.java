@@ -29,6 +29,11 @@ public enum NumDisplay {
 	digital,
 
 	/**
+	 * Displays the value in hexadecimal notation (unsigned)
+	 */
+	hexadecimal,
+
+	/**
 	 * Displays the value as a graph representation, displayed over the elapsing time.
 	 */
 	graph
