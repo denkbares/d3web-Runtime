@@ -62,10 +62,10 @@ public class TestExecutor {
 	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
 	private final BuildResult build;
-	private final HashMap<TestSpecification, TestResult> testResults = new HashMap<>();
+	private final HashMap<TestSpecification<?>, TestResult> testResults = new HashMap<>();
 	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<>());
 	private final ExecutorService executor;
-	private Thread executorThread;
+	private volatile boolean aborted;
 
 	/**
 	 * Returns the current build or null if the build has been terminated.
@@ -74,7 +74,7 @@ public class TestExecutor {
 	 * @created 14.08.2012
 	 */
 	public synchronized BuildResult getBuildResult() {
-		if (executorThread == null || executorThread.isInterrupted() || !isShutdown()) return null;
+		if (!isShutdown()) return null;
 		return build;
 	}
 
@@ -97,7 +97,6 @@ public class TestExecutor {
 	 * @created 22.05.2012
 	 */
 	public void run() {
-		executorThread = Thread.currentThread();
 		long buildStartTime = System.currentTimeMillis();
 
 		// checks the given tests of validity and only
@@ -105,8 +104,9 @@ public class TestExecutor {
 		Collection<TestSpecification<?>> validSpecifications = getValidSpecifications();
 
 		// creates and returns a CallableTest for each Test and TestObject
-		Map<TestSpecification, Collection<CallableTest>> callableTests =
+		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests =
 				getCallableTestsMap(validSpecifications);
+		List<FutureTestTask> testTasks = null;
 		try {
 			initProgress(callableTests);
 			executeTests(callableTests);
@@ -118,11 +118,19 @@ public class TestExecutor {
 		}
 	}
 
-	private void updateTestResults(Map<TestSpecification, Collection<CallableTest>> callableTests) {
+	private void updateTestResults(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests) {
 		MultiMap<TestResult, TestResult> groups = new DefaultMultiMap<>();
 		TestResult currentGroup = null;
 		for (TestSpecification<?> specification : callableTests.keySet()) {
-			Collection<CallableTest> ct = callableTests.get(specification);
+			Collection<CallableTest<?>> ct = callableTests.get(specification);
+			if (this.aborted) {
+				for (CallableTest<?> callableTest : ct) {
+					if (!callableTest.started) {
+						callableTest.testResult.addUnexpectedMessage(callableTest.testObjectName,
+								new Message(Type.SKIPPED, "Test was aborted"));
+					}
+				}
+			}
 			if (specification.getTest() instanceof TestGroup) {
 				// if this is a group, remember the group, but do nothing,
 				// because we will update the groups later on
@@ -144,8 +152,8 @@ public class TestExecutor {
 		}
 	}
 
-	private void initProgress(Map<TestSpecification, Collection<CallableTest>> callableTestsBySpecification) {
-		List<CallableTest> callableTests = callableTestsBySpecification.values()
+	private void initProgress(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTestsBySpecification) {
+		List<CallableTest<?>> callableTests = callableTestsBySpecification.values()
 				.stream()
 				.flatMap(Collection::stream)
 				.collect(toList());
@@ -153,8 +161,8 @@ public class TestExecutor {
 		// collect all the complexities from all tests
 		float[] complexities = new float[callableTests.size()];
 		for (int i = 0; i < callableTests.size(); i++) {
-			CallableTest callableTest = callableTests.get(i);
-			Test test = callableTest.specification.getTest();
+			CallableTest<?> callableTest = callableTests.get(i);
+			Test<?> test = callableTest.specification.getTest();
 			complexities[i] = test instanceof ProgressingTest ?
 					((ProgressingTest) test).getComputationalComplexity() : ProgressingTest.DEFAULT_COMPUTATION_COMPLEXITY;
 		}
@@ -168,9 +176,9 @@ public class TestExecutor {
 		parallelProgress.updateProgress(0, "Initializing...");
 	}
 
-	private float getNumberOfTests(Map<TestSpecification, Collection<CallableTest>> callablesMap) {
+	private float getNumberOfTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
 		int count = 0;
-		for (Collection<CallableTest> callablesOfTest : callablesMap.values()) {
+		for (Collection<CallableTest<?>> callablesOfTest : callablesMap.values()) {
 			count += callablesOfTest.size();
 		}
 		return count;
@@ -222,12 +230,12 @@ public class TestExecutor {
 		return validTests;
 	}
 
-	@SuppressWarnings("unchecked")
-	private Map<TestSpecification, Collection<CallableTest>> getCallableTestsMap(Collection<TestSpecification<?>> validSpecifications) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Map<TestSpecification<?>, Collection<CallableTest<?>>> getCallableTestsMap(Collection<TestSpecification<?>> validSpecifications) {
 		// Some weird non-generic stuff here to satisfy both Eclipse and Intellij compilers
-		Map callableTests = new LinkedHashMap();
-		for (TestSpecification specification : validSpecifications) {
-			Collection futuresForCallableTest = getCallableTests((TestSpecification<Object>) specification);
+		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests = new LinkedHashMap<>();
+		for (TestSpecification<?> specification : validSpecifications) {
+			Collection futuresForCallableTest = getCallableTests(specification);
 			callableTests.put(specification, futuresForCallableTest);
 		}
 		return callableTests;
@@ -285,13 +293,13 @@ public class TestExecutor {
 		return result;
 	}
 
-	private void executeTests(Map<TestSpecification, Collection<CallableTest>> callablesMap) {
+	private void executeTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
 		// finally run execute on callable tests
 		outerLoop:
 		for (TestSpecification<?> specification : callablesMap.keySet()) {
-			Collection<CallableTest> callableTests = callablesMap.get(specification);
+			Collection<CallableTest<?>> callableTests = callablesMap.get(specification);
 			specification.prepareExecution();
-			for (CallableTest callableTest : callableTests) {
+			for (CallableTest<?> callableTest : callableTests) {
 				try {
 					executor.execute(new FutureTestTask(callableTest));
 				}
@@ -315,6 +323,7 @@ public class TestExecutor {
 	}
 
 	private void setTerminateStatus() {
+		aborted = true;
 		progressListener.updateProgress(1f, "Aborted, please wait...");
 	}
 
@@ -343,7 +352,6 @@ public class TestExecutor {
 		setTerminateStatus();
 		// System.out.println("Terminating executor");
 		executor.shutdownNow();
-		if (executorThread != null) executorThread.interrupt();
 	}
 
 	/**
@@ -417,6 +425,7 @@ public class TestExecutor {
 		private final T testObject;
 		private final TestResult testResult;
 		private ProgressListener progressListener = null;
+		private boolean started = false;
 
 		public CallableTest(TestSpecification<T> specification, String testObjectName, T testObject, TestResult testresult) {
 			this.specification = specification;
@@ -434,6 +443,7 @@ public class TestExecutor {
 		}
 
 		public void testStarted() {
+			started = true;
 			currentlyRunningTests.add(getMessage());
 			progressListener.updateProgress(0, getMessage());
 		}
@@ -460,11 +470,16 @@ public class TestExecutor {
 				}
 				Test<T> test = specification.getTest();
 				Message message = test.execute(specification, testObject);
-				if (message.getType() == Type.SUCCESS) {
-					testResult.addExpectedMessage(testObjectName, message);
+				if (TestExecutor.this.aborted) {
+					testResult.addUnexpectedMessage(testObjectName, new Message(Type.SKIPPED, "Test was aborted"));
 				}
 				else {
-					testResult.addUnexpectedMessage(testObjectName, message);
+					if (message.getType() == Type.SUCCESS) {
+						testResult.addExpectedMessage(testObjectName, message);
+					}
+					else {
+						testResult.addUnexpectedMessage(testObjectName, message);
+					}
 				}
 				return null;
 			}

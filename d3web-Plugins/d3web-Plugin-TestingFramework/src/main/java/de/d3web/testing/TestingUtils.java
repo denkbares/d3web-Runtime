@@ -44,7 +44,6 @@ public class TestingUtils {
 	 * Checks whether the calling thread has been interrupted and throws InterruptedException in
 	 * case.
 	 *
-	 * @throws InterruptedException
 	 * @created 16.08.2012
 	 */
 	public static void checkInterrupt() throws InterruptedException {
@@ -69,6 +68,10 @@ public class TestingUtils {
 				summaryByType.computeIfAbsent(test.getType(), k -> new DefaultMultiMap<>())
 						.put(testResult.getTestName(), testObjectName);
 			}
+		}
+		MultiMap<String, String> skippedTests = summaryByType.computeIfAbsent(Type.SKIPPED, k -> new DefaultMultiMap<>());
+		if (!skippedTests.isEmpty()) {
+			return new Message(Type.SKIPPED, "Test was skipped/canceled");
 		}
 		MultiMap<String, String> errorTests = summaryByType.computeIfAbsent(Type.ERROR, k -> new DefaultMultiMap<>());
 		if (!errorTests.isEmpty()) {
