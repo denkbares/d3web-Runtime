@@ -484,6 +484,7 @@ public class TestExecutor {
 				return null;
 			}
 			catch (InterruptedException e) {
+				testResult.addUnexpectedMessage(testObjectName, new Message(Type.SKIPPED, "Test was aborted"));
 				throw e;
 			}
 			catch (Throwable e) { // NOSONAR
