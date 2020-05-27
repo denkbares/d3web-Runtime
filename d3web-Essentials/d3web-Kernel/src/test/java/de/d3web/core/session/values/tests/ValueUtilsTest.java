@@ -1,16 +1,16 @@
 /*
- * Copyright (C) 2013 University Wuerzburg, Computer Science VI
- * 
+ * Copyright (C) 2020 denkbares GmbH, Germany
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -27,6 +27,9 @@ import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.denkbares.plugin.test.InitPluginManager;
+import com.denkbares.utils.Java;
+import com.denkbares.utils.Log;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -47,7 +50,6 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.core.session.values.Unknown;
-import com.denkbares.plugin.test.InitPluginManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -92,7 +94,7 @@ public class ValueUtilsTest {
 
 		Value choice1 = ValueUtils.createQuestionValue(qmc, "choice1");
 		ChoiceValue choice2 = new ChoiceValue(this.choice2);
-		MultipleChoiceValue mcValue =  MultipleChoiceValue.fromChoices(this.choice1, this.choice2);
+		MultipleChoiceValue mcValue = MultipleChoiceValue.fromChoices(this.choice1, this.choice2);
 		Value actualMcValue = ValueUtils.handleExistingValue(qmc, choice1, choice2);
 		assertEquals(mcValue, actualMcValue);
 
@@ -160,39 +162,36 @@ public class ValueUtilsTest {
 	@Test
 	public void getTimeZone() {
 		compareTimeZones("UTC", "UTC");
-
 		compareTimeZones("UTC", "Utc");
-
 		compareTimeZones("GMT", "GMT");
-
 		compareTimeZones("GMT", "gmt");
-
 		compareTimeZones("Europe/Berlin", "CET");
-
 		compareTimeZones("Europe/Berlin", "CEST");
-
 		compareTimeZones("Europe/Berlin", "cest");
-
 		compareTimeZones("America/Los_Angeles", "PST");
-
 		compareTimeZones("America/Los_Angeles", "PDT");
-
 		compareTimeZones("America/Los_Angeles", "PDT");
-
 		compareTimeZones("America/Los_Angeles", "pdT");
-
 		compareTimeZones("America/Los_Angeles", "Pacific Standard Time");
 
-		compareTimeZones("Europe/Berlin", "Central European Time");
-
-		compareTimeZones("Europe/Berlin", "Central European Summer Time");
+		if (Java.getVersion() > 8) {
+			if (System.getProperty("java.locale.providers") != null) {
+				// If anyone is inclined to write a correct parser for the locale providers, this could be improved.
+				Log.warning("Skipping certain Timezone tests as a Java locale provider order has been set.");
+			}
+			else {
+				compareTimeZones("ECT", "Central European Time");
+				compareTimeZones("ECT", "Central European Summer Time");
+			}
+		}
+		else {
+			compareTimeZones("Europe/Berlin", "Central European Time");
+			compareTimeZones("Europe/Berlin", "Central European Summer Time");
+		}
 
 		compareTimeZones("GMT-08:00", "GMT-08:00");
-
 		compareTimeZones("GMT-08:00", "GMT-8:00");
-
 		compareTimeZones("GMT+08:00", "GMT+08:00");
-
 		compareTimeZones("GMT+08:00", "GMT+8:00");
 	}
 
@@ -453,7 +452,6 @@ public class ValueUtilsTest {
 		qdate2.getInfoStore().addValue(MMInfo.UNIT, "NZDT");
 		dateVerbalization = ValueUtils.getDateVerbalization(qdate2, date, ValueUtils.TimeZoneDisplayMode.ALWAYS);
 		assertEquals("2015-01-02 03:01:14 NZDT", dateVerbalization);
-
 	}
 
 	@Test
@@ -484,5 +482,4 @@ public class ValueUtilsTest {
 		date2 = ValueUtils.createDateValue(qdate2, dateVerbalization).getDate();
 		assertEquals(date, date2);
 	}
-
 }
