@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
@@ -86,7 +87,8 @@ public class TestExecutor {
 		this.objectProviders = providers;
 		this.specifications = specifications;
 		this.progressListener = listener;
-		this.executor = Executors.newFixedThreadPool(numberOfThreads);
+		AtomicLong threadNumber = new AtomicLong();
+		this.executor = Executors.newFixedThreadPool(numberOfThreads, r -> new Thread(r, "Test-Executor-" + threadNumber.incrementAndGet()));
 		this.build = new BuildResult();
 	}
 
