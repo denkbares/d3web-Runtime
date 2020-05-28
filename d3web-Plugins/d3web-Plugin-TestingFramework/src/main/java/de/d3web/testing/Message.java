@@ -103,7 +103,13 @@ public class Message implements Comparable<Message> {
 		 */
 		WARNING,
 		/**
+		 * The specific test was aborted. For example by the user or because some required criteria was not met.
+		 * This <b>can</b> cause the overall test result to become unsuccessful.
+		 */
+		ABORTED,
+		/**
 		 * The specific test was not executed, e.g. because no test objects are available to the test.
+		 * This will <b>not</b> cause the overall test result to become unsuccessful.
 		 */
 		SKIPPED,
 		/**

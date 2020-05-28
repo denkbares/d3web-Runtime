@@ -69,9 +69,13 @@ public class TestingUtils {
 						.put(testResult.getTestName(), testObjectName);
 			}
 		}
+		MultiMap<String, String> abortedTests = summaryByType.computeIfAbsent(Type.ABORTED, k -> new DefaultMultiMap<>());
+		if (!abortedTests.isEmpty()) {
+			return new Message(Type.ABORTED, "Test was aborted");
+		}
 		MultiMap<String, String> skippedTests = summaryByType.computeIfAbsent(Type.SKIPPED, k -> new DefaultMultiMap<>());
 		if (!skippedTests.isEmpty()) {
-			return new Message(Type.SKIPPED, "Test was skipped/canceled");
+			return new Message(Type.SKIPPED, "Test was skipped");
 		}
 		MultiMap<String, String> errorTests = summaryByType.computeIfAbsent(Type.ERROR, k -> new DefaultMultiMap<>());
 		if (!errorTests.isEmpty()) {

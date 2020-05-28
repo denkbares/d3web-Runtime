@@ -129,7 +129,7 @@ public class TestExecutor {
 				for (CallableTest<?> callableTest : ct) {
 					if (!callableTest.started) {
 						callableTest.testResult.addUnexpectedMessage(callableTest.testObjectName,
-								new Message(Type.SKIPPED, "Test was aborted"));
+								new Message(Type.ABORTED, "Test was aborted"));
 					}
 				}
 			}
@@ -473,7 +473,7 @@ public class TestExecutor {
 				Test<T> test = specification.getTest();
 				Message message = test.execute(specification, testObject);
 				if (TestExecutor.this.aborted) {
-					testResult.addUnexpectedMessage(testObjectName, new Message(Type.SKIPPED, "Test was aborted"));
+					testResult.addUnexpectedMessage(testObjectName, new Message(Type.ABORTED, "Test was aborted"));
 				}
 				else {
 					if (message.getType() == Type.SUCCESS) {
@@ -486,7 +486,7 @@ public class TestExecutor {
 				return null;
 			}
 			catch (InterruptedException e) {
-				testResult.addUnexpectedMessage(testObjectName, new Message(Type.SKIPPED, "Test was aborted"));
+				testResult.addUnexpectedMessage(testObjectName, new Message(Type.ABORTED, "Test was aborted"));
 				throw e;
 			}
 			catch (Throwable e) { // NOSONAR
