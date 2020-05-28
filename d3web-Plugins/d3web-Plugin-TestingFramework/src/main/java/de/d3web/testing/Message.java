@@ -95,6 +95,11 @@ public class Message implements Comparable<Message> {
 		 */
 		ERROR,
 		/**
+		 * The specific test was aborted. For example by the user or because some required criteria was not met.
+		 * This <b>can</b> cause the overall test result to become unsuccessful.
+		 */
+		ABORTED,
+		/**
 		 * The specific test has failed to read its pass criteria.
 		 */
 		FAILURE,
@@ -102,11 +107,6 @@ public class Message implements Comparable<Message> {
 		 * The specific test has failed to read its pass criteria due to an minor failure.
 		 */
 		WARNING,
-		/**
-		 * The specific test was aborted. For example by the user or because some required criteria was not met.
-		 * This <b>can</b> cause the overall test result to become unsuccessful.
-		 */
-		ABORTED,
 		/**
 		 * The specific test was not executed, e.g. because no test objects are available to the test.
 		 * This will <b>not</b> cause the overall test result to become unsuccessful.
