@@ -557,7 +557,9 @@ public final class PersistenceManager {
 					cpl.updateProgress(0, "Reading file " + name);
 					// initialize the reader
 					KnowledgeReader reader = (KnowledgeReader) plugin.getNewInstance();
-					reader.read(this, kb, createInputStream(file), cpl);
+					try (InputStream inputStream = createInputStream(file)) {
+						reader.read(this, kb, inputStream, cpl);
+					}
 					// and mark this as done
 					iterator.remove();
 					parsedAnyFile = true;
