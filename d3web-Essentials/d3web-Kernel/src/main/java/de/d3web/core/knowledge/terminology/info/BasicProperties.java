@@ -222,6 +222,7 @@ public class BasicProperties {
 	 * @return the questions date format
 	 * @created 20.08.2012
 	 */
+	@NotNull
 	public static DateDisplay getDateDisplay(QuestionDate question) {
 		DateDisplay display = question.getInfoStore().getValue(DATE_DISPLAY);
 		if (display == null) {
