@@ -20,13 +20,68 @@
 
 package de.d3web.core.knowledge.terminology.info.abnormality;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.denkbares.strings.Strings;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
+import de.d3web.core.knowledge.terminology.QuestionMC;
 import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Value;
+import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.MultipleChoiceValue;
+import de.d3web.core.session.values.NumValue;
+
+import static de.d3web.core.knowledge.terminology.info.abnormality.Abnormality.*;
 
 public class AbnormalityUtils {
+
+	public static State getNormality(QuestionNum question, NumValue value) {
+		Abnormality abnormality = BasicProperties.getAbnormality(question);
+		if (!abnormality.isSet(value)) return State.NEUTRAL;
+		double doubleAbnormality = abnormality.getValue(value);
+		return doubleAbnormality <= MAX_NORMAL_LIMIT ? State.NORMAL
+				: doubleAbnormality >= MIN_ABNORMAL_LIMIT ? State.ABNORMAL
+				: State.NEUTRAL;
+	}
+
+	public static State getNormality(QuestionMC question, MultipleChoiceValue value) {
+		Set<State> normalities = value.getChoiceIDs()
+				.stream()
+				.map(choiceID -> choiceID.getChoice(question))
+				.map(AbnormalityUtils::getNormality)
+				.collect(Collectors.toSet());
+		return normalities.contains(State.ABNORMAL) ?
+				State.ABNORMAL : normalities.contains(State.NORMAL) ?
+				State.NORMAL : State.NEUTRAL;
+	}
+
+	public static State getNormality(Choice choice) {
+		// check if choice is declared as normal
+		Abnormality abnormality = BasicProperties.getAbnormality(choice.getQuestion());
+		ChoiceValue choiceValue = new ChoiceValue(choice);
+		State normality;
+
+		if (abnormality.isSet(choiceValue)) {
+			double norm = abnormality.getValue(choiceValue);
+			normality = norm <= MAX_NORMAL_LIMIT ? State.NORMAL : State.ABNORMAL;
+		}
+		else if (choice.isAnswerYes()) {
+			// handle yes of "yes-no-questions" as normal by default if not specified
+			normality = State.NORMAL;
+		}
+		else if (choice.isAnswerNo()) {
+			// handle yes of "yes-no-questions" as abnormal by default if not specified
+			normality = State.ABNORMAL;
+		}
+		else {
+			normality = State.NEUTRAL;
+		}
+
+		return normality;
+	}
 
 	/**
 	 * Parses an abnormality value of any of the specified forms:
@@ -50,22 +105,22 @@ public class AbnormalityUtils {
 			}
 			char d = text.charAt(1);
 			if (d == '0') {
-				return Abnormality.A0;
+				return A0;
 			}
 			else if (d == '1') {
-				return Abnormality.A1;
+				return A1;
 			}
 			else if (d == '2') {
-				return Abnormality.A2;
+				return A2;
 			}
 			else if (d == '3') {
-				return Abnormality.A3;
+				return A3;
 			}
 			else if (d == '4') {
-				return Abnormality.A4;
+				return A4;
 			}
 			else if (d == '5') {
-				return Abnormality.A5;
+				return A5;
 			}
 			throw new IllegalArgumentException("Not a valid abnormality constant: " + text);
 		}
@@ -80,53 +135,53 @@ public class AbnormalityUtils {
 
 	public static String toAbnormalityValueString(double value) {
 		//noinspection FloatingPointEquality
-		return (value == Abnormality.A0) ? "A0"
-				: (value == Abnormality.A1) ? "A1"
-				: (value == Abnormality.A2) ? "A2"
-				: (value == Abnormality.A3) ? "A3"
-				: (value == Abnormality.A4) ? "A4"
-				: (value == Abnormality.A5) ? "A5"
+		return (value == A0) ? "A0"
+				: (value == A1) ? "A1"
+				: (value == A2) ? "A2"
+				: (value == A3) ? "A3"
+				: (value == A4) ? "A4"
+				: (value == A5) ? "A5"
 				: String.valueOf(value);
 	}
 
 	public static double convertConstantStringToValue(String c) {
 		if ("A0".equalsIgnoreCase(c)) {
-			return Abnormality.A0;
+			return A0;
 		}
 		else if ("A1".equalsIgnoreCase(c)) {
-			return Abnormality.A1;
+			return A1;
 		}
 		else if ("A2".equalsIgnoreCase(c)) {
-			return Abnormality.A2;
+			return A2;
 		}
 		else if ("A3".equalsIgnoreCase(c)) {
-			return Abnormality.A3;
+			return A3;
 		}
 		else if ("A4".equalsIgnoreCase(c)) {
-			return Abnormality.A4;
+			return A4;
 		}
 		else if ("A5".equalsIgnoreCase(c)) {
-			return Abnormality.A5;
+			return A5;
 		}
 		else {
-			return Abnormality.A0;
+			return A0;
 		}
 	}
 
 	public static String convertValueToConstantString(double value) {
-		if (value < Abnormality.A1) {
+		if (value < A1) {
 			return "A0";
 		}
-		else if (value < Abnormality.A2) {
+		else if (value < A2) {
 			return "A1";
 		}
-		else if (value < Abnormality.A3) {
+		else if (value < A3) {
 			return "A2";
 		}
-		else if (value < Abnormality.A4) {
+		else if (value < A4) {
 			return "A3";
 		}
-		else if (value < Abnormality.A5) {
+		else if (value < A5) {
 			return "A4";
 		}
 		else {
@@ -165,6 +220,6 @@ public class AbnormalityUtils {
 	 * @created 25.06.2010
 	 */
 	public static double getDefault() {
-		return Abnormality.A5;
+		return A5;
 	}
 }

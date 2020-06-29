@@ -69,4 +69,8 @@ public interface Abnormality {
 	 * @return true, if the abnormality is (explicitly) defined
 	 */
 	boolean isSet(Value answerValue);
+
+	enum State {
+		NORMAL, ABNORMAL, NEUTRAL
+	}
 }
