@@ -22,7 +22,6 @@ package de.d3web.demos;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -44,10 +43,12 @@ import de.d3web.core.knowledge.terminology.NamedObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.QuestionNum;
 import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
+import de.d3web.core.knowledge.terminology.info.NumericalInterval;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.QuestionValue;
 import de.d3web.core.session.Session;
@@ -55,6 +56,7 @@ import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.values.ChoiceValue;
+import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.Unknown;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
@@ -88,7 +90,7 @@ public class ConsoleInterview {
 		this.keyboard = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 	}
 
-	public void run() {
+	public void run() throws IOException {
 		System.out.println();
 		System.out.println(" _____        _     ___     _               _            ");
 		System.out.println("|_   _|____ _| |_  |_ _|_ _| |_ ___ _ ___ _(_)_____ __ __");
@@ -99,19 +101,23 @@ public class ConsoleInterview {
 		printSolutions();
 	}
 
-	public void askForms() {
+	public void askForms() throws IOException {
 		Form form;
 		while ((form = interview.nextForm()) != null && !form.isEmpty()) {
 			askForm(form);
 		}
 	}
 
-	private void askForm(Form form) {
+	private void askForm(Form form) throws IOException {
 		System.out.println();
 
 		// print title container, if there is any
 		QContainer container = form.getRoot();
-		if (container != null) {
+		if (container == null) {
+			System.out.println("Next Form");
+			System.out.println("=========");
+		}
+		else {
 			String prompt = getPrompt(container);
 			if (!Strings.isBlank(prompt)) {
 				System.out.println(prompt);
@@ -123,7 +129,15 @@ public class ConsoleInterview {
 		List<Question> questions = form.getActiveQuestions();
 		for (int i = 0; i < questions.size(); i++) {
 			Question question = questions.get(i);
-			System.out.println((i + 1) + ". " + getPrompt(question));
+			String questionText = getPrompt(question);
+			if (question instanceof QuestionNum) {
+				final String unit = question.getInfoStore().getValue(MMInfo.UNIT);
+				if (unit != null) questionText += " (" + unit + ")";
+
+				final NumericalInterval range = question.getInfoStore().getValue(BasicProperties.QUESTION_NUM_RANGE);
+				if (range != null) questionText += " " + range;
+			}
+			System.out.println((i + 1) + ". " + questionText);
 		}
 		System.out.println();
 
@@ -136,7 +150,7 @@ public class ConsoleInterview {
 
 			boolean unknown = BasicProperties.isUnknownVisible(question);
 
-			// TODO only supporting choice questions at the moment
+			// TODO only supporting choice and num questions at the moment
 			QuestionValue value = Unknown.getInstance();
 			if (question instanceof QuestionChoice) {
 				// print choices
@@ -151,6 +165,10 @@ public class ConsoleInterview {
 				if (index >= 1) {
 					value = new ChoiceValue(choices.get(index - 1));
 				}
+			}
+			else if (question instanceof QuestionNum) {
+				NumericalInterval range = question.getInfoStore().getValue(BasicProperties.QUESTION_NUM_RANGE);
+				value = new NumValue(readNumValue(range));
 			}
 
 			// answer the question
@@ -201,7 +219,7 @@ public class ConsoleInterview {
 		return Strings.htmlToPlain(MMInfo.getPrompt(container, lang));
 	}
 
-	private int readInputDigit(int min, int max) {
+	private int readInputDigit(int min, int max) throws IOException {
 		while (true) {
 			try {
 				// skip empty lines, or accept the only item if there is only one
@@ -219,8 +237,31 @@ public class ConsoleInterview {
 			}
 			catch (NumberFormatException ignore) {
 			}
-			catch (IOException e) {
-				throw new IOError(e);
+			// if not in range, beep
+			Toolkit.getDefaultToolkit().beep();
+		}
+	}
+
+	private double readNumValue(NumericalInterval range) throws IOException {
+		String line = "";
+		while (true) {
+			try {
+				line = keyboard.readLine();
+				double number = Double.parseDouble(line);
+				if (range != null
+						&& (range.isLeftOpen() && number <= range.getLeft()
+						|| !range.isLeftOpen() && number < range.getLeft()
+						|| range.isRightOpen() && number >= range.getRight()
+						|| !range.isRightOpen() && number > range.getRight())) {
+					System.out.println();
+					System.out.print("Please enter a value in the following range: " + range + "  ");
+				}
+				else {
+					return number;
+				}
+			}
+			catch (NumberFormatException ignore) {
+				System.out.println("Unable to parse number: '" + line + "'");
 			}
 			// if not in range, beep
 			Toolkit.getDefaultToolkit().beep();
