@@ -185,7 +185,7 @@ public class ConsoleInterview {
 
 		// print them as grouped list
 		Map<Solution, Set<Solution>> groups = KnowledgeBaseUtils.groupSolutions(solutions).toMap();
-		System.out.println(Strings.pluralOf(groups.size(), state.name() + " solutions"));
+		System.out.println(Strings.pluralOf(groups.size(), state.name() + " solution"));
 		groups.forEach((group, items) -> {
 			System.out.println("* " + getPrompt(group));
 			for (Solution item : items) {
