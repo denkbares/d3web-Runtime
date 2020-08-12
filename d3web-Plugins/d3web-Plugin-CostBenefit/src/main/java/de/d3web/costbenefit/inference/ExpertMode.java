@@ -59,7 +59,6 @@ import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
-import de.d3web.interview.Interview;
 
 import static de.d3web.core.inference.PSMethod.Type.source;
 
@@ -462,11 +461,9 @@ public class ExpertMode implements SessionObject {
 			return false;
 		}
 
-		// check is any source facts are provided for any active question of the QContainer
-		Blackboard blackboard = session.getBlackboard();
-		Interview interview = Interview.get(session);
-		List<Question> questions = interview.getFormStrategy().getActiveQuestions(currentQContainer, session);
-		for (Question child : questions) {
+		// check is any source facts are provided for any successor question of the QContainer
+		final Blackboard blackboard = session.getBlackboard();
+		for (Question child : KnowledgeBaseUtils.getSuccessors(currentQContainer, Question.class)) {
 			if (blackboard.getContributingPSMethods(child).stream().anyMatch(psMethod -> psMethod.hasType(source))) {
 				return true;
 			}
