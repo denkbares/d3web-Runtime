@@ -60,6 +60,7 @@ import de.d3web.core.knowledge.terminology.Rating;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.MMInfo;
+import de.d3web.core.knowledge.terminology.info.NumDisplay;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
@@ -613,8 +614,13 @@ public final class ValueUtils {
 			return getDateOrDurationVerbalization((QuestionDate) question, ((DateValue) value).getDate());
 		}
 		else if (value instanceof NumValue) {
-			// round value to digits, if specified
 			double val = ((NumValue) value).getDouble();
+			NumDisplay numDisplay = BasicProperties.getNumDisplay((QuestionNum) question);
+			if (numDisplay == NumDisplay.hexadecimal) {
+				final String hexString = Long.toHexString((long) val).toUpperCase();
+				return insertSpaces(hexString);
+			}
+			// round value to digits, if specified
 			Integer optionalDigits = question.getInfoStore().getValue(BasicProperties.DIGITS);
 			if (optionalDigits != null) {
 				int digits = Math.abs(optionalDigits);
@@ -636,6 +642,17 @@ public final class ValueUtils {
 		else {
 			return String.valueOf(value.getValue());
 		}
+	}
+
+	private static String insertSpaces(String hexString) {
+		StringBuilder builder = new StringBuilder();
+		if (hexString.length() % 2 == 1) hexString = "0" + hexString;
+		char[] charArray = hexString.toCharArray();
+		for (int i = 0; i < charArray.length; i++) {
+			if (i % 2 == 0) builder.append(" ");
+			builder.append(charArray[i]);
+		}
+		return builder.toString();
 	}
 
 	/**
