@@ -116,12 +116,17 @@ public class DefaultBlackboard implements Blackboard {
 		Value oldValue = getValue((ValueObject) terminologyObject);
 		this.getValueStorage().add(fact);
 		propagate(terminologyObject, oldValue, fact.getPSMethod().hasType(Type.source));
-		// add the arriving fact to the protocol
-		// if it was entered by a source psmethod
-		if (isSourceRecording() && psMethod != null && psMethod.hasType(Type.source)) {
+
+		if (shouldWriteToProtocol(psMethod)) {
 			getSession().getProtocol()
 					.addEntry(new FactProtocolEntry(session.getPropagationManager().getPropagationTime(), fact));
 		}
+	}
+
+	private boolean shouldWriteToProtocol(PSMethod psMethod) {
+		// add the arriving fact to the protocol
+		// if it was entered by a source ps-method
+		return isSourceRecording() && psMethod != null && psMethod.hasType(Type.source);
 	}
 
 	/**
@@ -150,13 +155,6 @@ public class DefaultBlackboard implements Blackboard {
 		this.listeners.remove(listener);
 	}
 
-	@Override
-	public void removeValueFact(Fact fact) {
-		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
-		this.getValueStorage().remove(fact);
-		propagate(fact.getTerminologyObject(), oldValue, false);
-	}
-
 	/**
 	 * Removes all value facts with the specified source from this blackboard for the specified terminology object. If
 	 * no such fact exists in the blackboard, this method has no effect.
@@ -166,9 +164,29 @@ public class DefaultBlackboard implements Blackboard {
 	 */
 	@Override
 	public void removeValueFact(TerminologyObject terminologyObject, Object source) {
-		Value oldValue = getValue((ValueObject) terminologyObject);
-		this.getValueStorage().remove(terminologyObject, source);
-		propagate(terminologyObject, oldValue, false);
+		for (Fact fact : getValueStorage().getAllFacts(terminologyObject)) {
+			if (source.equals(fact.getSource())) {
+				removeValueFact(fact);
+				return; // there is at most one fact per source
+			}
+		}
+	}
+
+	@Override
+	public void removeValueFact(Fact fact) {
+		Value oldValue = getValue((ValueObject) fact.getTerminologyObject());
+		this.getValueStorage().remove(fact);
+		propagate(fact.getTerminologyObject(), oldValue, false);
+
+		if (shouldWriteToProtocol(fact.getPSMethod())) {
+			// we create an entry setting undefined for object, source and ps-method, which is equivalent
+			// to removing an existing fact for the same combination (there is at most one fact per source)
+			final Fact protocolFact = FactFactory.createFact(fact.getTerminologyObject(), UndefinedValue.getInstance(),
+					fact.getSource(), fact.getPSMethod());
+			final FactProtocolEntry entry = new FactProtocolEntry(session.getPropagationManager()
+					.getPropagationTime(), protocolFact);
+			getSession().getProtocol().addEntry(entry);
+		}
 	}
 
 	@NotNull
