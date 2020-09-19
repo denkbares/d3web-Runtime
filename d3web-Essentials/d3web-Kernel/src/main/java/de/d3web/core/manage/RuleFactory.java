@@ -129,9 +129,7 @@ public final class RuleFactory {
 		return createIndicationRule(qaSets, condition, null);
 	}
 
-	public static Rule createIndicationRule(
-			QASet qaSet,
-			Condition condition) {
+	public static Rule createIndicationRule(QASet qaSet, Condition condition) {
 		List<QASet> ind = new LinkedList<>();
 		ind.add(qaSet);
 		return createIndicationRule(ind, condition, null);
