@@ -38,7 +38,7 @@ import de.d3web.core.session.blackboard.Blackboard;
 public class DefaultForm implements Form {
 
 	private final InterviewObject interviewObject;
-	private String title = "noname";
+	private final String title;
 	private final Session session;
 
 	public DefaultForm(String title, InterviewObject interviewObject, Session session) {
@@ -153,7 +153,6 @@ public class DefaultForm implements Form {
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public InterviewObject getInterviewObject() {
 		return this.interviewObject;
