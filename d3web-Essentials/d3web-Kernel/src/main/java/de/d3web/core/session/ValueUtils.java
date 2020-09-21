@@ -624,7 +624,11 @@ public final class ValueUtils {
 			// and format the result string
 			Locale saveLang = (lang == null) ? Locale.getDefault() : lang;
 			String unit = question.getInfoStore().getValue(MMInfo.UNIT, saveLang);
-			String numText = NumberFormat.getInstance(saveLang).format(val);
+			NumberFormat numberFormat = NumberFormat.getInstance(saveLang);
+			if (val < 1000000) {
+				numberFormat.setGroupingUsed(false);
+			}
+			String numText = numberFormat.format(val);
 			return Strings.isBlank(unit) ? numText : (numText + " " + unit);
 		}
 		else if (value instanceof Unknown) {
