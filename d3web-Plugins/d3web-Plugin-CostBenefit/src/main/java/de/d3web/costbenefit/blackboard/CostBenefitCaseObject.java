@@ -334,12 +334,25 @@ public class CostBenefitCaseObject implements SessionObject {
 				for (PSMethod contributing : blackboard.getContributingPSMethods(question)) {
 					// and also remove only facts from source solvers, not derived values
 					if (contributing.hasType(PSMethod.Type.source)) {
-						blackboard.removeValueFact(blackboard.getValueFact(question, contributing));
+						removeValueFactWithoutRecording(blackboard, blackboard.getValueFact(question, contributing));
 					}
 				}
 			}
 			retractQuestions(nob, session);
 		}
+	}
+
+	/**
+	 * We don't want source recording while retracting these questions...
+	 * They are retracted because of the cost benefit problem solver, not by the user. If we would record it normally,
+	 * loading such a case from persistence would not work, because it would contain entries looking like the user
+	 * retracted the fact.
+	 */
+	private void removeValueFactWithoutRecording(Blackboard blackboard, Fact valueFact) {
+		boolean sourceRecording = blackboard.isSourceRecording();
+		blackboard.setSourceRecording(false);
+		blackboard.removeValueFact(valueFact);
+		blackboard.setSourceRecording(sourceRecording);
 	}
 
 	/**
