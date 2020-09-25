@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -19,10 +19,15 @@
 
 package de.d3web.core.session.blackboard;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.session.Value;
 
+/**
+ * Default implementation for a fact
+ */
 public class DefaultFact implements Fact {
 
 	private final TerminologyObject terminologyObject;
@@ -30,17 +35,8 @@ public class DefaultFact implements Fact {
 	private final Object source;
 	private final PSMethod psMethod;
 
-	/**
-	 * 
-	 * @param terminologyObject
-	 * @param value
-	 * @param source
-	 * @param psMethod
-	 * @throws NullPointerException if a null object reference is passed in at
-	 *         any parameter
-	 */
 	public DefaultFact(TerminologyObject terminologyObject,
-						Value value, Object source, PSMethod psMethod) {
+					   Value value, Object source, PSMethod psMethod) {
 		if (terminologyObject == null || value == null || source == null || psMethod == null) {
 			throw new NullPointerException();
 		}
@@ -51,21 +47,25 @@ public class DefaultFact implements Fact {
 	}
 
 	@Override
+	@NotNull
 	public PSMethod getPSMethod() {
 		return psMethod;
 	}
 
 	@Override
+	@NotNull
 	public Object getSource() {
 		return source;
 	}
 
 	@Override
+	@NotNull
 	public TerminologyObject getTerminologyObject() {
 		return terminologyObject;
 	}
 
 	@Override
+	@NotNull
 	public Value getValue() {
 		return value;
 	}
