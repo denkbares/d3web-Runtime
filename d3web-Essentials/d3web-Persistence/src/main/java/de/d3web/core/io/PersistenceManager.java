@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -499,41 +500,41 @@ public final class PersistenceManager {
 	/**
 	 * Loads a knowledge base from a specified path (folder).
 	 *
-	 * @param folder the specified path to load the knowledge base from
+	 * @param path the specified path (directory or file) to load the knowledge base from
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified folder
 	 * @throws IOException if an error occurs during opening and reading the file
 	 */
-	public KnowledgeBase load(Path folder) throws IOException {
-		return load(folder, new DummyProgressListener());
+	public KnowledgeBase load(Path path) throws IOException {
+		return load(path, new DummyProgressListener());
 	}
 
 	/**
 	 * Loads a knowledge base from a specified path (folder) and notifies the specified listener about the working
 	 * progress.
 	 *
-	 * @param folder   the specified path to load the knowledge base from
+	 * @param path   the specified path (directory or file) to load the knowledge base from
 	 * @param listener the specified listener which should be notified about the load progress
 	 * @return a {@link KnowledgeBase} instance with the knowledge contained in the specified folder
 	 * @throws IOException if an error occurs during opening and reading the file
 	 */
-	public KnowledgeBase load(Path folder, ProgressListener listener) throws IOException {
-		if (!Files.isDirectory(folder)) {
-			throw new IOException("The knowledge base root is not a folder: " + folder);
+	public KnowledgeBase load(Path path, ProgressListener listener) throws IOException {
+		if (!Files.isDirectory(path)) {
+			return load(path.toFile(), listener);
 		}
 
-		listener.updateProgress(0, "Loading knowledge base: " + folder.toRealPath());
+		listener.updateProgress(0, "Loading knowledge base: " + path.toRealPath());
 		// pre-calculate the list of the contained, relevant files
-		List<Path> files = Files.walk(folder)
+		List<Path> files = Files.walk(path)
 				// ignore directories
 				.filter(Files::isRegularFile)
 				// ignore not-required files necessary for previous versions of persistence
-				.filter(p -> !notNeeded(folder.relativize(p).toString()))
+				.filter(p -> !notNeeded(path.relativize(p).toString()))
 				.collect(Collectors.toList());
 
 		// pre-calculate the size of the files to be parsed (no Stream-implementation, due to IOExceptions)
 		long size = 0;
 		for (Path file : files) {
-			size += isMultimedia(folder.relativize(file)) ? 1 : Files.size(file);
+			size += isMultimedia(path.relativize(file)) ? 1 : Files.size(file);
 		}
 
 		KnowledgeBase kb = new KnowledgeBase();
@@ -543,7 +544,7 @@ public final class PersistenceManager {
 			Iterator<Path> iterator = files.iterator();
 			while (iterator.hasNext()) {
 				Path file = iterator.next();
-				String name = folder.relativize(file).toString().replace(File.separatorChar, '/');
+				String name = path.relativize(file).toString().replace(File.separatorChar, '/');
 
 				// checks if this entry can be parsed with this plugin
 				String filePattern = plugin.getParameter("filepattern");
@@ -570,13 +571,13 @@ public final class PersistenceManager {
 		// if we not have parsed at least one file
 		// we assume that this is no valid knowledge base
 		if (!parsedAnyFile) {
-			throw new IOException("The parsed file appears not to be a valid knowledge base: " + folder);
+			throw new IOException("The parsed file appears not to be a valid knowledge base: " + path);
 		}
 
 		// finally scan all files in multimedia folder
 		// and add them to the knowledge base as resources
 		for (Path file : files) {
-			Path relativePath = folder.relativize(file);
+			Path relativePath = path.relativize(file);
 			String name = relativePath.toString();
 			if (isMultimedia(relativePath)) {
 				// prepare progress for the next step,
@@ -707,7 +708,7 @@ public final class PersistenceManager {
 				cpl.updateProgress(percent, "Saving binary resources");
 			}
 		}
-		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", "UTF-8"));
+		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", StandardCharsets.UTF_8));
 		// delete old backup file
 		if (bakfile.exists() && !recursiveDelete(bakfile)) {
 			Log.warning("Unable to delete old backup file: " + bakfile.getCanonicalPath());
