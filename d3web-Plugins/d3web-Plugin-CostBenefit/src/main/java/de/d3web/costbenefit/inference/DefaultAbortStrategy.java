@@ -100,7 +100,7 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	public void nextStep(Path path, Session session) throws AbortException {
 		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
 		sessionObject.steps++;
-		if (isAbortReached(sessionObject)) {
+		if (isAbortReached(sessionObject) || AbortStrategy.isPropagationTerminated(session)) {
 			throw new AbortException();
 		}
 	}
@@ -138,8 +138,6 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	 * Checks if at least one target is reached in the current calculation. If there is no active calculation, the
 	 * result of the last calculation is returned.
 	 *
-	 * @param session
-	 * @return
 	 * @created 23.02.2012
 	 */
 	public boolean isAnyTargetReached(Session session) {

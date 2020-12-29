@@ -47,4 +47,15 @@ public interface AbortStrategy {
 	 * @throws AbortException if the calculation should be stopped
 	 */
 	void nextStep(Path path, Session session) throws AbortException;
+
+	/**
+	 * Check whether the propagation of the session was terminated in general. In this case, it normally makes sense to
+	 * also abort the calculation.
+	 *
+	 * @param session the session for which to check
+	 * @return true if the propagation of the session has been terminated
+	 */
+	static boolean isPropagationTerminated(Session session) {
+		return Thread.currentThread().isInterrupted() || session.getPropagationManager().isTerminated();
+	}
 }
