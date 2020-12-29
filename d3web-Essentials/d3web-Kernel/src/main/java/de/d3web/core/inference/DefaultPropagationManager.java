@@ -471,6 +471,11 @@ public class DefaultPropagationManager implements PropagationManager {
 		this.terminated = true;
 	}
 
+	@Override
+	public boolean isTerminated() {
+		return terminated;
+	}
+
 	private void checkTerminated() throws SessionTerminatedException {
 		if (Thread.interrupted()) {
 			// we terminate if we got interrupted,

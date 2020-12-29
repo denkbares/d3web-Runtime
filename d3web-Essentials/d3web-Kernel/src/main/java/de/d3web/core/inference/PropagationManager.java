@@ -165,6 +165,14 @@ public interface PropagationManager {
 	void terminate();
 
 	/**
+	 * Check whether the propagation for the current session is marked to be terminated by calling {@link #terminate()}
+	 * This can be used for example by problem solvers that normally take a long time to finish propagation earlier.
+	 *
+	 * @return true if the session was terminated, false otherwise
+	 */
+	boolean isTerminated();
+
+	/**
 	 * Returns whether the given ValueObject is currently set to be forced for propagation (this means the propagation
 	 * will happen whether or not the value of the {@link ValueObject} has changed or not).
 	 *

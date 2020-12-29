@@ -211,6 +211,11 @@ public class DecoratedSession implements DerivedSession {
 			}
 
 			@Override
+			public boolean isTerminated() {
+				return false;
+			}
+
+			@Override
 			public void forcePropagate(ValueObject object, Value oldValue) throws SessionTerminatedException {
 			}
 
