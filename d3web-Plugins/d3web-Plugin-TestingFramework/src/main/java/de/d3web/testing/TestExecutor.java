@@ -88,7 +88,8 @@ public class TestExecutor {
 		this.specifications = specifications;
 		this.progressListener = listener;
 		AtomicLong threadNumber = new AtomicLong();
-		this.executor = Executors.newFixedThreadPool(numberOfThreads, r -> new Thread(r, "Test-Executor-" + threadNumber.incrementAndGet()));
+		this.executor = Executors.newFixedThreadPool(numberOfThreads, r -> new Thread(r, "Test-Executor-" + threadNumber
+				.incrementAndGet()));
 		this.build = new BuildResult();
 	}
 
@@ -492,12 +493,10 @@ public class TestExecutor {
 			catch (Throwable e) { // NOSONAR
 				// must catch throwable here to also handle unexpected errors
 				// such as StackOverflow, memory issues or invalid plugins (linkage) errors
-				String message = "Unexpected error in test " +
-						specification.getTestName() + ", " +
-						"during testing '" + testObjectName + "'";
-				testResult.addUnexpectedMessage(testObjectName,
-						new Message(Message.Type.ERROR, message + ": " + e));
-				Log.severe(message, e);
+				String message = "Unexpected error in test " + specification.getTestName() + ", during testing '" + testObjectName + "': "
+						+ e.getClass().getName() + ": " + e.getMessage();
+				testResult.addUnexpectedMessage(testObjectName, new Message(Message.Type.ERROR, message + ": " + e));
+				Log.warning(message);
 				return null;
 			}
 		}
