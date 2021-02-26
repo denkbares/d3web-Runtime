@@ -339,6 +339,15 @@
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verificationCompleteSolution">
+		<parameter id="name" value="verificationCompleteSolution" />
+		<parameter id="description" value="Allows to specify the solution of the knowledge base to be shown after a verification is complete." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="testEquipmentAvailabilityParent">
 		<parameter id="name" value="testEquipmentAvailabilityParent" />
 		<parameter id="description"
