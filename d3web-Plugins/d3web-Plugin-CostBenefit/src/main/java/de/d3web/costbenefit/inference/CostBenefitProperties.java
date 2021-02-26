@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.ObjectNameList;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
@@ -78,6 +80,11 @@ public class CostBenefitProperties {
 	public static final Property<String> NO_ERROR_SOLUTION = Property.getProperty("noErrorSolution", String.class);
 
 	/**
+	 * Allows to specify the solution to be shown when a repair verification is complete
+	 */
+	public static final Property<String> VERIFICATION_COMPLETE_SOLUTION = Property.getProperty("verificationCompleteSolution", String.class);
+
+	/**
 	 * Allows to specify the parent of the test equipment availability questions
 	 */
 	public static final Property<String> TEST_EQUIPMENT_AVAILABILITY_PARENT = Property.getProperty("testEquipmentAvailabilityParent", String.class);
@@ -97,6 +104,54 @@ public class CostBenefitProperties {
 	 * Allows to specify the interrupt QContainer.
 	 */
 	public static final Property<String> INTERRUPT_QCONTAINER = Property.getProperty("interruptQContainer", String.class);
+
+	/**
+	 * Checks whether the given solution is the solution marked as the no-error-solution
+	 *
+	 * @param solution the solution to check
+	 * @return true if the given solution is the no error solution, false otherwise
+	 */
+	public static boolean isNoErrorSolution(Solution solution) {
+		return solution.equals(getNoErrorSolution(solution.getKnowledgeBase()));
+	}
+
+	/**
+	 * Get the no error solution of the knowledge base (the solution to show if no error could be detected in the case).
+	 * The no-error-solution is expected to be marked using the property {@link CostBenefitProperties#NO_ERROR_SOLUTION)
+	 *
+	 * @param kb the knowledge base to get the no-error-solution from
+	 * @return the no-error-solution or null, if it does not exist or cannot be found.
+	 */
+	@Nullable
+	public static Solution getNoErrorSolution(KnowledgeBase kb) {
+		Solution solution = kb.getManager()
+				.searchSolution(kb.getInfoStore().getValue(CostBenefitProperties.NO_ERROR_SOLUTION));
+		// try fallback
+		if (solution == null) {
+			solution = kb.getManager().searchSolution("NoErrorSolution");
+		}
+		return solution;
+	}
+
+	/**
+	 * Get the verification-complete-solution of the knowledge base (the solution to show if the verification of a
+	 * previous case is complete, e.g. after repair).
+	 * The verification-complete-solution is expected to be marked using the property {@link
+	 * CostBenefitProperties#VERIFICATION_COMPLETE_SOLUTION)
+	 *
+	 * @param kb the knowledge base to get the verification-complete-solution from
+	 * @return the verification-complete-solution or null, if it does not exist or cannot be found.
+	 */
+	@Nullable
+	public static Solution getVerificationCompleteSolution(KnowledgeBase kb) {
+		Solution solution = kb.getManager()
+				.searchSolution(kb.getInfoStore().getValue(CostBenefitProperties.VERIFICATION_COMPLETE_SOLUTION));
+		// try fallback
+		if (solution == null) {
+			solution = kb.getManager().searchSolution("VerificationCompleteSolution");
+		}
+		return solution;
+	}
 
 	public static final String CONNECT_UMD_CHOICE_NAME = "connect_umd"; // CBX
 	public static final String ADAPTED_CHOICE_NAME = "adapt"; // CBX
@@ -208,13 +263,9 @@ public class CostBenefitProperties {
 		// TODO: here some hard-coded stuff (convention) is used. Replace by searching knowledge base for UUT state properties
 		QContainer systemStateParent;
 		String parentName = base.getInfoStore().getValue(SYSTEM_STATE_PARENT);
-		if (parentName != null) {
-			systemStateParent = base.getManager().searchQContainer(parentName);
-		}
-		else {
-			// KnowledgeDesigner (SGP/CAN) backwards compatibility
-			systemStateParent = base.getManager().searchQContainer("target_state_questionnaire");
-		}
+		// KnowledgeDesigner (SGP/CAN) backwards compatibility
+		systemStateParent = base.getManager()
+				.searchQContainer(Objects.requireNonNullElse(parentName, "target_state_questionnaire"));
 		if (systemStateParent == null) return Collections.emptyList();
 		return Stream.of(systemStateParent.getChildren())
 				.filter(Question.class::isInstance).map(Question.class::cast).collect(Collectors.toList());
