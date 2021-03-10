@@ -131,7 +131,7 @@ public class EqualConditionHandler implements FragmentHandler<KnowledgeBase> {
 				}
 			}
 			else {
-				throw new IOException("CondEqual for question '" + idObject.getName() +
+				throw new IOException("CondEqual for question '" + idObject +
 						"' is not supported");
 			}
 		}
