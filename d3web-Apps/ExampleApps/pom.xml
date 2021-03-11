@@ -66,6 +66,11 @@
 					<artifactId>d3web-Plugin-TimeDB</artifactId>
 					<version>${project.version}</version>
 				</dependency>
+				<dependency>
+					<groupId>com.denkbares</groupId>
+					<artifactId>d3web-Plugin-ASP</artifactId>
+					<version>${d3web.version}</version>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
