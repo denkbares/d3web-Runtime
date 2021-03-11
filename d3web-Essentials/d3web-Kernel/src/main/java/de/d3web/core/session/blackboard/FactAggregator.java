@@ -56,6 +56,19 @@ public final class FactAggregator implements Copyable<FactAggregator> {
 	}
 
 	/**
+	 * Creates a new fact aggregator for the specified facts.
+	 * <p>
+	 * Note: This method assumes that there are not multiple facts for the same source. This is not explicitly tested.
+	 * If this is not sure, use default constructor and add the facts afterwards.
+	 *
+	 * @param facts the facts to be aggregated
+	 */
+	public FactAggregator(Collection<Fact> facts) {
+		this.facts = new ArrayList<>(facts);
+		this.mergedFact = null;
+	}
+
+	/**
 	 * Copy constructor to create a deep copy of this instance.
 	 *
 	 * @param source the source instance to be copied
