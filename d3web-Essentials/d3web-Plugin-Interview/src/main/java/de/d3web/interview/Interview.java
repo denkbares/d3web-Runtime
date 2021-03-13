@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.interview.inference.PSMethodInterview;
@@ -90,6 +91,15 @@ public interface Interview extends de.d3web.core.session.interviewmanager.Interv
 	 */
 	@Override
 	boolean isActive(InterviewObject interviewObject);
+
+	/**
+	 * Returns true if the choice can be offered to the user in the specified session. If false, the option should be
+	 * hidden or disabled by the interview, not allow the user to select this option.
+	 *
+	 * @param choice the choice to check for availability
+	 * @return true if the choice is available
+	 */
+	boolean isAvailable(Choice choice);
 
 	/**
 	 * Returns the interview that is currently associated to the specified session.

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -22,13 +22,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.denkbares.utils.Log;
+import de.d3web.core.inference.InterviewSupport;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
+import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -42,15 +45,13 @@ import de.d3web.core.session.values.UndefinedValue;
 import static de.d3web.core.knowledge.Indication.State.*;
 
 /**
- * The default implementation of {@link Interview}: This class stores an
- * {@link InterviewAgenda} managing the activation/deactivation of
- * {@link Question}/{@link QContainer} instances, that are indicated due to
- * values entered in the specified {@link Session}.
+ * The default implementation of {@link Interview}: This class stores an {@link InterviewAgenda} managing the
+ * activation/deactivation of {@link Question}/{@link QContainer} instances, that are indicated due to values entered in
+ * the specified {@link Session}.
  * <p>
- * By the default--the {@link QASet} to be answered next by a dialog-- is
- * wrapped in a {@link Form}, that can be retrieved by nextForm(). A
- * {@link FormStrategy} decides about the nature of the next {@link QASet} to be
- * presented in the dialog.
+ * By the default--the {@link QASet} to be answered next by a dialog-- is wrapped in a {@link Form}, that can be
+ * retrieved by nextForm(). A {@link FormStrategy} decides about the nature of the next {@link QASet} to be presented in
+ * the dialog.
  *
  * @author joba
  */
@@ -58,14 +59,14 @@ public class DefaultInterview implements Interview {
 
 	private final InterviewAgenda agenda;
 	private final Session session;
+	private final List<InterviewSupport> supports;
 
 	// Strategy: how to generate the forms for the dialog?
 	// E.g.: One question vs. multiple questions presented by the dialog
 	private FormStrategy formStrategy;
 
 	/**
-	 * Initializes an interview for a specified session based on a specified
-	 * knowledge base.
+	 * Initializes an interview for a specified session based on a specified knowledge base.
 	 *
 	 * @param session the specified session
 	 */
@@ -73,11 +74,28 @@ public class DefaultInterview implements Interview {
 		this.session = session;
 		this.agenda = new InterviewAgenda();
 		this.formStrategy = new NextUnansweredQuestionFormStrategy();
+
+		// prepare a list of all InterviewSupport PSMethods of this session
+		this.supports = session.getPSMethods().stream()
+				.filter(InterviewSupport.class::isInstance).map(InterviewSupport.class::cast)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Form nextForm() {
 		return formStrategy.nextForm(this.agenda.getCurrentlyActiveObjects(), session);
+	}
+
+	@Override
+	public boolean isAvailable(Choice choice) {
+		// If any interview support them dis-encourages the choice, do not display
+		for (InterviewSupport support : supports) {
+			if (!support.isAvailable(session, choice)) {
+				return false;
+			}
+		}
+		// no suppress of the choice is found, so allow to be displayed
+		return true;
 	}
 
 	@Override
@@ -205,11 +223,10 @@ public class DefaultInterview implements Interview {
 	}
 
 	/**
-	 * Usually, the specified interviewObject has changed. Therefore, we need to
-	 * (recursively) check whether the parental {@link QContainer} instances
-	 * need to be activated/deactivated due to the value change. For instance,
-	 * if every {@link Question} of a {@link QContainer} is inactive, then the
-	 * parental {@link QContainer} should be deactivated, too.
+	 * Usually, the specified interviewObject has changed. Therefore, we need to (recursively) check whether the
+	 * parental {@link QContainer} instances need to be activated/deactivated due to the value change. For instance, if
+	 * every {@link Question} of a {@link QContainer} is inactive, then the parental {@link QContainer} should be
+	 * deactivated, too.
 	 *
 	 * @param interviewObject object for which to check parent
 	 */
@@ -302,8 +319,8 @@ public class DefaultInterview implements Interview {
 	}
 
 	/**
-	 * For a specified {@link InterviewObject} instance all parental QContainers
-	 * are computed, that are included in the current {@link InterviewAgenda}.
+	 * For a specified {@link InterviewObject} instance all parental QContainers are computed, that are included in the
+	 * current {@link InterviewAgenda}.
 	 *
 	 * @param interviewObject the specified {@link InterviewObject} instance
 	 * @return all (recursively) parental {@link QContainer} instances that are on the agenda
