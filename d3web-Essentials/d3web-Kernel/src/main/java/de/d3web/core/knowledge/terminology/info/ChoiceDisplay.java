@@ -24,8 +24,15 @@ public enum ChoiceDisplay {
 	digital,
 
 	/**
+	 * Displays the choices as e.g. a drop-down field. This option may e.g. be used for large numbers of potential
+	 * answer values.
+	 */
+	dropdown,
+
+	/**
 	 * Displays the choices as e.g. a drop-down field, often combined with some ability to enter text to filter the
-	 * potential values during typing. This option may e.g. be used for large numbers of potential answer values.
+	 * potential values during typing. This option may e.g. be used for large numbers of potential answer values. If the
+	 * user interface does not provide filter capability, it should be displayed as {@link #dropdown}.
 	 */
 	filter,
 
