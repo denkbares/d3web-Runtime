@@ -20,8 +20,12 @@ package de.d3web.testing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.denkbares.strings.Strings;
 
@@ -160,5 +164,25 @@ public abstract class AbstractTest<T> implements Test<T> {
 			}
 		}
 		return count;
+	}
+
+	@NotNull
+	protected Message getMessage(List<MessageObject> messageObjects, Collection<String> messages, Message.Type messageType) {
+		return getMessage(null, messageObjects, messages, messageType);
+	}
+
+	@NotNull
+	protected Message getMessage(String suffix, List<MessageObject> messageObjects, Collection<String> messages, Message.Type messageType) {
+		if (messages.isEmpty()) return new Message(Message.Type.SUCCESS, suffix);
+		String message = "The following " + Strings.pluralOf(messages.size(), messageType.toString().toLowerCase()) +
+				" were detected:\n* " + getMessageStringFromCollection(messages)
+				+ (Strings.isBlank(suffix) ? "" : ("\n\n" + suffix));
+		return new Message(messageType, message, messageObjects);
+	}
+
+	protected String getMessageStringFromCollection(Collection<String> messages) {
+		return messages.stream()
+				.map(s -> Strings.trimRight(s).replace("\n", "\n** "))
+				.collect(Collectors.joining("\n* "));
 	}
 }
