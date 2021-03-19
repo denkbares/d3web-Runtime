@@ -35,9 +35,9 @@ public enum SolutionDisplay {
 	context,
 
 	/**
-	 * Specifies that that the solution is a user-relevant group of sub-solution. For these
+	 * Specifies that the solution is a user-relevant group of sub-solutions. For these
 	 * groups, the grouping solution is more relevant for the user. The group solution should be
-	 * displayed if any of the sun-solutions are derived, instead of the particular derived
+	 * displayed if any of the sub-solutions are derived, instead of the particular derived
 	 * sub-solutions. These derived sub-solution(s) of the group may be displayed to the user
 	 * additionally (if they are not context solutions) to explain the grouping solution.
 	 */
