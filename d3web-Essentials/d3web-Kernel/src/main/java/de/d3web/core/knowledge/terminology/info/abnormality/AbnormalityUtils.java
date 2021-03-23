@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -61,7 +63,9 @@ public class AbnormalityUtils {
 				State.NORMAL : State.NEUTRAL;
 	}
 
+	@NotNull
 	public static State getNormality(Choice choice) {
+		if (choice == null) return State.NEUTRAL;
 		// check if choice is declared as normal
 		Abnormality abnormality = BasicProperties.getAbnormality(choice.getQuestion());
 		ChoiceValue choiceValue = new ChoiceValue(choice);
