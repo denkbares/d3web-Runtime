@@ -42,11 +42,10 @@ public class MMInfo {
 	 * Examples of Description include, but is not limited to: an abstract, table of contents, reference to a graphical
 	 * representation of content or a free-text account of the content.
 	 */
-	public static final Property<String> DESCRIPTION =
-			Property.getProperty("description", String.class);
+	public static final Property<String> DESCRIPTION = Property.getProperty("description", String.class);
 
 	/**
-	 * The human readable name (prompt) for knowledge base object. This attribute may be used by any object that will we
+	 * The human readable name (prompt) for knowledge base object. This attribute may be used by any object that will be
 	 * represented to the user, especially questions, choices and solutions, but also for question containers.
 	 */
 	public final static Property<String> PROMPT = Property.getProperty("prompt", String.class);
@@ -66,8 +65,7 @@ public class MMInfo {
 	 * is specified for the knowledge base it represents the default value for all questions. See also 'unknownVisible'
 	 * to specify if 'unknown' is available to the user at all.
 	 */
-	public static final Property<String> UNKNOWN_VERBALISATION = Property.getProperty(
-			"unknownPrompt", String.class);
+	public static final Property<String> UNKNOWN_VERBALISATION = Property.getProperty("unknownPrompt", String.class);
 
 	/**
 	 * used for: Question the unit of numerical questions
