@@ -68,19 +68,19 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 		this(objectIdentifier, property, null, propertyValue);
 	}
 
-	public Identifier getObjectIdentifier() {
+	public @NotNull Identifier getObjectIdentifier() {
 		return objectIdentifier;
 	}
 
-	public Property<T> getProperty() {
+	public @NotNull Property<T> getProperty() {
 		return property;
 	}
 
-	public Locale getLocale() {
+	public @Nullable Locale getLocale() {
 		return locale;
 	}
 
-	public T getPropertyValue() {
+	public @Nullable T getPropertyValue() {
 		return propertyValue;
 	}
 
@@ -107,7 +107,7 @@ public class PropertyCheckTemplate<T> implements CheckTemplate {
 		}
 		if (object == null) {
 			throw new TransformationException("No knowledge base object found for object identifier " +
-					objectIdentifier.toExternalForm());
+					objectIdentifier.toPrettyPrint());
 		}
 		return new PropertyCheck<>(object, this.property, locale, propertyValue);
 	}
