@@ -3,11 +3,9 @@
  */
 package de.d3web.core.knowledge.terminology.info;
 
+import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
-import com.denkbares.strings.Identifier;
-import com.denkbares.strings.StringFragment;
 import com.denkbares.strings.Strings;
 
 /**
@@ -22,21 +20,12 @@ public class ObjectNameList extends LinkedList<String> {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		for (String object : this) {
-			if (builder.length() > 0) builder.append(", ");
-			builder.append(new Identifier(object).toExternalForm());
-		}
-		return builder.toString();
+		return Strings.concatParsable(", ", this.toArray(new String[0]));
 	}
 
 	public static ObjectNameList valueOf(String value) {
-		ObjectNameList list = new ObjectNameList();
-		List<StringFragment> splitUnquoted = Strings.splitUnquoted(value, ",");
-		for (StringFragment string : splitUnquoted) {
-			list.add(Strings.unquote(string.getContent().trim()));
-		}
-		return list;
+		ObjectNameList strings = new ObjectNameList();
+		Collections.addAll(strings, Strings.parseConcat(", ", value));
+		return strings;
 	}
-
 }
