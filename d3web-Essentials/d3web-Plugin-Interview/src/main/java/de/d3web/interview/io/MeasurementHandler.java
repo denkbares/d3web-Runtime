@@ -22,10 +22,10 @@ import de.d3web.interview.inference.condition.CondActive;
 import de.d3web.interview.measure.Measurement;
 
 /**
- * Handler for reading and writing {@link CondActive}s.
+ * Handler for reading and writing {@link Measurement}s.
  *
- * @author Albrecht Striffler (denkbares GmbH)
- * @created 09.06.16
+ * @author Volker Belli (denkbares GmbH)
+ * @created 11.12.16
  */
 public class MeasurementHandler implements FragmentHandler<KnowledgeBase> {
 	protected static final String ELEMENT = "measurement";
