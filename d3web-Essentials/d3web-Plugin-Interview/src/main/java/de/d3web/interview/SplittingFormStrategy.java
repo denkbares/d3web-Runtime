@@ -82,16 +82,7 @@ public class SplittingFormStrategy implements FormStrategy {
 	 */
 	@NotNull
 	private List<SplitForm> split(Form completeForm) {
-		LinkedList<List<Question>> groups = new LinkedList<>();
-		Question previous = null;
-		for (Question question : completeForm.getPotentialQuestions()) {
-			// check if (first/next) group is required
-			if ((previous == null) || splitter.requireSplit(previous, question)) {
-				groups.add(new ArrayList<>());
-			}
-			groups.getLast().add(question);
-			previous = question;
-		}
+		List<List<Question>> groups = splitQuestions(completeForm.getPotentialQuestions(), splitter);
 
 		// prepare the currently active questions
 		HashSet<Question> active = new HashSet<>(completeForm.getActiveQuestions());
@@ -105,6 +96,26 @@ public class SplittingFormStrategy implements FormStrategy {
 			result.add(new SplitForm(completeForm, groupNumber++, groups.size(), group));
 		}
 		return result;
+	}
+
+	/**
+	 * Splits the given list of questions according to the form splitter
+	 *
+	 * @return a list of list of questions representing the splitted original list
+	 */
+	@NotNull
+	public static List<List<Question>> splitQuestions(List<Question> questions, FormSplitter splitter) {
+		LinkedList<List<Question>> groups = new LinkedList<>();
+		Question previous = null;
+		for (Question question : questions) {
+			// check if (first/next) group is required
+			if ((previous == null) || splitter.requireSplit(previous, question)) {
+				groups.add(new ArrayList<>());
+			}
+			groups.getLast().add(question);
+			previous = question;
+		}
+		return groups;
 	}
 
 	@Override
@@ -187,7 +198,6 @@ public class SplittingFormStrategy implements FormStrategy {
 			return Objects.hash(delegate, groupNumber);
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public InterviewObject getInterviewObject() {
 			return delegate.getInterviewObject();
