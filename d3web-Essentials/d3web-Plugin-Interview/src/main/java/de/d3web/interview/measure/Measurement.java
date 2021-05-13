@@ -76,12 +76,14 @@ public class Measurement {
 	 */
 	public static final Property<Measurement> MEASUREMENT = Property.getProperty("measurement", Measurement.class);
 
-	public static Measurement getMeasurement(NamedObject object) {
+	@Nullable
+	public static Measurement getMeasurement(@Nullable NamedObject object) {
 		if (object == null) return null;
 		return object.getInfoStore().getValue(MEASUREMENT);
 	}
 
-	public static boolean hasMeasurement(NamedObject object) {
+	public static boolean hasMeasurement(@Nullable NamedObject object) {
+		if (object == null) return false;
 		return getMeasurement(object) != null;
 	}
 
