@@ -38,7 +38,7 @@ public class TestParser {
 	public static final Pattern IGNORE_PATTERN = Pattern.compile(IGNORE_REGEX,
 			Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
-	public static final Pattern PARAMETER_PATTERN = Pattern.compile("(?:[^(\"|\\s)]+|\".+?\")");
+	public static final Pattern PARAMETER_PATTERN = Pattern.compile("[^(\"|\\s)]+|\".+?\"");
 
 	private String declaration;
 	private final List<String> ignoreParameters = new LinkedList<>();
@@ -98,7 +98,6 @@ public class TestParser {
 		// check whether test object identifier string is a valid regex
 		String testObject = paramters.remove(0);
 		try {
-			//noinspection ResultOfMethodCallIgnored
 			Pattern.compile(testObject);
 		}
 		catch (PatternSyntaxException e) {
@@ -109,7 +108,7 @@ public class TestParser {
 		}
 
 		// check arguments and create error messages if necessary
-		String[] params = paramters.toArray(new String[paramters.size()]);
+		String[] params = paramters.toArray(String[]::new);
 		this.parameterCheckResult = test.checkArgs(params);
 
 		// check ignores and create error messages if necessary
@@ -117,7 +116,7 @@ public class TestParser {
 		int index = 0;
 		for (String ignore : ignoreParameters) {
 			List<String> args = splitParameters(ignore);
-			String[] array = args.toArray(new String[args.size()]);
+			String[] array = args.toArray(String[]::new);
 			ignores[index++] = array;
 			ignoreCheckResults.add(test.checkIgnore(array));
 		}
