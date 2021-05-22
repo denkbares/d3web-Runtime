@@ -41,6 +41,7 @@ public class TestResult implements Comparable<TestResult> {
 
 	private final String[] configuration;
 	private final String testName;
+	private long runTimeMillis = -1;
 
 	private Message summary = null;
 
@@ -303,5 +304,13 @@ public class TestResult implements Comparable<TestResult> {
 	// }
 	private static String generateUnknownTestObjectString(int i) {
 		return "unknown-TestObject-" + i;
+	}
+
+	public void setRunTime(long runTimeMillis) {
+		this.runTimeMillis = runTimeMillis;
+	}
+
+	public long getRunTimeMillis() {
+		return runTimeMillis;
 	}
 }

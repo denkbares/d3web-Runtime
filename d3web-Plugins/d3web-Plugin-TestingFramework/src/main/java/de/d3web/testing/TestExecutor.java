@@ -22,6 +22,7 @@ import com.denkbares.collections.MultiMap;
 import com.denkbares.progress.ParallelProgress;
 import com.denkbares.progress.ProgressListener;
 import com.denkbares.utils.Log;
+import com.denkbares.utils.Stopwatch;
 import de.d3web.testing.Message.Type;
 
 import static java.util.stream.Collectors.toList;
@@ -128,7 +129,7 @@ public class TestExecutor {
 			Collection<CallableTest<?>> ct = callableTests.get(specification);
 			if (this.aborted) {
 				for (CallableTest<?> callableTest : ct) {
-					if (!callableTest.started) {
+					if (!callableTest.hasStarted()) {
 						callableTest.testResult.addUnexpectedMessage(callableTest.testObjectName,
 								new Message(Type.ABORTED, "Test was aborted"));
 					}
@@ -428,7 +429,7 @@ public class TestExecutor {
 		private final T testObject;
 		private final TestResult testResult;
 		private ProgressListener progressListener = null;
-		private boolean started = false;
+		private volatile Stopwatch started = null;
 
 		public CallableTest(TestSpecification<T> specification, String testObjectName, T testObject, TestResult testresult) {
 			this.specification = specification;
@@ -446,7 +447,7 @@ public class TestExecutor {
 		}
 
 		public void testStarted() {
-			started = true;
+			started = new Stopwatch();
 			currentlyRunningTests.add(getMessage());
 			progressListener.updateProgress(0, getMessage());
 		}
@@ -499,6 +500,13 @@ public class TestExecutor {
 				Log.warning(message);
 				return null;
 			}
+			finally {
+				testResult.setRunTime(this.started.getTime());
+			}
+		}
+
+		public boolean hasStarted() {
+			return started != null;
 		}
 	}
 }
