@@ -89,6 +89,12 @@ public class CondAnd extends NonTerminalCondition {
 
 	@Override
 	public String toString() {
-		return Strings.concat(" AND ", getTerms());
+
+		if (getTerms().isEmpty()) {
+			return "true";
+		}
+		else {
+			return Strings.concat(" AND ", getTerms());
+		}
 	}
 }

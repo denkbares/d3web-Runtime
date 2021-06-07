@@ -51,4 +51,9 @@ public final class ConditionTrue extends TerminalCondition {
 	public boolean eval(Session theCase) {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "true";
+	}
 }
