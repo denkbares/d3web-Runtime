@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
@@ -464,5 +465,19 @@ public class Measurement {
 				", startCondition=" + startCondition +
 				", stopCondition=" + stopCondition +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Measurement that = (Measurement) o;
+		return Objects.equals(identifier, that.identifier) && Objects.equals(mapping, that.mapping) && Objects
+				.equals(startCondition, that.startCondition) && Objects.equals(stopCondition, that.stopCondition);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(identifier, mapping, startCondition, stopCondition);
 	}
 }
