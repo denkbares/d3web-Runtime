@@ -20,6 +20,7 @@ package de.d3web.costbenefit;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,10 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 
+import com.denkbares.strings.NumberAwareComparator;
 import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
@@ -118,6 +121,21 @@ public final class CostBenefitUtil {
 			copy.getPropagationManager().commitPropagation();
 		}
 		return copy;
+	}
+
+	/**
+	 * Get a sorted list of all QContainers that stand for a test step (contain StateTransition knowledge)
+	 *
+	 * @param knowledgeBase the knowledge base to get the test steps from
+	 * @return a sorted list with all test step QContainers
+	 */
+	public static List<QContainer> getTestSteps(KnowledgeBase knowledgeBase) {
+		return knowledgeBase.getManager()
+				.getQContainers()
+				.stream()
+				.filter(qContainer -> StateTransition.getStateTransition(qContainer) != null)
+				.sorted((Comparator.comparing(TerminologyObject::getName, NumberAwareComparator.CASE_INSENSITIVE)))
+				.collect(Collectors.toList());
 	}
 
 	public static void undo(Session session, Collection<Fact> facts) {
@@ -348,6 +366,7 @@ public final class CostBenefitUtil {
 		// TODO: handle positive relations?
 		for (Solution s : solutions) {
 			XCLModel model = s.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+			if (model == null) continue;
 			InferenceTrace inferenceTrace = model.getInferenceTrace(session);
 			addObjectsOfConditions(negativeObjects, inferenceTrace.getNegRelations());
 			addObjectsOfConditions(negativeObjects, inferenceTrace.getReqNegRelations());
