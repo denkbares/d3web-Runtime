@@ -41,5 +41,10 @@ public enum ChoiceDisplay {
 	 * questions. Especially if the question is abstract (read-only), the implementer of the user interface should
 	 * ensure that all choices are displayed, even is not selected (yet).
 	 */
-	checklist
+	checklist,
+
+	/**
+	 * Hides choices and does not display them.
+	 */
+	hidden
 }
