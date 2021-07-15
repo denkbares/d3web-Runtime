@@ -18,6 +18,8 @@
  */
 package de.d3web.costbenefit.inference;
 
+import java.util.Objects;
+
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.ConditionTrue;
 import de.d3web.core.session.Value;
@@ -46,6 +48,19 @@ public class ConditionalValueSetter {
 
 	public Condition getCondition() {
 		return condition;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ConditionalValueSetter that = (ConditionalValueSetter) o;
+		return Objects.equals(answer, that.answer) && Objects.equals(condition, that.condition);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(answer, condition);
 	}
 
 	@Override
