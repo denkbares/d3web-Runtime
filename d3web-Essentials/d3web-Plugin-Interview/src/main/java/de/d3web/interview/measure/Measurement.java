@@ -456,11 +456,20 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 					return;
 				}
 			}
-			if (!(lastEntry instanceof FactProtocolEntry)) continue;
-			FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
-			if (lastFactEntry.getTerminologyObjectName().equals(fact.getTerminologyObject().getName())
-					&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
-				protocol.removeEntry(lastFactEntry);
+			if (!(lastEntry instanceof FactProtocolEntry) && !(lastEntry instanceof MeasurementStartProtocolEntry)) {
+				continue;
+			}
+			if (lastEntry instanceof FactProtocolEntry) {
+				FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
+				if (lastFactEntry.getTerminologyObjectName().equals(fact.getTerminologyObject().getName())
+						&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
+					protocol.removeEntry(lastFactEntry);
+				}
+			}
+			// do not remove anything from older measures, so stop when reaching the start of this measurement
+			else if (((MeasurementStartProtocolEntry) lastEntry).getQuestionName()
+					.contains(fact.getTerminologyObject().getName())) {
+				break;
 			}
 		}
 	}
