@@ -34,10 +34,12 @@ import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.info.Property;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
+import de.d3web.core.session.blackboard.SessionObject;
 import de.d3web.core.session.protocol.ActualQContainerEntry;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.protocol.MeasurementStartProtocolEntry;
@@ -68,7 +70,7 @@ import static de.d3web.core.manage.KnowledgeBaseUtils.Matching.ANY_PROMPT;
  * @author Volker Belli (denkbares GmbH)
  * @created 09.12.2016
  */
-public class Measurement {
+public class Measurement implements SessionObjectSource<Measurement.MeasurementSessionObject> {
 
 	/**
 	 * Property for Questions that define a measurement attached to the question or a knowledge base.
@@ -76,6 +78,74 @@ public class Measurement {
 	 * @see Form#getMeasurements()
 	 */
 	public static final Property<Measurement> MEASUREMENT = Property.getProperty("measurement", Measurement.class);
+
+	public enum State {
+		/**
+		 * Measurement was started (and is ongoing), but no actual value has been received yet
+		 */
+		STARTING,
+		/**
+		 * Measurement is ongoing normally
+		 */
+		MEASURING,
+		/**
+		 * Measurement is ongoing, but in the process of stopping (e.g. before final values like peaks are set)
+		 */
+		STOPPING,
+		/**
+		 * Measurement is ongoing, but failed. Failed measurements still need to be stopped!
+		 */
+		FAILED,
+		/**
+		 * No measurement is ongoing
+		 */
+		NOT_MEASURING
+	}
+
+	public static class MeasurementSessionObject implements SessionObject {
+		private State state = State.NOT_MEASURING;
+		private Date started = new Date();
+
+		public MeasurementInfo getMeasurementInfo() {
+			return new MeasurementInfo(state, started, -1);
+		}
+
+		public void setState(State state) {
+			// we can only start, when we are not not measuring
+			if (this.state == State.NOT_MEASURING && state == State.STARTING) {
+				started = new Date();
+				this.state = state;
+			}
+			// we can only measure, when we are started
+			else if (this.state == State.STARTING && state == State.MEASURING) {
+				this.state = state;
+			}
+			// we can only stop or fail when we are measuring or starting or stopping
+			else if ((this.state == State.MEASURING || this.state == State.STARTING || this.state == State.STOPPING)
+					&& (state == State.STOPPING || state == State.FAILED)) {
+				this.state = state;
+			}
+
+			// we can always stop!
+			else if (state == State.NOT_MEASURING) {
+				this.state = state;
+			}
+			else if (this.state == state) {
+				// nothing to do
+			}
+			else {
+				Log.severe("Unhandled measurement state change: " + this.state + " -> " + state);
+			}
+		}
+
+		public State getState() {
+			return state;
+		}
+
+		public Date getStarted() {
+			return started;
+		}
+	}
 
 	@Nullable
 	public static Measurement getMeasurement(@Nullable NamedObject object) {
@@ -104,6 +174,11 @@ public class Measurement {
 		if (mapping != null) {
 			this.mapping.putAll(mapping);
 		}
+	}
+
+	@Override
+	public MeasurementSessionObject createSessionObject(Session session) {
+		return new MeasurementSessionObject();
 	}
 
 	/**
@@ -141,6 +216,14 @@ public class Measurement {
 	 * @param session the running session
 	 */
 	public void start(Session session) {
+		setState(session, State.STARTING);
+	}
+
+	private void setState(Session session, State measuring) {
+		//noinspection SynchronizationOnLocalVariableOrMethodParameter
+		synchronized (session) {
+			session.getSessionObject(this).setState(measuring);
+		}
 	}
 
 	/**
@@ -149,6 +232,7 @@ public class Measurement {
 	 * @param session the running session
 	 */
 	public void stop(Session session) {
+		setState(session, State.NOT_MEASURING);
 	}
 
 	/**
@@ -157,6 +241,7 @@ public class Measurement {
 	 * @param session the running session
 	 */
 	public void failure(Session session) {
+		setState(session, State.FAILED);
 	}
 
 	/**
@@ -265,6 +350,7 @@ public class Measurement {
 	 * nothing is applied or a fact has been removed
 	 */
 	public Collection<Fact> applyValues(Session session, Map<String, Object> values, long time) {
+		setState(session, State.MEASURING);
 		//noinspection SynchronizationOnLocalVariableOrMethodParameter
 		synchronized (session) {
 			session.getPropagationManager().openPropagation(time);
@@ -479,5 +565,22 @@ public class Measurement {
 	@Override
 	public int hashCode() {
 		return Objects.hash(identifier, mapping, startCondition, stopCondition);
+	}
+
+	/**
+	 * Returns the state of the measurement in the context of the current session<br/>
+	 * The state will be determined the following way:
+	 *
+	 * <ul>
+	 * <li>{@link State#FAILED} if the measurement has failed</li>
+	 * <li>{@link State#MEASURING} if the measurement has not failed and currently ongoing</li>
+	 * <li>{@link State#NOT_MEASURING} otherwise</li>
+	 * </ul>
+	 *
+	 * @param session the Session to check
+	 * @return the state of the measurement
+	 */
+	public MeasurementInfo getMeasurementInfo(Session session) {
+		return session.getSessionObject(this).getMeasurementInfo();
 	}
 }
