@@ -42,11 +42,13 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
+import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionZC;
+import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionObjectSource;
@@ -59,6 +61,7 @@ import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
+import de.d3web.xcl.XCLModel;
 
 import static de.d3web.core.inference.PSMethod.Type.source;
 
@@ -264,6 +267,22 @@ public class ExpertMode implements SessionObject {
 	public Collection<CondEqual> getAdaptedConditions() {
 		initStates();
 		return Collections.unmodifiableSet(adapterStates.valueSet());
+	}
+
+	/**
+	 * Returns all solutions in the KnowledgeBase that have an XCL model.
+	 *
+	 * @return collection containing all solutions
+	 */
+	public Collection<Solution> getXclSolutions() {
+		KnowledgeBase kb = session.getKnowledgeBase();
+		return kb.getManager()
+				.getAllTerminologyObjects()
+				.stream()
+				.filter(to -> to instanceof Solution)
+				.map(to -> (Solution) to)
+				.filter(solution -> solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND) != null)
+				.collect(Collectors.toSet());
 	}
 
 	/**
