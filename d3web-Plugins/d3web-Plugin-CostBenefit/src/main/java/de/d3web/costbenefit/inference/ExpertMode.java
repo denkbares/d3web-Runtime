@@ -282,7 +282,7 @@ public class ExpertMode implements SessionObject {
 				.filter(to -> to instanceof Solution)
 				.map(to -> (Solution) to)
 				.filter(solution -> solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND) != null)
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 	}
 
 	/**
