@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +46,7 @@ import de.d3web.core.inference.condition.NonTerminalCondition;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
+import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionZC;
@@ -285,14 +287,16 @@ public class ExpertMode implements SessionObject {
 
 	/**
 	 * Returns all potential target test steps that have the adapter integrated, that is referenced by the specified
-	 * adapter question. The question is usually one of the questions returned by {@link #getAdapterStates()}. Otherwise
-	 * the method returns an empty set of targets.
+	 * adapter question. The question is usually one of the questions returned by {@link #getAdapterStates()}.
+	 * Otherwise, the method returns an empty set of targets.
+	 * The returned test steps are grouped into buckets of test steps that contain measurements for the same
+	 * adapter-to-MD plug, so they can be targeted together.
 	 *
 	 * @param adapterStateQuestion the adapter integration question, to search the target test steps for
 	 * @param choice               optionally the choice to additionally filter target test steps by
 	 * @return the target test steps for the adapter
 	 */
-	public Set<QContainer> getTargetsForAdapterState(Question adapterStateQuestion, @Nullable Choice choice) {
+	public Set<Set<QASet>> getTargetsForAdapterState(Question adapterStateQuestion, @Nullable Choice choice) {
 		initStates();
 		Set<CondEqual> states = new LinkedHashSet<>(adapterStates.getValues(adapterStateQuestion));
 		if (choice != null) states.removeIf(c -> !usesChoice(c, choice));
@@ -312,8 +316,28 @@ public class ExpertMode implements SessionObject {
 			if (isDeAdaptation(target)) continue;
 			targets.add(target);
 		}
-		targets.sort(getAdapterStateTargetComparator());
-		return new LinkedHashSet<>(targets);
+
+		// put all targets in buckets that are equal according to the comparator...
+		// using a comparator comparing the plugs of the adapter connecting to the MD will group for these plugs
+		Comparator<QContainer> comparator = getAdapterStateTargetComparator();
+		Set<Set<QASet>> targetBuckets = new HashSet<>();
+		targets:
+		for (QContainer target : targets) {
+			// find matching bucket
+			for (Set<QASet> targetBucket : targetBuckets) {
+				if (targetBucket.isEmpty()) continue;
+				QContainer bucketTarget = (QContainer) targetBucket.iterator().next();
+				if (comparator.compare(bucketTarget, target) == 0) {
+					targetBucket.add(target);
+					continue targets;
+				}
+			}
+			// no matching bucket found, create a new one
+			Set<QASet> newBucket = new HashSet<>();
+			newBucket.add(target);
+			targetBuckets.add(newBucket);
+		}
+		return targetBuckets;
 	}
 
 	private boolean usesChoice(CondEqual condEqual, Choice choice) {
