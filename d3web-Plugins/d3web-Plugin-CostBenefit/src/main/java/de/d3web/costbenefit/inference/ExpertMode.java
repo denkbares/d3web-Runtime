@@ -277,10 +277,8 @@ public class ExpertMode implements SessionObject {
 	public Collection<Solution> getXclSolutions() {
 		KnowledgeBase kb = session.getKnowledgeBase();
 		return kb.getManager()
-				.getAllTerminologyObjects()
+				.getSolutions()
 				.stream()
-				.filter(to -> to instanceof Solution)
-				.map(to -> (Solution) to)
 				.filter(solution -> solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND) != null)
 				.collect(Collectors.toList());
 	}
