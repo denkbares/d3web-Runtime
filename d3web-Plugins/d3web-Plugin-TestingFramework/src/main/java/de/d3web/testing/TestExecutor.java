@@ -82,7 +82,10 @@ public class TestExecutor {
 	 * @created 14.08.2012
 	 */
 	public synchronized BuildResult getBuildResult() {
-		if (!isShutdown()) return null;
+		if (!isShutdown()) {
+			Log.warning("Build not yet finished, build result not available!");
+			return null;
+		}
 		return build;
 	}
 
@@ -323,7 +326,9 @@ public class TestExecutor {
 			specification.prepareExecution();
 			for (CallableTest<?> callableTest : callableTests) {
 				try {
-					futures.add(executor.submit(new FutureTestTask(callableTest)));
+					FutureTestTask task = new FutureTestTask(callableTest);
+					executor.execute(task);
+					futures.add(task);
 				}
 				catch (RejectedExecutionException e) {
 					// it is possible that the executor is shut down during or
