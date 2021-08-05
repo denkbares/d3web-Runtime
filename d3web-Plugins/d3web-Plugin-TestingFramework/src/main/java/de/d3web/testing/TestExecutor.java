@@ -9,12 +9,18 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.denkbares.collections.DefaultMultiMap;
@@ -55,17 +61,17 @@ import static java.util.stream.Collectors.toList;
  */
 public class TestExecutor {
 
-	/**
-	 * Here the number of (parllel) threads are configured that will be used to execute the testing tasks.
-	 */
-	private static final int DEFAULT_NUMBER_OF_PARALLEL_THREADS = 2;
+	private static final AtomicLong THREAD_NUMBER = new AtomicLong();
+	private static final ExecutorService DEFAULT_EXECUTOR = Executors.newFixedThreadPool(
+			Runtime.getRuntime().availableProcessors(),
+			r -> new Thread(r, "Default-Test-Executor-" + THREAD_NUMBER.incrementAndGet()));
 
 	private final Collection<TestObjectProvider> objectProviders;
 	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
 	private final BuildResult build;
 	private final HashMap<TestSpecification<?>, TestResult> testResults = new HashMap<>();
-	private final List<String> currentlyRunningTests = Collections.synchronizedList(new LinkedList<>());
+	private final Set<Future<?>> futures = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	private final ExecutorService executor;
 	private volatile boolean aborted;
 
@@ -80,18 +86,31 @@ public class TestExecutor {
 		return build;
 	}
 
+	/**
+	 * Creates a new TestExecutor.
+	 *
+	 * @param providers      the provider for the test objects
+	 * @param specifications the specifications of the tests
+	 * @param listener       the progress listener
+	 */
 	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener) {
-		this(providers, specifications, listener, DEFAULT_NUMBER_OF_PARALLEL_THREADS);
+		this(providers, specifications, listener, DEFAULT_EXECUTOR);
 	}
 
-	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, int numberOfThreads) {
+	/**
+	 * Creates a new TestExecutor with the given executor service.
+	 *
+	 * @param executorService the executor service to be used when running the tests
+	 * @param providers       the provider for the test objects
+	 * @param specifications  the specifications of the tests
+	 * @param listener        the progress listener
+	 */
+	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, ExecutorService executorService) {
 		this.objectProviders = providers;
 		this.specifications = specifications;
 		this.progressListener = listener;
-		AtomicLong threadNumber = new AtomicLong();
-		this.executor = Executors.newFixedThreadPool(numberOfThreads, r -> new Thread(r, "Test-Executor-" + threadNumber
-				.incrementAndGet()));
 		this.build = new BuildResult();
+		this.executor = executorService;
 	}
 
 	/**
@@ -110,13 +129,12 @@ public class TestExecutor {
 		// creates and returns a CallableTest for each Test and TestObject
 		Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTests =
 				getCallableTestsMap(validSpecifications);
-		List<FutureTestTask> testTasks = null;
 		try {
 			initProgress(callableTests);
 			executeTests(callableTests);
 		}
 		finally {
-			shutdown();
+			awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 			updateTestResults(callableTests);
 			build.setBuildDuration(System.currentTimeMillis() - buildStartTime);
 		}
@@ -305,7 +323,7 @@ public class TestExecutor {
 			specification.prepareExecution();
 			for (CallableTest<?> callableTest : callableTests) {
 				try {
-					executor.execute(new FutureTestTask(callableTest));
+					futures.add(executor.submit(new FutureTestTask(callableTest)));
 				}
 				catch (RejectedExecutionException e) {
 					// it is possible that the executor is shut down during or
@@ -317,9 +335,7 @@ public class TestExecutor {
 					TestingUtils.checkInterrupt();
 				}
 				catch (InterruptedException e) {
-					setTerminateStatus();
-					executor.shutdownNow();
-					// build is discarded, method call terminated
+					shutDownNow();
 					break outerLoop;
 				}
 			}
@@ -331,18 +347,8 @@ public class TestExecutor {
 		progressListener.updateProgress(1f, "Aborted, please wait...");
 	}
 
-	private void shutdown() {
-		try {
-			executor.shutdown();
-			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-		}
-		catch (InterruptedException e) {
-			setTerminateStatus();
-		}
-	}
-
 	public boolean isShutdown() {
-		return executor.isShutdown();
+		return futures.isEmpty();
 	}
 
 	/**
@@ -355,7 +361,7 @@ public class TestExecutor {
 		// aborted, so discard build
 		setTerminateStatus();
 		// System.out.println("Terminating executor");
-		executor.shutdownNow();
+		futures.forEach(f -> f.cancel(true));
 	}
 
 	/**
@@ -365,14 +371,20 @@ public class TestExecutor {
 	 * @created 17.12.2013
 	 */
 	public void awaitTermination(long timeout, TimeUnit unit) {
-		// No shutdown needed, because shutdown is called at
-		// the end of method run.
-		try {
-			executor.awaitTermination(timeout, unit);
-		}
-		catch (InterruptedException e) {
-			// do nothing here
-		}
+		futures.forEach(f -> {
+			try {
+				f.get(timeout, unit);
+			}
+			catch (InterruptedException e) {
+				Log.info("Interrupted while waiting for test shut down");
+			}
+			catch (ExecutionException e) {
+				Log.severe("Exception while waiting for test shut down", e);
+			}
+			catch (TimeoutException | CancellationException ignore) {
+				// as expected...
+			}
+		});
 	}
 
 	/**
@@ -406,7 +418,7 @@ public class TestExecutor {
 		return result;
 	}
 
-	static class FutureTestTask extends FutureTask<Void> {
+	class FutureTestTask extends FutureTask<Void> {
 
 		private final CallableTest<?> callable;
 
@@ -419,6 +431,7 @@ public class TestExecutor {
 		protected void done() {
 			// update progress listener as task has been finished
 			callable.testFinished();
+			futures.remove(this);
 		}
 	}
 
@@ -448,12 +461,10 @@ public class TestExecutor {
 
 		public void testStarted() {
 			started = new Stopwatch();
-			currentlyRunningTests.add(getMessage());
 			progressListener.updateProgress(0, getMessage());
 		}
 
 		public void testFinished() {
-			currentlyRunningTests.remove(getMessage());
 			progressListener.updateProgress(1f, null);
 		}
 
