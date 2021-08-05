@@ -185,4 +185,15 @@ public abstract class AbstractTest<T> implements Test<T> {
 				.map(s -> Strings.trimRight(s).replace("\n", "\n** "))
 				.collect(Collectors.joining("\n* "));
 	}
+
+	/**
+	 * enables rendering of test-objects with expected outcome (good case).
+	 * <p>
+	 * usually only test-objects with unexpected outcome (bad case) are rendered.
+	 *
+	 * @return whether to render test-objects with expected outcome
+	 */
+	public boolean renderResultsOfSucceededTests() {
+		return false;
+	}
 }
