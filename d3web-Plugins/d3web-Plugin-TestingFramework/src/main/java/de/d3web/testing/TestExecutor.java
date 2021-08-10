@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.progress.ParallelProgress;
@@ -433,7 +435,20 @@ public class TestExecutor {
 		}
 
 		@Override
-		protected void done() {
+		public Void get() throws InterruptedException, ExecutionException {
+			Void value = super.get();
+			cleanup();
+			return value;
+		}
+
+		@Override
+		public Void get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+			Void value = super.get(timeout, unit);
+			cleanup();
+			return value;
+		}
+
+		private void cleanup() {
 			// update progress listener as task has been finished
 			callable.testFinished();
 			futures.remove(this);
