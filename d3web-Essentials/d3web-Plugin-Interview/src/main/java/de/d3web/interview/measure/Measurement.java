@@ -120,8 +120,8 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			else if (this.state == State.STARTING && state == State.MEASURING) {
 				this.state = state;
 			}
-			// we can only stop or fail when we are measuring or starting or stopping
-			else if ((this.state == State.MEASURING || this.state == State.STARTING || this.state == State.STOPPING)
+			// we can only stop or fail when we are measuring or starting or stopping or failed
+			else if ((this.state == State.MEASURING || this.state == State.STARTING || this.state == State.STOPPING || this.state == State.FAILED)
 					&& (state == State.STOPPING || state == State.FAILED)) {
 				this.state = state;
 			}
