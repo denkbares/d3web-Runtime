@@ -481,7 +481,7 @@ public class TestExecutor {
 
 		public void testStarted() {
 			started = new Stopwatch();
-			progressListener.updateProgress(0, getMessage());
+			progressListener.updateProgress(0, null);
 		}
 
 		public void testFinished() {
