@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -203,7 +204,7 @@ public class DefaultInfoStore implements InfoStore {
 					+ key.getStoredClass());
 		}
 		if (entries == null) {
-			entries = new HashMap<>();
+			entries = new ConcurrentHashMap<>();
 		}
 		if (key.isMultilingual()) {
 			if (language == null) language = ROOT;
