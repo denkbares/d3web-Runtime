@@ -68,7 +68,17 @@ public class SessionInfoStore extends DefaultInfoStore {
 
 	@Override
 	public void addValue(Property<?> key, Locale language, Object value) {
+		addValue(key, language, value, true);
+	}
+
+	public void addValue(Property<?> key, Locale language, Object value, boolean shouldTouch) {
 		super.addValue(key, language, value);
-		session.touch();
+		if (shouldTouch) {
+			session.touch();
+		}
+	}
+
+	public <T> void addValue(Property<? super T> key, T value, boolean touchSession) {
+		addValue(key, Locale.ROOT, value, touchSession);
 	}
 }
