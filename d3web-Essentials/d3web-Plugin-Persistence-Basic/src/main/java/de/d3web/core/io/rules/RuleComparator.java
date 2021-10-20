@@ -19,6 +19,7 @@
 package de.d3web.core.io.rules;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,8 +47,8 @@ public final class RuleComparator implements Comparator<Rule> {
 		int comparator = compareIDObjectLists(terminalObjects, terminalObjects2);
 		if (comparator != 0) return comparator;
 		// conditions contain the same idobjects, try to compare actions
-		List<? extends TerminologyObject> backwardObjects = o1.getAction().getBackwardObjects();
-		List<? extends TerminologyObject> backwardObjects2 = o2.getAction().getBackwardObjects();
+		List<? extends TerminologyObject> backwardObjects = o1.getAction() == null ? Collections.emptyList() : o1.getAction().getBackwardObjects();
+		List<? extends TerminologyObject> backwardObjects2 = o2.getAction() == null ? Collections.emptyList() : o2.getAction().getBackwardObjects();
 		comparator = compareIDObjectLists(backwardObjects, backwardObjects2);
 		if (comparator != 0) return comparator;
 		// actions contain the same idodjects, compare by toString
