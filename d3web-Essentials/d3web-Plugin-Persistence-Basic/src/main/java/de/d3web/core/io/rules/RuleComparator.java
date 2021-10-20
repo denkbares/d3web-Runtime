@@ -42,8 +42,8 @@ public final class RuleComparator implements Comparator<Rule> {
 	public int compare(Rule o1, Rule o2) {
 		// get all idobjects of the conditions and try to sort the rules by
 		// the ids of them
-		Collection<? extends TerminologyObject> terminalObjects = o1.getCondition().getTerminalObjects();
-		Collection<? extends TerminologyObject> terminalObjects2 = o2.getCondition().getTerminalObjects();
+		Collection<? extends TerminologyObject> terminalObjects = o1.getCondition() == null ? Collections.emptyList() : o1.getCondition().getTerminalObjects();
+		Collection<? extends TerminologyObject> terminalObjects2 = o2.getCondition() == null ? Collections.emptyList() : o2.getCondition().getTerminalObjects();
 		int comparator = compareIDObjectLists(terminalObjects, terminalObjects2);
 		if (comparator != 0) return comparator;
 		// conditions contain the same idobjects, try to compare actions
