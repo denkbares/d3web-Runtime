@@ -56,9 +56,40 @@ public class MeasurementUtil {
 	public static Question getMeasurementCompanionQuestion(@Nullable Question question) {
 		if (question instanceof QuestionChoice) {
 			return getNumericMeasurementCompanionQuestion(question);
-		} else {
+		}
+		else {
 			return getChoiceMeasurementCompanionQuestion(question);
 		}
 	}
 
+	/**
+	 * Get the measurement from the given question. This method also returns the measurement for questions that don't
+	 * themselves have the question but are companion questions of the question with the actual measurement.
+	 *
+	 * @param question the question (or its companion) to get the measurement from
+	 * @return the measurement of the given (or its companion's) question
+	 */
+	@Nullable
+	public static Measurement getMeasurement(Question question) {
+		Measurement measurement = Measurement.getMeasurement(question);
+		if (measurement == null) {
+			measurement = Measurement.getMeasurement(getNumericMeasurementCompanionQuestion(question));
+		}
+		return measurement;
+	}
+
+	/**
+	 * Check if the given question has/belongs to a question. This also return true, if the measurement is stored for
+	 * the measurement companion question of the given question.
+	 *
+	 * @param question the question to check if it (or its companion) has a measurement
+	 * @return true if the question (or its companion) has a measurement, false otherwise
+	 */
+	public static boolean hasMeasurement(@Nullable Question question) {
+		boolean measurement = Measurement.hasMeasurement(question);
+		if (!measurement) {
+			measurement = Measurement.hasMeasurement(getNumericMeasurementCompanionQuestion(question));
+		}
+		return measurement;
+	}
 }
