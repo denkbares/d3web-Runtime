@@ -101,6 +101,19 @@ public class CostBenefitProperties {
 	public static final Property<MalfunctionType> MALFUNCTION_TYPE = Property.getProperty("malfunctionType", MalfunctionType.class);
 
 	/**
+	 * Property to mark a question to represent test equipment. The property value will stand for the terminology name
+	 * of a question marked with a MalfunctionType 'testEquipment'
+	 */
+	public static final Property<String> TEST_EQUIPMENT_QUESTION = Property.getProperty("testEquipmentQuestion", String.class);
+
+	/**
+	 * Allow to specify the type of a terminology object in the context of a repair verification, e.g. set it to
+	 * exclusiveTestEquipmentCheck to have a test step as the only one verifying the error code no longer exists after
+	 * the repair
+	 */
+	public static final Property<VerifyRepairType> VERIFY_REPAIR_TYPE = Property.getProperty("verifyRepairType", VerifyRepairType.class);
+
+	/**
 	 * Allows to specify the interrupt QContainer.
 	 */
 	public static final Property<String> INTERRUPT_QCONTAINER = Property.getProperty("interruptQContainer", String.class);
@@ -160,6 +173,14 @@ public class CostBenefitProperties {
 
 	public enum MalfunctionType {
 		basic, testEquipment
+	}
+
+	public enum VerifyRepairType {
+		/**
+		 * Mark a test step as the only one verifying the error code no longer exists after the repair, in case there
+		 * are multiple test steps that would verify the same
+		 */
+		exclusiveTestEquipmentCheck
 	}
 
 	/**
