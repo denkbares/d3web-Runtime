@@ -200,6 +200,28 @@
 		<parameter id="priority" value="5" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="testEquipmentQuestion">
+		<parameter id="name" value="testEquipmentQuestion" />
+		<parameter id="description"
+			value="Mark a question to represent test equipment. The property value will stand for the terminology name of a question marked with a MalfunctionType 'testEquipment'" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+		<parameter id="default" value="false" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verifyRepairType">
+		<parameter id="name" value="verifyRepairType" />
+		<parameter id="description"
+			value="Allow to specify the type of a terminology object in the context of a repair verification" />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.costbenefit.inference.CostBenefitProperties.VerifyRepairType" />
+		<parameter id="default" value="false" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="comfortBenefit">
 		<parameter id="name" value="comfortBenefit" />
 		<parameter id="description"
