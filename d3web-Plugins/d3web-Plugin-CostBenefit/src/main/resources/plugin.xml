@@ -219,7 +219,6 @@
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="de.d3web.costbenefit.inference.CostBenefitProperties$VerifyRepairType" />
-		<parameter id="default" value="false" />
 	</extension>
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="comfortBenefit">
