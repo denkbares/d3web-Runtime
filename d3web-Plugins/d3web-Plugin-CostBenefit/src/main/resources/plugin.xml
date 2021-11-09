@@ -218,7 +218,7 @@
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="de.d3web.costbenefit.inference.CostBenefitProperties.VerifyRepairType" />
+		<parameter id="instanceof" value="de.d3web.costbenefit.inference.CostBenefitProperties$VerifyRepairType" />
 		<parameter id="default" value="false" />
 	</extension>
 
