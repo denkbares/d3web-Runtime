@@ -73,6 +73,11 @@ public class MMInfo {
 	public static final Property<String> UNIT = Property.getProperty("unit", String.class);
 
 	/**
+	 * Use for num and text questions, allowing to set a specific place holder in the form
+	 */
+	public static final Property<String> PLACEHOLDER = Property.getProperty("placeholder", String.class);
+
+	/**
 	 * Checks if the link points to an {@link Resource} of the {@link KnowledgeBase}
 	 *
 	 * @param link the link to be checked

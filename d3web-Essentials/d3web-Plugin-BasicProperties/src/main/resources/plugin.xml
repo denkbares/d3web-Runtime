@@ -32,6 +32,15 @@
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="placeholder">
+		<parameter id="name" value="placeholder" />
+		<parameter id="description" value="Specifies the placeholder for the num oder text question input field." />
+		<parameter id="multilingual" value="true" />
+		<parameter id="autosave" value="mminfo" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="abstractionQuestion">
 		<parameter id="name" value="abstractionQuestion" />
 		<parameter id="description"
