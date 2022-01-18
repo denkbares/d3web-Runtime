@@ -12,7 +12,10 @@ import java.util.stream.Collectors;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyManager;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
+import de.d3web.core.session.Value;
+import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.FactProtocolEntry;
@@ -62,14 +65,20 @@ public class FactProtocolExecutor<T extends PSMethod> implements ProtocolExecuto
 				// determine object to be set
 				String name = entry.getTerminologyObjectName();
 				TerminologyObject object = manager.search(name);
+				Value value = entry.getValue();
 				if (object == null) {
-					builder.warn("Object not available, ignore value: " + name + " = " + entry.getValue());
+					builder.warn("Object not available, ignore value: " + name + " = " + value);
 					continue;
 				}
 
 				// create and add fact to blackboard
-				Fact fact = FactFactory.createFact(object, entry.getValue(), psm, psm);
-				session.getBlackboard().addValueFact(fact);
+				if (ValueUtils.isCompatible((ValueObject) object, value)) {
+					Fact fact = FactFactory.createFact(object, value, psm, psm);
+					session.getBlackboard().addValueFact(fact);
+				}
+				else {
+					builder.warn("Value " + value + " not compatible with object " + name + ", skipping...");
+				}
 			}
 		}
 		finally {
