@@ -56,6 +56,7 @@ public class SessionBuilder {
 	private final KnowledgeBase base;
 
 	// configuration settings
+	@SuppressWarnings("rawtypes")
 	private final PriorityList<Double, Pair<ProtocolExecutor, Class>> executors = new PriorityList<>(5.0);
 	private Session session;
 	private String id;
@@ -83,8 +84,10 @@ public class SessionBuilder {
 		for (Extension extension : PluginManager.getInstance().getExtensions(
 				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PROTOCOL_EXECUTOR)) {
 
+			//noinspection rawtypes
 			ProtocolExecutor executor = (ProtocolExecutor) extension.getNewInstance();
 			String entryClassName = extension.getParameter("entryClass");
+			//noinspection rawtypes
 			Class entryClass;
 			try {
 				entryClass = Class.forName(entryClassName, true, executor.getClass().getClassLoader());
