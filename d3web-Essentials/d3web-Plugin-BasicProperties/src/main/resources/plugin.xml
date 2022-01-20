@@ -123,16 +123,6 @@
 		<parameter id="instanceof" value="java.lang.String" />
 	</extension>
 
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="hidden">
-		<parameter id="name" value="hidden" />
-		<parameter id="description" value="Marks a NamedObject as hidden. Where it is hidden depends on the implementation for the gui." />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.Boolean" />
-		<parameter id="default" value="false" />
-	</extension>
-
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="affiliation">
 		<parameter id="name" value="affiliation" />
 		<parameter id="description"
