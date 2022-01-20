@@ -147,6 +147,11 @@ public class BasicProperties {
 	public static final Property<Date> CREATED = Property.getProperty("created", Date.class);
 
 	/**
+	 * Hide this object from the user, e.g. in the front end, statistic, protocol...
+	 */
+	public static final Property<Boolean> HIDDEN = Property.getProperty("hidden", Boolean.class);
+
+	/**
 	 * @see DefaultAbnormality
 	 */
 	public static final Property<DefaultAbnormality> DEFAULT_ABNORMALITY = Property.getProperty(
