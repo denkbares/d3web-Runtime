@@ -26,9 +26,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ConfigLoader {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigLoader.class);
 
 	public enum EdgeShowAnswers {
 		all, decisive, none
@@ -44,7 +46,7 @@ public final class ConfigLoader {
 			config.load(new InputStreamReader(new FileInputStream(userDir + "config.properties"), "UTF-8"));
 		}
 		catch (Exception e) {
-			Log.severe("Exception while loading config", e);
+			LOGGER.error("Exception while loading config", e);
 		}
 	}
 
@@ -59,7 +61,7 @@ public final class ConfigLoader {
 			config.load(new InputStreamReader(new FileInputStream(configUrl.getFile()), "UTF-8"));
 		}
 		catch (IOException e) {
-			Log.severe("Exception while loading config", e);
+			LOGGER.error("Exception while loading config", e);
 		}
 	}
 

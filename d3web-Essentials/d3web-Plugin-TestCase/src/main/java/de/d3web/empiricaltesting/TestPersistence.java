@@ -43,6 +43,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.Question;
@@ -61,9 +65,7 @@ import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.NumValue;
 import de.d3web.core.session.values.TextValue;
 import de.d3web.core.session.values.Unknown;
-import com.denkbares.strings.Strings;
 import de.d3web.testcase.persistence.TestCasePersistenceManager;
-import com.denkbares.utils.Log;
 
 /**
  * Legacy persistence class for legacy {@link SequentialTestCase}s.
@@ -73,6 +75,7 @@ import com.denkbares.utils.Log;
 @SuppressWarnings("deprecation")
 @Deprecated
 public final class TestPersistence {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestPersistence.class);
 
 	private static final String SEQUENTIAL_TEST_CASES_OLD = "SeqTestCaseRepository"; // compatibility
 	private static final String SEQUENTIAL_TEST_CASE_OLD = "STestCase"; // compatibility
@@ -132,13 +135,13 @@ public final class TestPersistence {
 			ret = loadTheCases(casesUrl, kb);
 		}
 		catch (FileNotFoundException e) {
-			Log.severe("Invalid case URL: " + casesUrl, e);
+			LOGGER.error("Invalid case URL: " + casesUrl, e);
 		}
 		catch (XMLStreamException e) {
-			Log.severe("Error while reading XML at: " + casesUrl, e);
+			LOGGER.error("Error while reading XML at: " + casesUrl, e);
 		}
 		catch (URISyntaxException e) {
-			Log.severe("URL has wrong syntax: " + casesUrl, e);
+			LOGGER.error("URL has wrong syntax: " + casesUrl, e);
 		}
 
 		return ret;
@@ -195,10 +198,10 @@ public final class TestPersistence {
 					bWriteDerivedSolutions);
 		}
 		catch (FileNotFoundException e) {
-			Log.severe("Error in casesUrl: Path not correct!", e);
+			LOGGER.error("Error in casesUrl: Path not correct!", e);
 		}
 		catch (URISyntaxException e) {
-			Log.severe("Error in casesUrl: URL has wrong syntax!", e);
+			LOGGER.error("Error in casesUrl: URL has wrong syntax!", e);
 		}
 
 	}
@@ -208,13 +211,13 @@ public final class TestPersistence {
 			writeTheCases(out, cases, bWriteDerivedSolutions);
 		}
 		catch (XMLStreamException e) {
-			Log.severe("Error while writing XML!", e);
+			LOGGER.error("Error while writing XML!", e);
 		}
 		catch (FileNotFoundException e) {
-			Log.severe("Error in casesUrl: Path not correct!", e);
+			LOGGER.error("Error in casesUrl: Path not correct!", e);
 		}
 		catch (URISyntaxException e) {
-			Log.severe("Error in casesUrl: URL has wrong syntax!", e);
+			LOGGER.error("Error in casesUrl: URL has wrong syntax!", e);
 		}
 	}
 
@@ -417,7 +420,7 @@ public final class TestPersistence {
 						stc.setStartDate(Strings.readDate(dateString, Strings.DATE_FORMAT_COMPATIBILITY));
 					}
 					catch (ParseException e) {
-						Log.severe("Unable to parse date", e);
+						LOGGER.error("Unable to parse date", e);
 					}
 				}
 				break;
@@ -432,7 +435,7 @@ public final class TestPersistence {
 						rtc.setTimeStamp(Strings.readDate(time, Strings.DATE_FORMAT_COMPATIBILITY));
 					}
 					catch (ParseException e) {
-						Log.severe("Unable to parse timestamp " + time, e);
+						LOGGER.error("Unable to parse timestamp " + time, e);
 					}
 				}
 				String lastTestedDate = sr.getAttributeValue(null, LAST_TESTED);
@@ -461,7 +464,7 @@ public final class TestPersistence {
 				String name = sr.getAttributeValue(null, NAME);
 				Solution d = kb.getManager().searchSolution(name);
 				if (d == null) {
-					Log.warning("Solution not found '" + name + "'.");
+					LOGGER.warn("Solution not found '" + name + "'.");
 					return;
 				}
 				Rating r;
@@ -485,7 +488,7 @@ public final class TestPersistence {
 		String regex = sr.getAttributeValue(null, MATCHES);
 		Question q = kb.getManager().searchQuestion(questionText);
 		if (q == null) {
-			Log.warning("Question not found '" + questionText + "'.");
+			LOGGER.warn("Question not found '" + questionText + "'.");
 			return null;
 		}
 		return new RegexFinding(q, regex);
@@ -498,7 +501,7 @@ public final class TestPersistence {
 		Question q = kb.getManager().searchQuestion(questionText);
 
 		if (q == null) {
-			Log.warning("Question not found '" + questionText + "'.");
+			LOGGER.warn("Question not found '" + questionText + "'.");
 			return null;
 		}
 

@@ -25,7 +25,8 @@ import java.util.NoSuchElementException;
 
 import org.w3c.dom.Element;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.utilities.XMLUtil;
 import de.d3web.core.knowledge.DefaultInfoStore;
@@ -38,6 +39,7 @@ import de.d3web.core.knowledge.terminology.info.Property;
  * @author hoernlein, Markus Friedrich (denkbares GmbH)
  */
 public class PropertiesHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesHandler.class);
 
 	public boolean canRead(Element element) {
 		return element.getNodeName().equals("Properties");
@@ -64,7 +66,7 @@ public class PropertiesHandler {
 					property = Property.getUntypedProperty(name);
 				}
 				catch (NoSuchElementException e) {
-					Log.warning("Property " + name + " is not in use any more.");
+					LOGGER.warn("Property " + name + " is not in use any more.");
 					continue;
 				}
 				String textContent = prop.getTextContent();

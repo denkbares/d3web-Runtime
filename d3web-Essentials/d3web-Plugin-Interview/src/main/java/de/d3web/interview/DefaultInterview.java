@@ -24,7 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.InterviewSupport;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.Indication;
@@ -56,6 +57,7 @@ import static de.d3web.core.knowledge.Indication.State.*;
  * @author joba
  */
 public class DefaultInterview implements Interview {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultInterview.class);
 
 	private final InterviewAgenda agenda;
 	private final Session session;
@@ -134,7 +136,7 @@ public class DefaultInterview implements Interview {
 				this.agenda.deactivateFirst(indicatedObject);
 			}
 			else {
-				Log.warning("UNKNOWN VALUE CHANGE: old: " + oldValue + ", new: " + newValue);
+				LOGGER.warn("UNKNOWN VALUE CHANGE: old: " + oldValue + ", new: " + newValue);
 			}
 		}
 		// Need to update indicated QContainers:
@@ -217,7 +219,7 @@ public class DefaultInterview implements Interview {
 		}
 
 		else if (oldIndication.getState() != newIndication.getState()) {
-			Log.warning("Unknown indication state: old: " + oldIndication + ", new: "
+			LOGGER.warn("Unknown indication state: old: " + oldIndication + ", new: "
 					+ newIndication + ", ignoring it...");
 		}
 	}

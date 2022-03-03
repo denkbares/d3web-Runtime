@@ -24,7 +24,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.terminology.Question;
@@ -40,6 +41,7 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.indication.inference.PSMethodUserSelected;
 
 public final class Facts {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Facts.class);
 
 	private Facts() { // suppress default constructor for noninstantiability
 	}
@@ -154,7 +156,7 @@ public final class Facts {
 		// so warn and use last fact (most recent one)
 		if (filteredFacts.length > 1) {
 			String className = filteredFacts[0].getPSMethod().getClass().getName();
-			Log.warning("Method "
+			LOGGER.warn("Method "
 					+ className
 					+ ".mergeFacts(Fact[]) is called with multiple facts. "
 					+ "This usually should not happen.");

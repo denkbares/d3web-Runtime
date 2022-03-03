@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.PSAction;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -57,6 +58,7 @@ import de.d3web.diaFlux.flow.StartNode;
  * @author Reinhard Hatko Created: 07.08.2010
  */
 public final class DiaFluxUtils {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DiaFluxUtils.class);
 
 	private DiaFluxUtils() {
 	}
@@ -174,7 +176,7 @@ public final class DiaFluxUtils {
 			}
 		}
 
-		Log.severe(("Node '" + nodeName + "' not found."));
+		LOGGER.error(("Node '" + nodeName + "' not found."));
 		return null;
 	}
 

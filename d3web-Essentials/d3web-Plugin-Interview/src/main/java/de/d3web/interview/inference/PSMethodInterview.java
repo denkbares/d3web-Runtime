@@ -22,10 +22,10 @@ package de.d3web.interview.inference;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.knowledge.InterviewObject;
@@ -46,6 +46,7 @@ import de.d3web.interview.NextUnansweredQuestionFormStrategy;
  * @author joba
  */
 public class PSMethodInterview extends PSMethodAdapter implements SessionObjectSource<Interview> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PSMethodInterview.class);
 
 	private FormStrategy defaultFormStrategy;
 
@@ -69,9 +70,8 @@ public class PSMethodInterview extends PSMethodAdapter implements SessionObjectS
 			 * therefore have other side effects.
 			 */
 			Collection<InterviewObject> objects = interview.getInterviewAgenda().getCurrentlyActiveObjects();
-			Logger logger = Log.logger();
-			if (logger.isLoggable(Level.FINER)) {
-				logger.finer("Agenda (" + changes.size() + " changes): " + objects);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Agenda (" + changes.size() + " changes): " + objects);
 			}
 		}
 	}

@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -28,6 +29,7 @@ import de.d3web.core.session.Session;
  * @created 25.08.2016
  */
 public class SplittingFormStrategy implements FormStrategy {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SplittingFormStrategy.class);
 
 	private final FormStrategy delegate;
 	private final FormSplitter splitter;
@@ -59,7 +61,7 @@ public class SplittingFormStrategy implements FormStrategy {
 		}
 
 		// otherwise, if completely answered, there is something unexpected, so use the original form.
-		Log.warning("The form is already answered, check behaviour of: " + delegate);
+		LOGGER.warn("The form is already answered, check behaviour of: " + delegate);
 		return completeForm;
 	}
 
@@ -131,6 +133,7 @@ public class SplittingFormStrategy implements FormStrategy {
 	}
 
 	private static class SplitForm implements Form {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SplitForm.class);
 
 		private final Form delegate;
 		private final int groupNumber;

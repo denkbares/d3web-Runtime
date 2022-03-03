@@ -30,7 +30,8 @@ import java.util.concurrent.Future;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to decorate an executor service and allow to iterate over all futures results of the submitted callables.
@@ -39,6 +40,7 @@ import com.denkbares.utils.Log;
  * @created 09.09.2011
  */
 public class IterableExecutor<T> implements Iterable<Future<T>> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(IterableExecutor.class);
 
 	// share one thread pool among the whole virtual machine
 	private static final int threadCount = Runtime.getRuntime().availableProcessors() * 3 / 2;
@@ -93,7 +95,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 		// initialize thread pool if not exists
 		if (threadPool == null) {
 			threadPool = Executors.newFixedThreadPool(threadCount, IterableExecutor::newDemon);
-			Log.info("created multicore thread pool of size " + threadCount);
+			LOGGER.info("created multicore thread pool of size " + threadCount);
 		}
 		// and return new executor based on the thread pool
 		return new IterableExecutor<>(threadPool);
@@ -149,7 +151,7 @@ public class IterableExecutor<T> implements Iterable<Future<T>> {
 				this.wait();
 			}
 			catch (InterruptedException e) {
-				Log.severe("wait interrupted", e);
+				LOGGER.error("wait interrupted", e);
 			}
 		}
 		return finishedWorkers.get(index);

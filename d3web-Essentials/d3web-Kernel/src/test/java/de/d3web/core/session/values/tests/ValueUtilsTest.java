@@ -29,7 +29,8 @@ import org.junit.Test;
 
 import com.denkbares.plugin.test.InitPluginManager;
 import com.denkbares.utils.Java;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -55,6 +56,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ValueUtilsTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ValueUtilsTest.class);
 
 	private Choice choice1;
 	private Choice choice2;
@@ -177,7 +179,7 @@ public class ValueUtilsTest {
 		if (Java.getVersion() > 8) {
 			if (System.getProperty("java.locale.providers") != null) {
 				// If anyone is inclined to write a correct parser for the locale providers, this could be improved.
-				Log.warning("Skipping certain Timezone tests as a Java locale provider order has been set.");
+				LOGGER.warn("Skipping certain Timezone tests as a Java locale provider order has been set.");
 			}
 			else {
 				compareTimeZones("ECT", "Central European Time");

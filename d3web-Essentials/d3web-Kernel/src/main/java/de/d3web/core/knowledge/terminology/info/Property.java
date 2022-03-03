@@ -33,7 +33,8 @@ import org.jetbrains.annotations.Nullable;
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
 
@@ -48,6 +49,7 @@ import de.d3web.core.knowledge.InfoStore;
  * @created 06.10.2010
  */
 public final class Property<T> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Property.class);
 
 	private static final Map<String, Property<?>> properties = new HashMap<>();
 	private static final Map<String, Property<?>> synonyms = new HashMap<>();
@@ -136,7 +138,7 @@ public final class Property<T> {
 				this.defaultValue = parseValue(this.defaultValueString);
 			}
 			catch (IllegalArgumentException | NoSuchMethodException e) {
-				Log.severe("cannot parse/initialize property default value: " +
+				LOGGER.error("cannot parse/initialize property default value: " +
 						this.name + " = " + this.defaultValueString, e);
 				// do noting here, leave defaultValue on null
 			}

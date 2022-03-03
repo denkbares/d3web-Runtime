@@ -31,7 +31,8 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.DefaultPropagationManager;
 import de.d3web.core.inference.PSConfig;
 import de.d3web.core.inference.PSMethod;
@@ -54,6 +55,7 @@ import de.d3web.plugin.Autodetect;
  * @see SessionObject
  */
 public class DefaultSession implements Session {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSession.class);
 
 	private final KnowledgeBase kb;
 	private final DefaultPropagationManager propagationController;
@@ -182,7 +184,7 @@ public class DefaultSession implements Session {
 			psMethodInterviewClass = (Class<? extends PSMethod>) Class.forName("de.d3web.interview.inference.PSMethodInterview");
 		}
 		catch (ClassNotFoundException e) {
-			Log.severe("No PSMethodInterview contained in session.");
+			LOGGER.error("No PSMethodInterview contained in session.");
 			return null;
 		}
 		PSMethod psMethodInstance = getPSMethodInstance(psMethodInterviewClass);
@@ -301,6 +303,7 @@ public class DefaultSession implements Session {
 	 * @created 01.02.2011
 	 */
 	private static class PSMethodComparator implements Comparator<PSMethod> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PSMethodComparator.class);
 
 		@Override
 		public int compare(PSMethod o1, PSMethod o2) {

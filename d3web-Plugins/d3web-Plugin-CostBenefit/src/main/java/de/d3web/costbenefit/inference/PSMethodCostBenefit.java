@@ -31,7 +31,8 @@ import java.util.Set;
 
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PostHookablePSMethod;
@@ -83,6 +84,7 @@ import de.d3web.interview.inference.PSMethodInterview;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjectSource<CostBenefitCaseObject>, PostHookablePSMethod {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PSMethodCostBenefit.class);
 
 	/**
 	 * Constant for the benefit of a test step if the user has selected the test steo as the target
@@ -276,7 +278,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Target bestTarget = searchModel.getBestCostBenefitTarget();
 		if (bestTarget == null || bestTarget.getMinPath() == null) return false;
 		Path minPath = bestTarget.getMinPath();
-		Log.fine(minPath + " --> " + searchModel.getBestCostBenefitTarget());
+		LOGGER.debug(minPath + " --> " + searchModel.getBestCostBenefitTarget());
 		caseObject.activatePath(minPath.getPath(), this);
 		return true;
 	}

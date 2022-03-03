@@ -24,7 +24,8 @@ import java.util.List;
 
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for plugins of the type Test.
@@ -33,6 +34,7 @@ import com.denkbares.utils.Log;
  * @created 30.05.2012
  */
 public class TestManager {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestManager.class);
 
 	/**
 	 * Searches within the plugged tests for a test with a specific name. Returns null if the test is not found.
@@ -61,7 +63,7 @@ public class TestManager {
 				}
 			}
 			else {
-				Log.warning("extension of class '" + extension.getClass().getName() +
+				LOGGER.warn("extension of class '" + extension.getClass().getName() +
 						"' is not of the expected type " + Test.class.getName());
 			}
 		}
@@ -101,7 +103,7 @@ public class TestManager {
 				result.add((Test<?>) singleton);
 			}
 			else {
-				Log.warning("extension of class '" + extension.getClass().getName() +
+				LOGGER.warn("extension of class '" + extension.getClass().getName() +
 						"' is not of the expected type " + Test.class.getName());
 			}
 		}

@@ -30,7 +30,8 @@ import de.d3web.core.records.filter.AndFilter;
 import de.d3web.core.records.filter.CreationDateFilter;
 import de.d3web.core.records.filter.Filter;
 import de.d3web.core.records.filter.OrFilter;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default Implementation of the SessionRepository Interface (@link
@@ -40,6 +41,7 @@ import com.denkbares.utils.Log;
  * 
  */
 public class DefaultSessionRepository implements SessionRepository {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSessionRepository.class);
 
 	protected final Map<String, SessionRecord> sessionRecords = new HashMap<>();
 
@@ -55,7 +57,7 @@ public class DefaultSessionRepository implements SessionRepository {
 		else {
 			// joba: I would recommend to keep the "==" comparison here
 			if (oldRecord == sessionRecord) {
-				Log.warning("SessionRecord " + sessionRecord.getId()
+				LOGGER.warn("SessionRecord " + sessionRecord.getId()
 						+ " is already in the SessionRepository.");
 				return false;
 

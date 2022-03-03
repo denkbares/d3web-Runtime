@@ -36,7 +36,8 @@ import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.indication.inference.PSMethodStrategic;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.scoring.inference.PSMethodHeuristic;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory for Session objects.
@@ -44,6 +45,7 @@ import com.denkbares.utils.Log;
  * @author joba, Norman Brümmer, Georg
  */
 public final class SessionFactory {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionFactory.class);
 
 	private static final List<PSMethod> commonPSMethods = Arrays.asList(
 			PSMethodUserSelected.getInstance(),
@@ -120,7 +122,7 @@ public final class SessionFactory {
 			defaultSession.initPSMethods();
 		}
 		catch (SessionTerminatedException e) {
-			Log.warning("Endless loop in initialization detected, session terminated", e);
+			LOGGER.warn("Endless loop in initialization detected, session terminated", e);
 		}
 		return defaultSession;
 	}

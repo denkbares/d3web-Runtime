@@ -31,7 +31,8 @@ import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.knowledge.Indication;
@@ -63,6 +64,7 @@ import de.d3web.xcl.XCLUtils;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class CostBenefitCaseObject implements SessionObject {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CostBenefitCaseObject.class);
 
 	private QContainer[] currentSequence;
 	private SearchModel searchModel;
@@ -107,7 +109,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void setCurrentSequence(QContainer[] newSequence) {
 		this.currentSequence = Arrays.copyOf(newSequence, newSequence.length);
-		Log.fine("new cost benefit sequence: " + Arrays.asList(newSequence));
+		LOGGER.debug("new cost benefit sequence: " + Arrays.asList(newSequence));
 		unreachedTarget = null;
 	}
 
@@ -129,7 +131,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void incCurrentPathIndex() {
 		currentPathIndex++;
-		Log.fine("next qcontianer: "
+		LOGGER.debug("next qcontianer: "
 				+ (currentPathIndex >= currentSequence.length
 				? null
 				: currentSequence[currentPathIndex]));
@@ -195,7 +197,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	public QContainer getCurrentQContainer() {
 		if (currentSequence == null) return null;
 		if (currentPathIndex == -1) {
-			Log.warning("Sequence was generated and is accessed, but is not activated yet: "
+			LOGGER.warn("Sequence was generated and is accessed, but is not activated yet: "
 					+ Arrays.toString(currentSequence));
 			return null;
 		}
@@ -426,7 +428,7 @@ public class CostBenefitCaseObject implements SessionObject {
 			}
 			this.getSession().getProtocol().addEntry(
 					new TextProtocolEntry(this.getSession().getPropagationManager().getPropagationTime(), message));
-			Log.warning(message);
+			LOGGER.warn(message);
 		}
 		Set<TerminologyObject> conflictingQuestions = CostBenefitUtil.calculatePossibleConflictingQuestions(
 				this.getSession(), currentSolutions);
@@ -435,7 +437,7 @@ public class CostBenefitCaseObject implements SessionObject {
 			String message = "The following questions decreased the covering value of the sprint group: " + conflictingQuestions;
 			this.getSession().getProtocol().addEntry(
 					new TextProtocolEntry(this.getSession().getPropagationManager().getPropagationTime(), message));
-			Log.warning(message);
+			LOGGER.warn(message);
 		}
 		return !previousSolutions.equals(currentSolutions);
 	}

@@ -24,7 +24,8 @@ import com.denkbares.collections.MultiMaps;
 import com.denkbares.collections.PriorityList;
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.denkbares.utils.Pair;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
@@ -49,6 +50,7 @@ import de.d3web.core.session.protocol.ProtocolEntry;
  * @created 27.04.2018
  */
 public class SessionBuilder {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionBuilder.class);
 
 	private static final Map<Session, SessionBuilder> processing = new ConcurrentHashMap<>();
 
@@ -302,7 +304,7 @@ public class SessionBuilder {
 
 	public void warn(String message) {
 		if (warnings.add(message)) {
-			Log.warning("Session Replay: " + message);
+			LOGGER.warn("Session Replay: " + message);
 		}
 	}
 }

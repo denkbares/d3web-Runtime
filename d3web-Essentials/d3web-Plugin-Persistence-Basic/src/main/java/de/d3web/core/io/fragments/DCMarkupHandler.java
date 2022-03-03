@@ -31,7 +31,8 @@ import org.w3c.dom.NodeList;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.info.Property;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.denkbares.utils.Triple;
 
 /**
@@ -42,6 +43,7 @@ import com.denkbares.utils.Triple;
  */
 @Deprecated
 public class DCMarkupHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DCMarkupHandler.class);
 
 	public static final String MARKUPTAG = "head";
 	public static final String PROFILE = "http://dublincore.org/documents/dcq-html/";
@@ -110,7 +112,7 @@ public class DCMarkupHandler {
 					property, locale);
 		}
 		catch (NoSuchElementException e) {
-			Log.warning("Property " + parsedValues.get("dc.subject") + " is not in use any more.");
+			LOGGER.warn("Property " + parsedValues.get("dc.subject") + " is not in use any more.");
 			return null;
 		}
 	}

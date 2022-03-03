@@ -49,13 +49,15 @@ import de.d3web.diaFlux.flow.Node;
 import de.d3web.diaFlux.inference.DiaFluxUtils;
 import com.denkbares.plugin.test.InitPluginManager;
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Reinhard Hatko
  * @created 03.12.2010
  */
 public abstract class AbstractDiaFluxTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDiaFluxTest.class);
 
 	protected static final String PATH = "src/test/resources/";
 	protected static final int TORTURE_LIMIT = 10;
@@ -256,7 +258,7 @@ public abstract class AbstractDiaFluxTest {
 			if (isSupported(node)) buffy.append(getID(node)).append(", ");
 		}
 
-		Log.info(buffy.toString());
+		LOGGER.info(buffy.toString());
 
 		Assert.fail("Node '" + id + "' must be active.");
 
@@ -311,7 +313,7 @@ public abstract class AbstractDiaFluxTest {
 
 	protected void setNumValue(QuestionNum question, double value) {
 
-		Log.info("Setting '" + question.getName() + "' to '" + value + "'.");
+		LOGGER.info("Setting '" + question.getName() + "' to '" + value + "'.");
 
 		Fact fact = FactFactory.createUserEnteredFact(question, new NumValue(value));
 		addFact(fact);
@@ -324,7 +326,7 @@ public abstract class AbstractDiaFluxTest {
 	}
 
 	protected void setChoiceValue(QuestionOC question, String answerName) {
-		Log.info("Setting '" + question.getName() + "' to '" + answerName + "'.");
+		LOGGER.info("Setting '" + question.getName() + "' to '" + answerName + "'.");
 
 		Choice choice = KnowledgeBaseUtils.findChoice(question, answerName);
 

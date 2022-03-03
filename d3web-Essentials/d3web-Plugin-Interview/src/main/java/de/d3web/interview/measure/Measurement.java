@@ -18,7 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -71,6 +72,7 @@ import static de.d3web.core.manage.KnowledgeBaseUtils.Matching.ANY_PROMPT;
  * @created 09.12.2016
  */
 public class Measurement implements SessionObjectSource<Measurement.MeasurementSessionObject> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Measurement.class);
 
 	/**
 	 * Property for Questions that define a measurement attached to the question or a knowledge base.
@@ -103,6 +105,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 	}
 
 	public static class MeasurementSessionObject implements SessionObject {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MeasurementSessionObject.class);
 		private State state = State.NOT_MEASURING;
 		private Date started = new Date();
 
@@ -134,7 +137,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 				// nothing to do
 			}
 			else {
-				Log.severe("Unhandled measurement state change: " + this.state + " -> " + state);
+				LOGGER.error("Unhandled measurement state change: " + this.state + " -> " + state);
 			}
 		}
 
@@ -363,7 +366,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 						.collect(Collectors.toMap(Map.Entry::getKey, e -> Unknown.getInstance())));
 			}
 			catch (Throwable e) {
-				Log.severe("Applying measured readings threw an exception.", e);
+				LOGGER.error("Applying measured readings threw an exception.", e);
 			}
 			finally {
 				session.getPropagationManager().commitPropagation();
@@ -426,7 +429,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 	 */
 	protected Fact addFact(Session session, Question question, Value value) {
 		Fact fact = createFact(session, question, value);
-		Log.fine("Applying measurement fact " + fact.getTerminologyObject().getName() + " = " + fact.getValue());
+		LOGGER.debug("Applying measurement fact " + fact.getTerminologyObject().getName() + " = " + fact.getValue());
 		cleanUpProtocol(session, fact);
 		session.getBlackboard().addValueFact(fact);
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
@@ -483,7 +486,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 	 * @see #addFact(Session, Question, Value)
 	 */
 	protected void removeFact(Session session, Question question) {
-		Log.fine("Removing measurement fact of question " + question.getName());
+		LOGGER.debug("Removing measurement fact of question " + question.getName());
 		session.getBlackboard().removeValueFact(question, getPSMethod(session));
 		session.touch(new Date(session.getPropagationManager().getPropagationTime()));
 	}

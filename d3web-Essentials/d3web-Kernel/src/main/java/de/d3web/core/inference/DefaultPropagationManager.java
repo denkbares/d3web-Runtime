@@ -32,13 +32,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.ValueObject;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 
 public class DefaultPropagationManager implements PropagationManager {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultPropagationManager.class);
 
 	private final Collection<PropagationListener> listeners = new LinkedList<>();
 	private long propagationIndex = -1;
@@ -113,7 +115,7 @@ public class DefaultPropagationManager implements PropagationManager {
 			}
 			catch (Throwable e) { // NOSONAR
 				// we catch Throwable here, to also handle runtime errors such as StackOverflow
-				Log.severe("internal error in pluggable problem solver #" +
+				LOGGER.error("internal error in pluggable problem solver #" +
 						getPSMethod().getClass(), e);
 			}
 			finally {
@@ -419,7 +421,7 @@ public class DefaultPropagationManager implements PropagationManager {
 	public void setPropagationTimeOfNoReturn(long time) {
 		if (this.timeOfNoReturn != time) {
 			this.timeOfNoReturn = time;
-			Log.fine("Setting propagation time of no return to " + time);
+			LOGGER.debug("Setting propagation time of no return to " + time);
 		}
 	}
 

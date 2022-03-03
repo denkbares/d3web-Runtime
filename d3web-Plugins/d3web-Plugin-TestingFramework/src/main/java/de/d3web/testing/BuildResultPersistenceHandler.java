@@ -39,13 +39,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 13.06.2012
  */
 public class BuildResultPersistenceHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(BuildResultPersistenceHandler.class);
 
 	private static final String DATE = "date";
 	private static final String DURATION = "duration";
@@ -136,7 +138,7 @@ public class BuildResultPersistenceHandler {
 		for (String testObjectName : testObjects) {
 			Message message = result.getMessageForTestObject(testObjectName);
 			if (message == null) {
-				Log.warning("No message found for test object '" + testObjectName + "' in test '"
+				LOGGER.warn("No message found for test object '" + testObjectName + "' in test '"
 						+ result.getTestName() + "'.");
 				continue;
 			}
@@ -218,7 +220,7 @@ public class BuildResultPersistenceHandler {
 					successfulTests = Integer.parseInt(numberOfSuccessfulRuns);
 				}
 				catch (NumberFormatException e) {
-					Log.warning("NumberFormatException in build result persistence when loading number of succesful test object runs: "
+					LOGGER.warn("NumberFormatException in build result persistence when loading number of succesful test object runs: "
 							+ successfulTests);
 				}
 			}

@@ -30,7 +30,8 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.io.Persistence;
 import de.d3web.core.io.fragments.FragmentHandler;
 import de.d3web.core.io.utilities.XMLUtil;
@@ -51,6 +52,7 @@ import de.d3web.testcase.persistence.TestCasePersistence;
  */
 @SuppressWarnings("deprecation")
 public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SequentialTestCaseHandler.class);
 
 	private static final String SEQUENTIAL_TEST_CASES_OLD = "SeqTestCaseRepository"; // compatibility
 	private static final String SEQUENTIAL_TEST_CASE_OLD = "STestCase"; // compatibility
@@ -74,7 +76,7 @@ public class SequentialTestCaseHandler implements FragmentHandler<TestCase> {
 			List<Element> children = XMLUtil.getChildren(element, SEQUENTIAL_TEST_CASE_OLD, SEQUENTIAL_TEST_CASE);
 			stcElement = children.get(0);
 			if (children.size() > 1) {
-				Log.severe("Unable to read multiple SequentialTestCases in on repository in compatibility mode. " +
+				LOGGER.error("Unable to read multiple SequentialTestCases in on repository in compatibility mode. " +
 						"Only the first SequestionTestCase will be loaded.");
 			}
 		}

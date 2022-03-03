@@ -26,7 +26,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.CondOr;
@@ -53,6 +54,7 @@ import de.d3web.core.session.values.ChoiceValue;
  * @created 22.02.2014
  */
 public class XCLUtils {
+	private static final Logger LOGGER = LoggerFactory.getLogger(XCLUtils.class);
 
 	/**
 	 * Returns a value for the question fitting to the coverings of the solution
@@ -238,7 +240,7 @@ public class XCLUtils {
 			// then no value can create a "true" result
 			if (session != null && Conditions.isFalse(condition, session)) {
 				// do nothing, result remains empty
-				Log.info("skip values due to false sub-condition of AND condition: " + condition);
+				LOGGER.info("skip values due to false sub-condition of AND condition: " + condition);
 			}
 			else {
 				List<Set<Value>> subSets = new ArrayList<>();
@@ -256,12 +258,12 @@ public class XCLUtils {
 					}
 				}
 				if (result.isEmpty()) {
-					Log.warning("Cannot find value for " + question + " in " + condition);
+					LOGGER.warn("Cannot find value for " + question + " in " + condition);
 				}
 			}
 		}
 		else {
-			Log.warning("Condition of type " + condition.getClass() + " is not supported: "
+			LOGGER.warn("Condition of type " + condition.getClass() + " is not supported: "
 					+ condition);
 		}
 		return result;

@@ -29,7 +29,8 @@ import java.util.TreeSet;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.BlockingReason;
@@ -46,6 +47,7 @@ import de.d3web.costbenefit.inference.StateTransition;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public class SearchModel {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchModel.class);
 
 	private final NavigableSet<Target> targets = new TreeSet<>(new TargetComparator());
 	private final Map<Target, BlockingReason> blockedTargets = new TreeMap<>(new TargetComparator());
@@ -70,7 +72,7 @@ public class SearchModel {
 		}
 		else {
 			costFunction = new DefaultCostFunction();
-			Log.warning("No Costbenefit-PSMethod included in the session, using default cost function.");
+			LOGGER.warn("No Costbenefit-PSMethod included in the session, using default cost function.");
 		}
 		blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
 		transitionalStateTransitions = new HashSet<>();
@@ -408,6 +410,7 @@ public class SearchModel {
 	}
 
 	private static class TargetComparator implements Comparator<Target> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TargetComparator.class);
 
 		@Override
 		public int compare(Target o1, Target o2) {

@@ -32,7 +32,8 @@ import de.d3web.core.session.values.NumValue;
 import de.d3web.testcase.TestCaseUtils;
 import de.d3web.testcase.model.Check;
 import de.d3web.testcase.stc.DerivedQuestionCheck;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A finding is a tuple of a {@link Question} and an {@link QuestionValue}.
@@ -44,6 +45,7 @@ import com.denkbares.utils.Log;
 @SuppressWarnings("deprecation")
 @Deprecated
 public class Finding implements Comparable<Finding>, de.d3web.testcase.model.Finding, Check {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Finding.class);
 
 	private Question question;
 	private QuestionValue value;
@@ -60,7 +62,7 @@ public class Finding implements Comparable<Finding>, de.d3web.testcase.model.Fin
 			if (choiceName.equals(choice.getName())) foundChoice = choice;
 		}
 		if (foundChoice == null) {
-			Log.warning("Choice not found: "
+			LOGGER.warn("Choice not found: "
 					+ choiceName + " in question " + question.getName());
 			setup(question, new ChoiceValue(new ChoiceID(choiceName)));
 		}

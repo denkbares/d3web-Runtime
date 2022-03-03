@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.denkbares.collections.CountingSet;
 import de.d3web.core.inference.LoopTerminator.LoopStatus;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -31,7 +34,6 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.SessionFactory;
 import de.d3web.core.session.SessionObjectSource;
 import de.d3web.core.session.blackboard.SessionObject;
-import com.denkbares.utils.Log;
 
 /**
  * This {@link PropagationListener} observes the reasoning process for endless
@@ -76,6 +78,7 @@ public class LoopTerminator implements SessionObjectSource<LoopStatus> {
 	}
 
 	public static class LoopStatus implements SessionObject {
+		private static final Logger LOGGER = LoggerFactory.getLogger(LoopStatus.class);
 
 		private final Session session;
 		private final PSMethod observedPSMethod;
@@ -150,7 +153,7 @@ public class LoopTerminator implements SessionObjectSource<LoopStatus> {
 					// set flag to prevent status of loop detection
 					terminated = true;
 					session.getPropagationManager().terminate();
-					Log.severe("Propagation loop detected for knowledge base '"
+					LOGGER.error("Propagation loop detected for knowledge base '"
 							+ session.getKnowledgeBase().getName()
 							+ "'. The following objects are mainly involved: "
 							+ getLoopObjects());

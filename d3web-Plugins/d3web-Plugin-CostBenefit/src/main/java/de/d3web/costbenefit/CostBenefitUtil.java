@@ -27,14 +27,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import com.denkbares.strings.NumberAwareComparator;
-import com.denkbares.utils.Log;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.Conditions;
@@ -83,6 +83,7 @@ import de.d3web.xcl.XCLRelation;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class CostBenefitUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CostBenefitUtil.class);
 
 	public static final int LOG_THRESHOLD = 5000;
 
@@ -205,7 +206,7 @@ public final class CostBenefitUtil {
 			DefaultAbnormality abnormality = questionChoice.getInfoStore()
 					.getValue(BasicProperties.DEFAULT_ABNORMALITY);
 			if (abnormality == null) {
-				Log.info("no normal value for question " + questionChoice);
+				LOGGER.info("no normal value for question " + questionChoice);
 				continue;
 			}
 
@@ -481,6 +482,10 @@ public final class CostBenefitUtil {
 	}
 
 	public static void log(long duration, String message) {
-		Log.mock(1, duration <= LOG_THRESHOLD ? Level.FINE : Level.INFO, message);
+		if (duration <= LOG_THRESHOLD) {
+			LOGGER.debug(message);
+		} else {
+			LOGGER.info(message);
+		}
 	}
 }

@@ -31,12 +31,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.denkbares.progress.ProgressListener;
-import com.denkbares.utils.Log;
 import de.d3web.abstraction.ActionSetQuestion;
 import de.d3web.abstraction.inference.PSMethodAbstraction;
 import de.d3web.core.inference.PSAction;
@@ -68,6 +69,7 @@ public class BasicPersistenceHandler implements
 		KnowledgeReader,
 		KnowledgeWriter {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(BasicPersistenceHandler.class);
 	public static final String BASIC_PERSISTENCE_HANDLER = "basic";
 
 	/**
@@ -340,7 +342,7 @@ public class BasicPersistenceHandler implements
 			}
 		}
 		if (noParents.size() > 1) {
-			Log.warning("more than one root node in qaset tree!");
+			LOGGER.warn("more than one root node in qaset tree!");
 			// [HOTFIX]:aha:multiple root / orphan handling
 			QASet root = null;
 			for (QASet q : noParents) {
@@ -350,7 +352,7 @@ public class BasicPersistenceHandler implements
 
 		}
 		else if (noParents.size() < 1) {
-			Log.severe("no root node in qaset tree!");
+			LOGGER.error("no root node in qaset tree!");
 			return null;
 		}
 		return noParents.get(0);
@@ -364,7 +366,7 @@ public class BasicPersistenceHandler implements
 			}
 		}
 		if (result.size() > 1) {
-			Log.warning("more than one diagnosis root node!");
+			LOGGER.warn("more than one diagnosis root node!");
 
 			// [HOTFIX]:aha:multiple root / orphan handling
 			Solution root = null;
@@ -375,7 +377,7 @@ public class BasicPersistenceHandler implements
 
 		}
 		else if (result.size() < 1) {
-			Log.severe("no root node in diagnosis tree!");
+			LOGGER.error("no root node in diagnosis tree!");
 			return null;
 		}
 		return result.get(0);

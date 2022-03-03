@@ -31,13 +31,15 @@ import org.jetbrains.annotations.NotNull;
 
 import com.denkbares.collections.ConcatenateIterable;
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)
  * @created 04.05.2012
  */
 public class TestResult implements Comparable<TestResult> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestResult.class);
 
 	private final String[] configuration;
 	private final String testName;
@@ -201,7 +203,7 @@ public class TestResult implements Comparable<TestResult> {
 				String stackTrace = Strings.getStackTrace(e);
 				// we are not interested if if the message is empty in persisted build results
 				if (stackTrace.contains("de.d3web.testing.BuildResultPersistenceHandler.fromXML")) return;
-				Log.warning("Summary message of type ERROR without text was set to test result with the following stack:\n" + stackTrace);
+				LOGGER.warn("Summary message of type ERROR without text was set to test result with the following stack:\n" + stackTrace);
 			}
 		}
 	}

@@ -34,8 +34,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,7 +47,6 @@ import com.denkbares.progress.ProgressInputStream;
 import com.denkbares.progress.ProgressListener;
 import com.denkbares.strings.Locales;
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
 import com.denkbares.utils.Triple;
 import com.denkbares.utils.XMLUtils;
 import de.d3web.core.io.NoSuchFragmentHandlerException;
@@ -75,6 +75,7 @@ import de.d3web.scoring.Score;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class XMLUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(XMLUtil.class);
 
 	public static final String INFO_STORE = "infoStore";
 	public static final String TYPE = "type";
@@ -672,7 +673,7 @@ public final class XMLUtil {
 		Set<String> missing = knownMissingProperties.computeIfAbsent(
 				persistence.getArtifact(), a -> new HashSet<>());
 		if (missing.add(propertyName)) {
-			Log.mock(1, Level.WARNING, "Property '" + propertyName +
+			LOGGER.warn("Property '" + propertyName +
 					"' is not supported. Probably the corresponding plugin " +
 					"is missing. This property will be lost when saving " +
 					"the knowledge base.");

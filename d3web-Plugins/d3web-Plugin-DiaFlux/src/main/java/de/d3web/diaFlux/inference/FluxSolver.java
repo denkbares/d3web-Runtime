@@ -29,7 +29,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.KnowledgeKind;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
@@ -69,6 +70,7 @@ import de.d3web.diaFlux.flow.StartNode;
  * @created 10.09.2009
  */
 public class FluxSolver implements PostHookablePSMethod, StrategicSupport, SessionObjectSource<DiaFluxCaseObject> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FluxSolver.class);
 
 	public enum SuggestMode {
 		/**
@@ -119,7 +121,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 	}
 
 	public static void start(Session session, StartNode startNode) {
-		Log.finer("Activating start node '" + startNode.getName() + "' of flow '"
+		LOGGER.trace("Activating start node '" + startNode.getName() + "' of flow '"
 				+ startNode.getFlow().getName() + "'.");
 
 		FlowRun run = new FlowRun();
@@ -131,7 +133,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 	@Override
 	public void init(Session session) {
 		if (!DiaFluxUtils.isFlowCase(session)) return;
-		Log.finer("Initializing FluxSolver with case: " + session);
+		LOGGER.trace("Initializing FluxSolver with case: " + session);
 
 		try {
 			session.getPropagationManager().openPropagation();
@@ -148,7 +150,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 	@Override
 	public void propagate(Session session, Collection<PropagationEntry> changes) {
 		if (!DiaFluxUtils.isFlowCase(session)) return;
-		Log.finer("Start propagating: " + changes);
+		LOGGER.trace("Start propagating: " + changes);
 
 		DiaFluxCaseObject caseObject = DiaFluxUtils.getDiaFluxCaseObject(session);
 		List<FlowRun> runs = caseObject.getRuns();
@@ -193,7 +195,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 		}
 
 		caseObject.updateSuspectedSolutions();
-		Log.finer("Finished propagating.");
+		LOGGER.trace("Finished propagating.");
 	}
 
 	/**
@@ -341,7 +343,7 @@ public class FluxSolver implements PostHookablePSMethod, StrategicSupport, Sessi
 				enteredSnapshots, caseObject);
 
 		// log debug output
-		Log.finer("Taking snapshots: " + snappyFlows);
+		LOGGER.trace("Taking snapshots: " + snappyFlows);
 
 		// Calculate new flow runs (before changing anything in the session)
 		Collection<FlowRun> newRuns = new HashSet<>();

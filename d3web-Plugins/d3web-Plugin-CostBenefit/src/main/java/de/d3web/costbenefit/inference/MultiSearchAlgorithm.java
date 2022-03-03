@@ -28,7 +28,8 @@ import java.util.concurrent.Future;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.model.SearchModel;
 
@@ -43,12 +44,14 @@ import de.d3web.costbenefit.model.SearchModel;
  * @created 01.09.2011
  */
 public class MultiSearchAlgorithm implements SearchAlgorithm {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MultiSearchAlgorithm.class);
 
 	public enum Mode {
 		continued, merged, parallel
 	}
 
 	private static class Worker implements Callable<SearchModel> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 
 		private final SearchAlgorithm algorithm;
 		private final SearchModel model;
@@ -124,7 +127,7 @@ public class MultiSearchAlgorithm implements SearchAlgorithm {
 						model.merge(result);
 					}
 					catch (InterruptedException | ExecutionException e) {
-						Log.severe("error in cost/benefit search thread", e);
+						LOGGER.error("error in cost/benefit search thread", e);
 					}
 				}
 				// if no search task has succeeded,

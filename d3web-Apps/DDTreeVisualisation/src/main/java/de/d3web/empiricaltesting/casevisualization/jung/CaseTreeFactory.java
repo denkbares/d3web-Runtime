@@ -24,7 +24,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.empiricaltesting.RatedSolution;
 import de.d3web.empiricaltesting.RatedTestCase;
 import de.d3web.empiricaltesting.SequentialTestCase;
@@ -41,6 +42,7 @@ import de.d3web.empiricaltesting.TestCase;
  * 
  */
 public final class CaseTreeFactory {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CaseTreeFactory.class);
 
 	/**
 	 * Instance for Singleton Pattern!
@@ -106,6 +108,7 @@ public final class CaseTreeFactory {
 	}
 
 	public static class RatingComparatorByName implements Comparator<RatedSolution> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RatingComparatorByName.class);
 
 		@Override
 		public int compare(RatedSolution o1, RatedSolution o2) {
@@ -144,7 +147,7 @@ public final class CaseTreeFactory {
 				graph.addEdge(edge, previousRTC, currentRTC);
 			}
 			catch (IllegalArgumentException e) {
-				Log.warning("unexpected error", e);
+				LOGGER.warn("unexpected error", e);
 			}
 
 		}

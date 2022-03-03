@@ -50,6 +50,9 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.Plugin;
 import com.denkbares.plugin.PluginManager;
@@ -57,7 +60,6 @@ import com.denkbares.progress.CombinedProgressListener;
 import com.denkbares.progress.DummyProgressListener;
 import com.denkbares.progress.ProgressListener;
 import com.denkbares.strings.Strings;
-import com.denkbares.utils.Log;
 import com.denkbares.utils.Streams;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.Resource;
@@ -79,6 +81,7 @@ import static com.denkbares.utils.Files.recursiveDelete;
  * @author Markus Friedrich (denkbares GmbH)
  */
 public final class PersistenceManager {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceManager.class);
 
 	private static final String MULTIMEDIA = "multimedia";
 	public static final String MULTIMEDIA_PATH_PREFIX = MULTIMEDIA + "/";
@@ -361,7 +364,7 @@ public final class PersistenceManager {
 				cpl.next(entry.getSize());
 				cpl.updateProgress(0, "Skipping file " + name);
 				if (!name.startsWith(EXTENDS_PATH_PREFIX)) {
-					Log.warning("No parser for entry " + name +
+					LOGGER.warn("No parser for entry " + name +
 							" available. This file will be lost" +
 							" when saving the KnowledgeBase.");
 				}
@@ -591,7 +594,7 @@ public final class PersistenceManager {
 				cpl.next(Files.size(file));
 				cpl.updateProgress(0, "Skipping file " + name);
 				if (!isExportFile(name) && !isHiddenInfoFile(file)) {
-					Log.warning("No parser for entry " + name + " available. " +
+					LOGGER.warn("No parser for entry " + name + " available. " +
 							"The file will be lost when saving the KnowledgeBase.");
 				}
 			}
@@ -711,7 +714,7 @@ public final class PersistenceManager {
 		File bakfile = new File(URLDecoder.decode(file.getCanonicalPath() + ".bak", StandardCharsets.UTF_8));
 		// delete old backup file
 		if (bakfile.exists() && !recursiveDelete(bakfile)) {
-			Log.warning("Unable to delete old backup file: " + bakfile.getCanonicalPath());
+			LOGGER.warn("Unable to delete old backup file: " + bakfile.getCanonicalPath());
 		}
 		// backup original file, if it exists
 		if (file.exists() && !file.renameTo(bakfile)) {
@@ -768,6 +771,7 @@ public final class PersistenceManager {
 	}
 
 	private static class WriterInfo {
+	private static final Logger LOGGER = LoggerFactory.getLogger(WriterInfo.class);
 
 		private final PluginConfig pluginConfig;
 		private final Extension plugin;

@@ -18,7 +18,8 @@
  */
 package de.d3web.testing;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides the actual TestObject and its name. We need this container, since
@@ -28,6 +29,7 @@ import com.denkbares.utils.Log;
  * @created 13.09.2012
  */
 public class TestObjectContainer<T> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestObjectContainer.class);
 
 	private final T testObject;
 	private final String testObjectname;
@@ -35,7 +37,7 @@ public class TestObjectContainer<T> {
 	public TestObjectContainer(String testObjectName, T testObject) {
 		this.testObject = testObject;
 		if (testObjectName == null) {
-			Log.warning("test object name was null, using toString() as test object name");
+			LOGGER.warn("test object name was null, using toString() as test object name");
 			this.testObjectname = testObject.toString();
 		}
 		else {

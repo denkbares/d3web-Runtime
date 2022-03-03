@@ -29,7 +29,8 @@ import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.progress.ParallelProgress;
 import com.denkbares.progress.ProgressListener;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.denkbares.utils.Stopwatch;
 import de.d3web.testing.Message.Type;
 
@@ -62,6 +63,7 @@ import static java.util.stream.Collectors.toList;
  * @created 04.05.2012
  */
 public class TestExecutor {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestExecutor.class);
 
 	private static final AtomicLong THREAD_NUMBER = new AtomicLong();
 	private static final ExecutorService DEFAULT_EXECUTOR = Executors.newFixedThreadPool(
@@ -85,7 +87,7 @@ public class TestExecutor {
 	 */
 	public synchronized BuildResult getBuildResult() {
 		if (!isShutdown()) {
-			Log.warning("Build not yet finished, build result not available!");
+			LOGGER.warn("Build not yet finished, build result not available!");
 			return null;
 		}
 		return build;
@@ -335,7 +337,7 @@ public class TestExecutor {
 				catch (RejectedExecutionException e) {
 					// it is possible that the executor is shut down during or
 					// before adding the tests to the executor... we just catch it
-					Log.fine("Rejected execution of " + callableTest.specification.getTestName() + ": " + callableTest.testObjectName);
+					LOGGER.debug("Rejected execution of " + callableTest.specification.getTestName() + ": " + callableTest.testObjectName);
 				}
 
 				try {
@@ -383,10 +385,10 @@ public class TestExecutor {
 				f.get(timeout, unit);
 			}
 			catch (InterruptedException e) {
-				Log.info("Interrupted while waiting for test shut down");
+				LOGGER.info("Interrupted while waiting for test shut down");
 			}
 			catch (ExecutionException e) {
-				Log.severe("Exception while waiting for test shut down", e);
+				LOGGER.error("Exception while waiting for test shut down", e);
 			}
 			catch (TimeoutException | CancellationException ignore) {
 				// as expected...
@@ -528,7 +530,7 @@ public class TestExecutor {
 				String message = "Unexpected error in test " + specification.getTestName() + ", during testing '" + testObjectName + "': "
 						+ e.getClass().getName() + ": " + e.getMessage();
 				testResult.addUnexpectedMessage(testObjectName, new Message(Message.Type.ERROR, message + ": " + e));
-				Log.warning(message);
+				LOGGER.warn(message);
 				return null;
 			}
 			finally {

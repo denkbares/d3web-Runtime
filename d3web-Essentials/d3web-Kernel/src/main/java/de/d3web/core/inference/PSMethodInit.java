@@ -26,7 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -62,6 +63,7 @@ import static de.d3web.core.knowledge.Indication.State.INDICATED;
  * @author Christian Betz
  */
 public class PSMethodInit implements PSMethod {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PSMethodInit.class);
 
 	private static PSMethodInit instance = null;
 
@@ -105,7 +107,7 @@ public class PSMethodInit implements PSMethod {
 						session.getBlackboard().addValueFact(fact);
 					}
 					catch (IllegalArgumentException e) {
-						Log.warning(e.getMessage());
+						LOGGER.warn(e.getMessage());
 					}
 				}
 			}

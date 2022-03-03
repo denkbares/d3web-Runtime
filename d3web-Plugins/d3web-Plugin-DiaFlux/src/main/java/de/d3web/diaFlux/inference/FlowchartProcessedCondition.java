@@ -29,7 +29,8 @@ import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.Flow;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.Node;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -37,6 +38,7 @@ import com.denkbares.utils.Log;
  * @created 21.10.2010
  */
 public class FlowchartProcessedCondition implements Condition {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FlowchartProcessedCondition.class);
 
 	private final String flowName;
 
@@ -53,7 +55,7 @@ public class FlowchartProcessedCondition implements Condition {
 		Flow flow = DiaFluxUtils.getFlowSet(session).get(flowName);
 
 		if (flow == null) {
-			Log.warning("Flowchart '" + flowName + "' not found.");
+			LOGGER.warn("Flowchart '" + flowName + "' not found.");
 			return false;
 		}
 

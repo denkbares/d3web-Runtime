@@ -17,7 +17,8 @@ import org.junit.Test;
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.plugin.test.InitPluginManager;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -61,6 +62,7 @@ import static org.junit.Assert.*;
  * @created 02.09.2010
  */
 public class KnowledgeBaseUtilsTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(KnowledgeBaseUtilsTest.class);
 
 	private Choice choice1;
 	private Choice choice2;
@@ -199,7 +201,7 @@ public class KnowledgeBaseUtilsTest {
 			dateToGet = new DateValue(date);
 		}
 		catch (ParseException e) {
-			Log.severe("Exception in Test", e);
+			LOGGER.error("Exception in Test", e);
 		}
 		String dateValInput = "2010-09-02 12:13:30.000 UTC";
 		QuestionDate qd = new QuestionDate(kb, "Please enter: ");

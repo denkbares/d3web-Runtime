@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -44,6 +45,7 @@ import de.d3web.core.session.Session;
  * @author joba
  */
 public class CurrentQContainerFormStrategy implements FormStrategy {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CurrentQContainerFormStrategy.class);
 
 	@Override
 	public Form nextForm(List<InterviewObject> agendaEntries, Session session) {
@@ -153,7 +155,7 @@ public class CurrentQContainerFormStrategy implements FormStrategy {
 				children.addAll(collectFollowUpQuestions(child));
 			}
 			else {
-				Log.warning("UNHANDLED QASET TYPE");
+				LOGGER.warn("UNHANDLED QASET TYPE");
 			}
 		}
 		return children;

@@ -29,13 +29,15 @@ import de.d3web.core.session.Session;
 import de.d3web.diaFlux.flow.ComposedNode;
 import de.d3web.diaFlux.flow.FlowRun;
 import de.d3web.diaFlux.flow.StartNode;
-import com.denkbares.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Reinhard Hatko
  * @created 03.11.2009
  */
 public class CallFlowAction extends PSAction {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CallFlowAction.class);
 
 	private final String flowName;
 	private final String startNodeName;
@@ -54,7 +56,7 @@ public class CallFlowAction extends PSAction {
 				startNodeName);
 
 		if (startNode == null) {
-			Log.severe("Could not find start node '" + startNodeName + "' in flow '" +
+			LOGGER.error("Could not find start node '" + startNodeName + "' in flow '" +
 					flowName + "'.");
 			return;
 		}
@@ -70,7 +72,7 @@ public class CallFlowAction extends PSAction {
 				startNodeName);
 
 		if (startNode == null) {
-			Log.severe("Could not find start node '" + startNodeName + "' in flow '" +
+			LOGGER.error("Could not find start node '" + startNodeName + "' in flow '" +
 					flowName + "'.");
 			return;
 		}
