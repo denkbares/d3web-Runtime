@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.d3web.core.inference.KnowledgeSlice;
+import org.jetbrains.annotations.NotNull;
+
+import com.denkbares.collections.MultiMap;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -47,6 +49,7 @@ import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.DefaultAbnormality;
+import de.d3web.core.manage.KnowledgeBaseUtils;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceID;
@@ -156,9 +159,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			Collection<Solution> solutions, Session session) {
 		Set<Question> coveredSymptoms = new HashSet<>();
 		for (Solution solution : solutions) {
-			KnowledgeSlice ks = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
-			if (ks == null) continue;
-			XCLModel model = (XCLModel) ks;
+			XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
+			if (model == null) continue;
 			for (TerminologyObject nob : model.getCoveredSymptoms()) {
 				if (nob instanceof Question) {
 					coveredSymptoms.add((Question) nob);
@@ -191,65 +193,68 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	@Override
-	public double getInformationGain(Collection<? extends QASet> qasets,
-									 Collection<Solution> solutions, Session session) {
-		Collection<Question> questions = getRelevantQuestions(qasets, session);
+	public boolean hasGroupInformationGain(Collection<? extends QASet> qaSets, Collection<Solution> solutions, Session session) {
+		Collection<Question> questions = getRelevantQuestions(qaSets, session);
+		if (questions.isEmpty()) return false;
+
+		Map<ArrayList<Set<Condition>>, Set<Solution>> groupPots = new HashMap<>();
+		Map<Question, Set<XCLRelation>> excludingQuestions = getExcludingQuestion(solutions, questions);
+
+		MultiMap<Solution, Solution> groupToSolutionsOfGroup = KnowledgeBaseUtils.groupSolutions(solutions);
+
+		// More than 20 groups: we are sure there is benefit somewhere (otherwise the kb would be very incomplete)
+		// -> Skip costly calculation and return true immediately
+		if (groupToSolutionsOfGroup.keySet().size() > 20) return true;
+
+		for (Solution group : groupToSolutionsOfGroup.keySet()) {
+			Set<Solution> solutionsOfGroup = groupToSolutionsOfGroup.getValues(group);
+
+			// add all condition sets for the grouping solution
+			Set<XCLModel> coveringModels = getCoveringModels(questions, solutionsOfGroup);
+			for (XCLModel model : coveringModels) {
+				ArrayList<Set<Condition>> conditionsForQuestions = getConditionsForQuestions(questions, excludingQuestions, model);
+				groupPots.computeIfAbsent(conditionsForQuestions, k -> new HashSet<>()).add(group);
+			}
+
+			// as soon as there are different sets of solution groups for different
+			// conditions pots (answer set combinations), we know that different answers might produce different
+			// grouping solutions, meaning we have benefit somewhere
+			Set<Set<Solution>> sets = new HashSet<>();
+			for (Set<Solution> groups : groupPots.values()) {
+				sets.add(groups);
+				if (sets.size() > 1) return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public double getInformationGain(Collection<? extends QASet> qaSets, Collection<Solution> solutions, Session session) {
+		Collection<Question> questions = getRelevantQuestions(qaSets, session);
 		if (questions.isEmpty()) return 0;
 
 		InformationPots<Condition> pots = new InformationPots<>();
 		Map<Question, Set<XCLRelation>> excludingQuestions = getExcludingQuestion(solutions, questions);
 
-		Set<XCLModel> coveringModels = new HashSet<>();
-		// collect models of the specified solutions, covering the questions
-		for (Question q : questions) {
-			XCLContributedModelSet knowledge = q.getKnowledgeStore()
-					.getKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND);
-			if (knowledge == null) continue;
-			for (XCLModel model : knowledge.getModels()) {
-				if (solutions.contains(model.getSolution())) {
-					coveringModels.add(model);
-				}
-			}
-		}
+		Set<XCLModel> coveringModels = getCoveringModels(questions, solutions);
 
 		for (XCLModel model : coveringModels) {
-			ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<>(questions.size());
-			for (Question q : questions) {
-				Set<Condition> set = null;
-				Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
-				for (XCLRelation r : coveringRelations) {
-					if (r.hasType(XCLRelationType.contradicted)) {
-						// maybe slightly incorrect, but have a better behaviour for multiple non-covered choices
-						set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
-					}
-					else {
-						set = lazyAddAll(set, getExtractedOrs(r));
-					}
-				}
-				if (set == null) {
-					set = NULL_SET;
-				}
-				// cover all conditions used in contra-relations of other
-				// XCLModels
-				Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
-				if (excludingRelations != null) {
-					for (XCLRelation r : excludingRelations) {
-						if (coveringRelations.contains(r)) {
-							continue;
-						}
-						set = lazyAddAll(set, filterForeignConditions(q, getExtractedOrs(r)));
-					}
-				}
-				conditionsForQuestions.add(set);
-			}
-
 			// multiply possible value sets to get pots
 			// and add solution probabilities to these pots
-			pots.addWeights(model.getSolution(), conditionsForQuestions);
+			pots.addWeights(model.getSolution(), getConditionsForQuestions(questions, excludingQuestions, model));
 		}
 
-		// finally we add all the solutions that are not covered at all
-		float allWeight = getTotalWeight(solutions);
+		// finally, we add all the solutions that are not covered at all
+		pots.addWeights(getTotalWeight(solutions) - pots.getTotalWeight(),
+				getConditionsOfUncoveredSolutions(questions, excludingQuestions));
+
+		// calculate information gain
+		return pots.getInformationGain();
+	}
+
+	@NotNull
+	private ArrayList<Set<Condition>> getConditionsOfUncoveredSolutions(Collection<Question> questions, Map<Question, Set<XCLRelation>> excludingQuestions) {
 		ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<>(questions.size());
 		for (Question q : questions) {
 			Set<Condition> set = NULL_SET;
@@ -261,10 +266,58 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			}
 			conditionsForQuestions.add(set);
 		}
-		pots.addWeights(allWeight - pots.getTotalWeight(), conditionsForQuestions);
+		return conditionsForQuestions;
+	}
 
-		// calculate information gain
-		return pots.getInformationGain();
+	@NotNull
+	private ArrayList<Set<Condition>> getConditionsForQuestions(Collection<Question> questions, Map<Question, Set<XCLRelation>> excludingQuestions, XCLModel model) {
+		ArrayList<Set<Condition>> conditionsForQuestions = new ArrayList<>(questions.size());
+		for (Question q : questions) {
+			Set<Condition> set = null;
+			Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
+			for (XCLRelation r : coveringRelations) {
+				if (r.hasType(XCLRelationType.contradicted)) {
+					// maybe slightly incorrect, but have a better behaviour for multiple non-covered choices
+					set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
+				}
+				else {
+					set = lazyAddAll(set, getExtractedOrs(r));
+				}
+			}
+			if (set == null) {
+				set = NULL_SET;
+			}
+			// cover all conditions used in contra-relations of other
+			// XCLModels
+			Set<XCLRelation> excludingRelations = excludingQuestions.get(q);
+			if (excludingRelations != null) {
+				for (XCLRelation r : excludingRelations) {
+					if (coveringRelations.contains(r)) {
+						continue;
+					}
+					set = lazyAddAll(set, filterForeignConditions(q, getExtractedOrs(r)));
+				}
+			}
+			conditionsForQuestions.add(set);
+		}
+		return conditionsForQuestions;
+	}
+
+	@NotNull
+	private Set<XCLModel> getCoveringModels(Collection<Question> questions, Collection<Solution> solutions) {
+		Set<XCLModel> coveringModels = new HashSet<>();
+		// collect models of the specified solutions, covering the questions
+		for (Question question : questions) {
+			XCLContributedModelSet knowledge = question.getKnowledgeStore()
+					.getKnowledge(XCLContributedModelSet.KNOWLEDGE_KIND);
+			if (knowledge == null) continue;
+			for (XCLModel model : knowledge.getModels()) {
+				if (solutions.contains(model.getSolution())) {
+					coveringModels.add(model);
+				}
+			}
+		}
+		return coveringModels;
 	}
 
 	private Collection<Condition> filterForeignConditions(Question q, Collection<Condition> extractedOrs) {
@@ -297,7 +350,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	private static final Set<Condition> NULL_SET = Collections.unmodifiableSet(new HashSet<>(
-			Collections.singletonList((Condition) null)));
+			Collections.singletonList(null)));
 
 	/**
 	 * Adds item to a source set that may be null and returns the resulting set. The specified source set is used
@@ -351,16 +404,16 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			Set<Condition> result = new HashSet<>();
 			c.getTerminalObjects().stream()
 					.filter(QuestionChoice.class::isInstance).map(QuestionChoice.class::cast).forEach(question -> {
-				for (Choice choice : question.getAllAlternatives()) {
-					// skip if choice is in or (use all non-covered choices to create negated covering)
-					CondEqual cond = new CondEqual(question, new ChoiceValue(choice));
-					if (ors.remove(cond)) continue;
-					// skip if normal values are covered and the choice is normal (to create negated covering)
-					if (coversNormal && isNormalCovering(cond)) continue;
-					// otherwise add the choice to the negated covering
-					result.add(cond);
-				}
-			});
+						for (Choice choice : question.getAllAlternatives()) {
+							// skip if choice is in or (use all non-covered choices to create negated covering)
+							CondEqual cond = new CondEqual(question, new ChoiceValue(choice));
+							if (ors.remove(cond)) continue;
+							// skip if normal values are covered and the choice is normal (to create negated covering)
+							if (coversNormal && isNormalCovering(cond)) continue;
+							// otherwise add the choice to the negated covering
+							result.add(cond);
+						}
+					});
 
 			// additionally add all remaining negated extracted ORs that are not CondEquals of any choices
 			// Killt das den fix von 2018 ?!

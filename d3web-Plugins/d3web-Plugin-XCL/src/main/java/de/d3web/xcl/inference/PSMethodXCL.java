@@ -230,6 +230,11 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	}
 
 	@Override
+	public boolean hasGroupInformationGain(Collection<? extends QASet> qaSets, Collection<Solution> solutions, Session session) {
+		return strategicSupport.hasGroupInformationGain(qaSets, solutions, session);
+	}
+
+	@Override
 	public Set<TerminologyObject> getPotentialDerivationSources(TerminologyObject derivedObject) {
 		Set<TerminologyObject> result = new HashSet<>();
 		XCLModel model = derivedObject.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);

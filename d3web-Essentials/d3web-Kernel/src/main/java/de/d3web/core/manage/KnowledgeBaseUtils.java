@@ -295,9 +295,7 @@ public final class KnowledgeBaseUtils {
 	 * @return null, if no answer found for specified params
 	 */
 	public static Choice findChoice(QuestionChoice question, String answerName, Matching matching) {
-		if (question == null
-				|| question.getAllAlternatives() == null
-				|| answerName == null) {
+		if (question == null || answerName == null) {
 			return null;
 		}
 
@@ -611,12 +609,12 @@ public final class KnowledgeBaseUtils {
 	 * Groups all solutions into the closest parent solutions that have set the property {@link
 	 * BasicProperties#SOLUTION_DISPLAY} to {@link SolutionDisplay#group}. If any of the solutions has no such parent,
 	 * or the solution itself is such a group, the returned MultiMap contains an entry with both, key an value of that
-	 * solution. Additionally there are entries where the key is the grouping solution of each (non-group) solution and
-	 * the values are the specified solutions.
+	 * solution. Additionally, there are entries where the key is the grouping solution of each (non-group) solution
+	 * and the values are the specified solutions.
 	 * <p/>
-	 * The order of the solutions is preserved. The first group (when iterating the keys) is the the group of the first
-	 * solution. Additionally the values are also in the order of the specified solution, that means if a solution s1 is
-	 * before a solution s2 in the specified list, the groups of s1 is before the group of s2, and if both are in the
+	 * The order of the solutions is preserved. The first group (when iterating the keys) is the group of the first
+	 * solution. Additionally, the values are also in the order of the specified solution, that means if a solution s1
+	 * is before a solution s2 in the specified list, the groups of s1 is before the group of s2, and if both are in the
 	 * same group, then s1 is in the values of that group before s2.
 	 *
 	 * @param solutions the solutions to get the groups for
@@ -624,8 +622,11 @@ public final class KnowledgeBaseUtils {
 	 */
 	public static MultiMap<Solution, Solution> groupSolutions(Collection<Solution> solutions) {
 		MultiMap<Solution, Solution> groups = new DefaultMultiMap<>(MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
+		Set<Solution> visited = new HashSet<>();
 		for (Solution solution : solutions) {
-			groupSolution(solution, groups);
+			Solution group = getGroup(solution, visited);
+			if (group == null) group = solution;
+			groups.put(group, solution);
 		}
 		return groups;
 	}
@@ -662,9 +663,24 @@ public final class KnowledgeBaseUtils {
 	 */
 	@NotNull
 	public static Solution getGroup(@NotNull Solution solution) {
-		MultiMap<Solution, Solution> group = new DefaultMultiMap<>();
-		groupSolution(solution, group);
-		return group.isEmpty() ? solution : group.keySet().iterator().next();
+		Solution group = getGroup(solution, new HashSet<>());
+		return group == null ? solution : group;
+	}
+
+	/**
+	 * Returns the closest (ancestor) group or null, if there is no grouping ancestor
+	 */
+	private static Solution getGroup(@NotNull Solution solution, Set<Solution> visited) {
+		if (BasicProperties.getSolutionDisplay(solution) == SolutionDisplay.group) {
+			return solution;
+		}
+		if (visited.add(solution)) {
+			for (TerminologyObject parent : solution.getParents()) {
+				Solution group = getGroup((Solution) parent, visited);
+				if (group != null) return group;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -730,39 +746,11 @@ public final class KnowledgeBaseUtils {
 	@NotNull
 	private static MultiMap<Solution, Solution> sortGroups(MultiMap<Solution, Solution> groups, SolutionComparator sorting) {
 		// resorting of the groups is required, because the group sorting is slightly different
-		// (use best groupd children, but the fine-sorting based on the group itself)
+		// (use best grouped children, but the fine-sorting based on the group itself)
 		MultiMap<Solution, Solution> sorted = new DefaultMultiMap<>(MultiMaps.linkedFactory(), MultiMaps.linkedFactory());
 		groups.keySet().stream().sorted((g1, g2) -> sorting.compareGroups(g1, g2, groups)).forEach(key ->
 				sorted.putAll(key, groups.getValues(key)));
 		return sorted;
-	}
-
-	private static void groupSolution(Solution solution, MultiMap<Solution, Solution> groups) {
-		LinkedList<Solution> queue = new LinkedList<>();
-		HashSet<Solution> visited = new HashSet<>();
-		queue.add(solution);
-		while (!queue.isEmpty()) {
-			// take the first and process if not visited yet
-			Solution first = queue.remove(0);
-			if (!visited.add(first)) continue;
-
-			// check if we reached a group, that use this group
-			if (BasicProperties.getSolutionDisplay(first) == SolutionDisplay.group) {
-				groups.put(first, solution);
-				return;
-			}
-
-			// queue parents for further processing
-			for (TerminologyObject parent : first.getParents()) {
-				queue.add((Solution) parent);
-			}
-		}
-
-		// if there is no group, add the solution to itself
-		// if the solution is not a context solution
-		if (BasicProperties.getSolutionDisplay(solution) != SolutionDisplay.context) {
-			groups.put(solution, solution);
-		}
 	}
 
 	/**

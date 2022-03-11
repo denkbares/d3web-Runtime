@@ -27,12 +27,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableSet;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PostHookablePSMethod;
@@ -75,7 +77,6 @@ import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as cheap as possible. This is configurable with
@@ -235,7 +236,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		initializeSearchModel(caseObject);
 		SearchModel searchModel = caseObject.getSearchModel();
 		Set<Solution> remaining = caseObject.getUndiscriminatedSolutions();
-		if (searchModel.getBestBenefit() != 0 && solutionsRater.check(remaining)) {
+		NavigableSet<Target> targets = searchModel.getTargets();
+		if (searchModel.getBestBenefit() != 0 && solutionsRater.check(session, remaining, targets)) {
 			search(session, searchModel);
 		}
 		// sets the new path based on the result stored in the search model

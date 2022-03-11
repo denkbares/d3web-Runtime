@@ -20,9 +20,12 @@ package de.d3web.costbenefit.inference;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.manage.KnowledgeBaseUtils;
+import de.d3web.core.session.Session;
+import de.d3web.costbenefit.model.Target;
 
 /**
  * This class discriminates if the solutions are part of multiple solution groups.
@@ -33,7 +36,7 @@ import de.d3web.core.manage.KnowledgeBaseUtils;
 public class DefaultSolutionRater implements SolutionsRater {
 
 	@Override
-	public boolean check(Collection<Solution> undiscriminatedSolutions) {
+	public boolean check(Session session, Collection<Solution> undiscriminatedSolutions, Set<Target> targets) {
 		if (undiscriminatedSolutions == null || undiscriminatedSolutions.size() < 2) return false;
 
 		// get the group of the first solution
