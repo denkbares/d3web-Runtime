@@ -197,7 +197,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Collection<Question> questions = getRelevantQuestions(qaSets, session);
 		if (questions.isEmpty()) return false;
 
-		Map<ArrayList<Set<Condition>>, Set<Solution>> groupPots = new HashMap<>();
+		Map<List<Set<Condition>>, Set<Solution>> groupPots = new HashMap<>();
 		Map<Question, Set<XCLRelation>> excludingQuestions = getExcludingQuestion(solutions, questions);
 
 		MultiMap<Solution, Solution> groupToSolutionsOfGroup = KnowledgeBaseUtils.groupSolutions(solutions);
@@ -214,6 +214,9 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			for (XCLModel model : coveringModels) {
 				ArrayList<Set<Condition>> conditionsForQuestions = getConditionsForQuestions(questions, excludingQuestions, model);
 				groupPots.computeIfAbsent(conditionsForQuestions, k -> new HashSet<>()).add(group);
+			}
+			if (coveringModels.isEmpty()) {
+				groupPots.computeIfAbsent(List.of(), k -> new HashSet<>()).add(group);
 			}
 
 			// as soon as there are different sets of solution groups for different
