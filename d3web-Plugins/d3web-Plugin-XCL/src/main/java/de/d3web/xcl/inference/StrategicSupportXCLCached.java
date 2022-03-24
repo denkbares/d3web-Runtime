@@ -222,7 +222,9 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			Set<Set<Solution>> sets = new HashSet<>();
 			for (Set<Solution> groups : groupPots.values()) {
 				sets.add(groups);
-				if (sets.size() > 1) return true;
+				if (sets.size() > 1) {
+					return true;
+				}
 			}
 		}
 
