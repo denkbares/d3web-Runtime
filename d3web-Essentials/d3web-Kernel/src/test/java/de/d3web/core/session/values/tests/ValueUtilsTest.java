@@ -181,7 +181,7 @@ public class ValueUtilsTest {
 				// If anyone is inclined to write a correct parser for the locale providers, this could be improved.
 				LOGGER.warn("Skipping certain Timezone tests as a Java locale provider order has been set.");
 			}
-			else if (Java.getVersion() > 17) {
+			else if (Java.getVersion() > 16) {
 				compareTimeZones("CET", "Central European Time");
 				compareTimeZones("CET", "Central European Summer Time");
 			} else {
