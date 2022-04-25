@@ -26,11 +26,11 @@ import java.util.TimeZone;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.denkbares.plugin.test.InitPluginManager;
 import com.denkbares.utils.Java;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
@@ -181,7 +181,10 @@ public class ValueUtilsTest {
 				// If anyone is inclined to write a correct parser for the locale providers, this could be improved.
 				LOGGER.warn("Skipping certain Timezone tests as a Java locale provider order has been set.");
 			}
-			else {
+			else if (Java.getVersion() > 17) {
+				compareTimeZones("CET", "Central European Time");
+				compareTimeZones("CET", "Central European Summer Time");
+			} else {
 				compareTimeZones("ECT", "Central European Time");
 				compareTimeZones("ECT", "Central European Summer Time");
 			}
