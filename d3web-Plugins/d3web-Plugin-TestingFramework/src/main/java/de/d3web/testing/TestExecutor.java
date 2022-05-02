@@ -24,13 +24,13 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
 import com.denkbares.progress.ParallelProgress;
 import com.denkbares.progress.ProgressListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.denkbares.utils.Stopwatch;
 import de.d3web.testing.Message.Type;
 
@@ -201,8 +201,6 @@ public class TestExecutor {
 		for (int i = 0; i < callableTests.size(); i++) {
 			callableTests.get(i).setProgressListener(parallelProgress.getSubTaskProgressListener(i));
 		}
-		// set starting message
-		parallelProgress.updateProgress(0, "Initializing...");
 	}
 
 	private float getNumberOfTests(Map<TestSpecification<?>, Collection<CallableTest<?>>> callablesMap) {
@@ -483,15 +481,11 @@ public class TestExecutor {
 
 		public void testStarted() {
 			started = new Stopwatch();
-			progressListener.updateProgress(0, null);
+			progressListener.updateProgress(0, specification.getTestName() + ": " + testObjectName);
 		}
 
 		public void testFinished() {
 			progressListener.updateProgress(1f, null);
-		}
-
-		public String getMessage() {
-			return specification.getTestName() + ": " + testObjectName;
 		}
 
 		@Override
@@ -507,6 +501,7 @@ public class TestExecutor {
 				}
 				Test<T> test = specification.getTest();
 				Message message = test.execute(specification, testObject);
+
 				if (TestExecutor.this.aborted) {
 					testResult.addUnexpectedMessage(testObjectName, new Message(Type.ABORTED, "Test was aborted"));
 				}
@@ -535,6 +530,7 @@ public class TestExecutor {
 			}
 			finally {
 				testResult.setRunTime(this.started.getTime());
+				testFinished();
 			}
 		}
 
