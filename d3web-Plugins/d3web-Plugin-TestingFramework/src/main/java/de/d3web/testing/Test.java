@@ -123,4 +123,11 @@ public interface Test<T> {
 	 * @created 31.07.2012
 	 */
 	List<TestParameter> getIgnoreSpecification();
+
+	/**
+	 * Returns whether this tests thread may be interrupted or not
+	 */
+	default boolean allowInterrupt() {
+		return true;
+	}
 }

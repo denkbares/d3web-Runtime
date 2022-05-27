@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -33,8 +32,6 @@ import com.denkbares.progress.ParallelProgress;
 import com.denkbares.progress.ProgressListener;
 import com.denkbares.utils.Stopwatch;
 import de.d3web.testing.Message.Type;
-
-import static java.util.stream.Collectors.toList;
 
 /*
  * Copyright (C) 2012 denkbares GmbH
@@ -75,7 +72,7 @@ public class TestExecutor {
 	private final ProgressListener progressListener;
 	private final BuildResult build;
 	private final HashMap<TestSpecification<?>, TestResult> testResults = new HashMap<>();
-	private final Set<Future<?>> futures = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	private final Set<FutureTestTask> futures = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	private final ExecutorService executor;
 	private volatile boolean aborted;
 
@@ -184,8 +181,7 @@ public class TestExecutor {
 	private void initProgress(Map<TestSpecification<?>, Collection<CallableTest<?>>> callableTestsBySpecification) {
 		List<CallableTest<?>> callableTests = callableTestsBySpecification.values()
 				.stream()
-				.flatMap(Collection::stream)
-				.collect(toList());
+				.flatMap(Collection::stream).toList();
 
 		// collect all the complexities from all tests
 		float[] complexities = new float[callableTests.size()];
@@ -368,7 +364,7 @@ public class TestExecutor {
 		// aborted, so discard build
 		setTerminateStatus();
 		// System.out.println("Terminating executor");
-		futures.forEach(f -> f.cancel(true));
+		futures.forEach(f -> f.cancel(f.mayInterrupt()));
 	}
 
 	/**
@@ -441,6 +437,10 @@ public class TestExecutor {
 			return value;
 		}
 
+		public boolean mayInterrupt() {
+			return this.callable.mayInterrupt();
+		}
+
 		@Override
 		public Void get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 			Void value = super.get(timeout, unit);
@@ -469,6 +469,10 @@ public class TestExecutor {
 			this.testObject = testObject;
 			this.testObjectName = testObjectName;
 			this.testResult = testresult;
+		}
+
+		public boolean mayInterrupt() {
+			return specification.getTest().allowInterrupt();
 		}
 
 		public void setProgressListener(ProgressListener progressListener) {
