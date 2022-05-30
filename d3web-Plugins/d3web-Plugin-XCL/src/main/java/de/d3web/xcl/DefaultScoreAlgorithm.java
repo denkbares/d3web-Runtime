@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2010 denkbares GmbH, Würzburg, Germany
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -23,7 +23,9 @@ import java.util.Collection;
 
 import de.d3web.core.inference.PropagationEntry;
 import de.d3web.core.inference.condition.ConditionCache;
+import de.d3web.core.knowledge.terminology.OrderedRating;
 import de.d3web.core.knowledge.terminology.Rating;
+import de.d3web.core.knowledge.terminology.info.BasicProperties;
 import de.d3web.core.session.Session;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.xcl.inference.PSMethodXCL;
@@ -96,28 +98,32 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		boolean hasContradiction = !trace.getContrRelations().isEmpty();
 		boolean hasSufficient = !trace.getSuffRelations().isEmpty();
 		boolean hasAllNecessary = trace.getReqPosRelations().size() == model.getNecessaryRelations().size();
+		Float apriori = model.getSolution().getInfoStore().getValue(BasicProperties.APRIORI);
+		if (apriori == null) {
+			apriori = 1.0f;
+		}
 
 		if (hasContradiction) {
-			return new Rating(Rating.State.EXCLUDED);
+			return new OrderedRating(Rating.State.EXCLUDED, apriori);
 		}
 
 		if (hasSufficient) {
-			return new Rating(Rating.State.ESTABLISHED);
+			return new OrderedRating(Rating.State.ESTABLISHED, apriori);
 		}
 
 		double minSupport = getMinSupport(model);
 		if (minSupport <= support) {
 			if (score >= getEstablishedThreshold(model)) {
 				return hasAllNecessary
-						? new Rating(Rating.State.ESTABLISHED)
-						: new Rating(Rating.State.SUGGESTED);
+						? new OrderedRating(Rating.State.ESTABLISHED, apriori)
+						: new OrderedRating(Rating.State.SUGGESTED, apriori);
 			}
 			if (score >= getSuggestedThreshold(model)) {
-				return new Rating(Rating.State.SUGGESTED);
+				return new OrderedRating(Rating.State.SUGGESTED, apriori);
 			}
 		}
 
-		return new Rating(Rating.State.UNCLEAR);
+		return new OrderedRating(Rating.State.UNCLEAR, apriori);
 	}
 
 	@Override
@@ -192,5 +198,4 @@ public class DefaultScoreAlgorithm implements ScoreAlgorithm {
 		}
 		return suggestedThreshold;
 	}
-
 }
