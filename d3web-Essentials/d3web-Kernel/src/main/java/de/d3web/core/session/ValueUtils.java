@@ -522,6 +522,9 @@ public final class ValueUtils {
 		else if (value instanceof UndefinedValue) {
 			return UndefinedValue.UNDEFINED_ID;
 		}
+		else if (value instanceof MultipleChoiceValue) {
+			return value.toString(); // produces a parseable string
+		}
 		else {
 			return value.getValue().toString();
 		}
@@ -537,8 +540,7 @@ public final class ValueUtils {
 	 */
 	@NotNull
 	public static Collection<Choice> getChoices(Question question, Value value) {
-		if (question instanceof QuestionChoice) {
-			QuestionChoice questionChoice = (QuestionChoice) question;
+		if (question instanceof QuestionChoice questionChoice) {
 			if (value instanceof ChoiceValue) {
 				return Collections.singleton(((ChoiceValue) value).getChoice(questionChoice));
 			}
@@ -1033,15 +1035,11 @@ public final class ValueUtils {
 		else if (value instanceof Rating && object instanceof Solution) {
 			// no tests required here
 		}
-		else if (value instanceof MultipleChoiceValue && object instanceof QuestionMC) {
-			QuestionChoice question = (QuestionChoice) object;
-			MultipleChoiceValue val = (MultipleChoiceValue) value;
+		else if (value instanceof MultipleChoiceValue val && object instanceof QuestionMC question) {
 			// will throw IllegalArgumentException if not compatible
 			val.asChoiceList(question);
 		}
-		else if (value instanceof ChoiceValue && object instanceof QuestionChoice) {
-			QuestionChoice question = (QuestionChoice) object;
-			ChoiceValue val = (ChoiceValue) value;
+		else if (value instanceof ChoiceValue val && object instanceof QuestionChoice question) {
 			if (val.getChoice(question) == null) {
 				throw new IllegalArgumentException("Choice '" + val.getChoiceID() +
 						"' is not available in question " + object);
