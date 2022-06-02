@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2010 Chair of Artificial Intelligence and Applied Informatics
  * Computer Science VI, University of Wuerzburg
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -23,12 +23,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionMC;
@@ -43,7 +45,7 @@ import de.d3web.core.session.Value;
  * @created 07.04.2010
  */
 public class MultipleChoiceValue implements QuestionValue {
-
+	private static final Pattern QUOTE_CHECK = Pattern.compile("[,\"\\[\\]\\\\]");
 	private final Collection<ChoiceID> choiceIDs;
 
 	/**
@@ -64,7 +66,7 @@ public class MultipleChoiceValue implements QuestionValue {
 	 * Constructs a new MultipleChoiceValue
 	 *
 	 * @param choiceIDs the Collection of ChoiceID for which a new MultipleChoiceValue should be
-	 * instantiated
+	 *                  instantiated
 	 * @throws NullPointerException if a null object was passed in
 	 */
 	public MultipleChoiceValue(Collection<ChoiceID> choiceIDs) {
@@ -174,8 +176,7 @@ public class MultipleChoiceValue implements QuestionValue {
 		if (o == null) {
 			throw new NullPointerException();
 		}
-		if (o instanceof MultipleChoiceValue) {
-			MultipleChoiceValue other = (MultipleChoiceValue) o;
+		if (o instanceof MultipleChoiceValue other) {
 			return choiceIDs.size() - other.choiceIDs.size();
 		}
 		else {
@@ -184,20 +185,23 @@ public class MultipleChoiceValue implements QuestionValue {
 	}
 
 	public String getName() {
-		StringBuilder b = new StringBuilder();
-		for (Iterator<ChoiceID> iterator = choiceIDs.iterator(); iterator.hasNext(); ) {
-			ChoiceID choiceID = iterator.next();
-			b.append(choiceID.getText());
-			if (iterator.hasNext()) {
-				b.append(", ");
-			}
-		}
-		return b.toString();
+		return getChoiceIDs()
+				.stream()
+				.map(ChoiceID::getText)
+				.map(this::quoteIfNecessary)
+				.collect(Collectors.joining(", "));
 	}
 
 	@Override
 	public String toString() {
-		return choiceIDs.toString();
+		return "[" + getName() + "]";
+	}
+
+	private String quoteIfNecessary(String choiceName) {
+		if (QUOTE_CHECK.matcher(choiceName).find()) {
+			return Strings.quote(choiceName);
+		}
+		return choiceName;
 	}
 
 	/**
@@ -242,8 +246,7 @@ public class MultipleChoiceValue implements QuestionValue {
 		else if (obj == null) {
 			return false;
 		}
-		else if (obj instanceof MultipleChoiceValue) {
-			MultipleChoiceValue other = (MultipleChoiceValue) obj;
+		else if (obj instanceof MultipleChoiceValue other) {
 			return (choiceIDs.containsAll(other.choiceIDs) && other.choiceIDs.containsAll(choiceIDs));
 		}
 		else if (obj instanceof ChoiceValue) {
