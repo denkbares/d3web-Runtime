@@ -53,13 +53,10 @@ public class OrderedRating extends Rating {
 
 	@Override
 	public int compareTo(@NotNull Value other) {
-		if (other instanceof OrderedRating) {
-			if (this.getState() == ((Rating) other).getState()) {
-				return Double.compare(this.orderKey, ((OrderedRating) other).orderKey);
-			}
-			return this.getState().ordinal() - ((Rating) other).getState().ordinal();
+		if (other instanceof OrderedRating orderedRating && this.getState() == orderedRating.getState()) {
+			return Double.compare(this.orderKey, orderedRating.orderKey);
 		}
-		return -1;
+		return this.getState().ordinal() - ((Rating) other).getState().ordinal();
 	}
 
 	@Override
