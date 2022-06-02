@@ -20,6 +20,7 @@ package de.d3web.core.session.values.tests;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -61,6 +62,8 @@ public class ValueUtilsTest {
 	private Choice choice1;
 	private Choice choice2;
 	private Choice choice3;
+	private Choice choice4;
+	private Choice choice5;
 	private QuestionMC qmc;
 	private QuestionOC qoc;
 	private QuestionYN qyn;
@@ -76,10 +79,14 @@ public class ValueUtilsTest {
 		choice1 = new Choice("choice1");
 		choice2 = new Choice("choice2");
 		choice3 = new Choice("choice3");
+		choice4 = new Choice("c\\ho,ic[e4");
+		choice5 = new Choice("c]ho\\ic[e5]");
 		qmc = new QuestionMC(kb.getRootQASet(), "qmc");
 		qmc.addAlternative(choice1);
 		qmc.addAlternative(choice2);
 		qmc.addAlternative(choice3);
+		qmc.addAlternative(choice4);
+		qmc.addAlternative(choice5);
 		qoc = new QuestionOC(kb.getRootQASet(), "qoc");
 		qoc.addAlternative(choice1);
 		qoc.addAlternative(choice2);
@@ -149,6 +156,13 @@ public class ValueUtilsTest {
 		ChoiceValue choice2 = new ChoiceValue(this.choice2);
 		Value choice1 = ValueUtils.createQuestionChoiceValue(qmc, "choice1");
 		assertEquals(new MultipleChoiceValue(new ChoiceID(this.choice1), new ChoiceID(this.choice2)), ValueUtils.handleExistingValue(qmc, choice1, choice2));
+
+		MultipleChoiceValue expected = new MultipleChoiceValue(new ChoiceID(this.choice2), new ChoiceID(this.choice3), new ChoiceID(this.choice4), new ChoiceID(this.choice5));
+		Value toString = ValueUtils.createQuestionChoiceValue(qmc, expected.toString());
+		assertEquals(expected, toString);
+
+		Value getName = ValueUtils.createQuestionChoiceValue(qmc, expected.getName());
+		assertEquals(expected, getName);
 	}
 
 	@Test
@@ -207,12 +221,12 @@ public class ValueUtilsTest {
 
 	@Test
 	public void createDateValue() {
-		GregorianCalendar calendar = new GregorianCalendar(2015, 3, 15, 20, 0); // april is month 3
+		GregorianCalendar calendar = new GregorianCalendar(2015, Calendar.APRIL, 15, 20, 0); // april is month 3
 		Date date = calendar.getTime();
 		DateValue dateValue;
 		assertEquals(date, ValueUtils.createDateValue(qdate, "2015-04-15 20:00").getDate());
 
-		calendar = new GregorianCalendar(2015, 3, 15, 20, 0); // april is month 3
+		calendar = new GregorianCalendar(2015, Calendar.APRIL, 15, 20, 0); // april is month 3
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
@@ -261,7 +275,7 @@ public class ValueUtilsTest {
 
 		// try some not summer/day-light-saving dates
 
-		calendar = new GregorianCalendar(2015, 0, 1, 20, 0); // april is month 3
+		calendar = new GregorianCalendar(2015, Calendar.JANUARY, 1, 20, 0); // april is month 3
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
@@ -289,7 +303,7 @@ public class ValueUtilsTest {
 
 		// try some time zones on the southern hemisphere
 
-		calendar = new GregorianCalendar(2015, 3, 15, 20, 0);
+		calendar = new GregorianCalendar(2015, Calendar.APRIL, 15, 20, 0);
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 
@@ -307,7 +321,7 @@ public class ValueUtilsTest {
 
 		// try summer / daylight-saving-time
 
-		calendar = new GregorianCalendar(2015, 0, 1, 20, 0);
+		calendar = new GregorianCalendar(2015, Calendar.JANUARY, 1, 20, 0);
 		calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = calendar.getTime();
 

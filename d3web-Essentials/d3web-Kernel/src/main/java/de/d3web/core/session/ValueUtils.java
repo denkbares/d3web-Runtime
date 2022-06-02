@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.denkbares.strings.Locales;
+import com.denkbares.strings.StringFragment;
 import com.denkbares.strings.Strings;
 import de.d3web.core.knowledge.TerminologyObject;
 import de.d3web.core.knowledge.ValueObject;
@@ -376,17 +377,31 @@ public final class ValueUtils {
 	 * @created 11.08.2012
 	 */
 	public static QuestionValue createQuestionChoiceValue(QuestionChoice question, String valueString) {
+		if (question instanceof QuestionMC) {
+			valueString = valueString.startsWith("[") ? valueString.substring(1) : valueString;
+			valueString = valueString.endsWith("]") ? valueString.substring(0, valueString.length() - 1) : valueString;
+			List<ChoiceID> choiceIds = Strings.splitUnquoted(valueString, ",")
+					.stream()
+					.map(StringFragment::getContentTrimmed)
+					.map(Strings::unquote)
+					.map(s -> getChoice(question, s))
+					.map(ChoiceID::new)
+					.toList();
+			return new MultipleChoiceValue(choiceIds);
+		}
+		else {
+			return new ChoiceValue(getChoice(question, valueString));
+		}
+	}
+
+	@NotNull
+	private static Choice getChoice(QuestionChoice question, String valueString) {
 		Choice choice = KnowledgeBaseUtils.findChoice(question, valueString, KnowledgeBaseUtils.Matching.CASE_INSENSITIVE_IF_NO_CONFLICT);
 		if (choice == null) {
 			throw new IllegalArgumentException("'" + valueString +
 					"' is not a valid choice for question '" + question.getName() + "'");
 		}
-		if (question instanceof QuestionMC) {
-			return new MultipleChoiceValue(new ChoiceID(choice));
-		}
-		else {
-			return new ChoiceValue(choice);
-		}
+		return choice;
 	}
 
 	/**
@@ -1010,7 +1025,8 @@ public final class ValueUtils {
 	 * value object as a fact.
 	 * <p>
 	 * Note that the method only checks if the core is capable to handle the object-value combination well, not if the
-	 * value should be applied to the object accoring to some additional properties, e.g. is always allows Unknown to be
+	 * value should be applied to the object occurring to some additional properties, e.g. is always allows Unknown to
+	 * be
 	 * applied to any question, even if unknown is invisible, and also to apply each numeric value to a numeric
 	 * question, even if the value is out of the desired range limits.
 	 * <p>
