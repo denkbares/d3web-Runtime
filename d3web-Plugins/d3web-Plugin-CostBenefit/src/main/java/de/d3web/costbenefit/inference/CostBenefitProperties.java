@@ -393,6 +393,7 @@ public class CostBenefitProperties {
 	 * user is always allowed to use this QContainer, independently from a calculated path.
 	 */
 	public static boolean isPermanentlyRelevant(QContainer container) {
+		if (container == null) return false;
 		return container.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT);
 	}
 
