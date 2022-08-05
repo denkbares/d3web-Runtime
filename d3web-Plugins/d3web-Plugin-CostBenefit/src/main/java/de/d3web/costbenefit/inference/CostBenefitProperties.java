@@ -38,6 +38,18 @@ import de.d3web.core.session.values.UndefinedValue;
  * @created 19.04.2018
  */
 public class CostBenefitProperties {
+
+	/**
+	 * Denotes the development progress of a terminology object.
+	 */
+	public static final Property<Double> PROGRESS = Property.getProperty("progress", Double.class);
+
+	/**
+	 * Denotes the overridden development progress of a terminology object. This can be used, to track an
+	 * additional/alternative progress on the terminology objects.
+	 */
+	public static final Property<Double> PROGRESS_OVERRIDE = Property.getProperty("progressOverride", Double.class);
+
 	/**
 	 * Marks a Question, indicating that the value of the question cannot be changed, once it has left the init value.
 	 */

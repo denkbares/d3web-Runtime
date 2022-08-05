@@ -220,6 +220,26 @@
 		<parameter id="instanceof" value="de.d3web.costbenefit.inference.CostBenefitProperties$VerifyRepairType" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="progress">
+		<parameter id="name" value="progress" />
+		<parameter id="description"
+			value="Denotes the development progress of a terminology object." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Double" />
+	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="progressOverride">
+		<parameter id="name" value="progressOverride" />
+		<parameter id="description"
+			value="Denotes the overridden development progress of a terminology object. This can be used, to track an additional/alternative progress on the terminology objects." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Double" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="comfortBenefit">
 		<parameter id="name" value="comfortBenefit" />
 		<parameter id="description"
