@@ -116,7 +116,7 @@ public class DefaultSessionRepository implements SessionRepository {
 		sortFilters(filter, simpleFilters, orFilters, complexFilters);
 		// shrinks the possible matches by applying simply filters first
 		Collection<SessionRecord> matchingRecords = filterRecords(sessionRecords,
-				simpleFilters.toArray(new Filter[simpleFilters.size()]));
+				simpleFilters.toArray(new Filter[0]));
 		// handles or, this may also shrink the matching records by using
 		// primarily the cheap filters:
 		// for example: (A and B) or (C and D)
@@ -128,7 +128,7 @@ public class DefaultSessionRepository implements SessionRepository {
 		}
 		// at last all non-optimizable Filters are used
 		matchingRecords = filterRecords(matchingRecords,
-				complexFilters.toArray(new Filter[complexFilters.size()]));
+				complexFilters.toArray(new Filter[0]));
 		return matchingRecords;
 	}
 
