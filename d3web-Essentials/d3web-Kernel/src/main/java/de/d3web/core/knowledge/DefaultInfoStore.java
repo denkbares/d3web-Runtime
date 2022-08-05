@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +39,7 @@ import static java.util.Locale.ROOT;
 
 public class DefaultInfoStore implements InfoStore {
 
-	private Map<Property<?>, Object> entries = null;
+	private volatile Map<Property<?>, Object> entries = null;
 
 	@Override
 	@NotNull
@@ -204,11 +203,15 @@ public class DefaultInfoStore implements InfoStore {
 					+ key.getStoredClass());
 		}
 		if (entries == null) {
-			entries = new ConcurrentHashMap<>();
+			synchronized (this) {
+				if (entries == null) {
+					entries = new ConcurrentHashMap<>();
+				}
+			}
 		}
 		if (key.isMultilingual()) {
 			if (language == null) language = ROOT;
-			asMap(entries.computeIfAbsent(key, k -> new HashMap<>(4))).put(language, value);
+			asMap(entries.computeIfAbsent(key, k -> new ConcurrentHashMap<>(4))).put(language, value);
 		}
 		else if (Locales.isEmpty(language)) {
 			entries.put(key, value);
