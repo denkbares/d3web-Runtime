@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -65,9 +66,8 @@ public class DefaultInfoStore implements InfoStore {
 		keyMustNotBeNull(key);
 		if (entries == null) return Collections.emptyMap();
 		if (key.isMultilingual()) {
-			//noinspection unchecked
-			return Collections.unmodifiableMap((Map<Locale, StoredType>)
-					entries.getOrDefault(key, Collections.emptyMap()));
+			//noinspection Java9CollectionFactory,unchecked
+			return Collections.unmodifiableMap(new HashMap<>((Map<Locale, StoredType>) entries.getOrDefault(key, Collections.emptyMap())));
 		}
 		else {
 			StoredType value = key.castToStoredValue(entries.get(key));
