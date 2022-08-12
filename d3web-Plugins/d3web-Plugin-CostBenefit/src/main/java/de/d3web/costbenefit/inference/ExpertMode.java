@@ -300,7 +300,7 @@ public class ExpertMode implements SessionObject {
 		initStates();
 		Set<CondEqual> states = new LinkedHashSet<>(adapterStates.getValues(adapterStateQuestion));
 		if (choice != null) states.removeIf(c -> !usesChoice(c, choice));
-		List<QContainer> targets = new ArrayList<>();
+		Set<QContainer> targets = new HashSet<>();
 		Set<String> visitedQContainers = session.getProtocol()
 				.getProtocolHistory()
 				.stream()
@@ -315,6 +315,22 @@ public class ExpertMode implements SessionObject {
 			if (visitedQContainers.contains(target.getName())) continue;
 			if (isDeAdaptation(target)) continue;
 			targets.add(target);
+		}
+
+		// Use property MEASUREMENT_CONNECTOR to find other test steps marked to be measuring on the same connector.
+		// Normally, we would only need this property to find all desired test steps... to stay somewhat backwards
+		// compatible to old knowledge bases, we also check using the old methods, but maybe don't find all test steps,
+		// e.g. single_adapt measurements.
+		if (choice != null) {
+			String connector = choice.getInfoStore().getValue(CostBenefitProperties.MEASUREMENT_CONNECTOR);
+			if (connector != null) {
+				for (QContainer qaSet : session.getKnowledgeBase().getManager().getQContainers()) {
+					String otherConnector = qaSet.getInfoStore().getValue(CostBenefitProperties.MEASUREMENT_CONNECTOR);
+					if (connector.equals(otherConnector)) {
+						targets.add(qaSet);
+					}
+				}
+			}
 		}
 
 		// put all targets in buckets that are equal according to the comparator...

@@ -40,6 +40,12 @@ import de.d3web.core.session.values.UndefinedValue;
 public class CostBenefitProperties {
 
 	/**
+	 * This property is used on measurement questions and related named objects to denotes the connector/socket, the
+	 * measurement is performed on.
+	 */
+	public static final Property<String> MEASUREMENT_CONNECTOR = Property.getProperty("measurementConnector", String.class);
+
+	/**
 	 * Denotes the development progress of a terminology object.
 	 */
 	public static final Property<Double> PROGRESS = Property.getProperty("progress", Double.class);

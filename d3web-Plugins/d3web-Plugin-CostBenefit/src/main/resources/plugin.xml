@@ -240,6 +240,16 @@
 		<parameter id="instanceof" value="java.lang.Double" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="measurementConnector">
+		<parameter id="name" value="measurementConnector" />
+		<parameter id="description"
+			value="This property is used on measurement questions and related named objects to denotes the connector/socket, the measurement is performed on." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.String" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="comfortBenefit">
 		<parameter id="name" value="comfortBenefit" />
 		<parameter id="description"
