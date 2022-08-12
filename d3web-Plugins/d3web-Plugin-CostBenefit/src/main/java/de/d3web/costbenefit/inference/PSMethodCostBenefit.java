@@ -77,6 +77,7 @@ import de.d3web.costbenefit.model.ids.Node;
 import de.d3web.costbenefit.session.protocol.CalculatedPathEntry;
 import de.d3web.interview.Form;
 import de.d3web.interview.Interview;
+import de.d3web.interview.InterviewAgenda;
 
 /**
  * The PSMethodCostBenefit indicates QContainer to establish a diagnosis as cheap as possible. This is configurable with
@@ -372,8 +373,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		for (Condition condition : conditionValueCache.keySet()) {
 			double additiveValue = strategicBenefitFactor * conditionValueCache.get(condition)
 					/ totalbenefit;
-			if (condition instanceof CondEqual) {
-				CondEqual condEqual = (CondEqual) condition;
+			if (condition instanceof CondEqual condEqual) {
 				// only inspect conditions of final questions
 				if (!finalQuestions.contains(condEqual.getQuestion())) {
 					continue;
@@ -427,8 +427,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Condition activationCondition = stateTransition.getActivationCondition();
 		List<Condition> terms = new LinkedList<>();
 		// Expand ands
-		if (activationCondition instanceof CondAnd) {
-			CondAnd condAnd = (CondAnd) activationCondition;
+		if (activationCondition instanceof CondAnd condAnd) {
 			terms.addAll(condAnd.getTerms());
 		}
 		else {
@@ -436,13 +435,10 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 		// invert ContNots containing a CondEqual of QuestionOCs
 		for (Condition c : new LinkedList<>(terms)) {
-			if (c instanceof CondNot) {
-				CondNot condNot = (CondNot) c;
-				if (condNot.getTerms().get(0) instanceof CondEqual) {
-					CondEqual condEqual = (CondEqual) condNot.getTerms().get(0);
+			if (c instanceof CondNot condNot) {
+				if (condNot.getTerms().get(0) instanceof CondEqual condEqual) {
 					if (condEqual.getQuestion() instanceof QuestionOC
-							&& condEqual.getValue() instanceof ChoiceValue) {
-						ChoiceValue value = (ChoiceValue) condEqual.getValue();
+							&& condEqual.getValue() instanceof ChoiceValue value) {
 						List<Condition> conds = new LinkedList<>();
 						for (Choice choice : ((QuestionOC) condEqual.getQuestion()).getAllAlternatives()) {
 							if (!choice.getName().equals(value.getChoiceID().getText())) {
@@ -460,8 +456,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// conditions
 		// (ignoring the fact that one condition would be enough)
 		for (Condition condition : new LinkedList<>(terms)) {
-			if (condition instanceof CondOr) {
-				CondOr condOr = (CondOr) condition;
+			if (condition instanceof CondOr condOr) {
 				terms.remove(condOr);
 				terms.addAll(condOr.getTerms());
 			}
@@ -771,9 +766,28 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					calculateNewPath(sessionObject);
 				}
 			}
+			// in case the agenda changes through other problem solvers (e.g. indication rules),
+			// we have to reset and update the path
+			else if (!allQContainersOnAgenda(session)) {
+				sessionObject.resetPath();
+				calculateNewPath(sessionObject);
+			}
 			else {
 				calculateNewPath(sessionObject);
 			}
 		}
+	}
+
+	private boolean allQContainersOnAgenda(Session session) {
+		InterviewAgenda interviewAgenda = Interview.get(session).getInterviewAgenda();
+		CostBenefitCaseObject caseObject = session.getSessionObject(this);
+		QContainer[] currentSequence = caseObject.getCurrentSequence();
+		if (currentSequence == null) return true;
+		for (int i = caseObject.getCurrentPathIndex(); i < currentSequence.length; i++) {
+			if (!interviewAgenda.onAgenda(currentSequence[i])) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
