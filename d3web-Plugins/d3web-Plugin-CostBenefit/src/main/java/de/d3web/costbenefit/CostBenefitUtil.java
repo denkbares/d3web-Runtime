@@ -20,6 +20,7 @@ package de.d3web.costbenefit;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,11 @@ import org.w3c.dom.Node;
 import com.denkbares.strings.NumberAwareComparator;
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.StrategicSupport;
+import de.d3web.core.inference.condition.CondAnd;
+import de.d3web.core.inference.condition.CondEqual;
+import de.d3web.core.inference.condition.CondNot;
+import de.d3web.core.inference.condition.CondOr;
+import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
@@ -67,9 +73,11 @@ import de.d3web.core.session.values.Unknown;
 import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.blackboard.DecoratedSession;
 import de.d3web.costbenefit.blackboard.DerivedSession;
+import de.d3web.costbenefit.inference.ConditionalValueSetter;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
+import de.d3web.costbenefit.inference.ValueTransition;
 import de.d3web.indication.inference.PSMethodUserSelected;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
@@ -484,8 +492,106 @@ public final class CostBenefitUtil {
 	public static void log(long duration, String message) {
 		if (duration <= LOG_THRESHOLD) {
 			LOGGER.debug(message);
-		} else {
+		}
+		else {
 			LOGGER.info(message);
+		}
+	}
+
+	/**
+	 * Checks if all parts of a condition can be achieved (combinations are ignored, just a heuristic)
+	 *
+	 * @param condition        Condition to be checked
+	 * @param stateTransitions the allowed state transitions
+	 * @return a List of unreachable Conditions
+	 * @created 28.05.2011
+	 */
+	public static List<Condition> checkConditionReachability(Condition condition, Collection<StateTransition> stateTransitions) {
+		if (condition == null) return Collections.emptyList();
+		if (condition instanceof CondAnd cand) {
+			List<Condition> ret = new LinkedList<>();
+			for (Condition c : cand.getTerms()) {
+				ret.addAll(checkConditionReachability(c, stateTransitions));
+			}
+			return ret;
+		}
+		else if (condition instanceof CondOr cor) {
+			List<Condition> ret = new LinkedList<>();
+			for (Condition c : cor.getTerms()) {
+				List<Condition> temp = checkConditionReachability(c, stateTransitions);
+				// if one condition can be fulfilled, the whole condition can
+				// be fulfilled
+				if (temp.isEmpty()) return temp;
+				ret.addAll(temp);
+			}
+			return ret;
+		}
+		else if (condition instanceof CondEqual c) {
+			QuestionChoice question = (QuestionChoice) c.getQuestion();
+			ChoiceValue value = (ChoiceValue) c.getValue();
+			String initValue = question.getInfoStore().getValue(BasicProperties.INIT);
+			// check if it is a start value
+			if (initValue != null && !initValue.isEmpty()) {
+				String[] split = initValue.split(";");
+				for (String s : split) {
+					if (s.equals(value.getChoiceID().getText())) {
+						return new LinkedList<>();
+					}
+				}
+			}
+			for (StateTransition st : stateTransitions) {
+				List<ValueTransition> postTransitions = st.getPostTransitions();
+				for (ValueTransition vt : postTransitions) {
+					if (vt.getQuestion() == question) {
+						for (ConditionalValueSetter cvs : vt.getSetters()) {
+							if (cvs.getAnswer().equals(value)) {
+								return new LinkedList<>();
+							}
+						}
+					}
+				}
+			}
+			List<Condition> ret = new LinkedList<>();
+			ret.add(condition);
+			return ret;
+		}
+		else if (condition instanceof CondNot cnot) {
+			List<Condition> terms = cnot.getTerms();
+			if (terms.size() == 1 && terms.get(0) instanceof CondEqual c) {
+				QuestionChoice question = (QuestionChoice) c.getQuestion();
+				String initValue = question.getInfoStore().getValue(BasicProperties.INIT);
+				if (initValue != null && !initValue.isEmpty()) {
+					String[] split = initValue.split(";");
+					ChoiceValue choiceValue = (ChoiceValue) c.getValue();
+					for (String s : split) {
+						if (!s.equals(choiceValue.getChoiceID().getText())) {
+							return new LinkedList<>();
+						}
+					}
+					// the kb starts with the value in condnot..
+					if (question.getAllAlternatives().size() == 1) {
+						List<Condition> ret = new LinkedList<>();
+						ret.add(condition);
+						return ret;
+					}
+					List<Condition> temp = new LinkedList<>();
+					for (Choice choice : question.getAllAlternatives()) {
+						if (!choice.equals(choiceValue.getChoice(question))) {
+							temp.add(new CondEqual(question, new ChoiceValue(choice)));
+						}
+					}
+					return checkConditionReachability(new CondOr(temp), stateTransitions);
+				}
+				else {
+					return new ArrayList<>();
+				}
+			}
+			else {
+				throw new IllegalArgumentException("Can only handle CondNot with one CondEqual: " + condition);
+			}
+		}
+		else {
+			throw new IllegalArgumentException("Can only handle CondNot, CondAnd, CondOr or CondEqual: " + condition);
 		}
 	}
 }
