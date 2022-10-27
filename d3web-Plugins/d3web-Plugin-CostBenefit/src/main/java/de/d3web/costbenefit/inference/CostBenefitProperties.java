@@ -161,6 +161,9 @@ public class CostBenefitProperties {
 		if (solution == null) {
 			solution = kb.getManager().searchSolution("NoErrorSolution");
 		}
+		if (solution == null) {
+			solution = kb.getManager().searchSolution("noErrorSolution");
+		}
 		return solution;
 	}
 
