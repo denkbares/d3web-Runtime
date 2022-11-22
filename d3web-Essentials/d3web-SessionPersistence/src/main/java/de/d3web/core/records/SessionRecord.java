@@ -19,6 +19,9 @@
 package de.d3web.core.records;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
 
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.Rating.State;
@@ -61,12 +64,44 @@ public interface SessionRecord extends SessionHeader {
 	List<FactRecord> getValueFacts();
 
 	/**
+	 * Returns all value facts of the record, but for value objects with multiple facts, only the merged fact will be in
+	 * the returned list.
+	 *
+	 * @return the value facts of the record filtered to only merged and distinct facts
+	 */
+	default List<FactRecord> getMergedValueFacts() {
+		return toMergedFacts(getValueFacts());
+	}
+
+	@NotNull
+	private static List<FactRecord> toMergedFacts(List<FactRecord> factsToMerge) {
+		return factsToMerge.stream()
+				.collect(Collectors.groupingBy(FactRecord::getObjectName))
+				.values()
+				.stream()
+				.flatMap(facts -> facts.stream()
+						.reduce((fact1, fact2) -> fact1.getPSM() == null ? fact1 : fact2)
+						.stream())
+				.toList();
+	}
+
+	/**
 	 * Return all interview facts
 	 *
 	 * @return List of interview facts
 	 * @created 05.08.2011
 	 */
 	List<FactRecord> getInterviewFacts();
+
+	/**
+	 * Returns all interview facts of the record, but for interview objects with multiple facts, only the merged fact will be in
+	 * the returned list.
+	 *
+	 * @return the interview facts of the record filtered to only merged and distinct facts
+	 */
+	default List<FactRecord> getMergedInterviewFacts() {
+		return toMergedFacts(getInterviewFacts());
+	}
 
 	/**
 	 * Returns all {@link Solution} instances, that hold one of the specified states
@@ -91,7 +126,8 @@ public interface SessionRecord extends SessionHeader {
 
 	/**
 	 * Creates a new SessionBuilder for this record instance, that can be used to initialize a running session with the
-	 * contents of this record. Usually the specified target session should be empty, otherwise the results are hardly to
+	 * contents of this record. Usually the specified target session should be empty, otherwise the results are hardly
+	 * to
 	 * predict.
 	 *
 	 * @param targetSession the session to replay this records contents into
