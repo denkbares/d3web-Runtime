@@ -250,7 +250,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 	/**
 	 * Returns relevant measurement variables for a given session that may be relevant
 	 *
-	 * @return List of measurement variable values, or an empty list if none are available
+	 * @return Map of measurement variable values, or an empty map if none are available
 	 */
 	public Map<String, Object> getMeasurementVariables(Session session) {
 		return Collections.emptyMap();
@@ -451,8 +451,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 		for (int i = protocolHistory.size() - 1; i >= 0; i--) {
 			ProtocolEntry lastEntry = protocolHistory.get(i);
 			if (lastEntry instanceof ActualQContainerEntry) return;
-			if (lastEntry instanceof MeasurementStartProtocolEntry) {
-				MeasurementStartProtocolEntry mStartEntry = (MeasurementStartProtocolEntry) lastEntry;
+			if (lastEntry instanceof MeasurementStartProtocolEntry mStartEntry) {
 				String questionName = mapping.get(mStartEntry.getQuestionName());
 				if (questionName == null) continue;
 				if (questionName.equals(fact.getTerminologyObject().getName())) {
@@ -462,8 +461,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			if (!(lastEntry instanceof FactProtocolEntry) && !(lastEntry instanceof MeasurementStartProtocolEntry)) {
 				continue;
 			}
-			if (lastEntry instanceof FactProtocolEntry) {
-				FactProtocolEntry lastFactEntry = (FactProtocolEntry) lastEntry;
+			if (lastEntry instanceof FactProtocolEntry lastFactEntry) {
 				if (lastFactEntry.getTerminologyObjectName().equals(fact.getTerminologyObject().getName())
 						&& lastFactEntry.getSolvingMethodClassName().equals(fact.getPSMethod().getClass().getName())) {
 					protocol.removeEntry(lastFactEntry);
@@ -520,8 +518,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			ValueUtils.requireCompatible(question, (Value) rawValue);
 			return (Value) rawValue;
 		}
-		if ((question instanceof QuestionChoice) && (rawValue instanceof String)) {
-			String name = (String) rawValue;
+		if ((question instanceof QuestionChoice) && (rawValue instanceof String name)) {
 			Choice choice = KnowledgeBaseUtils.findChoice((QuestionChoice) question, name, ANY_PROMPT);
 			if (choice != null) {
 				return new ChoiceValue(choice);
