@@ -513,20 +513,20 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 		return solver;
 	}
 
-	protected Value toValue(Question question, Object rawValue) {
-		if (rawValue instanceof Value) {
-			ValueUtils.requireCompatible(question, (Value) rawValue);
-			return (Value) rawValue;
+	protected Value toValue(Question question, Object measurandValue) {
+		if (measurandValue instanceof Value) {
+			ValueUtils.requireCompatible(question, (Value) measurandValue);
+			return (Value) measurandValue;
 		}
-		if ((question instanceof QuestionChoice) && (rawValue instanceof String name)) {
-			Choice choice = KnowledgeBaseUtils.findChoice((QuestionChoice) question, name, ANY_PROMPT);
+		if (question instanceof QuestionChoice questionChoice && measurandValue instanceof String name) {
+			Choice choice = KnowledgeBaseUtils.findChoice(questionChoice, name, ANY_PROMPT);
 			if (choice != null) {
 				return new ChoiceValue(choice);
 			}
-			throw new IllegalArgumentException("no choice " + rawValue);
+			throw new IllegalArgumentException("no choice " + measurandValue);
 		}
-		if ((question instanceof QuestionChoice) && (rawValue instanceof Number)) {
-			int index = ((Number) rawValue).intValue();
+		if ((question instanceof QuestionChoice) && (measurandValue instanceof Number)) {
+			int index = ((Number) measurandValue).intValue();
 			if (index == 0) {
 				return Unknown.getInstance();
 			}
@@ -536,20 +536,27 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			}
 			throw new IllegalArgumentException("no choice at index " + index);
 		}
-		if ((question instanceof QuestionNum) && (rawValue instanceof Number)) {
-			return new NumValue(((Number) rawValue).doubleValue());
+		if (question instanceof QuestionText && measurandValue instanceof Long longValue) {
+			return new TextValue(Long.toString(longValue));
 		}
-		if ((question instanceof QuestionNum) && (rawValue instanceof String)) {
+		if (question instanceof QuestionText && measurandValue instanceof Collection<?> collectionValue) {
+			String collectionVerbalization = collectionValue.stream().map(Object::toString).sorted().collect(Collectors.joining(", "));
+			return new TextValue(collectionVerbalization);
+		}
+		if (question instanceof QuestionNum && measurandValue instanceof Number numValue) {
+			return new NumValue(numValue.doubleValue());
+		}
+		if (question instanceof QuestionNum && measurandValue instanceof String stringValue) {
 			// may throw an NumberFormatException which is also an IllegalArgumentException
-			return new NumValue(Double.parseDouble((String) rawValue));
+			return new NumValue(Double.parseDouble(stringValue));
 		}
 		if (question instanceof QuestionText) {
-			return new TextValue(String.valueOf(rawValue));
+			return new TextValue(String.valueOf(measurandValue));
 		}
-		if ((question instanceof QuestionDate) && (rawValue instanceof Date)) {
-			return new DateValue((Date) rawValue);
+		if ((question instanceof QuestionDate) && (measurandValue instanceof Date)) {
+			return new DateValue((Date) measurandValue);
 		}
-		throw new IllegalArgumentException("cannot map measured value '" + rawValue + "' to question '" + question + "'");
+		throw new IllegalArgumentException("cannot map measured value '" + measurandValue + "' to question '" + question + "'");
 	}
 
 	@Override
