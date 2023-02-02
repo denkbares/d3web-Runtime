@@ -540,7 +540,12 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			return new TextValue(Long.toString(longValue));
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Collection<?> collectionValue) {
-			String collectionVerbalization = collectionValue.stream().map(Object::toString).sorted().collect(Collectors.joining(", "));
+			String collectionVerbalization = collectionValue.stream().map(o -> {
+				if (o instanceof Long || o instanceof Integer) {
+					return Long.toHexString((long) o);
+				}
+				return o.toString();
+			}).sorted().collect(Collectors.joining(", "));
 			return new TextValue(collectionVerbalization);
 		}
 		if (question instanceof QuestionNum && measurandValue instanceof Number numValue) {
