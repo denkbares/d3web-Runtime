@@ -537,7 +537,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			throw new IllegalArgumentException("no choice at index " + index);
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Long longValue) {
-			return new TextValue(Long.toString(longValue));
+			return new TextValue(Long.toHexString(longValue));
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Collection<?> collectionValue) {
 			String collectionVerbalization = collectionValue.stream().map(o -> {
