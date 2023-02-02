@@ -25,7 +25,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 
 /**
- * Some common util method regarding measuremtns
+ * Some common util method regarding measurements
  *
  * @author Albrecht Striffler (denkbares GmbH)
  * @created 05.11.21
