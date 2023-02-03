@@ -18,8 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.denkbares.strings.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.NoAnswerException;
@@ -105,7 +107,7 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 	}
 
 	public static class MeasurementSessionObject implements SessionObject {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MeasurementSessionObject.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(MeasurementSessionObject.class);
 		private State state = State.NOT_MEASURING;
 		private Date started = new Date();
 
@@ -537,15 +539,13 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			throw new IllegalArgumentException("no choice at index " + index);
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Long longValue) {
-			return new TextValue(Long.toHexString(longValue));
+			return new TextValue(Long.toString(longValue));
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Collection<?> collectionValue) {
-			String collectionVerbalization = collectionValue.stream().map(o -> {
-				if (o instanceof Long || o instanceof Integer) {
-					return Long.toHexString((long) o);
-				}
-				return o.toString();
-			}).sorted().collect(Collectors.joining(", "));
+			String collectionVerbalization = collectionValue.stream()
+					.map(Object::toString)
+					.sorted()
+					.collect(Collectors.joining(", "));
 			return new TextValue(collectionVerbalization);
 		}
 		if (question instanceof QuestionNum && measurandValue instanceof Number numValue) {
