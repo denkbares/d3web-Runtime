@@ -322,6 +322,16 @@
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.ObjectNameList" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verifyMalfunctions">
+		<parameter id="name" value="verifyMalfunctions" />
+		<parameter id="description"
+			value="Property to mark a test step as verification step for test equipment malfunctions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.ObjectNameList" />
+	</extension>
+
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
 		id="ManualTargetSelectionEntryHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.ManualTargetSelectionEntryHandler" />

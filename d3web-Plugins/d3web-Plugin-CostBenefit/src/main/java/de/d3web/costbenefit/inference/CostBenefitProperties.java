@@ -125,6 +125,16 @@ public class CostBenefitProperties {
 	public static final Property<String> TEST_EQUIPMENT_QUESTION = Property.getProperty("testEquipmentQuestion", String.class);
 
 	/**
+	 * Property to mark a test step as verification step for test equipment malfunctions.
+	 */
+	public static final Property<ObjectNameList> VERIFY_MALFUNCTIONS = Property.getProperty("verifyMalfunctions", ObjectNameList.class);
+
+	public static ObjectNameList getVerifyMalfunctions(QContainer testStep) {
+		ObjectNameList list = testStep.getInfoStore().getValue(VERIFY_MALFUNCTIONS);
+		return list == null ? new ObjectNameList() : list;
+	}
+
+	/**
 	 * Allow to specify the type of a terminology object in the context of a repair verification, e.g. set it to
 	 * exclusiveTestEquipmentCheck to have a test step as the only one verifying the error code no longer exists after
 	 * the repair
@@ -270,7 +280,7 @@ public class CostBenefitProperties {
 				if (mechanicalPattern.matcher(name).matches()) return mechanicalCheck;
 				return status;
 			}
-			if (name.equals("positionTransitions")) return status;
+			if ("positionTransitions".equals(name)) return status;
 			return null;
 		}
 	}
