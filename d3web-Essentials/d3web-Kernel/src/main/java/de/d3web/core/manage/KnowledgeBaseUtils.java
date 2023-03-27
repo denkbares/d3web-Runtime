@@ -817,10 +817,14 @@ public final class KnowledgeBaseUtils {
 	 * @param base the knowledge base to get the name for
 	 * @return the name or id of the knowledge base
 	 */
+	@NotNull
 	public static String getBaseName(KnowledgeBase base) {
 		String name = base.getName();
 		if (name == null) {
 			name = base.getId();
+		}
+		if (name == null) {
+			name = "unnamed";
 		}
 		return name;
 	}
