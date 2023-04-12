@@ -7,7 +7,6 @@ package de.d3web.core.session.builder;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import de.d3web.core.inference.PSMethod;
 import de.d3web.core.knowledge.TerminologyManager;
@@ -21,8 +20,8 @@ import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.protocol.FactProtocolEntry;
 
 /**
- * Executes facts of a specific problem solver. This executer is usually instantiated for source solver, but may also be
- * used by other solvers if they want their factrs to be simply re-added on loading.
+ * Executes facts of a specific problem solver. This executor is usually instantiated for source solver, but may also be
+ * used by other solvers if they want their facts to be simply re-added on loading.
  *
  * @author Volker Belli (denkbares GmbH)
  * @created 03.05.2018
@@ -53,7 +52,7 @@ public class FactProtocolExecutor<T extends PSMethod> implements ProtocolExecuto
 	@Override
 	public void handle(SessionBuilder builder, Date date, List<FactProtocolEntry> entries) {
 
-		List<FactProtocolEntry> subset = entries.stream().filter(this::canHandle).collect(Collectors.toList());
+		List<FactProtocolEntry> subset = entries.stream().filter(this::canHandle).toList();
 		if (subset.isEmpty()) return;
 
 		Session session = builder.getSession();
