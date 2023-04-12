@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,10 @@ import com.denkbares.collections.MultiMaps;
 import com.denkbares.collections.PriorityList;
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.denkbares.utils.Pair;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
@@ -60,6 +63,8 @@ public class SessionBuilder {
 	// configuration settings
 	@SuppressWarnings("rawtypes")
 	private final PriorityList<Double, Pair<ProtocolExecutor, Class>> executors = new PriorityList<>(5.0);
+	@SuppressWarnings("rawtypes")
+	private final Set<Pair<ProtocolExecutor, Class>> pluggedExecutors = new HashSet<>();
 	private Session session;
 	private String id;
 	private String name;
@@ -82,6 +87,14 @@ public class SessionBuilder {
 		initPluggedExecutors();
 	}
 
+	/**
+	 * A session builder without the plugged executors
+	 */
+	public SessionBuilder unplugged() {
+		pluggedExecutors.forEach(executors::remove);
+		return this;
+	}
+
 	private void initPluggedExecutors() {
 		for (Extension extension : PluginManager.getInstance().getExtensions(
 				KernelExtensionPoints.PLUGIN_ID, KernelExtensionPoints.EXTENSIONPOINT_PROTOCOL_EXECUTOR)) {
@@ -100,6 +113,7 @@ public class SessionBuilder {
 
 			//noinspection unchecked
 			executor(extension.getPriority(), entryClass, executor);
+			this.pluggedExecutors.add(new Pair<>(executor, entryClass));
 		}
 	}
 
