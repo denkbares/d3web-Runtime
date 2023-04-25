@@ -70,16 +70,12 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding) {
 		// if the condition is a condNot,
 		// try to replace it with condOr or condAnd
-		if (conditionedFinding instanceof CondNot) {
-			CondNot condNot = (CondNot) conditionedFinding;
+		if (conditionedFinding instanceof CondNot condNot) {
 			Condition subCondition = condNot.getTerms().get(0);
-			if (subCondition instanceof CondEqual) {
-				CondEqual condEqual = (CondEqual) subCondition;
+			if (subCondition instanceof CondEqual condEqual) {
 				Value value = condEqual.getValue();
-				if (condEqual.getQuestion() instanceof QuestionOC && value instanceof ChoiceValue) {
-					ChoiceValue cv = (ChoiceValue) value;
+				if (condEqual.getQuestion() instanceof QuestionOC oc && value instanceof ChoiceValue cv) {
 					List<Condition> terms = new LinkedList<>();
-					QuestionOC oc = (QuestionOC) condEqual.getQuestion();
 					for (Choice c : oc.getAllAlternatives()) {
 						if (!cv.getChoiceID().equals(new ChoiceID(c))) {
 							terms.add(new CondEqual(oc, new ChoiceValue(c)));
@@ -89,16 +85,14 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 				}
 			}
 			// use De Morgan
-			else if (subCondition instanceof CondAnd) {
-				CondAnd condAnd = (CondAnd) subCondition;
+			else if (subCondition instanceof CondAnd condAnd) {
 				List<Condition> terms = new LinkedList<>();
 				for (Condition c : condAnd.getTerms()) {
 					terms.add(new CondNot(c));
 				}
 				conditionedFinding = new CondOr(terms);
 			}
-			else if (subCondition instanceof CondOr) {
-				CondOr condOr = (CondOr) subCondition;
+			else if (subCondition instanceof CondOr condOr) {
 				List<Condition> terms = new LinkedList<>();
 				for (Condition c : condOr.getTerms()) {
 					terms.add(new CondNot(c));
@@ -116,8 +110,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 			extractOrs(conds, ((CondAnd) conditionedFinding).getTerms().get(0));
 		}
 		// replace condequals of normal answers with null
-		else if (conditionedFinding instanceof CondEqual) {
-			CondEqual condEqual = (CondEqual) conditionedFinding;
+		else if (conditionedFinding instanceof CondEqual condEqual) {
 			if (isNormalCovering(condEqual)) {
 				conds.add(null);
 			}
