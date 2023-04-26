@@ -273,10 +273,11 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		for (Question q : questions) {
 			Set<Condition> set = null;
 			Set<XCLRelation> coveringRelations = model.getCoveringRelations(q);
+			Set<Condition> forbiddenSet = null;
 			for (XCLRelation r : coveringRelations) {
 				if (r.hasType(XCLRelationType.contradicted)) {
-					// maybe slightly incorrect, but have a better behaviour for multiple non-covered choices
 					set = lazyAddAll(set, filterForeignConditions(q, getNegatedExtractedOrs(r)));
+					forbiddenSet = lazyAddAll(forbiddenSet, filterForeignConditions(q, getExtractedOrs(r)));
 				}
 				else {
 					set = lazyAddAll(set, getExtractedOrs(r));
@@ -293,7 +294,9 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 					if (coveringRelations.contains(r)) {
 						continue;
 					}
-					set = lazyAddAll(set, filterForeignConditions(q, getExtractedOrs(r)));
+					Collection<Condition> conditions = filterForeignConditions(q, getExtractedOrs(r));
+					if (forbiddenSet != null) conditions.removeAll(forbiddenSet);
+					set = lazyAddAll(set, conditions);
 				}
 			}
 			conditionsForQuestions.add(set);
@@ -394,8 +397,9 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 * otherwise a cached value is returned.
 	 */
 	private Collection<Condition> getNegatedExtractedOrs(XCLRelation r) {
-		return negatedExtractedOrCache.computeIfAbsent(r.getConditionedFinding(), c -> {
-			Set<Condition> ors = new HashSet<>(getExtractedOrs(r));
+//		return negatedExtractedOrCache.computeIfAbsent(r.getConditionedFinding(), c -> {
+		Condition c = r.getConditionedFinding();
+		Set<Condition> ors = new HashSet<>(getExtractedOrs(r));
 			boolean coversNormal = ors.remove(null);
 
 			// add all non-covered choices (as CondEquals) that are NOT (!) in the extracted ORs
@@ -426,7 +430,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 
 			if (result.isEmpty() && coversNormal) result.add(new CondNot(ConditionTrue.INSTANCE));
 			return Collections.unmodifiableCollection(result);
-		});
+//		});
 	}
 
 	@Override
