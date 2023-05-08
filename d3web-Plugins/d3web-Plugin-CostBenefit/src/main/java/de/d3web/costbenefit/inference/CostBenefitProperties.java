@@ -433,6 +433,7 @@ public class CostBenefitProperties {
 	 * used to prepare stated for other targets.
 	 */
 	public static boolean isTargetOnly(QContainer container) {
+		if (container == null) return false;
 		return container.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
 	}
 }
