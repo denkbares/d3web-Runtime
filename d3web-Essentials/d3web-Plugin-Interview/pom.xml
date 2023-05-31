@@ -23,7 +23,7 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>2023.2-SNAPSHOT</version>
+		<version>2023.2</version>
 	</parent>
 
 	<artifactId>d3web-Plugin-Interview</artifactId>
