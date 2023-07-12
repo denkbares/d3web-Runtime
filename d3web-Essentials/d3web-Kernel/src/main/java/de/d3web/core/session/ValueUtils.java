@@ -313,7 +313,7 @@ public final class ValueUtils {
         }
 
         if (valueString.equals(UndefinedValue.UNDEFINED_ID)) return UndefinedValue.getInstance();
-        if (valueString.equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
+        if (Strings.unquote(valueString).equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
             return UndefinedValue.getInstance();
         }
 
