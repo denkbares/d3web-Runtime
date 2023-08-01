@@ -9,26 +9,22 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
-
-import com.denkbares.collections.MultiMap;
-import com.denkbares.collections.MultiMaps;
-import com.denkbares.collections.PriorityList;
-import com.denkbares.plugin.Extension;
-import com.denkbares.plugin.PluginManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.denkbares.collections.PriorityList;
+import com.denkbares.plugin.Extension;
+import com.denkbares.plugin.PluginManager;
 import com.denkbares.utils.Pair;
 import de.d3web.core.extensions.KernelExtensionPoints;
 import de.d3web.core.knowledge.InfoStore;
@@ -299,18 +295,21 @@ public class SessionBuilder {
 	}
 
 	private void replayProtocol() {
-		MultiMap<Date, ProtocolEntry> groups = protocol.stream().collect(MultiMaps.toMultiMap(
-				ProtocolEntry::getDate, Function.identity(), MultiMaps.linkedFactory(), MultiMaps.linkedFactory()));
+		// we need a list for each date, because there can be multiple equal entries at the same date,
+		// and we want them all and in the same order as in the original protocol
+		Map<Date, List<ProtocolEntry>> groups = new LinkedHashMap<>();
+		for (ProtocolEntry entry : protocol) {
+			groups.computeIfAbsent(entry.getDate(), k -> new ArrayList<>()).add(entry);
+		}
 
-		for (Date date : groups.keySet()) {
-			Set<ProtocolEntry> entries = groups.getValues(date);
+		for (Map.Entry<Date, List<ProtocolEntry>> entry : groups.entrySet()) {
 			executors.forEach(pair -> {
 				// replay the recorded indications
-				List<ProtocolEntry> matches = entries.stream()
+				List<ProtocolEntry> matches = entry.getValue().stream()
 						.filter(pair.getB()::isInstance).collect(Collectors.toList());
 				if (!matches.isEmpty()) {
 					//noinspection unchecked
-					pair.getA().handle(this, date, matches);
+					pair.getA().handle(this, entry.getKey(), matches);
 				}
 			});
 		}
