@@ -254,6 +254,15 @@
 		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.ChoiceDisplay" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="textDisplay">
+		<parameter id="name" value="textDisplay" />
+		<parameter id="description" value="Represents the display type of text questions." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="de.d3web.core.knowledge.terminology.info.TextDisplay" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="solutionDisplay">
 		<parameter id="name" value="solutionDisplay" />
 		<parameter id="description" value="Represents the display type of solutions." />

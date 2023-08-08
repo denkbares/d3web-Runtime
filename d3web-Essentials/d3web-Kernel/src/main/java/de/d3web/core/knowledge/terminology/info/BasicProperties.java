@@ -198,6 +198,9 @@ public class BasicProperties {
 	 */
 	public static final Property<ChoiceDisplay> CHOICE_DISPLAY = Property.getProperty("choiceDisplay", ChoiceDisplay.class);
 
+	public static final Property<TextDisplay> TEXT_DISPLAY = Property.getProperty(
+			"textDisplay", TextDisplay.class);
+
 	/**
 	 * Used for Diagnosis. Specified how the solution should be displayed to the user
 	 */
