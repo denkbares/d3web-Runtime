@@ -30,6 +30,7 @@ import de.d3web.core.knowledge.terminology.Question;
 import de.d3web.core.knowledge.terminology.QuestionChoice;
 import de.d3web.core.knowledge.terminology.QuestionDate;
 import de.d3web.core.knowledge.terminology.QuestionNum;
+import de.d3web.core.knowledge.terminology.QuestionText;
 import de.d3web.core.knowledge.terminology.Solution;
 import de.d3web.core.knowledge.terminology.info.abnormality.Abnormality;
 import de.d3web.core.knowledge.terminology.info.abnormality.AbnormalityNum;
@@ -448,5 +449,11 @@ public class BasicProperties {
 			abnormality = ((DynamicAbnormality) abnormality).eval(session);
 		}
 		return abnormality;
+	}
+
+	@NotNull
+	public static TextDisplay getTextDisplay(QuestionText question) {
+		TextDisplay value = question.getInfoStore().getValue(BasicProperties.TEXT_DISPLAY);
+		return value == null ? TextDisplay.normal : value;
 	}
 }
