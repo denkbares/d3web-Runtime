@@ -22,6 +22,17 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
+
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="noBenefit">
+		<parameter id="name" value="noBenefit" />
+		<parameter id="description"
+			value="Property to mark a choice as irrelevant for cost benefit calculation." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
 	
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
 		id="XCLModelPersistenceHandler">
@@ -54,7 +65,7 @@
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="5" />
 	</extension>
-	
+
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
 		id="XCLPSConfigHandler">
 		<parameter id="class"

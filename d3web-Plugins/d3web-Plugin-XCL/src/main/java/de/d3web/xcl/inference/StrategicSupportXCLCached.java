@@ -58,6 +58,7 @@ import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
+import de.d3web.xcl.XCLProperties;
 import de.d3web.xcl.XCLRelation;
 import de.d3web.xcl.XCLRelationType;
 
@@ -366,13 +367,22 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	 */
 	private static Set<Condition> lazyAddAll(Set<Condition> source, Collection<Condition> items) {
 		if (items == null || items.isEmpty()) return source;
-		if (source == null) return new HashSet<>(items);
-		if (source == NULL_SET) {
-			source = new HashSet<>(items);
-			source.add(null);
-			return source;
+		if (source == null) {
+			source = new HashSet<>();
 		}
-		source.addAll(items);
+		else if (source == NULL_SET) {
+			source = new HashSet<>();
+			source.add(null);
+		}
+		for (Condition item : items) {
+			if (item instanceof CondEqual eq) {
+				if (eq.getValue() instanceof ChoiceValue cv) {
+					QuestionChoice question = (QuestionChoice) eq.getQuestion();
+					if (cv.getChoice(question).getInfoStore().getValue(XCLProperties.NO_BENEFIT_CHOICE)) continue;
+				}
+			}
+			source.add(item);
+		}
 		return source;
 	}
 
@@ -400,36 +410,36 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 //		return negatedExtractedOrCache.computeIfAbsent(r.getConditionedFinding(), c -> {
 		Condition c = r.getConditionedFinding();
 		Set<Condition> ors = new HashSet<>(getExtractedOrs(r));
-			boolean coversNormal = ors.remove(null);
+		boolean coversNormal = ors.remove(null);
 
-			// add all non-covered choices (as CondEquals) that are NOT (!) in the extracted ORs
-			Set<Condition> result = new HashSet<>();
-			c.getTerminalObjects().stream()
-					.filter(QuestionChoice.class::isInstance).map(QuestionChoice.class::cast).forEach(question -> {
-						for (Choice choice : question.getAllAlternatives()) {
-							// skip if choice is in or (use all non-covered choices to create negated covering)
-							CondEqual cond = new CondEqual(question, new ChoiceValue(choice));
-							if (ors.remove(cond)) continue;
-							// skip if normal values are covered and the choice is normal (to create negated covering)
-							if (coversNormal && isNormalCovering(cond)) continue;
-							// otherwise add the choice to the negated covering
-							result.add(cond);
-						}
-					});
+		// add all non-covered choices (as CondEquals) that are NOT (!) in the extracted ORs
+		Set<Condition> result = new HashSet<>();
+		c.getTerminalObjects().stream()
+				.filter(QuestionChoice.class::isInstance).map(QuestionChoice.class::cast).forEach(question -> {
+					for (Choice choice : question.getAllAlternatives()) {
+						// skip if choice is in or (use all non-covered choices to create negated covering)
+						CondEqual cond = new CondEqual(question, new ChoiceValue(choice));
+						if (ors.remove(cond)) continue;
+						// skip if normal values are covered and the choice is normal (to create negated covering)
+						if (coversNormal && isNormalCovering(cond)) continue;
+						// otherwise add the choice to the negated covering
+						result.add(cond);
+					}
+				});
 
-			// additionally add all remaining negated extracted ORs that are not CondEquals of any choices
-			// Killt das den fix von 2018 ?!
-			for (Condition other : ors) {
-				if (other instanceof CondNot) {
-					result.add(((CondNot) other).getOperand());
-				}
-				else {
-					result.add(new CondNot(other));
-				}
+		// additionally add all remaining negated extracted ORs that are not CondEquals of any choices
+		// Killt das den fix von 2018 ?!
+		for (Condition other : ors) {
+			if (other instanceof CondNot) {
+				result.add(((CondNot) other).getOperand());
 			}
+			else {
+				result.add(new CondNot(other));
+			}
+		}
 
-			if (result.isEmpty() && coversNormal) result.add(new CondNot(ConditionTrue.INSTANCE));
-			return Collections.unmodifiableCollection(result);
+		if (result.isEmpty() && coversNormal) result.add(new CondNot(ConditionTrue.INSTANCE));
+		return Collections.unmodifiableCollection(result);
 //		});
 	}
 
