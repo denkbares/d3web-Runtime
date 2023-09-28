@@ -68,6 +68,12 @@ import de.d3web.xcl.XCLRelationType;
  */
 public class StrategicSupportXCLCached implements StrategicSupport {
 
+	private final int maxBenefitPots;
+
+	public StrategicSupportXCLCached(int maxBenefitPots) {
+		this.maxBenefitPots = maxBenefitPots;
+	}
+
 	private static void extractOrs(Collection<Condition> conds, Condition conditionedFinding) {
 		// if the condition is a condNot,
 		// try to replace it with condOr or condAnd
@@ -233,23 +239,69 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Collection<Question> questions = getRelevantQuestions(qaSets, session);
 		if (questions.isEmpty()) return 0;
 
-		InformationPots<Condition> pots = new InformationPots<>();
 		Map<Question, Set<XCLRelation>> excludingQuestions = getExcludingQuestion(solutions, questions);
-
 		Set<XCLModel> coveringModels = getCoveringModels(questions, solutions);
 
+		InformationPots<Condition> pots = getInformationPots(solutions, coveringModels, questions, excludingQuestions);
+		if (pots == null) {
+			// if information pots would get to big use another heuristic for calculating the benefit
+			pots = getEstimatedInformationPots(solutions, coveringModels);
+		}
+		// calculate information gain
+		return pots.getInformationGain();
+	}
+
+	@NotNull
+	private InformationPots<Condition> getEstimatedInformationPots(Collection<Solution> solutions, Set<XCLModel> coveringModels) {
+		InformationPots<Condition> pots;
+		pots = new InformationPots<>();
+		Set<Solution> coveringSolutions = new HashSet<>();
+		for (XCLModel model : coveringModels) {
+			pots.addWeights(model.getSolution(), model.getAllRelations()
+					.stream()
+					.map(XCLRelation::getConditionedFinding)
+					.map(Collections::singletonList)
+					.toList());
+			coveringSolutions.add(model.getSolution());
+		}
+		for (Solution solution : solutions) {
+			if (coveringSolutions.contains(solution)) {
+				continue;
+			}
+			pots.addWeights(solution, List.of(List.of(ConditionTrue.INSTANCE)));
+		}
+		return pots;
+	}
+
+	private InformationPots<Condition> getInformationPots(Collection<Solution> solutions, Set<XCLModel> coveringModels, Collection<Question> questions, Map<Question, Set<XCLRelation>> excludingQuestions) {
+		InformationPots<Condition> pots = new InformationPots<>();
 		for (XCLModel model : coveringModels) {
 			// multiply possible value sets to get pots
 			// and add solution probabilities to these pots
-			pots.addWeights(model.getSolution(), getConditionsForQuestions(questions, excludingQuestions, model));
+			ArrayList<Set<Condition>> conditionsForQuestions = getConditionsForQuestions(questions, excludingQuestions, model);
+			if (exceedsPotsSize(conditionsForQuestions)) {
+				return null;
+			}
+
+			pots.addWeights(model.getSolution(), conditionsForQuestions);
 		}
 
 		// finally, we add all the solutions that are not covered at all
-		pots.addWeights(getTotalWeight(solutions) - pots.getTotalWeight(),
-				getConditionsOfUncoveredSolutions(questions, excludingQuestions));
+		ArrayList<Set<Condition>> conditionsOfUncoveredSolutions = getConditionsOfUncoveredSolutions(questions, excludingQuestions);
+		if (exceedsPotsSize(conditionsOfUncoveredSolutions)) {
+			return null;
+		}
 
-		// calculate information gain
-		return pots.getInformationGain();
+		pots.addWeights(getTotalWeight(solutions) - pots.getTotalWeight(),
+				conditionsOfUncoveredSolutions);
+		return pots;
+	}
+
+	private boolean exceedsPotsSize(ArrayList<Set<Condition>> conditionsOfUncoveredSolutions) {
+		return conditionsOfUncoveredSolutions.stream()
+				.mapToDouble(Set::size)
+				.reduce((a, b) -> a * b)
+				.orElse(1) > maxBenefitPots;
 	}
 
 	@NotNull

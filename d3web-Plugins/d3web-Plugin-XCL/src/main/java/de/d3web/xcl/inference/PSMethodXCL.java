@@ -62,7 +62,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	public static final String EXTENSION_ID = "PSMethodXCL";
 
 	private ScoreAlgorithm scoreAlgorithm = new DefaultScoreAlgorithm();
-	private final StrategicSupport strategicSupport = new StrategicSupportXCLCached();
+	private final StrategicSupport strategicSupport = new StrategicSupportXCLCached(1000);
 
 	public PSMethodXCL() {
 		super();
@@ -108,8 +108,7 @@ public final class PSMethodXCL implements PSMethod, StrategicSupport,
 	private void updateAnsweredWeight(Session session, Collection<PropagationEntry> changes) {
 		XCLCaseObject caseObject = session.getSessionObject(this);
 		for (PropagationEntry entry : changes) {
-			if (entry.getObject() instanceof Question) {
-				Question question = (Question) entry.getObject();
+			if (entry.getObject() instanceof Question question) {
 
 				// update count of question
 				boolean hasOldValue = entry.hasOldValue();
