@@ -141,14 +141,13 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		Set<Question> result = new HashSet<>();
 		for (QASet qaSet : qasets) {
 			for (Question q : formStrategy.getActiveQuestions(qaSet, session)) {
-				boolean ignore = // false;
-						(q instanceof QuestionChoice)
-								&& ((QuestionChoice) q).getAllAlternatives().size() <= 1;
-				// unfortunately, in rare cases, ignoring irrelevant questions
-				// will result in slightly different information gain
-				if (!ignore) {
-					result.add(q);
-				}
+				if ((q instanceof QuestionChoice) && ((QuestionChoice) q).getAllAlternatives().size() <= 1) continue;
+				// ignore questions without any coverings.
+				List<XCLModel> models = XCLContributedModelSet.getModels(q);
+				if (models.isEmpty()) continue;
+				// We do not ignore questions that have no coverings for the sprint group (suspected solutions),
+				// since it is presumable not faster and it is not relevant for benefit calculation.
+				result.add(q);
 			}
 		}
 		return result;
