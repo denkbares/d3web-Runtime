@@ -473,7 +473,9 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 						CondEqual cond = new CondEqual(question, new ChoiceValue(choice));
 						if (ors.remove(cond)) continue;
 						// skip if normal values are covered and the choice is normal (to create negated covering)
-						if (coversNormal && isNormalCovering(cond)) continue;
+						boolean normalCovering = isNormalCovering(cond);
+						if (coversNormal && normalCovering) continue;
+						if (normalCovering) cond = null;
 						// otherwise add the choice to the negated covering
 						result.add(cond);
 					}
