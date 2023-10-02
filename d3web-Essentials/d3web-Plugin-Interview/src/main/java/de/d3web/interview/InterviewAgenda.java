@@ -39,6 +39,7 @@ import de.d3web.interview.indication.IndicationComparator;
 public final class InterviewAgenda implements de.d3web.core.session.interviewmanager.InterviewAgenda {
 
 	private final List<AgendaEntry> agenda;
+	private boolean sorted = true;
 
 	public static final class AgendaEntry implements Comparable<AgendaEntry> {
 
@@ -122,7 +123,9 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 			if (!indication.equals(other.indication)) {
 				return false;
 			}
-			else return interviewState == other.interviewState;
+			else {
+				return interviewState == other.interviewState;
+			}
 		}
 
 		@Override
@@ -136,7 +139,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	}
 
 	/**
-	 * A new {@link InterviewAgenda} instance is created.
+	 * A new  instance is created.
 	 */
 	public InterviewAgenda() {
 		agenda = new ArrayList<>();
@@ -147,22 +150,24 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	 *
 	 * @param interviewObject {@link InterviewObject}
 	 */
-	public final void append(InterviewObject interviewObject, Indication indication) {
+	public void append(InterviewObject interviewObject, Indication indication) {
 		if (findAgendaEntry(interviewObject, indication) != null) {
 			activate(interviewObject, indication);
 		}
 		else {
 			// if the interviewObject is a QASet:
-			if (interviewObject instanceof QASet) {
+			if (interviewObject instanceof QASet interviewQuestion) {
 				// check, if this QASet is either a question
 				// or a non-empty QContainer
-				QASet interviewQuestion = (QASet) interviewObject;
 				if (!interviewQuestion.isQuestionOrHasQuestions()) {
 					// if the QContainer is empty: Don't add it to the agenda!
 					return;
 				}
 			}
-			agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE, indication));
+			synchronized (this) {
+				agenda.add(new AgendaEntry(interviewObject, InterviewState.ACTIVE, indication));
+				sorted = false;
+			}
 		}
 	}
 
@@ -316,7 +321,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	 */
 	@NotNull
 	public List<InterviewObject> getCurrentlyActiveObjects() {
-		Collections.sort(this.agenda);
+		checkSorted();
 		// organize if required
 		List<InterviewObject> objects = new ArrayList<>();
 		for (AgendaEntry entry : this.agenda) {
@@ -327,6 +332,12 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 		return Collections.unmodifiableList(objects);
 	}
 
+	private synchronized void checkSorted() {
+		if (sorted) return;
+		Collections.sort(this.agenda);
+		sorted = true;
+	}
+
 	/**
 	 * Gives the (unmodifiable) list of currently objects on the agenda, regardless if they are active or not. Returns
 	 * an empty list if the agenda is empty.
@@ -335,7 +346,7 @@ public final class InterviewAgenda implements de.d3web.core.session.interviewman
 	 */
 	@NotNull
 	public List<InterviewObject> getAllObjects() {
-		Collections.sort(this.agenda);
+		checkSorted();
 		List<InterviewObject> objects = new ArrayList<>();
 		for (AgendaEntry entry : this.agenda) {
 			objects.add(entry.getInterviewObject());
