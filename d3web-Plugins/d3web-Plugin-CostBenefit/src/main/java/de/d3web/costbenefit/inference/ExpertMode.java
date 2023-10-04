@@ -592,7 +592,8 @@ public class ExpertMode implements SessionObject {
 		// sets a new abort strategy that allows al least 2x steps to be used (up to 5x steps)
 		SearchAlgorithm algorithm = psm.getSearchAlgorithm();
 		AbortStrategy existing = algorithm.getAbortStrategy();
-		algorithm.setAbortStrategy(new DefaultAbortStrategy(searchModel.getCalculationSteps() * 2, 2.5f));
+		int lastMaxSteps = existing instanceof DefaultAbortStrategy existingDefStrategy ? existingDefStrategy.getMaxSteps() : searchModel.getCalculationSteps();
+		algorithm.setAbortStrategy(new DefaultAbortStrategy(lastMaxSteps * 2, 2.5f));
 
 		try {
 			// if a manual target has been selected, select a path to that target
