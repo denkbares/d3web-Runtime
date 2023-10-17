@@ -539,7 +539,9 @@ public class Measurement implements SessionObjectSource<Measurement.MeasurementS
 			throw new IllegalArgumentException("no choice at index " + index);
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Long longValue) {
-			return new TextValue(Long.toString(longValue));
+			// use toUnsignedString instead of just toString for cases where the CAN message is too big to
+			// fit in the positive long values
+			return new TextValue(Long.toUnsignedString(longValue));
 		}
 		if (question instanceof QuestionText && measurandValue instanceof Collection<?> collectionValue) {
 			String collectionVerbalization = collectionValue.stream()
