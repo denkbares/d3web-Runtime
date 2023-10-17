@@ -60,6 +60,9 @@ public class MultipleChoiceValue implements QuestionValue {
 		}
 		this.choiceIDs = new LinkedHashSet<>();
 		Collections.addAll(this.choiceIDs, choiceIDs);
+		if (this.choiceIDs.contains(null)) {
+			throw new NullPointerException();
+		}
 	}
 
 	/**
@@ -74,13 +77,16 @@ public class MultipleChoiceValue implements QuestionValue {
 			throw new NullPointerException();
 		}
 		this.choiceIDs = new LinkedHashSet<>(choiceIDs);
+		if (this.choiceIDs.contains(null)) {
+			throw new NullPointerException();
+		}
 	}
 
 	public static MultipleChoiceValue fromChoicesValues(List<ChoiceValue> choices) {
 		ChoiceID[] choiceIDs = new ChoiceID[choices.size()];
 		int index = 0;
 		for (ChoiceValue choice : choices) {
-			choiceIDs[index] = choice.getChoiceID();
+			choiceIDs[index++] = choice.getChoiceID();
 		}
 		return new MultipleChoiceValue(choiceIDs);
 	}
