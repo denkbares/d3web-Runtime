@@ -119,11 +119,17 @@ public final class CostBenefitUtil {
 		copy.getBlackboard().setSourceRecording(false);
 		Blackboard blackboard = session.getBlackboard();
 		List<? extends Question> answeredQuestions = blackboard.getAnsweredQuestions();
+		Collection<InterviewObject> interviewObjects = blackboard.getInterviewObjects();
 		try {
 			copy.getPropagationManager().openPropagation();
 			for (Question q : answeredQuestions) {
 				Fact fact = blackboard.getValueFact(q);
 				copy.getBlackboard().addValueFact(fact);
+			}
+
+			for (InterviewObject q : interviewObjects) {
+				Fact fact = blackboard.getInterviewFact(q);
+				copy.getBlackboard().addInterviewFact(fact);
 			}
 		}
 		finally {
@@ -197,11 +203,10 @@ public final class CostBenefitUtil {
 			}
 
 			// we expect choice question from here on
-			if (!(question instanceof QuestionChoice)) continue;
+			if (!(question instanceof QuestionChoice questionChoice)) continue;
 
 			Value value = blackboard.getValue(question);
 			if (!UndefinedValue.isUndefinedValue(value)) continue;
-			QuestionChoice questionChoice = (QuestionChoice) question;
 
 			// if question has only one choice, use the choice
 			List<Choice> alternatives = questionChoice.getAllAlternatives();
