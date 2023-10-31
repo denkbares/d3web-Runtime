@@ -27,10 +27,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.denkbares.utils.Stopwatch;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.inference.BlockingReason;
@@ -39,6 +41,7 @@ import de.d3web.costbenefit.inference.CostFunction;
 import de.d3web.costbenefit.inference.DefaultCostFunction;
 import de.d3web.costbenefit.inference.PSMethodCostBenefit;
 import de.d3web.costbenefit.inference.StateTransition;
+import de.d3web.costbenefit.inference.SupportiveStateTransitions;
 
 /**
  * This model provides all functions on targets, nodes and paths for the search algorithms. It represents the actual
@@ -46,6 +49,7 @@ import de.d3web.costbenefit.inference.StateTransition;
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
+@SuppressWarnings("JavadocDeclaration")
 public class SearchModel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchModel.class);
 
@@ -56,8 +60,10 @@ public class SearchModel {
 	private Target bestCostBenefitTarget;
 	private final CostFunction costFunction;
 	private final Session session;
-	private final Set<StateTransition> transitionalStateTransitions;
+
 	private final Map<QContainer, BlockingReason> blockedQContainers;
+	private final Set<StateTransition> applicableStateTransitions;
+	private Set<StateTransition> usefulStateTransitions = null;
 
 	private boolean aborted = false;
 	private long calculationTime = -1;
@@ -75,9 +81,9 @@ public class SearchModel {
 			LOGGER.warn("No Costbenefit-PSMethod included in the session, using default cost function.");
 		}
 		blockedQContainers = PSMethodCostBenefit.getBlockedQContainers(session);
-		transitionalStateTransitions = new HashSet<>();
 
 		// filter StateTransitions that cannot be applied due to final questions
+		applicableStateTransitions = new HashSet<>();
 		for (StateTransition st : StateTransition.getAll(session)) {
 			// skip blocked and target-only containers, as their transitions are not taken into consideration
 			QContainer container = st.getQContainer();
@@ -85,7 +91,7 @@ public class SearchModel {
 			if (CostBenefitProperties.isTargetOnly(container)) continue;
 
 			// add all remaining state transitions
-			transitionalStateTransitions.add(st);
+			applicableStateTransitions.add(st);
 		}
 	}
 
@@ -150,6 +156,8 @@ public class SearchModel {
 	 * Adds a new target
 	 */
 	public void addTarget(Target target) {
+		// targets must not be modified after the state transitions have been calculated
+		if (usefulStateTransitions != null) throw new IllegalStateException();
 		targets.add(target);
 	}
 
@@ -161,6 +169,8 @@ public class SearchModel {
 	 * @param reason some textual reason why this target is blocked (for debug purposes)
 	 */
 	public void blockTarget(Target target, BlockingReason reason) {
+		// targets must not be modified after the state transitions have been calculated
+		if (usefulStateTransitions != null) throw new IllegalStateException();
 		if (targets.remove(target)) {
 			blockedTargets.put(target, reason);
 			// update the best benefit target, if that one is removed
@@ -327,16 +337,25 @@ public class SearchModel {
 	 *
 	 * @return the state transitions currently usable for establishing precondition states
 	 */
+	@NotNull
 	public Set<StateTransition> getTransitionalStateTransitions() {
-		return transitionalStateTransitions;
+		// restrict the active transitions to the transitive hull of those, which derives any required state question
+		if (usefulStateTransitions == null) {
+			var stopwatch = new Stopwatch().start();
+			usefulStateTransitions = new SupportiveStateTransitions(applicableStateTransitions, targets).getSupportiveHull();
+			stopwatch.log(LOGGER, "calculate path on " + usefulStateTransitions.size() + " of " +
+					applicableStateTransitions.size() + " transitional test steps");
+		}
+		return usefulStateTransitions;
 	}
 
 	/**
 	 * Calculates all unblocked state transitions having a {@link QContainer} being part of an actual target
 	 *
-	 * @return List of unblocked target StateTransitions
+	 * @return collection of unblocked target StateTransitions
 	 * @created 28.11.2012
 	 */
+	@NotNull
 	public Set<StateTransition> getTargetStateTransitions() {
 		HashSet<StateTransition> result = new HashSet<>();
 		for (Target t : targets) {
@@ -410,8 +429,6 @@ public class SearchModel {
 	}
 
 	private static class TargetComparator implements Comparator<Target> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(TargetComparator.class);
-
 		@Override
 		public int compare(Target o1, Target o2) {
 			return o2.compareTo(o1);

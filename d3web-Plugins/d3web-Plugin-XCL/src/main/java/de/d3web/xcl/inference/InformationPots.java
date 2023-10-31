@@ -39,7 +39,6 @@ import de.d3web.core.knowledge.terminology.info.BasicProperties;
 public class InformationPots<K> {
 
 	private static class WeightSum {
-
 		private float value = 0f;
 	}
 

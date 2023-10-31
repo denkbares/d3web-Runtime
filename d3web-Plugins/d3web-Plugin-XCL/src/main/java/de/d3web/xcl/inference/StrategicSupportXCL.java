@@ -50,7 +50,6 @@ import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.interview.FormStrategy;
 import de.d3web.interview.Interview;
-import de.d3web.interview.inference.PSMethodInterview;
 import de.d3web.xcl.XCLContributedModelSet;
 import de.d3web.xcl.XCLModel;
 import de.d3web.xcl.XCLRelation;
@@ -59,7 +58,9 @@ import de.d3web.xcl.XCLRelationType;
 /**
  * @author volker_belli
  * @created 28.05.2012
+ * @deprecated use {@link StrategicSupportXCLCached}
  */
+@Deprecated
 public class StrategicSupportXCL implements StrategicSupport {
 
 	@Override
