@@ -190,51 +190,6 @@ public class TestComfortBenefit {
 		}
 	}
 
-	private static class TestPath implements Path {
-
-		private final List<QContainer> qcons;
-
-		public TestPath(List<QContainer> qcons) {
-			super();
-			this.qcons = qcons;
-		}
-
-		@Override
-		public List<QContainer> getPath() {
-			return qcons;
-		}
-
-		@Override
-		public double getCosts() {
-			return 0;
-		}
-
-		@Override
-		public double getNegativeCosts() {
-			return 0;
-		}
-
-		@Override
-		public boolean contains(QContainer qContainer) {
-			return qcons.contains(qContainer);
-		}
-
-		@Override
-		public boolean containsAll(Collection<QContainer> qContainers) {
-			return qcons.containsAll(qContainers);
-		}
-
-		@Override
-		public boolean contains(Collection<QContainer> qContainers) {
-			for (QContainer qContainer : qContainers) {
-				if (contains(qContainer)) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-
 	private static class TestAlgorithm implements SearchAlgorithm {
 
 		@Override

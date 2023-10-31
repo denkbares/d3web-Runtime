@@ -50,60 +50,104 @@ class PathSorter implements PathModifier {
 		// only called when canApply succeeded
 		Path path = model.getBestCostBenefitPath();
 		assert path != null;
+		return sortPath(copiedSession, path);
+	}
+
+	@NotNull
+	public Path sortPath(Session copiedSession, Path path) {
 		List<QContainer> containers = path.getPath();
 
-		// process the ordered items
-		// first process the item with the highest (abs) priority value towards head/tail
-		// then mark as processed, and move next ones, but not further than previously moved ones
-		List<QContainer> order = containers.stream().filter(this::hasPathOrder)
-				.sorted(Comparator.comparingDouble(qc -> -Math.abs(getPathOrder(qc)))).collect(Collectors.toList());
-		int min = 0; // inclusively
-		int max = containers.size() - 1; // inclusively
-		for (QContainer container : order) {
-			double priority = getPathOrder(container);
-			int from = containers.indexOf(container);
-			int to = from;
+		List<QContainer> cleaned = new ArrayList<>(containers);
 
-			// move towards head/tail, based on priority
-			int delta = (priority < 0) ? -1 : 1;
-			Path bestPath = null;
-			while (min < to && to < max) {
-				Path newPath = moveContainer(path, from, to + delta);
-				if (!isValidPath(copiedSession, newPath)) break;
-				// we found a new path
-				bestPath = newPath;
-				to += delta;
-			}
+		// first, reorder the negativ path orders
+		List<QContainer> negativeOrder = cleaned.stream()
+				.filter(qc -> getPathOrder(qc) < 0)
+				.sorted(Comparator.comparingDouble(this::getPathOrder))
+				.collect(Collectors.toCollection(ArrayList::new));
+		cleaned.removeAll(negativeOrder);
+		List<QContainer> reorderedNegative = findValidReorderedPath(copiedSession, cleaned, negativeOrder, true);
+		if (reorderedNegative == null) reorderedNegative = new ArrayList<>(path.getPath());
+		List<QContainer> copyOfFirstStep = new ArrayList<>(reorderedNegative);
 
-			// if a new best path has been found, apply the path
-			if (bestPath != null) {
-				path = bestPath;
-				containers = bestPath.getPath();
-			}
-
-			// and restrict the next items to be sorted not further than this item,
-			// (even if if this item could not been moved, but is has a higher (abs) order value)
-			if (priority < 0) {
-				min = to + 1;
-			}
-			else {
-				max = to - 1;
-			}
+		// then, reorder the positiv path orders
+		List<QContainer> positiveOrder = reorderedNegative.stream()
+				.filter(qc -> getPathOrder(qc) > 0)
+				.sorted(Comparator.comparingDouble(this::getPathOrder).reversed())
+				.collect(Collectors.toCollection(ArrayList::new));
+		reorderedNegative.removeAll(positiveOrder);
+		List<QContainer> reorderedPositive = findValidReorderedPath(copiedSession, reorderedNegative, positiveOrder, false);
+		if (reorderedPositive == null) { // reuse at least negative reordering
+			reorderedPositive = copyOfFirstStep;
 		}
 
-		return path;
+		return new ExtendedPath(reorderedPositive, path);
 	}
 
-	private Path moveContainer(Path source, int from, int to) {
-		List<QContainer> containers = new ArrayList<>(source.getPath());
-		QContainer container = containers.remove(from);
-		containers.add(to, container);
-		return new ExtendedPath(containers, source);
+	private List<QContainer> findValidReorderedPath(Session copiedSession, List<QContainer> rest, List<QContainer> ordered, boolean negative) {
+		if (rest.isEmpty()) {
+			// try to permute equal path orders in this case?
+			return isValidPath(copiedSession, ordered) ? ordered : null;
+		}
+		if (ordered.isEmpty()) {
+			return isValidPath(copiedSession, rest) ? rest : null;
+		}
+		ArrayList<QContainer> orderedCopy = new ArrayList<>(ordered);
+
+		QContainer nextInsert = orderedCopy.remove(0);
+		double nextPathOrder = getPathOrder(nextInsert);
+		if (negative) {
+			// move the negativ path orders to the front
+			int insert = getInsertIndex(rest, nextPathOrder);
+			for (int i = insert; i < rest.size(); i++) {
+				ArrayList<QContainer> restCopy = createCopyWithInsert(rest, i, nextInsert);
+				List<QContainer> validReorderedPath = findValidReorderedPath(copiedSession, restCopy, orderedCopy, negative);
+				if (validReorderedPath != null) return validReorderedPath;
+			}
+		}
+		else {
+			// the positives to the back...
+			int insertStop = getInsertStopIndex(rest, nextPathOrder);
+			for (int i = insertStop; i >= 0; i--) {
+				ArrayList<QContainer> restCopy = createCopyWithInsert(rest, i, nextInsert);
+				List<QContainer> validReorderedPath = findValidReorderedPath(copiedSession, restCopy, orderedCopy, negative);
+				if (validReorderedPath != null) return validReorderedPath;
+			}
+		}
+		return null;
 	}
 
-	private boolean isValidPath(Session copy, Path path) {
+	@NotNull
+	private static ArrayList<QContainer> createCopyWithInsert(List<QContainer> rest, int i, QContainer nextInsert) {
+		ArrayList<QContainer> restCopy = new ArrayList<>(rest.size() + 1);
+		restCopy.addAll(rest);
+		restCopy.add(i, nextInsert);
+		return restCopy;
+	}
+
+	private int getInsertIndex(List<QContainer> rest, double nextPathOrder) {
+		int insert = rest.size() - 1;
+		for (int i = rest.size() - 1; i >= 0; i--) {
+			double pathOrder = getPathOrder(rest.get(i));
+			if (nextPathOrder > pathOrder) break;
+			insert = i;
+		}
+		return insert;
+	}
+
+	private int getInsertStopIndex(List<QContainer> rest, double nextPathOrder) {
+		int insertStop = 0;
+		for (int i = 0; i < rest.size(); i++) {
+			double currentPathOrder = getPathOrder(rest.get(i));
+			if (currentPathOrder > nextPathOrder) break;
+			// the element at i is <= element to insert -> we can insert after the element at i
+			insertStop = i + 1;
+		}
+		return insertStop; // we want to insert after the found element/index
+	}
+
+	protected boolean isValidPath(Session copy, List<QContainer> path) {
 		copy = CostBenefitUtil.createDecoratedSession(copy);
-		return CostBenefitUtil.checkPath(path.getPath(), copy, 0, true);
+		return CostBenefitUtil.checkPath(path, copy, 0, true);
 	}
 
 	private boolean hasPathOrder(QContainer container) {
