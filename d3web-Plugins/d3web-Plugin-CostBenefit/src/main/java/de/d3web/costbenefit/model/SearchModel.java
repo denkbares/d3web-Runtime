@@ -358,8 +358,10 @@ public class SearchModel {
 		if (usefulStateTransitions == null) {
 			var stopwatch = new Stopwatch().start();
 			usefulStateTransitions = new SupportiveStateTransitions(applicableStateTransitions, targets).getSupportiveHull();
-			stopwatch.log(LOGGER, "calculate path on " + usefulStateTransitions.size() + " of " +
-					applicableStateTransitions.size() + " transitional test steps");
+			if (stopwatch.pause().getTime() > 5) {
+				stopwatch.log(LOGGER, "calculate path on " + usefulStateTransitions.size() + " of " +
+						applicableStateTransitions.size() + " transitional test steps");
+			}
 		}
 		return usefulStateTransitions;
 	}
