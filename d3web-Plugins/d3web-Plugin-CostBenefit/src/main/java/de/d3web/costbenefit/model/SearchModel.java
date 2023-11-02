@@ -156,9 +156,10 @@ public class SearchModel {
 	 * Adds a new target
 	 */
 	public void addTarget(Target target) {
-		// targets must not be modified after the state transitions have been calculated
-		if (usefulStateTransitions != null) throw new IllegalStateException();
-		targets.add(target);
+		if (targets.add(target)) {
+			// if the targets are modified, the state transitions have been newly calculated
+			usefulStateTransitions = null;
+		}
 	}
 
 	/**
@@ -169,8 +170,6 @@ public class SearchModel {
 	 * @param reason some textual reason why this target is blocked (for debug purposes)
 	 */
 	public void blockTarget(Target target, BlockingReason reason) {
-		// targets must not be modified after the state transitions have been calculated
-		if (usefulStateTransitions != null) throw new IllegalStateException();
 		if (targets.remove(target)) {
 			blockedTargets.put(target, reason);
 			// update the best benefit target, if that one is removed
@@ -183,6 +182,8 @@ public class SearchModel {
 				bestCostBenefitTarget = null;
 				targets.forEach(this::checkBestCostBenefitTarget);
 			}
+			// if the targets are modified, the state transitions have been newly calculated
+			usefulStateTransitions = null;
 		}
 	}
 
@@ -339,6 +340,20 @@ public class SearchModel {
 	 */
 	@NotNull
 	public Set<StateTransition> getTransitionalStateTransitions() {
+		return applicableStateTransitions;
+	}
+
+	/**
+	 * Returns a set of all available state transitions of the knowledge base that are allowed to be used to established
+	 * required precondition states, AND are helpful to reach any of the targets' preconditions. These are all
+	 * transitions, that are neither currently blocked, nor are transitions of target-only test steps, and also
+	 * establish any of targets' preconditions, or any precondition of a transition, that is itself helpful to reach any
+	 * target (transitive hull of 'helpful' transitions).
+	 *
+	 * @return the state transitions currently usable AND helpful for establishing precondition states of the targets
+	 */
+	@NotNull
+	public Set<StateTransition> getTransitionalStateTransitionsForTargets() {
 		// restrict the active transitions to the transitive hull of those, which derives any required state question
 		if (usefulStateTransitions == null) {
 			var stopwatch = new Stopwatch().start();
