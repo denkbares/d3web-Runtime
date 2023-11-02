@@ -70,8 +70,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		int maxNumber = Integer.MIN_VALUE;
 		for (Fact fact : facts) {
 
-			if (fact instanceof StateTransitionFact) {
-				StateTransitionFact stf = (StateTransitionFact) fact;
+			if (fact instanceof StateTransitionFact stf) {
 				// facts which set final questions have highest priority, if
 				// they are set by permanently relevant test steps
 				if (CostBenefitProperties.isCheckOnce(stf.getTerminologyObject())
@@ -120,7 +119,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 		private final ConditionalValueSetter cvs;
 
 		/**
-		 * Default method to create a {@link StateTransitionFact}, it should be used whenever possible
+		 * Default method to create a , it should be used whenever possible
 		 *
 		 * @param cvs               {@link ConditionalValueSetter} that has fired
 		 * @param session           actual {@link Session}
@@ -216,6 +215,11 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 					session.getProtocol().addEntry(new FactProtocolEntry(time, fact));
 				}
 
+				// save
+				if (qcon.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0) {
+					cbCaseObject.addAnsweredCBInitQContainer(qcon);
+				}
+
 				// check if there are any changes to our remembered solutions
 				if (cbCaseObject.hasChangedUndiscriminatedSolutions()) {
 					cbCaseObject.resetPath();
@@ -226,6 +230,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				cbCaseObject.activateNextQContainer();
 				cbCaseObject.cleanupIndicationForQContainer(session, transition.getQContainer());
 				sessionObject.qContainer = qcon;
+
 			}
 		}
 	}

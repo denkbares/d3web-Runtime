@@ -261,6 +261,17 @@
 		<parameter id="default" value="false" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="cbInitQContainer">
+		<parameter id="name" value="cbInitQContainer" />
+		<parameter id="description"
+				   value="Marks a QContainer to be a CB init test step and should be used before calculation the first path." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Double" />
+		<parameter id="default" value="0" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="pathOrder">
 		<parameter id="name" value="pathOrder" />
 		<parameter id="description"

@@ -28,6 +28,7 @@ import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
 import de.d3web.costbenefit.CostBenefitUtil;
+import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.inference.ComfortBenefit;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
@@ -86,7 +87,9 @@ class ComfortAdder implements PathModifier {
 
 	@NotNull
 	private Path extend(Session copiedSession, SearchModel model, Path path, QContainer qconToInclude) {
-		CostFunction costFunction = model.getSession().getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
+		// if the model has a copied session, this session has no PS methods. In this case we take the cost function of the root session
+		Session session = model.getSession() instanceof CopiedSession ? ((CopiedSession) model.getSession()).getRootSession() : model.getSession();
+		CostFunction costFunction = session.getPSMethodInstance(PSMethodCostBenefit.class).getCostFunction();
 		double staticCosts = costFunction.getStaticCosts(qconToInclude);
 		for (int i = 0; i < path.getPath().size(); i++) {
 			// check if the qcontainer is applicable

@@ -78,6 +78,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private Set<TerminologyObject> conflictingObjects = new HashSet<>();
 	private QContainer unreachedTarget = null;
 	private final Set<QContainer> watchedQContainers = new HashSet<>();
+	private final Set<QContainer> answeredCBInitQContainers = new HashSet<>();
 
 	private static final Pattern PATTERN_OK_CHOICE = Pattern.compile("^(.*#)?ok$",
 			Pattern.CASE_INSENSITIVE);
@@ -131,7 +132,7 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public void incCurrentPathIndex() {
 		currentPathIndex++;
-		LOGGER.debug("next qcontianer: "
+		LOGGER.debug("next qcontainer: "
 				+ (currentPathIndex >= currentSequence.length
 				? null
 				: currentSequence[currentPathIndex]));
@@ -329,9 +330,8 @@ public class CostBenefitCaseObject implements SessionObject {
 	private void retractQuestions(TerminologyObject container, Session session) {
 		Blackboard blackboard = session.getBlackboard();
 		for (TerminologyObject nob : container.getChildren()) {
-			if (nob instanceof Question) {
+			if (nob instanceof Question question) {
 				// restrict to retractable questions
-				Question question = (Question) nob;
 				if (!isRetractableQuestion(question)) continue;
 				for (PSMethod contributing : blackboard.getContributingPSMethods(question)) {
 					// and also remove only facts from source solvers, not derived values
@@ -446,8 +446,16 @@ public class CostBenefitCaseObject implements SessionObject {
 		return watchedQContainers;
 	}
 
+	public Set<QContainer> getAnsweredCBInitQContainers() {
+		return answeredCBInitQContainers;
+	}
+
 	public void addWatch(QContainer watchedQContainer) {
 		watchedQContainers.add(watchedQContainer);
+	}
+
+	public void addAnsweredCBInitQContainer(QContainer answeredQContainer) {
+		answeredCBInitQContainers.add(answeredQContainer);
 	}
 
 	private void checkWatchedQContainers() {

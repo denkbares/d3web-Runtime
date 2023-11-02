@@ -21,6 +21,7 @@ package de.d3web.costbenefit.inference;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -51,6 +52,7 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -92,6 +94,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * Constant for the benefit of a test step if the user has selected the test steo as the target
 	 */
 	public static final double USER_SELECTED_BENEFIT = 10000000000.0;
+	private List<QContainer> allCBInitQContainer = null;
 
 	private TargetFunction targetFunction;
 	private CostFunction costFunction;
@@ -129,10 +132,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	}
 
 	public PSMethodCostBenefit() {
-		this.targetFunction = new DefaultTargetFunction();
-		this.costFunction = new DefaultCostFunction();
-		this.searchAlgorithm = createDefaultAlgorithm();
-		this.solutionsRater = new DefaultSolutionRater();
+		this(new DefaultTargetFunction(), new DefaultCostFunction(), createDefaultAlgorithm(), new DefaultSolutionRater());
 	}
 
 	private static SearchAlgorithm createDefaultAlgorithm() {
@@ -172,6 +172,15 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// first reset the search path
 		caseObject.resetPath();
 
+		// if there are any CB init interview objects left,
+		// apply these state transitions to a copied session and calculate the path
+		// then add the CB init q containers at the beginning of the path
+		List<QContainer> openCBInitQContainerPath = getOpenCBInitQContainerPath(caseObject);
+		if (!openCBInitQContainerPath.isEmpty()) {
+			calculateNewPathToWithCBInitQContainers(caseObject, targets, openCBInitQContainerPath);
+			return;
+		}
+
 		// in contrast to the "usual" path creation we do *not* consider if
 		// there are already any other indicated qasets.
 
@@ -193,12 +202,45 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		}
 	}
 
+	private void calculateNewPathToWithCBInitQContainers(CostBenefitCaseObject caseObject, Target[] targets, List<QContainer> openCBInitQContainerPath) throws AbortException {
+		// we need a copied session to apply the state transitions of the open cb init q containers on
+		// and use this for searching the best path
+		Session copy = CostBenefitUtil.createSearchCopy(caseObject.getSession());
+		CostBenefitCaseObject sessionObject = copy.getSessionObject(this);
+		initializeSearchModelTo(sessionObject, targets);
+		SearchModel searchModel = sessionObject.getSearchModel();
+		for (QContainer qContainer : openCBInitQContainerPath) {
+			CostBenefitUtil.setNormalValues(copy, qContainer);
+		}
+		search(sessionObject.getSession(), searchModel);
+
+		Target bestTarget = searchModel.getBestCostBenefitTarget();
+		if (bestTarget != null && bestTarget.getMinPath() != null) {
+			// if best target exists add the cb init path in front of the min path
+			Path minPath = bestTarget.getMinPath();
+			LOGGER.debug("CB init path " + openCBInitQContainerPath + " + " + minPath + " --> " + searchModel.getBestCostBenefitTarget());
+			openCBInitQContainerPath.addAll(minPath.getPath());
+			caseObject.activatePath(openCBInitQContainerPath, this);
+			caseObject.activateNextQContainer();
+		}
+		else {
+			// otherwise if no best target exists, abort target setting
+			caseObject.setAbortedManuallySetTarget(true);
+			throw new AbortException();
+		}
+	}
+
 	private void initializeSearchModelTo(CostBenefitCaseObject caseObject, Target... targets) {
 		Session session = caseObject.getSession();
 		SearchModel searchModel = new SearchModel(session);
 		for (Target target : targets) {
 			boolean hasContraindicatedQContainer = false;
+			boolean hasCBInitQContainer = false;
 			for (QContainer qContainer : target.getQContainers()) {
+				if (allCBInitQContainer.contains(qContainer)) {
+					// do not calculate paths to cb init qcontainers
+					hasCBInitQContainer = true;
+				}
 				if (isContraIndicated(session, qContainer)) {
 					hasContraindicatedQContainer = true;
 				}
@@ -210,7 +252,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					}
 				}
 			}
-			if (!hasContraindicatedQContainer) {
+			if (!hasContraindicatedQContainer && !hasCBInitQContainer) {
 				searchModel.addTarget(target);
 				// initialize benefit in search model to a positive value
 				// (use 1 if there is no benefit inside the target)
@@ -232,6 +274,14 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		Session session = caseObject.getSession();
 		if (hasUnansweredQuestions(session)) return;
 
+		// if there are any init interview objects left, we first are going to answer these before creating a new path
+		List<QContainer> openCBInitQContainerPath = getOpenCBInitQContainerPath(caseObject);
+		if (!openCBInitQContainerPath.isEmpty()) {
+			caseObject.activatePath(openCBInitQContainerPath, this);
+			caseObject.activateNextQContainer();
+			return;
+		}
+
 		// searching for the best cost/benefit result
 		// (only if there is any benefit target)
 		initializeSearchModel(caseObject);
@@ -245,6 +295,24 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		// inside the specified case object.
 		selectPathToBestTarget(caseObject, searchModel);
 		caseObject.activateNextQContainer();
+	}
+
+	private List<QContainer> getOpenCBInitQContainerPath(CostBenefitCaseObject caseObject) {
+		if (allCBInitQContainer == null) {
+			Comparator<QContainer> objectComparator = Comparator.comparing(q -> q.getInfoStore()
+					.getValue(CostBenefitProperties.CB_INIT_QCONTAINER));
+			allCBInitQContainer = caseObject.getSession()
+					.getKnowledgeBase()
+					.getManager()
+					.getQContainers()
+					.stream()
+					.filter(q -> q.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0)
+					.sorted(objectComparator.thenComparing(AbstractNamedObject::getName)).toList();
+		}
+		Set<QContainer> answeredCBInitQContainers = caseObject.getAnsweredCBInitQContainers();
+		List<QContainer> openCBInitQContainers = new LinkedList<>(allCBInitQContainer);
+		openCBInitQContainers.removeAll(answeredCBInitQContainers);
+		return openCBInitQContainers;
 	}
 
 //	/**
@@ -481,7 +549,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * relevant
 	 *
 	 * @param session actual session
-	 * @return set of blocked QContainers
+	 * @return map of blocked QContainers
 	 * @created 24.10.2012
 	 */
 	public static Map<QContainer, BlockingReason> getBlockedQContainers(Session session) {
@@ -496,7 +564,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @param session                    actual session
 	 * @param includeContraindicated     if true, contraindicated QContainers are included in the returned set
 	 * @param includePermanentlyRelevant if true, permanently relevant QContainers are included in the returned set
-	 * @return set of blocked QContainers, mapped to the blocking reason
+	 * @return map of blocked QContainers, mapped to the blocking reason
 	 * @created 01.03.2014
 	 */
 	public static Map<QContainer, BlockingReason> getBlockedQContainers(Session session, boolean includeContraindicated, boolean includePermanentlyRelevant) {

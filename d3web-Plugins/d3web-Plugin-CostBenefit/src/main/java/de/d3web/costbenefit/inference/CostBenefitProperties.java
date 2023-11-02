@@ -67,6 +67,12 @@ public class CostBenefitProperties {
 	public static final Property<Boolean> TARGET_ONLY = Property.getProperty("targetOnly", Boolean.class);
 
 	/**
+	 * Marks a QContainer to be a CB init test step and should be used before calculation the first path.
+	 * The lower the number, the earlier in the path sequence.
+	 */
+	public static final Property<Double> CB_INIT_QCONTAINER = Property.getProperty("cbInitQContainer", Double.class);
+
+	/**
 	 * Marks a QContainer with a path order priority, indicating if that QContainer should be preferably used early
 	 * (lower, negative numbers) or late (higher, positive numbers) in the path. This property is used by the
 	 * PathExtender's PathSorter.
