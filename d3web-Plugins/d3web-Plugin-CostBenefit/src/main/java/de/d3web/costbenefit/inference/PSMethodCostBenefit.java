@@ -299,15 +299,13 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 	private List<QContainer> getOpenCBInitQContainerPath(CostBenefitCaseObject caseObject) {
 		if (allCBInitQContainer == null) {
-			Comparator<QContainer> objectComparator = Comparator.comparing(q -> q.getInfoStore()
-					.getValue(CostBenefitProperties.CB_INIT_QCONTAINER));
 			allCBInitQContainer = caseObject.getSession()
 					.getKnowledgeBase()
 					.getManager()
 					.getQContainers()
 					.stream()
 					.filter(q -> q.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0)
-					.sorted(objectComparator.thenComparing(AbstractNamedObject::getName)).toList();
+					.sorted(CostBenefitUtil.cbInitComparator).toList();
 		}
 		Set<QContainer> answeredCBInitQContainers = caseObject.getAnsweredCBInitQContainers();
 		List<QContainer> openCBInitQContainers = new LinkedList<>(allCBInitQContainer);

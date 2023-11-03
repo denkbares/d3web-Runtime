@@ -47,6 +47,7 @@ import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
+import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QASet;
 import de.d3web.core.knowledge.terminology.QContainer;
@@ -94,6 +95,10 @@ public final class CostBenefitUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CostBenefitUtil.class);
 
 	public static final int LOG_THRESHOLD = 5000;
+
+	private static final Comparator<QContainer> cbInitComparatorPrivate = Comparator.comparing(q -> q.getInfoStore()
+			.getValue(CostBenefitProperties.CB_INIT_QCONTAINER));
+	public static Comparator<QContainer> cbInitComparator = cbInitComparatorPrivate.thenComparing(AbstractNamedObject::getName);
 
 	/**
 	 * Avoids the creation of an instance for this class.
