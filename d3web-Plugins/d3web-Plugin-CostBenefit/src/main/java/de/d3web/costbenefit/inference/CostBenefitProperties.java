@@ -442,4 +442,13 @@ public class CostBenefitProperties {
 		if (container == null) return false;
 		return container.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
 	}
+
+	public static boolean isCBInitTS(QContainer container) {
+		if (container == null) return false;
+		return container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0;
+	}
+	public static double getCBInitTS(QContainer container) {
+		if (container == null) return 0.0;
+		return container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER);
+	}
 }

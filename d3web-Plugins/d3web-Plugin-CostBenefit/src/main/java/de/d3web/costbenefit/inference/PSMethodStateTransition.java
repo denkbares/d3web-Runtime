@@ -216,7 +216,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				}
 
 				// save
-				if (qcon.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0) {
+				if (CostBenefitProperties.isCBInitTS(qcon)) {
 					cbCaseObject.addAnsweredCBInitQContainer(qcon);
 				}
 

@@ -21,7 +21,6 @@ package de.d3web.costbenefit.inference;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,7 +51,6 @@ import de.d3web.core.inference.condition.UnknownAnswerException;
 import de.d3web.core.knowledge.Indication;
 import de.d3web.core.knowledge.Indication.State;
 import de.d3web.core.knowledge.TerminologyObject;
-import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -304,7 +302,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					.getManager()
 					.getQContainers()
 					.stream()
-					.filter(q -> q.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0)
+					.filter(CostBenefitProperties::isCBInitTS)
 					.sorted(CostBenefitUtil.cbInitComparator).toList();
 		}
 		Set<QContainer> answeredCBInitQContainers = caseObject.getAnsweredCBInitQContainers();

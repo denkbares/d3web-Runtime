@@ -96,9 +96,8 @@ public final class CostBenefitUtil {
 
 	public static final int LOG_THRESHOLD = 5000;
 
-	private static final Comparator<QContainer> cbInitComparatorPrivate = Comparator.comparing(q -> q.getInfoStore()
-			.getValue(CostBenefitProperties.CB_INIT_QCONTAINER));
-	public static Comparator<QContainer> cbInitComparator = cbInitComparatorPrivate.thenComparing(AbstractNamedObject::getName);
+	public static final Comparator<QContainer> cbInitComparator = Comparator.comparing(CostBenefitProperties::getCBInitTS)
+			.thenComparing(AbstractNamedObject::getName);
 
 	/**
 	 * Avoids the creation of an instance for this class.
