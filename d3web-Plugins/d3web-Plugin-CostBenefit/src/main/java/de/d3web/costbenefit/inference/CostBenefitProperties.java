@@ -427,7 +427,7 @@ public class CostBenefitProperties {
 
 	/**
 	 * Returns true if the specified QContainer is explicitly marked to be permanently relevant, which means that the
-	 * user is always allowed to use this QContainer, independently from a calculated path.
+	 * user is always allowed to use this QContainer, independently of a calculated path.
 	 */
 	public static boolean isPermanentlyRelevant(QContainer container) {
 		if (container == null) return false;
@@ -445,10 +445,11 @@ public class CostBenefitProperties {
 
 	public static boolean isCBInitTS(QContainer container) {
 		if (container == null) return false;
-		return container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != 0.0;
+		return container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != null;
 	}
 	public static double getCBInitTS(QContainer container) {
-		if (container == null) return 0.0;
-		return container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER);
+		if (container == null) return Double.MAX_VALUE;
+		Double value = container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER);
+		return value == null ? Double.MAX_VALUE : value;
 	}
 }
