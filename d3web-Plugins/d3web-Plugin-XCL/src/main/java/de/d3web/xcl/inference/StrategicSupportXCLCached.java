@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -437,8 +438,8 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		return source;
 	}
 
-	private final Map<Condition, Collection<Condition>> extractedOrCache = new HashMap<>();
-	private final Map<Condition, Collection<Condition>> negatedExtractedOrCache = new HashMap<>();
+	private final Map<Condition, Collection<Condition>> extractedOrCache = new ConcurrentHashMap<>();
+	private final Map<Condition, Collection<Condition>> negatedExtractedOrCache = new ConcurrentHashMap<>();
 
 	/**
 	 * Returns the extracted ors for the condition of a specified xcl relation. It is only created on demand, otherwise
