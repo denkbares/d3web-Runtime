@@ -385,11 +385,14 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 	}
 
 	// use come cache mechanism to avoid multiple calculation
-	private transient Collection<Solution> lastTotalWeightSolutions = null;
-	private transient float lastTotalWeight = 0f;
+	private record SolutionsWeight(Collection<Solution> solutions, float weight) {
+	}
 
-	private synchronized float getTotalWeight(Collection<Solution> solutions) {
-		if (lastTotalWeightSolutions == solutions) return lastTotalWeight;
+	private transient SolutionsWeight lastSolutionsWeight = null;
+
+	private float getTotalWeight(Collection<Solution> solutions) {
+		SolutionsWeight last = lastSolutionsWeight;
+		if (last != null && last.solutions == solutions) return last.weight;
 
 		// calculate the total weight
 		float totalWeight = 0;
@@ -398,8 +401,7 @@ public class StrategicSupportXCLCached implements StrategicSupport {
 		}
 
 		// use cache and return
-		lastTotalWeightSolutions = solutions;
-		lastTotalWeight = totalWeight;
+		lastSolutionsWeight = new SolutionsWeight(solutions, totalWeight);
 		return totalWeight;
 	}
 
