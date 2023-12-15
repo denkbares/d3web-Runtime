@@ -208,7 +208,9 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		initializeSearchModelTo(sessionObject, targets);
 		SearchModel searchModel = sessionObject.getSearchModel();
 		for (QContainer qContainer : openCBInitQContainerPath) {
-			CostBenefitUtil.setNormalValues(copy, qContainer);
+			CostBenefitUtil.setNormalValues(copy, qContainer, this);
+			StateTransition transition = StateTransition.getStateTransition(qContainer);
+			transition.fire(copy);
 		}
 		search(sessionObject.getSession(), searchModel);
 

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import com.denkbares.utils.Stopwatch;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.session.Session;
+import de.d3web.costbenefit.blackboard.CopiedSession;
 import de.d3web.costbenefit.inference.BlockingReason;
 import de.d3web.costbenefit.inference.CostBenefitProperties;
 import de.d3web.costbenefit.inference.CostFunction;
@@ -71,7 +72,8 @@ public class SearchModel {
 
 	public SearchModel(Session session) {
 		this.session = session;
-		PSMethodCostBenefit solver = session.getPSMethodInstance(PSMethodCostBenefit.class);
+		Session session2 = session instanceof CopiedSession ? ((CopiedSession) session).getRootSession() : session;
+		PSMethodCostBenefit solver = session2.getPSMethodInstance(PSMethodCostBenefit.class);
 		if (solver != null) {
 			costFunction = solver.getCostFunction();
 			costFunction.init(session.getKnowledgeBase());
@@ -108,7 +110,7 @@ public class SearchModel {
 	}
 
 	/**
-	 * Merges the information from the specified {@link SearchModel} into this SearchModel. The specified one is left
+	 * Merges the information from the specified  into this SearchModel. The specified one is left
 	 * untouched. This object is altered and contains the merged results of the two searches.
 	 *
 	 * @param other the search model to merge into this object

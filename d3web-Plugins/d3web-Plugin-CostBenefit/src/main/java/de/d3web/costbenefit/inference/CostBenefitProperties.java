@@ -445,11 +445,11 @@ public class CostBenefitProperties {
 
 	public static boolean isCBInitTS(QContainer container) {
 		if (container == null) return false;
-		return container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER) != null;
+		return container.getInfoStore().contains(CB_INIT_QCONTAINER);
 	}
 	public static double getCBInitTS(QContainer container) {
 		if (container == null) return Double.MAX_VALUE;
 		Double value = container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER);
-		return value == null ? Double.MAX_VALUE : value;
+		return (!isCBInitTS(container) || value == null) ? Double.MAX_VALUE : value;
 	}
 }
