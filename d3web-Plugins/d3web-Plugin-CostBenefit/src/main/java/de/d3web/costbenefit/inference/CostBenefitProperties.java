@@ -40,6 +40,13 @@ import de.d3web.core.session.values.UndefinedValue;
 public class CostBenefitProperties {
 
 	/**
+	 * Indicate, that the TSM element represented by a solution with this property can be replaced, even if it is
+	 * technically not Unit or Electrics or similar parent elements. Use this, to for example say, that a relay inside a
+	 * unit can be replaced and has its own TKZ.
+	 */
+	public static final Property<Boolean> REPLACEABLE = Property.getProperty("replaceable", Boolean.class);
+
+	/**
 	 * This property is used on measurement questions and related named objects to denotes the connector/socket, the
 	 * measurement is performed on.
 	 */
@@ -447,6 +454,7 @@ public class CostBenefitProperties {
 		if (container == null) return false;
 		return container.getInfoStore().contains(CB_INIT_QCONTAINER);
 	}
+
 	public static double getCBInitTS(QContainer container) {
 		if (container == null) return Double.MAX_VALUE;
 		Double value = container.getInfoStore().getValue(CostBenefitProperties.CB_INIT_QCONTAINER);

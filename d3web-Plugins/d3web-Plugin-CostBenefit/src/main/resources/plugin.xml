@@ -66,7 +66,7 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="ProtocolExecutor" id="FactProtocolExecutor:States">
 		<parameter id="class"
-			value="de.d3web.core.session.builder.FactProtocolExecutor(de.d3web.costbenefit.inference.PSMethodStateTransition.class)" />
+				   value="de.d3web.core.session.builder.FactProtocolExecutor(de.d3web.costbenefit.inference.PSMethodStateTransition.class)" />
 		<parameter id="entryClass" value="de.d3web.core.session.protocol.FactProtocolEntry" />
 		<parameter id="name" value="FactProtocolExecutor:States" />
 		<parameter id="description" value="Restore states with the previous value." />
@@ -75,7 +75,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
-		id="CostBenefitModelPersistenceHandler.Writer">
+			   id="CostBenefitModelPersistenceHandler.Writer">
 		<parameter id="class" value="de.d3web.costbenefit.io.CostBenefitModelPersistenceHandler" />
 		<parameter id="name" value="CostBenefitModelPersistenceHandler" />
 		<parameter id="description" value="Saves cost benefit knowledge to XML" />
@@ -85,7 +85,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeReader"
-		id="CostBenefitModelPersistenceHandler">
+			   id="CostBenefitModelPersistenceHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.CostBenefitModelPersistenceHandler" />
 		<parameter id="name" value="CostBenefitModelPersistenceHandler" />
 		<parameter id="description" value="Loads cost benefit knowledge from XML" />
@@ -95,7 +95,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="KnowledgeWriter"
-		id="ComfortBenefitHandler.Writer">
+			   id="ComfortBenefitHandler.Writer">
 		<parameter id="class" value="de.d3web.costbenefit.io.ComfortBenefitHandler" />
 		<parameter id="name" value="ComfortBenefitHandler" />
 		<parameter id="description" value="Saves comfort benefit knowledge to XML" />
@@ -122,7 +122,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DefaultAbortStrategyHandler">
+			   id="DefaultAbortStrategyHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DefaultAbortStrategyHandler" />
 		<parameter id="name" value="DefaultAbortStrategyHandler" />
 		<parameter id="description" value="Handler for DefaultAbortStrategy" />
@@ -131,7 +131,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DefaultCostFunctionHandler">
+			   id="DefaultCostFunctionHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DefaultCostFunctionHandler" />
 		<parameter id="name" value="DefaultCostFunctionHandler" />
 		<parameter id="description" value="Handler for DefaultCostFunctionHandler" />
@@ -140,7 +140,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DefaultTargetFunctionHandler">
+			   id="DefaultTargetFunctionHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DefaultTargetFunctionHandler" />
 		<parameter id="name" value="DefaultTargetFunctionHandler" />
 		<parameter id="description" value="Handler for DefaultTargetFunctionHandler" />
@@ -149,7 +149,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="DefaultSolutionRaterHandler">
+			   id="DefaultSolutionRaterHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.DefaultSolutionRaterHandler" />
 		<parameter id="name" value="DefaultSolutionRaterHandler" />
 		<parameter id="description" value="Handler for DefaultSolutionRater" />
@@ -158,7 +158,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="IterativeDeepeningSearchAlgorithmHandler">
+			   id="IterativeDeepeningSearchAlgorithmHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="name" value="IterativeDeepeningSearchAlgorithmHandler" />
 		<parameter id="description" value="Handler for IterativeDeepeningSearchAlgorithm" />
@@ -167,7 +167,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="MultiSearchAlgorithmHandler">
+			   id="MultiSearchAlgorithmHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.MultiSearchAlgorithmHandler" />
 		<parameter id="name" value="MultiSearchAlgorithmHandler" />
 		<parameter id="description" value="Handler for MultiSearchAlgorithm" />
@@ -192,7 +192,7 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="CostBenefitPSConfigHandler">
+			   id="CostBenefitPSConfigHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.CostBenefitPSConfigHandler" />
 		<parameter id="name" value="CostBenefitPSConfigHandler" />
 		<parameter id="description" value="Handler for CostBenefitPSConfigHandler" />
@@ -203,7 +203,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="testEquipmentQuestion">
 		<parameter id="name" value="testEquipmentQuestion" />
 		<parameter id="description"
-			value="Mark a question to represent test equipment. The property value will stand for the terminology name of a question marked with a MalfunctionType 'testEquipment'" />
+				   value="Mark a question to represent test equipment. The property value will stand for the terminology name of a question marked with a MalfunctionType 'testEquipment'" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -213,7 +213,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verifyRepairType">
 		<parameter id="name" value="verifyRepairType" />
 		<parameter id="description"
-			value="Allow to specify the type of a terminology object in the context of a repair verification" />
+				   value="Allow to specify the type of a terminology object in the context of a repair verification" />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -222,8 +222,7 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="progress">
 		<parameter id="name" value="progress" />
-		<parameter id="description"
-			value="Denotes the development progress of a terminology object." />
+		<parameter id="description" value="Denotes the development progress of a terminology object." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -233,17 +232,29 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="progressOverride">
 		<parameter id="name" value="progressOverride" />
 		<parameter id="description"
-			value="Denotes the overridden development progress of a terminology object. This can be used, to track an additional/alternative progress on the terminology objects." />
+				   value="Denotes the overridden development progress of a terminology object. This can be used, to track an additional/alternative progress on the terminology objects." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
 		<parameter id="instanceof" value="java.lang.Double" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="replaceable">
+		<parameter id="name" value="replaceable" />
+		<parameter id="description" value="Indicate, that the TSM element represented by a solution with this property can be replaced,
+				   even if it is technically not Unit or Electrics or similar parent elements. Use this, to for example
+				   say, that a relay inside a unit can be replaced and has its own TKZ." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="measurementConnector">
 		<parameter id="name" value="measurementConnector" />
 		<parameter id="description"
-			value="This property is used on measurement questions and related named objects to denotes the connector/socket, the measurement is performed on." />
+				   value="This property is used on measurement questions and related named objects to denotes the connector/socket, the measurement is performed on." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -253,7 +264,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="comfortBenefit">
 		<parameter id="name" value="comfortBenefit" />
 		<parameter id="description"
-			value="Marks a QContainer indicating that the execution of this QContainer increases comfort for the user." />
+				   value="Marks a QContainer indicating that the execution of this QContainer increases comfort for the user." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -274,7 +285,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="pathOrder">
 		<parameter id="name" value="pathOrder" />
 		<parameter id="description"
-			value="Marks a QContainer indicating if it should be executed early or late in the path." />
+				   value="Marks a QContainer indicating if it should be executed early or late in the path." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -285,7 +296,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="finalQuestion">
 		<parameter id="name" value="finalQuestion" />
 		<parameter id="description"
-			value="Marks a Question indicating that the value of the question cannot be changed, once it has left the init value." />
+				   value="Marks a Question indicating that the value of the question cannot be changed, once it has left the init value." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -296,7 +307,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="uutState">
 		<parameter id="name" value="uutState" />
 		<parameter id="description"
-			value="Marks a question as a state question with, by denoting a specific type of state." />
+				   value="Marks a question as a state question with, by denoting a specific type of state." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -314,7 +325,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="targetOnly">
 		<parameter id="name" value="targetOnly" />
 		<parameter id="description"
-			value="Marks a QContainer that it can only be used as an end QContainer by the AStar algorithm. This QContainer cannot be used to prepare other QContainers." />
+				   value="Marks a QContainer that it can only be used as an end QContainer by the AStar algorithm. This QContainer cannot be used to prepare other QContainers." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -325,7 +336,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="potentialChoices">
 		<parameter id="name" value="potentialChoices" />
 		<parameter id="description"
-			value="Allows to specify potential choices for questions. These potential choices can for example be shown to the user so he may convert them to actual choices." />
+				   value="Allows to specify potential choices for questions. These potential choices can for example be shown to the user so he may convert them to actual choices." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -335,7 +346,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verifyMalfunctions">
 		<parameter id="name" value="verifyMalfunctions" />
 		<parameter id="description"
-			value="Property to mark a test step as verification step for test equipment malfunctions." />
+				   value="Property to mark a test step as verification step for test equipment malfunctions." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -343,7 +354,7 @@
 	</extension>
 
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
-		id="ManualTargetSelectionEntryHandler">
+			   id="ManualTargetSelectionEntryHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.ManualTargetSelectionEntryHandler" />
 		<parameter id="name" value="ManualTargetSelectionEntryHandler" />
 		<parameter id="description" value="Handler for ManualTargetSelectionEntries" />
@@ -352,7 +363,7 @@
 	</extension>
 
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
-		id="CalculatedPathEntryHandler">
+			   id="CalculatedPathEntryHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.CalculatedPathEntryHandler" />
 		<parameter id="name" value="CalculatedPathEntryHandler" />
 		<parameter id="description" value="Handler for CalculatedPathEntries" />
@@ -361,7 +372,7 @@
 	</extension>
 
 	<extension plugin-id="d3web-SessionPersistence-ExtensionPoints" point-id="FragmentHandler"
-		id="CalculatedTargetEntryHandler">
+			   id="CalculatedTargetEntryHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.CalculatedTargetEntryHandler" />
 		<parameter id="name" value="CalculatedTargetEntryHandler" />
 		<parameter id="description" value="Handler for CalculatedTargetEntries" />
@@ -370,11 +381,11 @@
 	</extension>
 
 	<extension plugin-id="KnowledgePersistenceExtensionPoints" point-id="FragmentHandler"
-		id="StateTransitionMeasurementHandler">
+			   id="StateTransitionMeasurementHandler">
 		<parameter id="class" value="de.d3web.costbenefit.io.fragments.StateTransitionMeasurementHandler" />
 		<parameter id="name" value="StateTransitionMeasurementHandler" />
 		<parameter id="description"
-			value="Handler for measurements that will measure state values to interact with the cost-benefit problem solver" />
+				   value="Handler for measurements that will measure state values to interact with the cost-benefit problem solver" />
 		<parameter id="version" value="1.0" />
 		<parameter id="priority" value="3" />
 	</extension>
@@ -382,7 +393,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="permanentlyRelevant">
 		<parameter id="name" value="permanentlyRelevant" />
 		<parameter id="description"
-			value="If a qcontainer is marked as a permanently relevant, the user gets the possibility to indicate this qcontainer directly if its preconditions are fullfilled." />
+				   value="If a qcontainer is marked as a permanently relevant, the user gets the possibility to indicate this qcontainer directly if its preconditions are fullfilled." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -393,7 +404,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="systemStateParent">
 		<parameter id="name" value="systemStateParent" />
 		<parameter id="description"
-			value="Allows to specify the common system state question parent in a cost benefit knowledge base." />
+				   value="Allows to specify the common system state question parent in a cost benefit knowledge base." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -411,7 +422,8 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verificationCompleteSolution">
 		<parameter id="name" value="verificationCompleteSolution" />
-		<parameter id="description" value="Allows to specify the solution of the knowledge base to be shown after a verification is complete." />
+		<parameter id="description"
+				   value="Allows to specify the solution of the knowledge base to be shown after a verification is complete." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
@@ -421,7 +433,7 @@
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="testEquipmentAvailabilityParent">
 		<parameter id="name" value="testEquipmentAvailabilityParent" />
 		<parameter id="description"
-			value="Allows to specify the parent of the test equipment availability questions." />
+				   value="Allows to specify the parent of the test equipment availability questions." />
 		<parameter id="multilingual" value="false" />
 		<parameter id="autosave" value="basic" />
 		<parameter id="priority" value="5" />
