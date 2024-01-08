@@ -239,18 +239,6 @@
 		<parameter id="instanceof" value="java.lang.Double" />
 	</extension>
 
-	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="replaceable">
-		<parameter id="name" value="replaceable" />
-		<parameter id="description" value="Indicate, that the TSM element represented by a solution with this property can be replaced,
-				   even if it is technically not Unit or Electrics or similar parent elements. Use this, to for example
-				   say, that a relay inside a unit can be replaced and has its own TKZ." />
-		<parameter id="multilingual" value="false" />
-		<parameter id="autosave" value="basic" />
-		<parameter id="priority" value="5" />
-		<parameter id="instanceof" value="java.lang.Boolean" />
-		<parameter id="default" value="false" />
-	</extension>
-
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="measurementConnector">
 		<parameter id="name" value="measurementConnector" />
 		<parameter id="description"
