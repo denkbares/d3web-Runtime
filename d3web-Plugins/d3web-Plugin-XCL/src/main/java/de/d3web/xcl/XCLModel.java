@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,10 +68,10 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	public XCLModel(Solution solution) {
 		this.solution = solution;
 
-		relations = new LinkedHashSet<>();
-		necessaryRelations = new LinkedHashSet<>();
-		sufficientRelations = new LinkedHashSet<>();
-		contradictingRelations = new LinkedHashSet<>();
+		relations = new ArrayList<>();
+		necessaryRelations = new ArrayList<>();
+		sufficientRelations = new ArrayList<>();
+		contradictingRelations = new ArrayList<>();
 	}
 
 	/**
