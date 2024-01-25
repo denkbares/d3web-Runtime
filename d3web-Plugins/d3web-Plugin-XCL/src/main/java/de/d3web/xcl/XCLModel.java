@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,10 +69,10 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 	public XCLModel(Solution solution) {
 		this.solution = solution;
 
-		relations = new LinkedList<>();
-		necessaryRelations = new LinkedList<>();
-		sufficientRelations = new LinkedList<>();
-		contradictingRelations = new LinkedList<>();
+		relations = new LinkedHashSet<>();
+		necessaryRelations = new LinkedHashSet<>();
+		sufficientRelations = new LinkedHashSet<>();
+		contradictingRelations = new LinkedHashSet<>();
 	}
 
 	/**
@@ -176,17 +176,12 @@ public final class XCLModel implements KnowledgeSlice, Comparable<XCLModel>, Ses
 					.addModel(this);
 		}
 		// and add the relation to the particular set of relations
-		switch (relation.getType()) {
-			case explains:
-				return addRelationTo(relation, relations);
-			case contradicted:
-				return addRelationTo(relation, contradictingRelations);
-			case requires:
-				return addRelationTo(relation, necessaryRelations);
-			case sufficiently:
-				return addRelationTo(relation, sufficientRelations);
-		}
-		return false;
+		return switch (relation.getType()) {
+			case explains -> addRelationTo(relation, relations);
+			case contradicted -> addRelationTo(relation, contradictingRelations);
+			case requires -> addRelationTo(relation, necessaryRelations);
+			case sufficiently -> addRelationTo(relation, sufficientRelations);
+		};
 	}
 
 	public void removeRelation(XCLRelation rel) {
