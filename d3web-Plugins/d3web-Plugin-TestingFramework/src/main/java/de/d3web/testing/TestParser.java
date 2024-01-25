@@ -19,12 +19,15 @@
 package de.d3web.testing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import static de.d3web.testing.TestSpecification.SOFT_TEST;
 
 /**
  * Class to parse and validate a single test declaration.
@@ -108,7 +111,9 @@ public class TestParser {
 		}
 
 		// check arguments and create error messages if necessary
-		String[] params = paramters.toArray(String[]::new);
+		List<String> parametersTemp = new ArrayList<>(paramters);
+		parametersTemp.remove(SOFT_TEST);
+		String[] params = parametersTemp.toArray(String[]::new);
 		this.parameterCheckResult = test.checkArgs(params);
 
 		// check ignores and create error messages if necessary
@@ -121,7 +126,7 @@ public class TestParser {
 			ignoreCheckResults.add(test.checkIgnore(array));
 		}
 
-		this.testSpecification = new TestSpecification(test, testObject, params, ignores);
+		this.testSpecification = new TestSpecification(test, testObject, paramters.toArray(String[]::new), ignores);
 	}
 
 	/**

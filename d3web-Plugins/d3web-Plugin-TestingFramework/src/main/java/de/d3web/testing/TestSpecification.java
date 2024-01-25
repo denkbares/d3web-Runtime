@@ -20,7 +20,9 @@ package de.d3web.testing;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Class holding a test instance ready to be executed with all specified
@@ -35,6 +37,9 @@ public class TestSpecification<T> {
 	private final String testObject;
 	private final String[] args;
 	private final String[][] ignores;
+	private final boolean isSoftTest;
+	public static final String SOFT_TEST = "softTest";
+
 
 	private final Map<String, Object> customInfos = new HashMap<>();
 
@@ -49,7 +54,18 @@ public class TestSpecification<T> {
 	 */
 	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
 		this.test = test;
-		this.args = Arrays.copyOf(args, args.length);
+		//this.args = Arrays.copyOf(args, args.length);
+		// Check for "softTest" argument and remove it if present
+		List<String> argsList = Arrays.stream(args)
+				.filter(arg -> !arg.equalsIgnoreCase(SOFT_TEST))
+				.toList();
+
+		// Set isSoft to true if "softTest" was in the args array
+		this.isSoftTest = args.length != argsList.size();
+
+		// Convert the list back to an array
+		this.args = argsList.toArray(new String[0]);
+
 		this.testObject = testObject;
 		this.ignores = new String[ignores.length][];
 		for (int i = 0; i < ignores.length; i++) {
@@ -129,5 +145,9 @@ public class TestSpecification<T> {
 	 */
 	public Object getCustomInfo(String key) {
 		return customInfos.get(key);
+	}
+
+	public boolean isSoftTest() {
+		return isSoftTest;
 	}
 }

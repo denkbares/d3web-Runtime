@@ -195,6 +195,9 @@ public final class BuildResult {
 	public Message.Type getOverallResult() {
 		return getOverallResult(this.testResults);
 	}
+	public Message.Type getOverallResultConsideringSoftTests() {
+		return getOverallResultConsideringSoftTests(this.testResults);
+	}
 
 	/**
 	 * Computes the overall TestResultType of this result set, determined by the "worst" test result
@@ -205,6 +208,24 @@ public final class BuildResult {
 	public static Message.Type getOverallResult(Collection<TestResult> testResults) {
 		return testResults.stream().map(result -> result.getSummary().getType())
 				.reduce(Message.Type.SUCCESS, Message.Type::merge);
+	}
+
+	/**
+	 * Computes the overall TestResultType of this result set, determined by the "worst" test result
+	 * Considers if the test is flagged as softTest.
+	 * If a softTest leads to failure, the result is still SUCCESS
+	 *
+	 * @return the overall result type
+	 * @created 24.01.2024
+	 */
+	public static Message.Type getOverallResultConsideringSoftTests(Collection<TestResult> testResults) {
+		Message.Type overallResult = Message.Type.SUCCESS;
+		for (TestResult result : testResults) {
+			if (!result.isSoftTest()) {
+				overallResult = Message.Type.merge(overallResult, result.getSummary().getType());
+			}
+		}
+		return overallResult;
 	}
 
 	public void addTestResult(TestResult testResult) {

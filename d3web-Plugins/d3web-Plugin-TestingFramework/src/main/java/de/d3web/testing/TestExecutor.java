@@ -226,7 +226,6 @@ public class TestExecutor {
 		Collection<TestSpecification<?>> validTests = new ArrayList<>();
 		prepareTests:
 		for (TestSpecification<?> specification : specifications) {
-
 			String[] testArgs = specification.getArguments();
 			String testObjectID = specification.getTestObject();
 			Test<?> test = specification.getTest();
@@ -234,7 +233,7 @@ public class TestExecutor {
 			// check arguments and create error if erroneous
 			ArgsCheckResult argsCheckResult = test.checkArgs(testArgs);
 			if (argsCheckResult.hasError()) {
-				TestResult testResult = toTestResult(test, testObjectID, argsCheckResult);
+				TestResult testResult = toTestResult(test, testObjectID, argsCheckResult, specification.isSoftTest());
 				build.addTestResult(testResult);
 				continue prepareTests;
 			}
@@ -243,7 +242,7 @@ public class TestExecutor {
 			for (String[] ignoreArgs : specification.getIgnores()) {
 				ArgsCheckResult ignoreCheckResult = test.checkIgnore(ignoreArgs);
 				if (ignoreCheckResult.hasError()) {
-					TestResult testResult = toTestResult(test, testObjectID, ignoreCheckResult);
+					TestResult testResult = toTestResult(test, testObjectID, ignoreCheckResult, specification.isSoftTest());
 					build.addTestResult(testResult);
 					continue prepareTests;
 				}
@@ -285,6 +284,7 @@ public class TestExecutor {
 			System.arraycopy(testArgs, 0, config, 1, testArgs.length);
 			config[0] = specification.getTestObject();
 			testResult = new TestResult(testName, config);
+			testResult.setSoftTest(specification.isSoftTest());
 			testResults.put(specification, testResult);
 		}
 		return testResult;
@@ -419,6 +419,12 @@ public class TestExecutor {
 			result.setSummary(new Message(Type.ERROR, message.getText()));
 		}
 		return result;
+	}
+	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult, boolean isSoftTest) {
+		TestResult result = toTestResult(test, testObjectName, checkResult);
+		result.setSoftTest(isSoftTest);
+		return result;
+
 	}
 
 	class FutureTestTask extends FutureTask<Void> {

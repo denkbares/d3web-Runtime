@@ -50,6 +50,8 @@ public class TestResult implements Comparable<TestResult> {
 	private final Map<String, Message> unexpectedMessages = Collections.synchronizedMap(new TreeMap<>());
 	private final Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<>());
 
+	private boolean isSoftTest;
+
 	/**
 	 * Creates a new TestResult for the specified test with the specified arguments.
 	 *
@@ -314,5 +316,13 @@ public class TestResult implements Comparable<TestResult> {
 
 	public long getRunTimeMillis() {
 		return runTimeMillis;
+	}
+
+	public boolean isSoftTest() {
+		return isSoftTest;
+	}
+
+	public void setSoftTest(boolean softTest) {
+		isSoftTest = softTest;
 	}
 }
