@@ -33,6 +33,9 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
+import static de.d3web.costbenefit.inference.CostBenefitProperties.MalfunctionType.testEquipment;
+import static de.d3web.costbenefit.inference.CostBenefitProperties.MalfunctionType.testEquipmentWithObservable;
+
 /**
  * @author Volker Belli (denkbares GmbH)
  * @created 19.04.2018
@@ -164,7 +167,7 @@ public class CostBenefitProperties {
 
 	/**
 	 * Get the no error solution of the knowledge base (the solution to show if no error could be detected in the case).
-	 * The no-error-solution is expected to be marked using the property {@link CostBenefitProperties#NO_ERROR_SOLUTION)
+	 * The no-error-solution is expected to be marked using the property {@link CostBenefitProperties#NO_ERROR_SOLUTION}
 	 *
 	 * @param kb the knowledge base to get the no-error-solution from
 	 * @return the no-error-solution or null, if it does not exist or cannot be found.
@@ -187,7 +190,7 @@ public class CostBenefitProperties {
 	 * Get the verification-complete-solution of the knowledge base (the solution to show if the verification of a
 	 * previous case is complete, e.g. after repair).
 	 * The verification-complete-solution is expected to be marked using the property {@link
-	 * CostBenefitProperties#VERIFICATION_COMPLETE_SOLUTION)
+	 * CostBenefitProperties#VERIFICATION_COMPLETE_SOLUTION}
 	 *
 	 * @param kb the knowledge base to get the verification-complete-solution from
 	 * @return the verification-complete-solution or null, if it does not exist or cannot be found.
@@ -209,7 +212,7 @@ public class CostBenefitProperties {
 	public static final String UMD_INTEGRATED_CHOICE_NAME = "#integriert"; // KnowledgeDesigner (SGP + CAN)
 
 	public enum MalfunctionType {
-		basic, testEquipment
+		basic, testEquipment, testEquipmentWithObservable
 	}
 
 	public enum VerifyRepairType {
@@ -354,7 +357,7 @@ public class CostBenefitProperties {
 	}
 
 	/**
-	 * Returns true if the specified question is a integration state of a measurement device, a device that is
+	 * Returns true if the specified question is an integration state of a measurement device, a device that is
 	 * potentially connected to a measurement adapter.
 	 */
 	public static boolean isMeasurementDeviceState(Question stateQuestion) {
@@ -367,6 +370,19 @@ public class CostBenefitProperties {
 	@Nullable
 	public static MalfunctionType getMalfunctionType(Question question) {
 		return question.getInfoStore().getValue(MALFUNCTION_TYPE);
+	}
+
+	public static boolean isMalfunctionType(Question question, MalfunctionType... type) {
+		if (question == null) return false;
+		for (MalfunctionType malfunctionType : type) {
+			if (getMalfunctionType(question) == malfunctionType) return true;
+		}
+		return false;
+	}
+
+
+	public static boolean isAnyTestEquipmentMalfunction(Question question) {
+		return isMalfunctionType(question, testEquipment, testEquipmentWithObservable);
 	}
 
 	/**
