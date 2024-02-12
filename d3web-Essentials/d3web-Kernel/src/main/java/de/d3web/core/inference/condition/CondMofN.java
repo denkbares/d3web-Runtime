@@ -47,7 +47,7 @@ public class CondMofN extends NonTerminalCondition {
 	 */
 	public CondMofN(Collection<Condition> terms, int min, int max) {
 		super(terms);
-		this.min = (min < 0 ? 0 : min);
+		this.min = Math.max(min, 0);
 		this.max = max;
 	}
 
