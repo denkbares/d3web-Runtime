@@ -34,7 +34,6 @@ import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 
 import static de.d3web.costbenefit.inference.CostBenefitProperties.MalfunctionType.testEquipment;
-import static de.d3web.costbenefit.inference.CostBenefitProperties.MalfunctionType.testEquipmentWithObservable;
 
 /**
  * @author Volker Belli (denkbares GmbH)
@@ -212,7 +211,7 @@ public class CostBenefitProperties {
 	public static final String UMD_INTEGRATED_CHOICE_NAME = "#integriert"; // KnowledgeDesigner (SGP + CAN)
 
 	public enum MalfunctionType {
-		basic, testEquipment, testEquipmentWithObservable
+		basic, testEquipment
 	}
 
 	public enum VerifyRepairType {
@@ -381,8 +380,8 @@ public class CostBenefitProperties {
 	}
 
 
-	public static boolean isAnyTestEquipmentMalfunction(Question question) {
-		return isMalfunctionType(question, testEquipment, testEquipmentWithObservable);
+	public static boolean isTestEquipmentMalfunction(Question question) {
+		return isMalfunctionType(question, testEquipment);
 	}
 
 	/**
