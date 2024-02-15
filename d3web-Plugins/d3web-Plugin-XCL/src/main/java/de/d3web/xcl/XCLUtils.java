@@ -100,7 +100,7 @@ public class XCLUtils {
 	 * @return fitting values (may be empty)
 	 * @created 27.05.2014
 	 */
-	public static Collection<Value> getFittingValues(Solution solution, QuestionOC question, Session session) {
+	public static Collection<Value> getFittingValues(Solution solution, QuestionChoice question, Session session) {
 		XCLModel model = solution.getKnowledgeStore().getKnowledge(XCLModel.KNOWLEDGE_KIND);
 		if (model == null) {
 			return Collections.emptyList();
@@ -124,12 +124,10 @@ public class XCLUtils {
 					return values;
 				}
 				// do not abort, normal answer is taken
-				System.err.println("All values of " + question
-						+ " are used in contradicting relations.");
+				System.err.println("All values of " + question + " are used in contradicting relations.");
 			}
 			else {
-				Set<Value> allowedValues =
-						getValues(relation.getConditionedFinding(), question, session);
+				Set<Value> allowedValues = getValues(relation.getConditionedFinding(), question, session);
 				if (!allowedValues.isEmpty()) {
 					values.addAll(allowedValues);
 					return values;
@@ -137,8 +135,7 @@ public class XCLUtils {
 			}
 		}
 		// nothing covered, return normal facts
-		DefaultAbnormality abnormality = question.getInfoStore().getValue(
-				BasicProperties.DEFAULT_ABNORMALITY);
+		DefaultAbnormality abnormality = question.getInfoStore().getValue(BasicProperties.DEFAULT_ABNORMALITY);
 		if (abnormality == null) {
 			return Collections.emptyList();
 		}
@@ -151,7 +148,7 @@ public class XCLUtils {
 		return values;
 	}
 
-	private static void fillForbiddenValues(QuestionOC question, Condition condition, Set<Value> forbiddenValues) {
+	private static void fillForbiddenValues(QuestionChoice question, Condition condition, Set<Value> forbiddenValues) {
 		if (condition instanceof CondAnd) {
 			for (Condition c : ((CondAnd) condition).getTerms()) {
 				if (c.getTerminalObjects().contains(question)) {
