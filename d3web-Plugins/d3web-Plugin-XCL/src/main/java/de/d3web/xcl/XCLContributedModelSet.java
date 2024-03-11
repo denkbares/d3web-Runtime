@@ -18,8 +18,8 @@
  */
 package de.d3web.xcl;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import de.d3web.core.inference.KnowledgeKind;
@@ -42,7 +42,7 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	 */
 	public final static KnowledgeKind<XCLContributedModelSet> KNOWLEDGE_KIND = new KnowledgeKind<>(
 			"XCLContributedModelSet", XCLContributedModelSet.class);
-	private final List<XCLModel> models = new ArrayList<>();
+	private final LinkedHashSet<XCLModel> models = new LinkedHashSet<>();
 
 	/**
 	 * Returns the XCL models that covers the specified value object, usually a {@link Question}. This means it returns
@@ -58,9 +58,7 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	}
 
 	public void addModel(XCLModel model) {
-		if (!models.contains(model)) {
-			models.add(model);
-		}
+		models.add(model);
 	}
 
 	public boolean removeModel(XCLModel model) {
@@ -68,7 +66,7 @@ public class XCLContributedModelSet implements KnowledgeSlice {
 	}
 
 	public List<XCLModel> getModels() {
-		return Collections.unmodifiableList(models);
+		return List.copyOf(models);
 	}
 
 	public boolean isEmpty() {
