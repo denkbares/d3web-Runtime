@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -22,12 +22,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * Class holding a test instance ready to be executed with all specified
  * declarations.
- * 
+ *
  * @author Jochen Reutelshöfer, Volker Belli (denkbares GmbH)
  * @created 30.05.2012
  */
@@ -40,30 +40,24 @@ public class TestSpecification<T> {
 	private final boolean isSoftTest;
 	public static final String SOFT_TEST = "softTest";
 
-
 	private final Map<String, Object> customInfos = new HashMap<>();
 
 	/**
-	 * @param test Instance of the test to be executed. (mandatory)
+	 * @param test       Instance of the test to be executed. (mandatory)
 	 * @param testObject The test object the test will be executed on (target).
-	 *        (mandatory)
-	 * @param args The configuration parameters for the execution of the tests
-	 *        (depends on test).
-	 * @param ignores Information about entities that have to be ignored during
-	 *        testing. (optional)
+	 *                   (mandatory)
+	 * @param args       The configuration parameters for the execution of the tests
+	 *                   (depends on test).
+	 * @param ignores    Information about entities that have to be ignored during
+	 *                   testing. (optional)
 	 */
 	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
 		this.test = test;
-		//this.args = Arrays.copyOf(args, args.length);
 		// Check for "softTest" argument and remove it if present
 		List<String> argsList = Arrays.stream(args)
 				.filter(arg -> !arg.equalsIgnoreCase(SOFT_TEST))
 				.toList();
-
-		// Set isSoft to true if "softTest" was in the args array
 		this.isSoftTest = args.length != argsList.size();
-
-		// Convert the list back to an array
 		this.args = argsList.toArray(new String[0]);
 
 		this.testObject = testObject;
@@ -71,7 +65,6 @@ public class TestSpecification<T> {
 		for (int i = 0; i < ignores.length; i++) {
 			this.ignores[i] = Arrays.copyOf(ignores[i], ignores[i].length);
 		}
-
 	}
 
 	public Test<T> getTest() {
@@ -86,7 +79,7 @@ public class TestSpecification<T> {
 	 * Returns the argument at the specified index or the default value if there are not enough
 	 * arguments specified by the user.
 	 *
-	 * @param index the index to get the argument for
+	 * @param index        the index to get the argument for
 	 * @param defaultValue the default value if the argument is not specified
 	 * @return the argument at the specified index
 	 */
@@ -129,12 +122,13 @@ public class TestSpecification<T> {
 	 * data to the test execution and recall it later, e.g. for summarizing the
 	 * test results. The stored objects will be lost for the next test run.
 	 *
-	 * @param key the key of the custom info object
+	 * @param key   the key of the custom info object
 	 * @param value the custom info object
 	 */
 	public void setCustomInfo(String key, Object value) {
 		customInfos.put(key, value);
 	}
+
 	/**
 	 * Gets a custom info object. These objects can be used by the test to place some
 	 * data to the test execution and recall it later, e.g. for summarizing the
@@ -149,5 +143,18 @@ public class TestSpecification<T> {
 
 	public boolean isSoftTest() {
 		return isSoftTest;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TestSpecification<?> that = (TestSpecification<?>) o;
+		return isSoftTest == that.isSoftTest && Objects.equals(test, that.test) && Objects.equals(testObject, that.testObject) && Objects.deepEquals(args, that.args) && Objects.deepEquals(ignores, that.ignores) && Objects.equals(customInfos, that.customInfos);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(test, testObject, Arrays.hashCode(args), Arrays.deepHashCode(ignores), isSoftTest, customInfos);
 	}
 }
