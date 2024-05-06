@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.terminology.QContainer;
 import de.d3web.core.knowledge.terminology.Question;
@@ -88,14 +89,16 @@ public class SplittingFormStrategy implements FormStrategy {
 
 		// prepare the currently active questions
 		HashSet<Question> active = new HashSet<>(completeForm.getActiveQuestions());
-		// if there is no active question, skip form
-		groups.removeIf(group -> Collections.disjoint(active, group));
 
 		// and build the forms out of it
 		List<SplitForm> result = new ArrayList<>(groups.size());
 		int groupNumber = 1;
 		for (List<Question> group : groups) {
-			result.add(new SplitForm(completeForm, groupNumber++, groups.size(), group));
+			SplitForm splitForm = new SplitForm(completeForm, groupNumber++, groups.size(), group);
+			// if there is no active question, skip form
+			if (!Collections.disjoint(active, group)) {
+				result.add(splitForm);
+			}
 		}
 		return result;
 	}
@@ -133,7 +136,7 @@ public class SplittingFormStrategy implements FormStrategy {
 	}
 
 	private static class SplitForm implements Form {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SplitForm.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(SplitForm.class);
 
 		private final Form delegate;
 		private final int groupNumber;
@@ -190,8 +193,7 @@ public class SplittingFormStrategy implements FormStrategy {
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) return true;
-			if (!(o instanceof SplitForm)) return false;
-			SplitForm splitForm = (SplitForm) o;
+			if (!(o instanceof SplitForm splitForm)) return false;
 			return groupNumber == splitForm.groupNumber &&
 					Objects.equals(delegate, splitForm.delegate);
 		}
