@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>de.uniwue.d3web</groupId>
 		<artifactId>d3web</artifactId>
-		<version>2024.2-SNAPSHOT</version>
+		<version>2024.2</version>
 	</parent>
 
 	<artifactId>d3web-Apps</artifactId>
