@@ -64,7 +64,6 @@ import de.d3web.core.session.Value;
 import de.d3web.core.session.ValueUtils;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
-import de.d3web.core.session.protocol.FactProtocolEntry;
 import de.d3web.core.session.values.ChoiceID;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.MultipleChoiceValue;
@@ -783,8 +782,6 @@ public final class KnowledgeBaseUtils {
 				PSMethodUserSelected psm = PSMethodUserSelected.getInstance();
 				Fact fact = FactFactory.createFact(question, value, psm, psm);
 				session.getBlackboard().addValueFact(fact);
-				session.getProtocol().addEntry(new FactProtocolEntry(
-						session.getPropagationManager().getPropagationTime(), fact));
 			}
 		}
 		finally {
