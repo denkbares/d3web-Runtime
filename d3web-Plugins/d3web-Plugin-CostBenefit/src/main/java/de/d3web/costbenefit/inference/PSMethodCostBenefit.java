@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.NavigableSet;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,7 +285,7 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 
 		// searching for the best cost/benefit result
 		// (only if there is any benefit target)
-		initializeSearchModel(caseObject);
+		initializeSearchModelAndSolutions(caseObject);
 		SearchModel searchModel = caseObject.getSearchModel();
 		Set<Solution> remaining = caseObject.getUndiscriminatedSolutions();
 		NavigableSet<Target> targets = searchModel.getTargets();
@@ -384,12 +385,27 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 	 * @param caseObject the case object to be initialized for searching
 	 * @created 08.03.2011
 	 */
-	private void initializeSearchModel(CostBenefitCaseObject caseObject) {
+	private void initializeSearchModelAndSolutions(CostBenefitCaseObject caseObject) {
 		Session session = caseObject.getSession();
+		SearchModel searchModel = initSearchModel(session);
+
 		HashSet<Solution> allSolutions = new HashSet<>();
+		for (StrategicSupport strategicSupport : CostBenefitUtil.getStrategicSupports(session)) {
+			allSolutions.addAll(strategicSupport.getUndiscriminatedSolutions(session));
+		}
+
+		caseObject.setUndiscriminatedSolutions(allSolutions);
+		caseObject.setSearchModel(searchModel);
+		if (strategicBenefitFactor > 0.0) {
+			addStrategicBenefit(session, searchModel);
+		}
+		caseObject.setDiscriminatingTargets(searchModel.getTargets());
+	}
+
+	@NotNull
+	public SearchModel initSearchModel(Session session) {
 		SearchModel searchModel = new SearchModel(session);
-		List<StrategicSupport> strategicSupports = CostBenefitUtil.getStrategicSupports(session);
-		for (StrategicSupport strategicSupport : strategicSupports) {
+		for (StrategicSupport strategicSupport : CostBenefitUtil.getStrategicSupports(session)) {
 			// calculate the targets from the strategic support items
 			Collection<Solution> solutions = strategicSupport.getUndiscriminatedSolutions(session);
 			Collection<Question> questions = strategicSupport.getDiscriminatingQuestions(solutions, session);
@@ -412,17 +428,8 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 					}
 				}
 			}
-
-			// recall them for storing into the case object
-			allSolutions.addAll(solutions);
 		}
-
-		caseObject.setUndiscriminatedSolutions(allSolutions);
-		caseObject.setSearchModel(searchModel);
-		if (strategicBenefitFactor > 0.0) {
-			addStrategicBenefit(session, searchModel);
-		}
-		caseObject.setDiscriminatingTargets(searchModel.getTargets());
+		return searchModel;
 	}
 
 	private void addStrategicBenefit(Session session, SearchModel searchModel) {
