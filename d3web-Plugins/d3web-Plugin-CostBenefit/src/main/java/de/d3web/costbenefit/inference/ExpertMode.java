@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.denkbares.collections.DefaultMultiMap;
 import com.denkbares.collections.MultiMap;
@@ -38,6 +40,7 @@ import com.denkbares.collections.MultiMaps;
 import com.denkbares.plugin.Extension;
 import com.denkbares.plugin.PluginManager;
 import com.denkbares.strings.NumberAwareComparator;
+import com.denkbares.utils.Stopwatch;
 import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
@@ -78,6 +81,7 @@ import static de.d3web.core.inference.PSMethod.Type.source;
  */
 public class ExpertMode implements SessionObject {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExpertMode.class);
 	private static final String PLUGIN_ID = "d3web-CostBenefit";
 	private static final String EXTENSION_POINT_COMPARATOR = "AdapterStateTargetComparator";
 	private final Session session;
@@ -108,6 +112,18 @@ public class ExpertMode implements SessionObject {
 		this.session = session;
 		this.psm = psm;
 		this.pso = session.getSessionObject(psm);
+	}
+
+	public boolean hasDiscriminatingTestSteps() {
+		Stopwatch stopwatch = new Stopwatch();
+		SearchModel searchModel = getSearchModel();
+		if (searchModel == null) {
+			// if no path was calculated yet, we have to create in new search model...
+			searchModel = getProblemSolver().initSearchModel(session);
+		}
+		boolean hasDiscriminatingTestSteps = searchModel.getBestBenefit() != 0;
+		stopwatch.log(LOGGER, "Checked for discriminating test steps. " + (hasDiscriminatingTestSteps ? "There are some" : "There are none"));
+		return hasDiscriminatingTestSteps;
 	}
 
 	public PSMethodCostBenefit getProblemSolver() {
