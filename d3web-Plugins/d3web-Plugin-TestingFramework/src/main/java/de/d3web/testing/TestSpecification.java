@@ -52,12 +52,13 @@ public class TestSpecification<T> {
 	 *                   testing. (optional)
 	 */
 	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
+		this(test, testObject, args, ignores, false);
+	}
+
+	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores, boolean isSoftTest) {
 		this.test = test;
-		// Check for "softTest" argument and remove it if present
-		List<String> argsList = Arrays.stream(args)
-				.filter(arg -> !arg.equalsIgnoreCase(SOFT_TEST))
-				.toList();
-		this.isSoftTest = args.length != argsList.size();
+		List<String> argsList = Arrays.stream(args).toList();
+		this.isSoftTest = isSoftTest;
 		this.args = argsList.toArray(new String[0]);
 
 		this.testObject = testObject;

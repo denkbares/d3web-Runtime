@@ -63,6 +63,8 @@ public class TestParser {
 	public TestParser(String testDeclaration) {
 		// remove end-line comments
 		// testDeclaration = testDeclaration.replaceAll("(\\s+|^\\s*)//[^\n\r]*$", "");
+		boolean isSoftTest = testDeclaration.endsWith(SOFT_TEST);
+		testDeclaration = testDeclaration.replace(SOFT_TEST, "");
 		this.declaration = testDeclaration;
 
 		// parse ignores and remove them from test's command line
@@ -112,7 +114,6 @@ public class TestParser {
 
 		// check arguments and create error messages if necessary
 		List<String> parametersTemp = new ArrayList<>(paramters);
-		parametersTemp.remove(SOFT_TEST);
 		String[] params = parametersTemp.toArray(String[]::new);
 		this.parameterCheckResult = test.checkArgs(params);
 
@@ -126,7 +127,7 @@ public class TestParser {
 			ignoreCheckResults.add(test.checkIgnore(array));
 		}
 
-		this.testSpecification = new TestSpecification(test, testObject, paramters.toArray(String[]::new), ignores);
+		this.testSpecification = new TestSpecification(test, testObject, paramters.toArray(String[]::new), ignores, isSoftTest);
 	}
 
 	/**
