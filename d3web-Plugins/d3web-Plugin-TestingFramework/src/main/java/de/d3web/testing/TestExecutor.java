@@ -74,6 +74,7 @@ public class TestExecutor {
 	private final HashMap<TestSpecification<?>, TestResult> testResults = new HashMap<>();
 	private final Set<FutureTestTask> futures = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	private final ExecutorService executor;
+	private final double priority;
 	private volatile boolean aborted;
 
 	/**
@@ -98,7 +99,7 @@ public class TestExecutor {
 	 * @param listener       the progress listener
 	 */
 	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener) {
-		this(providers, specifications, listener, DEFAULT_EXECUTOR);
+		this(providers, specifications, listener, DEFAULT_EXECUTOR, 10);
 	}
 
 	/**
@@ -108,13 +109,16 @@ public class TestExecutor {
 	 * @param providers       the provider for the test objects
 	 * @param specifications  the specifications of the tests
 	 * @param listener        the progress listener
+	 * @param priority        the priority with which the tests should be executed in the executorService (in case there
+	 *                        are multiple TestExecutor for the same {@link ExecutorService}
 	 */
-	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, ExecutorService executorService) {
+	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, ExecutorService executorService, double priority) {
 		this.objectProviders = providers;
 		this.specifications = specifications;
 		this.progressListener = listener;
 		this.build = new BuildResult();
 		this.executor = executorService;
+		this.priority = priority;
 	}
 
 	/**
@@ -324,7 +328,7 @@ public class TestExecutor {
 			specification.prepareExecution();
 			for (CallableTest<?> callableTest : callableTests) {
 				try {
-					FutureTestTask task = new FutureTestTask(callableTest);
+					FutureTestTask task = new FutureTestTask(callableTest, priority);
 					executor.execute(task);
 					futures.add(task);
 				}
@@ -420,20 +424,22 @@ public class TestExecutor {
 		}
 		return result;
 	}
+
 	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult, boolean isSoftTest) {
 		TestResult result = toTestResult(test, testObjectName, checkResult);
 		result.setSoftTest(isSoftTest);
 		return result;
-
 	}
 
-	class FutureTestTask extends FutureTask<Void> {
+	class FutureTestTask extends FutureTask<Void> implements Comparable<FutureTestTask> {
 
 		private final CallableTest<?> callable;
+		private final double priority;
 
-		public FutureTestTask(CallableTest<?> callable) {
+		public FutureTestTask(CallableTest<?> callable, double priority) {
 			super(callable);
 			this.callable = callable;
+			this.priority = priority;
 		}
 
 		@Override
@@ -459,6 +465,11 @@ public class TestExecutor {
 			callable.testFinished();
 			futures.remove(this);
 		}
+
+		@Override
+		public int compareTo(@NotNull TestExecutor.FutureTestTask other) {
+			return Double.compare(other.priority, this.priority);
+		}
 	}
 
 	class CallableTest<T> implements Callable<Void> {
@@ -475,6 +486,14 @@ public class TestExecutor {
 			this.testObject = testObject;
 			this.testObjectName = testObjectName;
 			this.testResult = testresult;
+		}
+
+		public String getTestObjectName() {
+			return testObjectName;
+		}
+
+		public TestSpecification<T> getSpecification() {
+			return specification;
 		}
 
 		public boolean mayInterrupt() {
