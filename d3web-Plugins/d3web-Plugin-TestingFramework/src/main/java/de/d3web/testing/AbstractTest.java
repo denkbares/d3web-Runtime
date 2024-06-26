@@ -167,12 +167,12 @@ public abstract class AbstractTest<T> implements Test<T> {
 	}
 
 	@NotNull
-	protected Message getMessage(List<MessageObject> messageObjects, Collection<String> messages, Message.Type messageType) {
+	protected Message getMessage(Collection<MessageObject> messageObjects, Collection<String> messages, Message.Type messageType) {
 		return getMessage(null, messageObjects, messages, messageType);
 	}
 
 	@NotNull
-	protected Message getMessage(String suffix, List<MessageObject> messageObjects, Collection<String> messages, Message.Type messageType) {
+	protected Message getMessage(String suffix, Collection<MessageObject> messageObjects, Collection<String> messages, Message.Type messageType) {
 		if (messages.isEmpty()) return new Message(Message.Type.SUCCESS, suffix);
 		String message = "The following " + Strings.pluralOf(messages.size(), messageType.toString().toLowerCase()) +
 				" were detected:\n* " + getMessageStringFromCollection(messages)
