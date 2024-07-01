@@ -65,6 +65,9 @@ public class TestExecutor {
 	private static final ExecutorService DEFAULT_EXECUTOR = Executors.newFixedThreadPool(
 			Runtime.getRuntime().availableProcessors(),
 			r -> new Thread(r, "Default-Test-Executor-" + THREAD_NUMBER.incrementAndGet()));
+	private static final ExecutorService DEFAULT_SUB_EXECUTOR = Executors.newFixedThreadPool(
+			Runtime.getRuntime().availableProcessors(),
+			r -> new Thread(r, "Default-SubTest-Executor-" + THREAD_NUMBER.incrementAndGet()));
 
 	private final Collection<TestObjectProvider> objectProviders;
 	private final List<TestSpecification<?>> specifications;
@@ -73,6 +76,7 @@ public class TestExecutor {
 	private final HashMap<TestSpecification<?>, TestResult> testResults = new HashMap<>();
 	private final Set<FutureTestTask> futures = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	private final ExecutorService executor;
+	private final ExecutorService subExecutor;
 	private final double priority;
 	private volatile boolean aborted;
 
@@ -98,7 +102,7 @@ public class TestExecutor {
 	 * @param listener       the progress listener
 	 */
 	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener) {
-		this(providers, specifications, listener, DEFAULT_EXECUTOR, 10);
+		this(providers, specifications, listener, DEFAULT_EXECUTOR, DEFAULT_SUB_EXECUTOR, 10);
 	}
 
 	/**
@@ -111,12 +115,13 @@ public class TestExecutor {
 	 * @param priority        the priority with which the tests should be executed in the executorService (in case there
 	 *                        are multiple TestExecutor for the same {@link ExecutorService}
 	 */
-	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, ExecutorService executorService, double priority) {
+	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, ExecutorService executorService, ExecutorService subExecutorService, double priority) {
 		this.objectProviders = providers;
 		this.specifications = specifications;
 		this.progressListener = listener;
 		this.build = new BuildResult();
 		this.executor = executorService;
+		this.subExecutor = subExecutorService;
 		this.priority = priority;
 	}
 
@@ -533,7 +538,7 @@ public class TestExecutor {
 								LOGGER.error("Interrupted test sub task", e);
 							}
 						}, priority);
-						executor.execute(task);
+						subExecutor.execute(task);
 						futures.add(task);
 						subTasks.add(task);
 					}
