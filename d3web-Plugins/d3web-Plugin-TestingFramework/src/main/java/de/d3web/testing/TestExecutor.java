@@ -337,6 +337,7 @@ public class TestExecutor {
 			Collection<RunnableTest<?>> runnableTests = callablesMap.get(specification);
 			specification.prepareExecution();
 			for (RunnableTest<?> runnableTest : runnableTests) {
+				if (aborted) return;
 				try {
 					FutureTestTask task = new FutureTestTask(runnableTest, priority);
 					executor.execute(task);
@@ -534,8 +535,10 @@ public class TestExecutor {
 				parallelizedTest.registerTestTaskConsumer(new ParallelizedTest.TestTaskHandler() {
 					@Override
 					public void accept(ParallelizedTest.TestTask testTask) {
+						if (aborted) return;
 						FutureTestTask task = new FutureTestTask(() -> {
 							try {
+								if (aborted) return;
 								testTask.run();
 							}
 							catch (InterruptedException e) {
