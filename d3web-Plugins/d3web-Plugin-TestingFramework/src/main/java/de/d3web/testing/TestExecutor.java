@@ -79,6 +79,7 @@ public class TestExecutor {
 	private final ExecutorService subExecutor;
 	private final double priority;
 	private volatile boolean aborted;
+	private volatile boolean initialized = false;
 
 	/**
 	 * Returns the current build or null if the build has been terminated.
@@ -143,7 +144,8 @@ public class TestExecutor {
 				getCallableTestsMap(validSpecifications);
 		try {
 			initTest(callableTests);
-			executeTests(callableTests);
+			startTests(callableTests);
+			initialized = true;
 		}
 		finally {
 			awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
@@ -328,7 +330,7 @@ public class TestExecutor {
 		return result;
 	}
 
-	private void executeTests(Map<TestSpecification<?>, Collection<RunnableTest<?>>> callablesMap) {
+	private void startTests(Map<TestSpecification<?>, Collection<RunnableTest<?>>> callablesMap) {
 		// finally run execute on callable tests
 		outerLoop:
 		for (TestSpecification<?> specification : callablesMap.keySet()) {
@@ -363,7 +365,7 @@ public class TestExecutor {
 	}
 
 	public boolean isShutdown() {
-		return futures.isEmpty();
+		return initialized && futures.isEmpty();
 	}
 
 	/**
@@ -452,6 +454,7 @@ public class TestExecutor {
 
 		@Override
 		public Void get() throws InterruptedException, ExecutionException {
+			if (aborted) return null;
 			Void value = super.get();
 			cleanup();
 			return value;
@@ -468,6 +471,7 @@ public class TestExecutor {
 
 		@Override
 		public Void get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+			if (aborted) return null;
 			Void value = super.get(timeout, unit);
 			cleanup();
 			return value;
@@ -603,7 +607,7 @@ public class TestExecutor {
 				// must catch throwable here to also handle unexpected errors
 				// such as StackOverflow, memory issues or invalid plugins (linkage) errors
 				String message = "Unexpected error in test " + specification.getTestName() + ", during testing '" + testObjectName + "': "
-						+ e.getClass().getName() + ": " + e.getMessage();
+								 + e.getClass().getName() + ": " + e.getMessage();
 				testResult.addUnexpectedMessage(testObjectName, new Message(Message.Type.ERROR, message + ": " + e));
 				LOGGER.warn(message);
 			}
