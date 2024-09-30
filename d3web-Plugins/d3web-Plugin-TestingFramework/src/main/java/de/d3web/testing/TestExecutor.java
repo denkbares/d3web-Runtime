@@ -442,6 +442,10 @@ public class TestExecutor {
 		return result;
 	}
 
+	public boolean isAborted() {
+		return this.aborted;
+	}
+
 	class FutureTestTask extends FutureTask<Void> implements Comparable<FutureTestTask> {
 
 		private final Runnable runnable;
