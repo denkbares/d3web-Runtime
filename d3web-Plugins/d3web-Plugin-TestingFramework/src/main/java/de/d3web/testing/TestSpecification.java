@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Class holding a test instance ready to be executed with all specified
  * declarations.
@@ -51,11 +53,11 @@ public class TestSpecification<T> {
 	 * @param ignores    Information about entities that have to be ignored during
 	 *                   testing. (optional)
 	 */
-	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores) {
+	public TestSpecification(@NotNull Test<T> test, @NotNull String testObject, String[] args, String[][] ignores) {
 		this(test, testObject, args, ignores, false);
 	}
 
-	public TestSpecification(Test<T> test, String testObject, String[] args, String[][] ignores, boolean isSoftTest) {
+	public TestSpecification(@NotNull Test<T> test, @NotNull String testObject, String[] args, String[][] ignores, boolean isSoftTest) {
 		this.test = test;
 		List<String> argsList = Arrays.stream(args).toList();
 		this.isSoftTest = isSoftTest;
