@@ -41,8 +41,8 @@ public class MeasurementInfo {
 	 */
 	public final long measurementTimeOutMillis;
 
-	public MeasurementInfo(Measurement.State state) {
-		this(state, new Date(), -1);
+	public MeasurementInfo() {
+		this(Measurement.State.NOT_MEASURING, new Date(0), -1);
 	}
 
 	public MeasurementInfo(Measurement.State state, Date measurementStart, long measurementTimeOutMillis) {
