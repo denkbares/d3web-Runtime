@@ -23,7 +23,7 @@
 	<parent>
 		<artifactId>d3web-Plugins</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>2024.3-SNAPSHOT</version>
+		<version>2024.3</version>
 	</parent>
 
 	<artifactId>d3web-Plugin-TestingFramework</artifactId>
