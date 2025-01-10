@@ -311,6 +311,7 @@ public class SessionBuilder {
 					//noinspection unchecked
 					pair.getA().handle(this, entry.getKey(), matches);
 				}
+				session.touch(entry.getKey());
 			});
 		}
 	}
