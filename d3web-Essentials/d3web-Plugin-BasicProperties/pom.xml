@@ -23,7 +23,7 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>2025.1-SNAPSHOT</version>
+		<version>2025.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>d3web-Plugin-BasicProperties</artifactId>
