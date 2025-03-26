@@ -263,7 +263,7 @@ public class DefaultSession implements Session {
 
 	@Override
 	public void touch() {
-		edited = new Date();
+		touch(new Date());
 	}
 
 	@Override
