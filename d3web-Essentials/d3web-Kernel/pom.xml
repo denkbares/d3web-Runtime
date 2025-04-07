@@ -24,7 +24,7 @@
 	<parent>
 		<artifactId>d3web-Essentials</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>2025.2-SNAPSHOT</version>
+		<version>2025.3-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>d3web-Kernel</artifactId>
