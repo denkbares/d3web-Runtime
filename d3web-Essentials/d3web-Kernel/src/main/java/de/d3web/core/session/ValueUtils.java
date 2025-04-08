@@ -306,14 +306,15 @@ public final class ValueUtils {
      */
     public static QuestionValue createQuestionValue(Question question, String valueString) {
 
-        if (Strings.unquote(valueString).equals(Unknown.UNKNOWN_ID)) return Unknown.getInstance();
-        if (Strings.unquote(valueString).equals(Unknown.UNKNOWN_VALUE)) return Unknown.getInstance();
+        String unquotedValue = Strings.unquote(valueString);
+        if (unquotedValue.equals(Unknown.UNKNOWN_ID)) return Unknown.getInstance();
+        if (unquotedValue.equals(Unknown.UNKNOWN_VALUE)) return Unknown.getInstance();
         if (valueString.equalsIgnoreCase(Unknown.getInstance().getValue().toString())) {
             return Unknown.getInstance();
         }
 
         if (valueString.equals(UndefinedValue.UNDEFINED_ID)) return UndefinedValue.getInstance();
-        if (Strings.unquote(valueString).equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
+        if (unquotedValue.equalsIgnoreCase(UndefinedValue.getInstance().toString())) {
             return UndefinedValue.getInstance();
         }
 
@@ -375,6 +376,9 @@ public final class ValueUtils {
         if (question instanceof QuestionMC) {
             valueString = valueString.startsWith("[") ? valueString.substring(1) : valueString;
             valueString = valueString.endsWith("]") ? valueString.substring(0, valueString.length() - 1) : valueString;
+            if (Strings.isBlank(valueString)) { // in case of verbalized empty list of strings...
+                return Unknown.getInstance();
+            }
             List<ChoiceID> choiceIds = Strings.splitUnquoted(valueString, ",")
                     .stream()
                     .map(StringFragment::getContentTrimmed)
