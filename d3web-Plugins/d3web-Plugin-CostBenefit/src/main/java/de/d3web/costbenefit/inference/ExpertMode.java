@@ -46,6 +46,7 @@ import de.d3web.core.inference.condition.CondEqual;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.inference.condition.Conditions;
 import de.d3web.core.inference.condition.NonTerminalCondition;
+import de.d3web.core.knowledge.InterviewObject;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.terminology.AbstractNamedObject;
 import de.d3web.core.knowledge.terminology.Choice;
@@ -66,6 +67,7 @@ import de.d3web.costbenefit.blackboard.CostBenefitCaseObject;
 import de.d3web.costbenefit.model.SearchModel;
 import de.d3web.costbenefit.model.Target;
 import de.d3web.costbenefit.session.protocol.ManualTargetSelectionEntry;
+import de.d3web.interview.Interview;
 import de.d3web.xcl.XCLModel;
 
 import static de.d3web.core.inference.PSMethod.Type.source;
@@ -121,9 +123,25 @@ public class ExpertMode implements SessionObject {
 			// if no path was calculated yet, we have to create in new search model...
 			searchModel = getProblemSolver().initSearchModel(session);
 		}
-		boolean hasDiscriminatingTestSteps = searchModel.getBestBenefit() != 0;
-		stopwatch.log(LOGGER, "Checked for discriminating test steps. " + (hasDiscriminatingTestSteps ? "There are some" : "There are none"));
-		return hasDiscriminatingTestSteps;
+		boolean anyTestStepWithBenefit = searchModel.getBestBenefit() != 0;
+		boolean manualIndications = hasManualIndications();
+
+		stopwatch.log(LOGGER, "Checked for discriminating test steps. Found " +
+							  (anyTestStepWithBenefit
+									  ? "some"
+									  : "none" +
+										(manualIndications
+												? ", but there are some manual indications, proceeding as normal"
+												: "")));
+		return anyTestStepWithBenefit || manualIndications;
+	}
+
+	private boolean hasManualIndications() {
+		HashSet<InterviewObject> currentAgenda = new HashSet<>(Interview.get(session)
+				.getInterviewAgenda()
+				.getCurrentlyActiveObjects());
+		session.getKnowledgeBase().getInitQuestions().forEach(currentAgenda::remove);
+		return !currentAgenda.isEmpty();
 	}
 
 	public PSMethodCostBenefit getProblemSolver() {
@@ -642,7 +660,7 @@ public class ExpertMode implements SessionObject {
 			if (qcontainer.getInfoStore().getValue(CostBenefitProperties.PERMANENTLY_RELEVANT)) {
 				StateTransition stateTransition = StateTransition.getStateTransition(qcontainer);
 				if (stateTransition == null || stateTransition.getActivationCondition() == null
-						|| Conditions.isTrue(stateTransition.getActivationCondition(), session)) {
+					|| Conditions.isTrue(stateTransition.getActivationCondition(), session)) {
 					result.add(qcontainer);
 				}
 			}
