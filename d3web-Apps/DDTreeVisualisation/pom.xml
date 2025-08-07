@@ -24,7 +24,7 @@
 	<parent>
 		<artifactId>d3web-Apps</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>2025.3-SNAPSHOT</version>
+		<version>2025.3</version>
 	</parent>
 
 	<artifactId>DDTreeVisualisation</artifactId>
