@@ -217,7 +217,7 @@ public class CostBenefitProperties {
 	public static final String UMD_INTEGRATED_CHOICE_NAME = "#integriert"; // KnowledgeDesigner (SGP + CAN)
 
 	public enum MalfunctionType {
-		basic, testEquipment
+		basic, testEquipment, nonOperational
 	}
 
 	public enum VerifyRepairType {
