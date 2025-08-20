@@ -89,6 +89,12 @@ public class CostBenefitProperties {
 	public static final Property<Boolean> PERMANENTLY_RELEVANT = Property.getProperty("permanentlyRelevant", Boolean.class);
 
 	/**
+	 * Can be used to mark QContainers, that should (not) be used for verify repair.
+	 */
+	public static final Property<Boolean> VERIFY_REPAIR = Property.getProperty("verifyRepair", Boolean.class);
+
+
+	/**
 	 * This property should not be used anymore. It is replaced by the KnowledgeSlice {@link ComfortBenefit}
 	 */
 	@SuppressWarnings("DeprecatedIsStillUsed")
@@ -456,6 +462,15 @@ public class CostBenefitProperties {
 	public static boolean isTargetOnly(QContainer container) {
 		if (container == null) return false;
 		return container.getInfoStore().getValue(CostBenefitProperties.TARGET_ONLY);
+	}
+
+	/**
+	 * Returns true if the specified QASet is explicitly marked to use for verify repair.
+	 * Returns falls if explicitly set to false or if not set.
+	 */
+	public static boolean isVerifyRepair(QASet container) {
+		if (container == null) return false;
+		return container.getInfoStore().getValue(CostBenefitProperties.VERIFY_REPAIR);
 	}
 
 	public static boolean isCBInitTS(QContainer container) {

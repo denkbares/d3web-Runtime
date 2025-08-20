@@ -321,6 +321,17 @@
 		<parameter id="default" value="false" />
 	</extension>
 
+	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="verifyRepair">
+		<parameter id="name" value="verifyRepair" />
+		<parameter id="description"
+				   value="Marks a QContainer that should (not) be used for verify repair." />
+		<parameter id="multilingual" value="false" />
+		<parameter id="autosave" value="basic" />
+		<parameter id="priority" value="5" />
+		<parameter id="instanceof" value="java.lang.Boolean" />
+		<parameter id="default" value="false" />
+	</extension>
+
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="potentialChoices">
 		<parameter id="name" value="potentialChoices" />
 		<parameter id="description"
