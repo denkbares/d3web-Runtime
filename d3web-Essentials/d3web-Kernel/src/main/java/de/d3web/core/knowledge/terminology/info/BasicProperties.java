@@ -245,7 +245,7 @@ public class BasicProperties {
 	 * @return the questions display type
 	 * @created 20.08.2012
 	 */
-	public static NumDisplay getNumDisplay(QuestionNum question) {
+	public static NumDisplay getNumDisplay(Question question) {
 		NumDisplay display = question.getInfoStore().getValue(NUM_DISPLAY);
 		if (display == null) {
 			display = question.getKnowledgeBase().getInfoStore().getValue(NUM_DISPLAY);

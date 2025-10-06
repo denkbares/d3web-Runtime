@@ -613,9 +613,10 @@ public final class ValueUtils {
             return getDateOrDurationVerbalization((QuestionDate) question, ((DateValue) value).getDate());
         } else if (value instanceof NumValue) {
             double val = ((NumValue) value).getDouble();
-            NumDisplay numDisplay = BasicProperties.getNumDisplay((QuestionNum) question);
+            NumDisplay numDisplay = BasicProperties.getNumDisplay(question);
             if (numDisplay == NumDisplay.hexadecimal) {
-                final String hexString = Long.toHexString((long) val).toUpperCase();
+                long longVal = question instanceof QuestionNum ? (long) val : Double.doubleToLongBits(val);
+                final String hexString = Long.toHexString(longVal).toUpperCase();
                 return insertSpaces(hexString);
             }
             // round value to digits, if specified
@@ -863,7 +864,6 @@ public final class ValueUtils {
      * Creates a {@link DateValue} from a given String. If no time zone is given in the String, the time zone of the
      * local JVM will be used. To be parseable, the String has to come in one of the available {@link DateFormat} from
      * {@link DateValue#getAllowedFormatStrings()}.
-     *
      * <b>Attention:</b> If the corresponding question is available while calling the method, you should instead use
      * {@link ValueUtils#createDateValue(QuestionDate, String)}, especially, if your String does not contain a TimeZone
      * identifier. Having the Question available will use a specified time zone of the question's UNIT property if given
