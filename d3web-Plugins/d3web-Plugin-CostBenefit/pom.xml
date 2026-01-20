@@ -24,7 +24,7 @@
 	<parent>
 		<artifactId>d3web-Plugins</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
-		<version>2025.6-SNAPSHOT</version>
+		<version>2026.1</version>
 	</parent>
 	
 	<artifactId>d3web-Plugin-CostBenefit</artifactId>
