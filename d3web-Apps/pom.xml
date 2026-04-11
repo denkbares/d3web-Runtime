@@ -34,6 +34,7 @@
 	<modules>
 		<module>DDTreeVisualisation</module>
 		<module>ExampleApps</module>
+		<module>d3web-GlobalTests</module>
 	</modules>
 
 	<profiles>

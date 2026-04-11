@@ -22,7 +22,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<artifactId>d3web-Essentials</artifactId>
+		<artifactId>d3web-Apps</artifactId>
 		<groupId>de.uniwue.d3web</groupId>
 		<version>2026.4-SNAPSHOT</version>
 	</parent>

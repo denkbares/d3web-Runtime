@@ -36,7 +36,6 @@
 	<modules>
 		<module>d3web-Kernel</module>
 		<module>d3web-Persistence</module>
-		<module>d3web-GlobalTests</module>
 		<module>d3web-Plugin-BasicProperties</module>
 		<module>d3web-Plugin-Kernel-ExtensionPoints</module>
 		<module>d3web-Plugin-Persistence-Basic</module>
@@ -45,7 +44,6 @@
 		<module>d3web-Plugin-SessionPersistence-ExtensionPoints</module>
 		<module>d3web-Plugin-SessionPersistence-Basic</module>
 		<module>d3web-Plugin-TestCase</module>
-		<module>d3web-Plugin-Tests</module>
 		<module>d3web-Plugin-Interview</module>
 	</modules>
 </project>
