@@ -187,6 +187,16 @@ public final class BuildResult {
 	}
 
 	/**
+	 * Removes a result from the overall result list
+	 *
+	 * @return true if the result list contained the specified result
+	 * @created 17.03.2026
+	 */
+	public boolean removeResult(TestResult result) {
+		return testResults.remove(result);
+	}
+
+	/**
 	 * Computes the overall TestResultType of this result set, determined by the "worst" test result
 	 *
 	 * @return the overall result type
