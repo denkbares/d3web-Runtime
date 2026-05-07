@@ -246,4 +246,8 @@ public final class BuildResult {
 		}
 		return build.toString();
 	}
+
+	public void removeResult(TestResult result) {
+		testResults.remove(result);
+	}
 }
