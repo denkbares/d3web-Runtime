@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import static de.d3web.testing.TestSpecification.SOFT_TEST;
+import static de.d3web.testing.TestSpecification.FROZEN_TEST;
 
 /**
  * Class to parse and validate a single test declaration.
@@ -64,6 +65,8 @@ public class TestParser {
 		// testDeclaration = testDeclaration.replaceAll("(\\s+|^\\s*)//[^\n\r]*$", "");
 		boolean isSoftTest = testDeclaration.endsWith(SOFT_TEST);
 		testDeclaration = testDeclaration.replace(SOFT_TEST, "");
+		boolean isFrozenTest = testDeclaration.endsWith(FROZEN_TEST);
+		testDeclaration = testDeclaration.replace(FROZEN_TEST, "");
 		this.declaration = testDeclaration;
 
 		// parse ignores and remove them from test's command line
@@ -126,7 +129,7 @@ public class TestParser {
 			ignoreCheckResults.add(test.checkIgnore(array));
 		}
 
-		this.testSpecification = new TestSpecification(test, testObject, paramters.toArray(String[]::new), ignores, isSoftTest);
+		this.testSpecification = new TestSpecification(test, testObject, paramters.toArray(String[]::new), ignores, isSoftTest, isFrozenTest);
 	}
 
 	/**

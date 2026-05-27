@@ -247,7 +247,7 @@ public class TestExecutor {
 			// check arguments and create error if erroneous
 			ArgsCheckResult argsCheckResult = test.checkArgs(testArgs);
 			if (argsCheckResult.hasError()) {
-				TestResult testResult = toTestResult(test, testObjectID, argsCheckResult, specification.isSoftTest());
+				TestResult testResult = toTestResult(test, testObjectID, argsCheckResult, specification.isSoftTest(), specification.isFrozenTest());
 				build.addTestResult(testResult);
 				continue prepareTests;
 			}
@@ -256,7 +256,7 @@ public class TestExecutor {
 			for (String[] ignoreArgs : specification.getIgnores()) {
 				ArgsCheckResult ignoreCheckResult = test.checkIgnore(ignoreArgs);
 				if (ignoreCheckResult.hasError()) {
-					TestResult testResult = toTestResult(test, testObjectID, ignoreCheckResult, specification.isSoftTest());
+					TestResult testResult = toTestResult(test, testObjectID, ignoreCheckResult, specification.isSoftTest(), specification.isFrozenTest());
 					build.addTestResult(testResult);
 					continue prepareTests;
 				}
@@ -299,6 +299,7 @@ public class TestExecutor {
 			config[0] = specification.getTestObject();
 			testResult = new TestResult(testName, config);
 			testResult.setSoftTest(specification.isSoftTest());
+			testResult.setFrozenTest(specification.isFrozenTest());
 			testResults.put(specification, testResult);
 		}
 		return testResult;
@@ -436,9 +437,10 @@ public class TestExecutor {
 		return result;
 	}
 
-	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult, boolean isSoftTest) {
+	private <T> TestResult toTestResult(Test<T> test, String testObjectName, ArgsCheckResult checkResult, boolean isSoftTest, boolean isFrozenTest) {
 		TestResult result = toTestResult(test, testObjectName, checkResult);
 		result.setSoftTest(isSoftTest);
+		result.setFrozenTest(isFrozenTest);
 		return result;
 	}
 

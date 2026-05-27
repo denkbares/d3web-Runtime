@@ -51,6 +51,7 @@ public class TestResult implements Comparable<TestResult> {
 	private final Map<String, Message> expectedMessages = Collections.synchronizedMap(new TreeMap<>());
 
 	private boolean isSoftTest;
+	private boolean isFrozenTest;
 
 	/**
 	 * Creates a new TestResult for the specified test with the specified arguments.
@@ -324,5 +325,13 @@ public class TestResult implements Comparable<TestResult> {
 
 	public void setSoftTest(boolean softTest) {
 		isSoftTest = softTest;
+	}
+
+	public boolean isFrozenTest() {
+		return isFrozenTest;
+	}
+
+	public void setFrozenTest(boolean frozenTest) {
+		isFrozenTest = frozenTest;
 	}
 }

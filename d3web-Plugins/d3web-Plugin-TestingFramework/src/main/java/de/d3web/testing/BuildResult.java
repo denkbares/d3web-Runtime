@@ -222,8 +222,8 @@ public final class BuildResult {
 
 	/**
 	 * Computes the overall TestResultType of this result set, determined by the "worst" test result
-	 * Considers if the test is flagged as softTest.
-	 * If a softTest leads to failure, the result is still SUCCESS
+	 * Considers if the test is flagged as softTest or frozenTest.
+	 * If a softTest or frozenTest leads to failure, the result is still SUCCESS
 	 *
 	 * @return the overall result type
 	 * @created 24.01.2024
@@ -231,7 +231,7 @@ public final class BuildResult {
 	public static Message.Type getOverallResultConsideringSoftTests(Collection<TestResult> testResults) {
 		Message.Type overallResult = Message.Type.SUCCESS;
 		for (TestResult result : testResults) {
-			if (!result.isSoftTest()) {
+			if (!result.isSoftTest() && !result.isFrozenTest()) {
 				overallResult = Message.Type.merge(overallResult, result.getSummary().getType());
 			}
 		}

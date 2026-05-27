@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static de.d3web.testing.TestSpecification.SOFT_TEST;
+import static de.d3web.testing.TestSpecification.FROZEN_TEST;
 
 /**
  * @author Jochen Reutelshöfer (denkbares GmbH)
@@ -127,6 +128,7 @@ public class BuildResultPersistenceHandler {
 						TestParser.concatParameters(result.getConfiguration()));
 			}
 			test.setAttribute(SOFT_TEST, String.valueOf(result.isSoftTest()));
+			test.setAttribute(FROZEN_TEST, String.valueOf(result.isFrozenTest()));
 			// write unexpected messages
 			writeMessages(document, result, test, result.getTestObjectsWithUnexpectedOutcome());
 
@@ -287,6 +289,7 @@ public class BuildResultPersistenceHandler {
 				testResult.setSummary(summary);
 			}
 			testResult.setSoftTest(Boolean.parseBoolean(test.getAttribute(SOFT_TEST)));
+			testResult.setFrozenTest(Boolean.parseBoolean(test.getAttribute(FROZEN_TEST)));
 			resultList.add(testResult);
 		}
 

@@ -41,6 +41,8 @@ public class TestSpecification<T> {
 	private final String[][] ignores;
 	private final boolean isSoftTest;
 	public static final String SOFT_TEST = "softTest";
+	private final boolean isFrozenTest;
+	public static final String FROZEN_TEST = "frozenTest";
 
 	private final Map<String, Object> customInfos = new HashMap<>();
 
@@ -54,13 +56,14 @@ public class TestSpecification<T> {
 	 *                   testing. (optional)
 	 */
 	public TestSpecification(@NotNull Test<T> test, @NotNull String testObject, String[] args, String[][] ignores) {
-		this(test, testObject, args, ignores, false);
+		this(test, testObject, args, ignores, false, false);
 	}
 
-	public TestSpecification(@NotNull Test<T> test, @NotNull String testObject, String[] args, String[][] ignores, boolean isSoftTest) {
+	public TestSpecification(@NotNull Test<T> test, @NotNull String testObject, String[] args, String[][] ignores, boolean isSoftTest, boolean isFrozenTest) {
 		this.test = test;
 		List<String> argsList = Arrays.stream(args).toList();
 		this.isSoftTest = isSoftTest;
+		this.isFrozenTest = isFrozenTest;
 		this.args = argsList.toArray(new String[0]);
 
 		this.testObject = testObject;
@@ -148,16 +151,20 @@ public class TestSpecification<T> {
 		return isSoftTest;
 	}
 
+	public boolean isFrozenTest() {
+		return isFrozenTest;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		TestSpecification<?> that = (TestSpecification<?>) o;
-		return isSoftTest == that.isSoftTest && Objects.equals(test, that.test) && Objects.equals(testObject, that.testObject) && Objects.deepEquals(args, that.args) && Objects.deepEquals(ignores, that.ignores) && Objects.equals(customInfos, that.customInfos);
+		return isFrozenTest == that.isFrozenTest && isSoftTest == that.isSoftTest && Objects.equals(test, that.test) && Objects.equals(testObject, that.testObject) && Objects.deepEquals(args, that.args) && Objects.deepEquals(ignores, that.ignores) && Objects.equals(customInfos, that.customInfos);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(test, testObject, Arrays.hashCode(args), Arrays.deepHashCode(ignores), isSoftTest, customInfos);
+		return Objects.hash(test, testObject, Arrays.hashCode(args), Arrays.deepHashCode(ignores), isSoftTest, customInfos, isFrozenTest);
 	}
 }
