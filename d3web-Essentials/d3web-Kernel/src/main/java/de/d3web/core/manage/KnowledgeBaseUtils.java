@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +40,7 @@ import com.denkbares.collections.MultiMap;
 import com.denkbares.collections.MultiMaps;
 import com.denkbares.strings.Strings;
 import com.denkbares.utils.Triple;
+import de.d3web.core.knowledge.DefaultInfoStore;
 import de.d3web.core.knowledge.InfoStore;
 import de.d3web.core.knowledge.KnowledgeBase;
 import de.d3web.core.knowledge.TerminologyObject;
@@ -516,7 +518,9 @@ public final class KnowledgeBaseUtils {
 
 	/**
 	 * Extract all {@link Locale}s from a {@link KnowledgeBase} (and its containing {@link NamedObject}s). It will
-	 * return every {@link Locale} that is used for at least one property within the knowledge base.
+	 * return every {@link Locale} that is used for at least one property within the knowledge base. The returned set
+	 * has a stable, deterministic iteration order as defined by {@link DefaultInfoStore#STABLE_LOCALE_ORDER}: German
+	 * first, then English, then all other locales sorted by their language tag, ROOT last.
 	 * <p/>
 	 * Implementation note: <br> Because of searching every property within the whole knowledge base for all supported
 	 * languages is a time consuming operation, it is a good idea to store and reused the result of this operation
@@ -539,7 +543,10 @@ public final class KnowledgeBaseUtils {
 				}
 			}
 		}
-		return locales;
+		// sort for a stable, deterministic iteration order
+		List<Locale> sorted = new ArrayList<>(locales);
+		sorted.sort(DefaultInfoStore.STABLE_LOCALE_ORDER);
+		return new LinkedHashSet<>(sorted);
 	}
 
 	private static void getAvailableLocales(NamedObject object, Set<Locale> locales) {

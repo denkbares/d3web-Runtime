@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -280,9 +279,10 @@ public class KnowledgeBaseUtilsTest {
 		qc.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.GERMAN, "wf");
 		qmc.getInfoStore().addValue(MMInfo.PROMPT, Locale.FRENCH, "qcf");
 		choice1.getInfoStore().addValue(MMInfo.DESCRIPTION, Locale.CHINESE, "chinese?");
+		// also check for a stable iteration order: german first, then others sorted by language tag
 		assertEquals(
-				new HashSet<>(Arrays.asList(Locale.FRENCH, Locale.CHINESE, Locale.GERMAN)),
-				KnowledgeBaseUtils.getAvailableLocales(kb));
+				Arrays.asList(Locale.GERMAN, Locale.FRENCH, Locale.CHINESE),
+				new LinkedList<>(KnowledgeBaseUtils.getAvailableLocales(kb)));
 	}
 
 	@Test

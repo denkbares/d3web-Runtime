@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,16 +43,43 @@ import static java.util.Locale.ROOT;
 
 public class DefaultInfoStore implements InfoStore {
 
+	/**
+	 * Comparator providing a stable, deterministic order for locales, independent of hash map iteration order and
+	 * therefore independent of the JDK in use: German first, then English, then all other locales sorted by their
+	 * language tag, and the ROOT locale always last.
+	 */
+	public static final Comparator<Locale> STABLE_LOCALE_ORDER =
+			Comparator.comparingInt(DefaultInfoStore::localeRank).thenComparing(Locale::toLanguageTag);
+
+	private static int localeRank(Locale locale) {
+		if (ROOT.equals(locale)) return 3;
+		String language = locale.getLanguage();
+		if ("de".equals(language)) return 0;
+		if ("en".equals(language)) return 1;
+		return 2;
+	}
+
+	private static final Comparator<Entry<Property<?>, Object>> PROPERTY_NAME_ORDER =
+			Comparator.comparing(entry -> entry.getKey().getName());
+
 	private volatile Map<Property<?>, Object> entries = null;
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This implementation returns the entries in a stable, deterministic order: sorted by the property name, and for
+	 * multilingual properties additionally by {@link #STABLE_LOCALE_ORDER}.
+	 */
 	@Override
 	@NotNull
 	public Collection<Triple<Property<?>, Locale, Object>> entries() {
 		if (entries == null) return Collections.emptyList();
 		Collection<Triple<Property<?>, Locale, Object>> result = new ArrayList<>();
-		for (Entry<Property<?>, Object> entry : this.entries.entrySet()) {
+		List<Entry<Property<?>, Object>> sortedEntries = new ArrayList<>(this.entries.entrySet());
+		sortedEntries.sort(PROPERTY_NAME_ORDER);
+		for (Entry<Property<?>, Object> entry : sortedEntries) {
 			if (entry.getKey().isMultilingual()) {
-				for (Entry<Locale, Object> localeEntry : asMap(entry.getValue()).entrySet()) {
+				for (Entry<Locale, Object> localeEntry : sortedEntriesByLocale(asMap(entry.getValue()))) {
 					result.add(new Triple<>(entry.getKey(), localeEntry.getKey(), localeEntry.getValue()));
 				}
 			}
@@ -60,14 +90,20 @@ public class DefaultInfoStore implements InfoStore {
 		return Collections.unmodifiableCollection(result);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This implementation returns the map with a stable, deterministic iteration order as defined by
+	 * {@link #STABLE_LOCALE_ORDER}.
+	 */
 	@Override
 	@NotNull
 	public <StoredType> Map<Locale, StoredType> entries(Property<StoredType> key) {
 		keyMustNotBeNull(key);
 		if (entries == null) return Collections.emptyMap();
 		if (key.isMultilingual()) {
-			//noinspection Java9CollectionFactory,unchecked
-			return Collections.unmodifiableMap(new HashMap<>((Map<Locale, StoredType>) entries.getOrDefault(key, Collections.emptyMap())));
+			//noinspection unchecked
+			return (Map<Locale, StoredType>) getAsMultiLingualMap(key);
 		}
 		else {
 			StoredType value = key.castToStoredValue(entries.get(key));
@@ -103,7 +139,7 @@ public class DefaultInfoStore implements InfoStore {
 		}
 
 		// ok, lets see what we have and return best match
-		Collection<Locale> allAvailableLocales = getAvailableLocales(key);
+		List<Locale> allAvailableLocales = getAvailableLocales(key);
 		Locale bestLocale = Locales.findBestLocale(Arrays.asList(language), allAvailableLocales);
 		StoredType value = getEntry(key, bestLocale);
 		if (value != null) {
@@ -114,15 +150,59 @@ public class DefaultInfoStore implements InfoStore {
 		return key.getDefaultValue();
 	}
 
+	/**
+	 * Returns the locales available for the specified property, sorted by {@link #STABLE_LOCALE_ORDER} to be
+	 * deterministic and independent of hash map iteration order.
+	 */
 	@NotNull
-	private <StoredType> Collection<Locale> getAvailableLocales(Property<StoredType> key) {
+	private List<Locale> getAvailableLocales(Property<?> key) {
 		if (entries == null || !key.isMultilingual()) return Collections.emptyList();
-		return getAsMultiLingualMap(key).keySet();
+		Map<Locale, Object> raw = getRawMultiLingualMap(key);
+		if (raw.isEmpty()) return Collections.emptyList();
+		List<Locale> locales = new ArrayList<>(raw.keySet());
+		if (locales.size() > 1) locales.sort(STABLE_LOCALE_ORDER);
+		return locales;
+	}
+
+	/**
+	 * Returns an unmodifiable copy of the language-to-value map of the specified property, with a stable iteration
+	 * order as defined by {@link #STABLE_LOCALE_ORDER}. Empty and singleton maps are returned as shared immutable
+	 * instances, avoiding any sorting and copying overhead for these common cases.
+	 */
+	@NotNull
+	private Map<Locale, Object> getAsMultiLingualMap(Property<?> key) {
+		Map<Locale, Object> raw = getRawMultiLingualMap(key);
+		int size = raw.size();
+		if (size == 0) return Collections.emptyMap();
+		if (size == 1) {
+			Iterator<Entry<Locale, Object>> iterator = raw.entrySet().iterator();
+			// hasNext check in case of concurrent removal of the single entry
+			if (!iterator.hasNext()) return Collections.emptyMap();
+			Entry<Locale, Object> entry = iterator.next();
+			return Collections.singletonMap(entry.getKey(), entry.getValue());
+		}
+		Map<Locale, Object> sorted = new LinkedHashMap<>((int) Math.ceil(size / 0.75));
+		for (Entry<Locale, Object> entry : sortedEntriesByLocale(raw)) {
+			sorted.put(entry.getKey(), entry.getValue());
+		}
+		return Collections.unmodifiableMap(sorted);
 	}
 
 	@NotNull
-	private <StoredType> Map<Locale, Object> getAsMultiLingualMap(Property<StoredType> key) {
+	private Map<Locale, Object> getRawMultiLingualMap(Property<?> key) {
 		return asMap(entries.getOrDefault(key, Collections.emptyMap()));
+	}
+
+	/**
+	 * Returns the entries of the given map, sorted by {@link #STABLE_LOCALE_ORDER}. Maps with less than two entries
+	 * are returned as their plain entry set, without sorting or copying.
+	 */
+	@NotNull
+	private static Collection<Entry<Locale, Object>> sortedEntriesByLocale(Map<Locale, Object> raw) {
+		if (raw.size() <= 1) return raw.entrySet();
+		List<Entry<Locale, Object>> sortedEntries = new ArrayList<>(raw.entrySet());
+		sortedEntries.sort(Entry.comparingByKey(STABLE_LOCALE_ORDER));
+		return sortedEntries;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -134,7 +214,7 @@ public class DefaultInfoStore implements InfoStore {
 		if (entries == null) return null;
 		if (key.isMultilingual()) {
 			if (language == null) language = ROOT;
-			return key.castToStoredValue(getAsMultiLingualMap(key).get(language));
+			return key.castToStoredValue(getRawMultiLingualMap(key).get(language));
 		}
 		else {
 			return key.castToStoredValue(entries.get(key));
@@ -182,7 +262,7 @@ public class DefaultInfoStore implements InfoStore {
 		if (entries == null) return false;
 		if (key.isMultilingual()) {
 			if (language == null) language = ROOT;
-			return getAsMultiLingualMap(key).containsKey(language);
+			return getRawMultiLingualMap(key).containsKey(language);
 		}
 		else {
 			return entries.containsKey(key);
