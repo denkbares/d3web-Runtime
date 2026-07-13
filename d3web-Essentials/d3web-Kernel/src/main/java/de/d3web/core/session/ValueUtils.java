@@ -24,6 +24,11 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -107,6 +112,15 @@ public final class ValueUtils {
      * Date format to validate a time zone parsable by the other formats used in this ValueUtils.
      */
     private static final SimpleDateFormat TIME_ZONE_DATE_FORMAT = new SimpleDateFormat("z", Locale.ENGLISH);
+
+    /**
+     * Fallback for time zone names that {@link #TIME_ZONE_DATE_FORMAT} no longer parses since JDK 23 (removal of the
+     * COMPAT locale provider), e.g. generic long names like "Central European Time".
+     */
+    private static final DateTimeFormatter TIME_ZONE_NAME_FALLBACK_FORMAT = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendZoneText(TextStyle.FULL)
+            .toFormatter(Locale.ENGLISH);
 
     private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private static final SimpleDateFormat DATE_FORMAT_WITH_TIME_ZONE = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z", Locale.ENGLISH);
@@ -955,7 +969,11 @@ public final class ValueUtils {
                 return TIME_ZONE_DATE_FORMAT.getTimeZone();
             }
         } catch (ParseException ignore) {
-            throw new IllegalArgumentException("'" + timeZoneId + "' is not a valid time zone id");
+            try {
+                return TimeZone.getTimeZone(ZoneId.from(TIME_ZONE_NAME_FALLBACK_FORMAT.parse(timeZoneId.trim())));
+            } catch (DateTimeException e) {
+                throw new IllegalArgumentException("'" + timeZoneId + "' is not a valid time zone id");
+            }
         }
     }
 

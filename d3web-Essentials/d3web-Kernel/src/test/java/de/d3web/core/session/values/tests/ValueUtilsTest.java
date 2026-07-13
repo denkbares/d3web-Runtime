@@ -195,6 +195,12 @@ public class ValueUtilsTest {
 				// If anyone is inclined to write a correct parser for the locale providers, this could be improved.
 				LOGGER.warn("Skipping certain Timezone tests as a Java locale provider order has been set.");
 			}
+			else if (Java.getVersion() > 22) {
+				// since JDK 23 (COMPAT locale provider removed), SimpleDateFormat no longer parses the generic
+				// name "Central European Time" -> resolved via java.time fallback to the CLDR golden zone
+				compareTimeZones("Europe/Paris", "Central European Time");
+				compareTimeZones("Europe/Berlin", "Central European Summer Time");
+			}
 			else if (Java.getVersion() > 16) {
 				compareTimeZones("CET", "Central European Time");
 				compareTimeZones("CET", "Central European Summer Time");
