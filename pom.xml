@@ -31,7 +31,7 @@
 
 	<properties>
 		<!-- project version -->
-		<revision>2026.5-SNAPSHOT</revision>
+		<revision>2026.5</revision>
 		<denkbares-Commons.version>${revision}</denkbares-Commons.version>
 		<denkbares-Maven-Plugins.version>${revision}</denkbares-Maven-Plugins.version>
 		<d3web-DES.version>${revision}</d3web-DES.version>
