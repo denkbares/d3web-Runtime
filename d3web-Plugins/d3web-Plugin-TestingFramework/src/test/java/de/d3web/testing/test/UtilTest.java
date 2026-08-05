@@ -1,10 +1,13 @@
 package de.d3web.testing.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.CancellationException;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
@@ -39,5 +42,20 @@ public class UtilTest {
 		assertTrue(filtered.contains(string2));
 		assertTrue(filtered.contains(string4));
 
+	}
+
+	@Test
+	public void testUncheckedInterruptCheck() {
+		Thread.currentThread().interrupt();
+		try {
+			TestingUtils.checkInterruptUnchecked();
+			fail("Expected CancellationException");
+		}
+		catch (CancellationException expected) {
+			assertFalse(Thread.currentThread().isInterrupted());
+		}
+		finally {
+			Thread.interrupted();
+		}
 	}
 }
