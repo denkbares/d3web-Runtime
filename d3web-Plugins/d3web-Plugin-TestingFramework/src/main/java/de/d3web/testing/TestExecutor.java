@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +20,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +80,7 @@ public class TestExecutor {
 	private final ExecutorService executor;
 	private final ExecutorService subExecutor;
 	private final double priority;
+	private final Object taskLifecycleLock = new Object();
 	private volatile boolean aborted;
 	private volatile boolean initialized = false;
 
@@ -338,16 +341,20 @@ public class TestExecutor {
 			Collection<RunnableTest<?>> runnableTests = callablesMap.get(specification);
 			specification.prepareExecution();
 			for (RunnableTest<?> runnableTest : runnableTests) {
-				if (aborted) return;
-				try {
-					FutureTestTask task = new FutureTestTask(runnableTest, priority);
-					executor.execute(task);
+				synchronized (taskLifecycleLock) {
+					if (aborted) return;
+					FutureTestTask task = new FutureTestTask(runnableTest, priority, runnableTest.mayInterrupt());
 					futures.add(task);
-				}
-				catch (RejectedExecutionException e) {
-					// it is possible that the executor is shut down during or
-					// before adding the tests to the executor... we just catch it
-					LOGGER.debug("Rejected execution of " + runnableTest.specification.getTestName() + ": " + runnableTest.testObjectName);
+					try {
+						executor.execute(task);
+					}
+					catch (RejectedExecutionException e) {
+						futures.remove(task);
+						task.cancel(false);
+						// it is possible that the executor is shut down during or
+						// before adding the tests to the executor... we just catch it
+						LOGGER.debug("Rejected execution of " + runnableTest.specification.getTestName() + ": " + runnableTest.testObjectName);
+					}
 				}
 
 				try {
@@ -362,7 +369,6 @@ public class TestExecutor {
 	}
 
 	private void setTerminateStatus() {
-		aborted = true;
 		progressListener.updateProgress(1f, "Aborted, please wait...");
 	}
 
@@ -378,9 +384,14 @@ public class TestExecutor {
 	 */
 	public void shutDownNow() {
 		// aborted, so discard build
+		List<FutureTestTask> tasksToCancel;
+		synchronized (taskLifecycleLock) {
+			aborted = true;
+			tasksToCancel = new ArrayList<>(futures);
+		}
 		setTerminateStatus();
 		// System.out.println("Terminating executor");
-		futures.forEach(f -> f.cancel(f.mayInterrupt()));
+		tasksToCancel.forEach(f -> f.cancel(f.mayInterrupt()));
 	}
 
 	/**
@@ -390,20 +401,34 @@ public class TestExecutor {
 	 * @created 17.12.2013
 	 */
 	public void awaitTermination(long timeout, TimeUnit unit) {
-		futures.forEach(f -> {
-			try {
-				f.get(timeout, unit);
+		long timeoutNanos = unit.toNanos(timeout);
+		long startNanos = System.nanoTime();
+		try {
+			while (true) {
+				List<FutureTestTask> tasks = new ArrayList<>(futures);
+				if (tasks.isEmpty()) return;
+				for (FutureTestTask task : tasks) {
+					long elapsedNanos = System.nanoTime() - startNanos;
+					long remainingNanos = timeoutNanos - elapsedNanos;
+					if (remainingNanos <= 0 || !task.awaitExecutionCompleted(remainingNanos, TimeUnit.NANOSECONDS)) {
+						return;
+					}
+					try {
+						task.get(0, TimeUnit.NANOSECONDS);
+					}
+					catch (ExecutionException e) {
+						LOGGER.error("Exception while waiting for test shut down", e);
+					}
+					catch (TimeoutException | CancellationException ignore) {
+						// A cancelled task has still completed its actual execution at this point.
+					}
+				}
 			}
-			catch (InterruptedException e) {
-				LOGGER.info("Interrupted while waiting for test shut down");
-			}
-			catch (ExecutionException e) {
-				LOGGER.error("Exception while waiting for test shut down", e);
-			}
-			catch (TimeoutException | CancellationException ignore) {
-				// as expected...
-			}
-		});
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			LOGGER.info("Interrupted while waiting for test shut down");
+		}
 	}
 
 	/**
@@ -452,44 +477,80 @@ public class TestExecutor {
 
 		private final Runnable runnable;
 		private final double priority;
+		private final boolean mayInterrupt;
+		private final AtomicBoolean executionStarted = new AtomicBoolean(false);
+		private final AtomicBoolean executionCompleted = new AtomicBoolean(false);
+		private final CountDownLatch executionCompletedLatch = new CountDownLatch(1);
 
-		public FutureTestTask(Runnable runnable, double priority) {
+		public FutureTestTask(Runnable runnable, double priority, boolean mayInterrupt) {
 			super(runnable, null);
 			this.runnable = runnable;
 			this.priority = priority;
+			this.mayInterrupt = mayInterrupt;
+		}
+
+		@Override
+		public void run() {
+			executionStarted.set(true);
+			try {
+				super.run();
+			}
+			finally {
+				markExecutionCompleted();
+			}
+		}
+
+		@Override
+		public boolean cancel(boolean mayInterruptIfRunning) {
+			boolean cancelled = super.cancel(mayInterruptIfRunning);
+			if (cancelled && !executionStarted.get()) {
+				// A cancelled task that never started will never execute run() and must complete its lifecycle here.
+				markExecutionCompleted();
+			}
+			return cancelled;
 		}
 
 		@Override
 		public Void get() throws InterruptedException, ExecutionException {
 			if (aborted) return null;
-			Void value = super.get();
-			cleanup();
-			return value;
+			return super.get();
 		}
 
 		public boolean mayInterrupt() {
-			if (this.runnable instanceof RunnableTest<?> runnableTest) {
-				return runnableTest.mayInterrupt();
-			}
-			else {
-				return false;
-			}
+			return mayInterrupt;
 		}
 
 		@Override
 		public Void get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 			if (aborted) return null;
-			Void value = super.get(timeout, unit);
-			cleanup();
-			return value;
+			return super.get(timeout, unit);
 		}
 
 		private void cleanup() {
-			// update progress listener as task has been finished
-			if (this.runnable instanceof RunnableTest<?> runnableTest) {
-				runnableTest.testFinished();
+			try {
+				// update progress listener as task has been finished
+				if (this.runnable instanceof RunnableTest<?> runnableTest) {
+					runnableTest.testFinished();
+				}
 			}
-			futures.remove(this);
+			finally {
+				futures.remove(this);
+			}
+		}
+
+		private void markExecutionCompleted() {
+			if (executionCompleted.compareAndSet(false, true)) {
+				try {
+					cleanup();
+				}
+				finally {
+					executionCompletedLatch.countDown();
+				}
+			}
+		}
+
+		private boolean awaitExecutionCompleted(long timeout, TimeUnit unit) throws InterruptedException {
+			return executionCompletedLatch.await(timeout, unit);
 		}
 
 		@Override
@@ -541,19 +602,30 @@ public class TestExecutor {
 				parallelizedTest.registerTestTaskConsumer(new ParallelizedTest.TestTaskHandler() {
 					@Override
 					public void accept(ParallelizedTest.TestTask testTask) {
-						if (aborted) return;
-						FutureTestTask task = new FutureTestTask(() -> {
+						synchronized (taskLifecycleLock) {
+							if (aborted) return;
+							FutureTestTask task = new FutureTestTask(() -> {
+								try {
+									if (aborted) return;
+									testTask.run();
+								}
+								catch (InterruptedException e) {
+									LOGGER.info("Interrupted test sub task");
+									Thread.currentThread().interrupt();
+								}
+							}, priority, RunnableTest.this.mayInterrupt());
+							futures.add(task);
+							subTasks.add(task);
 							try {
-								if (aborted) return;
-								testTask.run();
+								subExecutor.execute(task);
 							}
-							catch (InterruptedException e) {
-								LOGGER.error("Interrupted test sub task", e);
+							catch (RejectedExecutionException e) {
+								subTasks.remove(task);
+								futures.remove(task);
+								task.cancel(false);
+								LOGGER.debug("Rejected execution of test sub task for " + specification.getTestName() + ": " + testObjectName);
 							}
-						}, priority);
-						subExecutor.execute(task);
-						futures.add(task);
-						subTasks.add(task);
+						}
 					}
 
 					@Override
@@ -563,7 +635,7 @@ public class TestExecutor {
 								subTask.get();
 							}
 						}
-						catch (InterruptedException | ExecutionException e) {
+						catch (InterruptedException | ExecutionException | CancellationException e) {
 							testResult.addUnexpectedMessage(testObjectName, new Message(Type.ABORTED, "Sub-test was aborted"));
 						}
 					}
@@ -591,6 +663,7 @@ public class TestExecutor {
 					return;
 				}
 				Test<T> test = specification.getTest();
+				TestingUtils.checkInterrupt();
 				Message message = test.execute(specification, testObject);
 
 				for (FutureTestTask subTask : subTasks) {
@@ -609,7 +682,7 @@ public class TestExecutor {
 					}
 				}
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException | CancellationException e) {
 				testResult.addUnexpectedMessage(testObjectName, new Message(Type.ABORTED, "Test was aborted"));
 			}
 			catch (Throwable e) { // NOSONAR

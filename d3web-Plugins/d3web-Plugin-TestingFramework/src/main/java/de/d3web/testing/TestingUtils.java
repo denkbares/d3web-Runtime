@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.regex.Pattern;
 
 import com.denkbares.collections.DefaultMultiMap;
@@ -49,6 +50,16 @@ public class TestingUtils {
 	public static void checkInterrupt() throws InterruptedException {
 		if (Thread.interrupted()) {
 			throw new InterruptedException();
+		}
+	}
+
+	/**
+	 * Unchecked variant of {@link #checkInterrupt()} for callbacks and cached computations that cannot declare a
+	 * checked exception.
+	 */
+	public static void checkInterruptUnchecked() {
+		if (Thread.interrupted()) {
+			throw new CancellationException("Test was interrupted");
 		}
 	}
 
