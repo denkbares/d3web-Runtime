@@ -45,6 +45,11 @@ public class MMInfo {
 	public static final Property<String> DESCRIPTION = Property.getProperty("description", String.class);
 
 	/**
+	 * Similar to description, but should be shown above the question or choice it belongs to.
+	 */
+	public static final Property<String> DESCRIPTION_ABOVE = Property.getProperty("descriptionAbove", String.class);
+
+	/**
 	 * The human readable name (prompt) for knowledge base object. This attribute may be used by any object that will be
 	 * represented to the user, especially questions, choices and solutions, but also for question containers.
 	 */
