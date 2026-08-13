@@ -446,7 +446,13 @@ public class BasicProperties {
 	public static Abnormality getAbnormality(Question question, Session session) {
 		Abnormality abnormality = getAbnormality(question);
 		if (abnormality instanceof DynamicAbnormality) {
-			abnormality = ((DynamicAbnormality) abnormality).eval(session);
+			// evaluating a dynamic abnormality reads the session state, and sessions are not thread-safe;
+			// we sync here (instead of requiring it from all callers), since this method is typically
+			// called from UI/rendering code that is not aware that the session is accessed
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (session) {
+				abnormality = ((DynamicAbnormality) abnormality).eval(session);
+			}
 		}
 		return abnormality;
 	}
