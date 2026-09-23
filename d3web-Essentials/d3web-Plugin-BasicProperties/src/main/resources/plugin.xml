@@ -172,7 +172,7 @@
 
 	<extension plugin-id="d3web-Kernel-ExtensionPoints" point-id="Property" id="descriptionAbove">
 		<parameter id="name" value="descriptionAbove" />
-		<parameter id="description" value="allows to define alternative labels" />
+		<parameter id="description" value="similar to description, but should be shown above the question or choice it belongs to" />
 		<parameter id="multilingual" value="true" />
 		<parameter id="autosave" value="mminfo" />
 		<parameter id="priority" value="5" />
