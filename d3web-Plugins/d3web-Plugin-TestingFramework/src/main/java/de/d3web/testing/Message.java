@@ -159,6 +159,7 @@ public class Message implements Comparable<Message> {
 
 	@Override
 	public String toString() {
+		if (getText() == null) return getType().toString();
 		return getType() + ": " + getText();
 	}
 
