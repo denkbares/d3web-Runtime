@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2013 denkbares GmbH
- * 
+ *
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
@@ -33,7 +33,7 @@ import de.d3web.testing.Message.Type;
 import de.d3web.testing.TestResult;
 
 /**
- * 
+ *
  * @author Jochen Reutelshöfer
  * @created 17.07.2013
  */
@@ -49,7 +49,7 @@ public class TestResultTest {
 	public void testToString() {
 		TestResult result = createTestResult();
 		assertEquals(
-				"testname (configuration: some configuration parameters, successes: 0): {key: FAILURE: m1, key2: ERROR: null}",
+				"testname (configuration: some configuration parameters, successes: 0): {key: FAILURE: m1, key2: ERROR}",
 				result.toString());
 
 		assertTrue(result.hasConfiguration());
@@ -75,7 +75,6 @@ public class TestResultTest {
 		// result3 with same content as result1
 		TestResult result3 = createTestResult();
 		assertTrue(result.compareTo(result3) == 0);
-
 	}
 
 	@Test
