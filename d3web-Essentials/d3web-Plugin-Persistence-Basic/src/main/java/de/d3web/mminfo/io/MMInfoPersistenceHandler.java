@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,6 +34,7 @@ import org.xml.sax.SAXException;
 
 import com.denkbares.progress.ProgressInputStream;
 import com.denkbares.progress.ProgressListener;
+import com.denkbares.utils.XMLUtils;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.KnowledgeReader;
 import de.d3web.core.io.KnowledgeWriter;
@@ -70,9 +69,7 @@ public class MMInfoPersistenceHandler implements KnowledgeReader, KnowledgeWrite
 		MMInfoContentHandler handler = new MMInfoContentHandler(dummyPersistence);
 		try {
 			InputStream in = new ProgressInputStream(stream, listener);
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser parser = factory.newSAXParser();
-			parser.parse(in, handler);
+			XMLUtils.newSAXParser().parse(in, handler);
 		}
 		catch (SAXException e) {
 			if (e.getException() instanceof IOException) {

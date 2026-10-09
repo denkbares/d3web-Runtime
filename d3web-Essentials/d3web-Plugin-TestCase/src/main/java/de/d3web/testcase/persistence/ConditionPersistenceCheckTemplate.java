@@ -31,6 +31,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.denkbares.utils.XMLUtils;
 import de.d3web.core.inference.condition.Condition;
 import de.d3web.core.io.KnowledgeBasePersistence;
 import de.d3web.core.io.PersistenceManager;
@@ -78,7 +79,7 @@ public class ConditionPersistenceCheckTemplate implements CheckTemplate {
 
 	public Document getDocument() throws ParserConfigurationException, SAXException, IOException {
 		if (this.document == null) {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factory = XMLUtils.newDocumentBuilderFactory();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			this.document = builder.parse(new InputSource(new StringReader(conditionXml)));
 		}
