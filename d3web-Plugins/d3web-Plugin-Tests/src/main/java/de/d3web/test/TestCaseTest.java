@@ -38,10 +38,10 @@ import de.d3web.testcase.model.TestCase;
 import de.d3web.testing.AbstractTest;
 import de.d3web.testing.Message;
 import de.d3web.testing.Message.Type;
+import de.d3web.testing.TestContext;
 import de.d3web.testing.TestObjectContainer;
-import de.d3web.testing.TestObjectProvider;
-import de.d3web.testing.TestObjectProviderManager;
 import de.d3web.testing.TestParameter;
+import de.d3web.testing.TestSpecification;
 import de.d3web.testing.TestingUtils;
 
 import static de.d3web.testcase.model.TestCase.Settings;
@@ -66,8 +66,21 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 	}
 
 	@Override
+	public Message execute(TestSpecification<TestCase> specification, TestCase testCase, TestContext context) throws InterruptedException {
+		return execute(testCase, specification.getArguments(), context);
+	}
+
+	/**
+	 * Executes the test outside a build, taking the knowledge bases from the plugged and registered providers, see
+	 * {@link TestContext#ofPluggedProviders()}.
+	 */
+	@Override
 	public Message execute(TestCase testCase, String[] args, String[]... ignores) throws InterruptedException {
-		Collection<KnowledgeBase> kbs = getKnowledgeBases(args);
+		return execute(testCase, args, TestContext.ofPluggedProviders());
+	}
+
+	private Message execute(TestCase testCase, String[] args, TestContext context) throws InterruptedException {
+		Collection<KnowledgeBase> kbs = getKnowledgeBases(args, context);
 		if (kbs == null || kbs.isEmpty()) {
 			return new Message(Type.FAILURE, "No Knowledge base found!");
 		}
@@ -166,17 +179,11 @@ public class TestCaseTest extends AbstractTest<TestCase> {
 		return message;
 	}
 
-	private Collection<KnowledgeBase> getKnowledgeBases(String[] args) {
+	private Collection<KnowledgeBase> getKnowledgeBases(String[] args, TestContext context) {
 		if (args.length == 0) return null;
 		Collection<KnowledgeBase> result = new ArrayList<>();
-		for (TestObjectProvider testObjectProvider : TestObjectProviderManager.getTestObjectProviders()) {
-			List<TestObjectContainer<KnowledgeBase>> testObjects = testObjectProvider.getTestObjects(
-					KnowledgeBase.class, args[0]);
-			if (!testObjects.isEmpty()) {
-				for (TestObjectContainer<KnowledgeBase> testObjectContainer : testObjects) {
-					result.add(testObjectContainer.getTestObject());
-				}
-			}
+		for (TestObjectContainer<KnowledgeBase> testObjectContainer : context.getTestObjects(KnowledgeBase.class, args[0])) {
+			result.add(testObjectContainer.getTestObject());
 		}
 		return result;
 	}

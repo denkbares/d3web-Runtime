@@ -56,6 +56,21 @@ public interface Test<T> {
 	Message execute(TestSpecification<T> specification, T testObject) throws InterruptedException;
 
 	/**
+	 * Executes the test within the context of its build, see {@link #execute(TestSpecification, Object)}. This is the
+	 * method the {@link TestExecutor} calls. Tests that need further test objects of the build (e.g. the knowledge
+	 * bases a test case is checked against) overwrite this method and look them up in the specified context. By
+	 * default, the context is ignored.
+	 *
+	 * @param specification the specification of the particular test, including parameters, ignores, ...
+	 * @param testObject    object to be tested (e.g., a knowledge base)
+	 * @param context       the context of the build the test is executed in
+	 * @return a Message containing information about the outcome of the test
+	 */
+	default Message execute(TestSpecification<T> specification, T testObject, TestContext context) throws InterruptedException {
+		return execute(specification, testObject);
+	}
+
+	/**
 	 * This method is called to calculate a new summary message based in the specified test results
 	 * containing the previously created messages of this test. The implementations of this method
 	 * shall call TestResult.setSummary(...) to initialize or update the summary before the method

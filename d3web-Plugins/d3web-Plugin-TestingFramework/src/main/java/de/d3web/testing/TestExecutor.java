@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,7 +70,7 @@ public class TestExecutor {
 			Runtime.getRuntime().availableProcessors(),
 			r -> new Thread(r, "Default-SubTest-Executor-" + THREAD_NUMBER.incrementAndGet()));
 
-	private final Collection<TestObjectProvider> objectProviders;
+	private final TestContext context;
 	private final List<TestSpecification<?>> specifications;
 	private final ProgressListener progressListener;
 	private final BuildResult build;
@@ -120,7 +119,7 @@ public class TestExecutor {
 	 *                        are multiple TestExecutor for the same {@link ExecutorService}
 	 */
 	public TestExecutor(Collection<TestObjectProvider> providers, List<TestSpecification<?>> specifications, ProgressListener listener, ExecutorService executorService, ExecutorService subExecutorService, double priority) {
-		this.objectProviders = providers;
+		this.context = new TestContext(providers);
 		this.specifications = specifications;
 		this.progressListener = listener;
 		this.build = new BuildResult();
@@ -225,17 +224,9 @@ public class TestExecutor {
 	}
 
 	private <T> Collection<TestObjectContainer<T>> getTestObjects(TestSpecification<T> specification) {
-
-		Collection<TestObjectContainer<T>> allTestObjects = new LinkedList<>();
-		Test<T> test = specification.getTest();
-		Class<T> objectClass = test.getTestObjectClass();
+		Class<T> objectClass = specification.getTest().getTestObjectClass();
 		if (objectClass == null) return Collections.emptyList();
-
-		String testObjectID = specification.getTestObject();
-		for (TestObjectProvider testObjectProvider : objectProviders) {
-			allTestObjects.addAll(testObjectProvider.getTestObjects(objectClass, testObjectID));
-		}
-		return allTestObjects;
+		return context.getTestObjects(objectClass, specification.getTestObject());
 	}
 
 	@SuppressWarnings("UnnecessaryLabelOnContinueStatement")
@@ -664,7 +655,7 @@ public class TestExecutor {
 				}
 				Test<T> test = specification.getTest();
 				TestingUtils.checkInterrupt();
-				Message message = test.execute(specification, testObject);
+				Message message = test.execute(specification, testObject, context);
 
 				for (FutureTestTask subTask : subTasks) {
 					subTask.get();
