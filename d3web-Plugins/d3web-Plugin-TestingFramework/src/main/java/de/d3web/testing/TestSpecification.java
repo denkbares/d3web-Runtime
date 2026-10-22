@@ -155,16 +155,17 @@ public class TestSpecification<T> {
 		return isFrozenTest;
 	}
 
+	// custom infos belong to the current run and change while the specification is a key of the running build
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		TestSpecification<?> that = (TestSpecification<?>) o;
-		return isFrozenTest == that.isFrozenTest && isSoftTest == that.isSoftTest && Objects.equals(test, that.test) && Objects.equals(testObject, that.testObject) && Objects.deepEquals(args, that.args) && Objects.deepEquals(ignores, that.ignores) && Objects.equals(customInfos, that.customInfos);
+		return isFrozenTest == that.isFrozenTest && isSoftTest == that.isSoftTest && Objects.equals(test, that.test) && Objects.equals(testObject, that.testObject) && Objects.deepEquals(args, that.args) && Objects.deepEquals(ignores, that.ignores);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(test, testObject, Arrays.hashCode(args), Arrays.deepHashCode(ignores), isSoftTest, customInfos, isFrozenTest);
+		return Objects.hash(test, testObject, Arrays.hashCode(args), Arrays.deepHashCode(ignores), isSoftTest, isFrozenTest);
 	}
 }
