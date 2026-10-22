@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -307,7 +306,8 @@ public class TestExecutor {
 			return Collections.emptyList();
 		}
 
-		Collection<RunnableTest<T>> result = new HashSet<>();
+		// keeps the order of the test objects, providers may order them for faster execution
+		Collection<RunnableTest<T>> result = new ArrayList<>();
 		boolean noTestObjects = true;
 
 		for (final TestObjectContainer<T> testObjectContainer : testObjects) {
@@ -464,10 +464,14 @@ public class TestExecutor {
 		return this.aborted;
 	}
 
+	// tasks of all executors sharing an executor service, the earlier submitted task wins among equal priorities
+	private static final AtomicLong TASK_SEQUENCE = new AtomicLong();
+
 	class FutureTestTask extends FutureTask<Void> implements Comparable<FutureTestTask> {
 
 		private final Runnable runnable;
 		private final double priority;
+		private final long sequence = TASK_SEQUENCE.getAndIncrement();
 		private final boolean mayInterrupt;
 		private final AtomicBoolean executionStarted = new AtomicBoolean(false);
 		private final AtomicBoolean executionCompleted = new AtomicBoolean(false);
@@ -546,7 +550,8 @@ public class TestExecutor {
 
 		@Override
 		public int compareTo(@NotNull TestExecutor.FutureTestTask other) {
-			return Double.compare(other.priority, this.priority);
+			int byPriority = Double.compare(other.priority, this.priority);
+			return byPriority != 0 ? byPriority : Long.compare(this.sequence, other.sequence);
 		}
 	}
 
