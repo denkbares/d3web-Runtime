@@ -80,6 +80,7 @@ public final class PSMethodStateTransition extends PSMethodAdapter implements Se
 				// use the first one
 				if (maxFact == null) {
 					maxFact = fact;
+					maxNumber = stf.number;
 				}
 				// and overwrite existing max if if the current one is newer
 				else {
