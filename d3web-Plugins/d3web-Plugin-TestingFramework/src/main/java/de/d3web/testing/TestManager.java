@@ -54,20 +54,35 @@ public class TestManager {
 	private static Test<?> findTestByParameter(String testName, String parameterName) {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID, Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			Object test = extension.getSingleton();
+			// check the declaration first, so only the requested test gets instantiated
+			List<String> parameters = extension.getParameters(parameterName);
+			if (parameters == null || !parameters.contains(testName)) continue;
+			Object test = getSingleton(extension);
 			if (test instanceof Test) {
-				List<String> parameters = extension.getParameters(parameterName);
-				if (parameters == null) continue;
-				if (parameters.contains(testName)) {
-					return (Test<?>) test;
-				}
+				return (Test<?>) test;
 			}
-			else {
-				LOGGER.warn("extension of class '" + extension.getClass().getName() +
+			if (test != null) {
+				LOGGER.warn("extension of class '" + test.getClass().getName() +
 						"' is not of the expected type " + Test.class.getName());
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the singleton of the specified test extension, or null if it cannot be instantiated, e.g. because its
+	 * class is not on the classpath. Skipping it prevents a single broken declaration from breaking the lookup of all
+	 * other tests.
+	 */
+	private static Object getSingleton(Extension extension) {
+		try {
+			return extension.getSingleton();
+		}
+		catch (LinkageError e) {
+			LOGGER.warn("Skipping test extension '{}' of plugin '{}', it cannot be instantiated",
+					extension.getID(), extension.getPluginID(), e);
+			return null;
+		}
 	}
 
 	/**
@@ -82,8 +97,8 @@ public class TestManager {
 	public static String getTestName(Test<?> test) {
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID, Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			Object singleton = extension.getSingleton();
-			if (singleton.equals(test)) return extension.getName();
+			Object singleton = getSingleton(extension);
+			if (singleton != null && singleton.equals(test)) return extension.getName();
 		}
 		return null;
 	}
@@ -98,11 +113,11 @@ public class TestManager {
 		List<Test<?>> result = new ArrayList<>();
 		Extension[] extensions = PluginManager.getInstance().getExtensions(Test.PLUGIN_ID, Test.EXTENSION_POINT_ID);
 		for (Extension extension : extensions) {
-			Object singleton = extension.getSingleton();
+			Object singleton = getSingleton(extension);
 			if (singleton instanceof Test) {
 				result.add((Test<?>) singleton);
 			}
-			else {
+			else if (singleton != null) {
 				LOGGER.warn("extension of class '" + extension.getClass().getName() +
 						"' is not of the expected type " + Test.class.getName());
 			}
