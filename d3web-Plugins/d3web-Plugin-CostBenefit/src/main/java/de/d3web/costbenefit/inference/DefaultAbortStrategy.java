@@ -100,6 +100,7 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	public void nextStep(Path path, Session session) throws AbortException {
 		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
 		sessionObject.steps++;
+		sessionObject.model.setRunningSteps(sessionObject.steps);
 		if (isAbortReached(sessionObject) || AbortStrategy.isPropagationTerminated(session)) {
 			throw new AbortException();
 		}

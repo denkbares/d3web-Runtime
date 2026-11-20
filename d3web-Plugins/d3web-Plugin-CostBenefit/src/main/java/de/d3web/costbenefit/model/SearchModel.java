@@ -66,9 +66,12 @@ public class SearchModel {
 	private final Set<StateTransition> applicableStateTransitions;
 	private Set<StateTransition> usefulStateTransitions = null;
 
-	private boolean aborted = false;
+	// may be set by another thread to abort the running calculation
+	private volatile boolean aborted = false;
 	private long calculationTime = -1;
 	private int calculationSteps = -1;
+	// only to show the progress of the running calculation (by another thread), so it is not synchronized
+	private long runningSteps = 0;
 
 	public SearchModel(Session session) {
 		this.session = session;
@@ -445,6 +448,26 @@ public class SearchModel {
 	 */
 	public void setCalculationSteps(int calculationSteps) {
 		this.calculationSteps = calculationSteps;
+	}
+
+	/**
+	 * Gets the number of steps the running calculation has processed so far, as counted by its abort strategy (see
+	 * {@code DefaultAbortStrategy}). It is only meant to show the progress of a running calculation, e.g. by another
+	 * thread, so the value may be slightly outdated.
+	 *
+	 * @return the steps processed so far
+	 */
+	public long getRunningSteps() {
+		return runningSteps;
+	}
+
+	/**
+	 * Sets the number of steps the running calculation has processed so far, see {@link #getRunningSteps()}.
+	 *
+	 * @param runningSteps the steps processed so far
+	 */
+	public void setRunningSteps(long runningSteps) {
+		this.runningSteps = runningSteps;
 	}
 
 	private static class TargetComparator implements Comparator<Target> {
