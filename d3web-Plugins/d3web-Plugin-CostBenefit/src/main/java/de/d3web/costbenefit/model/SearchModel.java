@@ -50,7 +50,6 @@ import de.d3web.costbenefit.inference.SupportiveStateTransitions;
  *
  * @author Markus Friedrich (denkbares GmbH)
  */
-@SuppressWarnings("JavadocDeclaration")
 public class SearchModel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchModel.class);
 
