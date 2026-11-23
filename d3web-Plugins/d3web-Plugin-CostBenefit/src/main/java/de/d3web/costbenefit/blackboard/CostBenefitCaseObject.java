@@ -49,6 +49,7 @@ import de.d3web.core.session.blackboard.Blackboard;
 import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.SessionObject;
+import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.protocol.TextProtocolEntry;
 import de.d3web.costbenefit.CostBenefitUtil;
 import de.d3web.costbenefit.inference.StateTransition;
@@ -74,6 +75,7 @@ public class CostBenefitCaseObject implements SessionObject {
 	private final Set<Target> discriminatingTargets = new HashSet<>();
 	private final Session session;
 	private boolean abortedManuallySetTarget = false;
+	private ProtocolEntry recentSearchEntry = null;
 	private boolean manualMode = false;
 	private Set<TerminologyObject> conflictingObjects = new HashSet<>();
 	private QContainer unreachedTarget = null;
@@ -207,6 +209,19 @@ public class CostBenefitCaseObject implements SessionObject {
 
 	public boolean isAbortedManuallySetTarget() {
 		return abortedManuallySetTarget;
+	}
+
+	/**
+	 * Returns the protocol entry of the most recent search for this case object, to check whether the session has been
+	 * changed since the search (see PSMethodCostBenefit#canContinuePath).
+	 */
+	@Nullable
+	public ProtocolEntry getRecentSearchEntry() {
+		return recentSearchEntry;
+	}
+
+	public void setRecentSearchEntry(@Nullable ProtocolEntry recentSearchEntry) {
+		this.recentSearchEntry = recentSearchEntry;
 	}
 
 	public void setAbortedManuallySetTarget(boolean abortedManuallySetTarget) {

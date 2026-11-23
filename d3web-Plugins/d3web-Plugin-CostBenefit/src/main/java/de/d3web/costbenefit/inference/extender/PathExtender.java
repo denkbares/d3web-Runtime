@@ -70,7 +70,22 @@ public class PathExtender implements SearchAlgorithm, SessionObjectSource<PathEx
 	public synchronized void search(Session session, SearchModel model) {
 		// search using the delegate algorithm
 		delegate.search(session, model);
+		extendPath(session, model);
+	}
 
+	@Override
+	public boolean canContinue(Session session, SearchModel model) {
+		return delegate.canContinue(session, model);
+	}
+
+	@Override
+	public synchronized void continueSearch(Session session, SearchModel model) {
+		// continue the search of the delegate algorithm, and extend its path as after a new search
+		delegate.continueSearch(session, model);
+		extendPath(session, model);
+	}
+
+	private void extendPath(Session session, SearchModel model) {
 		// rest the info object to reflect only the most recent search
 		PathExtenderInfo info = session.getSessionObject(this);
 		info.pathBeforeModification = null;

@@ -37,6 +37,18 @@ public interface AbortStrategy {
 	void init(SearchModel model);
 
 	/**
+	 * Initializes the abortion strategy for continuing an aborted search on the SearchModel (see {@link
+	 * SearchAlgorithm#continueSearch(Session, SearchModel)}). Strategies limiting the steps of a search should continue
+	 * counting from the steps calculated so far ({@link SearchModel#getRunningSteps()}). By default, the strategy is
+	 * initialized as for a new search.
+	 *
+	 * @param model the search model to prepare the abort strategy for
+	 */
+	default void initContinued(SearchModel model) {
+		init(model);
+	}
+
+	/**
 	 * This method decides if the path search should be aborted, even if (potentially) the best path is not found yet.
 	 * The selected abort strategy if the search model is notified with each test steps that is expanded, so the
 	 * AbortStrategy, can stop the calculation by throwing an {@link AbortException}, depending on the current state of

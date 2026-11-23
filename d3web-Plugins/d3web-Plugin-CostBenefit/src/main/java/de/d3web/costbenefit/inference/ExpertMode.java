@@ -95,39 +95,11 @@ public class ExpertMode implements SessionObject {
 	private Comparator<QContainer> adapterStatesTargetComparator;
 
 	/**
-	 * The search model and the abort strategy of the most recent {@link #recalculate(Relaxation)}, so trying again
-	 * continues relaxing from there, as long as no other calculation has been performed in between.
+	 * The search model and the abort strategy of the most recent {@link #recalculate()}, so trying again continues
+	 * relaxing from there, as long as no other calculation has been performed in between.
 	 */
 	private SearchModel relaxedSearchModel = null;
 	private DefaultAbortStrategy relaxedAbortStrategy = null;
-
-	/**
-	 * Specifies how {@link #recalculate(Relaxation)} relaxes the abort strategy of the most recent calculation.
-	 */
-	public enum Relaxation {
-		/**
-		 * Increases the increasing factor by one, i.e. only the number of steps searched if no target has been reached
-		 * yet. The steps searched after a target has been reached remain unchanged.
-		 */
-		INCREMENT,
-		/**
-		 * Extends the search by half: increases the maximum steps by 50%, keeping the increasing factor, so both the
-		 * steps searched after a target has been reached and the steps searched if no target has been reached yet are
-		 * increased by 50%.
-		 */
-		HALF;
-
-		public DefaultAbortStrategy relax(DefaultAbortStrategy strategy) {
-			int maxSteps = strategy.getMaxSteps();
-			float increasingFactor = strategy.getIncreasingFactor();
-			return switch (this) {
-				case INCREMENT -> new DefaultAbortStrategy(maxSteps, increasingFactor + 1);
-				case HALF -> new DefaultAbortStrategy(
-						(int) Math.min(Integer.MAX_VALUE, Math.max(maxSteps + 1L, Math.round(maxSteps * 1.5))),
-						increasingFactor);
-			};
-		}
-	}
 
 	/**
 	 * sort descending by the benefit of the target, with no regard to the target's costs
@@ -648,40 +620,47 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
-	 * Repeats the most recent calculation that has been performed, but increases the increasing factor of the abort
-	 * strategy by one, see {@link #recalculate(Relaxation)}.
+	 * Returns true if the most recent calculation has been aborted (e.g. by its abort strategy) and can be continued by
+	 * {@link #recalculate()}, instead of being repeated: the session has not been changed since, and the search
+	 * algorithm is able to continue the calculation.
+	 */
+	public boolean canContinueCalculation() {
+		return psm.canContinuePath(pso);
+	}
+
+	/**
+	 * Extends the most recent calculation by half: the abort strategy of that calculation is relaxed to allow 50% more
+	 * steps, see {@link #getRelaxedAbortStrategy()}. If possible, the aborted calculation is continued instead of being
+	 * repeated (see {@link #canContinueCalculation()}), so only the additional steps are calculated; the relaxed abort
+	 * strategy then limits the steps of both together. If the most recent calculation has been performed by this
+	 * method, its relaxed abort strategy is relaxed further, so repeated calls keep extending the search.
 	 *
 	 * @throws AbortException if a target was selected, but no path can be established with this calculation
 	 */
 	public void recalculate() throws AbortException {
-		recalculate(Relaxation.INCREMENT);
-	}
-
-	/**
-	 * Repeats the most recent calculation that has been performed, but relaxes the abort strategy of that calculation
-	 * as specified, see {@link #getRelaxedAbortStrategy(Relaxation)}. If the most recent calculation has been performed
-	 * by this method, its relaxed abort strategy is relaxed further, so repeated calls keep extending the search.
-	 *
-	 * @param relaxation how to relax the abort strategy
-	 * @throws AbortException if a target was selected, but no path can be established with this calculation
-	 */
-	public void recalculate(Relaxation relaxation) throws AbortException {
 		// check if a previous search has been executed
 		SearchModel searchModel = pso.getSearchModel();
-		DefaultAbortStrategy relaxed = getRelaxedAbortStrategy(relaxation);
+		DefaultAbortStrategy relaxed = getRelaxedAbortStrategy();
 		if (searchModel == null || relaxed == null) return;
 
 		SearchAlgorithm algorithm = psm.getSearchAlgorithm();
 		AbortStrategy existing = algorithm.getAbortStrategy();
 		algorithm.setAbortStrategy(relaxed);
+		// if possible, the aborted calculation is continued, instead of repeating the steps already calculated
+		boolean continued = canContinueCalculation();
 		try {
-			repeatCalculation();
+			if (continued) {
+				psm.continuePath(pso);
+			}
+			else {
+				repeatCalculation();
+			}
 		}
 		finally {
 			algorithm.setAbortStrategy(existing);
-			// remember the relaxed strategy, if a new calculation has been performed with it
+			// remember the relaxed strategy, if a calculation has been performed (or continued) with it
 			SearchModel recalculated = pso.getSearchModel();
-			if (recalculated != searchModel) {
+			if (continued || recalculated != searchModel) {
 				relaxedSearchModel = recalculated;
 				relaxedAbortStrategy = relaxed;
 			}
@@ -715,7 +694,7 @@ public class ExpertMode implements SessionObject {
 
 	/**
 	 * Returns the abort strategy used by the most recent calculation: the relaxed one, if that calculation has been
-	 * performed by {@link #recalculate(Relaxation)}, otherwise the one of the search algorithm, as configured in the
+	 * performed by {@link #recalculate()}, otherwise the one of the search algorithm, as configured in the
 	 * knowledge base. If the search algorithm uses an abort strategy other than {@link DefaultAbortStrategy}, a
 	 * strategy limited to the steps of the most recent calculation is returned.
 	 *
@@ -731,17 +710,20 @@ public class ExpertMode implements SessionObject {
 	}
 
 	/**
-	 * Returns the abort strategy {@link #recalculate(Relaxation)} would use: the abort strategy of the most recent
-	 * calculation (see {@link #getRecentAbortStrategy()}), relaxed as specified.
+	 * Returns the abort strategy {@link #recalculate()} would use: the abort strategy of the most recent calculation
+	 * (see {@link #getRecentAbortStrategy()}) with 50% more maximum steps and the same increasing factor, so both the
+	 * steps searched after a target has been reached and the steps searched if no target has been reached yet are
+	 * increased by 50%.
 	 *
-	 * @param relaxation how to relax the abort strategy
 	 * @return the relaxed abort strategy, or null if there has been no calculation yet
 	 */
 	@Nullable
-	public DefaultAbortStrategy getRelaxedAbortStrategy(Relaxation relaxation) {
+	public DefaultAbortStrategy getRelaxedAbortStrategy() {
 		DefaultAbortStrategy recent = getRecentAbortStrategy();
 		if (recent == null) return null;
-		return relaxation.relax(recent);
+		int maxSteps = recent.getMaxSteps();
+		long relaxedSteps = Math.max(maxSteps + 1L, Math.round(maxSteps * 1.5));
+		return new DefaultAbortStrategy((int) Math.min(Integer.MAX_VALUE, relaxedSteps), recent.getIncreasingFactor());
 	}
 
 	/**

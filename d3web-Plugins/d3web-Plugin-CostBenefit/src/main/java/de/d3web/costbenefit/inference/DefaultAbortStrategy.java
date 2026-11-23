@@ -97,6 +97,13 @@ public class DefaultAbortStrategy implements AbortStrategy, SessionObjectSource<
 	}
 
 	@Override
+	public void initContinued(SearchModel model) {
+		init(model);
+		// the continued search keeps counting the steps calculated so far
+		model.getSession().getSessionObject(this).steps = model.getRunningSteps();
+	}
+
+	@Override
 	public void nextStep(Path path, Session session) throws AbortException {
 		DefaultAbortStrategySessionObject sessionObject = session.getSessionObject(this);
 		sessionObject.steps++;

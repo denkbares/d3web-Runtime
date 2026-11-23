@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,7 @@ import de.d3web.core.inference.PSMethodAdapter;
 import de.d3web.core.inference.PSMethodInit;
 import de.d3web.core.inference.PostHookablePSMethod;
 import de.d3web.core.inference.PropagationEntry;
+import de.d3web.core.inference.PropagationManager;
 import de.d3web.core.inference.StrategicSupport;
 import de.d3web.core.inference.condition.CondAnd;
 import de.d3web.core.inference.condition.CondEqual;
@@ -65,6 +67,7 @@ import de.d3web.core.session.blackboard.Fact;
 import de.d3web.core.session.blackboard.FactFactory;
 import de.d3web.core.session.blackboard.Facts;
 import de.d3web.core.session.builder.SessionBuilder;
+import de.d3web.core.session.protocol.ProtocolEntry;
 import de.d3web.core.session.values.ChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
 import de.d3web.costbenefit.CostBenefitUtil;
@@ -353,10 +356,77 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 		return true;
 	}
 
+	/**
+	 * Returns true if the most recent search for the case object can be continued, see {@link
+	 * #continuePath(CostBenefitCaseObject)}: it has been aborted (e.g. by its abort strategy) without finding a path,
+	 * the session has not been changed since, and the search algorithm is able to continue it.
+	 */
+	boolean canContinuePath(CostBenefitCaseObject caseObject) {
+		Session session = caseObject.getSession();
+		SearchModel searchModel = caseObject.getSearchModel();
+		if (searchModel == null || !searchModel.isAborted()) return false;
+		// if a path has been found, it has been selected, so the session has been changed since the search
+		if (searchModel.getBestCostBenefitTarget() != null) return false;
+		// the session has not been changed since the search, if the most recent protocol entry is the one of the search
+		List<ProtocolEntry> history = session.getProtocol().getProtocolHistory();
+		ProtocolEntry searchEntry = caseObject.getRecentSearchEntry();
+		if (searchEntry == null || history.isEmpty() || history.get(history.size() - 1) != searchEntry) return false;
+		return searchAlgorithm.canContinue(session, searchModel);
+	}
+
+	/**
+	 * Continues the most recent search for the case object, using the current abort strategy of the search algorithm,
+	 * and selects the path to the best target, as the path of a new search would have been selected. It must only be
+	 * called if {@link #canContinuePath(CostBenefitCaseObject)} returns true.
+	 * <p>
+	 * Unlike calculating a new path, it must not be called inside a propagation frame: committing the frame would start
+	 * a new search, if no path could be found. Instead, the search does not change the session, and only if a path has
+	 * been found, it is selected in a propagation frame of its own.
+	 *
+	 * @param caseObject the case object to continue the search for
+	 * @throws AbortException if the search was for a manually selected target, and still no path could be found
+	 */
+	void continuePath(CostBenefitCaseObject caseObject) throws AbortException {
+		Session session = caseObject.getSession();
+		SearchModel searchModel = Objects.requireNonNull(caseObject.getSearchModel());
+		search(session, searchModel, () -> searchAlgorithm.continueSearch(session, searchModel));
+
+		Target bestTarget = searchModel.getBestCostBenefitTarget();
+		if (bestTarget == null || bestTarget.getMinPath() == null) {
+			// as for a new search, a manually selected target remains aborted, otherwise no path is selected
+			if (!isManuallySelected(searchModel)) return;
+			caseObject.setAbortedManuallySetTarget(true);
+			throw new AbortException();
+		}
+
+		PropagationManager propagationManager = session.getPropagationManager();
+		try {
+			propagationManager.openPropagation();
+			caseObject.resetPath();
+			selectPathToBestTarget(caseObject, searchModel);
+			caseObject.activateNextQContainer();
+		}
+		finally {
+			propagationManager.commitPropagation();
+		}
+	}
+
+	/**
+	 * Returns true if the search model has been initialized for a manually selected target.
+	 */
+	static boolean isManuallySelected(SearchModel searchModel) {
+		NavigableSet<Target> targets = searchModel.getTargets();
+		return targets.size() == 1 && targets.first().getBenefit() >= USER_SELECTED_BENEFIT;
+	}
+
 	private void search(Session session, SearchModel searchModel) {
+		search(session, searchModel, () -> searchAlgorithm.search(session, searchModel));
+	}
+
+	private void search(Session session, SearchModel searchModel, Runnable search) {
 		// search and measure time
 		long startTime = System.currentTimeMillis();
-		searchAlgorithm.search(session, searchModel);
+		search.run();
 		long duration = System.currentTimeMillis() - startTime;
 
 		// get the path
@@ -366,9 +436,11 @@ public class PSMethodCostBenefit extends PSMethodAdapter implements SessionObjec
 			path = searchModel.getBestCostBenefitTarget().getMinPath().getPath();
 		}
 
-		// store search result in protocol
+		// store search result in protocol, and remember the entry to recognize changes of the session since the search
 		long time = session.getPropagationManager().getPropagationTime();
-		session.getProtocol().addEntry(new CalculatedPathEntry(time, path, duration));
+		CalculatedPathEntry entry = new CalculatedPathEntry(time, path, duration);
+		session.getProtocol().addEntry(entry);
+		session.getSessionObject(this).setRecentSearchEntry(entry);
 	}
 
 	private boolean hasUnansweredQuestions(Session session) {

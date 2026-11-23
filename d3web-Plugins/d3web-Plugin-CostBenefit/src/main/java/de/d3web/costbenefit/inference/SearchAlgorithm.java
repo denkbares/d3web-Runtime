@@ -52,4 +52,30 @@ public interface SearchAlgorithm {
 	 * @param abortStrategy the new abort strategy to be set
 	 */
 	void setAbortStrategy(AbortStrategy abortStrategy);
+
+	/**
+	 * Returns true if the most recent search of this algorithm for the session has been performed on the specified
+	 * model, has been aborted (e.g. by its abort strategy), and can be continued, see {@link #continueSearch(Session,
+	 * SearchModel)}. By default, a search cannot be continued.
+	 *
+	 * @param session the session of the search
+	 * @param model   the search model of the search
+	 * @return true if the search can be continued
+	 */
+	default boolean canContinue(Session session, SearchModel model) {
+		return false;
+	}
+
+	/**
+	 * Continues the most recent, aborted search for the targets of the model, using the current abort strategy of this
+	 * algorithm. The result is stored in the model, as for a new search. It must only be called if {@link
+	 * #canContinue(Session, SearchModel)} returns true.
+	 *
+	 * @param session the session to continue the search for
+	 * @param model   the search model of the search to be continued
+	 */
+	default void continueSearch(Session session, SearchModel model) {
+		throw new UnsupportedOperationException("search algorithm " + getClass().getSimpleName()
+												+ " cannot continue a search");
+	}
 }
