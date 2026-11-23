@@ -447,7 +447,7 @@ public class ExpertMode implements SessionObject {
 	 * path becomes invalid and the cost benefit strategic solver is in charge to create a new path to the cost/benefit
 	 * optimal target (based on the new situation). If this behavior is not desired a new target has to be selected
 	 * manually afterwards, using this method again.
-	 *
+	 * <p>
 	 * <b>Note:</b><br>
 	 * If the search algorithm is not able to provide such a path or if it implements an abort strategy that prevents
 	 * the algorithm from finding such a path this method results in an {@link AbortException}.
@@ -521,7 +521,7 @@ public class ExpertMode implements SessionObject {
 	 * he does the path becomes invalid and the cost benefit strategic solver is in charge to create a new path to the
 	 * cost/benefit optimal target (based on the new situation). If this behavior is not desired a new target has to be
 	 * selected manually afterwards, using this method again.
-	 *
+	 * <p>
 	 * <b>Note:</b><br>
 	 * If the search algorithm is not able to provide such a path or if it implements an abort strategy that prevents
 	 * the algorithm from finding such a path this method results in an {@link AbortException}.
@@ -597,7 +597,7 @@ public class ExpertMode implements SessionObject {
 	 * setting a couple of values manually that are not part of the questionnaires to be answered. (Note that due to
 	 * performance reasons the cost benefit solver recalculate the path only automatically after a relevant/indicated
 	 * questionnaire has been fully answered.)
-	 *
+	 * <p>
 	 * <b>Note:</b><br>
 	 * The cost benefit solver does not selects any path if there are still other questions open to be answered (the are
 	 * already indicated to the interview agenda but no answer has given yet). In such a situation, this method also
