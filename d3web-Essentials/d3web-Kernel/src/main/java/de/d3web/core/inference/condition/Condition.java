@@ -62,6 +62,45 @@ public interface Condition {
 			throws NoAnswerException, UnknownAnswerException;
 
 	/**
+	 * Evaluates this condition exactly like {@link #eval(Session)}, but reports a missing or unknown answer as
+	 * {@link ConditionCache.ConditionResult#UNDEFINED} or {@link ConditionCache.ConditionResult#UNKNOWN} instead
+	 * of throwing {@link NoAnswerException} or {@link UnknownAnswerException}.
+	 * <p>
+	 * The default implementation delegates to {@link #eval(Session)}. Implementations may override this method to
+	 * avoid exceptions as control flow, which are expensive for conditions without answers (and very expensive if
+	 * a debugger or another JVMTI agent is attached). An override must always return the same result as the
+	 * default implementation.
+	 *
+	 * @param session the given {@link Session}
+	 * @return the result of the evaluation, never null
+	 */
+	default ConditionCache.ConditionResult evalToResult(Session session) {
+		return evalToResult(this, session);
+	}
+
+	/**
+	 * Evaluates the specified condition by calling {@link #eval(Session)} and converting the thrown exceptions into
+	 * the respective {@link ConditionCache.ConditionResult}. This is the reference implementation of
+	 * {@link #evalToResult(Session)}, e.g. for subclasses that override {@link #eval(Session)} of a class with an
+	 * optimized {@link #evalToResult(Session)}.
+	 *
+	 * @param condition the condition to evaluate
+	 * @param session   the given {@link Session}
+	 * @return the result of the evaluation, never null
+	 */
+	static ConditionCache.ConditionResult evalToResult(Condition condition, Session session) {
+		try {
+			return condition.eval(session) ? ConditionCache.ConditionResult.TRUE : ConditionCache.ConditionResult.FALSE;
+		}
+		catch (NoAnswerException e) {
+			return ConditionCache.ConditionResult.UNDEFINED;
+		}
+		catch (UnknownAnswerException e) {
+			return ConditionCache.ConditionResult.UNKNOWN;
+		}
+	}
+
+	/**
 	 * Returns the collection of {@link Question} and {@link Solution}
 	 * instances, that are constrained in this condition.
 	 * 

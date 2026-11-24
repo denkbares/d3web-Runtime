@@ -26,6 +26,7 @@ import de.d3web.core.session.Session;
 import de.d3web.core.session.Value;
 import de.d3web.core.session.values.MultipleChoiceValue;
 import de.d3web.core.session.values.UndefinedValue;
+import de.d3web.core.session.values.Unknown;
 
 /**
  * This condition checks, whether a specified value is assigned to a question
@@ -58,6 +59,21 @@ public class CondEqual extends CondQuestion {
 	public boolean eval(Session session)
 			throws NoAnswerException, UnknownAnswerException {
 		Value value = checkAnswer(session);
+		return matches(value);
+	}
+
+	@Override
+	public ConditionCache.ConditionResult evalToResult(Session session) {
+		// subclasses may override eval or checkAnswer, so use the exception-free variant only for this class
+		if (getClass() != CondEqual.class) return Condition.evalToResult(this, session);
+		// same checks as checkAnswer(Session), but without exceptions
+		Value value = session.getBlackboard().getValue(getQuestion());
+		if (value instanceof UndefinedValue || value == null) return ConditionCache.ConditionResult.UNDEFINED;
+		if (value instanceof Unknown) return ConditionCache.ConditionResult.UNKNOWN;
+		return matches(value) ? ConditionCache.ConditionResult.TRUE : ConditionCache.ConditionResult.FALSE;
+	}
+
+	private boolean matches(Value value) {
 		if (getQuestion() instanceof QuestionMC) {
 			if (value instanceof MultipleChoiceValue) {
 				MultipleChoiceValue currentValue = (MultipleChoiceValue) value;

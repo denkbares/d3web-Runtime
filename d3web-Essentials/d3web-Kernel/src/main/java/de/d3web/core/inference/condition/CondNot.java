@@ -63,6 +63,20 @@ public class CondNot extends NonTerminalCondition {
 	}
 
 	@Override
+	public ConditionCache.ConditionResult evalToResult(Session session) {
+		// subclasses may override eval, so use the exception-free variant only for this class
+		if (getClass() != CondNot.class) return Condition.evalToResult(this, session);
+
+		// same logic as eval(Session): negate true/false, keep undefined/unknown
+		ConditionCache.ConditionResult result = condition.evalToResult(session);
+		return switch (result) {
+			case TRUE -> ConditionCache.ConditionResult.FALSE;
+			case FALSE -> ConditionCache.ConditionResult.TRUE;
+			default -> result;
+		};
+	}
+
+	@Override
 	public String toString() {
 		return "NOT(" + condition + ")";
 	}

@@ -70,15 +70,8 @@ public class DefaultConditionCache implements ConditionCache {
 	}
 
 	protected ConditionResult evalToResult(Condition condition) {
-		try {
-			return condition.eval(session) ? ConditionResult.TRUE : ConditionResult.FALSE;
-		}
-		catch (NoAnswerException e) {
-			return ConditionResult.UNDEFINED;
-		}
-		catch (UnknownAnswerException e) {
-			return ConditionResult.UNKNOWN;
-		}
+		// evaluate without exceptions as control flow, where the condition supports it
+		return condition.evalToResult(session);
 	}
 
 	protected void removeResult(Condition condition) {

@@ -88,6 +88,33 @@ public class CondAnd extends NonTerminalCondition {
 	}
 
 	@Override
+	public ConditionCache.ConditionResult evalToResult(Session session) {
+		// subclasses may override eval, so use the exception-free variant only for this class
+		if (getClass() != CondAnd.class) return Condition.evalToResult(this, session);
+
+		// same logic as eval(Session), but without exceptions
+		boolean wasNoAnswer = false;
+		boolean wasUnknownAnswer = false;
+		for (Condition condition : getTerms()) {
+			switch (condition.evalToResult(session)) {
+				case FALSE:
+					return ConditionCache.ConditionResult.FALSE;
+				case UNDEFINED:
+					wasNoAnswer = true;
+					break;
+				case UNKNOWN:
+					wasUnknownAnswer = true;
+					break;
+				case TRUE:
+					break;
+			}
+		}
+		if (wasNoAnswer) return ConditionCache.ConditionResult.UNDEFINED;
+		if (wasUnknownAnswer) return ConditionCache.ConditionResult.UNKNOWN;
+		return ConditionCache.ConditionResult.TRUE;
+	}
+
+	@Override
 	public String toString() {
 
 		if (getTerms().isEmpty()) {
